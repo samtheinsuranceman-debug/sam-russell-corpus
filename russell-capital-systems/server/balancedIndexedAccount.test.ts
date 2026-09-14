@@ -360,3 +360,76 @@ describe('the Time Machine sees the segment accounts', () => {
     expect(twoYearGrowth).toBeGreaterThan(1);
   });
 });
+
+describe('the carrier\'s own basis: annualized, net of the spread', () => {
+  it('every segment carries the carrier-basis figure, equal to the annualized one', () => {
+    for (const s of rollingSegments(BIA, SP500, 2019, 2025)) {
+      expect(s.carrierBasisPct).toBeCloseTo(s.annualizedPct, 2);
+    }
+  });
+
+  it('the carrier basis is never the segment credit', () => {
+    const s = creditSegment(BIA, [SP500[2020], SP500[2021]], 2020);
+    expect(s.carrierBasisPct).toBeLessThan(s.creditedPct / 1.8);
+  });
+
+  it('annualizes geometrically, not by halving — the difference is ~2 points', () => {
+    // The flier says "annualized", which is the geometric root. Halving a 48%
+    // two-year credit gives 24.00%; the root gives 21.64%.
+    const s = creditSegment(BIA, [SP500[2020], SP500[2021]], 2020);
+    const halved = s.creditedPct / 2;
+    expect(s.annualizedPct).toBeCloseTo(21.64, 1);
+    expect(halved).toBeCloseTo(23.99, 1);
+    expect(halved - s.annualizedPct).toBeGreaterThan(2);
+  });
+
+  it('deducts the spread exactly once, so a chart figure fed back in would double-deduct', () => {
+    // Participation and spread are already inside anything read off the
+    // carrier's chart. Round-tripping such a figure through creditSegment
+    // deducts the spread a second time and understates the account — this
+    // test pins the size of that mistake so nobody makes it by accident.
+    // Two flat 10% years credit 19.55% over the segment (21% cumulative,
+    // participated to 22.05%, less the 2.50% spread). Feed that back through
+    // as though it were raw index data and the spread comes out a second time,
+    // netted against the participation uplift on it:
+    //   2.50 - 0.05 x 19.55 = 1.52 points lost.
+    const proper = creditSegment(BIA, [10, 10], 2000);
+    const doubleDeducted = creditSegment(BIA, [proper.annualizedPct, proper.annualizedPct], 2000);
+    expect(proper.creditedPct).toBeCloseTo(19.55, 1);
+    expect(doubleDeducted.creditedPct).toBeCloseTo(18.03, 1);
+    expect(proper.creditedPct - doubleDeducted.creditedPct).toBeCloseTo(1.52, 1);
+  });
+
+  it('marks the 10% cap comparator sourced, with the flier\'s exact terms', () => {
+    const cap = SEGMENT_ACCOUNTS.find((a) => a.id === 'cap10-annual')!;
+    expect(cap.sourced).toBe(true);
+    expect(cap.capPct).toBe(10);
+    expect(cap.participationPct).toBe(100);
+    expect(cap.carrierLabel).toBe('Mutual Company B');
+    expect(cap.source).toMatch(/F94327-15/);
+  });
+});
+
+describe('product generation travels with every sourced option', () => {
+  it('the two-year balanced account is generation II', () => {
+    expect(ALL_INDEX_OPTIONS.find((o) => o.id === 'bm-sp500-2yr-balanced')?.product).toBe('Product II');
+  });
+
+  it('an unsourced parameter set has no generation', () => {
+    expect(ALL_INDEX_OPTIONS.find((o) => o.id === 'bm-sp500-par110')?.product).toBeNull();
+  });
+
+  it('every sourced option names its generation', () => {
+    for (const o of ALL_INDEX_OPTIONS.filter((x) => x.sourced)) {
+      expect(o.product, `${o.id} is sourced but has no product generation`).toBeTruthy();
+    }
+  });
+
+  it('puts the generation in the label, because caps differ between generations', () => {
+    const labels = getPopularIndexOptions();
+    const bia = labels.find((o) => o.id === 'bm-sp500-2yr-balanced')!;
+    expect(bia.label).toMatch(/Product II/);
+    const par = labels.find((o) => o.id === 'bm-sp500-par110')!;
+    expect(par.label).not.toMatch(/Product/);
+  });
+});

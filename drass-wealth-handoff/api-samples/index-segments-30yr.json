@@ -15,6 +15,8 @@
     "from": 1994,
     "to": 2025
   },
+  "series_verified": false,
+  "series_warning": "The index series behind these figures carries no source and does not reconcile to the carrier's own published claims (3 of 3 checks fail). The arithmetic is correct; the inputs are not established. Do not quote these figures to a client until the series is replaced with a sourced one.",
   "window": {
     "from": 1994,
     "to": 2025
@@ -35,6 +37,7 @@
       "index_cumulative_pct": 37.09,
       "credited_pct": 36.44,
       "annualized_pct": 16.81,
+      "carrier_basis_pct": 16.81,
       "floor_saved": false,
       "cap_bit": false
     },
@@ -45,6 +48,7 @@
       "index_cumulative_pct": 62.25,
       "credited_pct": 62.87,
       "annualized_pct": 27.62,
+      "carrier_basis_pct": 27.62,
       "floor_saved": false,
       "cap_bit": false
     },
@@ -55,6 +59,7 @@
       "index_cumulative_pct": 63.85,
       "credited_pct": 64.54,
       "annualized_pct": 28.27,
+      "carrier_basis_pct": 28.27,
       "floor_saved": false,
       "cap_bit": false
     },
@@ -65,6 +70,7 @@
       "index_cumulative_pct": 56.59,
       "credited_pct": 56.92,
       "annualized_pct": 25.27,
+      "carrier_basis_pct": 25.27,
       "floor_saved": false,
       "cap_bit": false
     },
@@ -75,6 +81,7 @@
       "index_cumulative_pct": 30.21,
       "credited_pct": 29.22,
       "annualized_pct": 13.68,
+      "carrier_basis_pct": 13.68,
       "floor_saved": false,
       "cap_bit": false
     },
@@ -85,6 +92,7 @@
       "index_cumulative_pct": 0.12,
       "credited_pct": 0,
       "annualized_pct": 0,
+      "carrier_basis_pct": 0,
       "floor_saved": true,
       "cap_bit": false
     },
@@ -95,6 +103,7 @@
       "index_cumulative_pct": -19.01,
       "credited_pct": 0,
       "annualized_pct": 0,
+      "carrier_basis_pct": 0,
       "floor_saved": true,
       "cap_bit": false
     },
@@ -105,6 +114,7 @@
       "index_cumulative_pct": -32.16,
       "credited_pct": 0,
       "annualized_pct": 0,
+      "carrier_basis_pct": 0,
       "floor_saved": true,
       "cap_bit": false
     },
@@ -115,6 +125,7 @@
       "index_cumulative_pct": 3.45,
       "credited_pct": 1.12,
       "annualized_pct": 0.56,
+      "carrier_basis_pct": 0.56,
       "floor_saved": false,
       "cap_bit": false
     },
@@ -125,6 +136,7 @@
       "index_cumulative_pct": 43.09,
       "credited_pct": 42.74,
       "annualized_pct": 19.48,
+      "carrier_basis_pct": 19.48,
       "floor_saved": false,
       "cap_bit": false
     },
@@ -135,6 +147,7 @@
       "index_cumulative_pct": 11.85,
       "credited_pct": 9.94,
       "annualized_pct": 4.85,
+      "carrier_basis_pct": 4.85,
       "floor_saved": false,
       "cap_bit": false
     },
@@ -145,6 +158,7 @@
       "index_cumulative_pct": 16.88,
       "credited_pct": 15.22,
       "annualized_pct": 7.34,
+      "carrier_basis_pct": 7.34,
       "floor_saved": false,
       "cap_bit": false
     },
@@ -155,6 +169,7 @@
       "index_cumulative_pct": 3.9,
       "credited_pct": 1.59,
       "annualized_pct": 0.79,
+      "carrier_basis_pct": 0.79,
       "floor_saved": false,
       "cap_bit": false
     },
@@ -165,6 +180,7 @@
       "index_cumulative_pct": -47.75,
       "credited_pct": 0,
       "annualized_pct": 0,
+      "carrier_basis_pct": 0,
       "floor_saved": true,
       "cap_bit": false
     },
@@ -175,6 +191,7 @@
       "index_cumulative_pct": -17,
       "credited_pct": 0,
       "annualized_pct": 0,
+      "carrier_basis_pct": 0,
       "floor_saved": true,
       "cap_bit": false
     },
@@ -185,6 +202,7 @@
       "index_cumulative_pct": 80.56,
       "credited_pct": 82.08,
       "annualized_pct": 34.94,
+      "carrier_basis_pct": 34.94,
       "floor_saved": false,
       "cap_bit": false
     },
@@ -195,6 +213,7 @@
       "index_cumulative_pct": 23.65,
       "credited_pct": 22.34,
       "annualized_pct": 10.61,
+      "carrier_basis_pct": 10.61,
       "floor_saved": false,
       "cap_bit": false
     },
@@ -205,6 +224,7 @@
       "index_cumulative_pct": 14.13,
       "credited_pct": 12.33,
       "annualized_pct": 5.99,
+      "carrier_basis_pct": 5.99,
       "floor_saved": false,
       "cap_bit": false
     },
@@ -215,6 +235,7 @@
       "index_cumulative_pct": 36.15,
       "credited_pct": 35.46,
       "annualized_pct": 16.39,
+      "carrier_basis_pct": 16.39,
       "floor_saved": false,
       "cap_bit": false
     },
@@ -225,6 +246,7 @@
       "index_cumulative_pct": 38.94,
       "credited_pct": 38.39,
       "annualized_pct": 17.64,
+      "carrier_basis_pct": 17.64,
       "floor_saved": false,
       "cap_bit": false
     },
@@ -235,6 +257,7 @@
       "index_cumulative_pct": 3.91,
       "credited_pct": 1.61,
       "annualized_pct": 0.8,
+      "carrier_basis_pct": 0.8,
       "floor_saved": false,
       "cap_bit": false
     },
@@ -245,6 +268,7 @@
       "index_cumulative_pct": 12.31,
       "credited_pct": 10.43,
       "annualized_pct": 5.08,
+      "carrier_basis_pct": 5.08,
       "floor_saved": false,
       "cap_bit": false
     },
@@ -255,6 +279,7 @@
       "index_cumulative_pct": 40.46,
       "credited_pct": 39.98,
       "annualized_pct": 18.31,
+      "carrier_basis_pct": 18.31,
       "floor_saved": false,
       "cap_bit": false
     },
@@ -265,6 +290,7 @@
       "index_cumulative_pct": 17.81,
       "credited_pct": 16.2,
       "annualized_pct": 7.79,
+      "carrier_basis_pct": 7.79,
       "floor_saved": false,
       "cap_bit": false
     },
@@ -275,6 +301,7 @@
       "index_cumulative_pct": 8.86,
       "credited_pct": 6.8,
       "annualized_pct": 3.34,
+      "carrier_basis_pct": 3.34,
       "floor_saved": false,
       "cap_bit": false
     },
@@ -285,6 +312,7 @@
       "index_cumulative_pct": 36.88,
       "credited_pct": 36.22,
       "annualized_pct": 16.71,
+      "carrier_basis_pct": 16.71,
       "floor_saved": false,
       "cap_bit": false
     },
@@ -295,6 +323,7 @@
       "index_cumulative_pct": 48.06,
       "credited_pct": 47.97,
       "annualized_pct": 21.64,
+      "carrier_basis_pct": 21.64,
       "floor_saved": false,
       "cap_bit": false
     },
@@ -305,6 +334,7 @@
       "index_cumulative_pct": 4.18,
       "credited_pct": 1.89,
       "annualized_pct": 0.94,
+      "carrier_basis_pct": 0.94,
       "floor_saved": false,
       "cap_bit": false
     },
@@ -315,6 +345,7 @@
       "index_cumulative_pct": 16.51,
       "credited_pct": 14.84,
       "annualized_pct": 7.16,
+      "carrier_basis_pct": 7.16,
       "floor_saved": false,
       "cap_bit": false
     },
@@ -325,6 +356,7 @@
       "index_cumulative_pct": 49.98,
       "credited_pct": 49.97,
       "annualized_pct": 22.46,
+      "carrier_basis_pct": 22.46,
       "floor_saved": false,
       "cap_bit": false
     },
@@ -335,6 +367,7 @@
       "index_cumulative_pct": 34.97,
       "credited_pct": 34.22,
       "annualized_pct": 15.85,
+      "carrier_basis_pct": 15.85,
       "floor_saved": false,
       "cap_bit": false
     }

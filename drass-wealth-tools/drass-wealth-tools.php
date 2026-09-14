@@ -3,7 +3,7 @@
  * Plugin Name:       Drass Wealth Tools
  * Plugin URI:        https://www.drasswealthmanagement.com/
  * Description:       Retirement, tax and insurance calculators for Drass Wealth Management. Engines run on the Russell Capital Systems platform; this plugin renders them inside WordPress via shortcodes and blocks.
- * Version:           1.2.0
+ * Version:           1.3.0
  * Requires at least: 6.0
  * Requires PHP:      7.4
  * Author:            Russell Holdings Management LLC
@@ -34,7 +34,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'DWT_VERSION', '1.2.0' );
+define( 'DWT_VERSION', '1.3.0' );
 define( 'DWT_FILE', __FILE__ );
 define( 'DWT_DIR', plugin_dir_path( __FILE__ ) );
 define( 'DWT_URL', plugin_dir_url( __FILE__ ) );

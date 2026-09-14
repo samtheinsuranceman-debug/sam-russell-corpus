@@ -434,6 +434,9 @@ export function getPopularIndexOptions(): Array<{
       const carrierName = CARRIERS.find(c => c.id === opt.carrier)?.name ?? opt.carrier;
       const term = opt.segmentTermYears ?? 1;
       const sourced = opt.sourced ?? false;
+      // The product generation belongs in the name. Generation II and III of
+      // the same product carry different caps on identically-named options.
+      const product = opt.product ? ` ${opt.product}` : "";
       // The term and the unsourced mark go in the LABEL, not only in a field a
       // selector might not render. Whichever way this list is drawn, a reader
       // sees that a segment is multi-year and that a parameter set is nobody's
@@ -441,7 +444,7 @@ export function getPopularIndexOptions(): Array<{
       const suffix = `${term > 1 ? ` — ${term}-year segment` : ""}${sourced ? "" : " (unsourced)"}`;
       return {
         id: opt.id,
-        label: `${carrierName}: ${opt.name}${suffix}`,
+        label: `${carrierName}${product}: ${opt.name}${suffix}`,
         carrier: opt.carrier,
         description: opt.description,
         segmentTermYears: term,

@@ -3,7 +3,7 @@ Contributors: russellholdings
 Requires at least: 6.0
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 1.2.0
+Stable tag: 1.3.0
 License: Proprietary — licensed to Drass Wealth Management
 
 Retirement, tax and insurance calculators for Drass Wealth Management.
@@ -23,6 +23,21 @@ write endpoints. Deactivating removes every tool cleanly.
    package.
 
 == Changelog ==
+
+= 1.3.0 =
+* Index segments now lead with the carrier's own published basis: annualized
+  and net of the segment spread. The carrier's chart plots that figure, so it
+  is the only column that may be set beside a carrier document.
+* A figure read off a carrier chart already has participation and the spread
+  in it. Feeding one back through the crediting method would deduct the spread
+  twice and understate the account by about 1.5 points. The tool builds from
+  raw index data instead.
+* The platform reports whether the index series reconciles to the carrier's
+  published claims about that index. It currently does not, and the tool now
+  says so at the top of the view rather than in a footnote.
+* Index options carry their product generation (II, III), because successive
+  generations of the same product carry different caps on identically-named
+  options.
 
 = 1.2.0 =
 * Index segments [dwt_index_segments]. A multi-year index segment credits once

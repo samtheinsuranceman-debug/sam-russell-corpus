@@ -82,6 +82,15 @@ function dwt_render_segments( $atts = [] ): string {
 	$out  = '<div class="dwt dwt-segments">';
 	$out .= DWT_Compliance::historical_notice_html();
 
+	// The platform reports whether the index series behind these figures
+	// reconciles to the carrier's own published claims. When it does not, that
+	// belongs at the top of the tool in the visitor's face, not in a footnote —
+	// a figure whose provenance is unknown must say so on the same screen.
+	if ( empty( $data['series_verified'] ) && ! empty( $data['series_warning'] ) ) {
+		$out .= '<p class="dwt-stop"><strong>These figures are not yet verified.</strong> '
+			. esc_html( (string) $data['series_warning'] ) . '</p>';
+	}
+
 	// An unsourced parameter set says so above the table, not in a footnote.
 	// Somebody reading only the numbers has to be able to see that nobody
 	// quoted them.
@@ -96,8 +105,9 @@ function dwt_render_segments( $atts = [] ): string {
 	if ( $term > 1 ) {
 		$out .= '<p class="dwt-lede">Each row below is a <strong>' . esc_html( (string) $term )
 			. '-year segment</strong>, not a year. The account credits once across the whole term, '
-			. 'so the credited column and the per-year column are different numbers and only the '
-			. 'second compares with an annual strategy.</p>';
+			. 'so the credited column and the per-year column are different numbers. '
+			. '<strong>The carrier publishes this account on the per-year basis, net of the spread</strong> — '
+			. 'that is the last column, and it is the only one that may be set beside a carrier chart.</p>';
 	}
 
 	// The account's terms, so the arithmetic in the table is checkable.
@@ -117,7 +127,7 @@ function dwt_render_segments( $atts = [] ): string {
 		. '<th scope="col">Segment</th>'
 		. '<th scope="col">Index over the segment</th>'
 		. '<th scope="col">Credited over the segment</th>'
-		. '<th scope="col">Per year</th>'
+		. '<th scope="col">Per year — the carrier\'s published basis</th>'
 		. '</tr></thead><tbody>';
 
 	foreach ( $segments as $sg ) {
@@ -125,7 +135,9 @@ function dwt_render_segments( $atts = [] ): string {
 		$end       = isset( $sg['end_year'] ) ? (int) $sg['end_year'] : 0;
 		$idx       = isset( $sg['index_cumulative_pct'] ) ? (float) $sg['index_cumulative_pct'] : 0.0;
 		$credited  = isset( $sg['credited_pct'] ) ? (float) $sg['credited_pct'] : 0.0;
-		$annual    = isset( $sg['annualized_pct'] ) ? (float) $sg['annualized_pct'] : 0.0;
+		$annual    = isset( $sg['carrier_basis_pct'] )
+			? (float) $sg['carrier_basis_pct']
+			: ( isset( $sg['annualized_pct'] ) ? (float) $sg['annualized_pct'] : 0.0 );
 		$seg_years = isset( $sg['term_years'] ) ? (int) $sg['term_years'] : $term;
 		$floored   = ! empty( $sg['floor_saved'] );
 		$capped    = ! empty( $sg['cap_bit'] );

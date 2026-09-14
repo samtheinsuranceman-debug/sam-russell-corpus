@@ -44,6 +44,27 @@ the reason above — but it is your call, not mine.
 | `API_REFERENCE.md` | The twelve API endpoints the plugin calls. |
 | `api-samples/` | **A real captured response from every endpoint**, so the front end can be built and styled before a key exists. |
 
+## Before this goes in front of a client: the index series is not verified
+
+The figures these tools produce are computed from an S&P 500 series that
+carries no source and **does not reconcile to the carrier's own published
+claims about that index**:
+
+| The carrier published | This series measures |
+|---|---|
+| 8.06% average annual return, 1994–2023 | 8.29% |
+| 18 of 30 years above a 10% cap | 16 years |
+| exceeding the cap by 12.23% on average | 13.66% |
+
+A 30-year average that is close while the year count is wrong by two is the
+signature of individual years being wrong in offsetting directions. Every
+segment figure is built from the **years**, not the average.
+
+The method is right. The inputs are not established. Both platforms now say so
+on screen — a red banner above the table, driven by
+`series_verified: false` in the API — and the figures should not go into a
+proposal until the series is replaced with a sourced one.
+
 ## The tools
 
 Nine shortcodes. Activation creates one **draft** page per tool — draft, never
@@ -72,7 +93,19 @@ a made-up number for a real one is worse than one that says it is unavailable,
 because nobody re-checks a figure that looks right. Do not "improve" this by
 adding fallback values.
 
-**2. A multi-year segment credit is not an annual return.** The `[dwt_index_segments]`
+**2. The carrier's published basis is per-year and net of the spread.** The
+flier's own chart assumptions read: *"the vertical axis represents the
+annualized return for the relevant hold period, after the deduction of the
+strategy spread."* So the per-year column is the carrier's basis and the only
+one that may be set beside a carrier document.
+
+Two consequences. A figure read off a carrier chart **already has
+participation and the spread in it** — feeding one back through the crediting
+method deducts the spread twice and understates the account by about 1.5
+points. And "annualized" means the geometric root, not half: a 48% two-year
+credit is 21.64% a year, not 24.00%.
+
+**3. A multi-year segment credit is not an annual return.** The `[dwt_index_segments]`
 view exists because of this, and it constrains how its output may be restyled.
 The two-year balanced account credited 47.97% over 2020–2021. That is **21.64% a
 year**. If a redesign drops the "over 2 yrs" tag, or shows the credited column

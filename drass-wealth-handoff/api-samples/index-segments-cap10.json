@@ -1,15 +1,15 @@
 {
   "account": {
-    "id": "par110-annual",
-    "name": "110% participation, annual, uncapped",
-    "carrier": "Comparison parameter",
+    "id": "cap10-annual",
+    "name": "10% cap, annual, 100% participation",
+    "carrier": "Mutual Company B",
     "term_years": 1,
-    "participation_pct": 110,
+    "participation_pct": 100,
     "spread_pct": 0,
-    "cap_pct": null,
+    "cap_pct": 10,
     "floor_pct": 0,
-    "sourced": false,
-    "source": "Not a carrier quote — a parameter set for comparison"
+    "sourced": true,
+    "source": "Balanced Growth Accumulator II IUL flier, F94327-15 DOFU 10-2022 Rev 08-2023 (2446408) — the hypothetical capped strategy the flier charts against the 2-Year BIA"
   },
   "series_range": {
     "from": 1994,
@@ -23,11 +23,11 @@
   },
   "threshold_pct": 40,
   "segments_at_or_above_threshold": 0,
-  "mean_annualized_pct": 17.38,
-  "best_annualized_pct": 31.91,
+  "mean_annualized_pct": 8.01,
+  "best_annualized_pct": 10,
   "worst_annualized_pct": 0,
   "floor_saved_count": 1,
-  "cap_bit_count": 0,
+  "cap_bit_count": 5,
   "reading_note": "Segments are annual, so the credit and the annualized figure are the same.",
   "segments": [
     {
@@ -35,9 +35,9 @@
       "end_year": 2019,
       "term_years": 1,
       "index_cumulative_pct": 6.1,
-      "credited_pct": 6.71,
-      "annualized_pct": 6.71,
-      "carrier_basis_pct": 6.71,
+      "credited_pct": 6.1,
+      "annualized_pct": 6.1,
+      "carrier_basis_pct": 6.1,
       "floor_saved": false,
       "cap_bit": false
     },
@@ -46,22 +46,22 @@
       "end_year": 2020,
       "term_years": 1,
       "index_cumulative_pct": 29.01,
-      "credited_pct": 31.91,
-      "annualized_pct": 31.91,
-      "carrier_basis_pct": 31.91,
+      "credited_pct": 10,
+      "annualized_pct": 10,
+      "carrier_basis_pct": 10,
       "floor_saved": false,
-      "cap_bit": false
+      "cap_bit": true
     },
     {
       "start_year": 2021,
       "end_year": 2021,
       "term_years": 1,
       "index_cumulative_pct": 14.77,
-      "credited_pct": 16.25,
-      "annualized_pct": 16.25,
-      "carrier_basis_pct": 16.25,
+      "credited_pct": 10,
+      "annualized_pct": 10,
+      "carrier_basis_pct": 10,
       "floor_saved": false,
-      "cap_bit": false
+      "cap_bit": true
     },
     {
       "start_year": 2022,
@@ -79,33 +79,33 @@
       "end_year": 2023,
       "term_years": 1,
       "index_cumulative_pct": 28.36,
-      "credited_pct": 31.2,
-      "annualized_pct": 31.2,
-      "carrier_basis_pct": 31.2,
+      "credited_pct": 10,
+      "annualized_pct": 10,
+      "carrier_basis_pct": 10,
       "floor_saved": false,
-      "cap_bit": false
+      "cap_bit": true
     },
     {
       "start_year": 2024,
       "end_year": 2024,
       "term_years": 1,
       "index_cumulative_pct": 16.84,
-      "credited_pct": 18.52,
-      "annualized_pct": 18.52,
-      "carrier_basis_pct": 18.52,
+      "credited_pct": 10,
+      "annualized_pct": 10,
+      "carrier_basis_pct": 10,
       "floor_saved": false,
-      "cap_bit": false
+      "cap_bit": true
     },
     {
       "start_year": 2025,
       "end_year": 2025,
       "term_years": 1,
       "index_cumulative_pct": 15.52,
-      "credited_pct": 17.07,
-      "annualized_pct": 17.07,
-      "carrier_basis_pct": 17.07,
+      "credited_pct": 10,
+      "annualized_pct": 10,
+      "carrier_basis_pct": 10,
       "floor_saved": false,
-      "cap_bit": false
+      "cap_bit": true
     }
   ],
   "basis": "Segments are annual; credited_pct and annualized_pct are the same figure."

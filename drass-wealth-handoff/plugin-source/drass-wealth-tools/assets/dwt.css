@@ -132,3 +132,7 @@
   margin:0 0 14px;font-size:14px;border-radius:0 6px 6px 0}
 .dwt-lede{font-size:14px;margin:0 0 12px}
 .dwt-segments .dwt-credited{white-space:nowrap}
+/* Unverified provenance. Louder than the amber warning: amber means "nobody
+   quoted these terms", red means "we cannot stand behind these numbers". */
+.dwt-stop{border-left:3px solid #b42318;background:#fee4e2;padding:10px 14px;
+  margin:0 0 14px;font-size:14px;border-radius:0 6px 6px 0}

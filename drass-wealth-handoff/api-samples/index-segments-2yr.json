@@ -15,6 +15,8 @@
     "from": 1994,
     "to": 2025
   },
+  "series_verified": false,
+  "series_warning": "The index series behind these figures carries no source and does not reconcile to the carrier's own published claims (3 of 3 checks fail). The arithmetic is correct; the inputs are not established. Do not quote these figures to a client until the series is replaced with a sourced one.",
   "window": {
     "from": 2019,
     "to": 2025
@@ -35,6 +37,7 @@
       "index_cumulative_pct": 36.88,
       "credited_pct": 36.22,
       "annualized_pct": 16.71,
+      "carrier_basis_pct": 16.71,
       "floor_saved": false,
       "cap_bit": false
     },
@@ -45,6 +48,7 @@
       "index_cumulative_pct": 48.06,
       "credited_pct": 47.97,
       "annualized_pct": 21.64,
+      "carrier_basis_pct": 21.64,
       "floor_saved": false,
       "cap_bit": false
     },
@@ -55,6 +59,7 @@
       "index_cumulative_pct": 4.18,
       "credited_pct": 1.89,
       "annualized_pct": 0.94,
+      "carrier_basis_pct": 0.94,
       "floor_saved": false,
       "cap_bit": false
     },
@@ -65,6 +70,7 @@
       "index_cumulative_pct": 16.51,
       "credited_pct": 14.84,
       "annualized_pct": 7.16,
+      "carrier_basis_pct": 7.16,
       "floor_saved": false,
       "cap_bit": false
     },
@@ -75,6 +81,7 @@
       "index_cumulative_pct": 49.98,
       "credited_pct": 49.97,
       "annualized_pct": 22.46,
+      "carrier_basis_pct": 22.46,
       "floor_saved": false,
       "cap_bit": false
     },
@@ -85,6 +92,7 @@
       "index_cumulative_pct": 34.97,
       "credited_pct": 34.22,
       "annualized_pct": 15.85,
+      "carrier_basis_pct": 15.85,
       "floor_saved": false,
       "cap_bit": false
     }

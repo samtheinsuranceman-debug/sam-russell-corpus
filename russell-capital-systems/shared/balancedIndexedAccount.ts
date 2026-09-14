@@ -40,20 +40,80 @@
  * ## The account, from the carrier's own flier
  *
  * Balanced Growth Accumulator II IUL, Minnesota Life Insurance Company.
- * Document F94327-15 DOFU 10-2022 Rev 08-2023 (2446408). The 2-Year Balanced
- * Indexed Account: 100% S&P 500 Price Index allocation, 2.50% segment spread,
- * 105% participation rate, interest credits never less than zero, segments
- * established monthly. Back-test source given as Genesis Financial, 3 January
- * 1951 to 31 December 2022.
+ * Document F94327-15 DOFU 10-2022 Rev 08-2023 (2446408).
  *
- * Note the participation is **105%**, not 110%, and there is a **2.50%
- * spread** that the headline participation rate does not mention. The spread
- * is deducted after participation is applied, so it costs a flat 2.5 points of
- * the segment credit — most painful in a weak segment, where it can take a
- * small positive credit to near zero.
+ * The chart assumptions are quoted here in full because they settle how these
+ * figures must be presented, and they are easy to get wrong:
  *
- * The 110% figure that gets quoted belongs to a different carrier's account
- * (a five-year term at 110% current / 105% guaranteed), not to this one.
+ *     "The graph represents the annualized returns of two-year holds of the
+ *      S&P 500 Price Index and interest credited for a hypothetical 10.00%
+ *      annual point-to-point strategy (100% index participation up to 10.00%,
+ *      0% index participation above 10.00% and annualized returns of two-year
+ *      holds of the two-year BIA 100% S&P 500 Price Index Allocation, 2.50%
+ *      Segment Spread, 105% Participation Rate), with crediting factors
+ *      consistent for each new segment for every possible contract purchase
+ *      date from 1/3/1951 - 12/31/2022... the vertical axis represents the
+ *      annualized return for the relevant hold period, AFTER THE DEDUCTION OF
+ *      THE STRATEGY SPREAD, where applicable."
+ *
+ * Two things follow, and both change how this module reports.
+ *
+ * **The carrier's own basis is annualized and net of the spread.** Every
+ * number the carrier plots for this account has already had the 2.50% spread
+ * taken out and has already been reduced to a per-year figure. So the
+ * annualized net figure is not merely "the comparable one" by our reasoning —
+ * it is the carrier's own published basis, and it is what any figure quoted
+ * beside a carrier document has to match. This module therefore leads with
+ * `annualizedPct`. The segment credit is still returned, because a client
+ * asking "what did the segment pay" deserves an answer, but it is secondary
+ * and is never valid to compare against a carrier chart.
+ *
+ * **Anyone reading numbers OFF that chart must not re-apply participation or
+ * the spread.** Those are already in. This module builds from RAW index
+ * returns instead and applies participation and spread exactly once — see
+ * creditSegment. Feeding a figure taken from the carrier's chart into this
+ * function would deduct the spread twice and understate the account.
+ *
+ * Note the participation is **105%**, not 110%. The 110% figure that gets
+ * quoted belongs to a different carrier's account (a five-year term at 110%
+ * current / 105% guaranteed), not to this one.
+ *
+ * ## Annualized means the geometric root, not the half
+ *
+ * "Divided by two" and "annualized" are not the same operation, and on these
+ * numbers the difference is material. A 48% two-year credit is 21.64% a year
+ * geometrically — (1.48)^(1/2) - 1 — and 24.00% if simply halved. The carrier
+ * says "annualized", so this module uses the geometric root throughout. Halving
+ * would overstate every segment by roughly two points.
+ *
+ * ## What this module does NOT model
+ *
+ * The flier describes the wider structure: "The Balanced Indexed Accounts
+ * employ a Balanced Allocation Strategy with one-year, two-year, and
+ * three-year index segments - except where noted - established monthly. The
+ * Balanced Allocation Strategy blends an equity indexed component, a declared
+ * rate component, a segment spread component and a participation rate
+ * component."
+ *
+ * Two things are therefore outside what is modelled here:
+ *
+ *   - **The declared rate component.** A Balanced Allocation Strategy is not
+ *     pure index participation; part of the allocation earns a declared rate.
+ *     This module is valid only for the configuration the flier charts, which
+ *     is "100% S&P 500 Price Index Allocation" — at 100% index the declared
+ *     rate component carries zero weight. At any other allocation these
+ *     figures do not describe the account, and nothing here knows the declared
+ *     rate, which appears in no document held.
+ *   - **The one-year and three-year segments.** They exist and are not
+ *     modelled. Only the two-year is.
+ *
+ * ## A warning about the series underneath
+ *
+ * All of the above is about METHOD. The index series these functions run on is
+ * a separate problem: it carries no source and does not reconcile to the
+ * carrier's own published claims about the S&P 500. See
+ * shared/sp500SeriesAudit.ts. The method here is right; the inputs are not yet
+ * established.
  */
 
 export interface SegmentTerms {
@@ -92,7 +152,7 @@ export const SEGMENT_ACCOUNTS: readonly SegmentTerms[] = [
     floorPct: 0,
     source: 'Balanced Growth Accumulator II IUL flier, F94327-15 DOFU 10-2022 Rev 08-2023 (2446408)',
     sourced: true,
-    note: 'Segments are established monthly on a two-year term. The 2.50% spread is deducted after the 105% participation is applied.',
+    note: 'Segments are established monthly on a two-year term. The 2.50% spread is deducted after the 105% participation is applied. The carrier publishes this account on an annualized, net-of-spread basis, which is the annualized column here.',
   },
   {
     id: 'par110-annual',
@@ -122,14 +182,17 @@ export const SEGMENT_ACCOUNTS: readonly SegmentTerms[] = [
   {
     id: 'cap10-annual',
     name: '10% cap, annual, 100% participation',
-    carrierLabel: 'Comparison parameter',
+    carrierLabel: 'Mutual Company B',
     termYears: 1,
     participationPct: 100,
     spreadPct: 0,
     capPct: 10,
     floorPct: 0,
-    source: 'The capped strategy the carrier flier compares against',
-    sourced: false,
+    // Sourced: the flier states this comparator's terms exactly — "100% index
+    // participation up to 10.00%, 0% index participation above 10.00%".
+    source: 'Balanced Growth Accumulator II IUL flier, F94327-15 DOFU 10-2022 Rev 08-2023 (2446408) — the hypothetical capped strategy the flier charts against the 2-Year BIA',
+    sourced: true,
+    note: 'The carrier plots this beside the 2-Year BIA and states the BIA "captured 60% more upside than the capped strategy" over 1951-2022.',
   },
 ];
 
@@ -151,6 +214,13 @@ export interface SegmentResult {
   readonly floorSaved: boolean;
   /** True when the cap truncated the credit. */
   readonly capBit: boolean;
+  /**
+   * The figure on the carrier's own published basis: annualized, net of the
+   * spread. Identical to annualizedPct — named separately because this is the
+   * one that may be set beside a carrier chart, and a reader choosing a column
+   * should not have to infer which.
+   */
+  readonly carrierBasisPct: number;
 }
 
 /** Credit one segment from the index's year-by-year returns across its term. */
@@ -179,6 +249,7 @@ export function creditSegment(
     annualizedPct: Math.round(annualized * 100) / 100,
     floorSaved,
     capBit,
+    carrierBasisPct: Math.round(annualized * 100) / 100,
   };
 }
 

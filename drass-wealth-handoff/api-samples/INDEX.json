@@ -36,6 +36,12 @@
     "file": "index-segments-30yr.json"
   },
   {
+    "name": "index-segments-cap10",
+    "request": "GET /api/partner/index-segments?account=cap10-annual&from=2019&to=2025",
+    "status": 200,
+    "file": "index-segments-cap10.json"
+  },
+  {
     "name": "crediting",
     "request": "GET /api/partner/crediting?optionId=bm-sp500-2yr-balanced&startYear=2015&endYear=2025",
     "status": 200,
