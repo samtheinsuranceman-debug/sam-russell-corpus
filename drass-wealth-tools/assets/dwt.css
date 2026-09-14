@@ -125,3 +125,10 @@
 /* The two panels: the window chosen, and the whole record beside it. */
 .dwt .dwt-plan-dual { margin-top: 1rem; padding: .75rem 1rem; border: 1px solid rgba(0,0,0,.1); border-radius: .4rem; max-width: 34rem; }
 .dwt .dwt-plan-dual .dwt-plan-line:last-child { border-bottom: 0; }
+
+/* Index segments. The warning is a block, not a footnote: an unsourced
+   parameter set must be visible to somebody who reads only the table. */
+.dwt-warn{border-left:3px solid var(--dwt-cap);background:#fbf1de;padding:10px 14px;
+  margin:0 0 14px;font-size:14px;border-radius:0 6px 6px 0}
+.dwt-lede{font-size:14px;margin:0 0 12px}
+.dwt-segments .dwt-credited{white-space:nowrap}

@@ -62,6 +62,21 @@ export interface IndexOption {
   description: string;
   /** Available years (some strategies don't have 30-year history) */
   availableFrom: number;
+  /**
+   * Length of one index segment in years. Absent or 1 = an ordinary annual
+   * point-to-point. 2 or more = a multi-year segment, where participation,
+   * spread, cap and floor all apply ONCE across the whole term.
+   *
+   * For a multi-year option every per-year figure this module reports is the
+   * ANNUALIZED credit of the segment ending in that year, because that is the
+   * only figure comparable with an annual strategy. Use
+   * shared/balancedIndexedAccount.ts when the segment credit itself is wanted.
+   */
+  segmentTermYears?: number;
+  /** True only when every term above was transcribed from a carrier document. */
+  sourced?: boolean;
+  /** The document, or why there isn't one. */
+  sourceNote?: string;
 }
 // ─── MUTUAL COMPANY A Index Options ──────────────────────
 export const A_MUTUAL_INDEX_OPTIONS: IndexOption[] = [
@@ -541,11 +556,75 @@ export function publishedLookback(optionId: string): PublishedLookback | undefin
   return NATIONWIDE_PUBLISHED_LOOKBACKS.find((l) => l.optionId === optionId);
 }
 
+/**
+ * MUTUAL COMPANY B — the two-year balanced segment, and the 110% beside it.
+ *
+ * The first of these is the only option in this file whose terms came off a
+ * carrier document rather than out of a band: a 2-year balanced indexed
+ * account, 100% S&P 500 price index, 105% participation, 2.50% segment spread,
+ * 0% floor, no cap, segments established monthly.
+ *
+ * The second is the 110%-of-the-S&P parameter people ask for. No document held
+ * here offers 110% participation on an ANNUAL uncapped S&P segment — the
+ * nearest real thing is a five-year account at 110% current / 105% guaranteed,
+ * a different term and a different risk. So it is carried as a comparison
+ * parameter, marked unsourced, and labelled as such wherever it is shown.
+ */
+export const B_MUTUAL_SEGMENT_OPTIONS: IndexOption[] = [
+  {
+    id: 'bm-sp500-2yr-balanced',
+    name: '2-Year Balanced Indexed Account',
+    carrier: 'mutual-b',
+    index: 'SP500',
+    indexType: 'single',
+    cap: null,
+    floor: 0,
+    participation: 105,
+    spread: 2.5,
+    strategyCharge: 0,
+    bonus: 0,
+    segmentTermYears: 2,
+    sourced: true,
+    sourceNote:
+      'Balanced Growth Accumulator II IUL flier, F94327-15 DOFU 10-2022 Rev 08-2023 (2446408). ' +
+      'Participation 105%, segment spread 2.50%, 0% floor, segments established monthly.',
+    description:
+      'Two-year segment on the S&P 500 price index: 105% participation, 2.50% spread over the ' +
+      'segment, 0% floor, uncapped. Rates shown per year are the annualized credit of the ' +
+      'two-year segment ending that year, not the segment credit itself.',
+    availableFrom: 1994,
+  },
+  {
+    id: 'bm-sp500-par110',
+    name: '110% S&P 500, annual, uncapped',
+    carrier: 'mutual-b',
+    index: 'SP500',
+    indexType: 'single',
+    cap: null,
+    floor: 0,
+    participation: 110,
+    spread: 0,
+    strategyCharge: 0,
+    bonus: 0,
+    segmentTermYears: 1,
+    sourced: false,
+    sourceNote:
+      'Not a carrier quote. No held document offers 110% participation on an annual uncapped ' +
+      'S&P segment; the nearest real account is a five-year term at 110% current / 105% ' +
+      'guaranteed. Carried as a comparison parameter only.',
+    description:
+      'Annual point-to-point at 110% participation, no cap, no spread, 0% floor. A parameter ' +
+      'set for comparison, not a product anybody has quoted.',
+    availableFrom: 1994,
+  },
+];
+
 export const ALL_INDEX_OPTIONS: IndexOption[] = [
   ...A_MUTUAL_INDEX_OPTIONS,
   ...MUTUAL_A_VOLATILITY_CONTROL_OPTIONS,
   ...A_PLUS_MUTUAL_LIFE_INDEX_OPTIONS,
   ...A_MINUS_MUTUAL_INDEX_OPTIONS,
+  ...B_MUTUAL_SEGMENT_OPTIONS,
 ];
 
 // ─── Crediting Calculation ───────────────────────────────────────────────────
@@ -625,19 +704,61 @@ export function calculateBlendedReturn(option: IndexOption, year: number): numbe
   return total;
 }
 
+/** The raw index move for one year, blended when the option is a blend. */
+function rawReturnForYear(option: IndexOption, year: number): number {
+  if (option.indexType === 'multiIndex' || option.indexType === 'hindsight' || option.indexType === 'blended') {
+    return calculateBlendedReturn(option, year);
+  }
+  return RAW_INDEX_RETURNS[option.index]?.[year] ?? 0;
+}
+
+/** Years in this option's series, so a segment is never built on absent data. */
+function hasYear(option: IndexOption, year: number): boolean {
+  if (option.components?.length) {
+    return option.components.every((c) => RAW_INDEX_RETURNS[c.index]?.[year] !== undefined);
+  }
+  return RAW_INDEX_RETURNS[option.index]?.[year] !== undefined;
+}
+
+/**
+ * The ANNUALIZED credit of the multi-year segment ENDING in `year`.
+ *
+ * A two-year segment credits once, across two years. Reporting that credit
+ * against a single year would read as an annual return and overstate the
+ * account by roughly double, so what comes back here is the per-year
+ * equivalent — the figure that compares with an annual strategy. The segment
+ * credit itself, with its term stated beside it, lives in
+ * shared/balancedIndexedAccount.ts.
+ *
+ * Participation, spread, cap and floor apply ONCE across the whole term, which
+ * is what makes a segment different from repeating an annual strategy twice.
+ * Near the start of the series a full term does not exist; the segment is then
+ * built from the years that do, and annualized over that shorter span.
+ */
+export function segmentAnnualizedRate(option: IndexOption, year: number): number {
+  const term = option.segmentTermYears ?? 1;
+  const years: number[] = [];
+  for (let k = term - 1; k >= 0; k--) {
+    if (hasYear(option, year - k)) years.push(rawReturnForYear(option, year - k));
+  }
+  if (years.length === 0) return 0;
+
+  const growth = years.reduce((acc, r) => acc * (1 + r / 100), 1);
+  const cumulative = (growth - 1) * 100;
+  const segmentCredit = calculateCreditedRate(option, cumulative);
+  return (Math.pow(1 + segmentCredit / 100, 1 / years.length) - 1) * 100;
+}
+
 /**
  * Get the credited rate for an index option in a specific year.
+ *
+ * For an annual option this is that year's credit. For a multi-year segment it
+ * is the annualized credit of the segment ending that year — see
+ * segmentAnnualizedRate for why it is never the segment credit itself.
  */
 export function getCreditedRate(option: IndexOption, year: number): number {
-  let rawReturn: number;
-
-  if (option.indexType === 'multiIndex' || option.indexType === 'hindsight' || option.indexType === 'blended') {
-    rawReturn = calculateBlendedReturn(option, year);
-  } else {
-    rawReturn = RAW_INDEX_RETURNS[option.index]?.[year] ?? 0;
-  }
-
-  return calculateCreditedRate(option, rawReturn);
+  if ((option.segmentTermYears ?? 1) > 1) return segmentAnnualizedRate(option, year);
+  return calculateCreditedRate(option, rawReturnForYear(option, year));
 }
 
 /**
@@ -647,14 +768,8 @@ export function getCreditingHistory(option: IndexOption, startYear = 1994, endYe
   const history: Array<{ year: number; rawReturn: number; creditedRate: number }> = [];
 
   for (let year = startYear; year <= endYear; year++) {
-    let rawReturn: number;
-    if (option.indexType === 'multiIndex' || option.indexType === 'hindsight' || option.indexType === 'blended') {
-      rawReturn = calculateBlendedReturn(option, year);
-    } else {
-      rawReturn = RAW_INDEX_RETURNS[option.index]?.[year] ?? 0;
-    }
-
-    const creditedRate = calculateCreditedRate(option, rawReturn);
+    const rawReturn = rawReturnForYear(option, year);
+    const creditedRate = getCreditedRate(option, year);
     history.push({ year, rawReturn: Math.round(rawReturn * 100) / 100, creditedRate: Math.round(creditedRate * 100) / 100 });
   }
 

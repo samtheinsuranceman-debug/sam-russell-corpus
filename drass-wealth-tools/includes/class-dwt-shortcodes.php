@@ -19,6 +19,12 @@ class DWT_Shortcodes {
 				'file'  => 'backtester.php',
 				'fn'    => 'dwt_render_backtester',
 			],
+			'dwt_index_segments' => [
+				'label' => 'Index segments — a multi-year segment credit beside what it is per year (educational)',
+				'file'  => 'segments.php',
+				'fn'    => 'dwt_render_segments',
+				'page'  => 'What Did A Two-Year Segment Actually Credit?',
+			],
 			'dwt_concierge' => [
 				'label' => 'Concierge — ask by voice or text; speech stays in the visitor\'s browser',
 				'file'  => 'concierge.php',
