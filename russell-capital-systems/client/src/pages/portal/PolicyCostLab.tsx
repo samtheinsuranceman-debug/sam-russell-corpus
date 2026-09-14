@@ -15,7 +15,7 @@
 import { useState } from "react";
 import { AppShell } from "@/components/AppShell";
 import { trpc } from "@/lib/trpc";
-import { ShieldCheck, Coins, Landmark, TrendingDown, AlertTriangle } from "lucide-react";
+import { ShieldCheck, Coins, Landmark, TrendingDown, AlertTriangle, CalendarRange } from "lucide-react";
 
 const CARD = "rounded-2xl border border-cyan-400/20 bg-white/[0.04]";
 const INPUT = "rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-white w-full";
@@ -65,6 +65,18 @@ export default function PolicyCostLab() {
     chargedInAdvance: inAdvance,
   });
   const gaps = trpc.policyLab.gaps.useQuery({ design: "maxFunded" });
+
+  // The index-segment window. Six years back by default, because that is the
+  // stretch people ask about; the slider walks it one year at a time.
+  const [segAccount, setSegAccount] = useState("bia-2yr");
+  const [fromYear, setFromYear] = useState(2019);
+  const [toYear, setToYear] = useState(2025);
+  const [thresholdPct, setThresholdPct] = useState(40);
+  const segments = trpc.policyLab.segments.useQuery({
+    accountId: segAccount, fromYear, toYear, thresholdPct,
+  });
+  const segWindow = segments.data?.windows.find((w) => w.accountId === segAccount);
+  const segTerms = segments.data?.accounts.find((a) => a.id === segAccount);
 
   const a = carriers.data?.complete[0];
   const p = projection.data;
@@ -338,6 +350,167 @@ export default function PolicyCostLab() {
             </p>
           </div>
         )}
+
+        {/* ── INDEX SEGMENTS ───────────────────────────────────────────── */}
+        <div className={`${CARD} p-5`}>
+          <div className="mb-1 flex items-center gap-2">
+            <CalendarRange className="h-4 w-4 text-cyan-300" />
+            <h2 className={H}>Index segments — what a year credits, and what a segment credits</h2>
+          </div>
+          <p className="mb-4 max-w-3xl text-xs text-slate-400">
+            A two-year segment credits once, across two years. Put that credit next to a single year
+            and it reads as an annual return and overstates the account by roughly double. Both
+            figures are shown below, always together.
+          </p>
+
+          <div className="grid gap-3 sm:grid-cols-4">
+            <label className="block">
+              <span className="mb-1 block text-[11px] text-slate-400">Account</span>
+              <select
+                className={INPUT}
+                value={segAccount}
+                onChange={(e) => setSegAccount(e.target.value)}
+              >
+                {segments.data?.accounts.map((a) => (
+                  <option key={a.id} value={a.id}>
+                    {a.name}{a.sourced ? "" : " (unsourced)"}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <Num
+              label={`From year (${segments.data?.seriesRange.from ?? 1994} earliest)`}
+              value={fromYear} onChange={setFromYear}
+              min={segments.data?.seriesRange.from ?? 1994}
+              max={segments.data?.seriesRange.to ?? 2025}
+            />
+            <Num
+              label={`To year (${segments.data?.seriesRange.to ?? 2025} latest)`}
+              value={toYear} onChange={setToYear}
+              min={segments.data?.seriesRange.from ?? 1994}
+              max={segments.data?.seriesRange.to ?? 2025}
+            />
+            <Num
+              label="Count segments at or above (%)"
+              value={thresholdPct} onChange={setThresholdPct} min={0} max={200}
+            />
+          </div>
+
+          <div className="mt-3 flex flex-wrap gap-2">
+            {[3, 6, 10, 20, 30].map((n) => {
+              const last = segments.data?.seriesRange.to ?? 2025;
+              return (
+                <button
+                  key={n}
+                  type="button"
+                  onClick={() => { setFromYear(last - n); setToYear(last); }}
+                  className="rounded-lg border border-white/10 bg-black/30 px-3 py-1 text-[11px] text-slate-300 hover:border-cyan-400/40"
+                >
+                  Last {n} years
+                </button>
+              );
+            })}
+            <button
+              type="button"
+              onClick={() => {
+                setFromYear(segments.data?.seriesRange.from ?? 1994);
+                setToYear(segments.data?.seriesRange.to ?? 2025);
+              }}
+              className="rounded-lg border border-white/10 bg-black/30 px-3 py-1 text-[11px] text-slate-300 hover:border-cyan-400/40"
+            >
+              Whole series
+            </button>
+          </div>
+
+          {segTerms && (
+            <p className="mt-3 text-[11px] text-slate-500">
+              {segTerms.termYears}-year term · {segTerms.participationPct}% participation ·{" "}
+              {segTerms.spreadPct}% spread · {segTerms.capPct == null ? "uncapped" : `${segTerms.capPct}% cap`} ·{" "}
+              {segTerms.floorPct}% floor · {segTerms.carrierLabel}
+              <br />
+              {segTerms.sourced ? "Source: " : ""}{segTerms.source}
+            </p>
+          )}
+
+          {segTerms && !segTerms.sourced && (
+            <div className="mt-3 flex items-start gap-2 rounded-xl border border-amber-400/30 bg-amber-400/5 p-3">
+              <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-300" />
+              <p className="text-xs text-amber-200/90">
+                These terms came from nobody. They are a parameter set for comparison, not a quote,
+                and must not be shown to a client as a product.
+              </p>
+            </div>
+          )}
+
+          {segWindow && (
+            <>
+              <div className="mt-4 grid gap-3 sm:grid-cols-4">
+                <Stat
+                  label={`Segments ≥ ${segWindow.thresholdPct}% (of ${segWindow.segments.length})`}
+                  value={`${segWindow.segmentsAtOrAboveThreshold}`}
+                />
+                <Stat label="Mean, annualized" value={`${segWindow.meanAnnualizedPct.toFixed(2)}%`} />
+                <Stat label="Best, annualized" value={`${segWindow.bestAnnualizedPct.toFixed(2)}%`} />
+                <Stat label="Worst, annualized" value={`${segWindow.worstAnnualizedPct.toFixed(2)}%`} />
+              </div>
+
+              <p className="mt-3 text-[11px] text-cyan-200/80">{segWindow.readingNote}</p>
+
+              <div className="mt-4 overflow-x-auto">
+                <table className="w-full min-w-[560px] text-left text-xs">
+                  <thead className="text-[10px] uppercase tracking-wider text-slate-500">
+                    <tr>
+                      <th className="py-2 pr-3">Segment</th>
+                      <th className="py-2 pr-3">Index over the segment</th>
+                      <th className="py-2 pr-3">Credited over the segment</th>
+                      <th className="py-2 pr-3">Annualized — the comparable figure</th>
+                      <th className="py-2">Notes</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {segWindow.segments.map((sg) => (
+                      <tr key={`${sg.startYear}-${sg.endYear}`} className="border-t border-white/5">
+                        <td className="py-2 pr-3 text-slate-300">
+                          {sg.startYear === sg.endYear ? sg.startYear : `${sg.startYear}–${sg.endYear}`}
+                        </td>
+                        <td className="py-2 pr-3 text-slate-400">{sg.indexCumulativePct.toFixed(2)}%</td>
+                        <td className="py-2 pr-3 font-semibold text-white">
+                          {sg.creditedPct.toFixed(2)}%
+                          {sg.termYears > 1 && (
+                            <span className="ml-1 text-[10px] font-normal text-slate-500">
+                              over {sg.termYears} yrs
+                            </span>
+                          )}
+                        </td>
+                        <td className="py-2 pr-3 font-semibold text-cyan-200">
+                          {sg.annualizedPct.toFixed(2)}%<span className="text-[10px] font-normal text-slate-500"> / yr</span>
+                        </td>
+                        <td className="py-2 text-[11px] text-slate-500">
+                          {sg.floorSaved ? "floor held it at 0% " : ""}
+                          {sg.capBit ? "cap truncated" : ""}
+                        </td>
+                      </tr>
+                    ))}
+                    {segWindow.segments.length === 0 && (
+                      <tr>
+                        <td colSpan={5} className="py-3 text-slate-500">
+                          The window is shorter than one segment term.
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+
+              <p className="mt-3 text-[11px] text-slate-500">
+                Underlying index years in this window:{" "}
+                {segments.data?.indexByYear
+                  .map((r) => `${r.year} ${r.returnPct == null ? "—" : `${r.returnPct.toFixed(2)}%`}`)
+                  .join(" · ")}
+              </p>
+            </>
+          )}
+        </div>
 
         <p className="pb-4 text-center text-[11px] text-slate-600">
           Not an illustration. Nothing here may be shown to a client in place of a carrier illustration

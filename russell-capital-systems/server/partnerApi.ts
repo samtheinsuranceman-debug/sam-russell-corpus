@@ -31,6 +31,7 @@ import { generateDualIllustration } from "@shared/timeMachineEngine";
 import { ALL_INDEX_OPTIONS, MAX_YEAR, MIN_YEAR, RAW_INDEX_RETURNS, getCreditingHistory, hasIndexSeries, publishedLookback, runBacktest } from "@shared/indexCreditingData";
 import { CLAIMS, builtClaims, claimCounts } from "@shared/patentCatalog";
 import { APPLICATIONS, DRAFTED_COUNT, ENGINE_COUNT, statusBadge, statusSentence } from "@shared/patentStatus";
+import { SEGMENT_ACCOUNTS, summarizeWindow } from "@shared/balancedIndexedAccount";
 import { registerPartnerConcierge } from "./partnerConcierge";
 import { runMonteCarlo } from "@shared/monteCarloEngine";
 import { calculateTax, getStateCodes } from "@shared/taxBracketEngine";
@@ -460,6 +461,78 @@ export function registerPartnerApi(app: Express): void {
       // what the series is anchored to, and only this service knows.
       basis:
         "Annual index change as held by Russell Capital Systems. Confirm the segment anchor before labelling a public column.",
+    });
+  });
+
+  /**
+   * Multi-year index segments, over a window the caller chooses.
+   * GET /api/partner/index-segments?account=bia-2yr&from=2019&to=2025&threshold=40
+   *
+   * The window steps one year at a time, and every row carries BOTH the credit
+   * for its segment and the annualized equivalent. A partner site that shows
+   * only the first number will tell a reader a two-year 48% credit is an
+   * annual return, so both leave here together and the reading note comes with
+   * them.
+   */
+  app.get("/api/partner/index-segments", requireKey, (req, res) => {
+    const accountId = String(req.query.account ?? "bia-2yr");
+    const account = SEGMENT_ACCOUNTS.find((a) => a.id === accountId);
+    if (!account) {
+      res.status(404).json({
+        error: "unknown_account",
+        detail: `No segment account is held for "${accountId}".`,
+        available: SEGMENT_ACCOUNTS.map((a) => a.id),
+      });
+      return;
+    }
+
+    const series = RAW_INDEX_RETURNS.SP500;
+    const all = Object.keys(series).map(Number).sort((a, b) => a - b);
+    const first = all[0];
+    const last = all[all.length - 1];
+    const from = clampInt(req.query.from, first, last, last - 6);
+    const to = clampInt(req.query.to, first, last, last);
+    const threshold = clampInt(req.query.threshold, 0, 200, 40);
+
+    const w = summarizeWindow(account, series, Math.min(from, to), Math.max(from, to), threshold);
+
+    res.json({
+      account: {
+        id: account.id,
+        name: account.name,
+        carrier: account.carrierLabel,
+        term_years: account.termYears,
+        participation_pct: account.participationPct,
+        spread_pct: account.spreadPct,
+        cap_pct: account.capPct,
+        floor_pct: account.floorPct,
+        sourced: account.sourced,
+        source: account.source,
+      },
+      series_range: { from: first, to: last },
+      window: { from: w.fromYear, to: w.toYear },
+      threshold_pct: w.thresholdPct,
+      segments_at_or_above_threshold: w.segmentsAtOrAboveThreshold,
+      mean_annualized_pct: w.meanAnnualizedPct,
+      best_annualized_pct: w.bestAnnualizedPct,
+      worst_annualized_pct: w.worstAnnualizedPct,
+      floor_saved_count: w.floorSavedCount,
+      cap_bit_count: w.capBitCount,
+      reading_note: w.readingNote,
+      segments: w.segments.map((sg) => ({
+        start_year: sg.startYear,
+        end_year: sg.endYear,
+        term_years: sg.termYears,
+        index_cumulative_pct: sg.indexCumulativePct,
+        credited_pct: sg.creditedPct,
+        annualized_pct: sg.annualizedPct,
+        floor_saved: sg.floorSaved,
+        cap_bit: sg.capBit,
+      })),
+      basis:
+        account.termYears > 1
+          ? `Every credited_pct is for a ${account.termYears}-year segment. Label it with its term, or show annualized_pct instead.`
+          : "Segments are annual; credited_pct and annualized_pct are the same figure.",
     });
   });
 
