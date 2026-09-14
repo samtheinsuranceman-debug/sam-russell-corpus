@@ -29,6 +29,12 @@ import {
 import { applicablePercentage, VERIFIED_AGAINST_PRIMARY_TEXT, CORRIDOR_AUTHORITY } from "@shared/irc7702";
 import { UNPRICED_PARAMETERS, rankedFor } from "@shared/unpricedParameters";
 import { EPFR_DESIGNS } from "@shared/pacificHorizonEcv";
+import {
+  SEGMENT_ACCOUNTS,
+  summarizeWindow,
+  type SegmentTerms,
+} from "@shared/balancedIndexedAccount";
+import { RAW_INDEX_RETURNS, MIN_YEAR, MAX_YEAR } from "@shared/indexCreditingData";
 
 /** Mutual Company A's baseline, in the shape the projection engine takes. */
 export function chargesFromBaseline(b: CostBaseline): PolicyCharges {
@@ -229,6 +235,69 @@ export const policyLabRouter = router({
       return { age, applicablePercentage: Math.round(applicablePercentage(age) * 100) / 100 };
     }),
   })),
+
+  /**
+   * The multi-year index segments, over any window the viewer chooses.
+   *
+   * The window steps one year at a time — from 1994 to the last year of the
+   * series — so a client can walk back through the record rather than being
+   * shown one flattering stretch. Every row carries its segment term and its
+   * annualized equivalent, because a two-year credit of 48% is 21.64% a year
+   * and the two must never be read as the same number.
+   */
+  segments: publicProcedure
+    .input(
+      z
+        .object({
+          accountId: z.string().default("bia-2yr"),
+          fromYear: z.number().int().min(MIN_YEAR).max(MAX_YEAR).default(MAX_YEAR - 6),
+          toYear: z.number().int().min(MIN_YEAR).max(MAX_YEAR).default(MAX_YEAR),
+          /** Counted against the SEGMENT credit, which is how the claim is made. */
+          thresholdPct: z.number().min(0).max(200).default(40),
+        })
+        .default(() => ({
+          accountId: "bia-2yr",
+          fromYear: MAX_YEAR - 6,
+          toYear: MAX_YEAR,
+          thresholdPct: 40,
+        }))
+    )
+    .query(({ input }) => {
+      const account =
+        SEGMENT_ACCOUNTS.find((a) => a.id === input.accountId) ??
+        (SEGMENT_ACCOUNTS[0] as SegmentTerms);
+      const fromYear = Math.min(input.fromYear, input.toYear);
+      const toYear = Math.max(input.fromYear, input.toYear);
+      const series = RAW_INDEX_RETURNS.SP500;
+
+      return {
+        seriesRange: { from: MIN_YEAR, to: MAX_YEAR },
+        accounts: SEGMENT_ACCOUNTS.map((a) => ({
+          id: a.id,
+          name: a.name,
+          carrierLabel: a.carrierLabel,
+          termYears: a.termYears,
+          participationPct: a.participationPct,
+          spreadPct: a.spreadPct,
+          capPct: a.capPct,
+          floorPct: a.floorPct,
+          sourced: a.sourced,
+          source: a.source,
+          note: a.note ?? null,
+        })),
+        selected: account.id,
+        /** Every account over the same window, so they are compared like for like. */
+        windows: SEGMENT_ACCOUNTS.map((a) => ({
+          accountId: a.id,
+          ...summarizeWindow(a, series, fromYear, toYear, input.thresholdPct),
+        })),
+        /** The raw index years in the window, so the segment arithmetic is checkable. */
+        indexByYear: Array.from({ length: toYear - fromYear + 1 }, (_, i) => ({
+          year: fromYear + i,
+          returnPct: series[fromYear + i] ?? null,
+        })),
+      };
+    }),
 
   /** What still cannot be priced, ranked by what closing it is worth. */
   gaps: publicProcedure

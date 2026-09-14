@@ -125,6 +125,69 @@ describe('index history', () => {
   });
 });
 
+describe('index segments', () => {
+  it('returns every segment in the window with its term and its per-year figure', async () => {
+    const r = await fetch(`${base}/index-segments?account=bia-2yr&from=2019&to=2025`, auth);
+    expect(r.status).toBe(200);
+    const b = await r.json();
+    expect(b.account.term_years).toBe(2);
+    expect(b.segments).toHaveLength(6);
+    for (const sg of b.segments) {
+      expect(sg).toHaveProperty('credited_pct');
+      expect(sg).toHaveProperty('annualized_pct');
+      expect(sg).toHaveProperty('term_years');
+    }
+  });
+
+  it('never ships a segment credit without the annualized figure beside it', async () => {
+    const r = await fetch(`${base}/index-segments?account=bia-2yr&from=2019&to=2025`, auth);
+    const b = await r.json();
+    const big = b.segments.find((s: any) => s.credited_pct > 40);
+    expect(big).toBeTruthy();
+    expect(big.annualized_pct).toBeLessThan(big.credited_pct / 1.8);
+    expect(String(b.basis)).toMatch(/2-year segment/);
+    expect(String(b.reading_note)).toMatch(/not a year/);
+  });
+
+  it('counts segments, not years, against the threshold', async () => {
+    const at40 = await (await fetch(`${base}/index-segments?from=2019&to=2025&threshold=40`, auth)).json();
+    const at34 = await (await fetch(`${base}/index-segments?from=2019&to=2025&threshold=34`, auth)).json();
+    expect(at40.segments_at_or_above_threshold).toBe(2);
+    expect(at34.segments_at_or_above_threshold).toBe(4);
+  });
+
+  it('says when an account\'s terms came from nobody', async () => {
+    const b = await (await fetch(`${base}/index-segments?account=par110-annual`, auth)).json();
+    expect(b.account.sourced).toBe(false);
+    expect(String(b.account.source)).toMatch(/[Nn]ot a carrier quote/);
+  });
+
+  it('marks the two-year balanced account as sourced to its document', async () => {
+    const b = await (await fetch(`${base}/index-segments?account=bia-2yr`, auth)).json();
+    expect(b.account.sourced).toBe(true);
+    expect(b.account.participation_pct).toBe(105);
+    expect(b.account.spread_pct).toBe(2.5);
+  });
+
+  it('404s an account it does not hold, and says which it does', async () => {
+    const r = await fetch(`${base}/index-segments?account=not-an-account`, auth);
+    expect(r.status).toBe(404);
+    const b = await r.json();
+    expect(Array.isArray(b.available)).toBe(true);
+  });
+
+  it('clamps a window outside the series rather than inventing years', async () => {
+    const b = await (await fetch(`${base}/index-segments?from=1800&to=2999`, auth)).json();
+    expect(b.window.from).toBeGreaterThanOrEqual(b.series_range.from);
+    expect(b.window.to).toBeLessThanOrEqual(b.series_range.to);
+  });
+
+  it('requires a key like every other partner route', async () => {
+    const r = await fetch(`${base}/index-segments`);
+    expect(r.status).toBe(401);
+  });
+});
+
 describe('the time machine returns both panels, and withholds the average', () => {
   it('returns the illustration and its historical disclosure together', async () => {
     const r = await fetch(`${base}/time-machine?premium=25000&fundingYears=5&years=30`, auth);
