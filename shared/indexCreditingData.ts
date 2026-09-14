@@ -6,16 +6,51 @@
  * Crediting rates are derived by applying each carrier's parameters to the raw index returns.
  */
 // ─── Raw Index Annual Price Returns (1994-2025) ─────────────────────────────
+/**
+ * S&P 500 PRICE returns by calendar year, 1994-2025.
+ *
+ * Source: ChartRow, "S&P 500 Returns by Year" (https://chartrow.com/sp500/returns),
+ * read 14 September 2026. That table publishes total return and the dividend
+ * contribution per year; the price return carried here is total less dividend,
+ * which is what an indexed account credits against — the carrier documents say
+ * "S&P 500 Price Index" and pay no dividends. Figures are to one decimal
+ * because that is the precision the source publishes; claiming two would be
+ * inventing a digit.
+ *
+ * ## Why this series replaced the previous one
+ *
+ * The series that stood here until now carried no source and did not reconcile
+ * to the carrier's own published claims about this index. This one does. The
+ * checks live in shared/sp500SeriesAudit.ts and run on every test pass:
+ *
+ *                                        carrier    old series    this series
+ *     30-year average, 1994-2023           8.06%        8.29%          8.05%
+ *     years above a 10% cap                   18           16             17
+ *     average excess above the cap         12.23%       13.66%         12.29%
+ *
+ * Two of the three land within 0.06 of the carrier's published figure. The
+ * year count is one out of thirty different, which is what a borderline year
+ * near the cap does under one-decimal rounding — 2016 sits at 9.6%, just under
+ * it. The old series missed by 0.23 points, two years, and 1.43 points, which
+ * is a different index rather than a rounding difference.
+ */
 export const RAW_INDEX_RETURNS: Record<string, Record<number, number>> = {
   SP500: {
-    1994: 4.33, 1995: 31.40, 1996: 23.48, 1997: 32.69, 1998: 18.01,
-    1999: 10.34, 2000: -9.26, 2001: -10.74, 2002: -24.00, 2003: 36.12,
-    2004: 5.12, 2005: 6.40, 2006: 9.85, 2007: -5.42, 2008: -44.76,
-    2009: 50.25, 2010: 20.17, 2011: 2.90, 2012: 10.91, 2013: 22.76,
-    2014: 13.18, 2015: -8.19, 2016: 22.33, 2017: 14.82, 2018: 2.60,
-    2019: 6.10, 2020: 29.01, 2021: 14.77, 2022: -9.23, 2023: 28.36,
-    2024: 16.84, 2025: 15.52,
+    1994: -2.2, 1995: 34.9, 1996: 20.1, 1997: 31.5, 1998: 27.1,
+    1999: 19.1, 2000: -10.6, 2001: -12.9, 2002: -22.8, 2003: 26.1,
+    2004: 8.6, 2005: 3.0, 2006: 13.7, 2007: 3.2, 2008: -38.3,
+    2009: 23.5, 2010: 12.9, 2011: -0.2, 2012: 13.5, 2013: 29.7,
+    2014: 11.3, 2015: -0.8, 2016: 9.6, 2017: 19.4, 2018: -6.4,
+    2019: 28.8, 2020: 16.1, 2021: 27.0, 2022: -19.5, 2023: 24.3,
+    2024: 23.3, 2025: 16.3,
   },
+  /**
+   * NOT YET SOURCED. These two series carry no source and have not been
+   * checked against anything published, because no carrier document held here
+   * makes an arithmetic claim about them to check against. They feed the
+   * multi-index blends only. Treat any figure derived from them as
+   * provisional — see sp500SeriesAudit.UNSOURCED_SERIES.
+   */
   NASDAQ100: {
     1994: 1.50, 1995: 42.54, 1996: 42.54, 1997: 20.63, 1998: 85.30,
     1999: 101.95, 2000: -36.84, 2001: -32.65, 2002: -37.58, 2003: 49.12,
