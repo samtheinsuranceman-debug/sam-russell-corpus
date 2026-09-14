@@ -252,6 +252,7 @@ const NAV_SECTIONS: NavSection[] = [
           { path: "/portal/long-term-care", label: "Long-Term Care", icon: History, color: "cyan" },
           { path: "/portal/index-strategies", label: "Index Strategies", icon: Layers, color: "cyan" },
           { path: "/portal/policy-loans", label: "Policy Loans", icon: Wallet, color: "cyan" },
+          { path: "/portal/policy-cost-lab", label: "Policy Cost Lab", icon: Wallet, color: "cyan" },
           { path: "/portal/premium-financing", label: "Premium Financing", icon: DollarSign, color: "cyan" },
           { path: "/portal/index-backtester", label: "Index Backtester", icon: BarChart3, color: "cyan" },
           { path: "/portal/time-machine-calculator", label: "Time Machine", icon: Clock, color: "cyan" },

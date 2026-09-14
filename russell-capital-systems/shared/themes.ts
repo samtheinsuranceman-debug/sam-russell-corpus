@@ -403,7 +403,7 @@ const HUMAN_TOOLS = set(
 /** Theme 9 needle map — accent line, fill and live pip only. */
 export const NEEDLES: Record<string, Needle> = {
   // Gold — cash value / IUL / policy mechanics
-  "/portal/iul-historical": "gold", "/portal/iul-vs-roth": "gold", "/portal/policy-loans": "gold", "/portal/premium-financing": "gold",
+  "/portal/iul-historical": "gold", "/portal/iul-vs-roth": "gold", "/portal/policy-loans": "gold", "/portal/policy-cost-lab": "gold", "/portal/premium-financing": "gold",
   "/portal/quick-quote": "gold", "/portal/quotes": "gold", "/portal/batch-illustration": "gold", "/portal/illustration-compare": "gold",
   "/portal/comparison": "gold", "/portal/client-comparison": "gold", "/portal/carrier-comparison": "gold", "/portal/carrier-rates": "gold",
   "/portal/carrier-ratings": "gold", "/portal/carrier-settings": "gold", "/portal/russell-number": "gold", "/portal/iul-engine": "gold",
