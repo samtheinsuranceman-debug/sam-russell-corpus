@@ -410,22 +410,42 @@ export type { IndexOption };
  * Quick helper: get a list of "popular" index options for the selector UI.
  * Returns one representative option per carrier per index type.
  */
-export function getPopularIndexOptions(): Array<{ id: string; label: string; carrier: string; description: string }> {
+export function getPopularIndexOptions(): Array<{
+  id: string;
+  label: string;
+  carrier: string;
+  description: string;
+  /** 1 for annual; 2 or more for a multi-year segment. */
+  segmentTermYears: number;
+  /** False when the terms came from no carrier document. */
+  sourced: boolean;
+}> {
   const popular = [
     "am-sp500-ptp", "am-sp500-uncapped", "am-multi-index",
     "apm-sp500-capped", "apm-hindsight", "apm-sp500-multiplier",
     "amm-sp500-core", "amm-nasdaq-ccar", "amm-dynamic-bonus",
+    // The two-year balanced segment and the 110% parameter beside it.
+    "bm-sp500-2yr-balanced", "bm-sp500-par110",
   ];
   return popular
     .map(id => {
       const opt = ALL_INDEX_OPTIONS.find(o => o.id === id);
       if (!opt) return null;
       const carrierName = CARRIERS.find(c => c.id === opt.carrier)?.name ?? opt.carrier;
+      const term = opt.segmentTermYears ?? 1;
+      const sourced = opt.sourced ?? false;
+      // The term and the unsourced mark go in the LABEL, not only in a field a
+      // selector might not render. Whichever way this list is drawn, a reader
+      // sees that a segment is multi-year and that a parameter set is nobody's
+      // quote.
+      const suffix = `${term > 1 ? ` — ${term}-year segment` : ""}${sourced ? "" : " (unsourced)"}`;
       return {
         id: opt.id,
-        label: `${carrierName}: ${opt.name}`,
+        label: `${carrierName}: ${opt.name}${suffix}`,
         carrier: opt.carrier,
         description: opt.description,
+        segmentTermYears: term,
+        sourced,
       };
     })
     .filter((x): x is NonNullable<typeof x> => x !== null);
