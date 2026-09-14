@@ -432,6 +432,25 @@ export default function PolicyCostLab() {
             </p>
           )}
 
+          {segments.data?.seriesProvenance?.warning && (
+            <div className="mt-3 flex items-start gap-2 rounded-xl border border-rose-400/40 bg-rose-500/10 p-3">
+              <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-rose-300" />
+              <div className="text-xs text-rose-100/90">
+                <p className="font-semibold">The index series behind these figures is not established.</p>
+                <p className="mt-1">{segments.data.seriesProvenance.warning}</p>
+                <ul className="mt-2 space-y-0.5 text-[11px] text-rose-200/80">
+                  {segments.data.seriesProvenance.checks
+                    .filter((c) => !c.reconciles)
+                    .map((c) => (
+                      <li key={c.id}>
+                        {c.claim} — this series measures {c.measured} {c.unit}.
+                      </li>
+                    ))}
+                </ul>
+              </div>
+            </div>
+          )}
+
           {segTerms && !segTerms.sourced && (
             <div className="mt-3 flex items-start gap-2 rounded-xl border border-amber-400/30 bg-amber-400/5 p-3">
               <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-300" />
@@ -462,8 +481,8 @@ export default function PolicyCostLab() {
                     <tr>
                       <th className="py-2 pr-3">Segment</th>
                       <th className="py-2 pr-3">Index over the segment</th>
-                      <th className="py-2 pr-3">Credited over the segment</th>
-                      <th className="py-2 pr-3">Annualized — the comparable figure</th>
+                      <th className="py-2 pr-3">Credited over the segment (not a carrier basis)</th>
+                      <th className="py-2 pr-3">Per year — the carrier's published basis</th>
                       <th className="py-2">Notes</th>
                     </tr>
                   </thead>
