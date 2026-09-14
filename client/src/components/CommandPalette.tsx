@@ -79,6 +79,7 @@ const ALL_PAGES: NavItem[] = [
   { path: "/portal/iul-historical", label: "IUL Historical", section: "Calculators" },
   { path: "/portal/index-strategies", label: "Index Strategies", section: "Calculators" },
   { path: "/portal/policy-loans", label: "Policy Loans", section: "Calculators" },
+  { path: "/portal/policy-cost-lab", label: "Policy Cost Lab", section: "Calculators" },
   { path: "/portal/premium-financing", label: "Premium Financing", section: "Calculators" },
   { path: "/portal/index-backtester", label: "Index Backtester", section: "Calculators" },
   { path: "/portal/time-machine-calculator", label: "Time Machine", section: "Calculators" },

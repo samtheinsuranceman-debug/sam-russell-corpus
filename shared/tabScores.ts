@@ -74,6 +74,7 @@ export const TAB_SCORES: Record<string, number> = {
   "/portal/iul-historical": 10,
   "/portal/index-strategies": 9,
   "/portal/policy-loans": 9,
+  "/portal/policy-cost-lab": 9,
   "/portal/premium-financing": 9,
   "/portal/index-backtester": 9,
   "/portal/time-machine-calculator": 9,

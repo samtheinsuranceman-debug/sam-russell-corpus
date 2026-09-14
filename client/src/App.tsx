@@ -85,6 +85,7 @@ const TimeMachineCalculator = lazy(() => import("./pages/portal/TimeMachineCalcu
 const IllustrationCompare = lazy(() => import("./pages/portal/IllustrationCompare"));
 const PremiumFinancing = lazy(() => import("./pages/portal/PremiumFinancing"));
 const PolicyLoans = lazy(() => import("./pages/portal/PolicyLoans"));
+const PolicyCostLab = lazy(() => import("./pages/portal/PolicyCostLab"));
 const CarrierRatings = lazy(() => import("./pages/portal/CarrierRatings"));
 const TaxWaterfall = lazy(() => import("./pages/portal/TaxWaterfall"));
 const EstateTax = lazy(() => import("./pages/portal/EstateTax"));
@@ -408,6 +409,7 @@ function Router() {
       <Route path="/portal/illustration-compare" component={gated(IllustrationCompare, "/portal/illustration-compare")} />
       <Route path="/portal/premium-financing" component={gated(PremiumFinancing, "/portal/premium-financing")} />
       <Route path="/portal/policy-loans" component={gated(PolicyLoans, "/portal/policy-loans")} />
+      <Route path="/portal/policy-cost-lab" component={gated(PolicyCostLab, "/portal/policy-cost-lab")} />
       <Route path="/portal/carrier-ratings" component={gated(CarrierRatings, "/portal/carrier-ratings")} />
       <Route path="/portal/tax-waterfall" component={gated(TaxWaterfall, "/portal/tax-waterfall")} />
       <Route path="/portal/estate-tax" component={gated(EstateTax, "/portal/estate-tax")} />
