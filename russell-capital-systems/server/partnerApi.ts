@@ -32,6 +32,7 @@ import { ALL_INDEX_OPTIONS, MAX_YEAR, MIN_YEAR, RAW_INDEX_RETURNS, getCreditingH
 import { CLAIMS, builtClaims, claimCounts } from "@shared/patentCatalog";
 import { APPLICATIONS, DRAFTED_COUNT, ENGINE_COUNT, statusBadge, statusSentence } from "@shared/patentStatus";
 import { SEGMENT_ACCOUNTS, summarizeWindow } from "@shared/balancedIndexedAccount";
+import { provenanceWarning, SP500_SERIES_VERIFIED } from "@shared/sp500SeriesAudit";
 import { registerPartnerConcierge } from "./partnerConcierge";
 import { runMonteCarlo } from "@shared/monteCarloEngine";
 import { calculateTax, getStateCodes } from "@shared/taxBracketEngine";
@@ -510,6 +511,10 @@ export function registerPartnerApi(app: Express): void {
         source: account.source,
       },
       series_range: { from: first, to: last },
+      // A partner drawing these figures on somebody's website has to be able
+      // to see that the series behind them is not established.
+      series_verified: SP500_SERIES_VERIFIED,
+      series_warning: provenanceWarning(series),
       window: { from: w.fromYear, to: w.toYear },
       threshold_pct: w.thresholdPct,
       segments_at_or_above_threshold: w.segmentsAtOrAboveThreshold,
@@ -526,6 +531,9 @@ export function registerPartnerApi(app: Express): void {
         index_cumulative_pct: sg.indexCumulativePct,
         credited_pct: sg.creditedPct,
         annualized_pct: sg.annualizedPct,
+        // The carrier publishes this account annualized and net of spread.
+        // This is the field to set beside a carrier chart.
+        carrier_basis_pct: sg.carrierBasisPct,
         floor_saved: sg.floorSaved,
         cap_bit: sg.capBit,
       })),

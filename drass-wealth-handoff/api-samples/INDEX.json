@@ -1,0 +1,98 @@
+[
+  {
+    "name": "health",
+    "request": "GET /api/partner/health",
+    "status": 200,
+    "file": "health.json"
+  },
+  {
+    "name": "catalog",
+    "request": "GET /api/partner/catalog",
+    "status": 200,
+    "file": "catalog.json"
+  },
+  {
+    "name": "index-history",
+    "request": "GET /api/partner/index-history?index=SP500&years=30",
+    "status": 200,
+    "file": "index-history.json"
+  },
+  {
+    "name": "index-segments-2yr",
+    "request": "GET /api/partner/index-segments?account=bia-2yr&from=2019&to=2025&threshold=40",
+    "status": 200,
+    "file": "index-segments-2yr.json"
+  },
+  {
+    "name": "index-segments-par110",
+    "request": "GET /api/partner/index-segments?account=par110-annual&from=2019&to=2025",
+    "status": 200,
+    "file": "index-segments-par110.json"
+  },
+  {
+    "name": "index-segments-30yr",
+    "request": "GET /api/partner/index-segments?account=bia-2yr&from=1994&to=2025&threshold=34",
+    "status": 200,
+    "file": "index-segments-30yr.json"
+  },
+  {
+    "name": "index-segments-cap10",
+    "request": "GET /api/partner/index-segments?account=cap10-annual&from=2019&to=2025",
+    "status": 200,
+    "file": "index-segments-cap10.json"
+  },
+  {
+    "name": "crediting",
+    "request": "GET /api/partner/crediting?optionId=bm-sp500-2yr-balanced&startYear=2015&endYear=2025",
+    "status": 200,
+    "file": "crediting.json"
+  },
+  {
+    "name": "time-machine",
+    "request": "GET /api/partner/time-machine?premium=25000&fundingYears=5&age=45&years=30&ag49Rate=6&index=SP500&startYear=1994",
+    "status": 200,
+    "file": "time-machine.json"
+  },
+  {
+    "name": "accumulation",
+    "request": "GET /api/partner/accumulation?premium=25000&fundingYears=5&age=45&years=30",
+    "status": 200,
+    "file": "accumulation.json"
+  },
+  {
+    "name": "monte-carlo",
+    "request": "GET /api/partner/monte-carlo?balance=1000000&withdrawal=40000&years=30&equityPct=60",
+    "status": 200,
+    "file": "monte-carlo.json"
+  },
+  {
+    "name": "tax",
+    "request": "GET /api/partner/tax?income=250000&state=OH&filing=married",
+    "status": 200,
+    "file": "tax.json"
+  },
+  {
+    "name": "estate-tax",
+    "request": "GET /api/partner/estate-tax?estate=15000000&state=OH&married=true",
+    "status": 200,
+    "file": "estate-tax.json"
+  },
+  {
+    "name": "mortgage",
+    "request": "GET /api/partner/mortgage?balance=400000&rate=6.5&termMonths=360&payment=2800&homeValue=650000&income=250000&age=45",
+    "status": 200,
+    "file": "mortgage.json"
+  },
+  {
+    "name": "_refusal-no-key",
+    "request": "GET /api/partner/index-segments (no Authorization header)",
+    "status": 401,
+    "file": "_refusal-no-key.json"
+  },
+  {
+    "name": "_refusal-unknown-account",
+    "request": "GET /api/partner/index-segments?account=nope",
+    "status": 404,
+    "file": "_refusal-unknown-account.json"
+  }
+]

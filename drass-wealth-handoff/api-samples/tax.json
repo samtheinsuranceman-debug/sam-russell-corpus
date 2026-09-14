@@ -1,0 +1,61 @@
+{
+  "grossIncome": 250000,
+  "standardDeduction": 32200,
+  "taxableIncome": 217800,
+  "federalTax": 37468,
+  "federalEffectiveRate": 0.149872,
+  "federalMarginalRate": 0.24,
+  "federalMarginalBracket": {
+    "min": 211400,
+    "max": 403550,
+    "rate": 0.24
+  },
+  "stateTax": 7623.000000000001,
+  "stateRate": 0.035,
+  "stateName": "OH",
+  "totalTax": 45091,
+  "totalEffectiveRate": 0.180364,
+  "afterTaxIncome": 204909,
+  "bracketBreakdown": [
+    {
+      "bracket": {
+        "min": 0,
+        "max": 24800,
+        "rate": 0.1
+      },
+      "taxableInBracket": 24800,
+      "taxInBracket": 2480
+    },
+    {
+      "bracket": {
+        "min": 24800,
+        "max": 100800,
+        "rate": 0.12
+      },
+      "taxableInBracket": 76000,
+      "taxInBracket": 9120
+    },
+    {
+      "bracket": {
+        "min": 100800,
+        "max": 211400,
+        "rate": 0.22
+      },
+      "taxableInBracket": 110600,
+      "taxInBracket": 24332
+    },
+    {
+      "bracket": {
+        "min": 211400,
+        "max": 403550,
+        "rate": 0.24
+      },
+      "taxableInBracket": 6400,
+      "taxInBracket": 1536
+    }
+  ],
+  "nextBracketThreshold": 435750,
+  "incomeToNextBracket": 185750,
+  "nextBracketRate": 0.32,
+  "basis": "2026 federal brackets and the state's top marginal rate. An estimate, not tax advice."
+}

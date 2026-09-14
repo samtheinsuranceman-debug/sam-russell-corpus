@@ -35,6 +35,7 @@ import {
   type SegmentTerms,
 } from "@shared/balancedIndexedAccount";
 import { RAW_INDEX_RETURNS, MIN_YEAR, MAX_YEAR } from "@shared/indexCreditingData";
+import { provenanceWarning, checkSeriesAgainstPublishedClaims, SP500_SERIES_VERIFIED } from "@shared/sp500SeriesAudit";
 
 /** Mutual Company A's baseline, in the shape the projection engine takes. */
 export function chargesFromBaseline(b: CostBaseline): PolicyCharges {
@@ -272,6 +273,17 @@ export const policyLabRouter = router({
 
       return {
         seriesRange: { from: MIN_YEAR, to: MAX_YEAR },
+        /**
+         * The series these figures are computed from does not reconcile to the
+         * carrier's own published claims about the S&P 500. The method is
+         * right; the inputs are not established. Surfaced rather than buried —
+         * a figure whose provenance is unknown must say so on the same screen.
+         */
+        seriesProvenance: {
+          verified: SP500_SERIES_VERIFIED,
+          warning: provenanceWarning(series),
+          checks: checkSeriesAgainstPublishedClaims(series),
+        },
         accounts: SEGMENT_ACCOUNTS.map((a) => ({
           id: a.id,
           name: a.name,

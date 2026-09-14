@@ -1,0 +1,258 @@
+{
+  "current": {
+    "totalInterest": 370423,
+    "payoffMonths": 276,
+    "payoffDate": "2049-09-14"
+  },
+  "accelerated": {
+    "totalInterest": 108823,
+    "payoffMonths": 97,
+    "payoffDate": "2034-10-14"
+  },
+  "saved": {
+    "interest": 261600,
+    "years": 14,
+    "months": 179
+  },
+  "policy": {
+    "annualPremium": 50000,
+    "totalPremiums": 250000,
+    "totalPolicyLoans": 213987,
+    "finalCashValue": 714498
+  },
+  "byYear": [
+    {
+      "year": 1,
+      "mortgageBalance": 392169,
+      "policySurrenderValue": 24324,
+      "helocBalance": 50000,
+      "netWorth": 283455
+    },
+    {
+      "year": 2,
+      "mortgageBalance": 327265,
+      "policySurrenderValue": 70686,
+      "helocBalance": 100000,
+      "netWorth": 322297
+    },
+    {
+      "year": 3,
+      "mortgageBalance": 273205,
+      "policySurrenderValue": 119402,
+      "helocBalance": 150000,
+      "netWorth": 371931
+    },
+    {
+      "year": 4,
+      "mortgageBalance": 213425,
+      "policySurrenderValue": 170591,
+      "helocBalance": 200000,
+      "netWorth": 429573
+    },
+    {
+      "year": 5,
+      "mortgageBalance": 145156,
+      "policySurrenderValue": 227063,
+      "helocBalance": 250000,
+      "netWorth": 495954
+    },
+    {
+      "year": 6,
+      "mortgageBalance": 102131,
+      "policySurrenderValue": 236620,
+      "helocBalance": 250000,
+      "netWorth": 579684
+    },
+    {
+      "year": 7,
+      "mortgageBalance": 55637,
+      "policySurrenderValue": 246530,
+      "helocBalance": 250000,
+      "netWorth": 669027
+    },
+    {
+      "year": 8,
+      "mortgageBalance": 5409,
+      "policySurrenderValue": 256812,
+      "helocBalance": 250000,
+      "netWorth": 764357
+    },
+    {
+      "year": 9,
+      "mortgageBalance": 0,
+      "policySurrenderValue": 267484,
+      "helocBalance": 216400,
+      "netWorth": 850831
+    },
+    {
+      "year": 10,
+      "mortgageBalance": 0,
+      "policySurrenderValue": 278566,
+      "helocBalance": 182800,
+      "netWorth": 943246
+    },
+    {
+      "year": 11,
+      "mortgageBalance": 0,
+      "policySurrenderValue": 294260,
+      "helocBalance": 149200,
+      "netWorth": 1042794
+    },
+    {
+      "year": 12,
+      "mortgageBalance": 0,
+      "policySurrenderValue": 307979,
+      "helocBalance": 115600,
+      "netWorth": 1145699
+    },
+    {
+      "year": 13,
+      "mortgageBalance": 0,
+      "policySurrenderValue": 322445,
+      "helocBalance": 82000,
+      "netWorth": 1252130
+    },
+    {
+      "year": 14,
+      "mortgageBalance": 0,
+      "policySurrenderValue": 337701,
+      "helocBalance": 48400,
+      "netWorth": 1362270
+    },
+    {
+      "year": 15,
+      "mortgageBalance": 0,
+      "policySurrenderValue": 353788,
+      "helocBalance": 14800,
+      "netWorth": 1476304
+    },
+    {
+      "year": 16,
+      "mortgageBalance": 0,
+      "policySurrenderValue": 370171,
+      "helocBalance": 0,
+      "netWorth": 1575052
+    },
+    {
+      "year": 17,
+      "mortgageBalance": 0,
+      "policySurrenderValue": 387471,
+      "helocBalance": 0,
+      "netWorth": 1663296
+    },
+    {
+      "year": 18,
+      "mortgageBalance": 0,
+      "policySurrenderValue": 405740,
+      "helocBalance": 0,
+      "netWorth": 1756056
+    },
+    {
+      "year": 19,
+      "mortgageBalance": 0,
+      "policySurrenderValue": 425033,
+      "helocBalance": 0,
+      "netWorth": 1853564
+    },
+    {
+      "year": 20,
+      "mortgageBalance": 0,
+      "policySurrenderValue": 445406,
+      "helocBalance": 0,
+      "netWorth": 1956063
+    },
+    {
+      "year": 21,
+      "mortgageBalance": 0,
+      "policySurrenderValue": 466184,
+      "helocBalance": 0,
+      "netWorth": 2063073
+    },
+    {
+      "year": 22,
+      "mortgageBalance": 0,
+      "policySurrenderValue": 488177,
+      "helocBalance": 0,
+      "netWorth": 2175609
+    },
+    {
+      "year": 23,
+      "mortgageBalance": 0,
+      "policySurrenderValue": 511454,
+      "helocBalance": 0,
+      "netWorth": 2293957
+    },
+    {
+      "year": 24,
+      "mortgageBalance": 0,
+      "policySurrenderValue": 536092,
+      "helocBalance": 0,
+      "netWorth": 2418420
+    },
+    {
+      "year": 25,
+      "mortgageBalance": 0,
+      "policySurrenderValue": 562168,
+      "helocBalance": 0,
+      "netWorth": 2549312
+    },
+    {
+      "year": 26,
+      "mortgageBalance": 0,
+      "policySurrenderValue": 589078,
+      "helocBalance": 0,
+      "netWorth": 2686278
+    },
+    {
+      "year": 27,
+      "mortgageBalance": 0,
+      "policySurrenderValue": 617659,
+      "helocBalance": 0,
+      "netWorth": 2830419
+    },
+    {
+      "year": 28,
+      "mortgageBalance": 0,
+      "policySurrenderValue": 648015,
+      "helocBalance": 0,
+      "netWorth": 2982112
+    },
+    {
+      "year": 29,
+      "mortgageBalance": 0,
+      "policySurrenderValue": 680256,
+      "helocBalance": 0,
+      "netWorth": 3141757
+    },
+    {
+      "year": 30,
+      "mortgageBalance": 0,
+      "policySurrenderValue": 714498,
+      "helocBalance": 0,
+      "netWorth": 3309774
+    }
+  ],
+  "crediting": {
+    "ratePct": 4.95,
+    "capPct": 7.5,
+    "floorPct": 0,
+    "participationPct": 100,
+    "startYear": 1929,
+    "endYear": 2025,
+    "years": 97,
+    "uncapped": false,
+    "warnings": []
+  },
+  "selected": {
+    "label": "1929–2025",
+    "ratePct": 4.95,
+    "years": 97
+  },
+  "againstFullHistory": {
+    "label": "Everything held (1929–2025)",
+    "ratePct": 4.95,
+    "years": 97,
+    "differencePct": 0
+  },
+  "basis": "An illustration, not a promise. The 4.95% crediting assumption is not chosen — it is what this policy's own index strategy (7.5% cap, 0% floor, 100% participation) would have compounded to across 97 years of S&P 500 history, 1929 to 2025, from Roger Ibbotson's SBBI series. It is a compound rate, not an average of annual credits, because an average of credits overstates what an account reaches. Nothing about it is guaranteed: credited rates vary with the index and with the carrier's declared cap and participation rate, which the carrier may change, and may be zero in a year the index falls. Historical index changes are not indicative of future returns. Where the carrier's own AG 49-A maximum illustrated rate is lower than this figure, the carrier's illustration governs. Borrowing against a policy reduces its cash value and death benefit, and a policy that lapses with a loan outstanding can create a taxable event."
+}

@@ -1,0 +1,10 @@
+{
+  "grossEstate": 15000000,
+  "exemption": 7000000,
+  "taxableEstate": 8000000,
+  "federalEstateTax": 3200000,
+  "effectiveRate": 0.2133,
+  "netToHeirs": 11800000,
+  "estateShrinkagePercent": 21.33,
+  "basis": "Federal estate tax only. State estate and inheritance taxes are not included and apply in several states. An estimate, not legal or tax advice."
+}

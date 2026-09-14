@@ -1,0 +1,185 @@
+{
+  "counts": {
+    "built": 42,
+    "partial": 9,
+    "dropped": 1,
+    "none": 5
+  },
+  "ip": {
+    "statusSentence": "57 engines documented, with a full application drafted for all 57. No application has been filed with the United States Patent and Trademark Office yet, so nothing here is patented or patent pending.",
+    "badge": "Claims drafted — not filed",
+    "claims": 57,
+    "applicationsDrafted": 57,
+    "applicationsFiled": 0
+  },
+  "offered": [
+    {
+      "ref": "PAT-001",
+      "title": "Cascading Multi-Calculator Financial Planning Engine"
+    },
+    {
+      "ref": "PAT-002",
+      "title": "HELOC-to-IUL Arbitrage Optimization Engine"
+    },
+    {
+      "ref": "PAT-003",
+      "title": "AI Whisper Coaching System for Financial Advisors"
+    },
+    {
+      "ref": "PAT-004",
+      "title": "Wealth Genome Scoring & Classification System"
+    },
+    {
+      "ref": "PAT-005",
+      "title": "Tax-Free Retirement Income Waterfall Engine"
+    },
+    {
+      "ref": "PAT-006",
+      "title": "Divorce Asset Protection Calculator with IUL Shielding"
+    },
+    {
+      "ref": "PAT-007",
+      "title": "Ecological Drivers Retirement Risk Assessment Framework"
+    },
+    {
+      "ref": "PAT-008",
+      "title": "Behavioral Lock-In Prevention System"
+    },
+    {
+      "ref": "PAT-009",
+      "title": "Mortgage Elimination Through Real Estate Recycling & IUL"
+    },
+    {
+      "ref": "PAT-010",
+      "title": "Time Machine Dual-Illustration Method"
+    },
+    {
+      "ref": "PAT-011",
+      "title": "Russell Number Multi-Dimensional Advisor Scoring"
+    },
+    {
+      "ref": "PAT-012",
+      "title": "Roth Conversion with Short-Term Rental Tax Offset Strategy"
+    },
+    {
+      "ref": "PAT-013",
+      "title": "Monte Carlo Simulation Engine with IUL Floor/Cap"
+    },
+    {
+      "ref": "PAT-014",
+      "title": "FIA Collateral Assignment Lending Optimization System"
+    },
+    {
+      "ref": "PAT-015",
+      "title": "Automated Advisor Practice Revenue & Territory Strategy"
+    },
+    {
+      "ref": "SI-001",
+      "title": "Dynamic IUL Illustration Compliance Engine"
+    },
+    {
+      "ref": "SI-002",
+      "title": "Multi-Carrier IUL Comparison Optimizer"
+    },
+    {
+      "ref": "SI-003",
+      "title": "Automated Policy Review & Replacement Analyzer"
+    },
+    {
+      "ref": "SI-004",
+      "title": "Premium Financing Arbitrage Calculator"
+    },
+    {
+      "ref": "SI-005",
+      "title": "Living Benefits Probability Engine"
+    },
+    {
+      "ref": "SI-006",
+      "title": "Real-Time Tax Code Change Impact Simulator"
+    },
+    {
+      "ref": "SI-007",
+      "title": "Multi-Entity Tax Optimization Router"
+    },
+    {
+      "ref": "SI-008",
+      "title": "Charitable Remainder Trust + IUL Wealth Replacement"
+    },
+    {
+      "ref": "SI-012",
+      "title": "Predictive Client Churn Prevention System"
+    },
+    {
+      "ref": "SI-014",
+      "title": "Client Family Tree Financial Mapping"
+    },
+    {
+      "ref": "SI-015",
+      "title": "Voice-Activated Financial Dashboard"
+    },
+    {
+      "ref": "SI-016",
+      "title": "AI-Powered Compliance Pre-Check System"
+    },
+    {
+      "ref": "SI-017",
+      "title": "Automated Succession Planning Valuation Engine"
+    },
+    {
+      "ref": "SI-018",
+      "title": "Dynamic Commission Optimization Router"
+    },
+    {
+      "ref": "SI-019",
+      "title": "Peer Benchmarking Intelligence Network"
+    },
+    {
+      "ref": "SI-021",
+      "title": "Extreme-Scenario Portfolio Stress Testing"
+    },
+    {
+      "ref": "SI-022",
+      "title": "Blockchain-Verified Financial Plan Audit Trail"
+    },
+    {
+      "ref": "SI-025",
+      "title": "Automated Annuity Comparison with Hidden Fee Detection"
+    },
+    {
+      "ref": "SI-026",
+      "title": "Regulatory Sandbox Simulation Environment"
+    },
+    {
+      "ref": "SI-027",
+      "title": "Client Digital Twin Financial Modeling"
+    },
+    {
+      "ref": "SI-028",
+      "title": "Physician Student Loan Forgiveness Optimization Engine"
+    },
+    {
+      "ref": "SI-030",
+      "title": "Spousal Income Splitting & IUL Arbitrage Optimizer"
+    },
+    {
+      "ref": "SI-032",
+      "title": "Multi-Generational Wealth Transfer Sequencing Engine"
+    },
+    {
+      "ref": "SI-035",
+      "title": "Client Risk Tolerance Drift Detection & Auto-Rebalancing"
+    },
+    {
+      "ref": "SI-037",
+      "title": "Tax Loss Harvesting Coordination Engine with IUL Premium Timing"
+    },
+    {
+      "ref": "SI-039",
+      "title": "Dynamic Beneficiary Optimization Engine"
+    },
+    {
+      "ref": "SI-041",
+      "title": "Medicare Optimization & IRMAA Avoidance Planning Engine"
+    }
+  ]
+}

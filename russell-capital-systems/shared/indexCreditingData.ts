@@ -77,6 +77,17 @@ export interface IndexOption {
   sourced?: boolean;
   /** The document, or why there isn't one. */
   sourceNote?: string;
+  /**
+   * The de-identified product generation this option belongs to — "Product II",
+   * "Product III", and so on.
+   *
+   * This is not cosmetic. Successive generations of the same carrier's product
+   * carry DIFFERENT terms on options with the same name: the multi-index cap is
+   * 13.00% on generation II and 14.00% on generation III. An option shown
+   * without its generation invites somebody to quote one generation's cap
+   * against the other's illustration. Null where no document establishes it.
+   */
+  product?: string | null;
 }
 // ─── MUTUAL COMPANY A Index Options ──────────────────────
 export const A_MUTUAL_INDEX_OPTIONS: IndexOption[] = [
@@ -94,6 +105,10 @@ export const A_MUTUAL_INDEX_OPTIONS: IndexOption[] = [
     bonus: 0,
     description: 'Traditional capped S&P 500 strategy. 100% participation, 10.25% cap, 0% floor.',
     availableFrom: 1994,
+    product: 'Product II',
+    sourced: true,
+    sourceNote:
+      'Nationwide IUL Accumulator II 2020 rate guide, FLM-1491AO.10 (02/25), rates as of 15 March 2025.',
   },
   {
     id: 'am-sp500-uncapped',
@@ -110,6 +125,10 @@ export const A_MUTUAL_INDEX_OPTIONS: IndexOption[] = [
     bonus: 0,
     description: 'Uncapped S&P 500 with 6.00% spread. Unlimited upside minus spread, 0% floor.',
     availableFrom: 1994,
+    product: 'Product II',
+    sourced: true,
+    sourceNote:
+      'Nationwide IUL Accumulator II 2020 rate guide, FLM-1491AO.10 (02/25), rates as of 15 March 2025.',
   },
   {
     id: 'am-highcap-sp500',
@@ -127,6 +146,10 @@ export const A_MUTUAL_INDEX_OPTIONS: IndexOption[] = [
     bonus: 0,
     description: 'Higher cap (13.25%) with 1.5% strategy charge. More upside potential.',
     availableFrom: 1994,
+    product: 'Product II',
+    sourced: true,
+    sourceNote:
+      'Nationwide IUL Accumulator II 2020 rate guide, FLM-1491AO.10 (02/25), rates as of 15 March 2025.',
   },
   {
     id: 'am-multi-index',
@@ -153,6 +176,10 @@ export const A_MUTUAL_INDEX_OPTIONS: IndexOption[] = [
     // run this strategy. See docs/carriers/nationwide-iul-accumulator-ii-2020.md
     description: 'Blended 50/30/20 of best-performing indices. 13% cap, 0% floor. Third component is wrong until a DJIA series is sourced.',
     availableFrom: 1994,
+    product: 'Product II',
+    sourced: true,
+    sourceNote:
+      'Nationwide IUL Accumulator II 2020 rate guide, FLM-1491AO.10 (02/25), rates as of 15 March 2025.',
   },
   {
     id: 'am-highcap-multi',
@@ -176,6 +203,10 @@ export const A_MUTUAL_INDEX_OPTIONS: IndexOption[] = [
     bonus: 0,
     description: 'High-cap multi-index blend (25% cap) with 1.5% strategy charge.',
     availableFrom: 1994,
+    product: 'Product II',
+    sourced: true,
+    sourceNote:
+      'Nationwide IUL Accumulator II 2020 rate guide, FLM-1491AO.10 (02/25), rates as of 15 March 2025.',
   },
   {
     id: 'am-fixed',
@@ -478,32 +509,32 @@ export const A_MINUS_MUTUAL_INDEX_OPTIONS: IndexOption[] = [
  * rather than computing one we cannot support.
  */
 export const MUTUAL_A_VOLATILITY_CONTROL_OPTIONS: IndexOption[] = [
-  { id: 'ma-jpm-mercury-plus', name: 'J.P. Morgan Mercury Plus', carrier: 'mutual-a',
+  { id: 'ma-jpm-mercury-plus', product: 'Product II', sourced: true, name: 'J.P. Morgan Mercury Plus', carrier: 'mutual-a',
     index: 'JPM_MERCURY', indexType: 'single', cap: null, floor: 0, participation: 185,
     spread: 0, strategyCharge: 0, bonus: 0.6,
     description: 'Uncapped, 185% participation, plus a 0.6% non-guaranteed strategy credit. Guaranteed participation 65%.',
     availableFrom: 2022 },
-  { id: 'ma-bnpp-hfactor-plus', name: 'BNPP Global H-Factor Plus', carrier: 'mutual-a',
+  { id: 'ma-bnpp-hfactor-plus', product: 'Product II', sourced: true, name: 'BNPP Global H-Factor Plus', carrier: 'mutual-a',
     index: 'BNPP_HFACTOR', indexType: 'single', cap: null, floor: 0, participation: 235,
     spread: 0, strategyCharge: 0, bonus: 0.6,
     description: 'Uncapped, 235% participation, plus a 0.6% non-guaranteed strategy credit. Guaranteed participation 65%.',
     availableFrom: 2022 },
-  { id: 'ma-jpm-mercury-highpar', name: 'J.P. Morgan Mercury High Participation', carrier: 'mutual-a',
+  { id: 'ma-jpm-mercury-highpar', product: 'Product II', sourced: true, name: 'J.P. Morgan Mercury High Participation', carrier: 'mutual-a',
     index: 'JPM_MERCURY', indexType: 'single', cap: null, floor: 0, participation: 210,
     spread: 0, strategyCharge: 0, bonus: 0,
     description: 'Uncapped, 210% participation, no strategy credit. Guaranteed participation 65%.',
     availableFrom: 2022 },
-  { id: 'ma-bnpp-hfactor-highpar', name: 'BNPP Global H-Factor High Participation', carrier: 'mutual-a',
+  { id: 'ma-bnpp-hfactor-highpar', product: 'Product II', sourced: true, name: 'BNPP Global H-Factor High Participation', carrier: 'mutual-a',
     index: 'BNPP_HFACTOR', indexType: 'single', cap: null, floor: 0, participation: 265,
     spread: 0, strategyCharge: 0, bonus: 0,
     description: 'Uncapped, 265% participation, no strategy credit. Guaranteed participation 65%.',
     availableFrom: 2022 },
-  { id: 'ma-jpm-mercury-select', name: 'J.P. Morgan Mercury High Par Select', carrier: 'mutual-a',
+  { id: 'ma-jpm-mercury-select', product: 'Product II', sourced: true, name: 'J.P. Morgan Mercury High Par Select', carrier: 'mutual-a',
     index: 'JPM_MERCURY', indexType: 'single', cap: null, floor: 0, participation: 250,
     spread: 0, strategyCharge: 1.0, bonus: 0,
     description: 'Uncapped, 250% participation, in exchange for a 1.0% strategy charge (guaranteed maximum 1.5%).',
     availableFrom: 2022 },
-  { id: 'ma-bnpp-hfactor-select', name: 'BNPP Global H-Factor High Par Select', carrier: 'mutual-a',
+  { id: 'ma-bnpp-hfactor-select', product: 'Product II', sourced: true, name: 'BNPP Global H-Factor High Par Select', carrier: 'mutual-a',
     index: 'BNPP_HFACTOR', indexType: 'single', cap: null, floor: 0, participation: 315,
     spread: 0, strategyCharge: 1.0, bonus: 0,
     description: 'Uncapped, 315% participation, in exchange for a 1.0% strategy charge (guaranteed maximum 1.5%).',
@@ -584,6 +615,7 @@ export const B_MUTUAL_SEGMENT_OPTIONS: IndexOption[] = [
     strategyCharge: 0,
     bonus: 0,
     segmentTermYears: 2,
+    product: 'Product II',
     sourced: true,
     sourceNote:
       'Balanced Growth Accumulator II IUL flier, F94327-15 DOFU 10-2022 Rev 08-2023 (2446408). ' +
@@ -607,6 +639,7 @@ export const B_MUTUAL_SEGMENT_OPTIONS: IndexOption[] = [
     strategyCharge: 0,
     bonus: 0,
     segmentTermYears: 1,
+    product: null,
     sourced: false,
     sourceNote:
       'Not a carrier quote. No held document offers 110% participation on an annual uncapped ' +

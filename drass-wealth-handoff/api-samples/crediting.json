@@ -1,0 +1,565 @@
+{
+  "crediting": {
+    "ratePct": 4.95,
+    "capPct": 7.5,
+    "floorPct": 0,
+    "participationPct": 100,
+    "startYear": 1929,
+    "endYear": 2025,
+    "years": 97,
+    "uncapped": false,
+    "warnings": []
+  },
+  "selected": {
+    "label": "1929–2025",
+    "ratePct": 4.95,
+    "years": 97
+  },
+  "againstFullHistory": {
+    "label": "Everything held (1929–2025)",
+    "ratePct": 4.95,
+    "years": 97,
+    "differencePct": 0
+  },
+  "windows": [
+    {
+      "id": "full",
+      "label": "Everything held (1929–2025)",
+      "description": "The whole series this system holds, crash years included. The longest answer available and the hardest to argue with.",
+      "fromYear": 1929,
+      "toYear": 2025,
+      "startsAtPeak": false
+    },
+    {
+      "id": "ag49",
+      "label": "The AG 49-A lookback (2001–2025)",
+      "description": "Twenty-five years, the period the 2025 amendment to Actuarial Guideline 49-A uses when setting the maximum rate a policy may be illustrated at.",
+      "fromYear": 2001,
+      "toYear": 2025,
+      "startsAtPeak": false
+    },
+    {
+      "id": "thirty",
+      "label": "The last thirty years (1996–2025)",
+      "description": "A working lifetime of saving, covering the dot-com unwind, the financial crisis, the pandemic and the rate shock.",
+      "fromYear": 1996,
+      "toYear": 2025,
+      "startsAtPeak": false
+    },
+    {
+      "id": "dotcom",
+      "label": "Since the dot-com peak (2000–2025)",
+      "description": "Beginning at the top of the market in 2000, immediately before three consecutive losing years — the only such run in the modern series.",
+      "fromYear": 2000,
+      "toYear": 2025,
+      "startsAtPeak": true
+    },
+    {
+      "id": "crisis",
+      "label": "Since the financial crisis peak (2007–2025)",
+      "description": "Beginning the year before credit markets seized and equities lost roughly a third of their value.",
+      "fromYear": 2007,
+      "toYear": 2025,
+      "startsAtPeak": true
+    },
+    {
+      "id": "covid",
+      "label": "Since Covid (2020–2025)",
+      "description": "The pandemic crash and the recovery that followed it. The shortest window offered and the most flattering; read it beside the full history, not instead of it.",
+      "fromYear": 2020,
+      "toYear": 2025,
+      "startsAtPeak": false
+    }
+  ],
+  "years": [
+    {
+      "year": 1929,
+      "indexReturnPct": -8.42,
+      "creditedRatePct": 0
+    },
+    {
+      "year": 1930,
+      "indexReturnPct": -24.9,
+      "creditedRatePct": 0
+    },
+    {
+      "year": 1931,
+      "indexReturnPct": -43.34,
+      "creditedRatePct": 0
+    },
+    {
+      "year": 1932,
+      "indexReturnPct": -8.19,
+      "creditedRatePct": 0
+    },
+    {
+      "year": 1933,
+      "indexReturnPct": 53.99,
+      "creditedRatePct": 7.5
+    },
+    {
+      "year": 1934,
+      "indexReturnPct": -1.44,
+      "creditedRatePct": 0
+    },
+    {
+      "year": 1935,
+      "indexReturnPct": 47.67,
+      "creditedRatePct": 7.5
+    },
+    {
+      "year": 1936,
+      "indexReturnPct": 33.92,
+      "creditedRatePct": 7.5
+    },
+    {
+      "year": 1937,
+      "indexReturnPct": -35.03,
+      "creditedRatePct": 0
+    },
+    {
+      "year": 1938,
+      "indexReturnPct": 31.12,
+      "creditedRatePct": 7.5
+    },
+    {
+      "year": 1939,
+      "indexReturnPct": -0.41,
+      "creditedRatePct": 0
+    },
+    {
+      "year": 1940,
+      "indexReturnPct": -9.78,
+      "creditedRatePct": 0
+    },
+    {
+      "year": 1941,
+      "indexReturnPct": -11.59,
+      "creditedRatePct": 0
+    },
+    {
+      "year": 1942,
+      "indexReturnPct": 20.34,
+      "creditedRatePct": 7.5
+    },
+    {
+      "year": 1943,
+      "indexReturnPct": 25.9,
+      "creditedRatePct": 7.5
+    },
+    {
+      "year": 1944,
+      "indexReturnPct": 19.75,
+      "creditedRatePct": 7.5
+    },
+    {
+      "year": 1945,
+      "indexReturnPct": 36.44,
+      "creditedRatePct": 7.5
+    },
+    {
+      "year": 1946,
+      "indexReturnPct": -8.07,
+      "creditedRatePct": 0
+    },
+    {
+      "year": 1947,
+      "indexReturnPct": 5.71,
+      "creditedRatePct": 5.71
+    },
+    {
+      "year": 1948,
+      "indexReturnPct": 5.5,
+      "creditedRatePct": 5.5
+    },
+    {
+      "year": 1949,
+      "indexReturnPct": 18.79,
+      "creditedRatePct": 7.5
+    },
+    {
+      "year": 1950,
+      "indexReturnPct": 31.71,
+      "creditedRatePct": 7.5
+    },
+    {
+      "year": 1951,
+      "indexReturnPct": 24.02,
+      "creditedRatePct": 7.5
+    },
+    {
+      "year": 1952,
+      "indexReturnPct": 18.37,
+      "creditedRatePct": 7.5
+    },
+    {
+      "year": 1953,
+      "indexReturnPct": -0.99,
+      "creditedRatePct": 0
+    },
+    {
+      "year": 1954,
+      "indexReturnPct": 52.62,
+      "creditedRatePct": 7.5
+    },
+    {
+      "year": 1955,
+      "indexReturnPct": 31.56,
+      "creditedRatePct": 7.5
+    },
+    {
+      "year": 1956,
+      "indexReturnPct": 6.56,
+      "creditedRatePct": 6.56
+    },
+    {
+      "year": 1957,
+      "indexReturnPct": -10.78,
+      "creditedRatePct": 0
+    },
+    {
+      "year": 1958,
+      "indexReturnPct": 43.36,
+      "creditedRatePct": 7.5
+    },
+    {
+      "year": 1959,
+      "indexReturnPct": 11.96,
+      "creditedRatePct": 7.5
+    },
+    {
+      "year": 1960,
+      "indexReturnPct": 0.47,
+      "creditedRatePct": 0.47
+    },
+    {
+      "year": 1961,
+      "indexReturnPct": 26.89,
+      "creditedRatePct": 7.5
+    },
+    {
+      "year": 1962,
+      "indexReturnPct": -8.73,
+      "creditedRatePct": 0
+    },
+    {
+      "year": 1963,
+      "indexReturnPct": 22.8,
+      "creditedRatePct": 7.5
+    },
+    {
+      "year": 1964,
+      "indexReturnPct": 16.48,
+      "creditedRatePct": 7.5
+    },
+    {
+      "year": 1965,
+      "indexReturnPct": 12.45,
+      "creditedRatePct": 7.5
+    },
+    {
+      "year": 1966,
+      "indexReturnPct": -10.06,
+      "creditedRatePct": 0
+    },
+    {
+      "year": 1967,
+      "indexReturnPct": 23.98,
+      "creditedRatePct": 7.5
+    },
+    {
+      "year": 1968,
+      "indexReturnPct": 11.06,
+      "creditedRatePct": 7.5
+    },
+    {
+      "year": 1969,
+      "indexReturnPct": -8.5,
+      "creditedRatePct": 0
+    },
+    {
+      "year": 1970,
+      "indexReturnPct": 4.01,
+      "creditedRatePct": 4.01
+    },
+    {
+      "year": 1971,
+      "indexReturnPct": 14.31,
+      "creditedRatePct": 7.5
+    },
+    {
+      "year": 1972,
+      "indexReturnPct": 18.98,
+      "creditedRatePct": 7.5
+    },
+    {
+      "year": 1973,
+      "indexReturnPct": -14.66,
+      "creditedRatePct": 0
+    },
+    {
+      "year": 1974,
+      "indexReturnPct": -26.47,
+      "creditedRatePct": 0
+    },
+    {
+      "year": 1975,
+      "indexReturnPct": 37.2,
+      "creditedRatePct": 7.5
+    },
+    {
+      "year": 1976,
+      "indexReturnPct": 23.84,
+      "creditedRatePct": 7.5
+    },
+    {
+      "year": 1977,
+      "indexReturnPct": -7.18,
+      "creditedRatePct": 0
+    },
+    {
+      "year": 1978,
+      "indexReturnPct": 6.56,
+      "creditedRatePct": 6.56
+    },
+    {
+      "year": 1979,
+      "indexReturnPct": 18.44,
+      "creditedRatePct": 7.5
+    },
+    {
+      "year": 1980,
+      "indexReturnPct": 32.42,
+      "creditedRatePct": 7.5
+    },
+    {
+      "year": 1981,
+      "indexReturnPct": -4.91,
+      "creditedRatePct": 0
+    },
+    {
+      "year": 1982,
+      "indexReturnPct": 21.41,
+      "creditedRatePct": 7.5
+    },
+    {
+      "year": 1983,
+      "indexReturnPct": 22.51,
+      "creditedRatePct": 7.5
+    },
+    {
+      "year": 1984,
+      "indexReturnPct": 6.27,
+      "creditedRatePct": 6.27
+    },
+    {
+      "year": 1985,
+      "indexReturnPct": 32.16,
+      "creditedRatePct": 7.5
+    },
+    {
+      "year": 1986,
+      "indexReturnPct": 18.47,
+      "creditedRatePct": 7.5
+    },
+    {
+      "year": 1987,
+      "indexReturnPct": 5.81,
+      "creditedRatePct": 5.81
+    },
+    {
+      "year": 1988,
+      "indexReturnPct": 16.54,
+      "creditedRatePct": 7.5
+    },
+    {
+      "year": 1989,
+      "indexReturnPct": 31.48,
+      "creditedRatePct": 7.5
+    },
+    {
+      "year": 1990,
+      "indexReturnPct": -3.06,
+      "creditedRatePct": 0
+    },
+    {
+      "year": 1991,
+      "indexReturnPct": 30.23,
+      "creditedRatePct": 7.5
+    },
+    {
+      "year": 1992,
+      "indexReturnPct": 7.62,
+      "creditedRatePct": 7.5
+    },
+    {
+      "year": 1993,
+      "indexReturnPct": 9.99,
+      "creditedRatePct": 7.5
+    },
+    {
+      "year": 1994,
+      "indexReturnPct": 1.32,
+      "creditedRatePct": 1.32
+    },
+    {
+      "year": 1995,
+      "indexReturnPct": 37.43,
+      "creditedRatePct": 7.5
+    },
+    {
+      "year": 1996,
+      "indexReturnPct": 22.94,
+      "creditedRatePct": 7.5
+    },
+    {
+      "year": 1997,
+      "indexReturnPct": 33.36,
+      "creditedRatePct": 7.5
+    },
+    {
+      "year": 1998,
+      "indexReturnPct": 28.58,
+      "creditedRatePct": 7.5
+    },
+    {
+      "year": 1999,
+      "indexReturnPct": 21.04,
+      "creditedRatePct": 7.5
+    },
+    {
+      "year": 2000,
+      "indexReturnPct": -9.1,
+      "creditedRatePct": 0
+    },
+    {
+      "year": 2001,
+      "indexReturnPct": -11.89,
+      "creditedRatePct": 0
+    },
+    {
+      "year": 2002,
+      "indexReturnPct": -22.1,
+      "creditedRatePct": 0
+    },
+    {
+      "year": 2003,
+      "indexReturnPct": 28.89,
+      "creditedRatePct": 7.5
+    },
+    {
+      "year": 2004,
+      "indexReturnPct": 10.88,
+      "creditedRatePct": 7.5
+    },
+    {
+      "year": 2005,
+      "indexReturnPct": 4.91,
+      "creditedRatePct": 4.91
+    },
+    {
+      "year": 2006,
+      "indexReturnPct": 15.79,
+      "creditedRatePct": 7.5
+    },
+    {
+      "year": 2007,
+      "indexReturnPct": 5.49,
+      "creditedRatePct": 5.49
+    },
+    {
+      "year": 2008,
+      "indexReturnPct": -37,
+      "creditedRatePct": 0
+    },
+    {
+      "year": 2009,
+      "indexReturnPct": 26.46,
+      "creditedRatePct": 7.5
+    },
+    {
+      "year": 2010,
+      "indexReturnPct": 15.06,
+      "creditedRatePct": 7.5
+    },
+    {
+      "year": 2011,
+      "indexReturnPct": 2.11,
+      "creditedRatePct": 2.11
+    },
+    {
+      "year": 2012,
+      "indexReturnPct": 16,
+      "creditedRatePct": 7.5
+    },
+    {
+      "year": 2013,
+      "indexReturnPct": 32.39,
+      "creditedRatePct": 7.5
+    },
+    {
+      "year": 2014,
+      "indexReturnPct": 13.69,
+      "creditedRatePct": 7.5
+    },
+    {
+      "year": 2015,
+      "indexReturnPct": 1.38,
+      "creditedRatePct": 1.38
+    },
+    {
+      "year": 2016,
+      "indexReturnPct": 11.96,
+      "creditedRatePct": 7.5
+    },
+    {
+      "year": 2017,
+      "indexReturnPct": 21.83,
+      "creditedRatePct": 7.5
+    },
+    {
+      "year": 2018,
+      "indexReturnPct": -4.38,
+      "creditedRatePct": 0
+    },
+    {
+      "year": 2019,
+      "indexReturnPct": 31.49,
+      "creditedRatePct": 7.5
+    },
+    {
+      "year": 2020,
+      "indexReturnPct": 18.4,
+      "creditedRatePct": 7.5
+    },
+    {
+      "year": 2021,
+      "indexReturnPct": 28.71,
+      "creditedRatePct": 7.5
+    },
+    {
+      "year": 2022,
+      "indexReturnPct": -18.11,
+      "creditedRatePct": 0
+    },
+    {
+      "year": 2023,
+      "indexReturnPct": 26.29,
+      "creditedRatePct": 7.5
+    },
+    {
+      "year": 2024,
+      "indexReturnPct": 25.02,
+      "creditedRatePct": 7.5
+    },
+    {
+      "year": 2025,
+      "indexReturnPct": 2,
+      "creditedRatePct": 2
+    }
+  ],
+  "floorHeldYears": 26,
+  "capLimitedYears": 57,
+  "source": "S&P 500 annual returns from Roger Ibbotson and Rex Sinquefield's Stocks, Bonds, Bills and Inflation series, as held in this repository from NYU Stern / Damodaran. The held table begins in 1929; the published SBBI series itself begins in 1926, and those three earliest years are not included here.",
+  "notice": "Historical index changes shown are not indicative of future returns, and this is not an illustration of any specific policy. Caps and participation rates are declared by the carrier and can change."
+}

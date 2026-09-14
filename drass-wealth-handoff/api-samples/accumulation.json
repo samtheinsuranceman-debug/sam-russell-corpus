@@ -1,0 +1,692 @@
+{
+  "allocation": [
+    {
+      "optionId": "am-sp500-ptp",
+      "percentage": 100
+    }
+  ],
+  "startYear": 1996,
+  "years": [
+    {
+      "calendarYear": 1996,
+      "policyYear": 1,
+      "creditedRatePct": 10.25,
+      "accountValue": 27563,
+      "surrenderValue": 27563,
+      "byStrategy": [
+        {
+          "id": "am-sp500-ptp",
+          "name": "S&P 500 Point-to-Point",
+          "allocationPct": 100,
+          "indexReturnPct": 23.48,
+          "creditedRatePct": 10.25
+        }
+      ]
+    },
+    {
+      "calendarYear": 1997,
+      "policyYear": 2,
+      "creditedRatePct": 10.25,
+      "accountValue": 57950,
+      "surrenderValue": 57950,
+      "byStrategy": [
+        {
+          "id": "am-sp500-ptp",
+          "name": "S&P 500 Point-to-Point",
+          "allocationPct": 100,
+          "indexReturnPct": 32.69,
+          "creditedRatePct": 10.25
+        }
+      ]
+    },
+    {
+      "calendarYear": 1998,
+      "policyYear": 3,
+      "creditedRatePct": 10.25,
+      "accountValue": 91453,
+      "surrenderValue": 91453,
+      "byStrategy": [
+        {
+          "id": "am-sp500-ptp",
+          "name": "S&P 500 Point-to-Point",
+          "allocationPct": 100,
+          "indexReturnPct": 18.01,
+          "creditedRatePct": 10.25
+        }
+      ]
+    },
+    {
+      "calendarYear": 1999,
+      "policyYear": 4,
+      "creditedRatePct": 10.25,
+      "accountValue": 128389,
+      "surrenderValue": 128389,
+      "byStrategy": [
+        {
+          "id": "am-sp500-ptp",
+          "name": "S&P 500 Point-to-Point",
+          "allocationPct": 100,
+          "indexReturnPct": 10.34,
+          "creditedRatePct": 10.25
+        }
+      ]
+    },
+    {
+      "calendarYear": 2000,
+      "policyYear": 5,
+      "creditedRatePct": 0,
+      "accountValue": 153389,
+      "surrenderValue": 153389,
+      "byStrategy": [
+        {
+          "id": "am-sp500-ptp",
+          "name": "S&P 500 Point-to-Point",
+          "allocationPct": 100,
+          "indexReturnPct": -9.26,
+          "creditedRatePct": 0
+        }
+      ]
+    },
+    {
+      "calendarYear": 2001,
+      "policyYear": 6,
+      "creditedRatePct": 0,
+      "accountValue": 178389,
+      "surrenderValue": 178389,
+      "byStrategy": [
+        {
+          "id": "am-sp500-ptp",
+          "name": "S&P 500 Point-to-Point",
+          "allocationPct": 100,
+          "indexReturnPct": -10.74,
+          "creditedRatePct": 0
+        }
+      ]
+    },
+    {
+      "calendarYear": 2002,
+      "policyYear": 7,
+      "creditedRatePct": 0,
+      "accountValue": 203389,
+      "surrenderValue": 203389,
+      "byStrategy": [
+        {
+          "id": "am-sp500-ptp",
+          "name": "S&P 500 Point-to-Point",
+          "allocationPct": 100,
+          "indexReturnPct": -24,
+          "creditedRatePct": 0
+        }
+      ]
+    },
+    {
+      "calendarYear": 2003,
+      "policyYear": 8,
+      "creditedRatePct": 10.25,
+      "accountValue": 251799,
+      "surrenderValue": 251799,
+      "byStrategy": [
+        {
+          "id": "am-sp500-ptp",
+          "name": "S&P 500 Point-to-Point",
+          "allocationPct": 100,
+          "indexReturnPct": 36.12,
+          "creditedRatePct": 10.25
+        }
+      ]
+    },
+    {
+      "calendarYear": 2004,
+      "policyYear": 9,
+      "creditedRatePct": 5.12,
+      "accountValue": 290971,
+      "surrenderValue": 290971,
+      "byStrategy": [
+        {
+          "id": "am-sp500-ptp",
+          "name": "S&P 500 Point-to-Point",
+          "allocationPct": 100,
+          "indexReturnPct": 5.12,
+          "creditedRatePct": 5.12
+        }
+      ]
+    },
+    {
+      "calendarYear": 2005,
+      "policyYear": 10,
+      "creditedRatePct": 6.4,
+      "accountValue": 336193,
+      "surrenderValue": 336193,
+      "byStrategy": [
+        {
+          "id": "am-sp500-ptp",
+          "name": "S&P 500 Point-to-Point",
+          "allocationPct": 100,
+          "indexReturnPct": 6.4,
+          "creditedRatePct": 6.4
+        }
+      ]
+    },
+    {
+      "calendarYear": 2006,
+      "policyYear": 11,
+      "creditedRatePct": 9.85,
+      "accountValue": 396771,
+      "surrenderValue": 396771,
+      "byStrategy": [
+        {
+          "id": "am-sp500-ptp",
+          "name": "S&P 500 Point-to-Point",
+          "allocationPct": 100,
+          "indexReturnPct": 9.85,
+          "creditedRatePct": 9.85
+        }
+      ]
+    },
+    {
+      "calendarYear": 2007,
+      "policyYear": 12,
+      "creditedRatePct": 0,
+      "accountValue": 421771,
+      "surrenderValue": 421771,
+      "byStrategy": [
+        {
+          "id": "am-sp500-ptp",
+          "name": "S&P 500 Point-to-Point",
+          "allocationPct": 100,
+          "indexReturnPct": -5.42,
+          "creditedRatePct": 0
+        }
+      ]
+    },
+    {
+      "calendarYear": 2008,
+      "policyYear": 13,
+      "creditedRatePct": 0,
+      "accountValue": 446771,
+      "surrenderValue": 446771,
+      "byStrategy": [
+        {
+          "id": "am-sp500-ptp",
+          "name": "S&P 500 Point-to-Point",
+          "allocationPct": 100,
+          "indexReturnPct": -44.76,
+          "creditedRatePct": 0
+        }
+      ]
+    },
+    {
+      "calendarYear": 2009,
+      "policyYear": 14,
+      "creditedRatePct": 10.25,
+      "accountValue": 520127,
+      "surrenderValue": 520127,
+      "byStrategy": [
+        {
+          "id": "am-sp500-ptp",
+          "name": "S&P 500 Point-to-Point",
+          "allocationPct": 100,
+          "indexReturnPct": 50.25,
+          "creditedRatePct": 10.25
+        }
+      ]
+    },
+    {
+      "calendarYear": 2010,
+      "policyYear": 15,
+      "creditedRatePct": 10.25,
+      "accountValue": 601003,
+      "surrenderValue": 601003,
+      "byStrategy": [
+        {
+          "id": "am-sp500-ptp",
+          "name": "S&P 500 Point-to-Point",
+          "allocationPct": 100,
+          "indexReturnPct": 20.17,
+          "creditedRatePct": 10.25
+        }
+      ]
+    },
+    {
+      "calendarYear": 2011,
+      "policyYear": 16,
+      "creditedRatePct": 2.9,
+      "accountValue": 644157,
+      "surrenderValue": 644157,
+      "byStrategy": [
+        {
+          "id": "am-sp500-ptp",
+          "name": "S&P 500 Point-to-Point",
+          "allocationPct": 100,
+          "indexReturnPct": 2.9,
+          "creditedRatePct": 2.9
+        }
+      ]
+    },
+    {
+      "calendarYear": 2012,
+      "policyYear": 17,
+      "creditedRatePct": 10.25,
+      "accountValue": 737745,
+      "surrenderValue": 737745,
+      "byStrategy": [
+        {
+          "id": "am-sp500-ptp",
+          "name": "S&P 500 Point-to-Point",
+          "allocationPct": 100,
+          "indexReturnPct": 10.91,
+          "creditedRatePct": 10.25
+        }
+      ]
+    },
+    {
+      "calendarYear": 2013,
+      "policyYear": 18,
+      "creditedRatePct": 10.25,
+      "accountValue": 840927,
+      "surrenderValue": 840927,
+      "byStrategy": [
+        {
+          "id": "am-sp500-ptp",
+          "name": "S&P 500 Point-to-Point",
+          "allocationPct": 100,
+          "indexReturnPct": 22.76,
+          "creditedRatePct": 10.25
+        }
+      ]
+    },
+    {
+      "calendarYear": 2014,
+      "policyYear": 19,
+      "creditedRatePct": 10.25,
+      "accountValue": 954684,
+      "surrenderValue": 954684,
+      "byStrategy": [
+        {
+          "id": "am-sp500-ptp",
+          "name": "S&P 500 Point-to-Point",
+          "allocationPct": 100,
+          "indexReturnPct": 13.18,
+          "creditedRatePct": 10.25
+        }
+      ]
+    },
+    {
+      "calendarYear": 2015,
+      "policyYear": 20,
+      "creditedRatePct": 0,
+      "accountValue": 979684,
+      "surrenderValue": 979684,
+      "byStrategy": [
+        {
+          "id": "am-sp500-ptp",
+          "name": "S&P 500 Point-to-Point",
+          "allocationPct": 100,
+          "indexReturnPct": -8.19,
+          "creditedRatePct": 0
+        }
+      ]
+    },
+    {
+      "calendarYear": 2016,
+      "policyYear": 21,
+      "creditedRatePct": 10.25,
+      "accountValue": 1107664,
+      "surrenderValue": 1107664,
+      "byStrategy": [
+        {
+          "id": "am-sp500-ptp",
+          "name": "S&P 500 Point-to-Point",
+          "allocationPct": 100,
+          "indexReturnPct": 22.33,
+          "creditedRatePct": 10.25
+        }
+      ]
+    },
+    {
+      "calendarYear": 2017,
+      "policyYear": 22,
+      "creditedRatePct": 10.25,
+      "accountValue": 1248762,
+      "surrenderValue": 1248762,
+      "byStrategy": [
+        {
+          "id": "am-sp500-ptp",
+          "name": "S&P 500 Point-to-Point",
+          "allocationPct": 100,
+          "indexReturnPct": 14.82,
+          "creditedRatePct": 10.25
+        }
+      ]
+    },
+    {
+      "calendarYear": 2018,
+      "policyYear": 23,
+      "creditedRatePct": 2.6,
+      "accountValue": 1306880,
+      "surrenderValue": 1306880,
+      "byStrategy": [
+        {
+          "id": "am-sp500-ptp",
+          "name": "S&P 500 Point-to-Point",
+          "allocationPct": 100,
+          "indexReturnPct": 2.6,
+          "creditedRatePct": 2.6
+        }
+      ]
+    },
+    {
+      "calendarYear": 2019,
+      "policyYear": 24,
+      "creditedRatePct": 6.1,
+      "accountValue": 1413125,
+      "surrenderValue": 1413125,
+      "byStrategy": [
+        {
+          "id": "am-sp500-ptp",
+          "name": "S&P 500 Point-to-Point",
+          "allocationPct": 100,
+          "indexReturnPct": 6.1,
+          "creditedRatePct": 6.1
+        }
+      ]
+    },
+    {
+      "calendarYear": 2020,
+      "policyYear": 25,
+      "creditedRatePct": 10.25,
+      "accountValue": 1585533,
+      "surrenderValue": 1585533,
+      "byStrategy": [
+        {
+          "id": "am-sp500-ptp",
+          "name": "S&P 500 Point-to-Point",
+          "allocationPct": 100,
+          "indexReturnPct": 29.01,
+          "creditedRatePct": 10.25
+        }
+      ]
+    },
+    {
+      "calendarYear": 2021,
+      "policyYear": 26,
+      "creditedRatePct": 10.25,
+      "accountValue": 1775612,
+      "surrenderValue": 1775612,
+      "byStrategy": [
+        {
+          "id": "am-sp500-ptp",
+          "name": "S&P 500 Point-to-Point",
+          "allocationPct": 100,
+          "indexReturnPct": 14.77,
+          "creditedRatePct": 10.25
+        }
+      ]
+    },
+    {
+      "calendarYear": 2022,
+      "policyYear": 27,
+      "creditedRatePct": 0,
+      "accountValue": 1800612,
+      "surrenderValue": 1800612,
+      "byStrategy": [
+        {
+          "id": "am-sp500-ptp",
+          "name": "S&P 500 Point-to-Point",
+          "allocationPct": 100,
+          "indexReturnPct": -9.23,
+          "creditedRatePct": 0
+        }
+      ]
+    },
+    {
+      "calendarYear": 2023,
+      "policyYear": 28,
+      "creditedRatePct": 10.25,
+      "accountValue": 2012737,
+      "surrenderValue": 2012737,
+      "byStrategy": [
+        {
+          "id": "am-sp500-ptp",
+          "name": "S&P 500 Point-to-Point",
+          "allocationPct": 100,
+          "indexReturnPct": 28.36,
+          "creditedRatePct": 10.25
+        }
+      ]
+    },
+    {
+      "calendarYear": 2024,
+      "policyYear": 29,
+      "creditedRatePct": 10.25,
+      "accountValue": 2246605,
+      "surrenderValue": 2246605,
+      "byStrategy": [
+        {
+          "id": "am-sp500-ptp",
+          "name": "S&P 500 Point-to-Point",
+          "allocationPct": 100,
+          "indexReturnPct": 16.84,
+          "creditedRatePct": 10.25
+        }
+      ]
+    },
+    {
+      "calendarYear": 2025,
+      "policyYear": 30,
+      "creditedRatePct": 10.25,
+      "accountValue": 2504445,
+      "surrenderValue": 2504445,
+      "byStrategy": [
+        {
+          "id": "am-sp500-ptp",
+          "name": "S&P 500 Point-to-Point",
+          "allocationPct": 100,
+          "indexReturnPct": 15.52,
+          "creditedRatePct": 10.25
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "finalAccountValue": 2504445,
+    "finalSurrenderValue": 2504445,
+    "annualizedReturnPct": 4.1,
+    "floorProtectedYears": 7,
+    "capLimitedYears": 17,
+    "surrenderScheduleSupplied": false
+  },
+  "strategies": [
+    {
+      "id": "am-sp500-ptp",
+      "name": "S&P 500 Point-to-Point",
+      "capPct": 10.25,
+      "floorPct": 0,
+      "participationPct": 100,
+      "spreadPct": 0,
+      "strategyChargePct": 0
+    },
+    {
+      "id": "am-sp500-uncapped",
+      "name": "Uncapped S&P 500 PtP",
+      "capPct": null,
+      "floorPct": 0,
+      "participationPct": 100,
+      "spreadPct": 6,
+      "strategyChargePct": 0
+    },
+    {
+      "id": "am-highcap-sp500",
+      "name": "High-Cap S&P 500 PtP",
+      "capPct": 13,
+      "floorPct": 0,
+      "participationPct": 100,
+      "spreadPct": 0,
+      "strategyChargePct": 1
+    },
+    {
+      "id": "am-fixed",
+      "name": "Fixed Interest",
+      "capPct": 4.25,
+      "floorPct": 4.25,
+      "participationPct": 0,
+      "spreadPct": 0,
+      "strategyChargePct": 0
+    },
+    {
+      "id": "am-sp500-2yr",
+      "name": "2-Year S&P 500 PtP (Spread)",
+      "capPct": null,
+      "floorPct": 0,
+      "participationPct": 100,
+      "spreadPct": 4.5,
+      "strategyChargePct": 0
+    },
+    {
+      "id": "apm-sp500-capped",
+      "name": "S&P 500 Capped PtP",
+      "capPct": 10.5,
+      "floorPct": 0,
+      "participationPct": 100,
+      "spreadPct": 0,
+      "strategyChargePct": 0
+    },
+    {
+      "id": "apm-sp500-multiplier",
+      "name": "S&P 500 with Multiplier",
+      "capPct": 14,
+      "floorPct": 0,
+      "participationPct": 110,
+      "spreadPct": 0,
+      "strategyChargePct": 0.75
+    },
+    {
+      "id": "apm-sp500-lowvol",
+      "name": "S&P 500 Low Volatility",
+      "capPct": null,
+      "floorPct": 0,
+      "participationPct": 100,
+      "spreadPct": 3,
+      "strategyChargePct": 0
+    },
+    {
+      "id": "apm-fixed",
+      "name": "Fixed Account",
+      "capPct": 4,
+      "floorPct": 4,
+      "participationPct": 0,
+      "spreadPct": 0,
+      "strategyChargePct": 0
+    },
+    {
+      "id": "apm-sp500-2yr",
+      "name": "2-Year S&P 500 PtP (110% Participation)",
+      "capPct": null,
+      "floorPct": 0,
+      "participationPct": 110,
+      "spreadPct": 2.5,
+      "strategyChargePct": 0
+    },
+    {
+      "id": "apm-sp500-1yr-capped",
+      "name": "1-Year S&P 500 Capped PtP",
+      "capPct": 10.5,
+      "floorPct": 0,
+      "participationPct": 100,
+      "spreadPct": 0,
+      "strategyChargePct": 0
+    },
+    {
+      "id": "amm-sp500-core",
+      "name": "S&P 500 Core PtP",
+      "capPct": 9.5,
+      "floorPct": 0,
+      "participationPct": 100,
+      "spreadPct": 0,
+      "strategyChargePct": 0
+    },
+    {
+      "id": "amm-sp500-smart",
+      "name": "S&P 500 Smart Strategy",
+      "capPct": null,
+      "floorPct": 0,
+      "participationPct": 100,
+      "spreadPct": 5,
+      "strategyChargePct": 0
+    },
+    {
+      "id": "amm-nasdaq-ccar",
+      "name": "Nasdaq-100 CCAR",
+      "capPct": 11,
+      "floorPct": 0,
+      "participationPct": 100,
+      "spreadPct": 0,
+      "strategyChargePct": 0
+    },
+    {
+      "id": "amm-sp500-highpar",
+      "name": "S&P 500 High Participation",
+      "capPct": null,
+      "floorPct": 0,
+      "participationPct": 85,
+      "spreadPct": 0,
+      "strategyChargePct": 0
+    },
+    {
+      "id": "amm-dynamic-bonus",
+      "name": "Dynamic Low Vol with Bonus",
+      "capPct": null,
+      "floorPct": 0,
+      "participationPct": 125,
+      "spreadPct": 0,
+      "strategyChargePct": 0
+    },
+    {
+      "id": "amm-fixed",
+      "name": "Fixed Account",
+      "capPct": 3.75,
+      "floorPct": 3.75,
+      "participationPct": 0,
+      "spreadPct": 0,
+      "strategyChargePct": 0
+    },
+    {
+      "id": "amm-sp500-2yr",
+      "name": "2-Year S&P 500 PtP (110% Participation)",
+      "capPct": null,
+      "floorPct": 0,
+      "participationPct": 110,
+      "spreadPct": 2.5,
+      "strategyChargePct": 0
+    },
+    {
+      "id": "amm-sp500-1yr-capped",
+      "name": "1-Year S&P 500 Capped PtP",
+      "capPct": 10.5,
+      "floorPct": 0,
+      "participationPct": 100,
+      "spreadPct": 0,
+      "strategyChargePct": 0
+    },
+    {
+      "id": "bm-sp500-2yr-balanced",
+      "name": "2-Year Balanced Indexed Account",
+      "capPct": null,
+      "floorPct": 0,
+      "participationPct": 105,
+      "spreadPct": 2.5,
+      "strategyChargePct": 0
+    },
+    {
+      "id": "bm-sp500-par110",
+      "name": "110% S&P 500, annual, uncapped",
+      "capPct": null,
+      "floorPct": 0,
+      "participationPct": 110,
+      "spreadPct": 0,
+      "strategyChargePct": 0
+    }
+  ],
+  "basis": "No surrender charge schedule was supplied, so surrender value is shown equal to account value. A real policy carries a surrender charge for the first several years and the true figure is lower.",
+  "notice": "Historical index changes are not indicative of future returns. Caps, participation rates and spreads are declared by the carrier and can change."
+}
