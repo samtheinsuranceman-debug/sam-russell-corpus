@@ -25,6 +25,7 @@ import {
   getCreditedRate,
   getCreditingHistory,
 } from '../shared/indexCreditingData';
+import { getPopularIndexOptions } from '../shared/timeMachineEngine';
 
 const SP500 = RAW_INDEX_RETURNS.SP500;
 const BIA = SEGMENT_ACCOUNTS.find((a) => a.id === 'bia-2yr') as SegmentTerms;
@@ -316,5 +317,46 @@ describe('the segment accounts as index options on every calculator', () => {
     expect(h.map((r) => r.year)).toEqual([2020, 2021, 2022, 2023, 2024, 2025]);
     expect(h.find((r) => r.year === 2021)?.creditedRate).toBeCloseTo(21.64, 1);
     expect(h.find((r) => r.year === 2022)?.creditedRate).toBeCloseTo(0.94, 1);
+  });
+});
+
+describe('the Time Machine sees the segment accounts', () => {
+  it('offers both in the popular selector', () => {
+    const ids = getPopularIndexOptions().map((o) => o.id);
+    expect(ids).toContain('bm-sp500-2yr-balanced');
+    expect(ids).toContain('bm-sp500-par110');
+  });
+
+  it('puts the term and the unsourced mark in the LABEL, not only a field', () => {
+    // A selector that renders only `label` still tells the reader the truth.
+    const opts = getPopularIndexOptions();
+    const bia = opts.find((o) => o.id === 'bm-sp500-2yr-balanced')!;
+    const par = opts.find((o) => o.id === 'bm-sp500-par110')!;
+    expect(bia.label).toMatch(/2-year segment/);
+    expect(bia.label).not.toMatch(/unsourced/);
+    expect(par.label).toMatch(/unsourced/);
+    expect(bia.segmentTermYears).toBe(2);
+    expect(par.sourced).toBe(false);
+  });
+
+  it('leaves the annual options' + ' labels unchanged apart from the sourced mark', () => {
+    const ptp = getPopularIndexOptions().find((o) => o.id === 'am-sp500-ptp')!;
+    expect(ptp.segmentTermYears).toBe(1);
+    expect(ptp.label).not.toMatch(/segment/);
+  });
+
+  it('credits a two-year segment through the projection so the term compounds', () => {
+    // Crediting the annualized rate in each of the two years must reproduce
+    // the segment credit — otherwise a projection using this option would
+    // quietly pay the segment credit twice.
+    const bia = ALL_INDEX_OPTIONS.find((o) => o.id === 'bm-sp500-2yr-balanced')!;
+    const a = getCreditedRate(bia, 2020);
+    const b = getCreditedRate(bia, 2021);
+    const twoYearGrowth = (1 + a / 100) * (1 + b / 100);
+    // 2020 closes the 2019-2020 segment (36.22%) and 2021 closes 2020-2021
+    // (47.97%); each year carries its own segment's per-year rate.
+    expect(a).toBeCloseTo(16.71, 1);
+    expect(b).toBeCloseTo(21.64, 1);
+    expect(twoYearGrowth).toBeGreaterThan(1);
   });
 });

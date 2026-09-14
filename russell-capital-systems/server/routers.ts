@@ -5104,6 +5104,13 @@ Keep it personal, specific with dollar amounts, and actionable. Use their actual
           bonus: o.bonus,
           description: o.description,
           availableFrom: o.availableFrom,
+          // The term travels with the option. Without it a two-year segment
+          // renders beside annual strategies as though its credit were a
+          // year's return, which overstates it by roughly double.
+          segmentTermYears: o.segmentTermYears ?? 1,
+          // And so does whether anybody actually quoted these terms.
+          sourced: o.sourced ?? false,
+          sourceNote: o.sourceNote ?? null,
         })),
         carriers: CARRIERS,
         availableYears: AVAILABLE_YEARS,
@@ -5121,8 +5128,23 @@ Keep it personal, specific with dollar amounts, and actionable. Use their actual
         
         const option = ALL_INDEX_OPTIONS.find((o: any) => o.id === input.optionId);
         if (!option) throw new TRPCError({ code: 'NOT_FOUND', message: `Option ${input.optionId} not found` });
+        const term = option.segmentTermYears ?? 1;
         return {
-          option: { id: option.id, name: option.name, carrier: option.carrier },
+          option: {
+            id: option.id,
+            name: option.name,
+            carrier: option.carrier,
+            segmentTermYears: term,
+            sourced: option.sourced ?? false,
+          },
+          // For a multi-year segment every creditedRate below is the
+          // ANNUALIZED credit of the segment ending that year — the only
+          // figure comparable with an annual strategy. The segment credit
+          // itself, with its term beside it, comes from policyLab.segments.
+          basis:
+            term > 1
+              ? `Each row is the annualized credit of the ${term}-year segment ending that year, not that year's own crediting.`
+              : "Each row is that year's credit.",
           history: getCreditingHistory(option, input.startYear ?? 1994, input.endYear ?? 2025),
         };
       }),
