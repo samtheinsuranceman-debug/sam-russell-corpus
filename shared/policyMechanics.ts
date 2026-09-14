@@ -66,6 +66,16 @@ export interface PolicyCharges {
   /** Surrender charge by policy year, as a percentage of account value. */
   readonly surrenderChargePctByYear: readonly number[];
   /**
+   * Surrender charge in DOLLARS per $1,000 of specified amount, by policy year.
+   *
+   * This is how a real product states it, and the engine prefers it when both
+   * are present. A cost summary showed the same schedule reading 38.97%,
+   * 19.40%, 13.64% ... of account value while being a flat $37.68 per $1,000
+   * for three years — as a percentage it is not a property of the product at
+   * all, only of how fast that policy happened to accumulate.
+   */
+  readonly surrenderChargePerThousandByYear?: readonly number[];
+  /**
    * Persistency or asset credit added to the account value annually from a
    * given year, as a percentage. Several designs carry one.
    */
@@ -239,12 +249,13 @@ export function stepPolicyYear(s: PolicyYearStep): PolicyYearResult {
       : 0;
   accountValue += persistencyCredit;
 
-  const surrenderPct = atYear(c.surrenderChargePctByYear, s.policyYear);
   const accountValueRounded = Math.round(accountValue);
-  const surrenderValue = Math.max(
-    0,
-    accountValueRounded - Math.round(accountValue * (surrenderPct / 100))
-  );
+  // Dollars per $1,000 of face is the product's own basis; prefer it.
+  const surrenderCharge =
+    c.surrenderChargePerThousandByYear && c.surrenderChargePerThousandByYear.length > 0
+      ? (s.faceAmount / 1000) * atYear(c.surrenderChargePerThousandByYear, s.policyYear)
+      : accountValue * (atYear(c.surrenderChargePctByYear, s.policyYear) / 100);
+  const surrenderValue = Math.max(0, accountValueRounded - Math.round(surrenderCharge));
 
   return {
     accountValue,
@@ -272,7 +283,10 @@ export function runPolicyMechanics(input: PolicyMechanicsInput): PolicyMechanics
   const missing: string[] = [];
   if (c.coiTable.length === 0) missing.push('cost of insurance table');
   else if (c.coiTableSource === ILLUSTRATIVE_SOURCE) missing.push('a carrier cost of insurance table');
-  if (c.surrenderChargePctByYear.length === 0) missing.push('surrender charge schedule');
+  if (c.surrenderChargePctByYear.length === 0 &&
+      !(c.surrenderChargePerThousandByYear && c.surrenderChargePerThousandByYear.length > 0)) {
+    missing.push('surrender charge schedule');
+  }
   // The corridor is law, not pricing, so it is never missing — it defaults to
   // the statutory schedule. It stays on `missing` only until somebody has read
   // 26 U.S.C. 7702(d)(2) beside our transcription of it.
