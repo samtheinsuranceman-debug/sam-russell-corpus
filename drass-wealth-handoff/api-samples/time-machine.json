@@ -1,0 +1,1061 @@
+{
+  "indexAgeYears": 32,
+  "ag49Rate": 6,
+  "index": {
+    "id": "am-sp500-ptp",
+    "name": "S&P 500 Point-to-Point",
+    "carrier": "mutual-a",
+    "underlying": "SP500",
+    "capPct": 10.25,
+    "floorPct": 0,
+    "participationPct": 100,
+    "spreadPct": 0,
+    "strategyChargePct": 0,
+    "bonusPct": 0
+  },
+  "creditHistory": [
+    {
+      "year": 1994,
+      "indexChangePct": 4.33,
+      "creditedRatePct": 4.33,
+      "floorHeld": false,
+      "capLimited": false
+    },
+    {
+      "year": 1995,
+      "indexChangePct": 31.4,
+      "creditedRatePct": 10.25,
+      "floorHeld": false,
+      "capLimited": true
+    },
+    {
+      "year": 1996,
+      "indexChangePct": 23.48,
+      "creditedRatePct": 10.25,
+      "floorHeld": false,
+      "capLimited": true
+    },
+    {
+      "year": 1997,
+      "indexChangePct": 32.69,
+      "creditedRatePct": 10.25,
+      "floorHeld": false,
+      "capLimited": true
+    },
+    {
+      "year": 1998,
+      "indexChangePct": 18.01,
+      "creditedRatePct": 10.25,
+      "floorHeld": false,
+      "capLimited": true
+    },
+    {
+      "year": 1999,
+      "indexChangePct": 10.34,
+      "creditedRatePct": 10.25,
+      "floorHeld": false,
+      "capLimited": true
+    },
+    {
+      "year": 2000,
+      "indexChangePct": -9.26,
+      "creditedRatePct": 0,
+      "floorHeld": true,
+      "capLimited": false
+    },
+    {
+      "year": 2001,
+      "indexChangePct": -10.74,
+      "creditedRatePct": 0,
+      "floorHeld": true,
+      "capLimited": false
+    },
+    {
+      "year": 2002,
+      "indexChangePct": -24,
+      "creditedRatePct": 0,
+      "floorHeld": true,
+      "capLimited": false
+    },
+    {
+      "year": 2003,
+      "indexChangePct": 36.12,
+      "creditedRatePct": 10.25,
+      "floorHeld": false,
+      "capLimited": true
+    },
+    {
+      "year": 2004,
+      "indexChangePct": 5.12,
+      "creditedRatePct": 5.12,
+      "floorHeld": false,
+      "capLimited": false
+    },
+    {
+      "year": 2005,
+      "indexChangePct": 6.4,
+      "creditedRatePct": 6.4,
+      "floorHeld": false,
+      "capLimited": false
+    },
+    {
+      "year": 2006,
+      "indexChangePct": 9.85,
+      "creditedRatePct": 9.85,
+      "floorHeld": false,
+      "capLimited": false
+    },
+    {
+      "year": 2007,
+      "indexChangePct": -5.42,
+      "creditedRatePct": 0,
+      "floorHeld": true,
+      "capLimited": false
+    },
+    {
+      "year": 2008,
+      "indexChangePct": -44.76,
+      "creditedRatePct": 0,
+      "floorHeld": true,
+      "capLimited": false
+    },
+    {
+      "year": 2009,
+      "indexChangePct": 50.25,
+      "creditedRatePct": 10.25,
+      "floorHeld": false,
+      "capLimited": true
+    },
+    {
+      "year": 2010,
+      "indexChangePct": 20.17,
+      "creditedRatePct": 10.25,
+      "floorHeld": false,
+      "capLimited": true
+    },
+    {
+      "year": 2011,
+      "indexChangePct": 2.9,
+      "creditedRatePct": 2.9,
+      "floorHeld": false,
+      "capLimited": false
+    },
+    {
+      "year": 2012,
+      "indexChangePct": 10.91,
+      "creditedRatePct": 10.25,
+      "floorHeld": false,
+      "capLimited": true
+    },
+    {
+      "year": 2013,
+      "indexChangePct": 22.76,
+      "creditedRatePct": 10.25,
+      "floorHeld": false,
+      "capLimited": true
+    },
+    {
+      "year": 2014,
+      "indexChangePct": 13.18,
+      "creditedRatePct": 10.25,
+      "floorHeld": false,
+      "capLimited": true
+    },
+    {
+      "year": 2015,
+      "indexChangePct": -8.19,
+      "creditedRatePct": 0,
+      "floorHeld": true,
+      "capLimited": false
+    },
+    {
+      "year": 2016,
+      "indexChangePct": 22.33,
+      "creditedRatePct": 10.25,
+      "floorHeld": false,
+      "capLimited": true
+    },
+    {
+      "year": 2017,
+      "indexChangePct": 14.82,
+      "creditedRatePct": 10.25,
+      "floorHeld": false,
+      "capLimited": true
+    },
+    {
+      "year": 2018,
+      "indexChangePct": 2.6,
+      "creditedRatePct": 2.6,
+      "floorHeld": false,
+      "capLimited": false
+    },
+    {
+      "year": 2019,
+      "indexChangePct": 6.1,
+      "creditedRatePct": 6.1,
+      "floorHeld": false,
+      "capLimited": false
+    },
+    {
+      "year": 2020,
+      "indexChangePct": 29.01,
+      "creditedRatePct": 10.25,
+      "floorHeld": false,
+      "capLimited": true
+    },
+    {
+      "year": 2021,
+      "indexChangePct": 14.77,
+      "creditedRatePct": 10.25,
+      "floorHeld": false,
+      "capLimited": true
+    },
+    {
+      "year": 2022,
+      "indexChangePct": -9.23,
+      "creditedRatePct": 0,
+      "floorHeld": true,
+      "capLimited": false
+    },
+    {
+      "year": 2023,
+      "indexChangePct": 28.36,
+      "creditedRatePct": 10.25,
+      "floorHeld": false,
+      "capLimited": true
+    },
+    {
+      "year": 2024,
+      "indexChangePct": 16.84,
+      "creditedRatePct": 10.25,
+      "floorHeld": false,
+      "capLimited": true
+    },
+    {
+      "year": 2025,
+      "indexChangePct": 15.52,
+      "creditedRatePct": 10.25,
+      "floorHeld": false,
+      "capLimited": true
+    }
+  ],
+  "strategies": [
+    {
+      "id": "am-sp500-ptp",
+      "name": "S&P 500 Point-to-Point",
+      "carrier": "mutual-a",
+      "underlying": "SP500",
+      "capPct": 10.25,
+      "participationPct": 100,
+      "spreadPct": 0,
+      "availableFrom": 1994,
+      "description": "Traditional capped S&P 500 strategy. 100% participation, 10.25% cap, 0% floor.",
+      "modelCaveat": null,
+      "selectable": true
+    },
+    {
+      "id": "am-sp500-uncapped",
+      "name": "Uncapped S&P 500 PtP",
+      "carrier": "mutual-a",
+      "underlying": "SP500",
+      "capPct": null,
+      "participationPct": 100,
+      "spreadPct": 6,
+      "availableFrom": 1994,
+      "description": "Uncapped S&P 500 with 6.00% spread. Unlimited upside minus spread, 0% floor.",
+      "modelCaveat": null,
+      "selectable": true
+    },
+    {
+      "id": "am-highcap-sp500",
+      "name": "High-Cap S&P 500 PtP",
+      "carrier": "mutual-a",
+      "underlying": "SP500",
+      "capPct": 13,
+      "participationPct": 100,
+      "spreadPct": 0,
+      "availableFrom": 1994,
+      "description": "Higher cap (13.25%) with 1.5% strategy charge. More upside potential.",
+      "modelCaveat": null,
+      "selectable": true
+    },
+    {
+      "id": "am-multi-index",
+      "name": "Multi-Index Monthly Average",
+      "carrier": "mutual-a",
+      "underlying": "SP500",
+      "capPct": 13,
+      "participationPct": 100,
+      "spreadPct": 0,
+      "availableFrom": 1994,
+      "description": "Blended 50/30/20 of best-performing indices. 13% cap, 0% floor. Third component is wrong until a DJIA series is sourced.",
+      "modelCaveat": "Modelled on annual point-to-point index returns, while the product name describes a monthly average. A monthly design credits materially less in a trending market, so this reconstruction overstates it.",
+      "selectable": false
+    },
+    {
+      "id": "am-highcap-multi",
+      "name": "High-Cap Multi-Index Monthly Avg",
+      "carrier": "mutual-a",
+      "underlying": "SP500",
+      "capPct": 25,
+      "participationPct": 100,
+      "spreadPct": 0,
+      "availableFrom": 1994,
+      "description": "High-cap multi-index blend (25% cap) with 1.5% strategy charge.",
+      "modelCaveat": "Modelled on annual point-to-point index returns, while the product name describes a monthly average. A monthly design credits materially less in a trending market, so this reconstruction overstates it.",
+      "selectable": false
+    },
+    {
+      "id": "am-fixed",
+      "name": "Fixed Interest",
+      "carrier": "mutual-a",
+      "underlying": "SP500",
+      "capPct": 4.25,
+      "participationPct": 0,
+      "spreadPct": 0,
+      "availableFrom": 1994,
+      "description": "Fixed 4.25% guaranteed interest. No market exposure.",
+      "modelCaveat": null,
+      "selectable": true
+    },
+    {
+      "id": "am-sp500-2yr",
+      "name": "2-Year S&P 500 PtP (Spread)",
+      "carrier": "mutual-a",
+      "underlying": "SP500",
+      "capPct": null,
+      "participationPct": 100,
+      "spreadPct": 4.5,
+      "availableFrom": 1994,
+      "description": "2-Year S&P 500 Point-to-Point. 100% participation, uncapped, -4.5% spread, 0% floor.",
+      "modelCaveat": null,
+      "selectable": true
+    },
+    {
+      "id": "ma-jpm-mercury-plus",
+      "name": "J.P. Morgan Mercury Plus",
+      "carrier": "mutual-a",
+      "underlying": "JPM_MERCURY",
+      "capPct": null,
+      "participationPct": 185,
+      "spreadPct": 0,
+      "availableFrom": 2022,
+      "description": "Uncapped, 185% participation, plus a 0.6% non-guaranteed strategy credit. Guaranteed participation 65%.",
+      "modelCaveat": "No index series is held for JPM_MERCURY, so a year-by-year credit cannot be computed. The carrier publishes a 12.48% twenty-year look-back for this strategy; its index was established in 2022, so everything before that is back-tested.",
+      "selectable": false
+    },
+    {
+      "id": "ma-bnpp-hfactor-plus",
+      "name": "BNPP Global H-Factor Plus",
+      "carrier": "mutual-a",
+      "underlying": "BNPP_HFACTOR",
+      "capPct": null,
+      "participationPct": 235,
+      "spreadPct": 0,
+      "availableFrom": 2022,
+      "description": "Uncapped, 235% participation, plus a 0.6% non-guaranteed strategy credit. Guaranteed participation 65%.",
+      "modelCaveat": "No index series is held for BNPP_HFACTOR, so a year-by-year credit cannot be computed. The carrier publishes a 14.48% twenty-year look-back for this strategy; its index was established in 2022, so everything before that is back-tested.",
+      "selectable": false
+    },
+    {
+      "id": "ma-jpm-mercury-highpar",
+      "name": "J.P. Morgan Mercury High Participation",
+      "carrier": "mutual-a",
+      "underlying": "JPM_MERCURY",
+      "capPct": null,
+      "participationPct": 210,
+      "spreadPct": 0,
+      "availableFrom": 2022,
+      "description": "Uncapped, 210% participation, no strategy credit. Guaranteed participation 65%.",
+      "modelCaveat": "No index series is held for JPM_MERCURY, so a year-by-year credit cannot be computed. The carrier publishes a 14.16% twenty-year look-back for this strategy; its index was established in 2022, so everything before that is back-tested.",
+      "selectable": false
+    },
+    {
+      "id": "ma-bnpp-hfactor-highpar",
+      "name": "BNPP Global H-Factor High Participation",
+      "carrier": "mutual-a",
+      "underlying": "BNPP_HFACTOR",
+      "capPct": null,
+      "participationPct": 265,
+      "spreadPct": 0,
+      "availableFrom": 2022,
+      "description": "Uncapped, 265% participation, no strategy credit. Guaranteed participation 65%.",
+      "modelCaveat": "No index series is held for BNPP_HFACTOR, so a year-by-year credit cannot be computed. The carrier publishes a 16.33% twenty-year look-back for this strategy; its index was established in 2022, so everything before that is back-tested.",
+      "selectable": false
+    },
+    {
+      "id": "ma-jpm-mercury-select",
+      "name": "J.P. Morgan Mercury High Par Select",
+      "carrier": "mutual-a",
+      "underlying": "JPM_MERCURY",
+      "capPct": null,
+      "participationPct": 250,
+      "spreadPct": 0,
+      "availableFrom": 2022,
+      "description": "Uncapped, 250% participation, in exchange for a 1.0% strategy charge (guaranteed maximum 1.5%).",
+      "modelCaveat": "No index series is held for JPM_MERCURY, so a year-by-year credit cannot be computed. The carrier publishes a 16.86% twenty-year look-back for this strategy; its index was established in 2022, so everything before that is back-tested.",
+      "selectable": false
+    },
+    {
+      "id": "ma-bnpp-hfactor-select",
+      "name": "BNPP Global H-Factor High Par Select",
+      "carrier": "mutual-a",
+      "underlying": "BNPP_HFACTOR",
+      "capPct": null,
+      "participationPct": 315,
+      "spreadPct": 0,
+      "availableFrom": 2022,
+      "description": "Uncapped, 315% participation, in exchange for a 1.0% strategy charge (guaranteed maximum 1.5%).",
+      "modelCaveat": "No index series is held for BNPP_HFACTOR, so a year-by-year credit cannot be computed. The carrier publishes a 19.41% twenty-year look-back for this strategy; its index was established in 2022, so everything before that is back-tested.",
+      "selectable": false
+    },
+    {
+      "id": "apm-sp500-capped",
+      "name": "S&P 500 Capped PtP",
+      "carrier": "mutual-b",
+      "underlying": "SP500",
+      "capPct": 10.5,
+      "participationPct": 100,
+      "spreadPct": 0,
+      "availableFrom": 1994,
+      "description": "Traditional S&P 500 capped at 10.50%. 100% participation, 0% floor.",
+      "modelCaveat": null,
+      "selectable": true
+    },
+    {
+      "id": "apm-sp500-multiplier",
+      "name": "S&P 500 with Multiplier",
+      "carrier": "mutual-b",
+      "underlying": "SP500",
+      "capPct": 14,
+      "participationPct": 110,
+      "spreadPct": 0,
+      "availableFrom": 1994,
+      "description": "S&P 500 with 110% participation and 14% cap. 0.75% strategy charge.",
+      "modelCaveat": null,
+      "selectable": true
+    },
+    {
+      "id": "apm-sp500-lowvol",
+      "name": "S&P 500 Low Volatility",
+      "carrier": "mutual-b",
+      "underlying": "SP500",
+      "capPct": null,
+      "participationPct": 100,
+      "spreadPct": 3,
+      "availableFrom": 1994,
+      "description": "S&P 500 Low Volatility — uncapped with 3% spread. Smoother returns.",
+      "modelCaveat": null,
+      "selectable": true
+    },
+    {
+      "id": "apm-hindsight",
+      "name": "Hindsight Account (S&P/Nasdaq/Russell)",
+      "carrier": "mutual-b",
+      "underlying": "SP500",
+      "capPct": 12,
+      "participationPct": 100,
+      "spreadPct": 0,
+      "availableFrom": 1994,
+      "description": "Hindsight: 60% best + 40% second-best of S&P 500, Nasdaq-100, Russell 2000. 12% cap.",
+      "modelCaveat": "Blends the components 50/30/20 by that year's best performer, which is the contract — but one component is substituted: the strategy names the Dow Jones Industrial Average and we hold no DJIA series, so the Russell 2000 stands in for it.",
+      "selectable": false
+    },
+    {
+      "id": "apm-fixed",
+      "name": "Fixed Account",
+      "carrier": "mutual-b",
+      "underlying": "SP500",
+      "capPct": 4,
+      "participationPct": 0,
+      "spreadPct": 0,
+      "availableFrom": 1994,
+      "description": "Fixed 4.0% guaranteed interest. No market exposure.",
+      "modelCaveat": null,
+      "selectable": true
+    },
+    {
+      "id": "apm-sp500-2yr",
+      "name": "2-Year S&P 500 PtP (110% Participation)",
+      "carrier": "mutual-b",
+      "underlying": "SP500",
+      "capPct": null,
+      "participationPct": 110,
+      "spreadPct": 2.5,
+      "availableFrom": 1994,
+      "description": "2-Year S&P 500 Point-to-Point. Uncapped, 110% participation, -2.5% spread, 0% floor.",
+      "modelCaveat": null,
+      "selectable": true
+    },
+    {
+      "id": "apm-sp500-1yr-capped",
+      "name": "1-Year S&P 500 Capped PtP",
+      "carrier": "mutual-b",
+      "underlying": "SP500",
+      "capPct": 10.5,
+      "participationPct": 100,
+      "spreadPct": 0,
+      "availableFrom": 1994,
+      "description": "1-Year S&P 500 Point-to-Point. 100% participation, 10.5% cap, 0% floor.",
+      "modelCaveat": null,
+      "selectable": true
+    },
+    {
+      "id": "amm-sp500-core",
+      "name": "S&P 500 Core PtP",
+      "carrier": "mutual-c",
+      "underlying": "SP500",
+      "capPct": 9.5,
+      "participationPct": 100,
+      "spreadPct": 0,
+      "availableFrom": 1994,
+      "description": "Core S&P 500 strategy. 9.5% cap, 100% participation, 0% floor.",
+      "modelCaveat": null,
+      "selectable": true
+    },
+    {
+      "id": "amm-sp500-smart",
+      "name": "S&P 500 Smart Strategy",
+      "carrier": "mutual-c",
+      "underlying": "SP500",
+      "capPct": null,
+      "participationPct": 100,
+      "spreadPct": 5,
+      "availableFrom": 1994,
+      "description": "S&P 500 Allocation Index — uncapped with 5.0% spread. 100% participation.",
+      "modelCaveat": null,
+      "selectable": true
+    },
+    {
+      "id": "amm-nasdaq-ccar",
+      "name": "Nasdaq-100 CCAR",
+      "carrier": "mutual-c",
+      "underlying": "NASDAQ100",
+      "capPct": 11,
+      "participationPct": 100,
+      "spreadPct": 0,
+      "availableFrom": 1994,
+      "description": "Nasdaq-100 with CCAR rider. 11% cap, 100% participation, 0% floor.",
+      "modelCaveat": null,
+      "selectable": true
+    },
+    {
+      "id": "amm-sp500-highpar",
+      "name": "S&P 500 High Participation",
+      "carrier": "mutual-c",
+      "underlying": "SP500",
+      "capPct": null,
+      "participationPct": 85,
+      "spreadPct": 0,
+      "availableFrom": 1994,
+      "description": "S&P 500 uncapped with 85% participation. No spread.",
+      "modelCaveat": null,
+      "selectable": true
+    },
+    {
+      "id": "amm-dynamic-bonus",
+      "name": "Dynamic Low Vol with Bonus",
+      "carrier": "mutual-c",
+      "underlying": "SP500",
+      "capPct": null,
+      "participationPct": 125,
+      "spreadPct": 0,
+      "availableFrom": 1994,
+      "description": "Dynamic Low Volatility — 125% participation, 0.75% bonus, uncapped.",
+      "modelCaveat": null,
+      "selectable": true
+    },
+    {
+      "id": "amm-fixed",
+      "name": "Fixed Account",
+      "carrier": "mutual-c",
+      "underlying": "SP500",
+      "capPct": 3.75,
+      "participationPct": 0,
+      "spreadPct": 0,
+      "availableFrom": 1994,
+      "description": "Fixed 3.75% guaranteed interest. No market exposure.",
+      "modelCaveat": null,
+      "selectable": true
+    },
+    {
+      "id": "amm-sp500-2yr",
+      "name": "2-Year S&P 500 PtP (110% Participation)",
+      "carrier": "mutual-c",
+      "underlying": "SP500",
+      "capPct": null,
+      "participationPct": 110,
+      "spreadPct": 2.5,
+      "availableFrom": 1994,
+      "description": "2-Year S&P 500 Point-to-Point. Uncapped, 110% participation, -2.5% spread, 0% floor.",
+      "modelCaveat": null,
+      "selectable": true
+    },
+    {
+      "id": "amm-sp500-1yr-capped",
+      "name": "1-Year S&P 500 Capped PtP",
+      "carrier": "mutual-c",
+      "underlying": "SP500",
+      "capPct": 10.5,
+      "participationPct": 100,
+      "spreadPct": 0,
+      "availableFrom": 1994,
+      "description": "1-Year S&P 500 Point-to-Point. 100% participation, 10.5% cap, 0% floor.",
+      "modelCaveat": null,
+      "selectable": true
+    },
+    {
+      "id": "bm-sp500-2yr-balanced",
+      "name": "2-Year Balanced Indexed Account",
+      "carrier": "mutual-b",
+      "underlying": "SP500",
+      "capPct": null,
+      "participationPct": 105,
+      "spreadPct": 2.5,
+      "availableFrom": 1994,
+      "description": "Two-year segment on the S&P 500 price index: 105% participation, 2.50% spread over the segment, 0% floor, uncapped. Rates shown per year are the annualized credit of the two-year segment ending that year, not the segment credit itself.",
+      "modelCaveat": null,
+      "selectable": true
+    },
+    {
+      "id": "bm-sp500-par110",
+      "name": "110% S&P 500, annual, uncapped",
+      "carrier": "mutual-b",
+      "underlying": "SP500",
+      "capPct": null,
+      "participationPct": 110,
+      "spreadPct": 0,
+      "availableFrom": 1994,
+      "description": "Annual point-to-point at 110% participation, no cap, no spread, 0% floor. A parameter set for comparison, not a product anybody has quoted.",
+      "modelCaveat": null,
+      "selectable": true
+    }
+  ],
+  "boring": [
+    {
+      "year": 1,
+      "age": 46,
+      "accountValue": 26500,
+      "surrenderValue": 13250
+    },
+    {
+      "year": 2,
+      "age": 47,
+      "accountValue": 54590,
+      "surrenderValue": 30025
+    },
+    {
+      "year": 3,
+      "age": 48,
+      "accountValue": 84365,
+      "surrenderValue": 50619
+    },
+    {
+      "year": 4,
+      "age": 49,
+      "accountValue": 115927,
+      "surrenderValue": 75353
+    },
+    {
+      "year": 5,
+      "age": 50,
+      "accountValue": 149383,
+      "surrenderValue": 104568
+    },
+    {
+      "year": 6,
+      "age": 51,
+      "accountValue": 158346,
+      "surrenderValue": 118759
+    },
+    {
+      "year": 7,
+      "age": 52,
+      "accountValue": 167847,
+      "surrenderValue": 134277
+    },
+    {
+      "year": 8,
+      "age": 53,
+      "accountValue": 177917,
+      "surrenderValue": 151230
+    },
+    {
+      "year": 9,
+      "age": 54,
+      "accountValue": 188593,
+      "surrenderValue": 169733
+    },
+    {
+      "year": 10,
+      "age": 55,
+      "accountValue": 199908,
+      "surrenderValue": 183915
+    },
+    {
+      "year": 11,
+      "age": 56,
+      "accountValue": 211903,
+      "surrenderValue": 199188
+    },
+    {
+      "year": 12,
+      "age": 57,
+      "accountValue": 224617,
+      "surrenderValue": 215632
+    },
+    {
+      "year": 13,
+      "age": 58,
+      "accountValue": 238094,
+      "surrenderValue": 233332
+    },
+    {
+      "year": 14,
+      "age": 59,
+      "accountValue": 252379,
+      "surrenderValue": 249856
+    },
+    {
+      "year": 15,
+      "age": 60,
+      "accountValue": 267522,
+      "surrenderValue": 267522
+    },
+    {
+      "year": 16,
+      "age": 61,
+      "accountValue": 283573,
+      "surrenderValue": 283573
+    },
+    {
+      "year": 17,
+      "age": 62,
+      "accountValue": 300588,
+      "surrenderValue": 300588
+    },
+    {
+      "year": 18,
+      "age": 63,
+      "accountValue": 318623,
+      "surrenderValue": 318623
+    },
+    {
+      "year": 19,
+      "age": 64,
+      "accountValue": 337741,
+      "surrenderValue": 337741
+    },
+    {
+      "year": 20,
+      "age": 65,
+      "accountValue": 358005,
+      "surrenderValue": 358005
+    },
+    {
+      "year": 21,
+      "age": 66,
+      "accountValue": 379485,
+      "surrenderValue": 379485
+    },
+    {
+      "year": 22,
+      "age": 67,
+      "accountValue": 402254,
+      "surrenderValue": 402254
+    },
+    {
+      "year": 23,
+      "age": 68,
+      "accountValue": 426390,
+      "surrenderValue": 426390
+    },
+    {
+      "year": 24,
+      "age": 69,
+      "accountValue": 451973,
+      "surrenderValue": 451973
+    },
+    {
+      "year": 25,
+      "age": 70,
+      "accountValue": 479091,
+      "surrenderValue": 479091
+    },
+    {
+      "year": 26,
+      "age": 71,
+      "accountValue": 507837,
+      "surrenderValue": 507837
+    },
+    {
+      "year": 27,
+      "age": 72,
+      "accountValue": 538307,
+      "surrenderValue": 538307
+    },
+    {
+      "year": 28,
+      "age": 73,
+      "accountValue": 570606,
+      "surrenderValue": 570606
+    },
+    {
+      "year": 29,
+      "age": 74,
+      "accountValue": 604842,
+      "surrenderValue": 604842
+    },
+    {
+      "year": 30,
+      "age": 75,
+      "accountValue": 641132,
+      "surrenderValue": 641132
+    }
+  ],
+  "historical": [
+    {
+      "year": 1,
+      "calendarYear": 2027,
+      "indexChange": 0,
+      "creditedRate": 4.33,
+      "accountValue": 26083,
+      "surrenderValue": 13041
+    },
+    {
+      "year": 2,
+      "calendarYear": 2028,
+      "indexChange": 0,
+      "creditedRate": 10.25,
+      "accountValue": 56318,
+      "surrenderValue": 30975
+    },
+    {
+      "year": 3,
+      "calendarYear": 2029,
+      "indexChange": 0,
+      "creditedRate": 10.25,
+      "accountValue": 89654,
+      "surrenderValue": 53792
+    },
+    {
+      "year": 4,
+      "calendarYear": 2030,
+      "indexChange": 0,
+      "creditedRate": 10.25,
+      "accountValue": 126406,
+      "surrenderValue": 82164
+    },
+    {
+      "year": 5,
+      "calendarYear": 2031,
+      "indexChange": 0,
+      "creditedRate": 10.25,
+      "accountValue": 166925,
+      "surrenderValue": 116847
+    },
+    {
+      "year": 6,
+      "calendarYear": 2032,
+      "indexChange": 0,
+      "creditedRate": 10.25,
+      "accountValue": 184034,
+      "surrenderValue": 138026
+    },
+    {
+      "year": 7,
+      "calendarYear": 2033,
+      "indexChange": 0,
+      "creditedRate": 0,
+      "accountValue": 184034,
+      "surrenderValue": 147228
+    },
+    {
+      "year": 8,
+      "calendarYear": 2034,
+      "indexChange": 0,
+      "creditedRate": 0,
+      "accountValue": 184034,
+      "surrenderValue": 156429
+    },
+    {
+      "year": 9,
+      "calendarYear": 2035,
+      "indexChange": 0,
+      "creditedRate": 0,
+      "accountValue": 184034,
+      "surrenderValue": 165631
+    },
+    {
+      "year": 10,
+      "calendarYear": 2036,
+      "indexChange": 0,
+      "creditedRate": 10.25,
+      "accountValue": 202898,
+      "surrenderValue": 186666
+    },
+    {
+      "year": 11,
+      "calendarYear": 2037,
+      "indexChange": 0,
+      "creditedRate": 5.12,
+      "accountValue": 213286,
+      "surrenderValue": 200489
+    },
+    {
+      "year": 12,
+      "calendarYear": 2038,
+      "indexChange": 0,
+      "creditedRate": 6.4,
+      "accountValue": 226937,
+      "surrenderValue": 217859
+    },
+    {
+      "year": 13,
+      "calendarYear": 2039,
+      "indexChange": 0,
+      "creditedRate": 9.85,
+      "accountValue": 249290,
+      "surrenderValue": 244304
+    },
+    {
+      "year": 14,
+      "calendarYear": 2040,
+      "indexChange": 0,
+      "creditedRate": 0,
+      "accountValue": 249290,
+      "surrenderValue": 246797
+    },
+    {
+      "year": 15,
+      "calendarYear": 2041,
+      "indexChange": 0,
+      "creditedRate": 0,
+      "accountValue": 249290,
+      "surrenderValue": 249290
+    },
+    {
+      "year": 16,
+      "calendarYear": 2042,
+      "indexChange": 0,
+      "creditedRate": 10.25,
+      "accountValue": 274842,
+      "surrenderValue": 274842
+    },
+    {
+      "year": 17,
+      "calendarYear": 2043,
+      "indexChange": 0,
+      "creditedRate": 10.25,
+      "accountValue": 303013,
+      "surrenderValue": 303013
+    },
+    {
+      "year": 18,
+      "calendarYear": 2044,
+      "indexChange": 0,
+      "creditedRate": 2.9,
+      "accountValue": 311801,
+      "surrenderValue": 311801
+    },
+    {
+      "year": 19,
+      "calendarYear": 2045,
+      "indexChange": 0,
+      "creditedRate": 10.25,
+      "accountValue": 343760,
+      "surrenderValue": 343760
+    },
+    {
+      "year": 20,
+      "calendarYear": 2046,
+      "indexChange": 0,
+      "creditedRate": 10.25,
+      "accountValue": 378996,
+      "surrenderValue": 378996
+    },
+    {
+      "year": 21,
+      "calendarYear": 2047,
+      "indexChange": 0,
+      "creditedRate": 10.25,
+      "accountValue": 417843,
+      "surrenderValue": 417843
+    },
+    {
+      "year": 22,
+      "calendarYear": 2048,
+      "indexChange": 0,
+      "creditedRate": 0,
+      "accountValue": 417843,
+      "surrenderValue": 417843
+    },
+    {
+      "year": 23,
+      "calendarYear": 2049,
+      "indexChange": 0,
+      "creditedRate": 10.25,
+      "accountValue": 460672,
+      "surrenderValue": 460672
+    },
+    {
+      "year": 24,
+      "calendarYear": 2050,
+      "indexChange": 0,
+      "creditedRate": 10.25,
+      "accountValue": 507891,
+      "surrenderValue": 507891
+    },
+    {
+      "year": 25,
+      "calendarYear": 2051,
+      "indexChange": 0,
+      "creditedRate": 2.6,
+      "accountValue": 521096,
+      "surrenderValue": 521096
+    },
+    {
+      "year": 26,
+      "calendarYear": 2052,
+      "indexChange": 0,
+      "creditedRate": 6.1,
+      "accountValue": 552883,
+      "surrenderValue": 552883
+    },
+    {
+      "year": 27,
+      "calendarYear": 2053,
+      "indexChange": 0,
+      "creditedRate": 10.25,
+      "accountValue": 609553,
+      "surrenderValue": 609553
+    },
+    {
+      "year": 28,
+      "calendarYear": 2054,
+      "indexChange": 0,
+      "creditedRate": 10.25,
+      "accountValue": 672032,
+      "surrenderValue": 672032
+    },
+    {
+      "year": 29,
+      "calendarYear": 2055,
+      "indexChange": 0,
+      "creditedRate": 0,
+      "accountValue": 672032,
+      "surrenderValue": 672032
+    },
+    {
+      "year": 30,
+      "calendarYear": 2056,
+      "indexChange": 0,
+      "creditedRate": 10.25,
+      "accountValue": 740916,
+      "surrenderValue": 740916
+    }
+  ],
+  "floorProtectedYears": 7,
+  "capLimitedYears": 17,
+  "notice": "Historical index changes shown in this illustration are not indicative of future returns."
+}

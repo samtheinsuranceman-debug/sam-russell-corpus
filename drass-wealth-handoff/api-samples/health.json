@@ -1,0 +1,11 @@
+{
+  "ok": true,
+  "service": "rcs-partner-api",
+  "configured": true,
+  "indices": [
+    "SP500",
+    "NASDAQ100",
+    "RUSSELL2000"
+  ],
+  "originsConfigured": 0
+}

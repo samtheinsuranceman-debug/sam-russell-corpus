@@ -1,0 +1,13 @@
+{
+  "status": 404,
+  "body": {
+    "error": "unknown_account",
+    "detail": "No segment account is held for \"nope\".",
+    "available": [
+      "bia-2yr",
+      "par110-annual",
+      "par105-annual",
+      "cap10-annual"
+    ]
+  }
+}
