@@ -24,9 +24,9 @@ across a plausible range, moves the thirty-year account value by:
 
 | Design | Swing from mortality uncertainty alone |
 |---|---|
-| $50k × 10 years into $1.0M face | **5%** |
-| $25k × 20 years into $1.5M face | **33%** |
-| $8k × 30 years into $1.0M face | **131%** |
+| $50k × 10 years into $1.0M face | **7.8%** |
+| $25k × 20 years into $1.5M face | **32.9%** |
+| $8k × 30 years into $1.0M face | **131.5%** |
 
 That last row is $518,548 against $28,484 on the same premium — the range spans
 "comfortable" and "lapsed". Those figures are measured by running the engine at
@@ -87,15 +87,30 @@ is collapsing and the charge is small; this checks it where the charge is
 carrying the whole policy. If the two disagree, the reference curve shape is
 wrong and I'd rather find that out from your documents than from a client.
 
-## Upload 4 — the product guide's loan section
+## Upload 4 — the product guide's loan section (now only two numbers)
 
-**What:** the pages covering policy loans — fixed rate, variable rate, whether
-a wash loan is offered and at what spread, and what rate is credited to the
-loaned portion of the account value.
+**What:** the pages covering policy loans — the rate charged on the balance,
+and the rate credited to collateral on a fixed loan. Also whether a wash loan
+is offered and whether it is *contractually guaranteed* or a current declared
+practice the carrier can change.
 
-**What it closes:** every distribution number on the platform is a policy loan.
-A wash loan and a loan at a 1% net spread produce very different income over
-thirty years. The rate guide says nothing about any of it.
+**What it closes:** those two rates are the only quotes left. Everything built
+around them is already done in `shared/policyLoanMechanics.ts` and needed no
+document:
+
+- a **wash loan** costs zero by contract; a **fixed loan** costs a known
+  spread; a **participating loan** is charged its full rate in every year the
+  index credits nothing — seven years in thirty on the 1996–2025 record, which
+  the engine counts rather than averaging away
+- the **crossover year** is closed-form whenever the charged rate exceeds the
+  credited rate: `ln(cashValue / loan) ÷ ln((1+charged)/(1+credited))`
+- **charged in advance**, the interest comes out of the proceeds — a $60,000
+  draw at 5% hands over $57,000, so the illustration's income column is not
+  what reaches the bank
+- **on lapse**, the discharged loan is part of the amount realised, so the
+  whole accumulated gain is ordinary income while the cash value goes to repay
+  the loan and the client receives nothing. The engine computes that bill and
+  the cheque they have to write from elsewhere.
 
 ## Upload 5 — anything at all on Securian, Pacific Life or Lafayette
 
@@ -117,10 +132,23 @@ Without the third the blend cannot be computed, which is why those strategies
 are refused rather than approximated. This needs a sourced price-return series,
 not a carrier document.
 
-**The IRC 7702 corridor table.** Fixed by statute — the same for every company.
-It needs transcribing from 26 U.S.C. 7702(d)(2), not asking a carrier for. A
-death benefit column on any illustration serves as a check on the
-transcription.
+**The IRC 7702 corridor table.** ~~Needs transcribing.~~ **Done** —
+`shared/irc7702.ts` carries the ten brackets of 26 U.S.C. 7702(d)(2),
+interpolated ratably as the statute directs, and it now defaults into every
+projection. Interpolating reproduces all 32 of the commonly published integer
+percentages exactly, which is a real check on the transcription.
+
+Switching it on raised the mortality sensitivity on a max-funded design from
+5.0% to 7.8% — the corridor drags the death benefit up, which drags the amount
+at risk up. The gap got more expensive by being modelled correctly.
+
+One thing still outstanding: every direct fetch of the statute
+(law.cornell.edu, uscode.house.gov, govinfo.gov, uscode.ecfr.io, law.justia.com)
+is blocked by this environment's egress proxy, so the table was confirmed
+against two independent searches rather than read beside the primary text.
+`VERIFIED_AGAINST_PRIMARY_TEXT` in that file is the flag to flip once somebody
+spends ten minutes with the statute. Worth doing before it drives a client
+illustration.
 
 ## How to send them
 
