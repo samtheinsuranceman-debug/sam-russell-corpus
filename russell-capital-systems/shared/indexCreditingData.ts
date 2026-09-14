@@ -39,7 +39,7 @@ export const RAW_INDEX_RETURNS: Record<string, Record<number, number>> = {
 export interface IndexOption {
   id: string;
   name: string;
-  carrier: 'a-mutual' | 'a-plus-mutual-life' | 'a-minus-mutual';
+  carrier: 'mutual-a' | 'mutual-b' | 'mutual-c';
   /** Underlying index key in RAW_INDEX_RETURNS */
   index: string;
   /** Special index type for blended/hindsight strategies */
@@ -63,12 +63,12 @@ export interface IndexOption {
   /** Available years (some strategies don't have 30-year history) */
   availableFrom: number;
 }
-// ─── A MUTUAL LIFE Index Options ──────────────────────
+// ─── MUTUAL COMPANY A Index Options ──────────────────────
 export const A_MUTUAL_INDEX_OPTIONS: IndexOption[] = [
   {
     id: 'am-sp500-ptp',
     name: 'S&P 500 Point-to-Point',
-    carrier: 'a-mutual',
+    carrier: 'mutual-a',
     index: 'SP500',
     indexType: 'single',
     cap: 10.25,
@@ -83,29 +83,32 @@ export const A_MUTUAL_INDEX_OPTIONS: IndexOption[] = [
   {
     id: 'am-sp500-uncapped',
     name: 'Uncapped S&P 500 PtP',
-    carrier: 'a-mutual',
+    carrier: 'mutual-a',
     index: 'SP500',
     indexType: 'single',
     cap: null,
     floor: 0,
     participation: 100,
-    spread: 5.75,
+    // Spread corrected 5.75 -> 6.00 from FLM-1491AO.10 (02/25).
+    spread: 6.0,
     strategyCharge: 0,
     bonus: 0,
-    description: 'Uncapped S&P 500 with 5.75% spread. Unlimited upside minus spread, 0% floor.',
+    description: 'Uncapped S&P 500 with 6.00% spread. Unlimited upside minus spread, 0% floor.',
     availableFrom: 1994,
   },
   {
     id: 'am-highcap-sp500',
     name: 'High-Cap S&P 500 PtP',
-    carrier: 'a-mutual',
+    carrier: 'mutual-a',
     index: 'SP500',
     indexType: 'single',
-    cap: 13.25,
+    // Cap corrected 13.25 -> 13.00 from FLM-1491AO.10 (02/25).
+    cap: 13,
     floor: 0,
     participation: 100,
     spread: 0,
-    strategyCharge: 1.5,
+    // Current charge 1.0%; guaranteed maximum 1.5%.
+    strategyCharge: 1.0,
     bonus: 0,
     description: 'Higher cap (13.25%) with 1.5% strategy charge. More upside potential.',
     availableFrom: 1994,
@@ -113,7 +116,7 @@ export const A_MUTUAL_INDEX_OPTIONS: IndexOption[] = [
   {
     id: 'am-multi-index',
     name: 'Multi-Index Monthly Average',
-    carrier: 'a-mutual',
+    carrier: 'mutual-a',
     index: 'SP500',
     indexType: 'multiIndex',
     components: [
@@ -121,19 +124,25 @@ export const A_MUTUAL_INDEX_OPTIONS: IndexOption[] = [
       { index: 'NASDAQ100', weight: 0.30 },
       { index: 'RUSSELL2000', weight: 0.20 },
     ],
-    cap: 14,
+    cap: 13,
     floor: 0,
     participation: 100,
     spread: 0,
     strategyCharge: 0,
     bonus: 0,
-    description: 'Blended 50/30/20 of best-performing indices (S&P, Nasdaq, Russell). 14% cap, 0% floor.',
+    // Cap corrected 14 -> 13.00 from the Nationwide IUL Accumulator II 2020
+    // rate guide, FLM-1491AO.10 (02/25), rates as of 15 March 2025.
+    // The third component should be the Dow Jones Industrial Average, not the
+    // Russell 2000 — the contract names S&P 500, Nasdaq-100 and DJIA. We hold
+    // no DJIA series, so it stays wrong here and the partner API refuses to
+    // run this strategy. See docs/carriers/nationwide-iul-accumulator-ii-2020.md
+    description: 'Blended 50/30/20 of best-performing indices. 13% cap, 0% floor. Third component is wrong until a DJIA series is sourced.',
     availableFrom: 1994,
   },
   {
     id: 'am-highcap-multi',
     name: 'High-Cap Multi-Index Monthly Avg',
-    carrier: 'a-mutual',
+    carrier: 'mutual-a',
     index: 'SP500',
     indexType: 'multiIndex',
     components: [
@@ -145,7 +154,10 @@ export const A_MUTUAL_INDEX_OPTIONS: IndexOption[] = [
     floor: 0,
     participation: 100,
     spread: 0,
-    strategyCharge: 1.5,
+    // Current charge 0.85% per FLM-1491AO.10 (02/25); guaranteed maximum 1.5%.
+    // The file previously carried the guaranteed figure against the current
+    // cap, which mixes two columns of the rate sheet.
+    strategyCharge: 0.85,
     bonus: 0,
     description: 'High-cap multi-index blend (25% cap) with 1.5% strategy charge.',
     availableFrom: 1994,
@@ -153,7 +165,7 @@ export const A_MUTUAL_INDEX_OPTIONS: IndexOption[] = [
   {
     id: 'am-fixed',
     name: 'Fixed Interest',
-    carrier: 'a-mutual',
+    carrier: 'mutual-a',
     index: 'SP500',
     indexType: 'single',
     cap: 4.25,
@@ -168,7 +180,7 @@ export const A_MUTUAL_INDEX_OPTIONS: IndexOption[] = [
   {
     id: 'am-sp500-2yr',
     name: '2-Year S&P 500 PtP (Spread)',
-    carrier: 'a-mutual',
+    carrier: 'mutual-a',
     index: 'SP500',
     indexType: 'single',
     cap: null,
@@ -182,12 +194,12 @@ export const A_MUTUAL_INDEX_OPTIONS: IndexOption[] = [
   },
 ];
 
-// ─── A+ MUTUAL LIFE Index Options ──────────────────────
+// ─── MUTUAL COMPANY B Index Options ──────────────────────
 export const A_PLUS_MUTUAL_LIFE_INDEX_OPTIONS: IndexOption[] = [
   {
     id: 'apm-sp500-capped',
     name: 'S&P 500 Capped PtP',
-    carrier: 'a-plus-mutual-life',
+    carrier: 'mutual-b',
     index: 'SP500',
     indexType: 'single',
     cap: 10.50,
@@ -202,7 +214,7 @@ export const A_PLUS_MUTUAL_LIFE_INDEX_OPTIONS: IndexOption[] = [
   {
     id: 'apm-sp500-multiplier',
     name: 'S&P 500 with Multiplier',
-    carrier: 'a-plus-mutual-life',
+    carrier: 'mutual-b',
     index: 'SP500',
     indexType: 'single',
     cap: 14.0,
@@ -217,7 +229,7 @@ export const A_PLUS_MUTUAL_LIFE_INDEX_OPTIONS: IndexOption[] = [
   {
     id: 'apm-sp500-lowvol',
     name: 'S&P 500 Low Volatility',
-    carrier: 'a-plus-mutual-life',
+    carrier: 'mutual-b',
     index: 'SP500',
     indexType: 'single',
     cap: null,
@@ -232,7 +244,7 @@ export const A_PLUS_MUTUAL_LIFE_INDEX_OPTIONS: IndexOption[] = [
   {
     id: 'apm-hindsight',
     name: 'Hindsight Account (S&P/Nasdaq/Russell)',
-    carrier: 'a-plus-mutual-life',
+    carrier: 'mutual-b',
     index: 'SP500',
     indexType: 'hindsight',
     components: [
@@ -252,7 +264,7 @@ export const A_PLUS_MUTUAL_LIFE_INDEX_OPTIONS: IndexOption[] = [
   {
     id: 'apm-fixed',
     name: 'Fixed Account',
-    carrier: 'a-plus-mutual-life',
+    carrier: 'mutual-b',
     index: 'SP500',
     indexType: 'single',
     cap: 4.0,
@@ -267,7 +279,7 @@ export const A_PLUS_MUTUAL_LIFE_INDEX_OPTIONS: IndexOption[] = [
   {
     id: 'apm-sp500-2yr',
     name: '2-Year S&P 500 PtP (110% Participation)',
-    carrier: 'a-plus-mutual-life',
+    carrier: 'mutual-b',
     index: 'SP500',
     indexType: 'single',
     cap: null,
@@ -282,7 +294,7 @@ export const A_PLUS_MUTUAL_LIFE_INDEX_OPTIONS: IndexOption[] = [
   {
     id: 'apm-sp500-1yr-capped',
     name: '1-Year S&P 500 Capped PtP',
-    carrier: 'a-plus-mutual-life',
+    carrier: 'mutual-b',
     index: 'SP500',
     indexType: 'single',
     cap: 10.5,
@@ -296,12 +308,12 @@ export const A_PLUS_MUTUAL_LIFE_INDEX_OPTIONS: IndexOption[] = [
   },
 ];
 
-// ─── A- MUTUAL LIFE Index Options ───────────────────────
+// ─── MUTUAL COMPANY C LIFE Index Options ───────────────────────
 export const A_MINUS_MUTUAL_INDEX_OPTIONS: IndexOption[] = [
   {
     id: 'amm-sp500-core',
     name: 'S&P 500 Core PtP',
-    carrier: 'a-minus-mutual',
+    carrier: 'mutual-c',
     index: 'SP500',
     indexType: 'single',
     cap: 9.5,
@@ -316,7 +328,7 @@ export const A_MINUS_MUTUAL_INDEX_OPTIONS: IndexOption[] = [
   {
     id: 'amm-sp500-smart',
     name: 'S&P 500 Smart Strategy',
-    carrier: 'a-minus-mutual',
+    carrier: 'mutual-c',
     index: 'SP500',
     indexType: 'single',
     cap: null,
@@ -331,7 +343,7 @@ export const A_MINUS_MUTUAL_INDEX_OPTIONS: IndexOption[] = [
   {
     id: 'amm-nasdaq-ccar',
     name: 'Nasdaq-100 CCAR',
-    carrier: 'a-minus-mutual',
+    carrier: 'mutual-c',
     index: 'NASDAQ100',
     indexType: 'single',
     cap: 11.0,
@@ -346,7 +358,7 @@ export const A_MINUS_MUTUAL_INDEX_OPTIONS: IndexOption[] = [
   {
     id: 'amm-sp500-highpar',
     name: 'S&P 500 High Participation',
-    carrier: 'a-minus-mutual',
+    carrier: 'mutual-c',
     index: 'SP500',
     indexType: 'single',
     cap: null,
@@ -361,7 +373,7 @@ export const A_MINUS_MUTUAL_INDEX_OPTIONS: IndexOption[] = [
   {
     id: 'amm-dynamic-bonus',
     name: 'Dynamic Low Vol with Bonus',
-    carrier: 'a-minus-mutual',
+    carrier: 'mutual-c',
     index: 'SP500',
     indexType: 'single',
     cap: null,
@@ -376,7 +388,7 @@ export const A_MINUS_MUTUAL_INDEX_OPTIONS: IndexOption[] = [
   {
     id: 'amm-fixed',
     name: 'Fixed Account',
-    carrier: 'a-minus-mutual',
+    carrier: 'mutual-c',
     index: 'SP500',
     indexType: 'single',
     cap: 3.75,
@@ -391,7 +403,7 @@ export const A_MINUS_MUTUAL_INDEX_OPTIONS: IndexOption[] = [
   {
     id: 'amm-sp500-2yr',
     name: '2-Year S&P 500 PtP (110% Participation)',
-    carrier: 'a-minus-mutual',
+    carrier: 'mutual-c',
     index: 'SP500',
     indexType: 'single',
     cap: null,
@@ -406,7 +418,7 @@ export const A_MINUS_MUTUAL_INDEX_OPTIONS: IndexOption[] = [
   {
     id: 'amm-sp500-1yr-capped',
     name: '1-Year S&P 500 Capped PtP',
-    carrier: 'a-minus-mutual',
+    carrier: 'mutual-c',
     index: 'SP500',
     indexType: 'single',
     cap: 10.5,
@@ -421,8 +433,117 @@ export const A_MINUS_MUTUAL_INDEX_OPTIONS: IndexOption[] = [
 ];
 
 // ─── All Options Combined ────────────────────────────────────────────────────
+
+/**
+ * Volatility-control strategies from the Nationwide IUL Accumulator II 2020
+ * rate guide, FLM-1491AO.10 (02/25). Terms transcribed exactly.
+ *
+ * These are where the high participation rates live — 185% to 315%, uncapped.
+ * They are listed because a policyholder choosing an allocation should see
+ * every strategy the contract offers, including the ones nobody can model
+ * here.
+ *
+ * ## We hold no series for either index
+ *
+ * RAW_INDEX_RETURNS has SP500, NASDAQ100 and RUSSELL2000. It has nothing for
+ * the J.P. Morgan Mercury or BNP Paribas Global H-Factor indices, so a
+ * year-by-year credit cannot be computed for any of these and the engine
+ * refuses them.
+ *
+ * ## And even with the series, the history would be thin
+ *
+ * Nationwide states it plainly: J.P. Morgan Mercury was established
+ * 25 April 2022 and BNP Paribas Global H-Factor on 8 April 2022. Everything
+ * published before those dates is back-tested and, in Nationwide's own words,
+ * "designed with the benefit of hindsight". That is why their look-back table
+ * shows N/A for the 30-year and 25-year columns on every one of these.
+ *
+ * Nationwide's published look-backs for them are carried in
+ * NATIONWIDE_PUBLISHED_LOOKBACKS so a page can show the carrier's own figure
+ * rather than computing one we cannot support.
+ */
+export const MUTUAL_A_VOLATILITY_CONTROL_OPTIONS: IndexOption[] = [
+  { id: 'ma-jpm-mercury-plus', name: 'J.P. Morgan Mercury Plus', carrier: 'mutual-a',
+    index: 'JPM_MERCURY', indexType: 'single', cap: null, floor: 0, participation: 185,
+    spread: 0, strategyCharge: 0, bonus: 0.6,
+    description: 'Uncapped, 185% participation, plus a 0.6% non-guaranteed strategy credit. Guaranteed participation 65%.',
+    availableFrom: 2022 },
+  { id: 'ma-bnpp-hfactor-plus', name: 'BNPP Global H-Factor Plus', carrier: 'mutual-a',
+    index: 'BNPP_HFACTOR', indexType: 'single', cap: null, floor: 0, participation: 235,
+    spread: 0, strategyCharge: 0, bonus: 0.6,
+    description: 'Uncapped, 235% participation, plus a 0.6% non-guaranteed strategy credit. Guaranteed participation 65%.',
+    availableFrom: 2022 },
+  { id: 'ma-jpm-mercury-highpar', name: 'J.P. Morgan Mercury High Participation', carrier: 'mutual-a',
+    index: 'JPM_MERCURY', indexType: 'single', cap: null, floor: 0, participation: 210,
+    spread: 0, strategyCharge: 0, bonus: 0,
+    description: 'Uncapped, 210% participation, no strategy credit. Guaranteed participation 65%.',
+    availableFrom: 2022 },
+  { id: 'ma-bnpp-hfactor-highpar', name: 'BNPP Global H-Factor High Participation', carrier: 'mutual-a',
+    index: 'BNPP_HFACTOR', indexType: 'single', cap: null, floor: 0, participation: 265,
+    spread: 0, strategyCharge: 0, bonus: 0,
+    description: 'Uncapped, 265% participation, no strategy credit. Guaranteed participation 65%.',
+    availableFrom: 2022 },
+  { id: 'ma-jpm-mercury-select', name: 'J.P. Morgan Mercury High Par Select', carrier: 'mutual-a',
+    index: 'JPM_MERCURY', indexType: 'single', cap: null, floor: 0, participation: 250,
+    spread: 0, strategyCharge: 1.0, bonus: 0,
+    description: 'Uncapped, 250% participation, in exchange for a 1.0% strategy charge (guaranteed maximum 1.5%).',
+    availableFrom: 2022 },
+  { id: 'ma-bnpp-hfactor-select', name: 'BNPP Global H-Factor High Par Select', carrier: 'mutual-a',
+    index: 'BNPP_HFACTOR', indexType: 'single', cap: null, floor: 0, participation: 315,
+    spread: 0, strategyCharge: 1.0, bonus: 0,
+    description: 'Uncapped, 315% participation, in exchange for a 1.0% strategy charge (guaranteed maximum 1.5%).',
+    availableFrom: 2022 },
+];
+
+/**
+ * The carrier's own published look-back rates, FLM-1491AO.10 (02/25), as of
+ * 15 January 2025. An ARITHMETIC average of annual rates, excluding the
+ * strategy charges on the High-Cap and High-Par Select strategies and the
+ * 0.60% Plus credit. N/A where the index did not exist.
+ *
+ * Two uses. For strategies we can model, this is the external check that the
+ * arithmetic is right. For the volatility-control strategies, it is the only
+ * figure available at all, and it is the carrier's, not ours.
+ */
+export interface PublishedLookback {
+  readonly optionId: string;
+  readonly y30: number | null;
+  readonly y25: number | null;
+  readonly y20: number | null;
+  readonly y15: number | null;
+  readonly y10: number | null;
+  readonly y5: number | null;
+}
+
+export const NATIONWIDE_PUBLISHED_LOOKBACKS: readonly PublishedLookback[] = [
+  { optionId: 'am-multi-index',            y30: 7.52,  y25: 6.54, y20: 7.32,  y15: 7.93,  y10: 7.86,  y5: 8.46 },
+  { optionId: 'am-sp500-ptp',              y30: 6.98,  y25: 6.47, y20: 7.03,  y15: 7.51,  y10: 7.18,  y5: 7.22 },
+  { optionId: 'am-sp500-uncapped',         y30: 8.68,  y25: 7.20, y20: 8.17,  y15: 8.81,  y10: 9.57,  y5: 13.98 },
+  { optionId: 'am-highcap-multi',          y30: 9.32,  y25: 7.54, y20: 8.40,  y15: 8.90,  y10: 9.15,  y5: 11.08 },
+  { optionId: 'am-highcap-sp500',          y30: 8.42,  y25: 7.74, y20: 8.48,  y15: 9.10,  y10: 8.77,  y5: 9.05 },
+  { optionId: 'ma-jpm-mercury-plus',       y30: null,  y25: null, y20: 12.48, y15: 12.79, y10: 9.36,  y5: 3.36 },
+  { optionId: 'ma-bnpp-hfactor-plus',      y30: null,  y25: null, y20: 14.48, y15: 15.44, y10: 12.57, y5: 8.58 },
+  { optionId: 'ma-jpm-mercury-highpar',    y30: null,  y25: null, y20: 14.16, y15: 14.52, y10: 10.62, y5: 3.82 },
+  { optionId: 'ma-bnpp-hfactor-highpar',   y30: null,  y25: null, y20: 16.33, y15: 17.41, y10: 14.17, y5: 9.68 },
+  { optionId: 'ma-jpm-mercury-select',     y30: null,  y25: null, y20: 16.86, y15: 17.28, y10: 12.64, y5: 4.55 },
+  { optionId: 'ma-bnpp-hfactor-select',    y30: null,  y25: null, y20: 19.41, y15: 20.69, y10: 16.84, y5: 11.51 },
+];
+
+/** Whether this repository holds an index series the option can be run on. */
+export function hasIndexSeries(option: IndexOption): boolean {
+  if (option.components?.length) {
+    return option.components.every((c) => Boolean(RAW_INDEX_RETURNS[c.index]));
+  }
+  return Boolean(RAW_INDEX_RETURNS[option.index]);
+}
+
+export function publishedLookback(optionId: string): PublishedLookback | undefined {
+  return NATIONWIDE_PUBLISHED_LOOKBACKS.find((l) => l.optionId === optionId);
+}
+
 export const ALL_INDEX_OPTIONS: IndexOption[] = [
   ...A_MUTUAL_INDEX_OPTIONS,
+  ...MUTUAL_A_VOLATILITY_CONTROL_OPTIONS,
   ...A_PLUS_MUTUAL_LIFE_INDEX_OPTIONS,
   ...A_MINUS_MUTUAL_INDEX_OPTIONS,
 ];
@@ -665,20 +786,30 @@ export function runBacktest(
 }
 
 // ─── Carrier Grouping Helper ─────────────────────────────────────────────────
-export function getOptionsByCarrier(carrier: 'a-mutual' | 'a-plus-mutual-life' | 'a-minus-mutual'): IndexOption[] {
+export function getOptionsByCarrier(carrier: 'mutual-a' | 'mutual-b' | 'mutual-c'): IndexOption[] {
   return ALL_INDEX_OPTIONS.filter(o => o.carrier === carrier);
 }
 
 export const CARRIERS = [
-  { id: 'a-mutual', name: 'A Mutual Life', color: '#1e40af' },
-  { id: 'a-plus-mutual-life', name: 'A+ Mutual Life', color: '#059669' },
-  { id: 'a-minus-mutual', name: 'A- Mutual Life', color: '#7c3aed' },
+  { id: 'mutual-a', name: 'Mutual Company A', color: '#1e40af' },
+  { id: 'mutual-b', name: 'Mutual Company B', color: '#059669' },
+  { id: 'mutual-c', name: 'Mutual Company C', color: '#7c3aed' },
 ] as const;
 
-/** Legacy aliases for backward compatibility */
-export const NATIONWIDE_INDEX_OPTIONS = A_MUTUAL_INDEX_OPTIONS;
-export const SECURIAN_INDEX_OPTIONS = A_PLUS_MUTUAL_LIFE_INDEX_OPTIONS;
-export const SYMETRA_INDEX_OPTIONS = A_MINUS_MUTUAL_INDEX_OPTIONS;
+/*
+ * Three aliases were here — NATIONWIDE_INDEX_OPTIONS, SECURIAN_INDEX_OPTIONS
+ * and SYMETRA_INDEX_OPTIONS — each pointing at one of the anonymised option
+ * sets above. They were unused, and they asserted that these caps,
+ * participation rates and spreads are those three companies' actual products.
+ *
+ * None of the terms in this file carries a source or an as-of date, so that
+ * identification could not be checked, and a cap named as a real carrier's is
+ * a factual claim about a real company. Removed rather than left as dead code
+ * somebody later trusts.
+ *
+ * Real carrier terms belong in docs/carriers/, sourced per field, and are
+ * being collected — see docs/carriers/INTAKE.md.
+ */
 
 export const AVAILABLE_YEARS = Object.keys(RAW_INDEX_RETURNS.SP500).map(Number).sort((a, b) => a - b);
 export const MIN_YEAR = AVAILABLE_YEARS[0]; // 1994

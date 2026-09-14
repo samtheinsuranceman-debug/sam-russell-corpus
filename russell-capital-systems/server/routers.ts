@@ -123,6 +123,7 @@ import { ALL_INDEX_OPTIONS, CARRIERS, AVAILABLE_YEARS, getCreditingHistory, runB
 import { MODEL_PORTFOLIOS, getPortfolioAllocations } from "@shared/modelPortfolios";
 import { calculatePremiumFinancing } from "@shared/premiumFinancing";
 import { optimizePolicyLoans, compareLoanStrategies } from "@shared/policyLoanOptimizer";
+import { stepPolicyYear, ILLUSTRATIVE_COI_TABLE, ILLUSTRATIVE_SOURCE } from "@shared/policyMechanics";
 import { calculateBracketWaterfall, calculateComprehensiveTaxWaterfall, generateRecommendation, buildIncomeTimeline, runCompetitiveAnalysis, compareIULvsRoth, inflationImpactSummary } from "@shared/advancedAnalytics";
 import { BITCOIN_CYCLES, simulateNextCycles, runCryptoAccumulation } from "@shared/cryptoCycleEngine";
 import { calculateLifetimeIncome, getDefaultLifetimeIncomeInput, INCOME_RATE_TABLE, analyzeExistingAnnuity, getDefaultExistingAnnuityInput } from "@shared/lifetimeIncomeEngine";
@@ -3176,9 +3177,13 @@ Keep it personal, specific with dollar amounts, and actionable. Use their actual
       // Carrier overrides — when provided, these replace the default IUL constants
       carrierId: z.string().optional(),
       carrierLoadFee: z.number().min(0).max(0.15).optional(),
-      carrierCoiRate: z.number().min(0).max(0.10).optional(),
       carrierLoanRate: z.number().min(0).max(0.15).optional(),
       carrierAvgReturn: z.number().min(0).max(0.20).optional(),
+      // The policy's specified amount. Cost of insurance is charged on the
+      // death benefit less the account value; without a face amount there is no
+      // amount at risk to charge, and the projection says so rather than
+      // substituting a charge on premium, which is a different thing entirely.
+      deathBenefit: z.number().min(0).optional(),
     })).mutation(async ({ ctx, input }) => {
       // ═══════════════════════════════════════════════════════════════════════
       // 6-OPTION 0% ROTH CONVERSION ENGINE
@@ -3190,8 +3195,26 @@ Keep it personal, specific with dollar amounts, and actionable. Use their actual
       const IUL_LOAD_FEE = input.carrierLoadFee ?? 0.08;       // 8% Y1, 6% Y2-5, 0% after (using Y1 rate as default)
       const IUL_LOAN_RATE = input.carrierLoanRate ?? 0.05;       // 5% policy loan rate (declared rate)
       const IUL_AVG_RETURN = input.carrierAvgReturn ?? 0.12;      // 12% annual return (user instruction)
-      const IUL_COI_RATE = input.carrierCoiRate ?? 0.008;        // 0.8% COI rate (age-based, starting rate)
       const SOLAR_ENHANCEMENT = 0.22;   // 22% solar equity enhancement
+
+      // The charges this projection deducts, in the shape the shared engine
+      // takes them. A carrier override replaces the load schedule wholesale;
+      // otherwise it is 8% year 1, 6% years 2-5, nothing after. No surrender
+      // charge schedule has been sourced for this product, so surrender value
+      // comes back equal to account value and the result says so — the old
+      // flat 90% haircut was invented and applied for all twenty years.
+      const POLICY_CHARGES = {
+        premiumLoadPctByYear:
+          input.carrierLoadFee !== undefined
+            ? [input.carrierLoadFee * 100]
+            : [8, 6, 6, 6, 6, 0],
+        monthlyPolicyFee: 10,
+        perUnitMonthlyPerThousand: 0,
+        perUnitYears: 0,
+        coiTable: input.deathBenefit ? ILLUSTRATIVE_COI_TABLE : [],
+        coiTableSource: ILLUSTRATIVE_SOURCE,
+        surrenderChargePctByYear: [],
+      };
       const MORTGAGE_RATE = input.mortgageRate;
       const strategyYears = input.strategyYears;
       const isSolar = input.solarEquity;
@@ -3297,25 +3320,31 @@ Keep it personal, specific with dollar amounts, and actionable. Use their actual
           }
 
           cumulativePremiums += premium;
-          // A Mutual Life Accumulator III: 8% Y1, 6% Y2-5, 0% after
-          const yearLoadRate = y === 1 ? 0.08 : (y <= 5 ? 0.06 : 0);
-          const loadFee = premium * (input.carrierLoadFee ?? yearLoadRate);
-          const coiCost = premium * IUL_COI_RATE; // age-based COI rate
-          const netPremiumToAccount = premium - loadFee - coiCost;
-
-          // Beginning value = prior ending + net premium
+          // The charge sequence runs through the platform's one policy engine.
+          // This loop used to charge cost of insurance as 0.8% of the premium,
+          // which is not what cost of insurance is: it is a rate per thousand
+          // of the NET AMOUNT AT RISK — death benefit less account value — so
+          // it falls as cash value grows and has nothing to do with premium.
+          const step = stepPolicyYear({
+            accountValue,
+            policyYear: y,
+            attainedAge: input.age + y - 1,
+            premium,
+            faceAmount: input.deathBenefit ?? 0,
+            charges: POLICY_CHARGES,
+            creditedRatePct: IUL_AVG_RETURN * 100,
+          });
+          const loadFee = step.row.premiumLoad;
+          const coiCost = step.row.costOfInsurance;
+          const netPremiumToAccount = premium - loadFee - step.row.policyFee - coiCost;
           const beginningValue = accountValue + netPremiumToAccount;
-
-          // Interest = 12% of account value (A Mutual Life Accumulator III baseline at 12% growth)
-          const interestEarned = beginningValue * IUL_AVG_RETURN;
+          const interestEarned = step.row.interestCredited;
           cumulativeInterest += interestEarned;
-
-          // Update account value
-          accountValue = beginningValue + interestEarned;
+          accountValue = step.accountValue;
 
           // Y3 special: take 80% loan of surrender value → STR principal
           if (y === 3) {
-            const surrenderVal = accountValue * 0.90; // surrender value ~90% of account
+            const surrenderVal = step.row.surrenderValue;
             const y3Loan = surrenderVal * 0.80;
             policyLoanTaken = y3Loan;
             loanPurpose = "80% of surrender value → STR principal-only payment";
@@ -3327,7 +3356,7 @@ Keep it personal, specific with dollar amounts, and actionable. Use their actual
           const loanInterestAccrued = totalLoanBalance * IUL_LOAN_RATE;
           totalLoanBalance += loanInterestAccrued; // compound loan interest
 
-          const surrenderValue = accountValue * 0.90;
+          const surrenderValue = step.row.surrenderValue;
           const netCashValue = accountValue - totalLoanBalance;
           cumulativeStrPrincipalPayments += strPrincipalPayment;
 
@@ -3551,11 +3580,30 @@ Keep it personal, specific with dollar amounts, and actionable. Use their actual
           year1Premium: Math.round(year1Premium),
           year2Premium: Math.round(year2Premium),
         },
+        // What this projection could not source, stated so it travels with the
+        // numbers instead of being lost between the engine and the page.
+        mechanics: {
+          reliable: false,
+          missing: [
+            ...(input.deathBenefit ? [] : ['the policy specified amount (death benefit)']),
+            'a carrier cost of insurance table',
+            'a surrender charge schedule',
+            ...(IUL_AVG_RETURN * 100 > 6.5 ? ['an illustrated rate within the AG 49 maximum'] : []),
+          ],
+          notes: [
+            input.deathBenefit
+              ? 'Mortality was charged on the net amount at risk from generic age bands, not a carrier schedule. Treat the cost of insurance line as an order of magnitude.'
+              : 'No death benefit was supplied, so there is no net amount at risk and NO MORTALITY CHARGE was deducted at any point. Every account value below is materially too high.',
+            'No surrender charge schedule has been sourced, so surrender value is shown equal to account value. In the early years the cash a client could actually take is well below it — which matters here, because the year 3 step borrows 80% of surrender value.',
+            ...(IUL_AVG_RETURN * 100 > 6.5
+              ? [`The projection credits ${(IUL_AVG_RETURN * 100).toFixed(1)}% every year. A carrier's AG 49 maximum illustrated rate is derived from its own index parameters and is published per product; no carrier may illustrate above it, and this rate is above the 6.5% ceiling this platform uses. These columns are a model, not an illustration, and may not be shown to a client in place of one.`]
+              : []),
+          ],
+        },
         iulParams: {
           loadFee: IUL_LOAD_FEE,
           loanRate: IUL_LOAN_RATE,
           avgReturn: IUL_AVG_RETURN,
-          coiRate: IUL_COI_RATE,
           solarEnhancementRate: SOLAR_ENHANCEMENT,
           carrierId: input.carrierId ?? null,
         },
@@ -3623,6 +3671,8 @@ Keep it personal, specific with dollar amounts, and actionable. Use their actual
       helocRate: z.number().min(0).max(0.2).default(0.07),
       mortgageRate: z.number().min(0).max(0.15).default(0.065),
       rates: z.array(z.number()).default([0.08, 0.10, 0.12, 0.14]),
+      /** Specified amount. Without it there is no net amount at risk to charge. */
+      deathBenefit: z.number().min(0).optional(),
     })).mutation(async ({ input }) => {
       const rates = input.rates;
       const iraValue = input.iraBalance;
@@ -3632,7 +3682,15 @@ Keep it personal, specific with dollar amounts, and actionable. Use their actual
       const year1Premium = input.solarEquity ? solarEnhancement : halfTaxSavings;
       const year2Premium = halfTaxSavings;
       const IUL_LOAN_RATE = 0.05;
-      const IUL_COI_RATE = 0.008;
+      const STRESS_CHARGES = {
+        premiumLoadPctByYear: [8, 6, 6, 6, 6, 0],
+        monthlyPolicyFee: 10,
+        perUnitMonthlyPerThousand: 0,
+        perUnitYears: 0,
+        coiTable: input.deathBenefit ? ILLUSTRATIVE_COI_TABLE : [],
+        coiTableSource: ILLUSTRATIVE_SOURCE,
+        surrenderChargePctByYear: [],
+      };
 
       function runScenario(creditRate: number) {
         let accountValue = 0;
@@ -3651,7 +3709,9 @@ Keep it personal, specific with dollar amounts, and actionable. Use their actual
             policyLoanTaken = iraValue * 0.25;
           } else if (y === 3) {
             premium = year2Premium;
-            const surrenderVal = accountValue * 0.90;
+            // No surrender charge schedule is held, so this is the account
+            // value. A real schedule would put it materially lower in year 3.
+            const surrenderVal = accountValue;
             policyLoanTaken = surrenderVal * 0.80;
           } else {
             premium = year2Premium;
@@ -3659,13 +3719,18 @@ Keep it personal, specific with dollar amounts, and actionable. Use their actual
           }
 
           cumulativePremiums += premium;
-          const yearLoadRate = y === 1 ? 0.08 : (y <= 5 ? 0.06 : 0);
-          const loadFee = premium * yearLoadRate;
-          const coiCost = premium * IUL_COI_RATE;
-          const netPremiumToAccount = premium - loadFee - coiCost;
-          const beginningValue = accountValue + netPremiumToAccount;
-          const interestEarned = beginningValue * creditRate;
-          accountValue = beginningValue + interestEarned;
+          // Same shared charge sequence as every other projection here.
+          const step = stepPolicyYear({
+            accountValue,
+            policyYear: y,
+            attainedAge: input.age + y - 1,
+            premium,
+            faceAmount: input.deathBenefit ?? 0,
+            charges: STRESS_CHARGES,
+            creditedRatePct: creditRate * 100,
+          });
+          const interestEarned = step.row.interestCredited;
+          accountValue = step.accountValue;
 
           totalLoanBalance += policyLoanTaken;
           const loanInterestAccrued = totalLoanBalance * IUL_LOAN_RATE;
@@ -4656,7 +4721,6 @@ Keep it personal, specific with dollar amounts, and actionable. Use their actual
         iulYears: z.number().min(15).max(20).default(20),
         carrierId: z.string().optional(),
         carrierLoadFee: z.number().optional(),
-        carrierCoiRate: z.number().optional(),
         carrierLoanRate: z.number().optional(),
         carrierAvgReturn: z.number().optional(),
         autoRecommendCarrier: z.boolean().default(false),
@@ -4715,7 +4779,6 @@ Keep it personal, specific with dollar amounts, and actionable. Use their actual
 
           // Determine carrier rates — A Mutual Life Accumulator III baseline (sample illustration)
           let loadFee = input.carrierLoadFee ?? 0.08;
-          let coiRate = input.carrierCoiRate ?? 0.008;
           let loanRate = input.carrierLoanRate ?? 0.05;
           let avgReturn = input.carrierAvgReturn ?? 0.12;
           let usedCarrierId = input.carrierId ?? "a-mutual";
@@ -4746,7 +4809,6 @@ Keep it personal, specific with dollar amounts, and actionable. Use their actual
               usedCarrierId = top.carrierId;
               usedCarrierName = top.carrierName;
               loadFee = carrierRates.find(c => c.carrierId === top.carrierId)?.loadFee ?? 0.08;
-              coiRate = carrierRates.find(c => c.carrierId === top.carrierId)?.coiRate ?? 0.008;
               loanRate = carrierRates.find(c => c.carrierId === top.carrierId)?.loanRate ?? 0.05;
               avgReturn = carrierRates.find(c => c.carrierId === top.carrierId)?.avgReturn ?? 0.12;
             }
@@ -4756,7 +4818,6 @@ Keep it personal, specific with dollar amounts, and actionable. Use their actual
               usedCarrierName = carrier.name;
               const ov = overrideMap.get(carrier.id);
               loadFee = input.carrierLoadFee ?? (ov?.loadFee ? Number(ov.loadFee) : carrier.loadFee);
-              coiRate = input.carrierCoiRate ?? (ov?.coiRate ? Number(ov.coiRate) : carrier.coiRate);
               loanRate = input.carrierLoanRate ?? carrier.loanRate;
               avgReturn = input.carrierAvgReturn ?? (ov?.avgReturn ? Number(ov.avgReturn) : carrier.avgIllustratedRate);
             }
@@ -4784,16 +4845,37 @@ Keep it personal, specific with dollar amounts, and actionable. Use their actual
             else premium = year2Premium;
 
             cumulativePremiums += premium;
-            const netPremium = premium * (1 - loadFee - coiRate);
-            accountValue += netPremium;
-            accountValue *= (1 + avgReturn);
+            // Same shared charge sequence as every other projection here. The
+            // carrier's flat coiRate is deliberately not used as a mortality
+            // charge: it is a single number per carrier with a sixfold spread
+            // across the registry and no mortality table behind it. Without a
+            // specified amount there is no net amount at risk, so no mortality
+            // is charged at all and the batch result says so.
+            const step = stepPolicyYear({
+              accountValue,
+              policyYear: y,
+              attainedAge: age + y - 1,
+              premium,
+              faceAmount: 0,
+              charges: {
+                premiumLoadPctByYear: [loadFee * 100],
+                monthlyPolicyFee: 10,
+                perUnitMonthlyPerThousand: 0,
+                perUnitYears: 0,
+                coiTable: [],
+                surrenderChargePctByYear: [],
+              },
+              creditedRatePct: avgReturn * 100,
+            });
+            accountValue = step.accountValue;
 
             if (y === 2) {
               const m13Loan = iraBalance * 0.25;
               totalLoanBalance += m13Loan;
             }
             if (y === 3) {
-              const y3Loan = accountValue * 0.90 * 0.80;
+              // No surrender charge schedule is held for any carrier here.
+              const y3Loan = accountValue * 0.80;
               totalLoanBalance += y3Loan;
             }
             if (y >= 4) {
@@ -5414,7 +5496,10 @@ Extract ALL years shown in the illustration. Use the ILLUSTRATED (non-guaranteed
       premiumYears: z.number().min(1).max(10).default(5),
       loanInterestRate: z.number().min(0.01).max(0.15).default(0.065),
       collateralRequirement: z.number().min(0).max(1).default(0.20),
-      illustratedRate: z.number().min(0.01).max(0.20).default(0.12),
+      // 6% matches the platform's own default illustrated rate (see the
+      // partner API's ag49Rate). 12% was above anything AG 49 lets a carrier
+      // illustrate, and a default is a statement about what is normal.
+      illustratedRate: z.number().min(0.01).max(0.20).default(0.06),
       issueAge: z.number().min(20).max(80).default(50),
       loanTermYears: z.number().min(5).max(30).default(10),
       projectionYears: z.number().min(10).max(40).default(30),
@@ -5430,7 +5515,11 @@ Extract ALL years shown in the illustration. Use the ILLUSTRATED (non-guaranteed
       currentCashValue: z.number().min(0),
       currentAge: z.number().min(20).max(80),
       retirementAge: z.number().min(50).max(85),
-      illustratedRate: z.number().min(0.01).max(0.20).default(0.12),
+      // 6% matches the platform's own default illustrated rate (see the
+      // partner API's ag49Rate). 12% was above anything AG 49 lets a carrier
+      // illustrate, and a default is a statement about what is normal.
+      illustratedRate: z.number().min(0.01).max(0.20).default(0.06),
+      maximumIllustratedRate: z.number().min(1).max(12).optional(),
       loanRate: z.number().min(0.01).max(0.10).default(0.05),
       loanType: z.enum(['fixed', 'variable', 'wash']).default('wash'),
       annualIncomeNeeded: z.number().min(0).default(100000),
@@ -5447,7 +5536,11 @@ Extract ALL years shown in the illustration. Use the ILLUSTRATED (non-guaranteed
       currentCashValue: z.number().min(0),
       currentAge: z.number().min(20).max(80),
       retirementAge: z.number().min(50).max(85),
-      illustratedRate: z.number().min(0.01).max(0.20).default(0.12),
+      // 6% matches the platform's own default illustrated rate (see the
+      // partner API's ag49Rate). 12% was above anything AG 49 lets a carrier
+      // illustrate, and a default is a statement about what is normal.
+      illustratedRate: z.number().min(0.01).max(0.20).default(0.06),
+      maximumIllustratedRate: z.number().min(1).max(12).optional(),
       loanRate: z.number().min(0.01).max(0.10).default(0.05),
       annualIncomeNeeded: z.number().min(0).default(100000),
       maxLoanToValue: z.number().min(0.5).max(0.95).default(0.90),

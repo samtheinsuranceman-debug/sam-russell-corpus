@@ -28,7 +28,7 @@
 import type { Express, Request, Response, NextFunction } from "express";
 import { createHash, timingSafeEqual } from "node:crypto";
 import { generateDualIllustration } from "@shared/timeMachineEngine";
-import { ALL_INDEX_OPTIONS, MAX_YEAR, MIN_YEAR, RAW_INDEX_RETURNS, getCreditingHistory } from "@shared/indexCreditingData";
+import { ALL_INDEX_OPTIONS, MAX_YEAR, MIN_YEAR, RAW_INDEX_RETURNS, getCreditingHistory, hasIndexSeries, publishedLookback, runBacktest } from "@shared/indexCreditingData";
 import { CLAIMS, builtClaims, claimCounts } from "@shared/patentCatalog";
 import { APPLICATIONS, DRAFTED_COUNT, ENGINE_COUNT, statusBadge, statusSentence } from "@shared/patentStatus";
 import { registerPartnerConcierge } from "./partnerConcierge";
@@ -260,16 +260,20 @@ function dualPanel(crediting: Crediting, windowId: string) {
  *    carriers can offer a 25% cap on one. Applying that cap to an annual
  *    return overstates the credit, and the product name says so.
  *
- * 2. The multi-index and hindsight strategies sort the component indices by
- *    the return each actually delivered that year, then weight the best one
- *    highest. That is a decision made with knowledge of the outcome. Unless
- *    the contract genuinely allocates in arrears — and for these the terms are
- *    not recorded here — it is hindsight bias, and it inflates every year.
+ * 2. The multi-index strategies blend the components 50/30/20 by that year's
+ *    best, second and third performer. I called that hindsight bias. It is
+ *    not: the Nationwide rate guide (FLM-1491AO.10, 02/25) defines the
+ *    strategy exactly that way, so the weighting is the contract and the
+ *    original claim was wrong.
  *
- * Both push in the same direction. Together they produce 12.93% compound over
- * 1996-2025 on one strategy, which is far above anything a carrier could
- * illustrate under AG 49-A and would not match any illustration the carrier
- * actually issues.
+ *    What is wrong is the components. The contract names the S&P 500,
+ *    Nasdaq-100 and Dow Jones Industrial Average; we hold no DJIA series and
+ *    substitute the Russell 2000.
+ *
+ * Together they produce 12.93% compound over 1996-2025 on one strategy, where
+ * Nationwide publishes a 9.32% thirty-year look-back for the same strategy —
+ * and theirs is an arithmetic average of annual rates, which runs HIGHER than
+ * a compound one, so the real gap is wider than the 3.6 points it looks.
  *
  * So they are listed — a reader should see the terms — and refused for the
  * exhibit, with the reason. When the real contract mechanics are recorded,
@@ -277,13 +281,26 @@ function dualPanel(crediting: Crediting, windowId: string) {
  * actually chosen, they can be modelled properly and this list shrinks.
  */
 function reconstructionCaveat(o: (typeof ALL_INDEX_OPTIONS)[number]): string | null {
+  if (!hasIndexSeries(o)) {
+    // Without a series every year credits the floor, which would render as a
+    // strategy that never pays — the opposite of the truth for a 315%
+    // participation design. Refuse it and point at the carrier's own figure.
+    const pub = publishedLookback(o.id);
+    return (
+      `No index series is held for ${o.index}, so a year-by-year credit cannot be computed. ` +
+      (pub?.y20 != null
+        ? `The carrier publishes a ${pub.y20}% twenty-year look-back for this strategy; its index was established in 2022, so everything before that is back-tested.`
+        : "The carrier publishes no long look-back for this strategy either.")
+    );
+  }
   if (/monthly/i.test(o.name)) {
     return "Modelled on annual point-to-point index returns, while the product name describes a monthly average. " +
       "A monthly design credits materially less in a trending market, so this reconstruction overstates it.";
   }
   if (o.indexType === "multiIndex" || o.indexType === "hindsight") {
-    return "Weights the component indices by what each actually returned that year, highest first — a choice made " +
-      "with knowledge of the outcome. Unless the contract allocates in arrears, this inflates every year.";
+    return "Blends the components 50/30/20 by that year's best performer, which is the contract — but one component " +
+      "is substituted: the strategy names the Dow Jones Industrial Average and we hold no DJIA series, so the " +
+      "Russell 2000 stands in for it.";
   }
   return null;
 }
@@ -893,6 +910,126 @@ export function registerPartnerApi(app: Express): void {
       notice:
         "Historical index changes shown are not indicative of future returns, and this is not an illustration of any " +
         "specific policy. Caps and participation rates are declared by the carrier and can change.",
+    });
+  });
+
+  /**
+   * Accumulation across an allocation of strategies.
+   * GET /api/partner/accumulation?premium=50000&years=30&startYear=1996
+   *     &allocate=am-sp500-ptp:60,am-sp500-uncapped:40
+   *
+   * The policyholder chooses the strategies and the share of premium in each,
+   * and gets account value and surrender value year by year, with a per-
+   * strategy breakdown of what each contributed.
+   *
+   * Surrender value needs the contract's surrender charge schedule, which
+   * differs by product, issue age and class. Pass it as `surrender=10,9,8,...`
+   * or the response returns surrender value equal to account value and says
+   * plainly that it is not. In the first several years that difference is
+   * large and it runs in the flattering direction, so it is not glossed.
+   */
+  app.get("/api/partner/accumulation", requireKey, (req, res) => {
+    const raw = String(req.query.allocate ?? "").trim();
+    const parsed = raw
+      ? raw.split(",").map((pair) => {
+          const [optionId, pct] = pair.split(":");
+          return { optionId: String(optionId ?? "").trim(), percentage: Number(pct) };
+        })
+      : [{ optionId: "am-sp500-ptp", percentage: 100 }];
+
+    // Refusals first, each naming what is wrong. An allocation that silently
+    // normalises to 100% is an allocation the caller did not make.
+    const unknown = parsed.filter((a) => !ALL_INDEX_OPTIONS.some((o) => o.id === a.optionId));
+    if (unknown.length) {
+      res.status(400).json({
+        error: "unknown_strategy",
+        detail: `No strategy is held with id: ${unknown.map((u) => u.optionId).join(", ")}.`,
+        available: ALL_INDEX_OPTIONS.filter((o) => reconstructionCaveat(o) === null).map((o) => o.id),
+      });
+      return;
+    }
+    const refused = parsed
+      .map((a) => ALL_INDEX_OPTIONS.find((o) => o.id === a.optionId)!)
+      .filter((o) => reconstructionCaveat(o) !== null);
+    if (refused.length) {
+      res.status(422).json({
+        error: "strategy_not_modelled_faithfully",
+        strategies: refused.map((o) => ({ id: o.id, name: o.name, detail: reconstructionCaveat(o) })),
+      });
+      return;
+    }
+    const total = parsed.reduce((t, a) => t + (Number.isFinite(a.percentage) ? a.percentage : 0), 0);
+    if (Math.abs(total - 100) > 0.01) {
+      res.status(400).json({
+        error: "allocation_must_total_100",
+        detail: `The allocation totals ${total}%. It is not normalised here, because an allocation nobody chose is not an answer.`,
+      });
+      return;
+    }
+
+    const startYear = clampInt(req.query.startYear, MIN_YEAR, MAX_YEAR - 4, 1996);
+    const years = clampInt(req.query.years, 5, MAX_YEAR - startYear + 1, Math.min(30, MAX_YEAR - startYear + 1));
+    // Split before parsing, and drop empty entries first: "".split(",") is
+    // [""], Number("") is 0, and 0 passes every range check — so an absent
+    // schedule parsed as a valid one-year schedule of 0%, and the response
+    // claimed a schedule had been supplied when none had.
+    const surrenderSchedule = String(req.query.surrender ?? "")
+      .split(",")
+      .map((piece) => piece.trim())
+      .filter((piece) => piece !== "")
+      .map(Number)
+      .filter((n) => Number.isFinite(n) && n >= 0 && n <= 100);
+
+    let result;
+    try {
+      result = runBacktest(parsed, clampNum(req.query.premium, 0, 1e7, 50_000), years, startYear);
+    } catch (e) {
+      res.status(400).json({ error: "backtest_failed", detail: e instanceof Error ? e.message : "unknown" });
+      return;
+    }
+
+    const sv = (accountValue: number, policyYear: number) =>
+      surrenderSchedule.length
+        ? Math.max(0, Math.round(accountValue * (1 - (surrenderSchedule[policyYear - 1] ?? 0) / 100)))
+        : Math.round(accountValue);
+
+    res.json({
+      allocation: parsed,
+      startYear,
+      years: result.years.map((y, i) => ({
+        calendarYear: y.year,
+        policyYear: i + 1,
+        creditedRatePct: Number(y.weightedCreditRate.toFixed(2)),
+        accountValue: Math.round(y.endingValue),
+        surrenderValue: sv(y.endingValue, i + 1),
+        byStrategy: y.optionBreakdown.map((b) => ({
+          id: b.optionId,
+          name: b.optionName,
+          allocationPct: b.allocation,
+          indexReturnPct: Number(b.rawReturn.toFixed(2)),
+          creditedRatePct: Number(b.creditedRate.toFixed(2)),
+        })),
+      })),
+      summary: {
+        finalAccountValue: Math.round(result.finalValue),
+        finalSurrenderValue: sv(result.finalValue, result.years.length),
+        annualizedReturnPct: Number(result.annualizedReturn.toFixed(2)),
+        floorProtectedYears: result.floorProtectedYears,
+        capLimitedYears: result.capLimitedYears,
+        surrenderScheduleSupplied: surrenderSchedule.length > 0,
+      },
+      strategies: ALL_INDEX_OPTIONS.filter((o) => reconstructionCaveat(o) === null).map((o) => ({
+        id: o.id, name: o.name, capPct: o.cap, floorPct: o.floor,
+        participationPct: o.participation, spreadPct: o.spread, strategyChargePct: o.strategyCharge,
+      })),
+      basis:
+        surrenderSchedule.length
+          ? "Surrender value is account value less the surrender charge schedule supplied."
+          : "No surrender charge schedule was supplied, so surrender value is shown equal to account value. " +
+            "A real policy carries a surrender charge for the first several years and the true figure is lower.",
+      notice:
+        "Historical index changes are not indicative of future returns. Caps, participation rates and spreads are " +
+        "declared by the carrier and can change.",
     });
   });
 }

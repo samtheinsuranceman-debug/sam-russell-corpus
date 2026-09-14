@@ -2,7 +2,37 @@
  * Policy Loan Optimization Engine
  * Models optimal loan timing, amounts, tax-free income streams,
  * and lapse risk thresholds for IUL policies.
+ *
+ * The loan logic is this file's own. The policy underneath it is not: every
+ * year is stepped through `stepPolicyYear` in shared/policyMechanics.ts, which
+ * is the one place the charge order lives. This file used to carry its own
+ * copy — five age bands for cost of insurance, an 8%/6% premium load and a flat
+ * $120 fee, written inline — and two other engines carried different copies.
+ * The numbers below are those same defaults, moved behind a name that says what
+ * they are, so a projection built on them reports itself unreliable instead of
+ * looking like a carrier illustration.
  */
+import {
+  stepPolicyYear,
+  ILLUSTRATIVE_COI_TABLE,
+  ILLUSTRATIVE_SOURCE,
+  type PolicyCharges,
+} from './policyMechanics';
+
+/**
+ * The charges this engine assumed before it had anywhere to read them from.
+ * Not a carrier's schedule — see ILLUSTRATIVE_COI_TABLE. Callers with a real
+ * rate sheet pass their own and the result stops flagging itself.
+ */
+export const DEFAULT_LOAN_MODEL_CHARGES: PolicyCharges = {
+  premiumLoadPctByYear: [8, 6, 6, 6, 6, 0],
+  monthlyPolicyFee: 10,
+  perUnitMonthlyPerThousand: 0,
+  perUnitYears: 0,
+  coiTable: ILLUSTRATIVE_COI_TABLE,
+  coiTableSource: ILLUSTRATIVE_SOURCE,
+  surrenderChargePctByYear: [],
+};
 
 export interface PolicyLoanInput {
   currentCashValue: number;
@@ -17,6 +47,15 @@ export interface PolicyLoanInput {
   annualPremium: number; // ongoing premium if any
   premiumYearsRemaining: number;
   deathBenefit: number;
+  /** Carrier charges. Omitted, DEFAULT_LOAN_MODEL_CHARGES is used and said so. */
+  charges?: PolicyCharges;
+  /**
+   * The carrier's AG 49 maximum illustrated rate, as a percentage. It is a
+   * published figure derived from the product's own index parameters; there is
+   * no universal value and none is assumed. Supplied, the result says when the
+   * illustrated rate exceeds it. Absent, the result says no ceiling was checked.
+   */
+  maximumIllustratedRate?: number;
 }
 
 export interface PolicyLoanYear {
@@ -46,6 +85,12 @@ export interface PolicyLoanResult {
   yearsOfIncome: number;
   lapseYear: number | null;
   effectiveTaxRate: number; // vs taxable withdrawal
+  /** What the policy model was missing, and whether to trust the columns. */
+  mechanics: {
+    reliable: boolean;
+    missing: string[];
+    notes: string[];
+  };
   summary: {
     phase1: string; // accumulation
     phase2: string; // distribution
@@ -58,6 +103,7 @@ export interface PolicyLoanResult {
  * Calculate the optimal policy loan strategy
  */
 export function optimizePolicyLoans(input: PolicyLoanInput): PolicyLoanResult {
+  const charges = input.charges ?? DEFAULT_LOAN_MODEL_CHARGES;
   const years: PolicyLoanYear[] = [];
   let cv = input.currentCashValue;
   let outstandingLoan = 0;
@@ -77,21 +123,21 @@ export function optimizePolicyLoans(input: PolicyLoanInput): PolicyLoanResult {
     // Beginning of year
     const beginningCV = cv;
 
-    // Add premium
-    const premiumLoad = y === 1 ? premium * 0.08 : (y <= 5 ? premium * 0.06 : 0);
-    cv += premium - premiumLoad;
-
-    // Charges
+    // The policy year itself — premium load, fee, cost of insurance on the net
+    // amount at risk, then the credit. One implementation, shared.
     const specifiedAmount = input.deathBenefit;
-    const nar = Math.max(0, specifiedAmount - cv);
-    const coiRate = age <= 50 ? 0.0012 : age <= 60 ? 0.0028 : age <= 70 ? 0.0065 : age <= 80 ? 0.0160 : 0.0220;
-    const coi = nar * coiRate;
-    const charges = 120 + coi;
-    cv = Math.max(0, cv - charges);
-
-    // Interest earned on full CV (including loaned portion for wash loans)
-    const interest = cv * input.illustratedRate;
-    cv += interest;
+    const step = stepPolicyYear({
+      accountValue: cv,
+      policyYear: y,
+      attainedAge: age,
+      premium,
+      faceAmount: specifiedAmount,
+      charges,
+      creditedRatePct: input.illustratedRate * 100,
+    });
+    const chargesThisYear = step.row.premiumLoad + step.row.policyFee + step.row.perUnitCharge + step.row.costOfInsurance;
+    const interest = step.row.interestCredited;
+    cv = step.accountValue;
 
     // Loan interest charged on outstanding balance
     const loanInterestCharged = outstandingLoan * effectiveLoanRate;
@@ -128,7 +174,7 @@ export function optimizePolicyLoans(input: PolicyLoanInput): PolicyLoanResult {
       beginningCV: Math.round(beginningCV),
       premium: Math.round(premium),
       interest: Math.round(interest),
-      charges: Math.round(charges),
+      charges: Math.round(chargesThisYear),
       loanTaken: Math.round(loanTaken),
       loanInterestCharged: Math.round(loanInterestCharged),
       endingCV: Math.round(cv),
@@ -154,8 +200,41 @@ export function optimizePolicyLoans(input: PolicyLoanInput): PolicyLoanResult {
   const assumedTaxRate = 0.37; // top bracket
   const effectiveTaxRate = 0; // policy loans are tax-free
 
+  const missing: string[] = [];
+  const notes: string[] = [];
+  if (charges.coiTable.length === 0) {
+    missing.push('cost of insurance table');
+    notes.push('No cost of insurance table was supplied, so no mortality charge was deducted. Every value here is too high.');
+  } else if (charges.coiTableSource === ILLUSTRATIVE_SOURCE) {
+    missing.push('a carrier cost of insurance table');
+    notes.push('Mortality came from generic age bands, not a carrier schedule. Treat the charge column as an order of magnitude.');
+  }
+  if (charges.surrenderChargePctByYear.length === 0) {
+    missing.push('surrender charge schedule');
+    notes.push('No surrender charge schedule was supplied. Loans in the early years are shown against a cash value a real policy would not yet have.');
+  }
+  const illustratedPct = input.illustratedRate * 100;
+  if (typeof input.maximumIllustratedRate === 'number') {
+    if (illustratedPct > input.maximumIllustratedRate) {
+      missing.push('an illustrated rate within the AG 49 maximum');
+      notes.push(
+        `The projection credits ${illustratedPct.toFixed(2)}% against a maximum illustrated rate of ` +
+        `${input.maximumIllustratedRate.toFixed(2)}%. Under NAIC AG 49, as amended by AG 49-A and ` +
+        `AG 49-B, a carrier may not illustrate above that rate. These columns could not be shown to a client.`
+      );
+    }
+  } else {
+    missing.push('the carrier AG 49 maximum illustrated rate');
+    notes.push(
+      'No AG 49 maximum illustrated rate was supplied, so the credited rate was not checked against a ' +
+      'ceiling. That figure is published per product and derived from its own index parameters; it is ' +
+      'not a constant and is not assumed here.'
+    );
+  }
+
   return {
     years,
+    mechanics: { reliable: missing.length === 0, missing, notes },
     totalTaxFreeIncome: Math.round(totalTaxFreeIncome),
     maxSafeLoanPerYear,
     optimalStartAge: input.retirementAge,

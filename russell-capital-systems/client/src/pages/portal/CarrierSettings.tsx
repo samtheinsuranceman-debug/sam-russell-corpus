@@ -63,9 +63,9 @@ const DEFAULT_CARRIERS = [{ id: "aaa-plus-mutual", name: "AAA+ Mutual", rating: 
 ,
   { id: "bbb-plus-mutual", name: "BBB+ Mutual", rating: "B++", founded: 1905, hq: "Chicago, IL", amBest: "B++", sp: "BBB+", moody: "Baa1", fitch: "BBB+" },
 ,
-  { id: "aa-minus-mutual", name: "AA- Mutual", rating: "A+", founded: 1888, hq: "Boston, MA", amBest: "A+", sp: "AA-", moody: "Aa3", fitch: "AA-" },
+  { id: "amutual-c", name: "AA- Mutual", rating: "A+", founded: 1888, hq: "Boston, MA", amBest: "A+", sp: "AA-", moody: "Aa3", fitch: "AA-" },
 ,
-  { id: "a-mutual", name: "A Mutual Life", rating: "A", founded: 1920, hq: "Dallas, TX", amBest: "A", sp: "A", moody: "A2", fitch: "A" }
+  { id: "mutual-a", name: "Mutual Company A", rating: "", founded: 0, hq: "", amBest: "", sp: "", moody: "", fitch: "" }
 ];
 
 const DEFAULTS = { loadFee: "0.0800", coiRate: "0.0080", capRate: "0.1450", floorRate: "0.0000", avgReturn: "0.0750", participationRate: "1.0000", fixedAccountRate: "0.0400", loanRate: "0.0500", bonusRate: "0.0100", assetBasedFee: "0.0025", policyFee: "120" };
@@ -182,7 +182,7 @@ function generateTemplateCSV(): string {
     "carrier_id,carrier_name,load_fee,coi_rate,cap_rate,floor_rate,avg_return,participation_rate,fixed_account_rate,loan_rate,bonus_rate,asset_based_fee,policy_fee,notes",
     "aaa-plus-mutual,AAA+ Mutual,6%,4.5%,12%,0%,7.5%,100%,4%,5%,1%,0.25%,120,Based on 2024 illustration (AG 49 max)",
     "national-life,National Life Group,5.5%,5%,11.5%,1%,7.5%,110%,3.5%,4.5%,0.5%,0.30%,100,LSW illustration dated Jan 2024 (AG 49 max)",
-    "aa-minus-mutual,AA- Mutual,7%,5.5%,13%,0%,7.5%,95%,4.5%,5.5%,1.5%,0.20%,150,FIA+ rider included (AG 49 max)",
+    "amutual-c,AA- Mutual,7%,5.5%,13%,0%,7.5%,95%,4.5%,5.5%,1.5%,0.20%,150,FIA+ rider included (AG 49 max)",
   ].join("\n");
 }
 

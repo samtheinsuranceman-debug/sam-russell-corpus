@@ -236,7 +236,7 @@ export default function StrategyCompare() {
           strategyYears: strat.years, solarEquity: strat.solar,
           ...(carrierId !== "generic" || activeOverride ? {
             carrierId, carrierLoadFee: effectiveRates.loadFee,
-            carrierCoiRate: effectiveRates.coiRate, carrierLoanRate: effectiveRates.loanRate,
+            carrierLoanRate: effectiveRates.loanRate,
             carrierAvgReturn: effectiveRates.avgReturn,
           } : {}),
         });

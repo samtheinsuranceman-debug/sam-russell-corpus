@@ -626,6 +626,76 @@ describe('the policy history exhibit', () => {
   });
 });
 
+describe('accumulation across an allocation', () => {
+  const A = 'premium=50000&years=30&startYear=1996';
+
+  it('splits the premium across the chosen strategies and shows each one', async () => {
+    const b = await fetch(`${base}/accumulation?${A}&allocate=am-sp500-ptp:60,am-sp500-uncapped:40`, auth)
+      .then((x) => x.json());
+    expect(b.years.length).toBe(30);
+    const y = b.years[0];
+    expect(y.byStrategy.length).toBe(2);
+    expect(y.byStrategy.map((s: { allocationPct: number }) => s.allocationPct).sort()).toEqual([40, 60]);
+    expect(b.summary.finalAccountValue).toBeGreaterThan(0);
+  });
+
+  it('refuses an allocation that does not total 100 rather than normalising it', async () => {
+    // Silently scaling 60/30 up to 100 gives an answer for a policy nobody
+    // described. Better to say the total is wrong.
+    const r = await fetch(`${base}/accumulation?${A}&allocate=am-sp500-ptp:60,am-sp500-uncapped:30`, auth);
+    expect(r.status).toBe(400);
+    const b = await r.json();
+    expect(b.error).toBe('allocation_must_total_100');
+    expect(b.detail).toContain('90%');
+  });
+
+  it('refuses an unknown strategy and lists the ones it holds', async () => {
+    const r = await fetch(`${base}/accumulation?${A}&allocate=not-a-strategy:100`, auth);
+    expect(r.status).toBe(400);
+    const b = await r.json();
+    expect(b.error).toBe('unknown_strategy');
+    expect(b.available).toContain('am-sp500-ptp');
+  });
+
+  it('refuses an allocation into a strategy it will not model faithfully', async () => {
+    const r = await fetch(`${base}/accumulation?${A}&allocate=am-multi-index:100`, auth);
+    expect(r.status).toBe(422);
+    const b = await r.json();
+    expect(b.error).toBe('strategy_not_modelled_faithfully');
+    expect(b.strategies[0].detail.length).toBeGreaterThan(60);
+  });
+
+  it('shows surrender value below account value when a schedule is given', async () => {
+    const [bare, withCharges] = await Promise.all([
+      fetch(`${base}/accumulation?${A}&allocate=am-sp500-ptp:100`, auth).then((x) => x.json()),
+      fetch(`${base}/accumulation?${A}&allocate=am-sp500-ptp:100&surrender=10,9,8,7,6,5,4,3,2,1`, auth).then((x) => x.json()),
+    ]);
+    expect(bare.summary.surrenderScheduleSupplied).toBe(false);
+    expect(bare.years[0].surrenderValue).toBe(bare.years[0].accountValue);
+    expect(bare.basis).toContain('the true figure is lower');
+
+    expect(withCharges.summary.surrenderScheduleSupplied).toBe(true);
+    expect(withCharges.years[0].surrenderValue).toBeLessThan(withCharges.years[0].accountValue);
+    // Past the schedule, the two converge again.
+    expect(withCharges.years[20].surrenderValue).toBe(withCharges.years[20].accountValue);
+  });
+
+  it('counts the years the floor held and the years the cap bit', async () => {
+    const b = await fetch(`${base}/accumulation?${A}&allocate=am-sp500-ptp:100`, auth).then((x) => x.json());
+    expect(b.summary.floorProtectedYears).toBeGreaterThan(0);
+    expect(b.summary.capLimitedYears).toBeGreaterThan(0);
+  });
+
+  it('a richer allocation accumulates more, and the per-year rate shows why', async () => {
+    const [capped, blended] = await Promise.all([
+      fetch(`${base}/accumulation?${A}&allocate=am-sp500-ptp:100`, auth).then((x) => x.json()),
+      fetch(`${base}/accumulation?${A}&allocate=am-sp500-uncapped:100`, auth).then((x) => x.json()),
+    ]);
+    expect(blended.summary.finalAccountValue).toBeGreaterThan(capped.summary.finalAccountValue);
+    expect(blended.summary.annualizedReturnPct).toBeGreaterThan(capped.summary.annualizedReturnPct);
+  });
+});
+
 describe('closed by default', () => {
   it('answers 503 and explains when no key is configured', async () => {
     const saved = process.env.PARTNER_API_KEY;
