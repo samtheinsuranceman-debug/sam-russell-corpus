@@ -3,7 +3,7 @@ Contributors: russellholdings
 Requires at least: 6.0
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 1.3.0
+Stable tag: 1.4.0
 License: Proprietary — licensed to Drass Wealth Management
 
 Retirement, tax and insurance calculators for Drass Wealth Management.
@@ -23,6 +23,19 @@ write endpoints. Deactivating removes every tool cleanly.
    package.
 
 == Changelog ==
+
+= 1.4.0 =
+* The index series behind every figure is now sourced and reconciles to the
+  carrier's own published claims about the S&P 500 (8.05% vs a published 8.06%
+  thirty-year average; 12.29% vs a published 12.23% average excess above a 10%
+  cap). The previous series was unsourced and missed those by 0.23 points and
+  1.43 points.
+* Because of that, the segment figures changed materially. Over 2019-2025 the
+  two-year balanced account credited 49.51%, 47.32%, 0%, 0%, 53.42% and 43.07%
+  — four of six at 40% or more, and two at nothing. Discard any figure taken
+  from an earlier build.
+* The provenance warning added in 1.3.0 no longer shows, because the series now
+  passes. The check still runs on every build.
 
 = 1.3.0 =
 * Index segments now lead with the carrier's own published basis: annualized

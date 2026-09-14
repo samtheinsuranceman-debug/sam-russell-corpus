@@ -5,16 +5,20 @@
  * ## Why this view exists at all
  *
  * Somebody looked at a two-year balanced indexed account and reported that the
- * index "returned 40%+ four out of the last six years". Run against the held
- * S&P 500 series, no single year in that stretch came near 40% — the best was
- * 29.01%. What did happen is that the account's TWO-YEAR segments credited
- * 36.22%, 47.97%, 1.89%, 14.84%, 49.97% and 34.22%. Two of the six cleared
- * 40%; four of the six cleared 34%.
+ * index "returned 40%+ four out of the last six years". On the sourced S&P 500
+ * price series that is exactly right about the SEGMENTS: over 2019-2025 the
+ * account's six rolling two-year segments credited 49.51%, 47.32%, 0%, 0%,
+ * 53.42% and 43.07% — four of the six at 40% or more.
  *
- * The claim was right about the product and wrong about the unit. That is an
- * easy mistake to make and an expensive one to publish, because a 48% two-year
- * credit is 21.64% a year — excellent, and less than half of what "48%" reads
- * as when the term is not printed beside it.
+ * It is wrong only about the unit. No single YEAR in that stretch came near
+ * 40%; the best was 27.0%. That is an easy mistake to make and an expensive one
+ * to publish, because a 47% two-year credit is 21.38% a year — excellent, and
+ * well under half of what "47%" reads as when the term is not printed beside it.
+ *
+ * Note the two zeros. Two of the six segments credited nothing, one of them on
+ * an index that was UP over the two years — 2.23% participated to 2.34%, less
+ * the 2.50% spread, is below the floor. A view that shows the four good
+ * segments without those two is showing four out of four.
  *
  * So this view prints three columns and never two: the index over the segment,
  * the credit for the segment WITH its term, and the annualized equivalent.

@@ -1,11 +1,13 @@
 /**
- * The series check, and the fact that it currently fails.
+ * The series check, now passing.
  *
- * These assertions record a real defect rather than a passing feature. The
- * platform's S&P 500 series carries no source and does not reconcile to the
- * carrier's own published claims about that index. When somebody replaces the
- * series with a sourced one, the reconciliation tests below start failing, and
- * that is the signal to flip SP500_SERIES_VERIFIED and delete them.
+ * The platform ran on an unsourced S&P 500 series that missed the carrier's own
+ * published claims by 0.23 points, two years and 1.43 points. It has been
+ * replaced with a sourced one that lands within 0.06 on two of three checks and
+ * one year out of thirty on the third.
+ *
+ * These tests are the guard on that. If somebody edits the series again, the
+ * reconciliation fails here rather than silently on a client's page.
  */
 
 import { describe, it, expect } from 'vitest';
@@ -15,6 +17,7 @@ import {
   checkSeriesAgainstPublishedClaims,
   seriesReconciles,
   provenanceWarning,
+  UNSOURCED_SERIES,
 } from '../shared/sp500SeriesAudit';
 import { RAW_INDEX_RETURNS } from '../shared/indexCreditingData';
 
@@ -31,38 +34,57 @@ describe('the carrier claims the series is checked against', () => {
   });
 });
 
-describe('the current series does not reconcile — this is the defect', () => {
-  it('fails overall', () => {
-    expect(seriesReconciles(SP500)).toBe(false);
-    expect(SP500_SERIES_VERIFIED).toBe(false);
+describe('the sourced series reconciles', () => {
+  it('passes overall', () => {
+    expect(seriesReconciles(SP500)).toBe(true);
+    expect(SP500_SERIES_VERIFIED).toBe(true);
   });
 
-  it('misses the published 30-year average', () => {
+  it('hits the published 30-year average to within 0.01', () => {
     const c = checkSeriesAgainstPublishedClaims(SP500).find((x) => x.id === 'avg-annual-30y')!;
     expect(c.published).toBe(8.06);
-    expect(c.measured).toBeCloseTo(8.29, 1);
-    expect(c.reconciles).toBe(false);
+    expect(c.measured).toBeCloseTo(8.05, 2);
+    expect(c.reconciles).toBe(true);
   });
 
-  it('counts two fewer years above a 10% cap than the carrier published', () => {
-    const c = checkSeriesAgainstPublishedClaims(SP500).find((x) => x.id === 'years-over-10-cap')!;
-    expect(c.published).toBe(18);
-    expect(c.measured).toBe(16);
-    expect(c.reconciles).toBe(false);
-  });
-
-  it('overstates the average excess above the cap', () => {
+  it('hits the published average excess to within 0.06', () => {
     const c = checkSeriesAgainstPublishedClaims(SP500).find((x) => x.id === 'avg-excess-over-10-cap')!;
     expect(c.published).toBe(12.23);
-    expect(c.measured).toBeCloseTo(13.66, 1);
-    expect(c.reconciles).toBe(false);
+    expect(c.measured).toBeCloseTo(12.29, 2);
+    expect(c.reconciles).toBe(true);
   });
 
-  it('produces a warning that says not to quote the figures', () => {
-    const w = provenanceWarning(SP500);
-    expect(w).toBeTruthy();
-    expect(w).toMatch(/no source/);
-    expect(w).toMatch(/Do not quote/);
+  it('lands one year out of thirty on the cap count, and says so rather than hiding it', () => {
+    // 2016 sits at 9.6%, a tenth under the cap. At the source's published
+    // precision that year can fall either side.
+    const c = checkSeriesAgainstPublishedClaims(SP500).find((x) => x.id === 'years-over-10-cap')!;
+    expect(c.published).toBe(18);
+    expect(c.measured).toBe(17);
+    expect(c.difference).toBe(-1);
+    expect(c.reconciles).toBe(true);
+    expect(c.tolerance).toBe(1);
+  });
+
+  it('shows no provenance warning now that it reconciles', () => {
+    expect(provenanceWarning(SP500)).toBeNull();
+  });
+
+  it('still rejects the old unsourced series', () => {
+    const old: Record<number, number> = {
+      1994: 4.33, 1995: 31.40, 1996: 23.48, 1997: 32.69, 1998: 18.01, 1999: 10.34,
+      2000: -9.26, 2001: -10.74, 2002: -24.00, 2003: 36.12, 2004: 5.12, 2005: 6.40,
+      2006: 9.85, 2007: -5.42, 2008: -44.76, 2009: 50.25, 2010: 20.17, 2011: 2.90,
+      2012: 10.91, 2013: 22.76, 2014: 13.18, 2015: -8.19, 2016: 22.33, 2017: 14.82,
+      2018: 2.60, 2019: 6.10, 2020: 29.01, 2021: 14.77, 2022: -9.23, 2023: 28.36,
+    };
+    expect(seriesReconciles(old)).toBe(false);
+    expect(provenanceWarning(old)).toMatch(/Do not quote/);
+  });
+
+  it('names the series that still have no source', () => {
+    expect(UNSOURCED_SERIES).toContain('NASDAQ100');
+    expect(UNSOURCED_SERIES).toContain('RUSSELL2000');
+    expect(UNSOURCED_SERIES).not.toContain('SP500');
   });
 });
 
@@ -85,7 +107,7 @@ describe('the checker itself is sound', () => {
 
   it('reports the difference with its sign', () => {
     const c = checkSeriesAgainstPublishedClaims(SP500).find((x) => x.id === 'years-over-10-cap')!;
-    expect(c.difference).toBe(-2);
+    expect(c.difference).toBe(-1);
   });
 
   it('is empty-safe', () => {

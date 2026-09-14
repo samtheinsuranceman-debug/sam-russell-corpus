@@ -16,224 +16,224 @@
   "creditHistory": [
     {
       "year": 1994,
-      "indexChangePct": 4.33,
-      "creditedRatePct": 4.33,
-      "floorHeld": false,
+      "indexChangePct": -2.2,
+      "creditedRatePct": 0,
+      "floorHeld": true,
       "capLimited": false
     },
     {
       "year": 1995,
-      "indexChangePct": 31.4,
+      "indexChangePct": 34.9,
       "creditedRatePct": 10.25,
       "floorHeld": false,
       "capLimited": true
     },
     {
       "year": 1996,
-      "indexChangePct": 23.48,
+      "indexChangePct": 20.1,
       "creditedRatePct": 10.25,
       "floorHeld": false,
       "capLimited": true
     },
     {
       "year": 1997,
-      "indexChangePct": 32.69,
+      "indexChangePct": 31.5,
       "creditedRatePct": 10.25,
       "floorHeld": false,
       "capLimited": true
     },
     {
       "year": 1998,
-      "indexChangePct": 18.01,
+      "indexChangePct": 27.1,
       "creditedRatePct": 10.25,
       "floorHeld": false,
       "capLimited": true
     },
     {
       "year": 1999,
-      "indexChangePct": 10.34,
+      "indexChangePct": 19.1,
       "creditedRatePct": 10.25,
       "floorHeld": false,
       "capLimited": true
     },
     {
       "year": 2000,
-      "indexChangePct": -9.26,
+      "indexChangePct": -10.6,
       "creditedRatePct": 0,
       "floorHeld": true,
       "capLimited": false
     },
     {
       "year": 2001,
-      "indexChangePct": -10.74,
+      "indexChangePct": -12.9,
       "creditedRatePct": 0,
       "floorHeld": true,
       "capLimited": false
     },
     {
       "year": 2002,
-      "indexChangePct": -24,
+      "indexChangePct": -22.8,
       "creditedRatePct": 0,
       "floorHeld": true,
       "capLimited": false
     },
     {
       "year": 2003,
-      "indexChangePct": 36.12,
+      "indexChangePct": 26.1,
       "creditedRatePct": 10.25,
       "floorHeld": false,
       "capLimited": true
     },
     {
       "year": 2004,
-      "indexChangePct": 5.12,
-      "creditedRatePct": 5.12,
+      "indexChangePct": 8.6,
+      "creditedRatePct": 8.6,
       "floorHeld": false,
       "capLimited": false
     },
     {
       "year": 2005,
-      "indexChangePct": 6.4,
-      "creditedRatePct": 6.4,
+      "indexChangePct": 3,
+      "creditedRatePct": 3,
       "floorHeld": false,
       "capLimited": false
     },
     {
       "year": 2006,
-      "indexChangePct": 9.85,
-      "creditedRatePct": 9.85,
+      "indexChangePct": 13.7,
+      "creditedRatePct": 10.25,
+      "floorHeld": false,
+      "capLimited": true
+    },
+    {
+      "year": 2007,
+      "indexChangePct": 3.2,
+      "creditedRatePct": 3.2,
       "floorHeld": false,
       "capLimited": false
     },
     {
-      "year": 2007,
-      "indexChangePct": -5.42,
-      "creditedRatePct": 0,
-      "floorHeld": true,
-      "capLimited": false
-    },
-    {
       "year": 2008,
-      "indexChangePct": -44.76,
+      "indexChangePct": -38.3,
       "creditedRatePct": 0,
       "floorHeld": true,
       "capLimited": false
     },
     {
       "year": 2009,
-      "indexChangePct": 50.25,
+      "indexChangePct": 23.5,
       "creditedRatePct": 10.25,
       "floorHeld": false,
       "capLimited": true
     },
     {
       "year": 2010,
-      "indexChangePct": 20.17,
+      "indexChangePct": 12.9,
       "creditedRatePct": 10.25,
       "floorHeld": false,
       "capLimited": true
     },
     {
       "year": 2011,
-      "indexChangePct": 2.9,
-      "creditedRatePct": 2.9,
-      "floorHeld": false,
+      "indexChangePct": -0.2,
+      "creditedRatePct": 0,
+      "floorHeld": true,
       "capLimited": false
     },
     {
       "year": 2012,
-      "indexChangePct": 10.91,
+      "indexChangePct": 13.5,
       "creditedRatePct": 10.25,
       "floorHeld": false,
       "capLimited": true
     },
     {
       "year": 2013,
-      "indexChangePct": 22.76,
+      "indexChangePct": 29.7,
       "creditedRatePct": 10.25,
       "floorHeld": false,
       "capLimited": true
     },
     {
       "year": 2014,
-      "indexChangePct": 13.18,
+      "indexChangePct": 11.3,
       "creditedRatePct": 10.25,
       "floorHeld": false,
       "capLimited": true
     },
     {
       "year": 2015,
-      "indexChangePct": -8.19,
+      "indexChangePct": -0.8,
       "creditedRatePct": 0,
       "floorHeld": true,
       "capLimited": false
     },
     {
       "year": 2016,
-      "indexChangePct": 22.33,
-      "creditedRatePct": 10.25,
+      "indexChangePct": 9.6,
+      "creditedRatePct": 9.6,
       "floorHeld": false,
-      "capLimited": true
+      "capLimited": false
     },
     {
       "year": 2017,
-      "indexChangePct": 14.82,
+      "indexChangePct": 19.4,
       "creditedRatePct": 10.25,
       "floorHeld": false,
       "capLimited": true
     },
     {
       "year": 2018,
-      "indexChangePct": 2.6,
-      "creditedRatePct": 2.6,
-      "floorHeld": false,
+      "indexChangePct": -6.4,
+      "creditedRatePct": 0,
+      "floorHeld": true,
       "capLimited": false
     },
     {
       "year": 2019,
-      "indexChangePct": 6.1,
-      "creditedRatePct": 6.1,
+      "indexChangePct": 28.8,
+      "creditedRatePct": 10.25,
       "floorHeld": false,
-      "capLimited": false
+      "capLimited": true
     },
     {
       "year": 2020,
-      "indexChangePct": 29.01,
+      "indexChangePct": 16.1,
       "creditedRatePct": 10.25,
       "floorHeld": false,
       "capLimited": true
     },
     {
       "year": 2021,
-      "indexChangePct": 14.77,
+      "indexChangePct": 27,
       "creditedRatePct": 10.25,
       "floorHeld": false,
       "capLimited": true
     },
     {
       "year": 2022,
-      "indexChangePct": -9.23,
+      "indexChangePct": -19.5,
       "creditedRatePct": 0,
       "floorHeld": true,
       "capLimited": false
     },
     {
       "year": 2023,
-      "indexChangePct": 28.36,
+      "indexChangePct": 24.3,
       "creditedRatePct": 10.25,
       "floorHeld": false,
       "capLimited": true
     },
     {
       "year": 2024,
-      "indexChangePct": 16.84,
+      "indexChangePct": 23.3,
       "creditedRatePct": 10.25,
       "floorHeld": false,
       "capLimited": true
     },
     {
       "year": 2025,
-      "indexChangePct": 15.52,
+      "indexChangePct": 16.3,
       "creditedRatePct": 10.25,
       "floorHeld": false,
       "capLimited": true
@@ -818,244 +818,244 @@
       "year": 1,
       "calendarYear": 2027,
       "indexChange": 0,
-      "creditedRate": 4.33,
-      "accountValue": 26083,
-      "surrenderValue": 13041
+      "creditedRate": 0,
+      "accountValue": 25000,
+      "surrenderValue": 12500
     },
     {
       "year": 2,
       "calendarYear": 2028,
       "indexChange": 0,
       "creditedRate": 10.25,
-      "accountValue": 56318,
-      "surrenderValue": 30975
+      "accountValue": 55125,
+      "surrenderValue": 30319
     },
     {
       "year": 3,
       "calendarYear": 2029,
       "indexChange": 0,
       "creditedRate": 10.25,
-      "accountValue": 89654,
-      "surrenderValue": 53792
+      "accountValue": 88338,
+      "surrenderValue": 53003
     },
     {
       "year": 4,
       "calendarYear": 2030,
       "indexChange": 0,
       "creditedRate": 10.25,
-      "accountValue": 126406,
-      "surrenderValue": 82164
+      "accountValue": 124955,
+      "surrenderValue": 81221
     },
     {
       "year": 5,
       "calendarYear": 2031,
       "indexChange": 0,
       "creditedRate": 10.25,
-      "accountValue": 166925,
-      "surrenderValue": 116847
+      "accountValue": 165325,
+      "surrenderValue": 115728
     },
     {
       "year": 6,
       "calendarYear": 2032,
       "indexChange": 0,
       "creditedRate": 10.25,
-      "accountValue": 184034,
-      "surrenderValue": 138026
+      "accountValue": 182271,
+      "surrenderValue": 136703
     },
     {
       "year": 7,
       "calendarYear": 2033,
       "indexChange": 0,
       "creditedRate": 0,
-      "accountValue": 184034,
-      "surrenderValue": 147228
+      "accountValue": 182271,
+      "surrenderValue": 145817
     },
     {
       "year": 8,
       "calendarYear": 2034,
       "indexChange": 0,
       "creditedRate": 0,
-      "accountValue": 184034,
-      "surrenderValue": 156429
+      "accountValue": 182271,
+      "surrenderValue": 154930
     },
     {
       "year": 9,
       "calendarYear": 2035,
       "indexChange": 0,
       "creditedRate": 0,
-      "accountValue": 184034,
-      "surrenderValue": 165631
+      "accountValue": 182271,
+      "surrenderValue": 164044
     },
     {
       "year": 10,
       "calendarYear": 2036,
       "indexChange": 0,
       "creditedRate": 10.25,
-      "accountValue": 202898,
-      "surrenderValue": 186666
+      "accountValue": 200954,
+      "surrenderValue": 184878
     },
     {
       "year": 11,
       "calendarYear": 2037,
       "indexChange": 0,
-      "creditedRate": 5.12,
-      "accountValue": 213286,
-      "surrenderValue": 200489
+      "creditedRate": 8.6,
+      "accountValue": 218236,
+      "surrenderValue": 205142
     },
     {
       "year": 12,
       "calendarYear": 2038,
       "indexChange": 0,
-      "creditedRate": 6.4,
-      "accountValue": 226937,
-      "surrenderValue": 217859
+      "creditedRate": 3,
+      "accountValue": 224783,
+      "surrenderValue": 215792
     },
     {
       "year": 13,
       "calendarYear": 2039,
       "indexChange": 0,
-      "creditedRate": 9.85,
-      "accountValue": 249290,
-      "surrenderValue": 244304
+      "creditedRate": 10.25,
+      "accountValue": 247823,
+      "surrenderValue": 242867
     },
     {
       "year": 14,
       "calendarYear": 2040,
       "indexChange": 0,
-      "creditedRate": 0,
-      "accountValue": 249290,
-      "surrenderValue": 246797
+      "creditedRate": 3.2,
+      "accountValue": 255754,
+      "surrenderValue": 253196
     },
     {
       "year": 15,
       "calendarYear": 2041,
       "indexChange": 0,
       "creditedRate": 0,
-      "accountValue": 249290,
-      "surrenderValue": 249290
+      "accountValue": 255754,
+      "surrenderValue": 255754
     },
     {
       "year": 16,
       "calendarYear": 2042,
       "indexChange": 0,
       "creditedRate": 10.25,
-      "accountValue": 274842,
-      "surrenderValue": 274842
+      "accountValue": 281968,
+      "surrenderValue": 281968
     },
     {
       "year": 17,
       "calendarYear": 2043,
       "indexChange": 0,
       "creditedRate": 10.25,
-      "accountValue": 303013,
-      "surrenderValue": 303013
+      "accountValue": 310870,
+      "surrenderValue": 310870
     },
     {
       "year": 18,
       "calendarYear": 2044,
       "indexChange": 0,
-      "creditedRate": 2.9,
-      "accountValue": 311801,
-      "surrenderValue": 311801
+      "creditedRate": 0,
+      "accountValue": 310870,
+      "surrenderValue": 310870
     },
     {
       "year": 19,
       "calendarYear": 2045,
       "indexChange": 0,
       "creditedRate": 10.25,
-      "accountValue": 343760,
-      "surrenderValue": 343760
+      "accountValue": 342734,
+      "surrenderValue": 342734
     },
     {
       "year": 20,
       "calendarYear": 2046,
       "indexChange": 0,
       "creditedRate": 10.25,
-      "accountValue": 378996,
-      "surrenderValue": 378996
+      "accountValue": 377865,
+      "surrenderValue": 377865
     },
     {
       "year": 21,
       "calendarYear": 2047,
       "indexChange": 0,
       "creditedRate": 10.25,
-      "accountValue": 417843,
-      "surrenderValue": 417843
+      "accountValue": 416596,
+      "surrenderValue": 416596
     },
     {
       "year": 22,
       "calendarYear": 2048,
       "indexChange": 0,
       "creditedRate": 0,
-      "accountValue": 417843,
-      "surrenderValue": 417843
+      "accountValue": 416596,
+      "surrenderValue": 416596
     },
     {
       "year": 23,
       "calendarYear": 2049,
       "indexChange": 0,
-      "creditedRate": 10.25,
-      "accountValue": 460672,
-      "surrenderValue": 460672
+      "creditedRate": 9.6,
+      "accountValue": 456589,
+      "surrenderValue": 456589
     },
     {
       "year": 24,
       "calendarYear": 2050,
       "indexChange": 0,
       "creditedRate": 10.25,
-      "accountValue": 507891,
-      "surrenderValue": 507891
+      "accountValue": 503389,
+      "surrenderValue": 503389
     },
     {
       "year": 25,
       "calendarYear": 2051,
       "indexChange": 0,
-      "creditedRate": 2.6,
-      "accountValue": 521096,
-      "surrenderValue": 521096
+      "creditedRate": 0,
+      "accountValue": 503389,
+      "surrenderValue": 503389
     },
     {
       "year": 26,
       "calendarYear": 2052,
       "indexChange": 0,
-      "creditedRate": 6.1,
-      "accountValue": 552883,
-      "surrenderValue": 552883
+      "creditedRate": 10.25,
+      "accountValue": 554987,
+      "surrenderValue": 554987
     },
     {
       "year": 27,
       "calendarYear": 2053,
       "indexChange": 0,
       "creditedRate": 10.25,
-      "accountValue": 609553,
-      "surrenderValue": 609553
+      "accountValue": 611873,
+      "surrenderValue": 611873
     },
     {
       "year": 28,
       "calendarYear": 2054,
       "indexChange": 0,
       "creditedRate": 10.25,
-      "accountValue": 672032,
-      "surrenderValue": 672032
+      "accountValue": 674590,
+      "surrenderValue": 674590
     },
     {
       "year": 29,
       "calendarYear": 2055,
       "indexChange": 0,
       "creditedRate": 0,
-      "accountValue": 672032,
-      "surrenderValue": 672032
+      "accountValue": 674590,
+      "surrenderValue": 674590
     },
     {
       "year": 30,
       "calendarYear": 2056,
       "indexChange": 0,
       "creditedRate": 10.25,
-      "accountValue": 740916,
-      "surrenderValue": 740916
+      "accountValue": 743735,
+      "surrenderValue": 743735
     }
   ],
-  "floorProtectedYears": 7,
+  "floorProtectedYears": 9,
   "capLimitedYears": 17,
   "notice": "Historical index changes shown in this illustration are not indicative of future returns."
 }

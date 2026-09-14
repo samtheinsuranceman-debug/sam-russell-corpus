@@ -2,12 +2,14 @@
  * The two-year segment account, and the claim that sent me looking at it.
  *
  * The claim was "from 2020-2026 the index returned 40%+ four out of the last
- * six years". These tests pin the measured answer in place: no single YEAR came
- * near 40% (the best was 29.01%), while over 2019-2025 two rolling TWO-YEAR
- * segments credited 40% or more and four of the six credited 34% or more. If
- * anyone later changes the module so a segment credit can be read as an annual
- * return, or so the count drifts toward the claim rather than the record,
- * these fail.
+ * six years". On the sourced index series it is exactly right about the
+ * SEGMENTS and wrong only about the unit: no single YEAR came near 40% (the
+ * best was 27.0%), while four of the six rolling TWO-YEAR segments over
+ * 2019-2025 credited 40% or more. Two credited nothing at all.
+ *
+ * These tests pin that record. If anyone later changes the module so a segment
+ * credit can be read as an annual return, or so the floor years drop out of
+ * the window, they fail.
  */
 
 import { describe, it, expect } from 'vitest';
@@ -59,34 +61,34 @@ describe('the account as the carrier states it', () => {
 });
 
 describe('no single year reached 40%', () => {
-  it('is true across 2020-2025 on the platform series', () => {
+  it('is true across 2020-2025 on the sourced series', () => {
     const years = [2020, 2021, 2022, 2023, 2024, 2025];
     const best = Math.max(...years.map((y) => SP500[y]));
     expect(best).toBeLessThan(40);
-    expect(best).toBeCloseTo(29.01, 2);
+    expect(best).toBeCloseTo(27.0, 2);
   });
 });
 
 describe('creditSegment reproduces the measured two-year figures', () => {
   const seg = (start: number) => creditSegment(BIA, [SP500[start], SP500[start + 1]], start);
 
-  it('2020-2021 credits 47.97% — 21.64% a year', () => {
+  it('2020-2021 credits 47.32% — 21.38% a year', () => {
     const s = seg(2020);
-    expect(s.indexCumulativePct).toBeCloseTo(48.06, 1);
-    expect(s.creditedPct).toBeCloseTo(47.97, 1);
-    expect(s.annualizedPct).toBeCloseTo(21.64, 1);
+    expect(s.indexCumulativePct).toBeCloseTo(47.45, 1);
+    expect(s.creditedPct).toBeCloseTo(47.32, 1);
+    expect(s.annualizedPct).toBeCloseTo(21.38, 1);
     expect(s.endYear).toBe(2021);
   });
 
-  it('2023-2024 credits 49.97% — 22.46% a year', () => {
+  it('2023-2024 credits 53.42% — 23.86% a year', () => {
     const s = seg(2023);
-    expect(s.creditedPct).toBeCloseTo(49.97, 1);
-    expect(s.annualizedPct).toBeCloseTo(22.46, 1);
+    expect(s.creditedPct).toBeCloseTo(53.42, 1);
+    expect(s.annualizedPct).toBeCloseTo(23.86, 1);
   });
 
-  it('2019-2020 credits 36.22% and 2024-2025 credits 34.22%', () => {
-    expect(seg(2019).creditedPct).toBeCloseTo(36.22, 1);
-    expect(seg(2024).creditedPct).toBeCloseTo(34.22, 1);
+  it('2019-2020 credits 49.51% and 2024-2025 credits 43.07%', () => {
+    expect(seg(2019).creditedPct).toBeCloseTo(49.51, 1);
+    expect(seg(2024).creditedPct).toBeCloseTo(43.07, 1);
   });
 
   it('the annualized figure is always far below the segment credit', () => {
@@ -114,14 +116,21 @@ describe('the spread and the floor', () => {
     expect(s.annualizedPct).toBe(0);
   });
 
-  it('2021-2022 is the segment the spread nearly wipes out — 4.18% to 1.89%', () => {
-    // Not a floor year, which is the interesting part: the index was up over
-    // the two years and the account still credited under 1% a year.
+  it('2021-2022 is the segment the spread wipes out — 2.23% index, nothing credited', () => {
+    // The index was UP over the two years and the account still credited zero:
+    // 2.23% participated to 2.34%, less the 2.50% spread, is below the floor.
+    // This is the segment a headline about 40%+ leaves out.
     const s = creditSegment(BIA, [SP500[2021], SP500[2022]], 2021);
-    expect(s.indexCumulativePct).toBeCloseTo(4.18, 1);
-    expect(s.floorSaved).toBe(false);
-    expect(s.creditedPct).toBeCloseTo(1.89, 1);
-    expect(s.annualizedPct).toBeCloseTo(0.94, 1);
+    expect(s.indexCumulativePct).toBeCloseTo(2.23, 1);
+    expect(s.indexCumulativePct).toBeGreaterThan(0);
+    expect(s.floorSaved).toBe(true);
+    expect(s.creditedPct).toBe(0);
+  });
+
+  it('2022-2023 credits nothing either, on an index that was flat', () => {
+    const s = creditSegment(BIA, [SP500[2022], SP500[2023]], 2022);
+    expect(s.indexCumulativePct).toBeCloseTo(0.06, 1);
+    expect(s.creditedPct).toBe(0);
   });
 
   it('the 2.50% spread costs a flat 2.5 points of the segment credit', () => {
@@ -161,13 +170,13 @@ describe('rollingSegments steps one year at a time', () => {
     expect(segs.map((s) => s.endYear)).toEqual([2020, 2021, 2022, 2023, 2024, 2025]);
   });
 
-  it('shows the segment the overlapping view exists to expose', () => {
-    // Step by the term instead of by the year and 2021-22 disappears behind
-    // 2020-21 and 2022-23; stepping annually keeps the near-flat segment on
-    // screen next to the two that credited close to 50%.
+  it('shows the segments the overlapping view exists to expose', () => {
+    // Two of the six credited nothing. Any presentation that drops them is
+    // showing four good segments out of four.
     const segs = rollingSegments(BIA, SP500, 2019, 2025);
-    const flat = segs.find((s) => s.startYear === 2021);
-    expect(flat?.creditedPct).toBeCloseTo(1.89, 1);
+    expect(segs.filter((s) => s.creditedPct === 0)).toHaveLength(2);
+    expect(segs.find((s) => s.startYear === 2021)?.creditedPct).toBe(0);
+    expect(segs.find((s) => s.startYear === 2022)?.creditedPct).toBe(0);
   });
 
   it('stops rather than inventing a segment that runs past the data', () => {
@@ -187,19 +196,19 @@ describe('rollingSegments steps one year at a time', () => {
 });
 
 describe('summarizeWindow counts segments, never years', () => {
-  it('finds TWO two-year segments at or above 40% in 2019-2025, not four', () => {
-    // The claim was "40%+ four out of the last six". Four of six did clear
-    // 34%; only two cleared 40%. The count and the threshold have to be
-    // reported as measured, not rounded toward the claim.
+  it('finds FOUR two-year segments at or above 40% in 2019-2025', () => {
+    // "40%+ four out of the last six" is the record exactly, once "six" is
+    // read as six segments rather than six years.
     const w = summarizeWindow(BIA, SP500, 2019, 2025, 40);
     expect(w.segments).toHaveLength(6);
-    expect(w.segmentsAtOrAboveThreshold).toBe(2);
+    expect(w.segmentsAtOrAboveThreshold).toBe(4);
     expect(w.thresholdPct).toBe(40);
   });
 
-  it('finds four at or above 34%, which is where "four of six" is exact', () => {
-    const w = summarizeWindow(BIA, SP500, 2019, 2025, 34);
-    expect(w.segmentsAtOrAboveThreshold).toBe(4);
+  it('and the other two credited nothing, which the same window shows', () => {
+    const w = summarizeWindow(BIA, SP500, 2019, 2025, 40);
+    expect(w.floorSavedCount).toBe(2);
+    expect(w.worstAnnualizedPct).toBe(0);
   });
 
   it('counts the same window as zero when the threshold is read annually', () => {
@@ -228,12 +237,12 @@ describe('summarizeWindow counts segments, never years', () => {
     expect(w.bestAnnualizedPct).toBe(Math.max(...ann));
     expect(w.worstAnnualizedPct).toBe(Math.min(...ann));
     expect(w.meanAnnualizedPct).toBeCloseTo(ann.reduce((a, b) => a + b, 0) / ann.length, 2);
-    expect(w.worstAnnualizedPct).toBeCloseTo(0.94, 1); // 2021-2022
-    expect(w.bestAnnualizedPct).toBeCloseTo(22.46, 1); // 2023-2024
+    expect(w.worstAnnualizedPct).toBe(0); // the two floor segments
+    expect(w.bestAnnualizedPct).toBeCloseTo(23.86, 1); // 2023-2024
   });
 
-  it('counts no floor year in 2019-2025 and one over the 2007 crash', () => {
-    expect(summarizeWindow(BIA, SP500, 2019, 2025).floorSavedCount).toBe(0);
+  it('counts the floor years in 2019-2025 and over the 2007 crash', () => {
+    expect(summarizeWindow(BIA, SP500, 2019, 2025).floorSavedCount).toBe(2);
     expect(summarizeWindow(BIA, SP500, 2019, 2025).capBitCount).toBe(0);
     const crash = summarizeWindow(BIA, SP500, 2007, 2009);
     expect(crash.floorSavedCount).toBeGreaterThan(0);
@@ -267,9 +276,9 @@ describe('the segment accounts as index options on every calculator', () => {
 
   it('credits the two-year option per year at the ANNUALIZED segment rate', () => {
     const bia = ALL_INDEX_OPTIONS.find((o) => o.id === 'bm-sp500-2yr-balanced')!;
-    // 2021 closes the 2020-2021 segment: 47.97% credited, 21.64% a year.
-    expect(getCreditedRate(bia, 2021)).toBeCloseTo(21.64, 1);
-    expect(getCreditedRate(bia, 2024)).toBeCloseTo(22.46, 1);
+    // 2021 closes the 2020-2021 segment: 47.32% credited, 21.38% a year.
+    expect(getCreditedRate(bia, 2021)).toBeCloseTo(21.38, 1);
+    expect(getCreditedRate(bia, 2024)).toBeCloseTo(23.86, 1);
     // Never the segment credit itself — that is the whole point.
     expect(getCreditedRate(bia, 2021)).toBeLessThan(30);
   });
@@ -294,7 +303,7 @@ describe('the segment accounts as index options on every calculator', () => {
 
   it('the 110% annual option is an ordinary annual point-to-point', () => {
     const par = ALL_INDEX_OPTIONS.find((o) => o.id === 'bm-sp500-par110')!;
-    expect(getCreditedRate(par, 2020)).toBeCloseTo(29.01 * 1.1, 1);
+    expect(getCreditedRate(par, 2020)).toBeCloseTo(16.1 * 1.1, 1);
     expect(getCreditedRate(par, 2022)).toBe(0); // floor
   });
 
@@ -307,7 +316,7 @@ describe('the segment accounts as index options on every calculator', () => {
 
   it('leaves every annual option unchanged', () => {
     const ptp = ALL_INDEX_OPTIONS.find((o) => o.id === 'am-sp500-ptp')!;
-    expect(getCreditedRate(ptp, 2020)).toBeCloseTo(10.25, 2); // capped
+    expect(getCreditedRate(ptp, 2021)).toBeCloseTo(10.25, 2); // capped
     expect(getCreditedRate(ptp, 2022)).toBe(0); // floored
   });
 
@@ -315,8 +324,8 @@ describe('the segment accounts as index options on every calculator', () => {
     const bia = ALL_INDEX_OPTIONS.find((o) => o.id === 'bm-sp500-2yr-balanced')!;
     const h = getCreditingHistory(bia, 2020, 2025);
     expect(h.map((r) => r.year)).toEqual([2020, 2021, 2022, 2023, 2024, 2025]);
-    expect(h.find((r) => r.year === 2021)?.creditedRate).toBeCloseTo(21.64, 1);
-    expect(h.find((r) => r.year === 2022)?.creditedRate).toBeCloseTo(0.94, 1);
+    expect(h.find((r) => r.year === 2021)?.creditedRate).toBeCloseTo(21.38, 1);
+    expect(h.find((r) => r.year === 2022)?.creditedRate).toBe(0);
   });
 });
 
@@ -353,10 +362,10 @@ describe('the Time Machine sees the segment accounts', () => {
     const a = getCreditedRate(bia, 2020);
     const b = getCreditedRate(bia, 2021);
     const twoYearGrowth = (1 + a / 100) * (1 + b / 100);
-    // 2020 closes the 2019-2020 segment (36.22%) and 2021 closes 2020-2021
-    // (47.97%); each year carries its own segment's per-year rate.
-    expect(a).toBeCloseTo(16.71, 1);
-    expect(b).toBeCloseTo(21.64, 1);
+    // 2020 closes the 2019-2020 segment (49.51%) and 2021 closes 2020-2021
+    // (47.32%); each year carries its own segment's per-year rate.
+    expect(a).toBeCloseTo(22.28, 1);
+    expect(b).toBeCloseTo(21.38, 1);
     expect(twoYearGrowth).toBeGreaterThan(1);
   });
 });
@@ -374,12 +383,12 @@ describe('the carrier\'s own basis: annualized, net of the spread', () => {
   });
 
   it('annualizes geometrically, not by halving — the difference is ~2 points', () => {
-    // The flier says "annualized", which is the geometric root. Halving a 48%
-    // two-year credit gives 24.00%; the root gives 21.64%.
+    // The flier says "annualized", which is the geometric root. Halving a
+    // 47.32% two-year credit gives 23.66%; the root gives 21.38%.
     const s = creditSegment(BIA, [SP500[2020], SP500[2021]], 2020);
     const halved = s.creditedPct / 2;
-    expect(s.annualizedPct).toBeCloseTo(21.64, 1);
-    expect(halved).toBeCloseTo(23.99, 1);
+    expect(s.annualizedPct).toBeCloseTo(21.38, 1);
+    expect(halved).toBeCloseTo(23.66, 1);
     expect(halved - s.annualizedPct).toBeGreaterThan(2);
   });
 

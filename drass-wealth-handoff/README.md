@@ -37,33 +37,37 @@ the reason above — but it is your call, not mine.
 
 | Path | What it is |
 |---|---|
-| `drass-wealth-tools-1.3.0.zip` | **The installable.** This is the file you upload to WordPress. |
+| `drass-wealth-tools-1.4.0.zip` | **The installable.** This is the file you upload to WordPress. |
 | `plugin-source/drass-wealth-tools/` | The same plugin unzipped, for reading and diffing. |
 | `INSTALL.md` | Step-by-step installation and configuration. |
 | `SHORTCODES.md` | Every shortcode, its attributes, and where to place it. |
 | `API_REFERENCE.md` | The twelve API endpoints the plugin calls. |
 | `api-samples/` | **A real captured response from every endpoint**, so the front end can be built and styled before a key exists. |
 
-## Before this goes in front of a client: the index series is not verified
+## The index series, and what it changed
 
-The figures these tools produce are computed from an S&P 500 series that
-carries no source and **does not reconcile to the carrier's own published
-claims about that index**:
+The figures these tools produce are computed from S&P 500 **price** returns —
+total return less the dividend contribution, since an indexed account credits
+against the price index and pays no dividends. Source: ChartRow, *S&P 500
+Returns by Year*, read 14 September 2026.
+
+That series is checked on every test run against the carrier's own published
+claims about the same index:
 
 | The carrier published | This series measures |
 |---|---|
-| 8.06% average annual return, 1994–2023 | 8.29% |
-| 18 of 30 years above a 10% cap | 16 years |
-| exceeding the cap by 12.23% on average | 13.66% |
+| 8.06% average annual return, 1994–2023 | **8.05%** |
+| exceeding a 10% cap by 12.23% on average | **12.29%** |
+| 18 of 30 years above a 10% cap | **17** |
 
-A 30-year average that is close while the year count is wrong by two is the
-signature of individual years being wrong in offsetting directions. Every
-segment figure is built from the **years**, not the average.
+Two land within 0.06. The third is one year out of thirty, which is what a
+borderline year does at the source's one-decimal precision — 2016 sits at 9.6%,
+a tenth under the cap.
 
-The method is right. The inputs are not established. Both platforms now say so
-on screen — a red banner above the table, driven by
-`series_verified: false` in the API — and the figures should not go into a
-proposal until the series is replaced with a sourced one.
+An earlier build of this plugin ran on an unsourced series that missed those
+same checks by 0.23 points, two years and 1.43 points. **Any figure taken from
+a build before 1.4.0 should be discarded**, including the segment credits
+quoted in earlier versions of this document.
 
 ## The tools
 
@@ -74,7 +78,7 @@ behaviour for an installer.
 
 | Shortcode | What it shows |
 |---|---|
-| `[dwt_index_segments]` | **New in 1.2.0, corrected in 1.3.0.** Multi-year index segments — a segment credit beside what it is per year. |
+| `[dwt_index_segments]` | **New in 1.2.0, corrected in 1.4.0.** Multi-year index segments — a segment credit beside what it is per year. |
 | `[dwt_index_history]` | Historical index changes against a cap, floor and participation rate. |
 | `[dwt_time_machine]` | The AG 49 illustration beside its required historical disclosure. |
 | `[dwt_monte_carlo]` | Ten thousand modelled retirements — will the money last. |
@@ -107,13 +111,20 @@ credit is 21.64% a year, not 24.00%.
 
 **3. A multi-year segment credit is not an annual return.** The `[dwt_index_segments]`
 view exists because of this, and it constrains how its output may be restyled.
-The two-year balanced account credited 47.97% over 2020–2021. That is **21.64% a
+The two-year balanced account credited 47.32% over 2020–2021. That is **21.38% a
 year**. If a redesign drops the "over 2 yrs" tag, or shows the credited column
 without the per-year column beside it, the page will tell a reader that an
-account returned 48% in a year. It did not. Keep both columns.
+account returned 47% in a year. It did not. Keep both columns.
 
 The same rule governs the summary line: it counts **segments** over a threshold,
-never years.
+never years. Over 2019–2025 four of six segments credited 40%+; not one of the
+six years did.
+
+**4. Two of those six segments credited nothing.** 2021–22 and 2022–23 both
+came back at zero, and one of them on an index that was *up* over the two
+years — the spread took it below the floor. They are in the same table on
+purpose. A layout that shows only the four good segments is showing four out of
+four, which is a different product than the one being sold.
 
 ## Compliance
 
@@ -145,7 +156,7 @@ you the same value.
 
 ## Version
 
-**1.3.0.** Changelog in `plugin-source/drass-wealth-tools/readme.txt`.
+**1.4.0.** Changelog in `plugin-source/drass-wealth-tools/readme.txt`.
 
 Requires WordPress 6.0+, PHP 7.4+. Creates no database tables, modifies no
 existing content, registers no public write endpoints. Deactivating removes

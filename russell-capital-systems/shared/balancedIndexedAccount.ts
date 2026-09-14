@@ -5,34 +5,42 @@
  *
  * "From 2020-2026 the index returned 40%+ four out of the last six years."
  *
- * Read as ANNUAL returns that is not what happened. The S&P 500 price index in
- * this platform's own series returned, for 2020 through 2025: 29.01%, 14.77%,
- * -9.23%, 28.36%, 16.84%, 15.52%. Not one year reached 40%, and the best was
- * 29.01%.
+ * Read as ANNUAL returns that is not what happened. The S&P 500 price index
+ * returned, for 2020 through 2025: 16.1%, 27.0%, -19.5%, 24.3%, 23.3%, 16.3%.
+ * Not one year reached 40%; the best was 27.0%.
  *
  * Read as what the Balanced Indexed Account actually credits — a TWO-YEAR
- * segment — it is close to right, and that is the point worth keeping. Every
- * two-year segment that fits in 2019-2025, stepped one year at a time:
+ * segment — the claim is exactly right. Every two-year segment that fits in
+ * 2019-2025, stepped one year at a time:
  *
- *     2019-2020   index 36.88%   credited 36.22%   annualized 16.71%
- *     2020-2021   index 48.06%   credited 47.97%   annualized 21.64%
- *     2021-2022   index  4.18%   credited  1.89%   annualized  0.94%
- *     2022-2023   index 16.51%   credited 14.84%   annualized  7.16%
- *     2023-2024   index 49.98%   credited 49.97%   annualized 22.46%
- *     2024-2025   index 34.97%   credited 34.22%   annualized 15.85%
+ *     2019-2020   index 49.54%   credited 49.51%   per year 22.28%
+ *     2020-2021   index 47.45%   credited 47.32%   per year 21.38%
+ *     2021-2022   index  2.23%   credited  0.00%   per year  0.00%  (floor)
+ *     2022-2023   index  0.06%   credited  0.00%   per year  0.00%  (floor)
+ *     2023-2024   index 53.26%   credited 53.42%   per year 23.86%
+ *     2024-2025   index 43.40%   credited 43.07%   per year 19.61%
  *
- * So, precisely: TWO of those six segments credited 40% or more, and FOUR of
- * the six credited 34% or more. "40%+ four out of the last six" is right about
- * the shape and one notch high on the threshold — at 34% the count of four
- * holds exactly. The weak segment, 2021-2022 at 1.89%, is listed here on
- * purpose: leave it out and four good segments out of five looks like a
- * different product than four out of six.
+ * FOUR of those six segments credited 40% or more. "40%+ four out of the last
+ * six" is the record, precisely — provided "six" means six segments and not
+ * six years, which is the whole of the distinction below.
+ *
+ * Note also what the overlapping view exposes and a headline would hide: two
+ * of the six credited NOTHING. The floor did its job, and a client who bought
+ * on the strength of the other four should be shown these two on the same
+ * screen.
+ *
+ * ## An earlier version of this file said "two of six"
+ *
+ * It ran on an S&P 500 series that carried no source and did not reconcile to
+ * the carrier's own published claims about that index. The series has since
+ * been replaced with a sourced one — see shared/sp500SeriesAudit.ts — and the
+ * count moved from two to four. The arithmetic never changed; the inputs did.
  *
  * ## Why the distinction is not pedantry
  *
  * Put "40%" next to a row labelled with a single year and a reader will take it
- * as an annual return. A 48% two-year credit is 21.64% a year — excellent, and
- * less than half of what "48%" suggests if the two-year term is not stated
+ * as an annual return. A 47% two-year credit is 21.38% a year — excellent, and
+ * well under half of what "47%" suggests if the two-year term is not stated
  * beside it. Every figure this module produces therefore carries its segment
  * term and its annualized equivalent together, and the annualized figure is
  * what any comparison against an annual strategy must use.
@@ -81,8 +89,9 @@
  * ## Annualized means the geometric root, not the half
  *
  * "Divided by two" and "annualized" are not the same operation, and on these
- * numbers the difference is material. A 48% two-year credit is 21.64% a year
- * geometrically — (1.48)^(1/2) - 1 — and 24.00% if simply halved. The carrier
+ * numbers the difference is material. A 47.32% two-year credit is 21.38% a
+ * year geometrically — (1.4732)^(1/2) - 1 — and 23.66% if simply halved. The
+ * carrier
  * says "annualized", so this module uses the geometric root throughout. Halving
  * would overstate every segment by roughly two points.
  *
