@@ -37,6 +37,8 @@
  * curve is wrong in a way nobody can see by looking at it.
  */
 
+import { CORRIDOR_FACTOR_BY_AGE, VERIFIED_AGAINST_PRIMARY_TEXT } from './irc7702';
+
 export interface CoiRate {
   /** Attained age this rate applies from. */
   readonly age: number;
@@ -82,8 +84,12 @@ export interface PolicyMechanicsInput {
   readonly creditedRatePctByYear: readonly number[];
   /**
    * Minimum ratio of death benefit to account value, by attained age — the
-   * IRC section 7702 corridor. Without it no corridor is applied and the
-   * result says so.
+   * IRC section 7702 corridor.
+   *
+   * Omitted, the statutory schedule from shared/irc7702.ts is used, because
+   * 7702(d)(2) is the same for every carrier and every product and there is no
+   * honest reason to run without it. Pass an empty object to model a contract
+   * with no corridor at all.
    */
   readonly corridorFactorByAge?: Readonly<Record<number, number>>;
 }
@@ -267,7 +273,13 @@ export function runPolicyMechanics(input: PolicyMechanicsInput): PolicyMechanics
   if (c.coiTable.length === 0) missing.push('cost of insurance table');
   else if (c.coiTableSource === ILLUSTRATIVE_SOURCE) missing.push('a carrier cost of insurance table');
   if (c.surrenderChargePctByYear.length === 0) missing.push('surrender charge schedule');
-  if (!input.corridorFactorByAge) missing.push('IRC 7702 corridor factors');
+  // The corridor is law, not pricing, so it is never missing — it defaults to
+  // the statutory schedule. It stays on `missing` only until somebody has read
+  // 26 U.S.C. 7702(d)(2) beside our transcription of it.
+  const corridor = input.corridorFactorByAge ?? CORRIDOR_FACTOR_BY_AGE;
+  if (!VERIFIED_AGAINST_PRIMARY_TEXT && !input.corridorFactorByAge) {
+    missing.push('a primary-text check of the IRC 7702 corridor table');
+  }
 
   let accountValue = 0;
   let totalPremiums = 0;
@@ -289,7 +301,7 @@ export function runPolicyMechanics(input: PolicyMechanicsInput): PolicyMechanics
       faceAmount: input.faceAmount,
       charges: c,
       creditedRatePct: atYear(input.creditedRatePctByYear, y),
-      corridorFactor: input.corridorFactorByAge?.[age],
+      corridorFactor: corridor[age],
     });
 
     if (step.exhausted && lapseYear === null && premium === 0) lapseYear = y;
@@ -320,8 +332,10 @@ export function runPolicyMechanics(input: PolicyMechanicsInput): PolicyMechanics
   if (missing.includes('surrender charge schedule')) {
     notes.push('No surrender charge schedule was supplied, so surrender value equals account value. A real policy carries one for the first several years.');
   }
-  if (missing.includes('IRC 7702 corridor factors')) {
-    notes.push('No corridor factors were supplied, so the death benefit is held at the specified amount. Where 7702 would force it higher, the cost of insurance shown is too low.');
+  if (missing.includes('a primary-text check of the IRC 7702 corridor table')) {
+    notes.push(
+      'The corridor came from the statutory schedule in shared/irc7702.ts, transcribed from 26 U.S.C. 7702(d)(2) and confirmed against two independent sources, but not yet read beside the primary text. It is law rather than carrier pricing, so it applies to every product; the flag is about our transcription, not about the rule.'
+    );
   }
   if (lapseYear !== null) {
     notes.push(`The account value reached zero in policy year ${lapseYear}. Beyond that the policy has lapsed and the figures are not meaningful.`);

@@ -204,10 +204,33 @@ describe('what the result admits it does not have', () => {
     expect(r.notes.join(' ')).toMatch(/surrender value equals account value/);
   });
 
-  it('reports missing corridor factors, which understate the charge', () => {
+  it('applies the statutory corridor when none is supplied, rather than going without', () => {
+    // 7702(d)(2) is the same for every carrier, so there is no honest reason
+    // to project without it. Omitting it now gets the statutory schedule, not
+    // a flat death benefit.
     const r = runPolicyMechanics({ ...baseInput, corridorFactorByAge: undefined });
-    expect(r.missing).toContain('IRC 7702 corridor factors');
+    expect(r.years.some((y) => y.deathBenefit > 1_000_000)).toBe(true);
+    // What remains outstanding is our transcription, not the rule.
+    expect(r.missing).toContain('a primary-text check of the IRC 7702 corridor table');
+    expect(r.notes.join(' ')).toMatch(/law rather than carrier pricing/);
+  });
+
+  it('lets a caller opt out of the corridor entirely with an empty schedule', () => {
+    const r = runPolicyMechanics({ ...baseInput, corridorFactorByAge: {} });
     expect(r.years.every((y) => y.deathBenefit === 1_000_000)).toBe(true);
+  });
+
+  it('charges more mortality with the statutory corridor than without it', () => {
+    // The corridor raises the death benefit, which raises the amount at risk,
+    // which raises the charge. An engine that skipped it understated the cost
+    // exactly on the heavily funded designs this practice sells.
+    const rich = { ...baseInput, annualPremium: 400_000, years: 20 };
+    const withStatutory = runPolicyMechanics({ ...rich, corridorFactorByAge: undefined });
+    const without = runPolicyMechanics({ ...rich, corridorFactorByAge: {} });
+    const sumCoi = (r: ReturnType<typeof runPolicyMechanics>) =>
+      r.years.reduce((a, y) => a + y.costOfInsurance, 0);
+    expect(sumCoi(withStatutory)).toBeGreaterThan(sumCoi(without));
+    expect(withStatutory.summary.finalAccountValue).toBeLessThan(without.summary.finalAccountValue);
   });
 });
 
