@@ -103,6 +103,27 @@ describe("A Mutual Life Accumulator III — IUL Rate Verification", () => {
   });
 
   describe("Full Roth + IUL + STR Strategy (rothConversion.project)", () => {
+    it("charges mortality on the net amount at risk once a death benefit is supplied", async () => {
+      const { ctx } = createAuthContext();
+      const caller = appRouter.createCaller(ctx);
+      const base = {
+        iraBalance: 800000, conversionPortion: 1.0, homeEquity: 400000,
+        age: 52, income: 350000, filingStatus: "married" as const, currentTaxBracket: 0.24,
+        rentalGrossYield: 0.20, realEstateAppreciation: 0.05, helocRate: 0.07,
+        iulYears: 20, mortgageRate: 0.065, strategyYears: 1, solarEquity: false,
+      };
+      const without = await caller.rothConversion.project(base);
+      const with_ = await caller.rothConversion.project({ ...base, deathBenefit: 5_000_000 });
+
+      expect(with_.iulProjection[0].coiCost).toBeGreaterThan(0);
+      expect(with_.mechanics.missing).not.toContain('the policy specified amount (death benefit)');
+      // Charging mortality can only lower the account value.
+      expect(with_.summary.finalAccountValue).toBeLessThan(without.summary.finalAccountValue);
+      // And the charge falls as the account value grows into the death benefit.
+      expect(with_.iulProjection[19].coiCost).toBeLessThan(with_.iulProjection[9].coiCost);
+    });
+
+
     it("produces complete strategy for $800K IRA, 1-year non-solar", async () => {
       const { ctx } = createAuthContext();
       const caller = appRouter.createCaller(ctx);
@@ -129,7 +150,17 @@ describe("A Mutual Life Accumulator III — IUL Rate Verification", () => {
       expect(result.iulParams.loadFee).toBe(0.08);
       expect(result.iulParams.loanRate).toBe(0.05);
       expect(result.iulParams.avgReturn).toBe(0.12);
-      expect(result.iulParams.coiRate).toBe(0.008);
+      // There is no longer a flat per-carrier coiRate. Cost of insurance is a
+      // rate per thousand of the net amount at risk, so with no death benefit
+      // supplied the projection charges nothing for mortality and says so.
+      expect((result.iulParams as Record<string, unknown>).coiRate).toBeUndefined();
+      expect(result.mechanics.reliable).toBe(false);
+      expect(result.mechanics.missing).toContain('the policy specified amount (death benefit)');
+      expect(result.mechanics.notes.join(' ')).toMatch(/NO MORTALITY CHARGE/);
+      expect(result.iulProjection.every((r) => r.coiCost === 0)).toBe(true);
+      // 12% a year is above the 6.5% ceiling this platform uses, and the
+      // result has to carry that statement wherever the columns go.
+      expect(result.mechanics.missing).toContain('an illustrated rate within the AG 49 maximum');
 
       expect(result.iulProjection).toHaveLength(20);
       expect(result.iulProjection[0].premium).toBe(200000);

@@ -2,6 +2,7 @@
 import { AppShell } from "@/components/AppShell";
 import { NAICDisclaimer } from "@/components/NAICDisclaimer";
 import { trpc } from "@/lib/trpc";
+import { stepPolicyYear } from "@shared/policyMechanics";
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { useSearch } from "wouter";
 import { IUL_CARRIERS, getCarrierById, ILLUSTRATION_TOOLS, type IULCarrier } from "@shared/iulCarriers";
@@ -70,6 +71,7 @@ export default function RothConversionSTR() {
     currentTaxBracket: "0.24",
     iulYears: "20",
     mortgageRate: "0.065",
+    deathBenefit: "",
   });
 
   /* ── What-if scenario toggles ── */
@@ -171,6 +173,22 @@ export default function RothConversionSTR() {
     }
     return { loadFee: 0.08, coiRate: 0.008, loanRate: 0.05, avgReturn: 0.075, capRate: 0.145, floorRate: 0 }; // AG 49 max
   }, [carrierId, activeOverride, selectedCarrier]);
+
+  // The charges the Monte Carlo paths deduct, in the shape the shared engine
+  // takes them. No death benefit is carried through this flow, so there is no
+  // net amount at risk and no mortality is charged — the paths are therefore
+  // above what a real policy would reach, and the panel below says so. The
+  // alternative the loops used before was `av -= av * coiRate`, mortality as a
+  // percentage of account value, which grows as cash value grows. Real
+  // mortality does the opposite.
+  const MC_CHARGES = useMemo(() => ({
+    premiumLoadPctByYear: [effectiveRates.loadFee * 100],
+    monthlyPolicyFee: 10,
+    perUnitMonthlyPerThousand: 0,
+    perUnitYears: 0,
+    coiTable: [] as { age: number; perThousand: number }[],
+    surrenderChargePctByYear: [] as number[],
+  }), [effectiveRates.loadFee]);
 
   const savedQuery = trpc.savedStrategies.list.useQuery(
     { clientId: form.clientId ? Number(form.clientId) : undefined, includeArchived: showArchived },
@@ -312,12 +330,12 @@ export default function RothConversionSTR() {
       helocRate: helocRate / 100,
       iulYears: Number(form.iulYears),
       mortgageRate: Number(form.mortgageRate),
+      ...(form.deathBenefit ? { deathBenefit: Number(form.deathBenefit) } : {}),
       strategyYears: activeStrategyDef.years,
       solarEquity: activeStrategyDef.solar,
       ...(carrierId !== "generic" || activeOverride ? {
         carrierId,
         carrierLoadFee: effectiveRates.loadFee,
-        carrierCoiRate: effectiveRates.coiRate,
         carrierLoanRate: effectiveRates.loanRate,
         carrierAvgReturn: effectiveRates.avgReturn,
       } : {}),
@@ -469,8 +487,7 @@ export default function RothConversionSTR() {
         ...(carrierId !== "generic" ? {
           carrierId,
           carrierLoadFee: effectiveRates.loadFee,
-          carrierCoiRate: effectiveRates.coiRate,
-          carrierLoanRate: effectiveRates.loanRate,
+            carrierLoanRate: effectiveRates.loanRate,
           carrierAvgReturn: effectiveRates.avgReturn,
         } : {}),
       });
@@ -630,16 +647,19 @@ export default function RothConversionSTR() {
           let av = 0;
           for (let y = 0; y < years; y++) {
             const premium = result.iulProjection[y].premium;
-            const loadFee = result.iulParams.loadFee;
-            const coiRate = result.iulParams.coiRate;
             const u1 = Math.random();
             const u2 = Math.random();
             const z = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
-            const randomReturn = Math.max(0, ret + vol * z);
-            av += premium * (1 - loadFee);
-            av += av * randomReturn;
-            av -= av * coiRate;
-            av = Math.max(0, av);
+            const randomReturn = Math.max(0, ret + vol * z); // floor at 0%, the IUL floor
+            av = stepPolicyYear({
+              accountValue: av,
+              policyYear: y + 1,
+              attainedAge: Number(form.age) + y,
+              premium,
+              faceAmount: 0,
+              charges: MC_CHARGES,
+              creditedRatePct: randomReturn * 100,
+            }).accountValue;
           }
           const loanBal = result.iulProjection[years - 1]?.cumulativeLoanBalance ?? 0;
           finalValues.push(Math.max(0, av - loanBal));
@@ -654,7 +674,7 @@ export default function RothConversionSTR() {
     const minVal = Math.min(...allVals);
     const maxVal = Math.max(...allVals);
     return { rows, volatilities, minVal, maxVal };
-  }, [result]);
+  }, [result, MC_CHARGES, form.age]);
 
   const getSensitivityColor = (value: number, min: number, max: number) => {
     if (max === min) return "bg-emerald-500/20 text-emerald-400";
@@ -682,18 +702,19 @@ export default function RothConversionSTR() {
       for (let y = 0; y < years; y++) {
         const row = result.iulProjection[y];
         const premium = row.premium;
-        const loadFee = result.iulParams.loadFee;
-        const coiRate = result.iulParams.coiRate;
         const u1 = Math.random();
         const u2 = Math.random();
         const z = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
         const randomReturn = Math.max(0, baseReturn + VOLATILITY * z); // Floor at 0% (IUL floor)
-        const netPremium = premium * (1 - loadFee);
-        accountValue += netPremium;
-        const interest = accountValue * randomReturn;
-        accountValue += interest;
-        const coi = accountValue * coiRate;
-        accountValue -= coi;
+        accountValue = stepPolicyYear({
+          accountValue,
+          policyYear: y + 1,
+          attainedAge: Number(form.age) + y,
+          premium,
+          faceAmount: 0,
+          charges: MC_CHARGES,
+          creditedRatePct: randomReturn * 100,
+        }).accountValue;
         path.push(Math.max(0, accountValue));
       }
       allPaths.push(path);
@@ -711,7 +732,7 @@ export default function RothConversionSTR() {
       chartData.push(entry);
     }
     return chartData;
-  }, [result]);
+  }, [result, MC_CHARGES, form.age]);
 
   return (
     <AppShell>
@@ -2018,6 +2039,15 @@ export default function RothConversionSTR() {
               <NumberInput value={form.age} onChange={(v) => setForm((p) => ({ ...p, age: v }))} className="rc-input" placeholder="58" />
             </div>
             <div>
+              <label className="rc-label">Policy Death Benefit ($)</label>
+              <NumberInput value={form.deathBenefit} onChange={(v) => setForm((p) => ({ ...p, deathBenefit: v }))} className="rc-input" placeholder="5000000" />
+              <p className="mt-1 text-[10px] leading-snug text-[#7a95b8]">
+                Leave blank and no cost of insurance is charged — the account values will be higher
+                than any real policy reaches. Mortality is charged on the death benefit less the
+                account value.
+              </p>
+            </div>
+            <div>
               <label className="rc-label">Annual Income ($) *</label>
               <NumberInput value={form.income} onChange={(v) => setForm((p) => ({ ...p, income: v }))} className="rc-input" placeholder="250000" />
             </div>
@@ -2199,8 +2229,8 @@ export default function RothConversionSTR() {
                     <div className="text-white font-bold">{(effectiveRates.loadFee * 100).toFixed(1)}%</div>
                   </div>
                   <div className={`p-2 rounded-lg border ${activeOverride ? 'bg-cyan-500/5 border-cyan-500/20' : 'bg-[#0b1628] border-[#12233e]'}`}>
-                    <div className="text-[10px] text-[#7a95b8]">COI Rate</div>
-                    <div className="text-white font-bold">{(effectiveRates.coiRate * 100).toFixed(1)}%</div>
+                    <div className="text-[10px] text-[#7a95b8]" title="Stored on the carrier override but no longer used by any projection. Cost of insurance is a rate per thousand of the net amount at risk, from a table by age, sex and underwriting class — not one number per carrier.">COI Rate (unused)</div>
+                    <div className="text-white/50 font-bold line-through">{(effectiveRates.coiRate * 100).toFixed(1)}%</div>
                   </div>
                   <div className="p-2 rounded-lg bg-[#0b1628] border border-[#12233e]">
                     <div className="text-[10px] text-[#7a95b8]">Loan Rate</div>
@@ -2411,6 +2441,28 @@ export default function RothConversionSTR() {
         {/* ══════════ RESULTS ══════════ */}
         {result && (
           <>
+            {/* What this projection could not source */}
+            {result.mechanics && result.mechanics.missing.length > 0 && (
+              <div className="rc-card border-amber-500/30 bg-amber-500/[0.04]">
+                <div className="flex items-start gap-3">
+                  <Shield size={20} className="mt-0.5 shrink-0 text-amber-400" />
+                  <div>
+                    <div className="text-sm font-bold text-amber-200">
+                      What these numbers do not include
+                    </div>
+                    <ul className="mt-2 space-y-1.5 text-xs leading-relaxed text-[#b9cbe3]">
+                      {result.mechanics.notes.map((n: string, i: number) => (
+                        <li key={i}>· {n}</li>
+                      ))}
+                    </ul>
+                    <div className="mt-2 text-[10px] text-[#7a95b8]">
+                      Missing: {result.mechanics.missing.join(" · ")}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Active strategy label */}
             <div className={`rc-card ${isSolar ? "bg-amber-500/5 border-amber-500/20" : "bg-blue-500/5 border-blue-500/20"}`}>
               <div className="flex items-center gap-3">
@@ -2708,8 +2760,11 @@ export default function RothConversionSTR() {
                 <p>
                   By converting your full IRA to Roth and deploying the tax savings into an IUL policy with a borrow-to-pay cascade,
                   you are building a <strong className="text-white">tax-free retirement income engine</strong>. The IUL's illustrated policy value grows
-                  at an average {(result.iulParams.avgReturn * 100).toFixed(0)}% return on the total account value (illustrated, non-guaranteed) (all premiums
-                  plus all prior interest earned), with a {(result.iulParams.coiRate * 100).toFixed(0)}% cost of insurance deducted from each new premium.
+                  at an average {(result.iulParams.avgReturn * 100).toFixed(0)}% return on the total account value (modelled, non-guaranteed) (all premiums
+                  plus all prior interest earned). Premium load and the policy fee are deducted before any credit.
+                  No death benefit has been entered for this case, so there is no net amount at risk and
+                  <strong className="text-amber-300"> no cost of insurance has been deducted at all</strong> — the account
+                  values shown are higher than a real policy would reach. Enter a specified amount to charge mortality.
                 </p>
                 <p>
                   The <strong className="text-white">Month 13 policy loan</strong> ({fmtFull(result.strategy.month13PolicyLoan)}) and the

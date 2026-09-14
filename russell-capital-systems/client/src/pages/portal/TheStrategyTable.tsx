@@ -14,35 +14,84 @@ import {
 } from "recharts";
 import { ShieldCheck, Save, TrendingUp, Gauge } from "lucide-react";
 import { GENOME, GlowCard, GenomeBackdrop, SectionLabel, Stat, fmt$ } from "./_genome/GenomeKit";
+import { stepPolicyYear, ILLUSTRATIVE_COI_TABLE, ILLUSTRATIVE_SOURCE } from "@shared/policyMechanics";
 
-// Seed carrier assumptions — replace with carrier_overrides (loadFee, coiRate, capRate, floorRate, avgReturn).
+// Placeholder carriers. The names are deliberately generic: the caps, loads and
+// assumed returns below carry no source and no as-of date, and an unsourced cap
+// printed under a real company's name is a factual claim about that company
+// that nobody can check. Real terms arrive through carrier_overrides — see
+// docs/carriers/INTAKE.md for what a strategy has to carry before it goes in.
 const CARRIERS = [
-  { id: "paclife",   name: "Pacific Life Horizon ECV", color: GENOME.accent, loadFee: 0.06, coiRate: 0.012, capRate: 0.11, floorRate: 0.0, avgReturn: 0.067 },
-  { id: "nationwide",name: "Nationwide Accumulator III", color: GENOME.cyan,  loadFee: 0.055, coiRate: 0.013, capRate: 0.105, floorRate: 0.0, avgReturn: 0.064 },
-  { id: "securian",  name: "Securian BGA III/II",       color: "#f5b14c",     loadFee: 0.05, coiRate: 0.0125, capRate: 0.10, floorRate: 0.0075, avgReturn: 0.062 },
+  { id: "mutual-a", name: "Mutual Company A", color: GENOME.accent, loadFee: 0.06,  capRate: 0.11,  floorRate: 0.0,    assumedCredit: 0.06 },
+  { id: "mutual-b", name: "Mutual Company B", color: GENOME.cyan,   loadFee: 0.055, capRate: 0.105, floorRate: 0.0,    assumedCredit: 0.06 },
+  { id: "mutual-c", name: "Mutual Company C", color: "#f5b14c",     loadFee: 0.05,  capRate: 0.10,  floorRate: 0.0075, assumedCredit: 0.06 },
 ];
 
-function projectCarrier(c, { premium, years, overfund, loanRate, distributeFrom }) {
-  // Simplified illustrative model (front-end). Not a compliant illustration.
-  let cv = 0;
+// The charge sequence is not this page's to invent. It runs through
+// stepPolicyYear in shared/policyMechanics.ts, the same function the loan
+// optimizer and every other projection on the platform steps through: premium
+// less load, policy fee, per-unit charge, cost of insurance on the NET AMOUNT
+// AT RISK, then the credit.
+//
+// This page used to do `cv -= cv * coiRate` — mortality as a percentage of
+// account value. That has the slope backwards. The amount at risk is the death
+// benefit less the account value, so as cash value grows the mortality charge
+// FALLS. Charging a percentage of account value makes it rise, which is most
+// of why a well-funded policy looked wrong here.
+function chargesFor(c) {
+  return {
+    premiumLoadPctByYear: [c.loadFee * 100],
+    monthlyPolicyFee: 10,
+    perUnitMonthlyPerThousand: 0,
+    perUnitYears: 0,
+    coiTable: ILLUSTRATIVE_COI_TABLE,
+    coiTableSource: ILLUSTRATIVE_SOURCE,
+    surrenderChargePctByYear: [],
+  };
+}
+
+function projectCarrier(c, { premium, years, overfund, loanRate, distributeFrom, faceAmount, issueAge }) {
   const annualPremium = premium * (overfund ? 1 : 0.6);
+  const charges = chargesFor(c);
+  const creditRate = Math.min(c.capRate, Math.max(c.floorRate, c.assumedCredit));
+  let cv = 0;
   const rows = [];
   let totalLoanIncome = 0;
+  let lapseYear = null;
   for (let y = 1; y <= years; y++) {
-    const contributing = y <= 10;
-    if (contributing) cv += annualPremium * (1 - c.loadFee);
-    const credit = Math.min(c.capRate, Math.max(c.floorRate, c.avgReturn));
-    cv *= 1 + credit;
-    cv -= cv * c.coiRate;
+    const step = stepPolicyYear({
+      accountValue: cv,
+      policyYear: y,
+      attainedAge: issueAge + y - 1,
+      premium: y <= 10 ? annualPremium : 0,
+      faceAmount,
+      charges,
+      creditedRatePct: creditRate * 100,
+    });
+    if (step.exhausted && lapseYear === null) lapseYear = y;
+    cv = step.accountValue;
     let loanIncome = 0;
     if (y >= distributeFrom && cv > 0) {
       loanIncome = cv * 0.05;            // 5% distribution via policy loan
       cv -= loanIncome * (1 + loanRate); // loan + interest reduces cash value
+      cv = Math.max(0, cv);
       totalLoanIncome += loanIncome;
     }
-    rows.push({ year: y, cv: Math.max(0, Math.round(cv)), loanIncome: Math.round(loanIncome) });
+    rows.push({
+      year: y,
+      cv: Math.round(cv),
+      loanIncome: Math.round(loanIncome),
+      coi: step.row.costOfInsurance,
+      nar: step.row.netAmountAtRisk,
+    });
   }
-  return { rows, endCV: Math.max(0, Math.round(cv)), totalLoanIncome: Math.round(totalLoanIncome) };
+  return {
+    rows,
+    endCV: Math.round(cv),
+    totalLoanIncome: Math.round(totalLoanIncome),
+    lapseYear,
+    firstYearCoi: rows[0]?.coi ?? 0,
+  };
 }
 
 export default function TheStrategyTable() {
@@ -51,11 +100,13 @@ export default function TheStrategyTable() {
   const [loanRate, setLoanRate] = useState(0.05);
   const [overfund, setOverfund] = useState(true);
   const [distributeFrom, setDistributeFrom] = useState(20);
+  const [faceAmount, setFaceAmount] = useState(3000000);
+  const [issueAge, setIssueAge] = useState(45);
   const [saved, setSaved] = useState(false);
 
   const results = useMemo(
-    () => CARRIERS.map((c) => ({ c, ...projectCarrier(c, { premium, years, overfund, loanRate, distributeFrom }) })),
-    [premium, years, overfund, loanRate, distributeFrom],
+    () => CARRIERS.map((c) => ({ c, ...projectCarrier(c, { premium, years, overfund, loanRate, distributeFrom, faceAmount, issueAge }) })),
+    [premium, years, overfund, loanRate, distributeFrom, faceAmount, issueAge],
   );
 
   const chartData = useMemo(() => {
@@ -94,6 +145,12 @@ export default function TheStrategyTable() {
             <Control label={`Distribute from year ${distributeFrom}`}>
               <input type="range" min={10} max={Math.max(11, years - 1)} value={distributeFrom} onChange={(e) => setDistributeFrom(+e.target.value)} className="w-full accent-emerald-500" />
             </Control>
+            <Control label={`Death benefit · ${fmt$(faceAmount)}`}>
+              <input type="range" min={500000} max={10000000} step={250000} value={faceAmount} onChange={(e) => setFaceAmount(+e.target.value)} className="w-full accent-emerald-500" />
+            </Control>
+            <Control label={`Issue age · ${issueAge}`}>
+              <input type="range" min={25} max={70} value={issueAge} onChange={(e) => setIssueAge(+e.target.value)} className="w-full accent-emerald-500" />
+            </Control>
           </div>
           <div className="mt-5 flex flex-wrap items-center gap-3">
             <button
@@ -104,6 +161,38 @@ export default function TheStrategyTable() {
             </button>
             <span className="text-xs text-slate-500">Overfunding maximizes early cash value toward tax-free loan income.</span>
           </div>
+        </GlowCard>
+
+        {/* What these columns are not */}
+        <GlowCard className="mb-6 border-amber-400/25 p-5">
+          <h3 className="text-sm font-semibold text-amber-200">What this table is, and what it is not</h3>
+          <ul className="mt-2 space-y-1.5 text-xs leading-relaxed text-slate-300">
+            <li>
+              <strong className="text-slate-200">The carriers are placeholders.</strong> Caps, loads
+              and floors here carry no source and no as-of date, so they are not attributed to any
+              real company. Real terms replace them one field at a time.
+            </li>
+            <li>
+              <strong className="text-slate-200">Mortality is an order of magnitude, not a quote.</strong>{" "}
+              Cost of insurance is charged on the net amount at risk — death benefit less account
+              value — from generic age bands. A real schedule varies by age, sex, underwriting class
+              and policy year and moves by more than a factor of two between classes at one age.
+            </li>
+            <li>
+              <strong className="text-slate-200">Surrender value is not shown.</strong> No surrender
+              charge schedule has been sourced. In the early years the cash a client could actually
+              take is well below the account value plotted here.
+            </li>
+            <li>
+              <strong className="text-slate-200">The credited rate is flat.</strong> Every year is
+              credited at the same assumed rate. Real index crediting is a sequence with zero years
+              in it — see the Time Machine pages for the actual history.
+            </li>
+          </ul>
+          <p className="mt-3 text-[11px] text-slate-500">
+            Not an illustration. Nothing here may be shown to a client in place of a carrier
+            illustration produced under AG 49-A.
+          </p>
         </GlowCard>
 
         {/* Comparison cards */}
@@ -121,7 +210,7 @@ export default function TheStrategyTable() {
               </div>
               <div className="mt-3 grid grid-cols-3 gap-2 text-center text-[11px] text-slate-400">
                 <div>Cap<br/><span className="text-slate-200">{(r.c.capRate * 100).toFixed(0)}%</span></div>
-                <div>COI<br/><span className="text-slate-200">{(r.c.coiRate * 100).toFixed(2)}%</span></div>
+                <div>Yr-1 COI<br/><span className="text-slate-200">{fmt$(r.firstYearCoi)}</span></div>
                 <div>Load<br/><span className="text-slate-200">{(r.c.loadFee * 100).toFixed(1)}%</span></div>
               </div>
             </GlowCard>
