@@ -46,6 +46,7 @@ import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { ExecutiveSummary, GoalsAccelerator, RecommendationSummary, DoNothingBaseline, TaxBracketPanel } from "@/components/ConsumerOutcomeBlocks";
 import { formatTaxCurrency } from "@shared/taxBracketEngine";
+import { stepPolicyYear, ILLUSTRATIVE_COI_TABLE, ILLUSTRATIVE_SOURCE } from "@shared/policyMechanics";
 import { RelatedCalculators } from "@/components/RelatedCalculators";
 import { ComplianceFooter } from "@/components/ComplianceFooter";
 
@@ -66,6 +67,7 @@ export default function RetirementIncomeProjection() {
   const [currentAge, setCurrentAge] = useState(45);
   const [retirementAge, setRetirementAge] = useState(65);
   const [annualPremium, setAnnualPremium] = useState(25000);
+  const [faceAmount, setFaceAmount] = useState(1000000);
   const [creditingRate, setCreditingRate] = useState("conservative");
   const [loanRate, setLoanRate] = useState(5.0);
   const [incomeStartAge, setIncomeStartAge] = useState(66);
@@ -121,18 +123,41 @@ export default function RetirementIncomeProjection() {
   const accumulationYears = retirementAge - currentAge;
   const incomeYears = incomeEndAge - incomeStartAge;
 
+  // The charge sequence runs through the platform's one policy engine. This
+  // page used to credit interest first and then take mortality as a flat
+  // percentage of account value — both wrong, and wrong in the same direction.
+  // Cost of insurance is charged on the net amount at risk, before crediting.
+  const POLICY_CHARGES = {
+    premiumLoadPctByYear: [6],
+    monthlyPolicyFee: 10,
+    perUnitMonthlyPerThousand: 0,
+    perUnitYears: 0,
+    coiTable: ILLUSTRATIVE_COI_TABLE,
+    coiTableSource: ILLUSTRATIVE_SOURCE,
+    surrenderChargePctByYear: [],
+  };
+
   const projectionData = useMemo(() => {
     const data: any[] = [];
     let accumulationValue = 0;
-    const loadFee = 0.06;
-    const coiRate = 0.005;
-    
+    let lapseYear: number | null = null;
+
     for (let year = 0; year <= accumulationYears; year++) {
       const age = currentAge + year;
+      let row: any = null;
       if (year > 0) {
-        const netPremium = annualPremium * (1 - loadFee);
-        accumulationValue = (accumulationValue + netPremium) * (1 + selectedRate.rate / 100);
-        accumulationValue *= (1 - coiRate);
+        const step = stepPolicyYear({
+          accountValue: accumulationValue,
+          policyYear: year,
+          attainedAge: age,
+          premium: annualPremium,
+          faceAmount,
+          charges: POLICY_CHARGES,
+          creditedRatePct: selectedRate.rate,
+        });
+        if (step.exhausted && lapseYear === null) lapseYear = year;
+        accumulationValue = step.accountValue;
+        row = step.row;
       }
       data.push({
         year,
@@ -143,8 +168,13 @@ export default function RetirementIncomeProjection() {
         income: 0,
         taxableIncome: 0,
         taxFreeIncome: 0,
-        deathBenefit: Math.round(accumulationValue * 1.5),
-        surrenderValue: Math.round(accumulationValue * 0.9)
+        costOfInsurance: row?.costOfInsurance ?? 0,
+        netAmountAtRisk: row?.netAmountAtRisk ?? faceAmount,
+        deathBenefit: row?.deathBenefit ?? faceAmount,
+        // No surrender charge schedule has been sourced, so the cash a client
+        // could take is not known. Showing account value here would overstate
+        // it badly in the early years; the page says so rather than guessing.
+        surrenderValue: null
       });
     }
 
@@ -180,22 +210,26 @@ export default function RetirementIncomeProjection() {
         socialSecurityIncome: Math.round(socialSecurityIncome),
         pensionIncome: Math.round(pensionIncome),
         totalIncome: Math.round(annualIncome + socialSecurityIncome + pensionIncome),
-        deathBenefit: Math.max(0, Math.round(remainingValue * 1.1)),
-        surrenderValue: Math.max(0, Math.round(remainingValue))
+        deathBenefit: Math.max(0, Math.round(faceAmount - (annualIncome * year))),
+        surrenderValue: null
       });
     }
     return { data, peakValue, annualIncome };
-  }, [currentAge, retirementAge, annualPremium, selectedRate, loanRate, incomeStartAge, incomeEndAge, accumulationYears, incomeYears, includeSocialSecurity, socialSecurityStartAge, socialSecurityAmount, inflationRate, includePension, pensionStartAge, pensionAmount]);
+  }, [currentAge, retirementAge, annualPremium, faceAmount, selectedRate, loanRate, incomeStartAge, incomeEndAge, accumulationYears, incomeYears, includeSocialSecurity, socialSecurityStartAge, socialSecurityAmount, inflationRate, includePension, pensionStartAge, pensionAmount]);
 
   const threeScenarios = useMemo(() => {
     return Object.entries(RATE_MAP).map(([key, { label, rate, color }]) => {
       let value = 0;
-      const loadFee = 0.06;
-      const coiRate = 0.005;
       for (let y = 1; y <= accumulationYears; y++) {
-        const netPremium = annualPremium * (1 - loadFee);
-        value = (value + netPremium) * (1 + rate / 100);
-        value *= (1 - coiRate);
+        value = stepPolicyYear({
+          accountValue: value,
+          policyYear: y,
+          attainedAge: currentAge + y,
+          premium: annualPremium,
+          faceAmount,
+          charges: POLICY_CHARGES,
+          creditedRatePct: rate,
+        }).accountValue;
       }
       const annualIncome = Math.round(value * 0.06);
       const totalIncome = annualIncome * incomeYears;
@@ -211,7 +245,7 @@ export default function RetirementIncomeProjection() {
         roi: ((totalIncome + value) / (annualPremium * accumulationYears) - 1) * 100
       };
     });
-  }, [annualPremium, accumulationYears, incomeYears]);
+  }, [annualPremium, faceAmount, currentAge, accumulationYears, incomeYears]);
 
   const taxAnalysisData = useMemo(() => {
     return projectionData.data.filter((d) => d.phase === "Distribution").map((d) => {
@@ -795,7 +829,19 @@ export default function RetirementIncomeProjection() {
                 <NumberInput value={annualPremium} onChange={setAnnualPremium} min={1000} max={1000000} step={1000} className="bg-slate-900/50 border-slate-700 text-sm" />
               </div>
               <div className="space-y-1.5">
+                <label className="block text-xs font-medium text-slate-400">Death Benefit ($)</label>
+                <NumberInput value={faceAmount} onChange={setFaceAmount} min={100000} max={20000000} step={50000} className="bg-slate-900/50 border-slate-700 text-sm" />
+              </div>
+              <div className="space-y-1.5">
                 <label className="block text-xs font-medium text-slate-400">Crediting Rate</label>
+                {selectedRate.rate > 6.5 && (
+                  <p className="text-[10px] leading-snug text-amber-300/90">
+                    {selectedRate.rate.toFixed(1)}% is above the 6.5% ceiling this platform uses for
+                    an illustrated rate. A carrier's AG 49 maximum illustrated rate is derived from
+                    its own index parameters and is published per product; no carrier may illustrate
+                    above it. Use this setting to explore, not to show a client.
+                  </p>
+                )}
                 <Select value={creditingRate} onValueChange={setCreditingRate}>
                   <SelectTrigger className="bg-slate-900/50 border-slate-700 text-sm h-9">
                     <SelectValue />
@@ -1405,7 +1451,9 @@ export default function RetirementIncomeProjection() {
                             </td>
                             <td className="p-2.5 text-right text-slate-400">${row.premiumPaid.toLocaleString()}</td>
                             <td className="p-2.5 text-right text-white font-medium">${row.accumulationValue.toLocaleString()}</td>
-                            <td className="p-2.5 text-right text-slate-400">${row.surrenderValue.toLocaleString()}</td>
+                            <td className="p-2.5 text-right text-slate-500" title="No surrender charge schedule has been sourced for this product, so the cash value available on surrender is not known. It is materially below the account value in the early years.">
+                              {row.surrenderValue === null ? "—" : `$${row.surrenderValue.toLocaleString()}`}
+                            </td>
                             <td className="p-2.5 text-right text-emerald-400">${row.deathBenefit.toLocaleString()}</td>
                           </tr>
                         ))}
