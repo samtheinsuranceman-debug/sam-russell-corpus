@@ -37,7 +37,7 @@ the reason above — but it is your call, not mine.
 
 | Path | What it is |
 |---|---|
-| `drass-wealth-tools-1.2.0.zip` | **The installable.** This is the file you upload to WordPress. |
+| `drass-wealth-tools-1.3.0.zip` | **The installable.** This is the file you upload to WordPress. |
 | `plugin-source/drass-wealth-tools/` | The same plugin unzipped, for reading and diffing. |
 | `INSTALL.md` | Step-by-step installation and configuration. |
 | `SHORTCODES.md` | Every shortcode, its attributes, and where to place it. |
@@ -74,7 +74,7 @@ behaviour for an installer.
 
 | Shortcode | What it shows |
 |---|---|
-| `[dwt_index_segments]` | **New in 1.2.0.** Multi-year index segments — a segment credit beside what it is per year. |
+| `[dwt_index_segments]` | **New in 1.2.0, corrected in 1.3.0.** Multi-year index segments — a segment credit beside what it is per year. |
 | `[dwt_index_history]` | Historical index changes against a cap, floor and participation rate. |
 | `[dwt_time_machine]` | The AG 49 illustration beside its required historical disclosure. |
 | `[dwt_monte_carlo]` | Ten thousand modelled retirements — will the money last. |
@@ -145,7 +145,7 @@ you the same value.
 
 ## Version
 
-**1.2.0.** Changelog in `plugin-source/drass-wealth-tools/readme.txt`.
+**1.3.0.** Changelog in `plugin-source/drass-wealth-tools/readme.txt`.
 
 Requires WordPress 6.0+, PHP 7.4+. Creates no database tables, modifies no
 existing content, registers no public write endpoints. Deactivating removes
