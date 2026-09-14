@@ -28,15 +28,41 @@
  * benefit and the amount at risk collapses. On a thin protection design it is
  * the reverse, and not by a little:
  *
- *   $50k × 10 into $1.0M face   COI uncertainty moves the 30-year value   5%
- *   $25k × 20 into $1.5M face   COI uncertainty moves the 30-year value  33%
- *   $8k  × 30 into $1.0M face   COI uncertainty moves the 30-year value 131%
+ *   $50k × 10 into $1.0M face   COI uncertainty moves the 30-year value   7.8%
+ *   $25k × 20 into $1.5M face   COI uncertainty moves the 30-year value  32.9%
+ *   $8k  × 30 into $1.0M face   COI uncertainty moves the 30-year value 131.5%
+ *
+ * The first of those rose from 5.0% when the statutory corridor was switched
+ * on. That is the corridor doing its job: on a max-funded design it drags the
+ * death benefit up, which drags the amount at risk up, which makes the
+ * mortality table matter half again as much as it appeared to. The gap got
+ * more expensive by being modelled correctly — on exactly the design this
+ * practice sells. The thin row did not move at all, because a thin policy's
+ * cash value never climbs far enough for the corridor to bind.
  *
  * That last row is $518,548 against $28,484 on the same premium — the range
  * spans "comfortable" and "lapsed". A thin design cannot be projected at all
  * without a real mortality table, and no caveat makes that acceptable. The
  * max-funded designs this practice actually sells are far more forgiving, which
  * is why the platform can run at all today.
+ *
+ * ## What has since been built rather than waited for
+ *
+ * Two entries below are no longer gaps in the same sense.
+ *
+ * The **corridor** was never a carrier quote — 7702(d)(2) is identical for
+ * every company — so it is built (shared/irc7702.ts) and now defaults into
+ * every projection. It raises the death benefit on a well-funded policy, which
+ * raises the amount at risk, which raises the mortality charge; skipping it
+ * understated the cost exactly on the designs this practice sells.
+ *
+ * **Loan mechanics** are built too (shared/policyLoanMechanics.ts). Only two
+ * numbers there are quotes — the charged rate and, on a fixed loan, what the
+ * collateral earns. Everything downstream of them is arithmetic and statute:
+ * the compounding, the closed-form crossover year, lapse, and the fact that a
+ * lapse with a loan outstanding taxes the whole accumulated gain as ordinary
+ * income while the cash value goes to repay the loan and the client receives
+ * nothing.
  *
  * ## How each gap closes
  *
@@ -54,7 +80,9 @@ export type GapStatus =
   /** Recoverable exactly from any illustration ledger, by arithmetic. */
   | 'recoverable-from-ledger'
   /** Fixed by statute, not by the carrier — needs transcription, not a quote. */
-  | 'statutory';
+  | 'statutory'
+  /** Built. Left here so the record shows what closed and how. */
+  | 'closed';
 
 export interface UnpricedParameter {
   readonly id: string;
@@ -87,7 +115,7 @@ export const UNPRICED_PARAMETERS: readonly UnpricedParameter[] = [
     label: 'Cost of insurance, per $1,000 of net amount at risk by attained age',
     status: 'recoverable-from-ledger',
     band: { low: 0.5, high: 2.0, unit: '× a reference mortality curve' },
-    swingPct: { maxFunded: 5.0, midFunded: 33.1, thin: 131.5 },
+    swingPct: { maxFunded: 7.8, midFunded: 32.9, thin: 131.5 },
     closedBy:
       'One illustration ledger on the product, max-funded, showing account value by year. The mortality charge is then fitted against a reference curve and the scale factor comes back with a confidence grade.',
     whyNotGuessable:
@@ -98,7 +126,7 @@ export const UNPRICED_PARAMETERS: readonly UnpricedParameter[] = [
     label: 'Premium load, by policy year',
     status: 'recoverable-from-ledger',
     band: { low: 0, high: 10, unit: '% of premium' },
-    swingPct: { maxFunded: 11.6, midFunded: 15.1, thin: 22.8 },
+    swingPct: { maxFunded: 11.3, midFunded: 14.9, thin: 22.8 },
     closedBy:
       'An illustration ledger with years after the premiums stop. While the premium is level a percentage of it is arithmetically identical to a flat annual fee; the years with no premium are what separate them.',
     whyNotGuessable:
@@ -109,7 +137,7 @@ export const UNPRICED_PARAMETERS: readonly UnpricedParameter[] = [
     label: 'Per-unit charge, per $1,000 of face per month, and its duration',
     status: 'recoverable-from-ledger',
     band: { low: 0.02, high: 0.12, unit: '$ per $1,000 per month' },
-    swingPct: { maxFunded: 2.8, midFunded: 7.2, thin: 19.3 },
+    swingPct: { maxFunded: 2.7, midFunded: 7.1, thin: 19.3 },
     closedBy:
       'Two illustrations at different face amounts, same age and class. This one never separates from the policy fee on a single ledger at any funding level, because both are flat dollars per year — only the per-unit charge scales with face.',
     whyNotGuessable:
@@ -131,13 +159,13 @@ export const UNPRICED_PARAMETERS: readonly UnpricedParameter[] = [
   {
     id: 'corridor-factors',
     label: 'IRC 7702 corridor factors, by attained age',
-    status: 'statutory',
+    status: 'closed',
     band: { low: 1.0, high: 2.5, unit: '× account value' },
     swingPct: { maxFunded: 0, midFunded: 0, thin: 0 },
     closedBy:
-      'Transcription from 26 U.S.C. 7702(d)(2). This one is not a carrier quote and does not need an illustration — it is the same table for every company. An illustration ledger with a death benefit column serves as a check on the transcription.',
+      'CLOSED — shared/irc7702.ts. The ten brackets of 26 U.S.C. 7702(d)(2), interpolated ratably as the statute directs, now default into every projection. What remains is a primary-text check: the statute was confirmed against two independent sources but every direct fetch was blocked by this environment\'s egress proxy, so VERIFIED_AGAINST_PRIMARY_TEXT is still false.',
     whyNotGuessable:
-      'Fixed by statute, so it is knowable now and simply has not been transcribed. Where the corridor binds it raises the death benefit above the face amount, which raises the amount at risk and the mortality charge with it — so its effect runs entirely through the cost of insurance rather than showing up on its own.',
+      'It was never a carrier quote — it is the same schedule for every company, which is why it could be built without an illustration. Reading only the bracket endpoints and holding them flat would have overstated the corridor four years in five; the statute says the percentage falls ratably within each bracket, and interpolating reproduces all 32 of the commonly published integer percentages exactly.',
   },
   {
     id: 'policy-fee',
@@ -152,14 +180,14 @@ export const UNPRICED_PARAMETERS: readonly UnpricedParameter[] = [
   },
   {
     id: 'loan-terms',
-    label: 'Policy loan rates and how loaned values are credited',
+    label: 'Policy loan rates — the charged rate and what held collateral earns',
     status: 'unpriced',
     band: { low: 0, high: 2, unit: '% net cost of borrowing' },
     swingPct: { maxFunded: 0, midFunded: 0, thin: 0 },
     closedBy:
-      'The product guide section on loans: the fixed rate, the variable rate, whether a wash loan is offered and at what spread, and the rate credited to the loaned portion of the account value.',
+      'Two numbers from the product guide\'s loan section: the rate charged on the balance, and the rate credited to collateral on a fixed loan. Everything built around them — accrual, the crossover year, lapse, and the tax consequence of lapsing — is in shared/policyLoanMechanics.ts already and needs no document.',
     whyNotGuessable:
-      'Every distribution figure on this platform is a loan. A wash loan and a loan at a 1% net spread produce very different income over thirty years, and no part of the rate guide addresses it. The swing is shown as zero only because this is not an accumulation-phase charge — it is not measurable on the same test.',
+      'Only the two rates are quotes. The mechanics are not: a wash loan is zero cost by contract, a fixed loan costs a known spread, and a participating loan is charged its full rate in every year the index credits nothing — which on the 1996-2025 record is seven years in thirty. The engine counts those years rather than averaging them away, and computes the closed-form year the balance overtakes the cash value whenever the charged rate exceeds the credited one.',
   },
   {
     id: 'djia-series',

@@ -117,8 +117,16 @@ describe('the register itself', () => {
     expect(new Set(ids).size).toBe(ids.length);
   });
 
-  it('marks the corridor as statutory, not as something to ask a carrier for', () => {
-    expect(parameterById('corridor-factors')!.status).toBe('statutory');
+  it('marks the corridor closed, because it was law rather than a carrier quote', () => {
+    expect(parameterById('corridor-factors')!.status).toBe('closed');
     expect(parameterById('corridor-factors')!.closedBy).toMatch(/7702\(d\)\(2\)/);
+    expect(parameterById('corridor-factors')!.closedBy).toMatch(/CLOSED/);
+  });
+
+  it('still treats the loan rates as quotes even though the loan mechanics are built', () => {
+    const loan = parameterById('loan-terms')!;
+    expect(loan.status).toBe('unpriced');
+    expect(loan.closedBy).toMatch(/policyLoanMechanics/);
+    expect(loan.whyNotGuessable).toMatch(/seven years in thirty/);
   });
 });
