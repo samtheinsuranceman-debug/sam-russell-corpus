@@ -31,7 +31,7 @@
   },
   {
     "name": "index-segments-30yr",
-    "request": "GET /api/partner/index-segments?account=bia-2yr&from=1994&to=2025&threshold=34",
+    "request": "GET /api/partner/index-segments?account=bia-2yr&from=1994&to=2025&threshold=40",
     "status": 200,
     "file": "index-segments-30yr.json"
   },

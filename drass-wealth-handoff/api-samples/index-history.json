@@ -4,123 +4,123 @@
   "years": [
     {
       "year": 1996,
-      "change": 23.48
+      "change": 20.1
     },
     {
       "year": 1997,
-      "change": 32.69
+      "change": 31.5
     },
     {
       "year": 1998,
-      "change": 18.01
+      "change": 27.1
     },
     {
       "year": 1999,
-      "change": 10.34
+      "change": 19.1
     },
     {
       "year": 2000,
-      "change": -9.26
+      "change": -10.6
     },
     {
       "year": 2001,
-      "change": -10.74
+      "change": -12.9
     },
     {
       "year": 2002,
-      "change": -24
+      "change": -22.8
     },
     {
       "year": 2003,
-      "change": 36.12
+      "change": 26.1
     },
     {
       "year": 2004,
-      "change": 5.12
+      "change": 8.6
     },
     {
       "year": 2005,
-      "change": 6.4
+      "change": 3
     },
     {
       "year": 2006,
-      "change": 9.85
+      "change": 13.7
     },
     {
       "year": 2007,
-      "change": -5.42
+      "change": 3.2
     },
     {
       "year": 2008,
-      "change": -44.76
+      "change": -38.3
     },
     {
       "year": 2009,
-      "change": 50.25
+      "change": 23.5
     },
     {
       "year": 2010,
-      "change": 20.17
+      "change": 12.9
     },
     {
       "year": 2011,
-      "change": 2.9
+      "change": -0.2
     },
     {
       "year": 2012,
-      "change": 10.91
+      "change": 13.5
     },
     {
       "year": 2013,
-      "change": 22.76
+      "change": 29.7
     },
     {
       "year": 2014,
-      "change": 13.18
+      "change": 11.3
     },
     {
       "year": 2015,
-      "change": -8.19
+      "change": -0.8
     },
     {
       "year": 2016,
-      "change": 22.33
+      "change": 9.6
     },
     {
       "year": 2017,
-      "change": 14.82
+      "change": 19.4
     },
     {
       "year": 2018,
-      "change": 2.6
+      "change": -6.4
     },
     {
       "year": 2019,
-      "change": 6.1
+      "change": 28.8
     },
     {
       "year": 2020,
-      "change": 29.01
+      "change": 16.1
     },
     {
       "year": 2021,
-      "change": 14.77
+      "change": 27
     },
     {
       "year": 2022,
-      "change": -9.23
+      "change": -19.5
     },
     {
       "year": 2023,
-      "change": 28.36
+      "change": 24.3
     },
     {
       "year": 2024,
-      "change": 16.84
+      "change": 23.3
     },
     {
       "year": 2025,
-      "change": 15.52
+      "change": 16.3
     }
   ],
   "basis": "Annual index change as held by Russell Capital Systems. Confirm the segment anchor before labelling a public column."

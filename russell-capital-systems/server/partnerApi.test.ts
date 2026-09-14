@@ -150,10 +150,25 @@ describe('index segments', () => {
   });
 
   it('counts segments, not years, against the threshold', async () => {
-    const at40 = await (await fetch(`${base}/index-segments?from=2019&to=2025&threshold=40`, auth)).json();
-    const at34 = await (await fetch(`${base}/index-segments?from=2019&to=2025&threshold=34`, auth)).json();
-    expect(at40.segments_at_or_above_threshold).toBe(2);
-    expect(at34.segments_at_or_above_threshold).toBe(4);
+    // Four of the six two-year segments over 2019-2025 credited 40% or more;
+    // not one of the six YEARS reached it. Same window, same data, and the
+    // unit is the whole difference.
+    const b = await (await fetch(`${base}/index-segments?from=2019&to=2025&threshold=40`, auth)).json();
+    expect(b.segments).toHaveLength(6);
+    expect(b.segments_at_or_above_threshold).toBe(4);
+    expect(b.segments.filter((s: any) => s.annualized_pct >= 40)).toHaveLength(0);
+  });
+
+  it('keeps the two segments that credited nothing in the same window', async () => {
+    const b = await (await fetch(`${base}/index-segments?from=2019&to=2025&threshold=40`, auth)).json();
+    expect(b.floor_saved_count).toBe(2);
+    expect(b.segments.filter((s: any) => s.credited_pct === 0)).toHaveLength(2);
+  });
+
+  it('reports the series as verified against the carrier\'s published claims', async () => {
+    const b = await (await fetch(`${base}/index-segments`, auth)).json();
+    expect(b.series_verified).toBe(true);
+    expect(b.series_warning).toBeNull();
   });
 
   it('says when an account\'s terms came from nobody', async () => {
