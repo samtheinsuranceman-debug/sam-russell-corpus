@@ -61,6 +61,46 @@ model a specific product:
 - Whether the charge is guaranteed or current, and its guaranteed maximum
 - Whether the factor applies to the credit or to the account value
 
+## Cost of insurance
+
+This is the largest gap in the whole system and the one that moves the
+answer most.
+
+`shared/policyMechanics.ts` is now the one place a premium becomes cash
+value. Every projection on the platform steps through `stepPolicyYear()`,
+which charges in order: premium less load, policy fee, per-unit charge,
+cost of insurance **on the net amount at risk**, then the credit. Before
+that, five different files each had their own version and all five were
+wrong in different ways — mortality as a percentage of account value, as a
+percentage of premium, charged after crediting, or not charged at all.
+
+What is needed, per illustrated case:
+
+| Field | Notes |
+|---|---|
+| Rate per $1,000 of net amount at risk | By attained age, ascending |
+| Sex | The tables differ materially |
+| Underwriting class | Preferred non-smoker to standard smoker is more than a factor of two at the same age |
+| Guaranteed vs current | Both, if the policy publishes both |
+| Policy fee | Per month |
+| Per-unit charge | Per $1,000 of face, per month, and the years it applies |
+| IRC 7702 corridor factors | By attained age. Where the corridor forces the death benefit above the specified amount, the amount at risk rises with it |
+| As-of date and source | Document name and page |
+
+Until a real table arrives, projections run on `ILLUSTRATIVE_COI_TABLE` —
+five generic age bands carried over from the old inline code. It is
+labelled as not a carrier schedule, and anything built on it reports
+`reliable: false` with a note saying to treat the charge as an order of
+magnitude. It exists only because a projection with no mortality charge at
+all is wrong in the flattering direction.
+
+**A projection with no death benefit charges no mortality.** Cost of
+insurance is charged on the death benefit less the account value; with no
+specified amount there is no amount at risk. Several pages had no death
+benefit input at all, which is how they got away with the wrong mechanic.
+They take one now, and where it is left blank the page says on screen that
+the values are too high.
+
 ## Surrender charges
 
 Needed as a percentage by policy year. Without one, every tool here shows
