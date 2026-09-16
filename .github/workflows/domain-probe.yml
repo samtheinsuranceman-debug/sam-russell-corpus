@@ -15,4 +15,10 @@ jobs:
           done
           echo "===== cert on www"; echo | openssl s_client -servername www.russellcapitalsystems.com -connect www.russellcapitalsystems.com:443 2>/dev/null | openssl x509 -noout -subject -issuer -dates 2>&1 | head -5
           echo "===== cert on apex"; echo | openssl s_client -servername russellcapitalsystems.com -connect russellcapitalsystems.com:443 2>/dev/null | openssl x509 -noout -subject -issuer -dates 2>&1 | head -5
+          echo "===== CORS from the front door to the API"
+          curl -sS -m 25 -o /dev/null -D - -X OPTIONS "https://web-production-4b215.up.railway.app/api/trpc/auth.me" -H "Origin: https://russellcapitalsystems.com" -H "Access-Control-Request-Method: GET" -H "Access-Control-Request-Headers: x-session,content-type" | grep -i "^HTTP\|access-control" 
+          curl -sS -m 25 -D - -o /tmp/mode "https://web-production-4b215.up.railway.app/api/auth/mode" -H "Origin: https://russellcapitalsystems.com" | grep -i "^HTTP\|access-control\|vary"; echo "body: $(head -c 200 /tmp/mode)"
+          echo "===== front door page"
+          curl -sS -m 25 "https://russellcapitalsystems.com/" | grep -o "<title>[^<]*</title>\|assets/app.js\|http-equiv=\"refresh\"" | head -3
+          curl -sS -m 25 -o /dev/null -w "deep link /pricing -> %{http_code}\n" "https://russellcapitalsystems.com/pricing"
           echo "===== dns"; dig +short www.russellcapitalsystems.com CNAME; dig +short russellcapitalsystems.com A; dig +short russellcapitalsystems.com NS; dig +short _railway-verify.www.russellcapitalsystems.com TXT; dig +short russellcapitalsystems.com TXT
