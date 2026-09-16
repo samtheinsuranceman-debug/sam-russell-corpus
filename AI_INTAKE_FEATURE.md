@@ -21,3 +21,9 @@ Eleven configured model voices (`ultra.providers`) plus the always-on Russell ru
 - `server/aiIntake.test.ts` (9): parsing, branching, recap, mapping, three questions.
 - Smoke tests expect 264 routes. Sidebar Home section lists the three dashboards and the chain (navigation test).
 - Live probe: GitHub Action **Intake API probe** (`.github/workflows/intake-probe.yml`, script `.github/audit/intake-probe.mjs`): the five pages serve the app, script ≥ 40 steps, recap, three questions, and `intake.save` returns 401 unauthenticated.
+
+## The site's voice (2026-09-16)
+- Everything that speaks (blue microphone, spoken fact finder, founder message, journey guides) uses `activeVoiceId()` from `server/voiceSettings.ts`: the Voice Studio's pick (table `site_settings`, key `elevenlabs.voiceId`) wins over `ELEVENLABS_VOICE_ID`.
+- **Voice Studio** `/portal/voice` (owner sign-in or `OWNER_EMAIL`): lists every ElevenLabs workspace voice with the owner's clones first, plays the advisor's opening line in any voice, "Use this voice" switches the site at once, and "Clone a new voice" uploads 1–5 recordings to ElevenLabs `/v1/voices/add` and uses the result.
+- Production `ELEVENLABS_VOICE_ID` was set to `k3zGUviRBlOalyiswEdo` ("Sam", professional clone) on 2026-09-16; live `ultra.speak` verified returning audio.
+- The owner's other usable workspace voices: `VEApBNlwBCBDgurBInRX` (Easy voice me), `MvlvnctxNmFvM1kPyaBX` (Cheap voice me), `5BBf37H8zmD3EG9D6VFp` (100 minutes Hypnosis), `IuT10HmegOp8kKZ27P2j` (Drews Story Telling). `7vcJMUCoL3mfF5y1Ys1l` is not fine-tuned and cannot speak. The "Samuel Andrew Russell V" / "Best Voice clone Sam Russell" names seen in the HeyGen picker are not in the ElevenLabs workspace; clone them in the Studio from the same recordings.
