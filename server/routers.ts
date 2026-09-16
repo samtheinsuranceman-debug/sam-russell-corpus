@@ -109,6 +109,7 @@ import { planningCasesRouter } from "./planningCasesRouter";
 import { chainRouter } from "./chainRouter";
 import { intakeRouter } from "./intakeRouter";
 import { whispererRouter } from "./whisperer";
+import { voiceRouter } from "./voiceRouter";
 import { notifyOwner } from "./_core/notification";
 import { ENV } from "./_core/env";
 import { sendInvitationEmail, sendStaleClientDigest, sendStrategyNotification, sendProjectionFollowUp, sendQuoteRequestNotification, sendDriftAlertEmail } from "./email";
@@ -332,6 +333,7 @@ export const appRouter = router({
   chain: chainRouter,
   intake: intakeRouter,
   whisperer: whispererRouter,
+  voice: voiceRouter,
   ultra: ultraRouter,
   leads: leadsRouter,
   factFinder: factFinderRouter,

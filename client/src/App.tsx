@@ -48,6 +48,7 @@ const PhysicianDashboard = lazy(() => import("./pages/portal/RoleDashboard").the
 const ClientDashboard = lazy(() => import("./pages/portal/RoleDashboard").then((m) => ({ default: m.ClientDashboard })));
 const AdvisorDashboard = lazy(() => import("./pages/portal/RoleDashboard").then((m) => ({ default: m.AdvisorDashboard })));
 const Whisperer = lazy(() => import("./pages/portal/Whisperer"));
+const VoiceStudio = lazy(() => import("./pages/portal/VoiceStudio"));
 const SharedProjection = lazy(() => import("./pages/SharedProjection"));
 const SharedSlidesViewer = lazy(() => import("./pages/SharedSlidesViewer"));
 
@@ -379,6 +380,7 @@ function Router() {
       <Route path="/portal/client" component={gated(ClientDashboard, "/portal/client")} />
       <Route path="/portal/advisor" component={gated(AdvisorDashboard, "/portal/advisor")} />
       <Route path="/portal/whisperer" component={gated(Whisperer, "/portal/whisperer")} />
+      <Route path="/portal/voice" component={gated(VoiceStudio, "/portal/voice")} />
       <Route path="/portal/advisory-summary" component={gated(AdvisorySummary, "/portal/advisory-summary")} />
       <Route path="/portal/advisor-directory" component={gated(AdvisorDirectory, "/portal/advisor-directory")} />
       <Route path="/portal/clients" component={gated(Clients, "/portal/clients")} />

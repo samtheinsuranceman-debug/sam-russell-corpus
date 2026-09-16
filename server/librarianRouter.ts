@@ -13,6 +13,7 @@
 // catalog. No figures are ever invented: every number the librarian cites
 // comes from the client's own assessment.
 // ============================================================
+import { voiceOutConfigured } from "./voiceSettings";
 import { z } from "zod";
 import { recordEvent } from "./ledger";
 import { factsUsed, recordAdvice } from "./advice";
@@ -86,7 +87,7 @@ export const librarianRouter = router({
       configured: team.length > 0,
       contributorCount: team.length,
       contributors: team.map((p) => p.label),
-      voiceConfigured: Boolean(process.env.ELEVENLABS_API_KEY && process.env.ELEVENLABS_VOICE_ID),
+      voiceConfigured: await voiceOutConfigured(),
     };
   }),
 

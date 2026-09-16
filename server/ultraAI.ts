@@ -35,6 +35,7 @@ const strApiLine = () => strApiLineFor(process.env);
 import { buildAnswerPdf } from "./answerPdf";
 import { mailMode, sendMail } from "./_core/mailer";
 import { recordEvent } from "./ledger";
+import { activeVoiceId, voiceOutConfigured } from "./voiceSettings";
 
 // Owner's standing rule (2026-09-06): DeepSeek is not part of this platform and
 // must not be added back as a provider, a panel voice, or an OpenRouter route.
@@ -286,10 +287,10 @@ export const ultraRouter = router({
   keyProbe: publicProcedure.query(() => probeKeys()),
 
   // Which AI teammates are configured — names only, never key material.
-  providers: publicProcedure.query(() => ({
+  providers: publicProcedure.query(async () => ({
     lead: "claude",
     team: PROVIDERS.map((p) => ({ id: p.id, label: p.label, configured: Boolean(process.env[p.envKey]) })),
-    voiceOut: Boolean(process.env.ELEVENLABS_API_KEY && process.env.ELEVENLABS_VOICE_ID),
+    voiceOut: await voiceOutConfigured(),
     mailOut: mailMode() !== "none",
     modes: ADVISOR_MODES.map((m) => ({ id: m.id, label: m.label, short: m.short, blurb: m.blurb })),
     note: "Keys are set in the server's environment panel only.",
@@ -475,7 +476,7 @@ export const ultraRouter = router({
     .input(z.object({ text: z.string().min(1).max(2_000) }))
     .mutation(async ({ input }) => {
       const apiKey = process.env.ELEVENLABS_API_KEY;
-      const voiceId = process.env.ELEVENLABS_VOICE_ID;
+      const voiceId = await activeVoiceId();
       if (!apiKey || !voiceId) {
         return { ok: false as const, reason: "Voice output not configured (ELEVENLABS_API_KEY / ELEVENLABS_VOICE_ID)." };
       }
