@@ -1,6 +1,7 @@
 import {
   bigint,
   boolean,
+  longtext,
   decimal,
   index,
   int,
@@ -2777,3 +2778,60 @@ export const incomeRateSheets = mysqlTable("income_rate_sheets", {
   createdAt:     timestamp("createdAt").defaultNow().notNull(),
 }, (t) => ({ byCarrier: index("income_rate_sheets_carrier").on(t.carrier), byAge: index("income_rate_sheets_age").on(t.ageFrom) }));
 export type IncomeRateSheetRow = typeof incomeRateSheets.$inferSelect;
+
+// ─── AI Whisperer: the live sales-call coach ──────────────────────────────
+export const whispererSettings = mysqlTable("whisperer_settings", {
+  id:            int("id").autoincrement().primaryKey(),
+  workspaceId:   int("workspaceId").notNull(),
+  advisorPhone:  varchar("advisorPhone", { length: 30 }),
+  advisorName:   varchar("advisorName", { length: 200 }),
+  smsEnabled:    boolean("smsEnabled").default(true).notNull(),
+  cycleMinutes:  int("cycleMinutes").default(5).notNull(),
+  reportsPerCycle: int("reportsPerCycle").default(5).notNull(),
+  zoomUserEmail: varchar("zoomUserEmail", { length: 320 }),
+  createdAt:     timestamp("createdAt").defaultNow().notNull(),
+  updatedAt:     timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (t) => ({ byWorkspace: uniqueIndex("whisperer_settings_workspace").on(t.workspaceId) }));
+export type WhispererSettingsRow = typeof whispererSettings.$inferSelect;
+
+export const whispererSessions = mysqlTable("whisperer_sessions", {
+  id:            int("id").autoincrement().primaryKey(),
+  workspaceId:   int("workspaceId").notNull(),
+  clientId:      int("clientId"),
+  clientName:    varchar("clientName", { length: 200 }).notNull(),
+  advisorUserId: int("advisorUserId"),
+  advisorName:   varchar("advisorName", { length: 200 }),
+  status:        mysqlEnum("status", ["live", "ended"]).default("live").notNull(),
+  startedAt:     timestamp("startedAt").defaultNow().notNull(),
+  endedAt:       timestamp("endedAt"),
+  zoomMeetingId: varchar("zoomMeetingId", { length: 64 }),
+  zoomMeetingUuid: varchar("zoomMeetingUuid", { length: 128 }),
+  rtmsStreamId:  varchar("rtmsStreamId", { length: 128 }),
+  turns:         json("turns").$type<unknown[]>(),
+  signals:       json("signals").$type<unknown[]>(),
+  coachingLog:   json("coachingLog").$type<unknown[]>(),
+  lastCycleAt:   timestamp("lastCycleAt"),
+  cycles:        int("cycles").default(0).notNull(),
+  decisionType:  varchar("decisionType", { length: 20 }),
+  memorySummary: text("memorySummary"),
+  createdAt:     timestamp("createdAt").defaultNow().notNull(),
+  updatedAt:     timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (t) => ({ byWorkspace: index("whisperer_sessions_workspace").on(t.workspaceId), byClient: index("whisperer_sessions_client").on(t.clientId), byZoom: index("whisperer_sessions_zoom").on(t.zoomMeetingId) }));
+export type WhispererSessionRow = typeof whispererSessions.$inferSelect;
+
+export const whispererReports = mysqlTable("whisperer_reports", {
+  id:            int("id").autoincrement().primaryKey(),
+  sessionId:     int("sessionId").notNull(),
+  workspaceId:   int("workspaceId").notNull(),
+  clientId:      int("clientId"),
+  cycle:         int("cycle").notNull(),
+  objectionId:   varchar("objectionId", { length: 60 }).notNull(),
+  title:         varchar("title", { length: 300 }).notNull(),
+  likelihood:    int("likelihood").default(0).notNull(),
+  pages:         int("pages").default(0).notNull(),
+  sizeBytes:     int("sizeBytes").default(0).notNull(),
+  pdfBase64:     longtext("pdfBase64"),
+  smsSentAt:     timestamp("smsSentAt"),
+  createdAt:     timestamp("createdAt").defaultNow().notNull(),
+}, (t) => ({ bySession: index("whisperer_reports_session").on(t.sessionId), byClient: index("whisperer_reports_client").on(t.clientId) }));
+export type WhispererReportRow = typeof whispererReports.$inferSelect;

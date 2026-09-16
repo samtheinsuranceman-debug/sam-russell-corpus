@@ -108,6 +108,7 @@ import { experienceRouter, willWriterRouter, petRouter, morningRitualRouter, wit
 import { planningCasesRouter } from "./planningCasesRouter";
 import { chainRouter } from "./chainRouter";
 import { intakeRouter } from "./intakeRouter";
+import { whispererRouter } from "./whisperer";
 import { notifyOwner } from "./_core/notification";
 import { ENV } from "./_core/env";
 import { sendInvitationEmail, sendStaleClientDigest, sendStrategyNotification, sendProjectionFollowUp, sendQuoteRequestNotification, sendDriftAlertEmail } from "./email";
@@ -330,6 +331,7 @@ export const appRouter = router({
   planningCases: planningCasesRouter,
   chain: chainRouter,
   intake: intakeRouter,
+  whisperer: whispererRouter,
   ultra: ultraRouter,
   leads: leadsRouter,
   factFinder: factFinderRouter,

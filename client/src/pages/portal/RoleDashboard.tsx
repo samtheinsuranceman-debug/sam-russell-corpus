@@ -36,6 +36,7 @@ const SHORTCUTS: Record<IntakeRole, Array<{ label: string; path: string; blurb: 
     { label: "AI Financial Advisor", path: "/portal/ai-advisor", blurb: "Ask in plain words; get plain answers." },
   ],
   advisor: [
+    { label: "AI Whisperer", path: "/portal/whisperer", blurb: "The live-call coach: when to stop talking, five questions, five objections, five reports every five minutes, texted to you." },
     { label: "Advisor CRM", path: "/portal/dashboard", blurb: "Pipeline, clients, deals, the book." },
     { label: "Clients", path: "/portal/clients", blurb: "Every household, every assessment." },
     { label: "Calculator Chain", path: "/portal/chain", blurb: "Build the chain for a client and run 10,000 paths." },

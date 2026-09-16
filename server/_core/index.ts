@@ -9,6 +9,7 @@ import { registerRoomVideoRoutes } from "./roomVideos";
 import { registerStorageProxy } from "./storageProxy";
 import { registerMailRoutes } from "./mailer";
 import { registerSmsRoutes } from "./sms";
+import { registerWhispererRoutes, registerZoomWebhook, startWhispererScheduler } from "../whisperer";
 import { registerScheduledRoutes, startFollowupScheduler } from "../followups";
 import { registerEventRoutes } from "../automations";
 import { startHarvestSchedule } from "../forecastSources";
@@ -53,6 +54,8 @@ async function startServer() {
   // referrer, permissions) and gzip/brotli — see _core/siteHardening.ts.
   await registerSiteHardening(app);
   registerSiteRoutes(app, { dbPing: pingDatabase });
+  // Zoom signs its events over the raw body: this route reads the text itself, so it goes before the JSON parser.
+  registerZoomWebhook(app);
   const server = createServer(app);
   // Configure body parser with larger size limit for file uploads
   app.use(express.json({ limit: "50mb" }));
@@ -64,6 +67,8 @@ async function startServer() {
   // Unsubscribe link, inbound SMS (STOP/START/HELP), external-cron follow-ups
   registerMailRoutes(app);
   registerSmsRoutes(app);
+  // AI Whisperer report downloads (signed links from the advisor's texts, or a signed-in advisor)
+  registerWhispererRoutes(app);
   registerScheduledRoutes(app);
   // Verified inbound events (signed) feed the plan runtime
   registerEventRoutes(app);
@@ -101,6 +106,8 @@ async function startServer() {
     console.log(`Server running on http://localhost:${port}/`);
     // Lead follow-up automation ticks every minute (FOLLOWUPS_DISABLED=1 turns it off).
     startFollowupScheduler();
+    // AI Whisperer: every 20 s, a live call whose five-minute cycle is due gets its objection reports and its text (WHISPERER_DISABLED=1 turns it off).
+    if (startWhispererScheduler()) console.log("[whisperer] cycle scheduler running");
     // Erosion engine: EROSION_HARVEST_DAYS=7 has the AI council re-read every forecaster weekly (off unless set).
     if (startHarvestSchedule()) console.log("[erosion] harvest sweep scheduled every", process.env.EROSION_HARVEST_DAYS, "days");
     // The political pulse (seats, bench, market odds) is keyless and free: weekly by default, POWER_PULSE_DAYS=0 turns it off.

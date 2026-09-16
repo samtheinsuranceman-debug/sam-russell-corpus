@@ -21,7 +21,7 @@ import manifesto from "@shared/homeManifesto.json";
 const CALENDLY_URL = "https://calendly.com/sam-russellcapitalsystems/30min";
 
 // Every image page: one full-bleed picture, crisp, nothing on top of it.
-const PAGE = "relative isolate flex min-h-[100svh] items-end overflow-hidden bg-[#03090a]";
+const PAGE = "relative isolate flex min-h-[100svh] items-end overflow-hidden bg-[#0b1a16]";
 const PIC = "absolute inset-0 z-0 h-full w-full object-cover";
 const GLOW = "text-white [text-shadow:_0_0_14px_rgba(52,211,153,.55),_0_0_36px_rgba(16,185,129,.35),_0_4px_18px_rgba(0,0,0,.9)]";
 // The fifteen claims wear the pair chosen from Grok's boards, Title 01 "filament wrap" and
@@ -80,10 +80,10 @@ function SloganLine({ id }: { id?: string }) {
 /** A clean photograph filling the screen. `tall` is served under 768px when present. */
 function ImagePage({ id, src, tall, alt, position, slogan, label }: { id?: string; src: string; tall?: string; alt: string; position?: string; slogan?: boolean; label: string }) {
   return (
-    <section id={id} className={PAGE} aria-label={label}>
+    <section id={id} className={PAGE} aria-label={label} style={{ backgroundImage: `url(${src})`, backgroundSize: "cover", backgroundPosition: position ?? "center" }}>
       <picture>
         {tall && <source media="(max-width: 767px)" srcSet={tall} />}
-        <img src={src} alt={alt} className={PIC} style={{ objectPosition: position ?? "center" }} loading="lazy" decoding="async" />
+        <img src={src} alt={alt} className={PIC} style={{ objectPosition: position ?? "center" }} loading="eager" decoding="async" />
       </picture>
       {slogan && <SloganLine />}
     </section>
@@ -162,7 +162,7 @@ export default function Landing() {
       </nav>
 
       {/* ── 1 · THE SIGN. Its words are the headline; nothing else on the picture. ── */}
-      <header id="top" className={PAGE} aria-label="Financial and Tax Relief and Recovery for Physicians, Psychiatrists, and Surgeons">
+      <header id="top" className={PAGE} aria-label="Financial and Tax Relief and Recovery for Physicians, Psychiatrists, and Surgeons" style={{ backgroundImage: "url(/rcs-neon-a.webp)", backgroundSize: "cover", backgroundPosition: "center" }}>
         <picture>
           <source media="(max-width: 767px)" srcSet="/rcs-neon-a-tall.webp" width={1080} height={2160} />
           <img src="/rcs-neon-a.webp" alt="Neon sign reading Financial & Tax Relief and Recovery for Physicians, Psychiatrists, & Surgeons, over a glowing green city skyline" width={1920} height={1080} className={`${PIC} max-md:object-[center_12%] lg:object-[25%_center] xl:object-center`} fetchPriority="high" decoding="async" />
@@ -177,27 +177,27 @@ export default function Landing() {
         {PLATES.map((plate, i) => {
           const last = i === PLATES.length - 1;
           return (
-            <section key={plate.src} className="rc-plate" aria-label={plate.label}>
+            <section key={plate.src} className="rc-plate" aria-label={plate.label} style={{ backgroundImage: `url(${plate.src})`, backgroundPosition: plate.position ?? "center 40%" }}>
               <div className="rc-plate-bg" aria-hidden="true">
                 <picture>
                   {plate.tall && <source media="(max-width: 767px)" srcSet={plate.tall} />}
-                  <img src={plate.src} alt="" aria-hidden="true" className="rc-plate-pic" style={{ objectPosition: plate.position ?? "center" }} loading={i < 2 ? "eager" : "lazy"} decoding="async" />
+                  <img src={plate.src} alt="" aria-hidden="true" className="rc-plate-pic" style={{ objectPosition: plate.position ?? "center" }} loading="eager" fetchPriority={i < 3 ? "high" : "low"} decoding="async" />
                 </picture>
                 <div className="rc-plate-shade" />
               </div>
-              <div className="rc-plate-body container max-w-5xl">
+              <div className="rc-plate-body container max-w-3xl">
                 {i === 0 && <p className="mb-8 text-[11px] font-extrabold uppercase tracking-[.26em] text-emerald-300/85">Proprietary technologies</p>}
-                <ol className="grid gap-8">
+                <ol className="grid gap-6">
                   {manifesto.claims.slice(plate.from, plate.to).map(({ ref, name, lead, detail }) => (
                     <li key={ref} id={`claim-${ref}`} className="rc-plaque">
                       <p className="rc-plaque-eyebrow">Technology {ref} <span aria-hidden="true">·</span> Pending <span aria-hidden="true">·</span> Only at RCS</p>
                       <div className="rc-patent-title-wrap mt-3">
-                        <h3 className="rc-patent-title text-[clamp(2.2rem,4.8vw,4.2rem)]">{name}</h3>
+                        <h3 className="rc-patent-title text-[clamp(1.5rem,2.9vw,2.5rem)]">{name}</h3>
                         <svg className="rc-filament" viewBox="0 0 1000 14" preserveAspectRatio="none" aria-hidden="true"><path d="M0 7 C 120 1, 240 13, 360 7 S 600 1, 720 7 S 940 13, 1000 7" /></svg>
                       </div>
-                      <p className="rc-patent-body rc-patent-lead mt-4 text-[clamp(2rem,3.6vw,3.1rem)] leading-[1.22]">{lead}</p>
-                      <p className="rc-patent-body rc-patent-detail mt-4 max-w-4xl text-[clamp(1.8rem,2.95vw,2.5rem)] leading-[1.36]">{detail}</p>
-                      <a href="#planning-estimator" className="rc-plaque-link mt-6">See the mechanism <span aria-hidden="true">→</span></a>
+                      <p className="rc-patent-body rc-patent-lead mt-3 text-[clamp(1.2rem,1.9vw,1.6rem)] leading-[1.3]">{lead}</p>
+                      <p className="rc-patent-body rc-patent-detail mt-3 text-[clamp(1rem,1.35vw,1.2rem)] leading-[1.5]">{detail}</p>
+                      <a href="#planning-estimator" className="rc-plaque-link mt-4 text-sm">See the mechanism <span aria-hidden="true">→</span></a>
                     </li>
                   ))}
                 </ol>
@@ -220,8 +220,10 @@ export default function Landing() {
       {/* ── 7 · THE LEAD CARD. The only form on the page, and the last thing on it. ── */}
       <HomeLeadFactFinder />
 
-      <footer className="border-t border-emerald-300/15 py-8">
-        <div className="container flex flex-col items-center justify-between gap-4 text-sm text-[#7a95b8] md:flex-row">
+      <footer className="rc-plate relative isolate border-t border-emerald-300/15 py-8" style={{ backgroundImage: "url(/rcs-city-towers.webp)", backgroundPosition: "center 70%" }}>
+        <img src="/rcs-city-towers.webp" alt="" aria-hidden="true" className="absolute inset-0 -z-10 h-full w-full object-cover object-[center_70%]" loading="eager" decoding="async" />
+        <div className="absolute inset-0 -z-10 bg-[rgba(3,9,10,.55)]" aria-hidden="true" />
+        <div className="container flex flex-col items-center justify-between gap-4 text-sm text-[#c9d8ea] md:flex-row">
           <div>
             <div><span className="text-[#22c55e]">RCS</span> Russell Capital Systems™ © {new Date().getFullYear()}. All rights reserved.</div>
             <SiteIdentity />
