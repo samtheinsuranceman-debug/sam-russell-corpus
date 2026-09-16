@@ -1,0 +1,1 @@
+import{a}from"./chunk-A7PUPJLP.js";import{d as e,k as o,o as n,p as t}from"./chunk-KECI53AB.js";o();n();var d=e(t(),1);function s({className:c,...l}){return(0,d.jsx)("div",{"data-slot":"skeleton",className:a("bg-accent animate-pulse rounded-md",c),...l})}export{s as a};

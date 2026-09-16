@@ -1,0 +1,1 @@
+import{d as n,k as u,m as o,o as c}from"./chunk-KECI53AB.js";u();c();var t=n(o(),1);function i(r){let e=t.useRef({value:r,previous:r});return t.useMemo(()=>(e.current.value!==r&&(e.current.previous=e.current.value,e.current.value=r),e.current.previous),[r])}export{i as a};
