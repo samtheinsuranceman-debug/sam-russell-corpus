@@ -150,6 +150,8 @@ export default function UltraCalculatorPage() {
         </p>
         <p className="mt-2 text-xs text-slate-500">
           <Link href="/fact-finder" className="text-amber-400 underline">Start with the Fact Finder →</Link>
+          {" · "}
+          <Link href="/portal/chain" className="text-emerald-400 underline">Chain the calculators in a row with hand-offs and 10,000 simulations →</Link>
         </p>
 
         {/* ── CLIENT PROFILE ── */}

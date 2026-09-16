@@ -12,6 +12,7 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import { EntrainmentProvider } from "./contexts/EntrainmentEngine";
 import ComplianceGate from "./components/ComplianceGate";
 import ManagedAuthGuard from "./components/ManagedAuthGuard";
+import ChainDock from "./components/ChainDock";
 import EntranceGate from "./components/EntranceGate";
 import { SkipToContent, FocusRingStyles } from "@/components/AccessibilityHelpers";
 import TrialTimer from "./components/TrialTimer";
@@ -42,6 +43,7 @@ const ClientPortalView = lazy(() => import("./pages/ClientPortalView"));
 const UltraCalculatorPage = lazy(() => import("./pages/UltraCalculatorPage"));
 const FactFinderPage = lazy(() => import("./pages/FactFinderPage"));
 const MassiveCalculatorsPage = lazy(() => import("./pages/MassiveCalculatorsPage"));
+const ChainBuilder = lazy(() => import("./pages/portal/ChainBuilder"));
 const SharedProjection = lazy(() => import("./pages/SharedProjection"));
 const SharedSlidesViewer = lazy(() => import("./pages/SharedSlidesViewer"));
 
@@ -311,6 +313,7 @@ function gated(Component: React.ComponentType<any>, returnPath: string) {
       <ManagedAuthGuard returnPath={returnPath}>
         <ComplianceGate returnTo={returnPath}>
           <Component {...props} />
+          <ChainDock />
         </ComplianceGate>
       </ManagedAuthGuard>
     );
@@ -366,6 +369,7 @@ function Router() {
       {/* Portal routes — ALL gated with compliance disclaimer */}
       <Route path="/portal" component={gated(InfiniteScroll, "/portal")} />
       <Route path="/portal/dashboard" component={gated(Dashboard, "/portal/dashboard")} />
+      <Route path="/portal/chain" component={gated(ChainBuilder, "/portal/chain")} />
       <Route path="/portal/advisory-summary" component={gated(AdvisorySummary, "/portal/advisory-summary")} />
       <Route path="/portal/advisor-directory" component={gated(AdvisorDirectory, "/portal/advisor-directory")} />
       <Route path="/portal/clients" component={gated(Clients, "/portal/clients")} />

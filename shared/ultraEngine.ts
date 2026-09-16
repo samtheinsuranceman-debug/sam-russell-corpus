@@ -88,6 +88,50 @@ export type UltraModules = {
     payoutRatePct: number;
     startYear: number;
   };
+  crypto: {
+    enabled: boolean;
+    /** One-time allocation from taxable assets in year 1, % of taxable. */
+    allocationPctOfTaxable: number;
+    /** Ongoing yearly purchase, % of net cash saved. */
+    contributionPctOfNetCash: number;
+    /** Assumed average return, % per year (the client's assumption; crypto has no floor). */
+    expectedReturnPct: number;
+    /** Assumed volatility, % per year — used by the Monte Carlo sampler only. */
+    volatilityPct: number;
+  };
+};
+
+// ── Chain hand-offs: move a share of one balance into another at a chosen year ─
+export type TransferSource = "iulCashValue" | "taxableAssets" | "qualifiedAssets" | "cashReserves" | "homeEquity" | "realEstateValue" | "cryptoValue";
+export type TransferTarget = "trustIUL" | "incomeAnnuity" | "taxableAssets" | "cashReserves" | "realEstateProperty" | "cryptoValue" | "mortgagePaydown";
+export type Transfer = {
+  /** Year within the window (1 = the window's first year); the move happens after that year's growth. */
+  atYear: number;
+  pct: number; // 0–100 of the source balance
+  from: TransferSource;
+  to: TransferTarget;
+  label?: string;
+};
+export type TransferLedgerEntry = { year: number; windowIndex: number; from: TransferSource; to: TransferTarget; pct: number; amount: number; label?: string };
+
+/** Per-year overrides a macro or Monte Carlo sampler can inject (all % unless noted). */
+export type YearlyOverride = Partial<{
+  investmentGrowthPct: number;
+  appreciationPct: number;
+  cryptoReturnPct: number;
+  effectiveTaxRatePct: number;
+  /** Consumer inflation applied to household expenses. */
+  expenseInflationPct: number;
+  /** Extra one-year boosts layered on top of the base assumptions. */
+  equityBoostPct: number;
+  realEstateBoostPct: number;
+  cryptoBoostPct: number;
+  incomeAnnuityPayoutRatePct: number;
+}>;
+
+export type RunOptions = {
+  /** Called once per global year; whatever it returns overrides that year's assumptions. */
+  yearly?: (globalYear: number) => YearlyOverride | undefined;
 };
 
 export type WindowPlan = {
@@ -100,6 +144,12 @@ export type WindowPlan = {
     appreciationPct: number;
     savingsRatePctOfNetCash: number;
   }>;
+  /** Chain mode: this window runs with its own module set (state still carries across). */
+  modules?: UltraModules;
+  /** Chain mode: hand-offs executed inside this window. */
+  transfers?: Transfer[];
+  /** Chain mode: which calculator this window represents (for the report). */
+  calculatorId?: string;
 };
 
 export type Property = {
@@ -126,6 +176,7 @@ export type YearRow = {
   homeMortgage: number;
   propertiesOwned: number;
   realEstateValue: number; // all properties incl. home
+  cryptoValue: number;
   netWorth: number;
 };
 
@@ -139,6 +190,8 @@ export type WindowResult = {
   passiveIncomeAtEnd: number; // rentals + IUL income + annuity
   propertiesAcquired: number;
   narrative: string[];
+  calculatorId?: string;
+  transfers: TransferLedgerEntry[];
 };
 
 export type UltraResult = {
@@ -150,6 +203,7 @@ export type UltraResult = {
     note: string;
   };
   moduleNotes: string[];
+  transfers: TransferLedgerEntry[];
   disclosure: string;
 };
 
@@ -184,6 +238,7 @@ export function defaultModules(): UltraModules {
       chronicIllnessMultiple: 12,
     },
     incomeAnnuity: { enabled: false, premium: 100000, payoutRatePct: 6, startYear: 11 },
+    crypto: { enabled: false, allocationPctOfTaxable: 5, contributionPctOfNetCash: 0, expectedReturnPct: 12, volatilityPct: 70 },
   };
 }
 
@@ -194,12 +249,14 @@ export function appreciationForCycle(re: UltraModules["realEstate"], cycleIndex:
 
 export function runUltraScenario(
   profile: ClientProfile,
-  modules: UltraModules,
+  baseModules: UltraModules,
   windows: WindowPlan[],
+  options: RunOptions = {},
 ): UltraResult {
   const rows: YearRow[] = [];
   const windowResults: WindowResult[] = [];
   const moduleNotes: string[] = [];
+  const ledger: TransferLedgerEntry[] = [];
 
   // ── mutable simulation state (carried across ALL windows) ────────────────
   let incomeSelf = profile.incomeSelfAnnual;
@@ -217,7 +274,10 @@ export function runUltraScenario(
   const properties: Property[] = [];
   let iulCash = 0;
   let iulPremiumsPaid = 0;
+  let cryptoValue = 0;
+  let cryptoAllocatedOnce = false;
   let annuityActive = false;
+  let annuityPremiumBase = 0; // grows with hand-offs into the annuity
   let equityDeployedOnce = false;
   let cycleIndex = 0;
   let yearsSinceCycleStart = 0;
@@ -228,13 +288,16 @@ export function runUltraScenario(
   for (let w = 0; w < windows.length; w++) {
     const win = windows[w];
     const ov = win.overrides ?? {};
+    const modules: UltraModules = win.modules ? { ...baseModules, ...win.modules, crypto: win.modules.crypto ?? baseModules.crypto } : baseModules;
     const winRows: YearRow[] = [];
+    const winLedger: TransferLedgerEntry[] = [];
     const startYear = globalYear + 1;
     let propsAtWindowStart = properties.length;
 
     for (let y = 0; y < win.years; y++) {
       globalYear++;
       yearsSinceCycleStart++;
+      const yo: YearlyOverride = options.yearly?.(globalYear) ?? {};
 
       // 1. Income grows.
       const g = (ov.incomeGrowthPct ?? profile.incomeGrowthPct) / 100;
@@ -248,12 +311,13 @@ export function runUltraScenario(
       for (const ch of expenseSchedule) {
         if (ch.atYear === globalYear) expenses = ch.newAnnualExpenses;
       }
+      if (yo.expenseInflationPct != null && globalYear > 1) expenses *= 1 + yo.expenseInflationPct / 100;
 
       // 3. Real-estate appreciation (home + acquired properties).
-      const apprPct = ov.appreciationPct ?? (modules.realEstate.enabled
+      const apprPct = (yo.appreciationPct ?? ov.appreciationPct ?? (modules.realEstate.enabled
         ? appreciationForCycle(modules.realEstate, cycleIndex)
-        : 0);
-      const appr = clampPct(apprPct, -20, 25) / 100;
+        : 0)) + (yo.realEstateBoostPct ?? 0);
+      const appr = clampPct(apprPct, -30, 40) / 100;
       homeValue *= 1 + appr;
       for (const p of properties) p.value *= 1 + appr;
 
@@ -291,15 +355,16 @@ export function runUltraScenario(
         if (!annuityActive && globalYear >= modules.incomeAnnuity.startYear) {
           annuityActive = true;
           taxable = Math.max(0, taxable - modules.incomeAnnuity.premium); // funded from taxable
+          annuityPremiumBase += modules.incomeAnnuity.premium;
         }
-        if (annuityActive) annuityIncome = modules.incomeAnnuity.premium * (modules.incomeAnnuity.payoutRatePct / 100);
       }
+      if (annuityActive) annuityIncome = annuityPremiumBase * ((yo.incomeAnnuityPayoutRatePct ?? modules.incomeAnnuity.payoutRatePct) / 100);
 
       // 7. Gross income, taxes, debt service.
       const grossIncome = incomeSelf + incomeSpouse + otherIncome + rentalIncome + annuityIncome;
       // IUL income modeled as non-taxable (policy loans) per the strategy; all
       // other income taxed at the blended assumption.
-      const taxes = grossIncome * (clampPct(profile.effectiveTaxRatePct, 0, 60) / 100);
+      const taxes = grossIncome * (clampPct(yo.effectiveTaxRatePct ?? profile.effectiveTaxRatePct, 0, 60) / 100);
 
       let debtService = 0;
       if (homeMortgage > 0) {
@@ -329,7 +394,8 @@ export function runUltraScenario(
       }
 
       // 9. One-time equity deployment → trust-owned IUL (protection-first flow).
-      if (modules.equityDeployment.enabled && !equityDeployedOnce && globalYear === 1) {
+      // One-time: the first year of the first window in which the module is on (year 1 for a plain Ultra run).
+      if (modules.equityDeployment.enabled && !equityDeployedOnce && y === 0) {
         const equity = Math.max(0, homeValue - homeMortgage);
         const deployed = equity * (clampPct(modules.equityDeployment.pctOfHomeEquityDeployed) / 100);
         if (deployed > 0) {
@@ -369,11 +435,17 @@ export function runUltraScenario(
       }
 
       // 11. Savings & growth on invested assets.
-      const growPct = ov.investmentGrowthPct ?? modules.investmentGrowth.growthPct;
+      const growPct = (yo.investmentGrowthPct ?? ov.investmentGrowthPct ?? modules.investmentGrowth.growthPct) + (yo.equityBoostPct ?? 0);
       const saveRate = clampPct(ov.savingsRatePctOfNetCash ?? modules.investmentGrowth.savingsRatePctOfNetCash) / 100;
       if (modules.investmentGrowth.enabled) {
         if (netCash > 0) {
-          taxable += netCash * saveRate;
+          let saved = netCash * saveRate;
+          if (modules.crypto.enabled && modules.crypto.contributionPctOfNetCash > 0) {
+            const toCrypto = saved * (clampPct(modules.crypto.contributionPctOfNetCash) / 100);
+            cryptoValue += toCrypto;
+            saved -= toCrypto;
+          }
+          taxable += saved;
           cash += netCash * (1 - saveRate);
         } else {
           cash += netCash; // shortfalls drain cash first
@@ -382,6 +454,52 @@ export function runUltraScenario(
         qualified *= 1 + growPct / 100;
       } else {
         cash += netCash;
+      }
+
+      // 11b. Crypto: one-time allocation from taxable, then the assumed return (no floor).
+      if (modules.crypto.enabled) {
+        if (!cryptoAllocatedOnce && globalYear === startYear) {
+          const alloc = taxable * (clampPct(modules.crypto.allocationPctOfTaxable) / 100);
+          taxable -= alloc;
+          cryptoValue += alloc;
+          cryptoAllocatedOnce = true;
+        }
+        const cr = (yo.cryptoReturnPct ?? modules.crypto.expectedReturnPct) + (yo.cryptoBoostPct ?? 0);
+        cryptoValue = Math.max(0, cryptoValue * (1 + Math.max(-100, cr) / 100));
+      }
+
+      // 12. Chain hand-offs scheduled for this year of the window.
+      for (const t of win.transfers ?? []) {
+        if (t.atYear !== y + 1) continue;
+        const pct = clampPct(t.pct) / 100;
+        let amount = 0;
+        switch (t.from) {
+          case "iulCashValue": amount = iulCash * pct; iulCash -= amount; break;
+          case "taxableAssets": amount = taxable * pct; taxable -= amount; break;
+          case "qualifiedAssets": amount = qualified * pct; qualified -= amount; break;
+          case "cashReserves": amount = cash * pct; cash -= amount; break;
+          case "cryptoValue": amount = cryptoValue * pct; cryptoValue -= amount; break;
+          case "homeEquity": { const eq = Math.max(0, homeValue - homeMortgage); amount = eq * pct; homeMortgage += amount; break; } // drawn as a lien
+          case "realEstateValue": { // borrow against the paid-off portfolio (a lien on acquired properties)
+            const held = properties.reduce((a, p) => a + p.value, 0);
+            amount = held * pct;
+            if (amount > 0) debts.push({ name: `Portfolio lien y${globalYear}`, balance: amount, ratePct: profile.home.mortgageRatePct, paymentAnnual: amount * 0.08 });
+            break;
+          }
+        }
+        if (amount <= 0) continue;
+        switch (t.to) {
+          case "trustIUL": iulCash += amount; iulPremiumsPaid += amount; break;
+          case "incomeAnnuity": annuityPremiumBase += amount; annuityActive = true; break;
+          case "taxableAssets": taxable += amount; break;
+          case "cashReserves": cash += amount; break;
+          case "realEstateProperty": properties.push({ acquiredYear: globalYear, value: amount, paidOff: true }); break;
+          case "cryptoValue": cryptoValue += amount; break;
+          case "mortgagePaydown": { const applied = Math.min(amount, Math.max(0, homeMortgage)); homeMortgage -= applied; cash += amount - applied; break; }
+        }
+        const entry: TransferLedgerEntry = { year: globalYear, windowIndex: w, from: t.from, to: t.to, pct: t.pct, amount: Math.round(amount), label: t.label };
+        ledger.push(entry); winLedger.push(entry);
+        moduleNotes.push(`Year ${globalYear}: hand-off — ${t.pct}% of ${t.from} ($${Math.round(amount).toLocaleString()}) moved to ${t.to}${t.label ? ` (${t.label})` : ""}.`);
       }
 
       const realEstateValue = homeValue + properties.reduce((a, p) => a + p.value, 0);
@@ -404,7 +522,8 @@ export function runUltraScenario(
         homeMortgage: Math.round(Math.max(0, homeMortgage)),
         propertiesOwned: properties.length,
         realEstateValue: Math.round(realEstateValue),
-        netWorth: Math.round(taxable + qualified + cash + iulCash + realEstateValue - totalDebt),
+        cryptoValue: Math.round(cryptoValue),
+        netWorth: Math.round(taxable + qualified + cash + iulCash + cryptoValue + realEstateValue - totalDebt),
       };
       rows.push(row);
       winRows.push(row);
@@ -420,6 +539,8 @@ export function runUltraScenario(
       ending,
       passiveIncomeAtEnd: ending.rentalIncome + ending.iulIncome + ending.annuityIncome,
       propertiesAcquired: properties.length - propsAtWindowStart,
+      calculatorId: win.calculatorId,
+      transfers: winLedger,
       narrative: [
         `Window ${w + 1} (years ${startYear}–${globalYear}) — goal: ${win.goal || "not stated"}.`,
         `Ending net worth: $${ending.netWorth.toLocaleString()}; passive income: $${(ending.rentalIncome + ending.iulIncome + ending.annuityIncome).toLocaleString()}/yr; properties owned: ${ending.propertiesOwned}.`,
@@ -433,18 +554,19 @@ export function runUltraScenario(
     windows: windowResults,
     final,
     chronicIllnessBenefit: {
-      available: modules.trustIUL.enabled,
-      accessibleAmount: modules.trustIUL.enabled
-        ? modules.trustIUL.premiumAnnual * modules.trustIUL.chronicIllnessMultiple
+      available: baseModules.trustIUL.enabled,
+      accessibleAmount: baseModules.trustIUL.enabled
+        ? baseModules.trustIUL.premiumAnnual * baseModules.trustIUL.chronicIllnessMultiple
         : 0,
-      note: modules.trustIUL.enabled
+      note: baseModules.trustIUL.enabled
         ? `If a qualifying chronic illness occurs, the strategy contemplates accessing up to ` +
-          `${modules.trustIUL.chronicIllnessMultiple}× the annual premium ` +
-          `($${(modules.trustIUL.premiumAnnual * modules.trustIUL.chronicIllnessMultiple).toLocaleString()}) of face amount as living-benefit income. ` +
+          `${baseModules.trustIUL.chronicIllnessMultiple}× the annual premium ` +
+          `($${(baseModules.trustIUL.premiumAnnual * baseModules.trustIUL.chronicIllnessMultiple).toLocaleString()}) of face amount as living-benefit income. ` +
           `Actual availability, triggers, and amounts are set by the issued policy — carrier illustration required.`
         : "Enable the trust-owned IUL module to model chronic-illness living benefits.",
     },
     moduleNotes,
+    transfers: ledger,
     disclosure: ULTRA_DISCLOSURE,
   };
 }
@@ -482,5 +604,10 @@ export const MODULE_CATALOG: Record<ModuleKey, { name: string; whenNecessary: st
     name: "Income Annuity",
     whenNecessary: "Clients wanting a guaranteed-style income floor in later windows.",
     benefit: "Converts a lump sum into level lifetime-style income beginning in the year you choose.",
+  },
+  crypto: {
+    name: "Crypto Allocation",
+    whenNecessary: "Clients who choose a small, explicit crypto sleeve and accept full downside.",
+    benefit: "Carves an allocation from taxable assets (and optionally a slice of yearly savings) at the return and volatility you assume — no floor, no cap.",
   },
 };
