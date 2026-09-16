@@ -114,6 +114,17 @@ export default function Landing() {
   const { isAuthenticated } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
 
+  // The document itself wears a city while the homepage is up, so overscroll and fast scrolling on a
+  // phone show a skyline instead of the browser's black; restored when the visitor leaves the page.
+  useEffect(() => {
+    const el = document.documentElement;
+    const prev = { background: el.style.background, backgroundAttachment: el.style.backgroundAttachment, color: document.body.style.backgroundColor };
+    el.style.background = "#0b1a16 url(/rcs-city-towers.webp) center / cover no-repeat";
+    el.style.backgroundAttachment = "fixed";
+    document.body.style.backgroundColor = "transparent";
+    return () => { el.style.background = prev.background; el.style.backgroundAttachment = prev.backgroundAttachment; document.body.style.backgroundColor = prev.color; };
+  }, []);
+
   const NAV = [
     { href: "#claims", label: "The technologies" },
     { href: "#planning-estimator", label: "Start" },
@@ -121,7 +132,7 @@ export default function Landing() {
   ];
 
   return (
-    <div id="main-content" tabIndex={-1} className="rc-homepage rc-homepage-type-scale relative min-h-screen bg-[#03090a] text-[#c8d8ec] outline-none">
+    <div id="main-content" tabIndex={-1} className="rc-homepage rc-homepage-type-scale relative min-h-screen bg-transparent text-[#c8d8ec] outline-none">
       {/* ── NAV ── */}
       <nav className="rc-concept16-nav fixed inset-x-0 top-0 z-50" aria-label="Public navigation">
         <div className="container pt-4">
