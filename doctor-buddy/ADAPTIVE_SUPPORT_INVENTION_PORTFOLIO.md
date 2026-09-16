@@ -1,0 +1,11 @@
+# Doctor Buddy Adaptive Support — Invention Portfolio
+
+This build includes 50 client-facing invention kernels implemented through the Adaptive Support Lab. Each kernel is expressed in the application as a user benefit plus a technical mechanism. The system-level portfolio is centered on a shared architecture:
+
+**user-declared goal/context → selected communication mode → selected support engine → minimum-necessary input → server-enforced safety layer → structured exercise/output → optional usefulness signal → optional user-approved takeaway → optional portable personalization.**
+
+The portfolio includes: Intervention Genome, Personal Regulation Compiler, Assumption Drawer, Emotional Latency Map, Future-Self Jury, Counterfactual Progress Ledger, Micro-Closure Engine, Goal Gravity Field, Value Collision Resolver, Identity Distance Meter, Support Memory Palace, Personal Metaphor OS, Experience Refraction, Narrative Branch Simulator, Meaning Gradient, Story-to-Action Compiler, Personal Wisdom Recycler, Cross-Time Conversation, Narrative Checksum, Identity Evidence Vault, Friction Fingerprint, Intervention Shape-Shifter, Minimum Effective Reflection, Cognitive Load Governor, Decision Entropy Meter, Streak Forgiveness Protocol, Momentum Preservation Engine, Effort Exchange, Confidence-Calibrated Challenge Ladder, Context Mutation Engine, Personal State Transition Atlas, State Bridge Generator, Sensory Translation Engine, Cognitive Zoom Lens, Attention Portfolio, Recovery Dividend, Reaction Half-Life, Trigger-to-Choice Buffer, One-Degree Engine, Personal Resilience Recipe, Relationship Boundary Simulator, Conversation Consequence Tree, Repair Sequence Laboratory, Relationship Reciprocity Map, Perspective Exchange Chamber, Selective Context Capsule, Consent Waterfall, Ephemeral Reflection, Privacy–Utility Dial, and User-Owned Support Model.
+
+## Patent strategy note
+
+These are **candidate invention kernels**, not a legal opinion that any individual item is novel, non-obvious, or patentable. A defensible filing strategy should run prior-art searches and then draft claims around the technical combinations, data flows, adaptation loops, privacy controls, and interaction transformations that remain novel over the art.
