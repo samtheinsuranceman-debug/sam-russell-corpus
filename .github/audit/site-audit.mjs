@@ -152,7 +152,7 @@ await formTest("homepage lead form", "/", async (page) => {
   const submit = sec.locator("button", { hasText: /shape of my plan/i }).first();
   await submit.click({ timeout: 5000 });
   await page.waitForTimeout(6000);
-  const after = await sec.innerText().catch(() => (await page.locator("body").innerText()));
+  const after = await sec.innerText().catch(async () => page.locator("body").innerText());
   return { result: after !== before ? "changed" : "no-change", afterSnippet: after.replace(/\s+/g, " ").slice(0, 400) };
 });
 
