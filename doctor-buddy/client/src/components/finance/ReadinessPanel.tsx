@@ -35,18 +35,24 @@ const COPY = CLINICAL_TOOLS_ENABLED
       stability: ["Stability index", "Mood, behavioural control and treatment engagement together."],
       volatility: ["Volatility index", "How fast the picture is moving. Needs a series; from a one-off intake it is derived and labelled as such."],
       coSign: "advisor + clinician",
+      capacity: "Decision capacity",
+      rows: { cooling: "Cooling-off", cushion: "Liquidity floor", borrowing: "Borrowing", move: "Max single move", floor: "Floor products", automation: "Automation", second: "Co-signature", review: "Review every" },
+      pause: "Want a cooling-off period before anything that cannot be undone? Set one for yourself. It lifts on its own, or whenever you say.",
     }
   : {
-      title: "Financial readiness, from your own check-ins",
+      title: "Your check-ins and the finance tools",
       withData: (sources: string) => `Read from: ${sources}. These are your own 1-5 ratings, kept in this browser. Nothing here is a medical score, a diagnosis, or financial advice — it is a set of educational guardrails you can talk through with a licensed professional.`,
       noData: "No check-in yet, so every index is at a neutral default. Save a one-minute wellness check-in and this panel reads your own ratings instead of an average.",
       ctaHref: "/progress",
       cta: "Save a wellness check-in — about a minute — and the guardrails start reading how you actually rated today instead of an average.",
       capped: "A note you raised about your safety outranks every other number on this page. Education and protection planning continue; anything that cannot be undone waits.",
-      anxiety: ["Load index", "How much you are carrying right now, from how rested and focused you rated yourself. Higher raises the cash cushion and favours options with a contractual floor."],
-      stability: ["Steadiness index", "Mood, energy and connection together, from your latest check-in."],
-      volatility: ["Change index", "How much your check-ins have moved lately. Needs at least three; from a single check-in it is estimated and labelled as such."],
+      anxiety: ["Your reported stress", "From how rested and focused you rated yourself. Higher suggests a bigger emergency fund and simpler products."],
+      stability: ["Your reported stability", "Mood, energy and connection together, from your latest check-in."],
+      volatility: ["Your reported recent change", "How much your check-ins have moved lately. Needs at least three; from a single check-in it is estimated and labelled as such."],
       coSign: "advisor + someone you trust",
+      capacity: "Check-in score",
+      rows: { cooling: "Cooling-off period", cushion: "Emergency fund target", borrowing: "Borrowing limit", move: "Max transaction size", floor: "Simple products", automation: "Automated actions", second: "Second opinion", review: "Review cadence" },
+      pause: "Set a cooling-off period to create a waiting time before making large financial changes. This is a personal pause you can turn on or off at any time.",
     };
 
 function Meter({ label, value, invert = false, hint }: { label: string; value: number; invert?: boolean; hint: string }) {
@@ -79,7 +85,7 @@ function PauseControl({ pause, onChange }: { pause: SelfPause | null; onChange: 
         </div>
       ) : (
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <span className="text-muted-foreground">Want a cooling-off period before anything that cannot be undone? Set one for yourself. It lifts on its own, or whenever you say.</span>
+          <span className="text-muted-foreground">{COPY.pause}</span>
           <div className="flex items-center gap-2">
             <select value={days} onChange={e => setDays(Number(e.target.value))} className="rounded-md border border-border bg-background px-2 py-1 text-sm" aria-label="Pause length in days">
               {[3, 7, 14, 30].map(d => <option key={d} value={d}>{d} days</option>)}
@@ -140,7 +146,7 @@ export default function ReadinessPanel({ profile, hasClinicalData, hasIntake, pa
           <div className="space-y-4">
             <div>
               <div className="mb-1 flex items-baseline justify-between">
-                <span className="flex items-center gap-2 text-sm font-medium text-foreground"><Gauge className="h-4 w-4 text-primary" /> Decision capacity</span>
+                <span className="flex items-center gap-2 text-sm font-medium text-foreground"><Gauge className="h-4 w-4 text-primary" /> {COPY.capacity}</span>
                 <span className="font-mono text-2xl font-semibold tabular-nums text-foreground">{profile.decisionCapacity}<span className="text-sm text-muted-foreground"> / 100</span></span>
               </div>
               <Progress value={profile.decisionCapacity} className={`h-3 bg-muted ${tier.bar}`} />
@@ -153,21 +159,21 @@ export default function ReadinessPanel({ profile, hasClinicalData, hasIntake, pa
           <div>
             <div className="mb-2 flex items-center gap-2 text-sm font-medium text-foreground"><ShieldCheck className="h-4 w-4 text-primary" /> Guardrails in force</div>
             <dl className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
-              <dt className="text-muted-foreground">Cooling-off</dt>
+              <dt className="text-muted-foreground">{COPY.rows.cooling}</dt>
               <dd className="font-mono tabular-nums">{g.irreversibleLocked ? "paused" : `${g.coolingOffDays} day${g.coolingOffDays === 1 ? "" : "s"}`}</dd>
-              <dt className="text-muted-foreground">Cash cushion</dt>
+              <dt className="text-muted-foreground">{COPY.rows.cushion}</dt>
               <dd className="font-mono tabular-nums">{g.liquidityFloorMonths} mo{g.liquidityFloorDollars !== null ? ` · ${money(g.liquidityFloorDollars)}` : ""}</dd>
-              <dt className="text-muted-foreground">Borrowing</dt>
+              <dt className="text-muted-foreground">{COPY.rows.borrowing}</dt>
               <dd className="font-mono tabular-nums">{Math.round(g.leverageMultiplier * 100)}% of plan default</dd>
-              <dt className="text-muted-foreground">Max single move</dt>
+              <dt className="text-muted-foreground">{COPY.rows.move}</dt>
               <dd className="font-mono tabular-nums">{Math.round(g.maxSingleDecisionShare * 100)}% of liquid{g.maxSingleDecisionDollars !== null ? ` · ${money(g.maxSingleDecisionDollars)}` : ""}</dd>
-              <dt className="text-muted-foreground">Floor products</dt>
+              <dt className="text-muted-foreground">{COPY.rows.floor}</dt>
               <dd>{g.preferFloorProducts ? "favoured" : "neutral"}</dd>
-              <dt className="text-muted-foreground">Automation</dt>
+              <dt className="text-muted-foreground">{COPY.rows.automation}</dt>
               <dd>{g.preferAutomation ? "contributions run automatically" : "neutral"}</dd>
-              <dt className="text-muted-foreground">Second look</dt>
+              <dt className="text-muted-foreground">{COPY.rows.second}</dt>
               <dd>{g.requireCoSignature ? COPY.coSign : "advisor"}</dd>
-              <dt className="text-muted-foreground">Review every</dt>
+              <dt className="text-muted-foreground">{COPY.rows.review}</dt>
               <dd className="font-mono tabular-nums">{g.reviewCadenceDays} days</dd>
             </dl>
           </div>

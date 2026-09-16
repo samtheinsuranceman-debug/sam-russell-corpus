@@ -39,12 +39,12 @@ export default function FinanceHub() {
             <Landmark className="w-5 h-5 text-primary" />
             <span className="text-sm text-muted-foreground font-medium">Medically-driven financial planning</span>
           </div>
-          <h1 className="text-2xl font-bold text-foreground mb-2">The only financial plan that reads your mental state first</h1>
+          <h1 className="text-2xl font-bold text-foreground mb-2">{CLINICAL_TOOLS_ENABLED ? "A financial plan that reads the clinical picture first" : "Financial education that starts with how you feel"}</h1>
           <p className="text-muted-foreground text-sm max-w-3xl">
             Every strategy in Russell Capital Systems — tax-free income, mortgage elimination, divorce shielding, legacy, practice
             protection — sits behind one gate: how you are doing right now. {CLINICAL_TOOLS_ENABLED
               ? "Your anxiety, stability and volatility set the cooling-off periods, the liquidity floor, the borrowing limit and which strategies open at all. A strong balance sheet cannot argue a safety signal out of the way; a calmer week can."
-              : "How you rated your load, steadiness and recent change in your own check-ins sets the cooling-off periods, the cash cushion, the borrowing limit and which strategies open at all. A strong balance sheet cannot argue a rough week out of the way; a calmer one can."}
+              : "Your self-reported wellness check-ins set personal guardrails for these educational tools: a cooling-off period before big moves, an emergency fund target, a borrowing limit, and which strategy explainers open first. Learn at a pace that reflects how you feel."}
           </p>
         </div>
 

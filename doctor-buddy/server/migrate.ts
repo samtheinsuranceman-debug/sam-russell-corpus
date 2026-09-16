@@ -45,10 +45,26 @@ export function splitStatements(sql: string): string[] {
     .filter(c => c.length > 0);
 }
 
+/** The database may still be waking up when the pre-deploy step runs: retry for up to two minutes. */
+async function connectWithRetry<T>(attempt: () => Promise<T>, label: string, deadlineMs = 120_000): Promise<T> {
+  const start = Date.now();
+  let wait = 2_000;
+  for (;;) {
+    try {
+      return await attempt();
+    } catch (error) {
+      if (Date.now() - start > deadlineMs) throw error;
+      console.warn(`[migrate] ${label} not reachable yet (${(error as Error).message.slice(0, 80)}); retrying in ${wait / 1000}s`);
+      await new Promise(r => setTimeout(r, wait));
+      wait = Math.min(wait * 2, 15_000);
+    }
+  }
+}
+
 async function ensureDatabase(url: URL): Promise<void> {
   const database = url.pathname.replace(/^\//, "");
   if (!database) throw new Error("DATABASE_URL must name a database");
-  const admin = await mysql.createConnection({ host: url.hostname, port: Number(url.port || 3306), user: decodeURIComponent(url.username), password: decodeURIComponent(url.password), ssl: url.searchParams.get("ssl") ? { rejectUnauthorized: false } : undefined });
+  const admin = await connectWithRetry(() => mysql.createConnection({ host: url.hostname, port: Number(url.port || 3306), user: decodeURIComponent(url.username), password: decodeURIComponent(url.password), ssl: url.searchParams.get("ssl") ? { rejectUnauthorized: false } : undefined }), "MySQL server");
   try {
     await admin.query(`CREATE DATABASE IF NOT EXISTS \`${database.replace(/`/g, "")}\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci`);
   } finally {
