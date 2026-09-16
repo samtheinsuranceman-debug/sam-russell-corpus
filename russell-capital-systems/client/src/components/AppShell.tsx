@@ -129,6 +129,7 @@ const NAV_SECTIONS: NavSection[] = [
       { path: "/portal/client", label: "Client Dashboard", icon: MessageCircle, color: "green" },
       { path: "/portal/advisor", label: "Advisor Dashboard", icon: MessageCircle, color: "green" },
       { path: "/portal/whisperer", label: "AI Whisperer", icon: MessageCircle, color: "green" },
+      { path: "/portal/voice", label: "Voice Studio", icon: MessageCircle, color: "green" },
       { path: "/portal/chain", label: "Calculator Chain", icon: Link2, color: "green" },
       { path: "/portal/advisory-summary", label: "Advisory Summary", icon: BarChart3, color: "green" },
       { path: "/portal/client-health", label: "Client Health", icon: Activity, color: "green" },
