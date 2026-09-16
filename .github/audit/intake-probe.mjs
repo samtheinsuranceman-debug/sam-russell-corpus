@@ -44,7 +44,7 @@ const t0 = Date.now();
 const tq = await m("intake.threeQuestions", { answers, extras });
 out.threeQuestions = { status: tq.status, error: tq.error, via: tq.data?.via, wallMs: Date.now() - t0, questions: tq.data?.questions?.map((x) => ({ horizon: x.horizon, title: x.title, spokenWords: x.spoken?.split(/\s+/).length, evidence: x.evidence?.length, strategies: x.strategies?.length, calculators: x.calculators?.map((c) => c.path) })) };
 const sp = await m("ultra.speak", { text: "Doctor, thank you for sitting down with me." });
-out.speak = { status: sp.status, ok: sp.data?.ok, reason: sp.data?.reason, audioBytes: sp.data?.audioBase64 ? Math.round(sp.data.audioBase64.length * 0.75) : 0, mimeType: sp.data?.mimeType };
+out.speak = { status: sp.status, ok: sp.data?.ok, reason: sp.data?.reason, audioBytes: sp.data?.audioBase64 ? Math.round(sp.data.audioBase64.length * 0.75) : 0, mimeType: sp.data?.mimeType, via: sp.data?.via, voiceId: sp.data?.voiceId, fallback: sp.data?.fallback };
 const save = await m("intake.save", { answers, extras });
 out.saveUnauthenticated = { status: save.status, error: save.error };
 console.log(JSON.stringify(out, null, 2));

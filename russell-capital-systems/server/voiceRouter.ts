@@ -11,7 +11,8 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { protectedProcedure, router } from "./_core/trpc";
-import { activeVoiceId, setActiveVoiceId, voiceSource } from "./voiceSettings";
+import { activeVoice, setActiveVoice, voiceSource, type VoiceProvider } from "./voiceSettings";
+import { listHeygenVoices, synthesizeWith } from "./speech";
 
 const SAMPLE_LINE = "Doctor, thank you for sitting down with me. I am going to ask about every asset you have, the way a seasoned advisor would across the table, and then I will explain it all back to you.";
 
@@ -44,50 +45,63 @@ export function orderVoices<T extends { category?: string; name: string }>(voice
   });
 }
 
-async function tts(voiceId: string, text: string): Promise<Buffer> {
-  const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${encodeURIComponent(voiceId)}`, {
-    method: "POST",
-    headers: { "content-type": "application/json", "xi-api-key": apiKey(), accept: "audio/mpeg" },
-    body: JSON.stringify({ text, model_id: "eleven_multilingual_v2" }),
-    signal: AbortSignal.timeout(45_000),
-  });
-  if (!res.ok) throw new TRPCError({ code: "BAD_GATEWAY", message: `ElevenLabs refused the preview (HTTP ${res.status}). Some voices need fine-tuning before they can speak.` });
-  return Buffer.from(await res.arrayBuffer());
-}
-
 export const voiceRouter = router({
   current: protectedProcedure.query(async ({ ctx }) => {
     ownerOnly(ctx.user);
-    return { voiceId: await activeVoiceId(), source: await voiceSource(), apiKey: Boolean(process.env.ELEVENLABS_API_KEY), envVoiceId: process.env.ELEVENLABS_VOICE_ID ?? null };
+    const v = await activeVoice();
+    return {
+      provider: v?.provider ?? null, voiceId: v?.voiceId ?? null, name: v?.name ?? null, source: await voiceSource(),
+      keys: { elevenlabs: Boolean(process.env.ELEVENLABS_API_KEY), heygen: Boolean(process.env.HEYGEN_API_KEY) },
+      env: { provider: process.env.VOICE_PROVIDER ?? null, heygenVoiceName: process.env.HEYGEN_VOICE_NAME ?? null, heygenVoiceId: process.env.HEYGEN_VOICE_ID ?? null, elevenVoiceId: process.env.ELEVENLABS_VOICE_ID ?? null },
+    };
   }),
 
   list: protectedProcedure.query(async ({ ctx }) => {
     ownerOnly(ctx.user);
-    const res = await fetch("https://api.elevenlabs.io/v1/voices?show_legacy=true", { headers: { "xi-api-key": apiKey() }, signal: AbortSignal.timeout(20_000) });
-    if (!res.ok) throw new TRPCError({ code: "BAD_GATEWAY", message: `ElevenLabs voice list failed (HTTP ${res.status}).` });
-    const data = (await res.json()) as { voices?: XiVoice[] };
-    const active = await activeVoiceId();
-    return orderVoices((data.voices ?? []).map((v) => ({
-      voiceId: v.voice_id, name: v.name, category: v.category ?? "premade", description: v.description ?? "",
-      labels: v.labels ?? {}, previewUrl: v.preview_url ?? null, own: OWN_CATEGORIES.has(v.category ?? ""), active: v.voice_id === active,
-    })));
+    const active = await activeVoice();
+    const out: Array<{ provider: VoiceProvider; voiceId: string; name: string; category: string; description: string; labels: Record<string, string>; previewUrl: string | null; own: boolean; active: boolean }> = [];
+    const errors: string[] = [];
+    if (process.env.HEYGEN_API_KEY) {
+      try {
+        for (const v of await listHeygenVoices("private")) {
+          out.push({ provider: "heygen", voiceId: v.voice_id, name: v.name, category: "heygen clone", description: [v.language, v.gender].filter(Boolean).join(" · "), labels: { language: v.language ?? "", gender: v.gender ?? "" }, previewUrl: v.preview_audio_url ?? null, own: true, active: active?.provider === "heygen" && active.voiceId === v.voice_id });
+        }
+      } catch (e) { errors.push(`HeyGen: ${String((e as Error).message ?? e).slice(0, 120)}`); }
+    }
+    if (process.env.ELEVENLABS_API_KEY) {
+      try {
+        const res = await fetch("https://api.elevenlabs.io/v1/voices?show_legacy=true", { headers: { "xi-api-key": process.env.ELEVENLABS_API_KEY }, signal: AbortSignal.timeout(20_000) });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = (await res.json()) as { voices?: XiVoice[] };
+        for (const v of data.voices ?? []) {
+          out.push({ provider: "elevenlabs", voiceId: v.voice_id, name: v.name, category: v.category ?? "premade", description: v.description ?? "", labels: v.labels ?? {}, previewUrl: v.preview_url ?? null, own: OWN_CATEGORIES.has(v.category ?? ""), active: active?.provider === "elevenlabs" && active.voiceId === v.voice_id });
+        }
+      } catch (e) { errors.push(`ElevenLabs: ${String((e as Error).message ?? e).slice(0, 120)}`); }
+    }
+    if (!out.length && !errors.length) throw new TRPCError({ code: "PRECONDITION_FAILED", message: "Neither HEYGEN_API_KEY nor ELEVENLABS_API_KEY is set on this host." });
+    return { voices: out.sort((a, b) => Number(b.own) - Number(a.own) || (a.provider === "heygen" ? -1 : 1) - (b.provider === "heygen" ? -1 : 1) || a.name.localeCompare(b.name)), errors };
   }),
 
   preview: protectedProcedure
-    .input(z.object({ voiceId: z.string().min(4).max(64), text: z.string().max(600).optional() }))
+    .input(z.object({ provider: z.enum(["elevenlabs", "heygen"]).default("elevenlabs"), voiceId: z.string().min(4).max(64), text: z.string().max(600).optional() }))
     .mutation(async ({ ctx, input }) => {
       ownerOnly(ctx.user);
-      const audio = await tts(input.voiceId, input.text?.trim() || SAMPLE_LINE);
-      return { audioBase64: audio.toString("base64"), mimeType: "audio/mpeg", bytes: audio.length };
+      try {
+        const r = await synthesizeWith({ provider: input.provider, voiceId: input.voiceId }, input.text?.trim() || SAMPLE_LINE);
+        return { audioBase64: r.audio.toString("base64"), mimeType: r.mimeType, bytes: r.audio.length, via: r.via };
+      } catch (e) {
+        throw new TRPCError({ code: "BAD_GATEWAY", message: String((e as Error).message ?? e).slice(0, 200) });
+      }
     }),
 
   use: protectedProcedure
-    .input(z.object({ voiceId: z.string().min(4).max(64).nullable() }))
+    .input(z.object({ provider: z.enum(["elevenlabs", "heygen"]).default("elevenlabs"), voiceId: z.string().min(4).max(64).nullable() }))
     .mutation(async ({ ctx, input }) => {
       ownerOnly(ctx.user);
-      const ok = await setActiveVoiceId(input.voiceId);
-      if (!ok) return { saved: false as const, reason: "No database on this host; set ELEVENLABS_VOICE_ID in the environment instead.", voiceId: await activeVoiceId() };
-      return { saved: true as const, voiceId: await activeVoiceId(), source: await voiceSource() };
+      const ok = await setActiveVoice(input.voiceId ? { provider: input.provider, voiceId: input.voiceId } : null);
+      const v = await activeVoice();
+      if (!ok) return { saved: false as const, reason: "No database on this host; set VOICE_PROVIDER / HEYGEN_VOICE_NAME or ELEVENLABS_VOICE_ID in the environment instead.", provider: v?.provider ?? null, voiceId: v?.voiceId ?? null };
+      return { saved: true as const, provider: v?.provider ?? null, voiceId: v?.voiceId ?? null, source: await voiceSource() };
     }),
 
   clone: protectedProcedure
@@ -110,7 +124,7 @@ export const voiceRouter = router({
         const msg = typeof body.detail === "string" ? body.detail : body.detail?.message;
         throw new TRPCError({ code: "BAD_GATEWAY", message: `ElevenLabs could not clone the voice (HTTP ${res.status})${msg ? `: ${msg}` : ""}.` });
       }
-      if (input.useNow) await setActiveVoiceId(body.voice_id);
+      if (input.useNow) await setActiveVoice({ provider: "elevenlabs", voiceId: body.voice_id });
       return { voiceId: body.voice_id, active: input.useNow };
     }),
 });

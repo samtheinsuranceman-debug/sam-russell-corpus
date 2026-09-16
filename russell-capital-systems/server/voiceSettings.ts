@@ -1,15 +1,21 @@
 // ============================================================
-// THE SITE'S VOICE — which ElevenLabs voice speaks for the advisor.
+// THE SITE'S VOICE — which voice, on which provider, speaks for the
+// advisor.
 //
-// Resolution order: the voice the owner picked in the Voice Studio
-// (stored in site_settings), then ELEVENLABS_VOICE_ID from the host's
-// environment. Every place that speaks (ultra.speak, the founder message,
-// the journey guides) asks activeVoiceId() instead of reading the
-// environment, so a change in the studio takes effect at once, with no
-// redeploy. The table creates itself on first use.
+// Resolution order:
+//   1. the Voice Studio's pick (site_settings: voice.provider + voice.id)
+//   2. the environment: VOICE_PROVIDER=heygen with HEYGEN_VOICE_ID, or
+//      HEYGEN_VOICE_NAME resolved against the workspace's private voices
+//   3. ELEVENLABS_VOICE_ID
+// Every place that speaks asks activeVoice() at call time, so a change
+// in the studio takes effect at once, with no redeploy. The settings
+// table creates itself on first use.
 // ============================================================
 import { sql } from "drizzle-orm";
 import { getDb } from "./db";
+
+export type VoiceProvider = "elevenlabs" | "heygen";
+export type VoiceRef = { provider: VoiceProvider; voiceId: string; name?: string };
 
 const BOOTSTRAP = `CREATE TABLE IF NOT EXISTS \`site_settings\` (
   \`key\` varchar(64) NOT NULL,
@@ -49,30 +55,74 @@ export async function setSiteSetting(key: string, value: string | null): Promise
   return true;
 }
 
-const VOICE_KEY = "elevenlabs.voiceId";
-let voiceCache: { id: string | null; at: number } | null = null;
+const PROVIDER_KEY = "voice.provider";
+const ID_KEY = "voice.id";
+const LEGACY_KEY = "elevenlabs.voiceId";
 
-/** The voice the site speaks with right now: the studio's pick, else the environment's. */
-export async function activeVoiceId(): Promise<string | null> {
-  if (voiceCache && Date.now() - voiceCache.at < 30_000) return voiceCache.id ?? (process.env.ELEVENLABS_VOICE_ID ?? null);
-  const picked = await getSiteSetting(VOICE_KEY).catch(() => null);
-  voiceCache = { id: picked, at: Date.now() };
-  return picked ?? process.env.ELEVENLABS_VOICE_ID ?? null;
+let pickCache: { ref: VoiceRef | null; at: number } | null = null;
+
+/** The studio's pick, if any. */
+export async function studioVoice(): Promise<VoiceRef | null> {
+  if (pickCache && Date.now() - pickCache.at < 30_000) return pickCache.ref;
+  let ref: VoiceRef | null = null;
+  try {
+    const [provider, id, legacy] = await Promise.all([getSiteSetting(PROVIDER_KEY), getSiteSetting(ID_KEY), getSiteSetting(LEGACY_KEY)]);
+    if (id && (provider === "heygen" || provider === "elevenlabs")) ref = { provider, voiceId: id };
+    else if (legacy) ref = { provider: "elevenlabs", voiceId: legacy };
+  } catch { /* no database */ }
+  pickCache = { ref, at: Date.now() };
+  return ref;
 }
 
-export async function setActiveVoiceId(id: string | null): Promise<boolean> {
-  const ok = await setSiteSetting(VOICE_KEY, id);
-  voiceCache = { id, at: Date.now() };
+/** The environment's voice, when no studio pick exists. */
+export async function environmentVoice(env: NodeJS.ProcessEnv = process.env): Promise<VoiceRef | null> {
+  const wantHeygen = (env.VOICE_PROVIDER ?? "").toLowerCase() === "heygen" || Boolean(env.HEYGEN_VOICE_ID) || Boolean(env.HEYGEN_VOICE_NAME);
+  if (wantHeygen && env.HEYGEN_API_KEY) {
+    if (env.HEYGEN_VOICE_ID) return { provider: "heygen", voiceId: env.HEYGEN_VOICE_ID, name: env.HEYGEN_VOICE_NAME };
+    if (env.HEYGEN_VOICE_NAME) {
+      const { heygenVoiceByName } = await import("./speech");
+      const found = await heygenVoiceByName(env.HEYGEN_VOICE_NAME, env);
+      if (found) return found;
+      console.warn(`[voice] HEYGEN_VOICE_NAME "${env.HEYGEN_VOICE_NAME}" not found among private HeyGen voices; using ElevenLabs`);
+    }
+  }
+  if (env.ELEVENLABS_API_KEY && env.ELEVENLABS_VOICE_ID) return { provider: "elevenlabs", voiceId: env.ELEVENLABS_VOICE_ID };
+  return null;
+}
+
+/** The voice the site speaks with right now. */
+export async function activeVoice(env: NodeJS.ProcessEnv = process.env): Promise<VoiceRef | null> {
+  const picked = await studioVoice();
+  if (picked) return picked;
+  return environmentVoice(env);
+}
+
+/** Back-compat: the active voice id regardless of provider. */
+export async function activeVoiceId(): Promise<string | null> {
+  return (await activeVoice())?.voiceId ?? null;
+}
+
+export async function setActiveVoice(ref: VoiceRef | null): Promise<boolean> {
+  const ok = ref
+    ? (await setSiteSetting(PROVIDER_KEY, ref.provider)) && (await setSiteSetting(ID_KEY, ref.voiceId))
+    : (await setSiteSetting(PROVIDER_KEY, null)) && (await setSiteSetting(ID_KEY, null)) && (await setSiteSetting(LEGACY_KEY, null));
+  pickCache = { ref, at: Date.now() };
   return ok;
 }
 
-export async function voiceOutConfigured(): Promise<boolean> {
-  return Boolean(process.env.ELEVENLABS_API_KEY && (await activeVoiceId()));
+/** Back-compat for callers that only know ElevenLabs ids. */
+export async function setActiveVoiceId(id: string | null): Promise<boolean> {
+  return setActiveVoice(id ? { provider: "elevenlabs", voiceId: id } : null);
 }
 
-/** Where the active id came from, for the studio's status line. */
+export async function voiceOutConfigured(env: NodeJS.ProcessEnv = process.env): Promise<boolean> {
+  const ref = await activeVoice(env);
+  if (!ref) return false;
+  return ref.provider === "heygen" ? Boolean(env.HEYGEN_API_KEY) : Boolean(env.ELEVENLABS_API_KEY);
+}
+
+/** Where the active voice came from, for the studio's status line. */
 export async function voiceSource(): Promise<"studio" | "environment" | "none"> {
-  const picked = await getSiteSetting(VOICE_KEY).catch(() => null);
-  if (picked) return "studio";
-  return process.env.ELEVENLABS_VOICE_ID ? "environment" : "none";
+  if (await studioVoice()) return "studio";
+  return (await environmentVoice()) ? "environment" : "none";
 }

@@ -29,7 +29,7 @@ export default function VoiceStudio() {
   const cache = useRef<Map<string, string>>(new Map());
   useEffect(() => () => { audioRef.current?.pause(); }, []);
 
-  const play = async (voiceId: string) => {
+  const play = async (voiceId: string, provider: "elevenlabs" | "heygen") => {
     audioRef.current?.pause();
     if (playing === voiceId) { setPlaying(null); return; }
     setPlaying(voiceId);
@@ -37,7 +37,7 @@ export default function VoiceStudio() {
       const key = `${voiceId}:${line.trim()}`;
       let src = cache.current.get(key);
       if (!src) {
-        const r = await preview.mutateAsync({ voiceId, text: line.trim() || undefined });
+        const r = await preview.mutateAsync({ provider, voiceId, text: line.trim() || undefined });
         src = `data:${r.mimeType};base64,${r.audioBase64}`;
         cache.current.set(key, src);
       }
@@ -64,9 +64,10 @@ export default function VoiceStudio() {
     }
   };
 
-  const voices = (list.data ?? []).filter((v) => filter === "all" || v.own);
+  const voices = (list.data?.voices ?? []).filter((v) => filter === "all" || v.own);
   const active = current.data?.voiceId ?? null;
-  const activeName = list.data?.find((v) => v.voiceId === active)?.name;
+  const activeProvider = current.data?.provider ?? null;
+  const activeName = list.data?.voices.find((v) => v.voiceId === active && v.provider === activeProvider)?.name ?? current.data?.name ?? null;
 
   return (
     <AppShell title="Voice Studio" subtitle="Pick the voice the site speaks with, hear it, or clone a new one.">
@@ -83,8 +84,8 @@ export default function VoiceStudio() {
         <section className="mt-6 rounded-2xl border border-sky-300/25 bg-sky-500/10 p-4" aria-label="Current voice">
           {current.error ? <p className="text-sm text-amber-200">{current.error.message}</p> : (
             <p className="text-sm">
-              <span className="text-sky-200/70">Speaking now:</span> <span className="font-semibold">{activeName ?? active ?? "no voice set"}</span>
-              {current.data && <span className="text-sky-200/60"> · {current.data.source === "studio" ? "picked here" : current.data.source === "environment" ? "from the host's ELEVENLABS_VOICE_ID" : "nothing configured"}{current.data.apiKey ? "" : " · ELEVENLABS_API_KEY missing on this host"}</span>}
+              <span className="text-sky-200/70">Speaking now:</span> <span className="font-semibold">{activeName ?? active ?? "no voice set"}</span>{activeProvider && <span className="ml-2 rounded-full bg-white/10 px-2 py-0.5 text-xs">{activeProvider}</span>}
+              {current.data && <span className="text-sky-200/60"> · {current.data.source === "studio" ? "picked here" : current.data.source === "environment" ? `from the host's environment${current.data.env.heygenVoiceName ? ` (HEYGEN_VOICE_NAME = ${current.data.env.heygenVoiceName})` : ""}` : "nothing configured"}{current.data.keys.heygen ? "" : " · HEYGEN_API_KEY missing"}{current.data.keys.elevenlabs ? "" : " · ELEVENLABS_API_KEY missing"}</span>}
             </p>
           )}
           <label className="mt-3 block text-sm text-sky-100/70">Line to audition (optional)
@@ -98,22 +99,23 @@ export default function VoiceStudio() {
           <span className="text-white/50">{list.isLoading ? "Loading…" : `${voices.length} voice${voices.length === 1 ? "" : "s"}`}</span>
         </div>
         {list.error && <p className="mt-3 text-sm text-amber-200">{list.error.message}</p>}
+        {list.data?.errors.map((e) => <p key={e} className="mt-2 text-sm text-amber-200">{e}</p>)}
 
         <ul className="mt-3 grid gap-3 sm:grid-cols-2" data-testid="voice-list">
           {voices.map((v) => (
-            <li key={v.voiceId} className={`rounded-2xl border p-4 ${v.active ? "border-emerald-300/60 bg-emerald-500/10" : "border-white/10 bg-white/[0.03]"}`}>
+            <li key={`${v.provider}:${v.voiceId}`} className={`rounded-2xl border p-4 ${v.active ? "border-emerald-300/60 bg-emerald-500/10" : "border-white/10 bg-white/[0.03]"}`}>
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
                   <p className="truncate font-semibold">{v.name}{v.active && <span className="ml-2 rounded-full bg-emerald-500/30 px-2 py-0.5 text-xs">speaking now</span>}</p>
-                  <p className="text-xs text-white/50">{v.category}{v.labels.gender ? ` · ${v.labels.gender}` : ""}{v.labels.accent ? ` · ${v.labels.accent}` : ""}{v.labels.age ? ` · ${v.labels.age}` : ""}</p>
+                  <p className="text-xs text-white/50"><span className={`rounded px-1 ${v.provider === "heygen" ? "bg-violet-500/30" : "bg-sky-500/30"}`}>{v.provider}</span> · {v.category}{v.labels.gender ? ` · ${v.labels.gender}` : ""}{v.labels.accent ? ` · ${v.labels.accent}` : ""}{v.labels.age ? ` · ${v.labels.age}` : ""}</p>
                   {v.description && <p className="mt-1 line-clamp-2 text-xs text-white/60">{v.description}</p>}
                 </div>
-                <button type="button" onClick={() => void play(v.voiceId)} aria-label={playing === v.voiceId ? `Stop ${v.name}` : `Play ${v.name}`} className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full ${playing === v.voiceId ? "bg-red-500/80" : "bg-sky-500 hover:bg-sky-400"}`}>
+                <button type="button" onClick={() => void play(v.voiceId, v.provider)} aria-label={playing === v.voiceId ? `Stop ${v.name}` : `Play ${v.name}`} className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full ${playing === v.voiceId ? "bg-red-500/80" : "bg-sky-500 hover:bg-sky-400"}`}>
                   {playing === v.voiceId ? <span className="block h-3.5 w-3.5 bg-white" /> : <span className="ml-0.5 block h-0 w-0 border-y-[8px] border-l-[13px] border-y-transparent border-l-white" />}
                 </button>
               </div>
               <div className="mt-3 flex gap-2">
-                <button type="button" disabled={v.active || use.isPending} onClick={() => use.mutate({ voiceId: v.voiceId })} className="rounded-lg bg-white/10 px-3 py-1.5 text-sm font-semibold hover:bg-white/20 disabled:opacity-40">{v.active ? "In use" : "Use this voice"}</button>
+                <button type="button" disabled={v.active || use.isPending} onClick={() => use.mutate({ provider: v.provider, voiceId: v.voiceId })} className="rounded-lg bg-white/10 px-3 py-1.5 text-sm font-semibold hover:bg-white/20 disabled:opacity-40">{v.active ? "In use" : "Use this voice"}</button>
                 <span className="self-center text-[10px] text-white/30">{v.voiceId}</span>
               </div>
             </li>
@@ -125,7 +127,7 @@ export default function VoiceStudio() {
         <section className="mt-10 rounded-3xl border border-white/10 bg-white/[0.04] p-5" aria-label="Clone a voice">
           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-sky-300">Clone a new voice</p>
           <h2 className="mt-1 text-2xl font-semibold">Your voice, from your recordings</h2>
-          <p className="mt-2 text-sm leading-6 text-white/60">One to five clean recordings of you talking, one to three minutes in total, no music. ElevenLabs makes an instant clone in about a minute and the site starts speaking with it.</p>
+          <p className="mt-2 text-sm leading-6 text-white/60">One to five clean recordings of you talking, one to three minutes in total, no music. ElevenLabs makes an instant clone in about a minute and the site starts speaking with it. Your HeyGen clones are already listed above under their own badge.</p>
           <form onSubmit={doClone} className="mt-4 grid gap-3">
             <input value={cloneName} onChange={(e) => setCloneName(e.target.value)} placeholder="Name, e.g. Sam Russell — advisor" className="rounded-xl border border-white/15 bg-black/30 px-3 py-2.5 text-white placeholder:text-white/30" />
             <input type="file" accept="audio/*,video/mp4" multiple onChange={(e) => setCloneFiles(Array.from(e.target.files ?? []).slice(0, 5))} className="text-sm text-white/70 file:mr-3 file:rounded-lg file:border-0 file:bg-white/10 file:px-3 file:py-1.5 file:text-white" />
