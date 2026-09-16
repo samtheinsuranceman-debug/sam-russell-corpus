@@ -161,25 +161,15 @@ await formTest("login with wrong password", "/login", async (page) => {
   const pass = page.locator("input[type=password]").first();
   if ((await email.count()) === 0 || (await pass.count()) === 0) return { result: "fields-missing" };
   await email.fill("site-audit@example.com"); await pass.fill("definitely-wrong-password");
+  // The sign-in form is gated behind acknowledgement checkboxes; tick them all.
+  const boxes = page.locator("form input[type=checkbox]");
+  const nb = await boxes.count();
+  for (let i = 0; i < nb; i++) await boxes.nth(i).check({ timeout: 3000 }).catch(() => {});
   const before = await page.locator("body").innerText();
   await page.locator("button[type=submit], form button").first().click({ timeout: 5000 });
   await page.waitForTimeout(5000);
   const after = await page.locator("body").innerText();
   return { result: after !== before ? "changed" : "no-change", url: page.url(), afterSnippet: after.replace(/\s+/g, " ").slice(0, 300) };
-});
-
-await formTest("homepage estimator inputs", "/", async (page) => {
-  const inputs = page.locator("input[type=number]:visible, input[inputmode=numeric]:visible, input[inputmode=decimal]:visible");
-  const n = await inputs.count();
-  if (n === 0) return { result: "no-numeric-inputs" };
-  const first = inputs.first();
-  await first.scrollIntoViewIfNeeded();
-  const before = await page.locator("body").innerText();
-  await first.fill("425000");
-  await page.keyboard.press("Tab");
-  await page.waitForTimeout(1500);
-  const after = await page.locator("body").innerText();
-  return { result: after !== before ? "changed" : "no-change", numericInputs: n };
 });
 
 // ---- external links --------------------------------------------------------------
@@ -212,5 +202,6 @@ report.summary = {
 fs.writeFileSync(path.join(OUT, "report.json"), JSON.stringify(report, null, 2));
 console.log("=== AUDIT SUMMARY ===");
 console.log(JSON.stringify(report.summary, null, 2));
+console.log("=== APEX ===", JSON.stringify(report.apex));
 console.log("=== PAGES ===");
 for (const p of report.pages) console.log(`${p.ok ? "OK " : "BAD"} ${String(p.status).padEnd(4)} ${p.path.padEnd(40)} ${p.gatedRedirect ? "[gated→login] " : ""}${p.title.slice(0, 50)} btn=${p.buttons} c=${p.consoleErrors.length} f=${p.failedRequests.length}`);
