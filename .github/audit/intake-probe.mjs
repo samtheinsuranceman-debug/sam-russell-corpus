@@ -43,10 +43,12 @@ out.recap = { status: recap.status, error: recap.error, sentences: recap.data?.s
 const t0 = Date.now();
 const tq = await m("intake.threeQuestions", { answers, extras });
 out.threeQuestions = { status: tq.status, error: tq.error, via: tq.data?.via, wallMs: Date.now() - t0, questions: tq.data?.questions?.map((x) => ({ horizon: x.horizon, title: x.title, spokenWords: x.spoken?.split(/\s+/).length, evidence: x.evidence?.length, strategies: x.strategies?.length, calculators: x.calculators?.map((c) => c.path) })) };
+const sp = await m("ultra.speak", { text: "Doctor, thank you for sitting down with me." });
+out.speak = { status: sp.status, ok: sp.data?.ok, reason: sp.data?.reason, audioBytes: sp.data?.audioBase64 ? Math.round(sp.data.audioBase64.length * 0.75) : 0, mimeType: sp.data?.mimeType };
 const save = await m("intake.save", { answers, extras });
 out.saveUnauthenticated = { status: save.status, error: save.error };
 console.log(JSON.stringify(out, null, 2));
 const pagesOk = Object.values(out.pages).every((p) => p.status === 200 && p.isApp);
-const ok = pagesOk && out.script.status === 200 && out.script.steps >= 40 && out.recap.status === 200 && out.threeQuestions.status === 200 && out.threeQuestions.questions?.length === 3 && out.saveUnauthenticated.status === 401;
+const ok = pagesOk && out.script.status === 200 && out.script.steps >= 40 && out.recap.status === 200 && out.threeQuestions.status === 200 && out.threeQuestions.questions?.length === 3 && out.saveUnauthenticated.status === 401 && out.speak.ok === true && out.speak.audioBytes > 10000;
 console.log(ok ? "INTAKE_PROBE_OK" : "INTAKE_PROBE_FAILED");
 process.exit(ok ? 0 : 1);
