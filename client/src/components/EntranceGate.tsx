@@ -2,6 +2,7 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { entranceHref } from "@/components/ManagedAuthGuard";
 import { Loader2 } from "lucide-react";
 import { useEffect, useState, type ReactNode } from "react";
+import { apiFetch } from "@/lib/api";
 
 // ============================================================
 // THE FRONT DOOR
@@ -20,7 +21,7 @@ export default function EntranceGate({ children, returnPath = "/" }: { children:
 
   useEffect(() => {
     let cancelled = false;
-    fetch("/api/auth/mode", { credentials: "same-origin" })
+    apiFetch("/api/auth/mode", { credentials: "same-origin" })
       .then((r) => (r.ok ? r.json() : { gateHomepage: true }))
       .then((m: { gateHomepage?: boolean }) => { if (!cancelled) setGate(m.gateHomepage === false ? "open" : "closed"); })
       .catch(() => { if (!cancelled) setGate("closed"); });

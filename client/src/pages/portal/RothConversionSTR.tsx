@@ -36,6 +36,7 @@ import { ExecutiveSummary, GoalsAccelerator, RecommendationSummary, DoNothingBas
 import { formatTaxCurrency } from "@shared/taxBracketEngine";
 import { RelatedCalculators } from "@/components/RelatedCalculators";
 import { ComplianceFooter } from "@/components/ComplianceFooter";
+import { apiFetch, apiUrl } from "@/lib/api";
 
 /* ── Strategy option definitions ── */
 const STRATEGY_OPTIONS = [
@@ -587,7 +588,7 @@ export default function RothConversionSTR() {
       helocRate: String(result.inputs.helocRate),
       ...(result.iulParams.carrierId ? { carrierId: result.iulParams.carrierId } : {}),
     });
-    window.open(`/api/roth-report?${q.toString()}`, "_blank");
+    window.open(apiUrl(`/api/roth-report?${q.toString()}`), "_blank");
     toast.success("Generating PDF report...");
   };
 
@@ -603,7 +604,7 @@ export default function RothConversionSTR() {
     }
     setSendingEmail(true);
     try {
-      const resp = await fetch("/api/roth-report/send", {
+      const resp = await apiFetch("/api/roth-report/send", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -1005,7 +1006,7 @@ export default function RothConversionSTR() {
                 {savedQuery.data && savedQuery.data.length > 0 && (
                   <button
                     onClick={() => {
-                      const url = `/api/batch-strategy-export${form.clientId ? `?clientId=${form.clientId}` : ''}`;
+                      const url = apiUrl(`/api/batch-strategy-export${form.clientId ? `?clientId=${form.clientId}` : ''}`);
                       window.open(url, '_blank');
                     }}
                     className="rc-btn rc-btn-outline text-xs flex items-center gap-1 px-2 py-1"

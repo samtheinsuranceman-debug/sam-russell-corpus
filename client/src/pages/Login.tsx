@@ -4,6 +4,7 @@ import { LOGIN_DISCLAIMERS } from "@shared/loginDisclaimers";
 import { ArrowRight, LockKeyhole, ShieldCheck } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { INTAKE_ROLES, isIntakeRole, type IntakeRole } from "@shared/aiIntakeScript";
+import { apiFetch } from "@/lib/api";
 
 function requestedRole(): IntakeRole | null {
   const params = new URLSearchParams(window.location.search);
@@ -46,7 +47,7 @@ export default function Login() {
 
   useEffect(() => {
     let cancelled = false;
-    fetch("/api/auth/mode", { credentials: "same-origin" })
+    apiFetch("/api/auth/mode", { credentials: "same-origin" })
       .then((r) => (r.ok ? r.json() : NO_MODE))
       .then((m: AuthMode) => {
         if (cancelled) return;
@@ -68,7 +69,7 @@ export default function Login() {
     setBusy(true); setError(null);
     const path = showOwner ? "/api/auth/owner-login" : "/api/auth/guest-login";
     try {
-      const res = await fetch(path, {
+      const res = await apiFetch(path, {
         method: "POST", credentials: "same-origin",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ email, password, code: code || undefined, acknowledgements }),

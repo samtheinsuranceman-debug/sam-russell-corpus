@@ -35,6 +35,7 @@ import { ExecutiveSummary, GoalsAccelerator, RecommendationSummary, DoNothingBas
 import { formatTaxCurrency } from "@shared/taxBracketEngine";
 import { RelatedCalculators } from "@/components/RelatedCalculators";
 import { ComplianceFooter } from "@/components/ComplianceFooter";
+import { apiFetch } from "@/lib/api";
 
 const fmt = (n: number) => {
   if (Math.abs(n) >= 1_000_000) return `$${(n / 1_000_000).toFixed(1)}M`;
@@ -225,7 +226,7 @@ export default function BulkGeneration() {
           deathBenefitPct: 100,
         },
       }));
-      const resp = await fetch("/api/generate-bulk-1035-pdf", {
+      const resp = await apiFetch("/api/generate-bulk-1035-pdf", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ entries }),

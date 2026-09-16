@@ -19,6 +19,7 @@ import {
   type ReplacementCandidate,
 } from "@shared/replacementScoring";
 import { ALL_ANNUITY_PRODUCTS, type StateCode } from "@shared/annuityData";
+import { apiFetch } from "@/lib/api";
 
 /* ─── Traffic Light Colors ─── */
 const VERDICT_CONFIG: Record<Verdict, { color: string; bg: string; border: string; icon: React.ReactNode; label: string }> = {
@@ -224,7 +225,7 @@ export function ReplacementRadarPanel() {
         currentMonthlyIncome, carrierRating, carrierComdex, rollupRate, premiumBonusPct,
         clientAge, accountType, carrierName, productName, category,
       };
-      const res = await fetch("/api/generate-1035-pdf", {
+      const res = await apiFetch("/api/generate-1035-pdf", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ contract, stateCode }),

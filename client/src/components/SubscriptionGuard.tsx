@@ -16,6 +16,7 @@ import { Lock, AlertCircle, ArrowRight, Shield, Clock, CreditCard, Eye, EyeOff, 
 import { toast } from "sonner";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { isOwnerBypassEmail } from "@shared/accessControl";
+import { apiFetch } from "@/lib/api";
 
 interface SubscriptionGuardProps {
   children: React.ReactNode;
@@ -38,7 +39,7 @@ export default function SubscriptionGuard({ children }: SubscriptionGuardProps) 
     if (email && isOwnerBypassEmail(email.toLowerCase().trim())) {
       ownerAutoLoginAttempted.current = true;
       setSubmitting(true);
-      fetch("/api/auto-login", {
+      apiFetch("/api/auto-login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: email.toLowerCase().trim() }),
@@ -117,7 +118,7 @@ export default function SubscriptionGuard({ children }: SubscriptionGuardProps) 
       ownerAutoLoginAttempted.current = false; // reset so effect fires
       setSubmitting(true);
       try {
-        const res = await fetch("/api/auto-login", {
+        const res = await apiFetch("/api/auto-login", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email: email.toLowerCase().trim() }),

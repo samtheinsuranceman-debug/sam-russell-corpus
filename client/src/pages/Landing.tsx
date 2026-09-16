@@ -6,6 +6,7 @@ import { Link } from "wouter";
 import HomeLeadFactFinder from "@/components/HomeLeadFactFinder";
 import { SiteIdentity } from "@/components/SiteIdentity";
 import manifesto from "@shared/homeManifesto.json";
+import { apiUrl } from "@/lib/api";
 
 // ============================================================
 // THE HOMEPAGE — the sign, then the fifteen technologies straight away.
@@ -105,7 +106,7 @@ function FounderVoice() {
     <div className={ready ? "mx-auto mt-10 max-w-2xl rounded-2xl border border-emerald-300/35 bg-[#020c0a]/80 p-5 text-left backdrop-blur-md" : "hidden"} data-testid="founder-voice">
       <p className="text-[11px] font-extrabold uppercase tracking-[.22em] text-emerald-300">Hear it from Sam Russell</p>
       <p className="mt-1 text-sm text-white/75">One minute, in his own voice, on why this exists.</p>
-      <audio ref={audio} controls preload="metadata" src="/api/founder-message.mp3" className="mt-3 w-full" aria-label="A message from Sam Russell" onError={(e) => { e.currentTarget.hidden = true; }} />
+      <audio ref={audio} controls preload="metadata" src={apiUrl("/api/founder-message.mp3")} className="mt-3 w-full" aria-label="A message from Sam Russell" onError={(e) => { e.currentTarget.hidden = true; }} />
     </div>
   );
 }

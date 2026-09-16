@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Label } from "@/components/ui/label";
 import { Shield, Zap, ArrowRight, AlertCircle, Clock, CreditCard } from "lucide-react";
 import { BRAND_NAME } from "@shared/branding";
+import { apiFetch } from "@/lib/api";
 
 export default function TrialLogin() {
   const [, navigate] = useLocation();
@@ -22,7 +23,7 @@ export default function TrialLogin() {
     setTrialExpired(false);
     setLoading(true);
     try {
-      const res = await fetch("/api/trial/login", {
+      const res = await apiFetch("/api/trial/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
@@ -60,7 +61,7 @@ export default function TrialLogin() {
     setSubscribing(true);
     try {
       // First login to establish session cookie for the subscribe endpoint
-      const loginRes = await fetch("/api/trial/login", {
+      const loginRes = await apiFetch("/api/trial/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
@@ -68,7 +69,7 @@ export default function TrialLogin() {
       });
       // Even if trial expired, the cookie might still be set from a previous session
       // Try the subscribe endpoint
-      const res = await fetch("/api/trial/subscribe", {
+      const res = await apiFetch("/api/trial/subscribe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
