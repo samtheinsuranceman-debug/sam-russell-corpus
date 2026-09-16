@@ -60,3 +60,22 @@ this domain) on the host and marketing + transactional mail goes out signed.
 The apply scenario now holds only the `www` CNAME PUT (the DKIM/MX/SPF PATCH and
 the A-record DELETE from 2026-09-06 were already applied and were removed from
 the blueprint so re-running it cannot touch mail).
+
+## 2026-09-16 — the apex is the front door; www waits on GoDaddy
+
+- The GoDaddy account went on an identity-verification hold after 2026-09-10: the panel
+  refuses DNS edits and the API (so both Make scenarios) answers 403. Until GoDaddy lifts it
+  (support 480-505-8877), nothing can change the `www` CNAME.
+- Railway's `www` domain row was re-created at some point, so it now asks for CNAME
+  `www` → `tjkj8nc5.up.railway.app` **and** TXT `_railway-verify.www` (value in
+  `DOMAIN_RUNBOOK.md`). The zone still says `dd56isi9`, an edge hostname no project owns, so
+  https://www.russellcapitalsystems.com fails TLS. Two edits at GoDaddy fix it.
+- Meanwhile **https://russellcapitalsystems.com serves the application itself** with the
+  domain's own certificate: GitHub Pages holds the built client (`docs/`), and every `/api`
+  call goes to `https://web-production-4b215.up.railway.app` with credentialed CORS, a CSRF
+  guard and a cookie/header session bridge (`server/_core/crossSite.ts`,
+  `client/src/lib/api.ts`). Full description in `DOMAIN_RUNBOOK.md`.
+- `CANONICAL_HOST=russellcapitalsystems.com` and `PUBLIC_BASE_URL=https://russellcapitalsystems.com`
+  on the Railway service now, so mail links, Whisperer report links and the sitemap point at the
+  address that works; www 301s to the apex once it reaches the server. Revisit which host is
+  canonical after www has its certificate.
