@@ -4,7 +4,7 @@
 | Address | State | Served by |
 |---|---|---|
 | https://russellcapitalsystems.com | LIVE, valid TLS, **the app itself** | GitHub Pages (this repo, `docs/`, static client build); API calls go to the Railway origin |
-| https://www.russellcapitalsystems.com | BROKEN (TLS mismatch) | GoDaddy CNAME → an orphaned Railway edge (`dd56isi9`), no certificate |
+| https://www.russellcapitalsystems.com | BROKEN (TLS mismatch) — CNAME fixed 16 Sep ~22:00 UTC, TXT still missing | GoDaddy CNAME → `tjkj8nc5` (correct); Railway shows VALIDATING_OWNERSHIP until the TXT below exists |
 | https://web-production-4b215.up.railway.app | LIVE, valid TLS | Railway service `web` (server + client, same origin) |
 
 ## How the front door works (no registrar dependency)
