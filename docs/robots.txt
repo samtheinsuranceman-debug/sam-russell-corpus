@@ -1,4 +1,9 @@
 User-agent: *
 Allow: /
+# The 7.4MB self-contained homepage at /mirror/ is a zero-dependency fallback,
+# kept so the site can be restored in minutes if the app host goes down. It is
+# not the live site and nothing links to it. Left crawlable it competes with the
+# real site for indexing, and its canonical points at www — so it stays out.
+Disallow: /mirror/
 
 Sitemap: https://www.russellcapitalsystems.com/sitemap.xml
