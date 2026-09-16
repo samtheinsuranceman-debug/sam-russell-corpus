@@ -1,0 +1,18 @@
+name: domain-probe
+on:
+  workflow_dispatch: {}
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Probe the domain from the public internet
+        run: |
+          set +e
+          for u in http://www.russellcapitalsystems.com/ https://www.russellcapitalsystems.com/ http://russellcapitalsystems.com/ https://russellcapitalsystems.com/ https://dd56isi9.up.railway.app/ https://tjkj8nc5.up.railway.app/ https://web-production-4b215.up.railway.app/healthz; do
+            echo "===== $u"
+            curl -sS -k -m 25 -o /tmp/body -D /tmp/h -w "status=%{http_code} redirect=%{redirect_url} ip=%{remote_ip} ssl_verify=%{ssl_verify_result}\n" "$u"
+            head -c 600 /tmp/h; echo; echo "--- body head"; head -c 400 /tmp/body; echo
+          done
+          echo "===== cert on www"; echo | openssl s_client -servername www.russellcapitalsystems.com -connect www.russellcapitalsystems.com:443 2>/dev/null | openssl x509 -noout -subject -issuer -dates 2>&1 | head -5
+          echo "===== cert on apex"; echo | openssl s_client -servername russellcapitalsystems.com -connect russellcapitalsystems.com:443 2>/dev/null | openssl x509 -noout -subject -issuer -dates 2>&1 | head -5
+          echo "===== dns"; dig +short www.russellcapitalsystems.com CNAME; dig +short russellcapitalsystems.com A; dig +short russellcapitalsystems.com NS; dig +short _railway-verify.www.russellcapitalsystems.com TXT; dig +short russellcapitalsystems.com TXT
