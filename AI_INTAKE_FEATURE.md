@@ -27,3 +27,8 @@ Eleven configured model voices (`ultra.providers`) plus the always-on Russell ru
 - **Voice Studio** `/portal/voice` (owner sign-in or `OWNER_EMAIL`): lists every ElevenLabs workspace voice with the owner's clones first, plays the advisor's opening line in any voice, "Use this voice" switches the site at once, and "Clone a new voice" uploads 1–5 recordings to ElevenLabs `/v1/voices/add` and uses the result.
 - Production `ELEVENLABS_VOICE_ID` was set to `k3zGUviRBlOalyiswEdo` ("Sam", professional clone) on 2026-09-16; live `ultra.speak` verified returning audio.
 - The owner's other usable workspace voices: `VEApBNlwBCBDgurBInRX` (Easy voice me), `MvlvnctxNmFvM1kPyaBX` (Cheap voice me), `5BBf37H8zmD3EG9D6VFp` (100 minutes Hypnosis), `IuT10HmegOp8kKZ27P2j` (Drews Story Telling). `7vcJMUCoL3mfF5y1Ys1l` is not fine-tuned and cannot speak. The "Samuel Andrew Russell V" / "Best Voice clone Sam Russell" names seen in the HeyGen picker are not in the ElevenLabs workspace; clone them in the Studio from the same recordings.
+
+## HeyGen voice wired (2026-09-16, later)
+- `server/speech.ts` speaks through HeyGen (`POST /v3/voices/speech`, fallback `/v3/models/audio/tts`) or ElevenLabs; `activeVoice()` in `voiceSettings.ts` resolves Studio pick → `VOICE_PROVIDER=heygen` + `HEYGEN_VOICE_ID` / `HEYGEN_VOICE_NAME` → `ELEVENLABS_VOICE_ID`.
+- Production: `VOICE_PROVIDER=heygen`, `HEYGEN_VOICE_NAME=Best Voice clone Sam Russell`, `HEYGEN_VOICE_ID=545efce186af48ccbf9b79ae86a75501`. Live `ultra.speak` verified: `via: heygen`, no fallback, ~100 KB mp3 for a short line.
+- Voice Studio lists HeyGen private clones (violet badge) next to ElevenLabs voices; either can be previewed and made the site voice.
