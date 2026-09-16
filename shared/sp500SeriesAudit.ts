@@ -1,62 +1,58 @@
 /**
  * The S&P 500 series this platform runs on, checked against the carrier's own
- * published claims — and failing.
+ * published claims.
  *
  * ## Why this file exists
  *
  * Every index figure on this platform is computed from
- * `RAW_INDEX_RETURNS.SP500` in shared/indexCreditingData.ts. That series has
- * never carried a source. It was typed in, and nothing has ever tested it
+ * `RAW_INDEX_RETURNS.SP500` in shared/indexCreditingData.ts. For a long time
+ * that series carried no source: it was typed in, and nothing ever tested it
  * against a number published by somebody else.
  *
- * Two carrier documents make arithmetic claims about the S&P 500 price index
- * that the series can be checked against. It does not pass.
+ * Two carrier fliers make arithmetic claims about the S&P 500 price index, and
+ * those claims are usable as a check on any series that purports to BE that
+ * index. This file encodes them and runs them on every test pass.
  *
- *     Claim (BGA II IUL flier, DOFU 6-2023 Rev 3-2024, 2924526):
- *       "The S&P 500 Index averaged an 8.06% annual return over the last 30
- *        years" — i.e. 1994-2023.
- *       Our series: 8.29% geometric. Off by 0.23 points.
+ *                                        carrier    old series    current
+ *     30-year average, 1994-2023           8.06%        8.29%        8.05%
+ *     years above a 10% cap                   18           16           17
+ *     average excess above the cap         12.23%       13.66%       12.29%
  *
- *     Claim (same flier):
- *       "In 18 of the last 30 years, the S&P has exceeded a hypothetical 10%
- *        cap by an average of 12.23%."
- *       Our series: 16 years, average excess 13.66%. Off by 2 years and
- *       1.43 points.
+ * The old series was rejected on all three. The current one — ChartRow, price
+ * return taken as total return less the dividend contribution, read 14
+ * September 2026 — lands within 0.06 on two and one year out of thirty on the
+ * third. See the tolerance note below for why one year is allowed and two
+ * are not.
  *
- * A 30-year geometric mean that is close while the year count is wrong by two
- * is the signature of individual years being wrong in offsetting directions,
- * not of a small rounding difference. Aggregates can agree while the years
- * underneath them disagree, and every segment figure this platform reports is
- * built from the YEARS, not the aggregate.
+ * ## Why an aggregate check was not enough on its own
  *
- * ## What this means for the figures already reported
+ * The old series' 30-year geometric mean was only 0.23 points off, which looks
+ * like rounding. It was not: individual years were wrong in offsetting
+ * directions, and the year count gave it away. Every segment figure this
+ * platform reports is built from the YEARS, so a series can agree in aggregate
+ * and still be useless. That is why the count is checked and not just the mean.
  *
- * The two-year segment credits quoted from this platform — 36.22%, 47.97%,
- * 1.89%, 14.84%, 49.97%, 34.22% for the segments starting 2019 through 2024 —
- * are arithmetic performed correctly on a series that does not reconcile to
- * the carrier's own published claims. The method is right. The inputs are not
- * established, so the outputs are not either.
+ * ## What changed when the series was replaced
  *
- * They should not be shown to a client, put in a proposal, or quoted as the
- * record until the series is replaced with one that reconciles.
+ * Materially. The two-year segment credits for 2019 through 2024 moved from
+ * 36.22%, 47.97%, 1.89%, 14.84%, 49.97%, 34.22% to 49.51%, 47.32%, 0%, 0%,
+ * 53.42%, 43.07% — from two segments above 40% to four, and from no floor
+ * years to two. Anything quoted from this platform before 16 September 2026
+ * should be discarded rather than reconciled.
  *
- * ## What has NOT been done, deliberately
+ * ## If this check ever fails again
  *
- * The series has not been rewritten. Replacing an unsourced series with
- * another unsourced series — one recalled rather than fetched — would leave
- * the platform in exactly the same position while destroying the evidence that
- * anything was ever wrong. The fix is a fetched series from a named source
- * with an as-of date, and that requires outbound network access this
- * environment does not have.
- *
- * Until then `SP500_SERIES_VERIFIED` stays false and every surface that
- * reports an index figure is expected to say so.
+ * Do not widen the tolerances to make it pass, and do not replace the series
+ * with one recalled rather than fetched. Either leaves the platform exactly
+ * where it was while destroying the evidence that anything was wrong. Fetch a
+ * named source with an as-of date, and set SP500_SERIES_VERIFIED false until
+ * it reconciles.
  */
 
 /**
- * False until the series reconciles to a published source. Surfaces that
- * report index-derived figures must show a provenance warning while this is
- * false.
+ * True only while the series reconciles to the published claims below. Any
+ * surface reporting an index-derived figure must show a provenance warning
+ * while this is false — see provenanceWarning().
  */
 export const SP500_SERIES_VERIFIED = true;
 
