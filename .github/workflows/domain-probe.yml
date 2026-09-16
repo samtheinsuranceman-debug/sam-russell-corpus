@@ -20,5 +20,5 @@ jobs:
           curl -sS -m 25 -D - -o /tmp/mode "https://web-production-4b215.up.railway.app/api/auth/mode" -H "Origin: https://russellcapitalsystems.com" | grep -i "^HTTP\|access-control\|vary"; echo "body: $(head -c 200 /tmp/mode)"
           echo "===== front door page"
           curl -sS -m 25 "https://russellcapitalsystems.com/" | grep -o "<title>[^<]*</title>\|assets/app.js\|http-equiv=\"refresh\"" | head -3
-          curl -sS -m 25 -o /dev/null -w "deep link /pricing -> %{http_code}\n" "https://russellcapitalsystems.com/pricing"
+          for u in /pricing /pricing/ /portal /portal/whisperer /login /calculators/mortgage-killer /nope-not-a-route; do curl -sS -m 25 -L -o /tmp/dl -w "deep link $u -> first=%{http_code} final=%{url_effective} status=%{http_code}\n" "https://russellcapitalsystems.com$u" | sed 's/first=[0-9]* //'; grep -c "assets/app.js" /tmp/dl | sed 's/^/  app shell hits: /'; done
           echo "===== dns"; dig +short www.russellcapitalsystems.com CNAME; dig +short russellcapitalsystems.com A; dig +short russellcapitalsystems.com NS; dig +short _railway-verify.www.russellcapitalsystems.com TXT; dig +short russellcapitalsystems.com TXT

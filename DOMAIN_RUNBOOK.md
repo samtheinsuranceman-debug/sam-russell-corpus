@@ -3,11 +3,34 @@
 ## Current state
 | Address | State | Served by |
 |---|---|---|
-| https://russellcapitalsystems.com | LIVE, valid TLS | GitHub Pages (this repo, `docs/`) → redirect to the Railway app |
-| https://www.russellcapitalsystems.com | BROKEN (TLS mismatch) | GoDaddy CNAME → Railway edge, no certificate |
-| https://web-production-4b215.up.railway.app | LIVE, valid TLS | Railway service `web` (the app) |
+| https://russellcapitalsystems.com | LIVE, valid TLS, **the app itself** | GitHub Pages (this repo, `docs/`, static client build); API calls go to the Railway origin |
+| https://www.russellcapitalsystems.com | BROKEN (TLS mismatch) | GoDaddy CNAME → an orphaned Railway edge (`dd56isi9`), no certificate |
+| https://web-production-4b215.up.railway.app | LIVE, valid TLS | Railway service `web` (server + client, same origin) |
 
-## Root cause of the week-long "validating ownership" stall
+## How the front door works (no registrar dependency)
+The apex `A` records already pointed at GitHub Pages with a valid Let's Encrypt certificate, so the
+app is published there instead of a redirect:
+
+- `docs/` is the client build from `russell-capital-systems/scripts/build.mjs`, built with
+  `VITE_API_ORIGIN=https://web-production-4b215.up.railway.app NODE_ENV=production`.
+  Every `/api/...` call (tRPC, auth, events, exports) goes to that origin with credentials
+  (`client/src/lib/api.ts`: `apiUrl`, `eventsUrl`, `apiFetch`).
+- The server (`server/_core/crossSite.ts`, registered first in `server/_core/index.ts`) answers
+  credentialed CORS for `https://russellcapitalsystems.com` and `https://www.russellcapitalsystems.com`
+  (+ `CORS_ORIGINS`), refuses state-changing requests from any other origin (403), and bridges the
+  session for browsers that block third-party cookies: cookies set cross-site become
+  `SameSite=None; Secure` and are mirrored into `X-Set-Session`; the client stores them
+  (`localStorage` key `rcs.session.v1`) and sends `X-Session` (or `_session` on the EventSource URL).
+- `docs/404.html` is the app shell and every static route also has its own `<route>/index.html`,
+  so deep links answer 200 from Pages. `robots.txt` and `sitemap.xml` name the apex.
+- Rebuild + republish: run the build above, copy `dist/public/*` into `docs/` (keep `CNAME`,
+  `mirror/`), regenerate the per-route folders from `dist/public/routes.json`, push to `master`;
+  `.github/workflows/pages.yml` publishes.
+
+OAuth callbacks are served by the API origin (`const.ts` builds `redirectUri` from `VITE_API_ORIGIN`),
+so any provider console must list `https://web-production-4b215.up.railway.app/api/oauth/callback`.
+
+## Why www is still broken (Railway "validating ownership")
 Railway requires **two** DNS records per custom domain: the CNAME **and** a TXT ownership
 record (`status.verificationToken` in the API; shown behind the pencil icon in the dashboard).
 Only the CNAME was ever created. Source: https://docs.railway.com/integrations/api/manage-domains#dns-configuration
@@ -32,13 +55,13 @@ Ask: "identity verification pending >48h, unlock DNS edits on russellcapitalsyst
 ## Fallback (no GoDaddy dependency)
 Buy a domain through Vercel (`russellcapitalsystems.net` preferred; `.app` is HSTS-preloaded and
 hard-fails until the cert issues). Add it as a Railway custom domain, create the CNAME + TXT in
-Vercel DNS, wait for `certificateStatus = ISSUED`, then point the `docs/index.html` redirect at it.
+Vercel DNS, wait for `certificateStatus = ISSUED`, then add that origin to `CORS_ORIGINS` (or make it the API origin and rebuild `docs/`).
 
 ## End state after GoDaddy unlocks
 Move nameservers to Cloudflare (DNS-only). `www` CNAME + TXT → Railway; apex either stays on the
-GitHub Pages redirect or becomes a flattened CNAME → Railway with its own TXT. Export MX and
+GitHub Pages front door or becomes a flattened CNAME → Railway with its own TXT. Export MX and
 verification TXT records before changing nameservers.
 
 ## Verification (ground truth = GitHub Actions runner, not cached fetchers)
-`.github/workflows/probe.yml` — curl + DNS from outside. Cert is good when
+`.github/workflows/domain-probe.yml` (workflow_dispatch on `master`) — curl, certs, CORS preflight, deep link and DNS from outside. Cert is good when
 `openssl s_client -servername www.russellcapitalsystems.com` shows the hostname in the SAN list.
