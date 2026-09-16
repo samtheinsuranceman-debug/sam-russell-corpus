@@ -64,14 +64,46 @@ export const CLAIMS: readonly ClaimEntry[] = [
     engine: 'shared/wealthGenome.ts', page: 'client/src/pages/portal/RiskToleranceScoring.tsx', },
   { ref: 'PAT-005', applicationDraft: 'docs/patents/applications/PAT-005_Tax_Free_Retirement_Income_Waterfall_Engine.pdf', title: 'Tax-Free Retirement Income Waterfall Engine', status: 'built',
     engine: 'shared/incomeForLife.ts', page: 'client/src/pages/portal/TaxWaterfall.tsx' },
-  { ref: 'PAT-006', applicationDraft: 'docs/patents/applications/PAT-006_Divorce_Asset_Protection_Calculator_with_IUL_Shielding.pdf', title: 'Divorce Asset Protection Calculator with IUL Shielding', status: 'built',
-    page: 'client/src/pages/portal/DivorceCalculator.tsx' },
+  // Family 15. The page rendered and called zero procedures, and there was no
+  // fifty-state rules table anywhere in shared/ — the portfolio review flagged it
+  // as on the sheet with nothing behind it. shared/divorceStateRules.ts is that
+  // table: all fifty states and DC, and it REFUSES to supply a division ratio for
+  // any equitable-distribution state, because no such statutory ratio exists.
+  // The outside prior-art screen found no close art for this family.
+  { ref: 'PAT-006', applicationDraft: 'docs/patents/applications/PAT-006_Divorce_Asset_Protection_Calculator_with_IUL_Shielding.pdf', title: 'Divorce Asset Protection Calculator with IUL Shielding', status: 'partial',
+    engine: 'shared/divorceStateRules.ts', page: 'client/src/pages/portal/DivorceCalculator.tsx',
+    note: 'The fifty-state rules table now exists and is test-covered. The IUL shielding half of the claim — how much of the estate sits behind a trust-owned policy under each state\u2019s rules — is still unbuilt, so this is partial rather than built.' },
   { ref: 'PAT-007', applicationDraft: 'docs/patents/applications/PAT-007_Ecological_Drivers_Retirement_Risk_Assessment_Framework.pdf', title: 'Ecological Drivers Retirement Risk Assessment Framework', status: 'built',
     engine: 'shared/erosion.ts', page: 'client/src/pages/portal/EcologicalDrivers.tsx' },
   { ref: 'PAT-008', applicationDraft: 'docs/patents/applications/PAT-008_Behavioral_Lock_In_Prevention_System.pdf', title: 'Behavioral Lock-In Prevention System', status: 'built',
     engine: 'shared/livingRiskProfile.ts', page: 'client/src/pages/portal/PortfolioDriftMonitor.tsx' },
   { ref: 'PAT-009', applicationDraft: 'docs/patents/applications/PAT-009_Mortgage_Elimination_Through_Real_Estate_Recycling_and.pdf', title: 'Mortgage Elimination Through Real Estate Recycling & IUL', status: 'built',
     engine: 'shared/mortgageKiller.ts', page: 'client/src/pages/portal/HouseRecyclingStrategy.tsx' },
+  // COMPLIANCE RECORD — read before anyone proposes "improving" this engine.
+  //
+  // What is built here is a flat AG 49 rate shown beside blended historical index
+  // rates. That is close to the disclosure AG 49-A already requires, and Ensight,
+  // Zinnia, iPipeline and WinFlex all ship it, so the implemented form sits on
+  // crowded art.
+  //
+  // A scaled-reference variant was proposed: a hypothetical contract with premiums
+  // orders of magnitude larger, issued decades earlier, whose percentage movement
+  // is mapped by ratio onto the client's own policy to present a much larger
+  // effective credit. It was WITHDRAWN on compliance review and must not be built:
+  //
+  //   NAIC Model Regulation #582 §8A(4) requires a supplemental illustration's
+  //   premium outlay to EQUAL the basic illustration's. A 1000x reference premium
+  //   is by definition not equal.
+  //
+  //   §8A(2) forbids non-guaranteed elements more favorable than the basic
+  //   illustration scale. A ratio-mapped larger credit is exactly that.
+  //
+  //   §1 makes the test whether the presentation misleads, which a display can do
+  //   while every individual number complies. §2 issues the regulation under
+  //   Unfair Trade Practices Act authority.
+  //
+  // A carrier wholesaler saying "you'd be allowed to do that" is not a compliance
+  // opinion, and being referred to a compliance desk is not approval.
   { ref: 'PAT-010', applicationDraft: 'docs/patents/applications/PAT-010_Time_Machine_Dual_Illustration_Method.pdf', title: 'Time Machine Dual-Illustration Method', status: 'built',
     engine: 'shared/timeMachineEngine.ts', page: 'client/src/pages/portal/TimeMachineAG49.tsx' },
   { ref: 'PAT-011', applicationDraft: 'docs/patents/applications/PAT-011_Russell_Number_Multi_Dimensional_Advisor_Scoring.pdf', title: 'Russell Number Multi-Dimensional Advisor Scoring', status: 'built',

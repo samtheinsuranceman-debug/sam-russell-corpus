@@ -1,0 +1,849 @@
+<!doctype html><meta charset="utf-8"><title>Master Patent Document</title><style>@page{size:letter;margin:0.7in}
+body{font-family:Georgia,serif;font-size:10pt;line-height:1.5;color:#12151c}
+h1{font-size:22pt;color:#0b1220;border-bottom:3px solid #c9a227;padding-bottom:8px;margin-top:28px}
+h2{font-size:15pt;color:#0b1220;border-bottom:1px solid #c9a227;padding-bottom:4px;margin-top:26px;page-break-after:avoid}
+h3{font-size:12pt;color:#1a2440;margin-top:20px;page-break-after:avoid}
+table{border-collapse:collapse;width:100%;font-size:8.2pt;margin:10px 0;page-break-inside:avoid}
+th{background:#0b1220;color:#e8d9a0;text-align:left;padding:5px 6px;font-family:Helvetica,Arial,sans-serif}
+td{border-bottom:1px solid #d8dce4;padding:4px 6px;vertical-align:top}
+tr:nth-child(even) td{background:#f7f8fa}
+code{font-family:Menlo,Consolas,monospace;font-size:8.6pt;background:#eef1f6;padding:1px 3px;border-radius:2px}
+blockquote{border-left:4px solid #c9a227;background:#fffbef;margin:12px 0;padding:9px 14px;font-size:9.4pt;page-break-inside:avoid}
+blockquote.flag{border-left:5px solid #b3261e;background:#fff4f2}
+blockquote p{margin:5px 0}
+hr{border:0;border-top:1px solid #c9d0db;margin:22px 0}
+strong{color:#0b1220} p{margin:6px 0}
+ol{margin:6px 0 6px 18px} li{margin:4px 0}</style><h1>Master Patent Document</h1>
+<h2>Every Invention, Every Combination, Explained Like You&#x27;re in 5th Grade</h2>
+<p><strong>Inventor:</strong> Samuel Andrew Russell V</p>
+<p><strong>Assignee:</strong> Russell Holdings Management, LLC — Wilmington, Delaware</p>
+<p><strong>Compiled:</strong> 16 September 2026</p>
+<blockquote><p><strong>STATUS OF EVERY ITEM IN THIS DOCUMENT: DRAFT — NOT FILED.</strong> No application number exists. Nothing here is patent-pending. &quot;Patent pending&quot; is a statement of fact, not of intention — it becomes true only when the USPTO issues a number. Claiming it before then is false marking under 35 U.S.C. § 292, and since the AIA a competitor who is injured by it can sue. Confirm every status with patent counsel before any public claim.</p></blockquote>
+<hr>
+<h1>Part 0 — Where the numbers come from</h1>
+<p>You said: <em>&quot;you discovered 97 patents. Now you&#x27;re saying there&#x27;s 10 or something.&quot;</em></p>
+<p>Both numbers are real. They count different things, at different stages, on</p>
+<p>different platforms. Here is every number that has been used, what it counts,</p>
+<p>and where it lives.</p>
+<table><thead><tr><th>Number</th><th>What it actually counts</th><th>Platform</th><th>Where it lives</th></tr></thead><tbody>
+<tr><td><strong>97</strong></td><td>The filename of the 5th-grade PDF. <strong>The document&#x27;s own title page says 90.</strong></td><td>RCS</td><td><code>RCS_97_Patents_5th_Grade_Explained.pdf</code>, p.1</td></tr>
+<tr><td><strong>90</strong></td><td>54 core (PAT-001…PAT-055, no PAT-011) + 36 sister (SI-001…SI-041)</td><td>RCS</td><td>same PDF, Parts I and II</td></tr>
+<tr><td><strong>88</strong></td><td>Raw candidate <em>seeds</em> from the machine sweep, <strong>before</strong> de-duplication</td><td>JoinAQAL</td><td><code>knowledge/JoinAQAL_Patent_Discovery_Portfolio.md</code></td></tr>
+<tr><td><strong>78</strong></td><td>Files on disk in the application corpus (76 applications + 2 index files)</td><td>All</td><td><code>AQAL/patent-applications/</code></td></tr>
+<tr><td><strong>76</strong></td><td>Actual draft applications: 36 founding + 26 Series A + 6 Series B + 8 Series C</td><td>All</td><td>same</td></tr>
+<tr><td><strong>57</strong></td><td>The code registry — every claim mapped to the module that implements it</td><td>RCS</td><td><code>shared/patentCatalog.ts</code></td></tr>
+<tr><td><strong>20</strong></td><td>The 88 seeds de-duplicated into real families</td><td>JoinAQAL</td><td>Discovery Portfolio, &quot;Twenty-Family Ranking&quot;</td></tr>
+<tr><td><strong>16</strong></td><td>The 90 folded into filing families (ideas that are one invention wearing five names)</td><td>RCS</td><td><code>docs/patents/RCS_PATENT_PORTFOLIO_CONSOLIDATED.md</code></td></tr>
+<tr><td><strong>15</strong></td><td>Emergent patents that come into existence only when existing modules are wired together</td><td>RCS</td><td>same doc, Part 5</td></tr>
+<tr><td><strong>10</strong></td><td>Tier-1 + Tier-2 families recommended for actual first filing</td><td>RCS</td><td>same doc, Part 3</td></tr>
+<tr><td><strong>6</strong></td><td>JoinAQAL concepts that survived full drafting and structural review</td><td>JoinAQAL</td><td>Discovery Portfolio</td></tr>
+<tr><td><strong>8</strong></td><td>Verified patent-engine modules with real code in <code>server/patents/</code></td><td>JoinAQAL</td><td><code>joinaqal/server/patents/</code></td></tr>
+</tbody></table>
+<p><strong>The plain-English version.</strong> Think of it like a fishing trip. 88 fish came up in</p>
+<p>the net. When you sorted them, most were the same fish photographed from different</p>
+<p>angles — that left 20. Six were big enough to keep and clean. That is not &quot;losing</p>
+<p>82 patents.&quot; That is what de-duplication looks like, and it is the reason a filing</p>
+<p>package survives an examiner.</p>
+<p>The <strong>97/90</strong> number is <strong>Russell Capital Systems</strong>, not JoinAQAL. The <strong>88→20→6</strong></p>
+<p>number is <strong>JoinAQAL</strong>. They were never the same list. Nothing was lost between</p>
+<p>them, and the full 90 are all preserved and accounted for in Part 1A below.</p>
+<hr>
+<h1>Part 1 — The Singles, company by company</h1>
+<p>A &quot;single&quot; is one invention standing on its own — no combination.</p>
+<hr>
+<h2>1A. russellcapitalsystems.com</h2>
+<p><strong>On the sheet: 90. In the code registry: 57. Built and running: 42.</strong></p>
+<h3>The honest status count</h3>
+<p>Every one of the 57 registry entries names the exact file that implements it, and</p>
+<p>a test walks every entry and <strong>fails the build</strong> if a path does not resolve. That</p>
+<p>test is why these numbers can be trusted:</p>
+<table><thead><tr><th>Status</th><th>Count</th><th>What it means</th></tr></thead><tbody>
+<tr><td><strong>built</strong></td><td>42</td><td>An engine and/or page exists and does the described work</td></tr>
+<tr><td><strong>partial</strong></td><td>9</td><td>Related code exists but does not cover the whole claim</td></tr>
+<tr><td><strong>none</strong></td><td>5</td><td>On the sheet; no implementation located</td></tr>
+<tr><td><strong>dropped</strong></td><td>1</td><td>The portfolio review removed it, with the reason recorded</td></tr>
+</tbody></table>
+<p><em>Source: <code>shared/patentCatalog.ts</code>. Verified by reading the file, 16 Sep 2026.</em></p>
+<h3>The 90 fold into 16 families — highest priority first</h3>
+<p>The 90-item sheet contains a lot of the same invention described from different</p>
+<p>camera angles. Filed as 90 thin applications, most get rejected as abstract. Filed</p>
+<p>as 16 systems with the interactions claimed, they hold. Ordered here by filing</p>
+<p>priority — the order an examiner and an acquirer would each value most.</p>
+<hr>
+<p><strong>FAMILY 1 — The Truth Stack</strong> · Tier 1 · <em>the strongest thing in the portfolio</em></p>
+<p><em>Like you&#x27;re in 5th grade:</em> Imagine a classroom where nobody is allowed to say a</p>
+<p>fact unless they can point at the exact sentence in the book where they read it.</p>
+<p>If they point at the wrong page, the fact gets thrown in the trash before anyone</p>
+<p>hears it. Three kids read the same page, and their answers only count if they</p>
+<p>agree. And the kid who reads is never the kid who decides what it means.</p>
+<p><em>The machine version:</em> An AI may read a public page and report a figure, but must</p>
+<p>hand back the exact sentence. The server checks the sentence is really on the page</p>
+<p>AND the number is really inside that sentence. Fail either check, the figure dies.</p>
+<p>Several models read the same page and merge only if they agree within one percent.</p>
+<p>A human-written direction table — not the AI — decides what a figure means.</p>
+<p>Forecasters get graded when reality arrives; a bad grade halves a source but never</p>
+<p>zeroes it. Every figure waits in an owner approval queue.</p>
+<p><em>Folds in:</em> PAT-025 Witness Rule (lead) · PAT-028 Truth Stack (system claim) ·</p>
+<p>PAT-042 Forecast Referee · PAT-026 Report Card Machine · PAT-027 Truth Box ·</p>
+<p>PAT-048 Mutual Carrier Sentinel · PAT-054 Locked Library Card.</p>
+<p><em>Dropped:</em> SI-022 Blockchain Audit Trail — &quot;blockchain&quot; adds nothing to a hash chain.</p>
+<p><em>In the code:</em> <code>server/forecastSources.ts</code> (<code>quoteVerified</code>, <code>harvestSource</code>,</p>
+<p><code>readingFor</code>, <code>HARVEST_METRICS</code>); <code>shared/mutualIulCarriers.ts</code> (<code>Verified&lt;T&gt;</code>,</p>
+<p><code>v()</code>, <code>unverified()</code>); <code>shared/ltcEngine.ts</code> (<code>STATE_FIGURE_PROTOCOL</code>);</p>
+<p><code>shared/incomeForLife.ts</code> (<code>INCOME_PLAN_RULES.neverPrinted</code>). <strong>VERIFIED.</strong></p>
+<p><em>Prior art:</em> US9087048B2, US9015037B2 (fact verification); US20230370274A1</p>
+<p>(AI provenance); US20240296295A1 (LLM quotation verification); PaperTrail</p>
+<p>(arXiv 2602.21045); TROVE (arXiv 2503.15289). Component art exists.</p>
+<p><strong>No close art found for the ordered pipeline.</strong></p>
+<p><em>Why it matters most:</em> it is the answer to the only question a regulator, a carrier</p>
+<p>or an acquirer will ask about an AI planning platform — *&quot;how do you know it did</p>
+<p>not make that up.&quot;* Every other family sits on top of it.</p>
+<hr>
+<p><strong>FAMILY 3 — The Guardian Ledger</strong> · Tier 1 · <em>this is what lets an AI touch money</em></p>
+<p><em>Like you&#x27;re in 5th grade:</em> Every single thing that happens gets written in a</p>
+<p>notebook where each new line contains a fingerprint of the line above it. Tear out</p>
+<p>a page and every fingerprint after it stops matching, so everyone can see. The</p>
+<p>robot helper has a permission slip listing exactly which chores it may do, whose</p>
+<p>money it may touch, how much per chore, how much per week, and when it must stop</p>
+<p>and ask a grown-up. Before any money moves, a guard checks it against the family&#x27;s</p>
+<p>own rules, a list of people who are allowed to be paid, a waiting period for new</p>
+<p>names, a list of everyone who might be secretly benefiting (the advisor is always</p>
+<p>on that list), and a minimum amount that must stay in the jar. The guard answers</p>
+<p>allow, hold, or block — and says why.</p>
+<p><em>The machine version:</em> Hash-chained fact/decision/consent/outcome ledger; a save</p>
+<p>that changes nothing writes nothing; any date replayable; twelve hierarchical</p>
+<p>consent scopes with wildcards gating every read; agent mandates with per-action</p>
+<p>and rolling ceilings; a fiduciary firewall returning allow/hold/block with every</p>
+<p>reason; automations that run once per event fingerprint and never fire on events</p>
+<p>they wrote; advice signed with key-plus-fingerprint, never the figure.</p>
+<p><em>Folds in:</em> PAT-018 Guardian Ledger (system) · PAT-040 Black Box Advice Packet ·</p>
+<p>PAT-050 Consent Autopilot · PAT-052 Estate Paper Detective · PAT-032 Estate</p>
+<p>Fragility Replay · the ledger half of PAT-053.</p>
+<p><em>In the code:</em> <code>server/firewall.ts</code>, <code>shared/consent.ts</code>, <code>server/controlsRouter.ts</code>.</p>
+<p><strong>VERIFIED — with one gap:</strong> <code>firewall.ts</code> executes with <code>rail: &quot;ledger&quot;</code>, meaning</p>
+<p><strong>nothing actually moves money yet.</strong> Plaid is declared in <code>server/integrations.ts</code></p>
+<p>and implemented nowhere. See E-12.</p>
+<p><em>Prior art:</em> US20230370274A1 closest. Agent-governance portfolios at Salesforce,</p>
+<p>Microsoft, IBM, JPMorgan are related. <strong>No publication located</strong> reciting the</p>
+<p>twelve-scope hierarchy, rolling ceilings, allow/hold/block with conflict list and</p>
+<p>reserve floor, non-self-triggering automations, or fingerprint-only signing.</p>
+<p><em>Counsel note:</em> claim authorization, transaction evaluation, event safety and</p>
+<p>document consistency as <strong>four separate claim sets under one specification</strong> to</p>
+<p>survive an obviousness rejection.</p>
+<hr>
+<p><strong>FAMILY 2 — The Political Weather Machine</strong> · Tier 1</p>
+<p><em>Like you&#x27;re in 5th grade:</em> Every year since 1945 gets a sticker saying who was in</p>
+<p>charge — the president counts for half, the Senate a quarter, the House a quarter.</p>
+<p>When the plan asks &quot;how often did taxes go up over twenty years,&quot; it only learns</p>
+<p>from years whose sticker matches the sticker expected ahead. If fewer than fifteen</p>
+<p>matching years exist, it prints a warning instead of pretending. Once a week the</p>
+<p>computer reads who holds which seats, which party appointed each judge, and what</p>
+<p>the betting markets say — with no passwords at all — and writes it down with the</p>
+<p>date. Every guess in your plan that depends on politics carries a &quot;how fast does</p>
+<p>this go stale&quot; tag.</p>
+<p><em>Folds in:</em> PAT-017 Political Weather Radar (lead) · PAT-022 Political Weather</p>
+<p>Machine (system) · PAT-031 Power Pulse · PAT-049 Political Repricer · PAT-044</p>
+<p>Half-Life Engine · PAT-036 Tax Shock Map · PAT-029 Program Survival Odds</p>
+<p>(second independent claim) · SI-006 Tax Code Change Simulator.</p>
+<p><em>In the code:</em> <code>shared/erosion.ts</code> (<code>taxTrajectory</code>, <code>burdenAt</code>); <code>taxRules</code>,</p>
+<p><code>recomputeUnderRules</code>. <strong>VERIFIED.</strong></p>
+<p><em>Prior art:</em> Ash et al. <em>What Drives Partisan Tax Policy</em>; IMF ordered-logit;</p>
+<p>ifo WP 198; NBER w33462; Penn Wharton. <strong>No close art</strong> for the lever-share</p>
+<p>window-matching rule, the fallback threshold, the dated keyless pulse, the power</p>
+<p>swing, or the Jeffreys-hazard survival model.</p>
+<p><em>Risk:</em> obviousness. The claims must recite the window-matching rule, the fallback,</p>
+<p>the pulse construction and the hazard transformation — <strong>never</strong> &quot;forecast taxes</p>
+<p>using politics.&quot;</p>
+<hr>
+<p><strong>FAMILY 5 — The Debt-to-Liquidity Engine</strong> · Tier 1</p>
+<p><em>Like you&#x27;re in 5th grade:</em> You owe money on your house. Instead of paying it off</p>
+<p>slowly like everyone else, you borrow against the house cheaply, put that money</p>
+<p>somewhere it grows faster, then use the growth to knock out the mortgage in five</p>
+<p>to seven years instead of thirty. Then you do it again with the new equity. Then</p>
+<p>two at a time. The machine&#x27;s job is deciding <em>which</em> thing to borrow against,</p>
+<p><em>in what order</em>, <em>at what cost</em>, and <em>when to pay it back</em>.</p>
+<p><em>Folds in:</em> PAT-002 HELOC-to-IUL (lead) · PAT-009 Mortgage Elimination Through</p>
+<p>Recycling · PAT-014 FIA Collateral Assignment (independent: the two-sleeve split) ·</p>
+<p>SI-004 Premium Financing · **the homepage War Chest Transmutation Engine, which</p>
+<p>was missing from the 90-item sheet entirely — add it.**</p>
+<p><em>In the code:</em> <code>shared/reverseHeloc.ts</code>, <code>shared/policyLoanOptimizer.ts</code>,</p>
+<p><code>shared/premiumFinancing.ts</code>, <code>shared/fiaCollateralEngine.ts</code>,</p>
+<p><code>shared/mortgageKiller.ts</code>. <strong>VERIFIED — all five exist and run.</strong></p>
+<p><em>Prior art:</em> infinite-banking / bank-on-yourself materials are <strong>weak novelty</strong>.</p>
+<p><strong>No patent located</strong> on sequencing policy loans against mortgage payoff. The FIA</p>
+<p>two-sleeve model had <strong>no close art</strong>.</p>
+<blockquote class="flag"><p><strong>🚩 TWO MECHANISMS FROM YOUR TRANSCRIPT ARE MISSING FROM THE ENGINE.</strong></p><p><strong>(1) Account value vs. cash value.</strong> You were emphatic: <em>&quot;you don&#x27;t get credited on how much cash is in the policy. You get credited on what&#x27;s called the account value&quot;</em> — the monotone sum of every premium and every credit ever, which is why 95% of the money can leave on day two and the credit still lands on the full figure. <code>shared/mortgageKiller.ts</code> computes on <strong><code>cashValue</code></strong>. The account-value model does exist in this repo — 291 occurrences, principally <code>shared/policyLoanMechanics.ts</code> and <code>shared/policyMultiplier.ts</code> — but <strong><code>mortgageKiller.ts</code> has zero imports.</strong> It is a standalone file, and <code>policyLoanMechanics.ts</code> is imported by five other modules, none of them this one. So the engine understates the mechanism it exists to sell, and the claim is missing its most distinctive element. <em>(I initially wrote that account value was absent from the platform entirely; I checked more broadly and that was wrong — it is present, it is simply not wired to this engine.)</em></p><p><strong>(2) One-day threading and multi-policy threading.</strong> Premium in, 95–96% back out the next day as a loan, applied as a principal-only payment, a different bank each cycle; and where capacity allows, the same dollar threaded through two or three carriers in sequence before it reaches the bank, building two or three account values at once. <strong>Nothing in the repository models this.</strong> No <code>thread</code>, no day-two draw, no cross-carrier sequencing. <code>policyCount</code> in <code>server/routers.ts:6236</code> is a count, not a sequence.</p><p>Both of these are exactly the kind of specific, non-obvious, hard-to-design-around mechanism that survives a §103 rejection — which is more than can be said for &quot;borrow at a low rate, deposit at a higher one,&quot; which is what the current claim reduces to and which infinite-banking literature has published for decades.</p></blockquote>
+<p><em>See E-4 — this family becomes far stronger when its five engines are joined.</em></p>
+<hr>
+<p><strong>FAMILY 6 — The Suitcase</strong> · Tier 1 (scheduler) / Tier 2 / Tier 3</p>
+<p><em>Like you&#x27;re in 5th grade:</em> Packing a suitcase in a fixed order so the heavy things</p>
+<p>go in first and nothing gets crushed. Twenty-nine tax strategies, always in the same</p>
+<p>order: the basics, then the easy reducers sorted by how sure and how cheap they are,</p>
+<p>then the deduction engines sized to exactly fill the room under your tax bracket,</p>
+<p>then charity every third year, and the Roth conversion **last, counted as a cost,</p>
+<p>not a win.** Any number without a source doesn&#x27;t get to size a step.</p>
+<p><em>Folds in:</em> PAT-035 Suitcase Packer (lead) · PAT-012 100% Roth Conversion ·</p>
+<p>PAT-005 Tax-Free Income Waterfall (narrowed to eight sources) · SI-007, SI-037,</p>
+<p>SI-030, SI-041, SI-010 as dependents.</p>
+<p><em>Dropped:</em> SI-008 CRT, SI-042 Estate Freeze — textbook strategies, weak software claim.</p>
+<p><em>In the code:</em> <code>shared/taxSchedule.ts</code>, <code>shared/taxRules.ts</code>, <code>shared/taxBracketEngine.ts</code>.</p>
+<p><strong>VERIFIED.</strong></p>
+<p><em>Prior art:</em> <strong>CROWDED</strong> — RightCapital, Income Lab, RetireSmartIRA, Holistiplan,</p>
+<p>Corvee, TaxPlanIQ all do waterfalls, Roth modeling and IRMAA. <strong>No close art</strong> for</p>
+<p>the 29-family fixed order with Roth-last-as-cost, the &quot;unverified inputs never size</p>
+<p>a step&quot; rule, or the sealed rule-version delta.</p>
+<hr>
+<p><strong>FAMILY 4 — The Property Machine</strong> · Tier 1 (partly) / Tier 3 (partly)</p>
+<p><em>Like you&#x27;re in 5th grade:</em> Your zip code&#x27;s house prices come from two different</p>
+<p>record books — an old one and a new one — and where they&#x27;re taped together, the</p>
+<p>machine <strong>draws the seam and labels it</strong> instead of hiding it. You pick which year</p>
+<p>to start from, and every average recomputes from your window with the window</p>
+<p>printed right beside the number. Then each year the rentals&#x27; tax savings buy</p>
+<p>insurance inside a trust, the trustee borrows against it, and pays down the</p>
+<p>mortgages proportionally. The whole thirty years runs <strong>twice</strong> — with the loop</p>
+<p>and without it — and the difference is the loop&#x27;s own score.</p>
+<p><em>Folds in:</em> PAT-020 Property Machine (system) · PAT-024 Zip Time Machine (lead) ·</p>
+<p>PAT-019 Double-Run Trust Loop (independent) · PAT-034 House Budget Referee ·</p>
+<p>PAT-039 Household Resilience Lens · SI-034, SI-029, SI-009 (dependents only).</p>
+<p><em>In the code:</em> <code>shared/zipEngine.ts</code> (splice, window, cohort, <code>amortisation</code>),</p>
+<p><code>shared/rentalEnterprise.ts</code> (FEMA hazard). <strong>VERIFIED.</strong></p>
+<p><em>Prior art:</em> Zillow US11068911B1, US8676680B2; PropData, ZipSnapshot,</p>
+<p>HousingHandbook. Ingredients conventional. <strong>No anticipation located</strong> for the</p>
+<p>provenance-labeled splice with dependency-wide recomputation, the count-returning</p>
+<p>cohort query, the named binding rule, the composite hazard score, or the</p>
+<p>with-and-without run.</p>
+<hr>
+<p><strong>FAMILY 7 — The Lifetime Income Chain</strong> · Tier 1 (three claims) / Tier 3 (rest)</p>
+<p><em>Like you&#x27;re in 5th grade:</em> A calculator that <strong>refuses to answer</strong> when the money</p>
+<p>you fed it still owes tax — it points you at the conversion page instead. It will</p>
+<p>only print a payout number that a real person typed off a real rate sheet with a</p>
+<p>link and a date. And it figures out <em>when</em> your inheritance is likely to arrive,</p>
+<p>not by guessing, but from the government&#x27;s own survival table for the person you&#x27;d</p>
+<p>be inheriting from — printing the reason the date range is as wide as it is.</p>
+<p><em>Folds in:</em> PAT-021 Lifetime Income Chain (system) · PAT-016 Money That Says No</p>
+<p>(lead: the refusal gate) · PAT-037 Inheritance Arrival Meter and PAT-038 Timing</p>
+<p>Dial (independent) · PAT-033 Future-Self Negotiator · SI-025, SI-005, SI-031,</p>
+<p>SI-032, SI-039, SI-014 (dependents or dropped).</p>
+<p><em>In the code:</em> <code>shared/incomeForLife.ts</code>, <code>shared/inheritanceEngine.ts</code>,</p>
+<p><code>shared/longevityEngine.ts</code> (SSA survival table), <code>shared/ltcEngine.ts</code>. <strong>VERIFIED.</strong></p>
+<p><em>Prior art:</em> Cannex, Annuity Intelligence, eMoney, MoneyGuide — annuity comparison</p>
+<p>and multi-generational planning are <strong>crowded</strong>. <strong>No close art</strong> for the arrival</p>
+<p>meter&#x27;s tax-typed, probability-weighted, completeness-gated calculation, or the</p>
+<p>survival-curve timing dial.</p>
+<hr>
+<p><strong>FAMILY 8 — The Time Machine</strong> · Tier 2 · <em>file narrowly</em></p>
+<p><em>Like you&#x27;re in 5th grade:</em> Run your policy against what actually happened for the</p>
+<p>last 10, 20 or 30 years and show it right next to the salesman&#x27;s forward picture.</p>
+<p>Then run ten thousand made-up futures — and in <strong>every single one</strong>, the policy&#x27;s</p>
+<p>floor and ceiling are enforced year by year, not just at the end.</p>
+<p><em>In the code:</em> <code>shared/timeMachineEngine.ts</code>, <code>shared/monteCarloEngine.ts</code>,</p>
+<p><code>shared/ibbotsonModel.ts</code>, <code>shared/indexCreditingData.ts</code>. **VERIFIED — with a</p>
+<p>defect:<strong> three separate historical index datasets and </strong>two different functions</p>
+<p>both named <code>calculateCreditedRate</code>** that share no code. See E-6.</p>
+<blockquote class="flag"><p><strong>🚩 THE MOST IMPORTANT FINDING IN THIS DOCUMENT — PAT-010 is not the invention you described.</strong> In your own recorded words, the Time Machine works by showing an <strong>imaginary reference policy</strong> written 100–150 years ago whose premiums are orders of magnitude larger than the client&#x27;s. Because that pile is roughly a thousand times bigger, a legally displayable AG49-compliant movement on the imaginary policy — <em>&quot;we might only show a 1.3% increase&quot;</em> — corresponds to a far larger credit on the client&#x27;s policy, <em>&quot;which comes out to a 45% interest credit.&quot;</em> You said you verified this with Securian and Pacific Life and were sent to compliance. That <strong>ratio construct is the invention</strong>, and it is <strong>not in <code>timeMachineEngine.ts</code>.</strong></p><p>What the code actually does: <code>generateDualIllustration</code> runs one illustration at a flat AG49 rate and a second at blended historical index rates, side by side. <code>generateTimeMachineOverlay</code> does the same thing for existing calculators. There is no reference policy, no premium-scaling factor, no ratio mapping, and no compliance envelope. <strong>I read both functions end to end. The mechanism is absent.</strong></p><p>This matters enormously, because the implemented version is precisely the version with the strongest prior art against it — AG49-A <em>already requires</em> historical disclosure beside the illustration, and Ensight, Zinnia, iPipeline and WinFlex all ship it. The version you actually invented is the one with a specific, non-obvious mechanism, a named regulatory rationale, and two carrier compliance desks having looked at it. <strong>Build the ratio construct, and Family 8 moves from Tier 2 to a Tier 1 candidate. Until it is built, PAT-010 is a paper patent sitting on top of crowded art.</strong> This is the single highest-value engineering item in the portfolio.</p></blockquote>
+<p><em>Prior art:</em> <strong>STRONG ART.</strong> AG49 and AG49-A already <em>mandate</em> a capped-and-floored</p>
+<p>benchmark with a 25-year lookback and <em>require</em> historical disclosure beside the</p>
+<p>illustration. Commercial back-testing exists at Ensight, Zinnia, iPipeline, WinFlex.</p>
+<p>The dual display is close to what the guideline already requires. <strong>No close art</strong></p>
+<p>for path-level floor-and-cap enforcement inside a full policy cash-flow Monte Carlo,</p>
+<p>or for the regime split with the correlation refusal. <strong>Claim only those two.</strong></p>
+<hr>
+<p><strong>FAMILY 9 — The Listening Site</strong> · Tier 2 · <em>exposed at the top, strong underneath</em></p>
+<p><em>Like you&#x27;re in 5th grade:</em> A microphone on every page, but your voice never leaves</p>
+<p>your own computer. One question goes to every AI that has a key; the ones that fail</p>
+<p>are <strong>named out loud</strong>; a lead AI only combines answers when more than one actually</p>
+<p>answered. The public hears ideas and never numbers; the client hears everything.</p>
+<p>Twelve rules find the questions you never thought to ask — and you only see them</p>
+<p>after saying yes at each step, and never again for thirty days.</p>
+<p><em>In the code:</em> <code>server/ultraAI.ts</code> (eleven providers), <code>shared/unaskedQuestions.ts</code></p>
+<p>(twelve rules), and — <strong>upgraded on this pass</strong> — a Whisper Coach that is far more</p>
+<p>built than I previously credited: <code>shared/whispererEngine.ts</code> (578), <code>server/whisperer.ts</code></p>
+<p>(512), <code>server/whispererReports.ts</code> (498), <code>server/whispererDb.ts</code> (285),</p>
+<p><code>server/whispererVision.ts</code> (104), plus two test files. <strong>2,142 lines total.</strong> The</p>
+<p>objection-prediction claim is real and typed: <code>Objection.probability</code> is documented in</p>
+<p>the source as <em>&quot;0 to 1: how likely it surfaces in the next five minutes.&quot;</em> Alongside it,</p>
+<p><code>inferDecisionType</code> (driver / analytical / amiable / expressive), <code>detectPhase</code></p>
+<p>(opening → discovery → presentation → objections → close), <code>talkStats</code> over a rolling</p>
+<p>three-minute window, <code>moodFrom</code> over tone/body/energy/attention signals, and</p>
+<p><code>priorObjections</code> carried in from earlier calls.</p>
+<p><strong>This is reduction to practice, and you have told me you are running it on live calls.</strong></p>
+<p>I rated the objection pipeline &quot;potentially stronger&quot; in the previous revision on the</p>
+<p>strength of the specification. It is now verified in source. **PAT-003 is the strongest</p>
+<p>single claim in Family 9 and should lead it.**</p>
+<p><strong>VERIFIED — with a serious gap:</strong> <code>server/_core/llm.ts</code> hard-codes</p>
+<p>one gateway and throws unless its key is set, so **twenty-four portal AI features go</p>
+<p>dark whenever the owner&#x27;s own keys are the ones present.** See E-10.</p>
+<p><em>Prior art:</em> <strong>US20250225587A1 closely anticipates</strong> the specialized-model digital</p>
+<p>advisor. US20230074406A1, US20230075411A1 related. Gong, Chorus, Cresta, Uniphore,</p>
+<p>Zoom AI, Jump, Zocks for meeting intelligence. **Generic multi-model answers are</p>
+<p>exposed.** Potentially stronger: the future-objection pipeline that pre-builds the</p>
+<p>calculation, quorum-gated synthesis with truthful failure disclosure, consent-gated</p>
+<p>unasked questions, and the before-and-after confidence score.</p>
+<hr>
+<p><strong>FAMILY 10 — Career-to-Home</strong> · Tier 2</p>
+<p><em>Like you&#x27;re in 5th grade:</em> What did becoming a doctor actually cost? Not just</p>
+<p>tuition — the interest that piled up while you were still in school, plus all the</p>
+<p>money you <em>didn&#x27;t</em> earn during the low-pay years, plus what your commute really</p>
+<p>costs per hour. Then it compares you to the government&#x27;s own pay tables, but only</p>
+<p>shows peers when at least five real ones exist.</p>
+<p><em>In the code:</em> <code>shared/careerEngine.ts</code>, <code>shared/forgiveness.ts</code>. **VERIFIED — but</p>
+<p>disconnected:** both model the same federal loan independently and share nothing. See E-9.</p>
+<p><em>Prior art:</em> BLS OEWS is the benchmark; Doximity, Medscape, White Coat Investor have</p>
+<p>calculators. <strong>No close art</strong> for the integrated ledger with accrued training cost,</p>
+<p>opportunity cost, commute-adjusted hourly pay, percentile, and the page-as-form.</p>
+<hr>
+<p><strong>FAMILY 11 — Wealth Genome + Cooling-Off</strong> · Tier 3 (genome) / Tier 2 (cooling-off)</p>
+<p><em>Like you&#x27;re in 5th grade:</em> Twenty-plus facts about your household become one</p>
+<p>profile that picks your strategies. And when you&#x27;re about to panic-sell at a loss,</p>
+<p>the system reaches out <em>first</em>, shows you the evidence, and helps you wait a week.</p>
+<p><em>In the code:</em> <code>shared/retirementDNA.ts</code>, <code>shared/livingRiskProfile.ts</code>.</p>
+<p><strong>VERIFIED — but <code>livingRiskProfile.ts</code> is ORPHANED.</strong> Nothing imports it. It is</p>
+<p>SI-035&#x27;s reduction to practice and it is not wired in. See E-8.</p>
+<p><em>Prior art:</em> <strong>US20230075411A1 closely anticipates</strong> profile-driven strategy</p>
+<p>selection. **Andes Wealth Technologies holds a patent on investor risk drift —</p>
+<p>drift is TAKEN.<strong> The genome is exposed. The emotional-sale cooling-off had </strong>no</p>
+<p>close art.**</p>
+<hr>
+<p><strong>FAMILY 12 — The Cascading Core</strong> · Tier 3 standalone / <strong>Tier 1 as the vehicle for E-1 and E-2</strong></p>
+<p><em>Like you&#x27;re in 5th grade:</em> 35 calculators all snapped onto one base plate. Change</p>
+<p>one number, everything connected changes.</p>
+<p><em>In the code:</em> <code>shared/journeyEngine.ts</code>, <code>shared/taxBracketEngine.ts</code></p>
+<p>(<code>runDynamicTaxProjection</code>, imported by <strong>72 files</strong>). <strong>VERIFIED.</strong></p>
+<p>Also <code>shared/weaponizeEngines.ts</code> (981 lines, PAT-015&#x27;s engine) — **complete and</p>
+<p>orphaned.** Its <code>transformToClientView</code> strips <code>internal_</code> and <code>commission_</code></p>
+<p>sections for client mode. <em>I read this function line by line; it is real.</em></p>
+<p><em>Prior art:</em> eMoney, MoneyGuidePro, RightCapital all model connected plans. The base</p>
+<p>&quot;connect the calculators&quot; claim is <strong>weak alone.</strong></p>
+<p><em>Dropped:</em> SI-018 Commission Optimization Router — a system that routes clients by</p>
+<p>advisor commission is a conflict-of-interest exhibit, not a patent.</p>
+<hr>
+<p><strong>FAMILY 13 — The Money Globe</strong> · Tier 3</p>
+<p>Twelve domains × four depth layers; empty cells are labeled gaps; navigation, proof</p>
+<p>and search generated from one registry so they cannot disagree. Faceted navigation</p>
+<p>is common; the 12×4 map screened <strong>open</strong>, the self-fetching site audit <strong>crowded</strong>.</p>
+<p><strong>FAMILY 14 — The Ten Ecological Threats</strong> · Tier 2 <strong>once built</strong></p>
+<p>Ten retirement dangers uncorrelated with market return, one explainable score.</p>
+<p><strong>NOT IN THE CODE.</strong> There is a <code>riskScoring</code> router and a page, but no engine that</p>
+<p>computes ten named threats from sourced series. <strong>No close art found.</strong> Build before filing.</p>
+<p><strong>FAMILY 15 — The Divorce Shield</strong> · Tier 2 <strong>once built</strong></p>
+<p>Fifty states, five scenarios, safe vs. exposed. <strong>NOT IN THE CODE.</strong></p>
+<p><code>client/src/pages/portal/DivorceCalculator.tsx</code> renders and <strong>calls zero procedures</strong>;</p>
+<p>there is no fifty-state rules table. <strong>No close art found</strong> — which makes it worth</p>
+<p>a week of work.</p>
+<p><strong>FAMILY 16 — Found in the code, on no sheet</strong></p>
+<p><code>shared/cryptoCycleEngine.ts</code> (halving-cycle accumulation, Tier 4 — crowded) ·</p>
+<p><code>shared/multiPropertyMyga.ts</code> on <code>mygaWaterfall.ts</code> (Tier 3) ·</p>
+<p><code>shared/growthAnnuityEngine.ts</code> (Roth inside the contract, Tier 3) ·</p>
+<p><code>server/controlsRouter.ts</code> fact-suggestion pipeline with client-only acceptance</p>
+<p>(<strong>belongs in Family 3 as a dependent; on no sheet</strong>).</p>
+<p><em>Not patents:</em> the long-timer scheduler, memory gate, spreadsheet readers, dual FRED</p>
+<p>transport — good engineering. The entrainment layer and reward sound — design patent at most.</p>
+<hr>
+<h3>The 15 emergent RCS patents — what appears only when the wiring happens</h3>
+<p>These do not exist today. Each names the exact connection that creates it.</p>
+<p><strong>Order of wiring by payoff: E-10, E-1, E-2, E-4, E-3, E-7, E-14, E-6, E-5, E-8, E-9, E-13, E-15, E-11, E-12.</strong></p>
+<table><thead><tr><th>#</th><th>Name</th><th>The wiring</th><th>What becomes patentable</th></tr></thead><tbody>
+<tr><td>E-1</td><td>One Tax Future</td><td><code>taxBracketEngine</code> consumes <code>erosion.taxTrajectory</code> instead of its own model</td><td>All 35 calculators move with one politically-conditioned, sealed tax path</td></tr>
+<tr><td>E-2</td><td>Every Projection Breathes with FRED</td><td><code>server/inflation.ts</code> replaces hard-coded 3% in ~10 pages</td><td>One sourced, dated deflator across the whole suite <em>(also fixes a real bug: two pages discount with <code>(1-r)</code> where the rest compound with <code>(1+r)</code>)</em></td></tr>
+<tr><td>E-3</td><td>The Sealed Stochastic Plan</td><td>Move <code>monteCarloEngine</code> to a server router, seed deterministically</td><td>A probability band that can be re-run and proved later</td></tr>
+<tr><td>E-4</td><td><strong>The Collateral Ladder</strong></td><td>One <code>shared/collateralLadder.ts</code> over all five borrowing engines</td><td>Sequencing draws across heterogeneous collateral by after-tax cost and liquidity — <strong>the general form of PAT-002, PAT-009 and PAT-014 at once; screen found nothing</strong></td></tr>
+<tr><td>E-5</td><td>Hazard-Aware Recycling</td><td>Feed <code>zipEngine</code> into the three mortgage engines</td><td>Each recycling cycle&#x27;s equity discounted by that zip&#x27;s own hazard and drawdown</td></tr>
+<tr><td>E-6</td><td>Time Machine Monte Carlo</td><td>Unify three index datasets; block-bootstrap the paths</td><td>Back-test, illustration and probability bands <strong>cannot disagree about the past</strong> — this is how Family 8 gets past AG49</td></tr>
+<tr><td>E-7</td><td>Mortality-Weighted Care and Estate</td><td>Import <code>longevityEngine</code> into LTC, income, estate, inheritance</td><td>The plan cannot assume one death date for income and another for care</td></tr>
+<tr><td>E-8</td><td>Drift-Triggered Cooling-Off</td><td>Wire orphaned <code>livingRiskProfile</code> into PAT-008</td><td>A trigger on <strong>measured drift between dated snapshots</strong> — which the Andes patent does not describe</td></tr>
+<tr><td>E-9</td><td>Career-to-Forgiveness</td><td>Hand the career loan path to the survival model</td><td>Career cost <strong>with</strong> forgiveness, <strong>without</strong> it, and the expected value between</td></tr>
+<tr><td>E-10</td><td><strong>The Council Everywhere</strong></td><td>One adapter so <code>invokeLLM</code> falls back to <code>ultraAI</code>&#x27;s eleven providers</td><td>Every AI feature under Family 9&#x27;s quorum and disclosure rules — <strong>the single most valuable wiring change for the product</strong></td></tr>
+<tr><td>E-11</td><td>Advisor Memory Under Consent</td><td>Actually write and read the <code>aiMemoryNotes</code> table, through consent scopes</td><td>Memory partitioned by consent scope, revocable per scope — <strong>nothing in the located art does this</strong></td></tr>
+<tr><td>E-12</td><td>The Firewall Moves Money</td><td>Add one rail to <code>server/firewall.ts</code></td><td>Family 3 goes from a control layer to a fiduciary agent — <strong>the claim an acquirer pays for.</strong> Needs counsel and a bank first</td></tr>
+<tr><td>E-13</td><td>Engines That Raise Their Hand</td><td>Every engine publishes into the <code>unaskedQuestions</code> queue</td><td>The emergent question chosen across all findings, not one rule list</td></tr>
+<tr><td>E-14</td><td>One Report Card Path</td><td>Add the review pair to two routers</td><td>Not a new patent — but Family 1&#x27;s grading claim <strong>is only defensible if a human can actually enter an outcome</strong></td></tr>
+<tr><td>E-15</td><td>Ten Threats, Sourced</td><td>Build Family 14 from series already held</td><td>A danger score whose own confidence comes from the share of verified inputs</td></tr>
+</tbody></table>
+<hr>
+<h2>1B. joinaqal.com</h2>
+<p>**Founding applications: 10 (JQ-L1). Machine-swept candidates: 88 → 20 families → 6 drafted.</p>
+<p>Verified engine modules with real code: 8.**</p>
+<h3>The 8 verified engine modules — every one read line by line</h3>
+<table><thead><tr><th>#</th><th>Module</th><th>Lines</th><th>What it actually does</th><th>Verdict</th></tr></thead><tbody>
+<tr><td>JQ-a</td><td><code>server/patents/calibrationBus.ts</code></td><td>152</td><td>Trimmed-mean outlier guard + per-model, per-axis calibration weights accumulated from real scoring history, with a cold start at <code>MIN_SAMPLES</code></td><td><strong>REAL — strongest JQ asset</strong></td></tr>
+<tr><td>JQ-b</td><td><code>server/patents/voiceFeatures.ts</code></td><td>285</td><td>Energy-gated, lag-bounded pitch estimator that kills the silent-frame false-pitch and subharmonic-bias failure modes of naive autocorrelation</td><td><strong>REAL — DSP, not a wrapper</strong></td></tr>
+<tr><td>JQ-c</td><td><code>server/patents/ledger.ts</code></td><td>117</td><td>Canonical JSON (stable key order at every depth) → SHA-256 chain; <code>verifyChain</code> recomputes every link and returns the first bad id</td><td><strong>REAL</strong></td></tr>
+<tr><td>JQ-d</td><td><code>server/patents/achievementFloors.ts</code></td><td>119</td><td>A per-line floor that can only rise. <code>nextFloorState</code> is pure, clamps to [0,1], rejects non-finite and negative hours</td><td><strong>REAL</strong></td></tr>
+<tr><td>JQ-e</td><td><code>server/patents/dimensionIsolation.ts</code></td><td>69</td><td><code>Object.freeze</code> isolation views</td><td><strong>REAL BUT NARROW — see warning below</strong></td></tr>
+<tr><td>JQ-f</td><td><code>server/patents/computeFabric.ts</code></td><td>58</td><td>Pluggable fabric interface with a software default</td><td><strong>REAL — thin</strong></td></tr>
+<tr><td>JQ-g</td><td><code>server/patents/provenance.ts</code></td><td>32</td><td>Research provenance rows</td><td><strong>REAL — thin</strong></td></tr>
+<tr><td>JQ-h</td><td><code>server/patents/assessmentEvidence.ts</code></td><td>62</td><td>Computes and persists per-assessment patent evidence</td><td><strong>REAL — with a defect, see below</strong></td></tr>
+</tbody></table>
+<blockquote><p><strong>⚠️ CORRECTION ON THE RECORD — <code>dimensionIsolation.ts</code>.</strong> One of the AI team members reported this module as performing &quot;hardware memory isolation zones&quot; and &quot;context-blind token scrubbers&quot; and scored it 9.5/10 urgency. <strong>That is fabricated.</strong> The file is 69 lines of <code>Object.freeze</code>. Its own header says: <em>&quot;The hardware enclaves named in the patent spec (ARM TrustZone / AWS Nitro / Apple Secure Enclave) are the hardware embodiment… NOT implemented here, and nothing in this repository claims it is.&quot;</em> Do not let a hardware claim reach counsel on the strength of this file.</p></blockquote>
+<blockquote><p><strong>⚠️ DEFECT — <code>assessmentEvidence.ts</code>.</strong> <code>persistAssessmentPatentEvidence</code> runs inside a <code>catch</code> that logs <em>&quot;persistence skipped.&quot;</em> Patent evidence that silently skips is not evidence. <strong>Fix before relying on it as reduction-to-practice proof.</strong></p></blockquote>
+<blockquote><p><strong>⚠️ PHANTOM SYMBOL — on the record.</strong> An earlier scan of mine reported a symbol named <code>starvationCurves</code> in <code>shared/archetypesData.ts</code>. <strong>It does not exist.</strong> My export extraction truncated at 50 characters and invented it, and a candidate patent was built on top of it before I caught it. The real exports are <code>ARCHETYPES</code>, <code>archetypeProfiles</code>, <code>isolationFindings</code>, <code>starvationCards</code>, <code>integratedProfiles</code>, and <code>starvationForLine</code>. The extraction window has been widened.</p></blockquote>
+<blockquote class="flag"><p><strong>🚩 ESCALATED — the rarity number now contradicts the patent claim itself.</strong> <code>calculateCompositeRarity</code> in <code>server/routers.ts</code> uses a <strong>geometric mean</strong> of axis rarities; its own comment says &quot;not product, which would be too extreme.&quot; <code>calculateCompositeRarityMultiplicative</code> also exists and <strong>is</strong> imported — by <code>patents/assessmentEvidence.ts</code>. So the number shown to the user and the number stored as patent evidence are already computed two different ways.</p><p>The Treasure Map settles what the claim is supposed to be, and it lands on the other side: brick <strong>L1-04 &quot;Rarity Multiplier&quot;</strong> is defined as <em>&quot;Multiplies your scores together instead of averaging, to find super-rare people,&quot;</em> screened as <strong>&quot;No — does not exist&quot;</strong> anywhere else, and its stated novelty is precisely that <em>&quot;Nobody else multiplies scores from a team of AIs. Everyone else averages, which hides rare people.&quot;</em> It is also brick #1 of <strong>RarityForge</strong>, the 2-way combo ranked third for revenue at 9/10.</p><p><strong>So the distinguishing feature of the claim is multiplication, and the shipped user-facing number is an average.</strong> A geometric mean <em>is</em> a kind of averaging — it is the n-th root of the product, which is mathematically designed to pull extremes back toward the middle, the exact effect the claim says hides rare people. If counsel files the multiplicative claim, the product does not practice it on the surface a user sees. If you file the geometric-mean version, the stated novelty evaporates. <strong>Pick one and make the code say it.</strong> This is now a filing blocker, not a preference.</p></blockquote>
+<h3>The 20 JoinAQAL families, ranked — honest scores</h3>
+<p>The readiness score weighs source support, novelty, non-obviousness, §101</p>
+<p>eligibility, enablement and claim coherence. **It is a triage device, not a</p>
+<p>probability of allowance.**</p>
+<table><thead><tr><th>Rank</th><th>Family</th><th>Title</th><th>Score</th><th>Disposition</th></tr></thead><tbody>
+<tr><td>1</td><td>FAM-005</td><td>Idempotent Multi-Channel Accountability Reminders with Local-Date Claims</td><td>6.4</td><td>Hold</td></tr>
+<tr><td>2</td><td>FAM-003</td><td>Hybrid Browser/Server Speech-to-Text Capture Failover</td><td>6.7</td><td>Pursue after evidence</td></tr>
+<tr><td>3</td><td>FAM-009</td><td>Fail-Closed Marketing Email Opt-Out Enforcement</td><td>6.2</td><td>Hold</td></tr>
+<tr><td>4</td><td>FAM-001</td><td>Multi-AI Consensus Scoring with Trimmed Mean and Confidence Discount</td><td>5.9</td><td>Hold</td></tr>
+<tr><td>5</td><td>FAM-004</td><td>Privacy-Preserving Opportunistic Audio Deletion Sweep</td><td>5.8</td><td>Hold</td></tr>
+<tr><td>6</td><td>FAM-002</td><td>Continuous Transcript Segmentation via Fallback Marker Matching</td><td>5.6</td><td>Pursue after evidence</td></tr>
+<tr><td>7</td><td>FAM-008</td><td>Resume-First Asynchronous Audio Assessment Synchronization</td><td>5.2</td><td>Discard</td></tr>
+<tr><td>8</td><td>FAM-010</td><td>Client-Side Code-Split Corpus Search with Synonym Expansion</td><td>5.2</td><td>Discard</td></tr>
+<tr><td>9</td><td>FAM-019</td><td>Dynamic 3D Cosmos Canvas with Depth-based Parallax</td><td>5.2</td><td>Discard</td></tr>
+<tr><td>10</td><td>FAM-006</td><td>Multimodal Behavioral Fusion for Intelligence Profiling</td><td>5.1</td><td>Hold</td></tr>
+<tr><td>11</td><td>FAM-011</td><td>Voice-First Elicitation and SOKA Gap Scoring</td><td>4.8</td><td>Discard (§101)</td></tr>
+<tr><td>12</td><td>FAM-020</td><td>Age-Adjusted Developmental Cohort Norming</td><td>4.6</td><td>Discard (§101)</td></tr>
+<tr><td>13</td><td>FAM-015</td><td>Voice-Only Immutable Append-Only Commitment Ledger</td><td>4.4</td><td>Discard</td></tr>
+<tr><td>14</td><td>FAM-007</td><td>AI-Driven Developmental Stage Underwriting Rubric Injection</td><td>4.2</td><td>Discard (§101)</td></tr>
+<tr><td>15</td><td>FAM-013</td><td>Algorithmic Bimodal Matching with Generational Adjustment</td><td>4.2</td><td>Discard</td></tr>
+<tr><td>16</td><td>FAM-016</td><td>IME Composition State Tracking with Delayed Reset</td><td>4.1</td><td>Discard</td></tr>
+<tr><td>17</td><td>FAM-018</td><td>In-Memory Sliding-Window Rate Limiting with Blocklist</td><td>3.8</td><td>Discard (§101)</td></tr>
+<tr><td>18</td><td>FAM-014</td><td>Dynamic Goal-to-Practice Assembly and Deduplication</td><td>3.7</td><td>Discard (§101)</td></tr>
+<tr><td>19</td><td>FAM-012</td><td>Automated AI-Driven Outcome Engineering and Derailment Prediction</td><td>3.5</td><td>Discard (§101)</td></tr>
+<tr><td>20</td><td>FAM-017</td><td>Live Web Search-Based Factual Claim Verification</td><td>3.1</td><td>Discard (§101)</td></tr>
+</tbody></table>
+<p><strong>Read this honestly.</strong> Nothing on the JoinAQAL side scores above 6.7, and twelve of</p>
+<p>twenty are marked Discard — most on §101 (Alice), because they reduce to &quot;score a</p>
+<p>thing, then decide based on the score,&quot; which is the textbook abstract idea. The</p>
+<p>**four assets worth real money on this platform are the four modules with real</p>
+<p>machinery in them: the calibration bus, the pitch estimator, the hash chain, and the</p>
+<p>floor ratchet.** Those are apparatus-flavored. The rest are gating and correlation.</p>
+<p><strong>The 10 founding JQ-L1 applications</strong> live at</p>
+<p><code>AQAL/patent-applications/founding/series-jq-joinaqal/</code> and are the implemented</p>
+<p>originals for joinaqal.com — these are <strong>reduction to practice</strong>, which is the single</p>
+<p>most valuable thing a provisional can carry.</p>
+<hr>
+<h2>1C. Dr. Buddy</h2>
+<p><strong>Founding applications: 6 (DRB-L1). Application code: ZERO.</strong></p>
+<p>Dr. Buddy exists today as an operating <strong>document protocol</strong> — <code>buddy_memory/MEMORY.md</code>,</p>
+<p><code>SKILL_BACKUP.md</code>, <code>buddy_journal/</code>, <code>buddy-confessions/</code> — not as a running service.</p>
+<p>The six DRB-L1 applications describe the document-protocol embodiment honestly and</p>
+<p>specify the service embodiment.</p>
+<p><strong>What that means for filing:</strong> a provisional can be filed on a specified-but-unbuilt</p>
+<p>embodiment, but enablement is carried entirely by the specification, and the</p>
+<p>twelve-month clock starts anyway. **A paper patent on an unbuilt service is the</p>
+<p>weakest thing in this portfolio and the most expensive to convert.** The right move</p>
+<p>is to build the service first. You asked for &quot;an extreme build that is super</p>
+<p>functional&quot; — that build is what turns these six from paper into reduction to practice,</p>
+<p>and it is the highest-leverage engineering on the Dr. Buddy side.</p>
+<p>The three DRB super-emergent applications (AQAL-DRB-S1, S2, S3) are Series C and are</p>
+<p><strong>specified only</strong> — same caveat.</p>
+<hr>
+<h2>1D. Drass Wealth Management</h2>
+<p><strong>Original inventions: 0. And that is correct.</strong></p>
+<p>Drass is a WordPress plugin (<code>drass-wealth-tools</code>, v1.5.0) that licenses and presents</p>
+<p>RCS engines to a third party. Its SSO module (<code>includes/class-dwt-sso.php</code>, ~330 lines)</p>
+<p>is HS256-only — it <strong>rejects any other <code>alg</code> outright</strong>, uses <code>hash_equals</code> on both</p>
+<p>signature and nonce, checks <code>exp</code>/<code>nbf</code>/<code>iss</code>/<code>aud</code>, holds a server-side single-use</p>
+<p>nonce in a transient, and keys users on the RCS subject id, <strong>never on email.</strong></p>
+<p>That is a genuinely correct JWT verification implementation — most are not — but</p>
+<p>correct cryptographic hygiene is <strong>not patentable</strong>; it is the known-good way to do it.</p>
+<p>Drass&#x27;s value is commercial (a licensed distribution channel), not inventive.</p>
+<p><strong>Nothing here should go to counsel.</strong></p>
+<hr>
+<h1>Part 2 — The Combinations</h1>
+<h2>Read this before the ladder</h2>
+<p>You asked for combinations from two all the way to twelve or fourteen. Here they are,</p>
+<p>every tier, priority-ordered. But you are paying for this, so you get the truth with it:</p>
+<blockquote><p><strong>In patent law, arity is not strength. It is the opposite.</strong> Every element you add to an independent claim makes the claim <strong>narrower</strong>, and a narrower claim is easier to design around. An infringer only has to omit <strong>one</strong> element to walk free. A 14-element claim gives a competitor fourteen different doors. A 3-element claim gives them three.</p></blockquote>
+<p>So the ladder below is real and complete, but its **shape is inverted from what you</p>
+<p>might expect**: the 2-, 3- and 4-way combinations are the commercially valuable ones.</p>
+<p>The 8-way through 14-way combinations have three legitimate uses, and only three:</p>
+<ol>
+<li><strong>Continuation and dependent-claim material</strong> — file the narrow ones as dependents</li>
+</ol>
+<p>   under a broad independent claim, so if the broad claim falls in prosecution you</p>
+<p>   still own the specific system you actually built.</p>
+<ol>
+<li><strong>Demonstrating non-obviousness</strong> — a long chain of interactions is evidence that</li>
+</ol>
+<p>   a person of ordinary skill would not have predicted the result (KSR v. Teleflex).</p>
+<ol>
+<li><strong>Trade-secret and marketing description</strong> — the full system is what you sell.</li>
+</ol>
+<p><strong>What I recommend:</strong> file the 2-, 3- and 4-way combinations as the independent</p>
+<p>claims. Carry 5-way through 14-way as dependents inside those same specifications.</p>
+<p>That gets you every combination you asked for, in one filing package, without paying</p>
+<p>for fourteen applications that each protect less than the one below it.</p>
+<hr>
+<h2>Tier 2-WAY — 14 applications · <strong>highest commercial value</strong></h2>
+<p><em>Already drafted and on disk at <code>AQAL/patent-applications/</code>.</em> Ordered by strength.</p>
+<table><thead><tr><th>Rank</th><th>Ref</th><th>Title</th><th>Platform</th><th>Why it ranks here</th></tr></thead><tbody>
+<tr><td>1</td><td>AQAL-C-18</td><td>Adaptive Voice Consensus</td><td>AQAL</td><td>Pitch estimator + calibration bus — <strong>both components are real machinery</strong>, not gating. Strongest 2-way.</td></tr>
+<tr><td>2</td><td>AQAL-C-01</td><td>Consensus-Driven Coaching Synthesis</td><td>AQAL</td><td>Consensus + evidence-mapped protocol; the evidence binding is the novel half</td></tr>
+<tr><td>3</td><td>AQAL-C-03</td><td>Voice-Based Weakness Identification</td><td>AQAL</td><td>DSP → deterministic constant-time diagnostic</td></tr>
+<tr><td>4</td><td>AQAL-RCS-E5</td><td>Consensus-Scored Wealth-Capacity Profile</td><td>AQAL × RCS</td><td>First true cross-platform claim; both sides implemented</td></tr>
+<tr><td>5</td><td>AQAL-RCS-E6</td><td>Floor-Verified Advisor-Client Matching</td><td>AQAL × RCS</td><td>The floor ratchet is the strongest AQAL primitive; matching is the weak half</td></tr>
+<tr><td>6</td><td>AQAL-C-05</td><td>Staged Weakness Identification Engine</td><td>AQAL</td><td>Versioned rubric banding — reproducible by construction</td></tr>
+<tr><td>7</td><td>AQAL-C-02</td><td>Transparent Integral Framework</td><td>AQAL</td><td>Four-quadrant mapper + audit</td></tr>
+<tr><td>8</td><td>AQAL-C-06</td><td>Coaching Transparency Framework</td><td>AQAL</td><td></td></tr>
+<tr><td>9</td><td>AQAL-C-27</td><td>Voice-Driven Cognitive Coaching</td><td>AQAL</td><td></td></tr>
+<tr><td>10</td><td>AQAL-C-30</td><td>Voice-Driven Cognitive Assessment</td><td>AQAL</td><td></td></tr>
+<tr><td>11</td><td>AQAL-C-28</td><td>Transparent Cognitive Assessment</td><td>AQAL</td><td></td></tr>
+<tr><td>12</td><td>AQAL-TRI-S7</td><td>Weakness-to-Wealth Intervention Router</td><td>Tri</td><td>Specified only</td></tr>
+<tr><td>13</td><td>AQAL-DRB-S1</td><td>Assessment-Informed Companion Coaching</td><td>AQAL × DRB</td><td>Specified only — DRB has no code</td></tr>
+<tr><td>14</td><td>AQAL-DRB-S3</td><td>Longitudinal Wellbeing-Cognition Correlator</td><td>AQAL × DRB</td><td>Specified only; correlation claims are §101-exposed</td></tr>
+</tbody></table>
+<p><strong>Plus the RCS 2-way combinations that are not yet drafted as applications</strong> —</p>
+<p>these come from the emergent list and are stronger than most of the above:</p>
+<table><thead><tr><th>Rank</th><th>Emergent</th><th>Combination</th><th>Status</th></tr></thead><tbody>
+<tr><td><strong>A</strong></td><td>E-1</td><td>Political tax path × the 35-calculator suite</td><td><strong>Not drafted. Draft it.</strong> Highest-value 2-way in the whole portfolio</td></tr>
+<tr><td><strong>B</strong></td><td>E-10</td><td>Quorum council × every portal AI feature</td><td><strong>Not drafted.</strong> Also the best product change</td></tr>
+<tr><td><strong>C</strong></td><td>E-8</td><td>Measured risk drift × behavioral cooling-off</td><td><strong>Not drafted.</strong> Steps around the Andes patent</td></tr>
+<tr><td><strong>D</strong></td><td>E-9</td><td>Career loan ledger × program survival hazard</td><td><strong>Not drafted.</strong></td></tr>
+<tr><td><strong>E</strong></td><td>E-11</td><td>AI memory × consent scopes</td><td><strong>Not drafted.</strong> No located art</td></tr>
+</tbody></table>
+<hr>
+<h2>Tier 3-WAY — 16 applications</h2>
+<table><thead><tr><th>Rank</th><th>Ref</th><th>Title</th><th>Platform</th></tr></thead><tbody>
+<tr><td>1</td><td>AQAL-C-04</td><td>Voice-Transparent Consensus Assessment</td><td>AQAL</td></tr>
+<tr><td>2</td><td>AQAL-C-09</td><td>Integral Voice Consensus</td><td>AQAL</td></tr>
+<tr><td>3</td><td>AQAL-C-07</td><td>Voice-Driven Weakness Coaching</td><td>AQAL</td></tr>
+<tr><td>4</td><td>AQAL-C-08</td><td>Transparent Staged Consensus Assessment</td><td>AQAL</td></tr>
+<tr><td>5</td><td>AQAL-RCS-E1</td><td>Voice-Informed Financial Readiness Assessment</td><td>AQAL × RCS</td></tr>
+<tr><td>6</td><td>AQAL-RCS-E2</td><td>Weakness-Aware Financial Coaching</td><td>AQAL × RCS</td></tr>
+<tr><td>7</td><td>AQAL-RCS-E3</td><td>Cross-Domain Development Tracker</td><td>AQAL × RCS</td></tr>
+<tr><td>8</td><td>AQAL-C-13</td><td>Transparent Integral Consensus Assessment</td><td>AQAL</td></tr>
+<tr><td>9</td><td>AQAL-C-20</td><td>Integral Weakness Consensus</td><td>AQAL</td></tr>
+<tr><td>10</td><td>AQAL-C-10</td><td>Staged Weakness Coaching</td><td>AQAL</td></tr>
+<tr><td>11</td><td>AQAL-C-11</td><td>Transparent Integral Coaching</td><td>AQAL</td></tr>
+<tr><td>12</td><td>AQAL-C-19</td><td>Transparent Voice Coaching</td><td>AQAL</td></tr>
+<tr><td>13</td><td>AQAL-C-34</td><td>Cognitive-Financial Development Tracker</td><td>AQAL × RCS</td></tr>
+<tr><td>14</td><td>AQAL-C-36</td><td>Voice-Driven Cognitive Coaching with Transparency</td><td>AQAL</td></tr>
+<tr><td>15</td><td>AQAL-C-38</td><td>Voice-Driven Cognitive Assessment with Transparency</td><td>AQAL</td></tr>
+<tr><td>16</td><td>AQAL-TRI-S6</td><td>Consensus-Weighted Life-Plan Orchestrator</td><td>Tri</td></tr>
+</tbody></table>
+<p><strong>Not drafted, and stronger than most of the above — draft these:</strong></p>
+<p><strong>E-4 The Collateral Ladder</strong> (home equity × policy cash value × FIA collateral sleeve ×</p>
+<p>premium-finance line). The screen found <strong>nothing</strong> on cross-collateral sequencing, and</p>
+<p>it is the general form of PAT-002, PAT-009 and PAT-014 at once. *If you draft one new</p>
+<p>3-way from this document, draft this one.*</p>
+<p><strong>E-6 Time Machine Monte Carlo</strong> (one sourced series × block bootstrap × per-year floor</p>
+<p>and cap) — this is how Family 8 survives the AG49 art.</p>
+<hr>
+<h2>Tier 4-WAY — 3 applications</h2>
+<table><thead><tr><th>Rank</th><th>Ref</th><th>Title</th></tr></thead><tbody>
+<tr><td>1</td><td>AQAL-C-15</td><td>Consensus-Driven Integral Coaching with Transparency</td></tr>
+<tr><td>2</td><td>AQAL-C-12</td><td>Voice-Driven Staged Weakness Coaching</td></tr>
+<tr><td>3</td><td>AQAL-C-14</td><td>Staged Integral Weakness Coaching</td></tr>
+</tbody></table>
+<p><strong>Not drafted:</strong> <strong>E-7 Mortality-Weighted Care and Estate</strong> — one government survival</p>
+<p>curve feeding LTC gap, annuity payment years, estate arrival and inheritance timing,</p>
+<p>so the plan cannot assume one death date for income and another for care. This is a</p>
+<p>4-way with a clean, concrete inventive core. <strong>Draft it.</strong></p>
+<hr>
+<h2>Tier 5-WAY — 1 application, 1 recommended</h2>
+<table><thead><tr><th>Rank</th><th>Ref</th><th>Title</th></tr></thead><tbody>
+<tr><td>1</td><td>AQAL-C-16</td><td>Voice-Driven Staged Integral Weakness Coaching</td></tr>
+</tbody></table>
+<p><strong>Not drafted:</strong> <strong>E-15 Ten Threats, Sourced</strong> — inflation (E-2) × political tax path</p>
+<p>(E-1) × program survival × longevity curve × zip drawdown, each sourced, dated and</p>
+<p>sealed, with the score&#x27;s own confidence derived from the share of verified inputs.</p>
+<p>This is <strong>Family 14&#x27;s reduction to practice</strong> and it is currently a paper patent.</p>
+<hr>
+<h2>Tier 6-WAY — <strong>1 documented (Treasure Map), 2 recommended</strong></h2>
+<blockquote><p><strong>Correction to the previous revision.</strong> I wrote that 6-, 8-, 9- and 10-way were gaps with nothing drafted. That was wrong, and the document that proves it is one you had all along: <strong>the AQAL Patent Treasure Map</strong> (30 Aug 2026) carries a complete <strong>2-brick through 10-brick ladder</strong> built on ten named Level-1 bricks. Those tiers are filled. My recommendations below are <strong>additions</strong> to it, not replacements. <em>(See the architecture warning at the end of Part 2 before anyone builds from it.)</em></p></blockquote>
+<p><strong>6-A. LogVault</strong> <em>(Treasure Map, 6 bricks, money score 8/10)</em> — an append-only daily</p>
+<p>voice diary bound to the 32-line profile, so the record of how a mind changed is</p>
+<p>evidentiary rather than editable. Screened as not existing elsewhere.</p>
+<p><strong>6-B. The Sourced Plan</strong> <em>(RCS, recommended, Tier 1 value)</em> — Truth Stack + Political</p>
+<p>Weather + Guardian Ledger + one inflation basket + one tax path + the calculator suite.</p>
+<p><em>Like you&#x27;re in 5th grade:</em> every number in your plan can point at the sentence it came</p>
+<p>from, knows who was in charge when it was measured, is written in a notebook nobody can</p>
+<p>secretly edit, breathes with real inflation instead of a made-up 3%, and shares one tax</p>
+<p>future with all 35 calculators. <strong>Five of six exist; the wiring (E-1, E-2) does not.</strong></p>
+<p><strong>6-C. The Verified Assessment Chain</strong> <em>(AQAL, buildable today)</em> — calibration bus +</p>
+<p>pitch estimator + floor ratchet + hash ledger + provenance registry + dimension</p>
+<p>isolation. <strong>All six exist and run.</strong> *The most defensible high-arity combination in the</p>
+<p>portfolio, because every element is already reduction to practice.*</p>
+<hr>
+<h2>Tier 7-WAY — 2 documented</h2>
+<table><thead><tr><th>Rank</th><th>Ref</th><th>Title</th></tr></thead><tbody>
+<tr><td>1</td><td><strong>AQAL-C-17</strong></td><td><strong>Full-Spectrum Integral AI Coaching</strong></td></tr>
+<tr><td>2</td><td>Treasure Map</td><td><strong>WeakLink</strong> (7 bricks, money score 9/10)</td></tr>
+</tbody></table>
+<p>AQAL-C-17 combines Eight-Model Consensus Scoring + Prosodic Voice-Feature Extraction +</p>
+<p>Controlling-Weakness Identification + Evidence-Mapped Protocol Coaching + Developmental</p>
+<p>Stage-Band Estimator + Integral Four-Quadrant Mapper + Transparency and Tamper-Evident Audit.</p>
+<p><em>This is the best-written application in the corpus.</em> Its §101 section does the right</p>
+<p>thing: it recites the **hash-chain commitment format, the calibration-weight formula and</p>
+<p>cold start, the energy-gated lag-bounded pitch estimator, the fixed-width vector</p>
+<p>contract, frozen norming versions and frozen isolation views** — particular structures,</p>
+<p>not a result-only aspiration. That is the difference between surviving Alice and not.</p>
+<p><strong>WeakLink</strong> finds the single controlling weakness across the 32 lines and points every</p>
+<p>intervention at it. Screened as not existing elsewhere. Verified in code:</p>
+<p><code>shared/therapyLineMap.ts</code> (941 lines, all 32 lines carry at least one therapy-channel</p>
+<p>protocol) and <code>shared/archetypesData.ts</code> (<code>starvationCards</code>, <code>starvationForLine</code>).</p>
+<hr>
+<h2>Tier 8-WAY — 1 documented · <strong>the Treasure Map&#x27;s top money-maker</strong></h2>
+<table><thead><tr><th>Rank</th><th>Ref</th><th>Title</th></tr></thead><tbody>
+<tr><td>1</td><td>Treasure Map</td><td><strong>MatchForge</strong> (8 bricks, money score <strong>10/10 — ranked #1</strong>)</td></tr>
+</tbody></table>
+<p><em>Like you&#x27;re in 5th grade:</em> it builds teams where everybody&#x27;s strong parts cover</p>
+<p>somebody else&#x27;s weak parts, like puzzle pieces — matched on 32 proven skills instead of</p>
+<p>on personality quizzes or shared hobbies.</p>
+<p><strong>VERIFIED IN CODE.</strong> <code>shared/matchEngine.ts</code> (252 lines) exports</p>
+<p><code>MatchMode = &quot;complementary&quot; | &quot;resonance&quot;</code>, <code>ALTITUDE_LINES</code>, <code>WEIGHTS</code>, <code>THRESHOLDS</code>,</p>
+<p><code>ComplementaryResult</code>, <code>ResonanceResult</code>, <code>RankedMatch</code>. The complementary mode is the</p>
+<p>claimed mechanism and it is implemented. Screened as not existing elsewhere.</p>
+<p><em>Additional 8-way, dependent:</em> AQAL-C-17&#x27;s seven plus the compute fabric</p>
+<p>(<code>computeFabric.ts</code>), claiming parallel evaluation of isolated dimensions as part of the</p>
+<p>reproducibility guarantee. <strong>Honest note:</strong> that file is 58 lines and thin — file it as a</p>
+<p>dependent claim under AQAL-C-17, not as a new application.</p>
+<hr>
+<h2>Tier 9-WAY — 1 documented</h2>
+<table><thead><tr><th>Rank</th><th>Ref</th><th>Title</th></tr></thead><tbody>
+<tr><td>1</td><td>Treasure Map</td><td><strong>NormChain</strong> (9 bricks, money score 8/10)</td></tr>
+</tbody></table>
+<p><em>Like you&#x27;re in 5th grade:</em> every month your scores get re-checked against the newest</p>
+<p>standards, but your old scores are never erased — each one keeps a version tag, like a</p>
+<p>save file, so you can always prove what was true back then.</p>
+<p>Screened as not existing elsewhere. This is the strongest <em>regulatory</em> claim on the AQAL</p>
+<p>side: version-stamped re-scoring that never rewrites history is exactly what an</p>
+<p>accreditation body or an insurer has to be able to audit.</p>
+<p><em>Additional 9-way, dependent:</em> the 8-way bridged into RCS&#x27;s wealth-capacity profile</p>
+<p>(<code>AQAL-RCS-E5</code>), so the assessment mechanically decides which strategies are shown.</p>
+<hr>
+<h2>Tier 10-WAY — 1 documented · <strong>the whole AQAL platform</strong></h2>
+<table><thead><tr><th>Rank</th><th>Ref</th><th>Title</th></tr></thead><tbody>
+<tr><td>1</td><td>Treasure Map</td><td><strong>AQAL Sovereign</strong> (10 bricks, money score <strong>10/10 — ranked #2</strong>)</td></tr>
+</tbody></table>
+<p><em>Like you&#x27;re in 5th grade:</em> your voice, your 32 skills, your rarity rank, your</p>
+<p>proof-floors, your weak link, your fair-history, your team matches, and the research</p>
+<p>proving each skill is real — all of it becomes one portable &quot;mind identity&quot; that you own</p>
+<p>and can let people pay to see a slice of.</p>
+<p>Screened as not existing elsewhere. <strong>This is the platform thesis as a single claim</strong>, and</p>
+<p>it is the right place for the OAuth-scoped, per-slice, logged access model — which is</p>
+<p>also the cleanest commercial story in the whole portfolio: the individual owns the</p>
+<p>identity, the enterprise pays for a scope.</p>
+<p><em>Additional 10-way, dependent:</em> <code>AQAL-TRI-S5</code> identity passport across all three</p>
+<p>platforms. <strong>Specified only — Dr. Buddy has no code.</strong></p>
+<hr>
+<h2>Tier 11-WAY and 12-WAY — <strong>GAP. Dependent claims only.</strong></h2>
+<p><strong>11-A. The Audited Life Plan.</strong> The 10-way + <code>AQAL-TRI-S8</code> cross-platform tamper-evident</p>
+<p>audit fabric. <em>Like you&#x27;re in 5th grade:</em> all three notebooks braid into one, so a page</p>
+<p>torn out of any of them shows up in all three. <strong>Specified only.</strong></p>
+<p><strong>12-A. The Whole Organism.</strong> The 11-way + the Guardian Ledger&#x27;s mandate and firewall</p>
+<p>layer, so the combined system may act on money under ceilings and cooling-off.</p>
+<p><em>Like you&#x27;re in 5th grade:</em> the whole thing finally <em>does</em> something — it knows you, it</p>
+<p>knows the weather, it can prove every number, and now it is allowed to move a dollar, but</p>
+<p>only inside a permission slip, only above a reserve floor, and only with a receipt.</p>
+<p><strong>Blocked on E-12: <code>firewall.ts</code> runs with <code>rail: &quot;ledger&quot;</code> and no money rail exists.</strong></p>
+<p>Needs counsel and a bank before it is switched on.</p>
+<hr>
+<h2>Tier 13-WAY and 14-WAY — <strong>GAP. Defensive only.</strong></h2>
+<p><strong>13-A / 14-A.</strong> Add <code>AQAL-TRI-S4</code> (chronic-illness living-benefit coordination) and</p>
+<p><code>AQAL-TRI-S6</code> (consensus-weighted life-plan orchestration) to the 12-way.</p>
+<p>I will write these if you want them, but I owe you the truth first: **a 14-element</p>
+<p>independent claim is close to unenforceable.** Fourteen elements is fourteen ways for a</p>
+<p>competitor to not infringe. The only honest use for 13- and 14-way claims is as the</p>
+<p>last dependent claims in a specification, where their job is to show the examiner that</p>
+<p>the full system is a coherent thing somebody actually built — not to be asserted.</p>
+<p>**Recommendation: stop the independent-claim ladder at 4-way. Carry 5 through 14 as</p>
+<p>dependents.** That protects everything, costs one filing instead of ten, and leaves you</p>
+<p>with claims that can actually be enforced.</p>
+<hr>
+<h2>⚠️ Before anyone builds from the Treasure Map — read this</h2>
+<p>The AQAL Patent Treasure Map identifies ten real bricks and nine real combos. Its</p>
+<p>prior-art screening is useful. **Its engineering instructions are not executable, and</p>
+<p>if you hand that document to a developer they will build a second platform beside the</p>
+<p>one you already own.**</p>
+<p>Every &quot;what to change in the website&#x27;s code&quot; section is written against an architecture</p>
+<p>this repository does not have:</p>
+<table><thead><tr><th>The Treasure Map says</th><th>JoinAQAL actually is</th></tr></thead><tbody>
+<tr><td><code>voice_processor.py</code>, <code>diagnostics.py</code>, <code>matching_engine.py</code>, <code>scoring_service.py</code>, <code>renorm_job.py</code></td><td><strong>TypeScript.</strong> The only two Python files in the repo are <code>scripts/gen_catalog.py</code> and <code>scripts/upstream-audit/gen_catalog.py</code> — both catalog generators</td></tr>
+<tr><td>Postgres: <code>jsonb</code>, <code>float[32]</code>, <code>REVOKE DELETE/UPDATE</code> grants</td><td><strong>MySQL with Drizzle ORM.</strong> Different types, different migration tooling</td></tr>
+<tr><td>A <code>cognitive_profiles</code> table with <code>line_01 … line_32</code> columns</td><td><strong>No such table and no such columns exist.</strong> Verified by grep across <code>drizzle/</code>, <code>shared/</code> and <code>server/</code></td></tr>
+<tr><td>S3 + Glacier lifecycle, Redis nightly cache, OAuth2 scopes</td><td>None of these are in the stack</td></tr>
+<tr><td>Add a <code>controlling_weakness</code> column and write <code>compute_argmin</code></td><td>The controlling-weakness logic already exists in TypeScript</td></tr>
+<tr><td>Build <code>matching_engine.py</code> with cosine similarity</td><td><strong><code>shared/matchEngine.ts</code> already exists</strong> with <code>complementary</code> and <code>resonance</code> modes, weights and thresholds</td></tr>
+</tbody></table>
+<p><strong>The inventions are real. The build plan is fiction.</strong> Treat that document as a</p>
+<p><em>claims and prior-art</em> source — which is what it is good at — and take the</p>
+<p>reduction-to-practice evidence from the TypeScript files named throughout this document</p>
+<p>instead. Several things it tells you to build are already built, and filing a claim that</p>
+<p>recites a Python module and a Postgres column that do not exist would be an enablement</p>
+<p>problem pointing at the wrong machine.</p>
+<hr>
+<h1>Part 3 — What I verified myself, and what I got wrong</h1>
+<p>You said: *&quot;Review the material yourself and then check to see that you verify that</p>
+<p>these patents are inside the code.&quot;* Here is that record, including my own errors.</p>
+<h2>Verified present — read line by line</h2>
+<table><thead><tr><th>Claim</th><th>File</th><th>Evidence</th></tr></thead><tbody>
+<tr><td>Hash-chained ledger</td><td><code>joinaqal/server/patents/ledger.ts</code></td><td><code>canonicalJson</code> sorts keys at every depth; <code>entryHash</code> = SHA-256 of `prev\</td><td>kind\</td><td>json<code>; </code>verifyChain` recomputes every link and returns the first bad id</td></tr>
+<tr><td>Floor ratchet</td><td><code>joinaqal/server/patents/achievementFloors.ts</code></td><td><code>nextFloorState</code> is pure, clamps to [0,1], rejects non-finite inputs and negative hours, returns <code>Math.max(prior, level)</code></td></tr>
+<tr><td>Calibration consensus</td><td><code>joinaqal/server/patents/calibrationBus.ts</code></td><td><code>weightedTrimmedMean</code>, <code>calibrationWeight</code>, <code>MIN_SAMPLES</code> cold start, <code>recordCalibrationObservations</code></td></tr>
+<tr><td>Prosodic extraction</td><td><code>joinaqal/server/patents/voiceFeatures.ts</code></td><td>285 lines of real DSP; <code>decodeToPcm</code>, <code>extractVoiceFeatures</code>, <code>MAX_VOICE_AUDIO_BYTES</code></td></tr>
+<tr><td>Advisor/client view split</td><td><code>russell-capital-app/shared/weaponizeEngines.ts</code></td><td><code>transformToClientView</code> returns sections unchanged in advisor mode; in client mode swaps <code>title</code>→<code>clientTitle</code> and filters <code>internal_</code> and <code>commission_</code> prefixes</td></tr>
+<tr><td>Patent-status honesty</td><td><code>russell-capital-systems/shared/patentStatus.ts</code></td><td><code>mayClaimPatentPending()</code> requires an application record carrying an actual number and date — <strong>the claim cannot be turned on by asserting it</strong></td></tr>
+<tr><td>57-claim code registry</td><td><code>russell-capital-systems/shared/patentCatalog.ts</code></td><td>57 entries, each naming an engine and/or page path; a test walks every entry and fails the build on an unresolvable path</td></tr>
+</tbody></table>
+<h2>Verified ABSENT — on the sheet, not in the code</h2>
+<table><thead><tr><th>Claim</th><th>Reality</th></tr></thead><tbody>
+<tr><td>Family 14 — Ten Ecological Threats</td><td>A <code>riskScoring</code> router and a page exist. <strong>No engine computes ten named threats.</strong></td></tr>
+<tr><td>Family 15 — Divorce Shield</td><td><code>DivorceCalculator.tsx</code> renders and <strong>calls zero procedures.</strong> No fifty-state rules table exists.</td></tr>
+<tr><td>SI-026 Regulatory Sandbox</td><td>No code.</td></tr>
+<tr><td>SI-024 Multi-Currency</td><td>No code.</td></tr>
+<tr><td>SI-023 Market Sentiment</td><td>No code, and unsupportable under Family 1&#x27;s own sourcing rules.</td></tr>
+<tr><td>Dr. Buddy service embodiment</td><td>Document protocol only. <strong>Zero application code.</strong></td></tr>
+<tr><td>E-12 money movement</td><td><code>firewall.ts</code> runs with <code>rail: &quot;ledger&quot;</code>. Plaid declared, implemented nowhere.</td></tr>
+</tbody></table>
+<p><strong>Anything filed on the seven rows above before they exist is a paper patent.</strong></p>
+<h2>Corrections to the record — mine and the team&#x27;s</h2>
+<ol>
+<li><strong>A teammate fabricated a hardware claim.</strong> <code>dimensionIsolation.ts</code> was reported as</li>
+</ol>
+<p>   doing &quot;hardware memory isolation zones&quot; and &quot;context-blind token scrubbers,&quot; scored</p>
+<p>   9.5/10. It is 69 lines of <code>Object.freeze</code>, and the file&#x27;s own header disclaims</p>
+<p>   hardware enclaves. Caught by reading the file.</p>
+<ol>
+<li><strong>I invented a symbol.</strong> <code>starvationCurves</code> does not exist; my export scan truncated</li>
+</ol>
+<p>   at 50 characters and produced it. A candidate patent was built on it before I caught</p>
+<p>   it. Real names: <code>starvationCards</code>, <code>starvationForLine</code>.</p>
+<ol>
+<li><strong>Two downgrades on verification.</strong> <code>KIND_ATROPHY</code> is <strong>prose, not math</strong> — narrative</li>
+</ol>
+<p>   durability strings, not a decay model. <code>confidenceFromEvidence</code> is a **2-line string</p>
+<p>   map**, not a patentable mechanism on its own.</p>
+<ol>
+<li><strong>Alice scores were too optimistic.</strong> The first pass averaged 7.4/10. On adversarial</li>
+</ol>
+<p>   §101 review — *&quot;most of these reduce to data gating, correlation checks, or selective</p>
+<p>   display&quot;* — every score was lowered. New mean: 5.4. The JoinAQAL table in Part 1B is</p>
+<p>   the corrected one; note that twelve of twenty are Discard, most on §101.</p>
+<ol>
+<li><strong>A previously-flagged contradiction is already fixed.</strong> An audit snapshot showed</li>
+</ol>
+<p>   <code>PatentShowcase.tsx</code> claiming &quot;filed with the USPTO&quot; while the specs said &quot;DRAFT —</p>
+<p>   NOT FILED.&quot; **The current file imports <code>@shared/patentStatus</code> and reads &quot;Application</p>
+<p>   drafted April 2026 — not filed.&quot;** The false-marking exposure is closed. I was</p>
+<p>   working from a stale <code>source_hash</code> when I raised it.</p>
+<ol>
+<li><strong>Prior art forced a narrowing.</strong> SE-017 as originally drafted is anticipated by</li>
+</ol>
+<p>   <code>US 11,748,806</code>, <code>US 11,430,567 B2</code> and <code>US 12,718,290</code>. It must be narrowed to a</p>
+<p>   Boolean AND of <strong>independent</strong> predictors.</p>
+<ol>
+<li><strong>Four &quot;plumbing&quot; mechanisms were screened.</strong> Rate limiting: <strong>CROWDED.</strong> Job</li>
+</ol>
+<p>   locking: <strong>CROWDED.</strong> Webhook idempotency: <strong>CROWDED.</strong> Eight-model consensus:</p>
+<p>   <strong>CLEAR</strong> — nearest art <code>US10902005B2</code>. Only the last is worth a claim.</p>
+<p>**Roughly half of every model-proposed candidate failed verification against the actual</p>
+<p>source.** That is the gate working, not the gate failing.</p>
+<hr>
+<h1>Part 3B — The recorded strategy review, and what it changes</h1>
+<p>A recorded conversation (<code>Patent_Strategy_and_Product_Review</code>) contains the inventor</p>
+<p>describing three inventions in his own words. It is the most useful document in the</p>
+<p>entire corpus, for one reason: **in two of three cases the invention he described is</p>
+<p>materially different from — and stronger than — the invention the code implements.**</p>
+<p>Transcripts are not prior art and not enablement, but they are evidence of conception,</p>
+<p>and they are where the real mechanism lives.</p>
+<p><strong>Three new emergent patents fall out of it.</strong> These extend the E-1…E-15 list.</p>
+<table><thead><tr><th>#</th><th>Name</th><th>The wiring</th><th>What becomes patentable</th></tr></thead><tbody>
+<tr><td><strong>E-16</strong></td><td><strong>The Scaled Reference Illustration</strong></td><td>Build the imaginary large-premium reference policy into <code>timeMachineEngine.ts</code>: a reference contract at AG49-compliant rates whose premium scale is chosen so the mapped credit onto the client&#x27;s contract is displayable within the guideline&#x27;s envelope, with the scale factor, the envelope test and the mapping printed</td><td><strong>The highest-value unbuilt claim in the portfolio.</strong> Not &quot;show history next to the illustration&quot; (which AG49-A requires and four vendors ship) but a specific ratio construct with a named regulatory rationale that two carrier compliance desks have reportedly reviewed</td></tr>
+<tr><td><strong>E-17</strong></td><td><strong>Account-Value Recycling</strong></td><td>Import <code>policyLoanMechanics.ts</code> into <code>mortgageKiller.ts</code> so the cycle credits on <strong>account value</strong> — the monotone sum of every premium and credit — instead of <code>cashValue</code>; then model the day-two draw and the principal-only application</td><td>Cycled mortgage retirement in which crediting is computed on a monotone non-decreasing account value while 95% of the premium has already left the contract. <strong>This is the element that makes the claim non-obvious over infinite-banking literature</strong></td></tr>
+<tr><td><strong>E-18</strong></td><td><strong>Cross-Carrier Threading</strong></td><td>Model the same dollar sequenced through two or three carriers before it reaches the bank, building two or three account values from one premium, subject to the 60%-of-net-worth cap, with the optimizer choosing how many contracts and what sizes</td><td>Sequencing a single premium across multiple carriers to multiply account-value accrual per dollar. <strong>Nothing in the repository models this and no prior art was located.</strong> Highest novelty of the three</td></tr>
+</tbody></table>
+<h3>Why this changes the filing order</h3>
+<p>I ranked Family 8 (Time Machine) <strong>Tier 2, file narrowly</strong>, because AG49-A already</p>
+<p>mandates a capped-and-floored benchmark with a 25-year lookback and <em>requires</em> historical</p>
+<p>disclosure beside the illustration — so the implemented dual display is close to what the</p>
+<p>guideline demands anyway. **That assessment was correct about the code and wrong about</p>
+<p>the invention.** The scaled-reference construct is not what AG49-A contemplates; it is a</p>
+<p>method for making a compliant disclosure carry information the guideline was written to</p>
+<p>suppress. Whether that survives counsel&#x27;s review is counsel&#x27;s call — but it is a real</p>
+<p>mechanism, not a re-labelling, and it deserves to be assessed on its own terms.</p>
+<p>Same story in Family 5. &quot;Borrow at a low rate, deposit at a higher one&quot; is decades of</p>
+<p>published infinite-banking material and would not survive §103. **One-day threading on a</p>
+<p>monotone account value, repeated in cycles, across rotating lenders and multiple</p>
+<p>carriers** is a different animal with specific, checkable, hard-to-design-around steps.</p>
+<h3>What did <em>not</em> change</h3>
+<p>Family 9 moved the other way, and in your favour. I had rated the Whisper Coach on its</p>
+<p>specification. On this pass I read the source: <strong>2,142 lines across six files</strong>, with</p>
+<p>objection probability typed as <em>&quot;how likely it surfaces in the next five minutes,&quot;</em></p>
+<p>decision-type inference, call-phase detection, rolling talk statistics, multi-signal mood,</p>
+<p>and prior objections carried between calls. You said you are running it on live calls.</p>
+<p><strong>That is reduction to practice, and PAT-003 should lead Family 9 rather than sit inside it.</strong></p>
+<hr>
+<h1>Part 3C — Patent360</h1>
+<p><code>PATENT360-COMPLETE-BUILD.zip</code> is a <strong>real, deployed service</strong>, not a mock — packaged</p>
+<p>11 Sep 2026 from commit <code>1f0ce30</code>, live at <code>patent360-production.up.railway.app</code>.</p>
+<p>- <strong>342 files.</strong> FastAPI application (<code>app/main.py</code>, <code>app/mcp.py</code>), React/TypeScript</p>
+<p>  client (30 <code>.tsx</code> files), two-stage Dockerfile, <code>railway.toml</code>, tests, plus a compiled</p>
+<p>  static build that runs with no build step.</p>
+<p>- <strong>Pages:</strong> Dashboard, Matters, Filings, Drafting, Deadlines, Clients, ClientReport,</p>
+<p>  Datasets, Targets, Team, Options, How, Home, Login.</p>
+<p>- <strong>Three surfaces, one service:</strong> the app at <code>/</code> and <code>/app/<em></code>, REST at <code>/api/</em></code> and</p>
+<p>  <code>/health</code>, and an <strong>MCP server at <code>/mcp</code></strong> — four read-only tools behind bearer auth.</p>
+<p>  With no <code>MCP_API_KEY</code> set it answers <strong>503 rather than serving openly</strong>, which is the</p>
+<p>  correct fail-closed default and worth keeping.</p>
+<p>This is the advisor-only surface you asked for. <strong>Its patent status:</strong> the service is</p>
+<p>tooling — matter management, docketing, drafting workflow. Docketing and IP-management</p>
+<p>software is a <strong>crowded</strong> field (Anaqua, Clarivate IPfolio, PatSnap, Dennemeyer). I did</p>
+<p>not screen it formally, but nothing in the file inventory suggests a claim worth filing.</p>
+<p>**Its value is commercial and strategic — it is the delivery vehicle for everything in</p>
+<p>this document — not inventive.** Treat it that way and it stays cheap to run.</p>
+<hr>
+<h1>Part 4 — What to do next, in order</h1>
+<ol>
+<li><strong>Build E-16, the scaled reference illustration.</strong> By your own account it is the</li>
+</ol>
+<p>   fastest money in the portfolio and two carrier compliance desks have already looked at</p>
+<p>   it. Right now PAT-010 claims a mechanism the code does not contain, and the mechanism</p>
+<p>   the code <em>does</em> contain is the one with the strongest art against it. Nothing else on</p>
+<p>   this list changes the portfolio&#x27;s value as much.</p>
+<ol>
+<li><strong>Settle the rarity formula</strong> — multiplicative or geometric mean — and make the</li>
+</ol>
+<p>   user-facing number, the stored evidence and the claim all say the same thing. It is a</p>
+<p>   filing blocker.</p>
+<ol>
+<li><strong>Wire E-17.</strong> One import (<code>policyLoanMechanics</code> into <code>mortgageKiller</code>) moves Family 5</li>
+</ol>
+<p>   from a decades-old published strategy to a specific, checkable mechanism.</p>
+<ol>
+<li><strong>Fix the two defects before counsel sees anything.</strong> <code>persistAssessmentPatentEvidence</code></li>
+</ol>
+<p>   silently skipping, and the rarity number being computed two different ways for the</p>
+<p>   user and for the evidence record. Both undermine reduction-to-practice claims.</p>
+<ol>
+<li><strong>Build Families 14 and 15.</strong> Both screened <strong>no close art found</strong>, both are on the</li>
+</ol>
+<p>   sheet with nothing behind them, and Family 15 is roughly a week of work — a</p>
+<p>   versioned, sourced fifty-state rules table in the style of <code>taxRules.ts</code>.</p>
+<ol>
+<li><strong>Wire E-10, E-1 and E-2.</strong> Cheap, and they turn three Tier-3 items into Tier-1</li>
+</ol>
+<p>   evidence. E-10 is also the single best product change available.</p>
+<ol>
+<li><strong>Draft E-4 (Collateral Ladder).</strong> It is the general form of three existing patents</li>
+</ol>
+<p>   at once and the screen found nothing.</p>
+<ol>
+<li><strong>Build the Dr. Buddy service.</strong> Six applications currently rest on paper. Building</li>
+</ol>
+<p>   converts all six to reduction to practice, which is what a provisional is for.</p>
+<ol>
+<li><strong>Give each Tier-1 family a one-page disclosure</strong> in the erosion-disclosure format:</li>
+</ol>
+<p>   field, problem, elements, novelty as the inventor understands it, prior-art starting</p>
+<p>   points, reduction-to-practice files, and first commit hash.</p>
+<ol>
+<li><strong>Run a formal search before drafting</strong> — USPTO Patent Center, Google Patents and</li>
+</ol>
+<p>   WIPO by CPC class <strong>G06Q 40/06, G06Q 40/08, G06Q 10/06, G06N.</strong> Every screen in this</p>
+<p>   document is product-page level, not a freedom-to-operate opinion. &quot;No close art</p>
+<p>   found&quot; means <em>none found in that screen</em>, not <em>none exists.</em></p>
+<ol>
+<li><strong>File 2-, 3- and 4-way as independents. Carry 5- through 14-way as dependents.</strong></li>
+</ol>
+<hr>
+<p>*Prepared by the multi-model review team under a four-gate verification loop: a model</p>
+<p>proposes → prior art is screened → the claim is checked against the actual source file</p>
+<p>→ the claim is attacked under §101. A candidate that fails any gate does not appear in</p>
+<p>this document as verified.*</p>
+<p><em>Russell Holdings Management, LLC · 5700 Kirkwood Hwy Suite 202, Wilmington</em></p>
+<p><em>russellcapitalsystems.com · joinaqal.com · drasswealthmanagement.com</em></p>
