@@ -1,6 +1,7 @@
 // @ts-nocheck
 import { AlertTriangle, RotateCcw, Home, Bug, Copy, Check } from "lucide-react";
 import { Component, ReactNode, useState } from "react";
+import { apiFetch } from "@/lib/api";
 
 interface Props {
   children: ReactNode;
@@ -16,7 +17,7 @@ interface State {
 /** Report error to backend for tracking */
 async function reportError(error: Error, errorInfo?: any, metadata?: Record<string, unknown>) {
   try {
-    await fetch("/api/trpc/errorLog.report?batch=1", {
+    await apiFetch("/api/trpc/errorLog.report?batch=1", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",

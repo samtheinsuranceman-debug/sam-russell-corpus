@@ -21,6 +21,7 @@ import { ExportToSlides } from "@/components/ExportToSlides";
 import { PageInsights } from "@/components/PageInsights";
 import { MessageClientPanel } from "@/components/MessageClientPanel";
 import { ClientLedgerPanel } from "@/components/ClientLedgerPanel";
+import { apiUrl } from "@/lib/api";
 
 const NOTE_TYPE_META: Record<string, { icon: React.ReactNode; label: string; color: string }> = {
   CALL:    { icon: <Phone size={12} />,         label: "Call",    color: "text-green-400 bg-green-400/10" },
@@ -1258,7 +1259,7 @@ export default function ClientDetail() {
               <>
                 <button onClick={startEdit} className="rc-btn rc-btn-secondary text-sm"><Edit2 size={14} /> Edit</button>
                 <a
-                  href={`/api/report/${clientId}`}
+                  href={apiUrl(`/api/report/${clientId}`)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="rc-btn rc-btn-secondary text-sm"

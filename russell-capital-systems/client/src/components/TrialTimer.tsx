@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import { useLocation } from "wouter";
 import { Clock, X, CreditCard, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { apiFetch } from "@/lib/api";
 
 const HEARTBEAT_INTERVAL_MS = 60_000; // Send heartbeat every 60 seconds
 const NOTIFICATION_INTERVAL_S = 30 * 60; // Show notification every 30 minutes (1800s)
@@ -29,7 +30,7 @@ export default function TrialTimer() {
 
   const sendHeartbeat = useCallback(async () => {
     try {
-      const res = await fetch("/api/trial/heartbeat", {
+      const res = await apiFetch("/api/trial/heartbeat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ elapsedSeconds: 60 }),
@@ -107,7 +108,7 @@ export default function TrialTimer() {
   const handleSubscribe = async () => {
     setSubscribing(true);
     try {
-      const res = await fetch("/api/trial/subscribe", {
+      const res = await apiFetch("/api/trial/subscribe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -125,7 +126,7 @@ export default function TrialTimer() {
 
   const handleLogout = async () => {
     try {
-      await fetch("/api/trial/logout", { method: "POST", credentials: "include" });
+      await apiFetch("/api/trial/logout", { method: "POST", credentials: "include" });
     } catch {}
     localStorage.removeItem("rc_trial_active");
     localStorage.removeItem("rc_trial_expires");

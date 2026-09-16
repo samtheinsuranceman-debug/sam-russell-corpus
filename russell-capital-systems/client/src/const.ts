@@ -1,11 +1,12 @@
 import { OAUTH_STATE_COOKIE, encodeOAuthState } from "@shared/const";
 
 export { COOKIE_NAME, ONE_YEAR_MS } from "@shared/const";
+import { API_ORIGIN } from "@/lib/api";
 
 export const startLogin = (returnPath = window.location.pathname) => {
   const oauthPortalUrl = import.meta.env.VITE_OAUTH_PORTAL_URL;
   const appId = import.meta.env.VITE_APP_ID;
-  const redirectUri = `${window.location.origin}/api/oauth/callback`;
+  const redirectUri = `${API_ORIGIN || window.location.origin}/api/oauth/callback`;
 
   // Self-hosted install (no managed OAuth portal): the /login page offers the
   // owner sign-in instead of bouncing to a non-existent portal URL.

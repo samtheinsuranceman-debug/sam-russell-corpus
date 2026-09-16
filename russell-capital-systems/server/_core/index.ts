@@ -26,6 +26,7 @@ import { registerFounderVoice } from "../founderVoice";
 import { registerPartnerApi } from "../partnerApi";
 import { startBackupSchedule } from "../backups";
 import { pingDatabase } from "../db";
+import { registerCrossSite } from "./crossSite";
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -50,6 +51,9 @@ async function startServer() {
   const app = express();
   app.disable("x-powered-by");
   app.set("trust proxy", true);
+  // The bare domain is served by GitHub Pages and calls this origin for its
+  // API; CORS, CSRF guard and the cookie session bridge live in crossSite.ts.
+  registerCrossSite(app);
   // Canonical-host redirects, security headers (HSTS, CSP, frame, sniff,
   // referrer, permissions) and gzip/brotli — see _core/siteHardening.ts.
   await registerSiteHardening(app);

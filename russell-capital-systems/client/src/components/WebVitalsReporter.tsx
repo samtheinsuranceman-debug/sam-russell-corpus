@@ -5,6 +5,7 @@
 // identifier, no cookie: route, metric, value and device class only.
 // ============================================================
 import { useEffect } from "react";
+import { apiFetch, apiUrl } from "@/lib/api";
 
 type Sample = { route: string; metric: "LCP" | "CLS" | "INP" | "FCP" | "TTFB"; value: number; device: "mobile" | "desktop"; navType?: string };
 
@@ -42,7 +43,7 @@ export function WebVitalsReporter() {
       sent = true;
       const body = JSON.stringify({ samples });
       try {
-        if (!navigator.sendBeacon?.("/api/vitals", new Blob([body], { type: "application/json" }))) void fetch("/api/vitals", { method: "POST", body, headers: { "content-type": "application/json" }, keepalive: true }).catch(() => undefined);
+        if (!navigator.sendBeacon?.(apiUrl("/api/vitals"), new Blob([body], { type: "application/json" }))) void apiFetch("/api/vitals", { method: "POST", body, headers: { "content-type": "application/json" }, keepalive: true }).catch(() => undefined);
       } catch { /* nothing to do */ }
     };
     const onHidden = () => { if (document.visibilityState === "hidden") send(); };

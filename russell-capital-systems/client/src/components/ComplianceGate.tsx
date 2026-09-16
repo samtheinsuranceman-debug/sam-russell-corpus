@@ -4,6 +4,7 @@ import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/_core/hooks/useAuth";
 import ComplianceDisclosure from "@/pages/ComplianceDisclosure";
 import { isOwnerBypassEmail } from "@shared/accessControl";
+import { apiUrl } from "@/lib/api";
 
 /* ═══════════════════════════════════════════════════════════════════════════
    ComplianceGate — Deep Surgical Rewrite
@@ -204,7 +205,7 @@ export default function ComplianceGate({ children, returnTo }: ComplianceGatePro
         { id: 1, jsonrpc: "2.0", method: "complianceTracking.endSession", params: { sessionId } },
       ]);
       navigator.sendBeacon(
-        "/api/rpc/complianceTracking.endSession",
+        apiUrl("/api/rpc/complianceTracking.endSession"),
         new Blob([payload], { type: "application/json" })
       );
     };

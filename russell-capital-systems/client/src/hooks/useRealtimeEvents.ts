@@ -7,6 +7,7 @@
  */
 import { useEffect, useRef, useCallback } from "react";
 import { useAuth } from "@/_core/hooks/useAuth";
+import { eventsUrl } from "@/lib/api";
 
 type EventHandler = (data: any) => void;
 
@@ -23,7 +24,7 @@ export function useRealtimeEvents() {
     function connect() {
       if (esRef.current) esRef.current.close();
 
-      const es = new EventSource("/api/events", { withCredentials: true });
+      const es = new EventSource(eventsUrl("/api/events"), { withCredentials: true });
       esRef.current = es;
 
       es.onmessage = (event) => {

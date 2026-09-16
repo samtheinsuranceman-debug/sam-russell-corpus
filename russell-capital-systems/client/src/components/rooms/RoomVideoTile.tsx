@@ -9,11 +9,12 @@ import { useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
 import { ROOM_VIDEOS, SITE_VIDEO_SLOTS, roomVideoFor, type SiteVideoSlot } from "@shared/roomVideos";
 import { useRoom } from "./RoomTheme";
+import { apiFetch } from "@/lib/api";
 
 type Payload = { urls: Record<string, string>; posters: Record<string, string> };
 let cache: Promise<Payload> | null = null;
 function load(): Promise<Payload> {
-  if (!cache) cache = fetch("/api/site/room-videos", { credentials: "same-origin" }).then((r) => (r.ok ? r.json() : { urls: {}, posters: {} })).catch(() => ({ urls: {}, posters: {} }));
+  if (!cache) cache = apiFetch("/api/site/room-videos", { credentials: "same-origin" }).then((r) => (r.ok ? r.json() : { urls: {}, posters: {} })).catch(() => ({ urls: {}, posters: {} }));
   return cache;
 }
 

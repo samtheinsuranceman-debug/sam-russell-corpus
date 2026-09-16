@@ -7,6 +7,7 @@
 import { useEffect, useRef } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { MUTATION_QUEST_MAP, getQuestCategoryForPath } from "./useSoundOfMoney";
+import { apiFetch } from "@/lib/api";
 
 export function useQuestTracker() {
   const queryClient = useQueryClient();
@@ -37,7 +38,7 @@ export function useQuestTracker() {
       if (category) {
         lastTrackedRef.current = now;
         // Fire-and-forget POST to increment quest progress
-        fetch("/api/rpc/questProgress.incrementAction?batch=1", {
+        apiFetch("/api/rpc/questProgress.incrementAction?batch=1", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           credentials: "include",
