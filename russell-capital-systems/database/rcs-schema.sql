@@ -1,6 +1,6 @@
 -- Russell Capital Systems — complete database schema
 -- Generated from drizzle/schema.ts by scripts/export_schema_sql.sh; do not hand-edit.
--- Tables: 145
+-- Tables: 148
 -- Import: mysql -u USER -p DBNAME < database/rcs-schema.sql   (or phpMyAdmin → Import)
 -- The database itself must already exist (create it in cPanel → MySQL Databases).
 
@@ -2106,6 +2106,60 @@ CREATE TABLE `webhook_endpoints` (
 	`createdAt` timestamp NOT NULL DEFAULT (now()),
 	`updatedAt` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,
 	CONSTRAINT `webhook_endpoints_id` PRIMARY KEY(`id`)
+);
+CREATE TABLE `whisperer_reports` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`sessionId` int NOT NULL,
+	`workspaceId` int NOT NULL,
+	`clientId` int,
+	`cycle` int NOT NULL,
+	`objectionId` varchar(60) NOT NULL,
+	`title` varchar(300) NOT NULL,
+	`likelihood` int NOT NULL DEFAULT 0,
+	`pages` int NOT NULL DEFAULT 0,
+	`sizeBytes` int NOT NULL DEFAULT 0,
+	`pdfBase64` longtext,
+	`smsSentAt` timestamp,
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	CONSTRAINT `whisperer_reports_id` PRIMARY KEY(`id`)
+);
+CREATE TABLE `whisperer_sessions` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`workspaceId` int NOT NULL,
+	`clientId` int,
+	`clientName` varchar(200) NOT NULL,
+	`advisorUserId` int,
+	`advisorName` varchar(200),
+	`status` enum('live','ended') NOT NULL DEFAULT 'live',
+	`startedAt` timestamp NOT NULL DEFAULT (now()),
+	`endedAt` timestamp,
+	`zoomMeetingId` varchar(64),
+	`zoomMeetingUuid` varchar(128),
+	`rtmsStreamId` varchar(128),
+	`turns` json,
+	`signals` json,
+	`coachingLog` json,
+	`lastCycleAt` timestamp,
+	`cycles` int NOT NULL DEFAULT 0,
+	`decisionType` varchar(20),
+	`memorySummary` text,
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	`updatedAt` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,
+	CONSTRAINT `whisperer_sessions_id` PRIMARY KEY(`id`)
+);
+CREATE TABLE `whisperer_settings` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`workspaceId` int NOT NULL,
+	`advisorPhone` varchar(30),
+	`advisorName` varchar(200),
+	`smsEnabled` boolean NOT NULL DEFAULT true,
+	`cycleMinutes` int NOT NULL DEFAULT 5,
+	`reportsPerCycle` int NOT NULL DEFAULT 5,
+	`zoomUserEmail` varchar(320),
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	`updatedAt` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,
+	CONSTRAINT `whisperer_settings_id` PRIMARY KEY(`id`),
+	CONSTRAINT `whisperer_settings_workspace` UNIQUE(`workspaceId`)
 );
 CREATE TABLE `will_drafts` (
 	`id` int AUTO_INCREMENT NOT NULL,

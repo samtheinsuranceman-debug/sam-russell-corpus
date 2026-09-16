@@ -38,7 +38,7 @@ describe("verified Grok delta merge", () => {
   const currentRoutes = routeSet(currentApp);
 
   it("retains every Grok and unified-platform route in the 239-route application", () => {
-    expect(currentRoutes.size).toBe(264); // +3: /portal/physician, /portal/client, /portal/advisor (role dashboards) // +1: /portal/chain (calculator chain builder) // 232 + ultra-calculator, fact-finder, calculators + portal/leads + financial-assessment, ai-advisor, wealth-genome, my-journey, plan-ledger, connections, controls, erosion, sphere, forgiveness, tax-schedule, site-health, zip-engine, short-term-rentals, rental-enterprise, inheritance, iul-engine, long-term-care, income-for-life, outside-forces + /for, /for/:slug // +1: /portal/interior, the internal design-system reference added in 549521b
+    expect(currentRoutes.size).toBe(265); // +1: /portal/whisperer (AI Whisperer live-call coach) // +3: /portal/physician, /portal/client, /portal/advisor (role dashboards) // +1: /portal/chain (calculator chain builder) // 232 + ultra-calculator, fact-finder, calculators + portal/leads + financial-assessment, ai-advisor, wealth-genome, my-journey, plan-ledger, connections, controls, erosion, sphere, forgiveness, tax-schedule, site-health, zip-engine, short-term-rentals, rental-enterprise, inheritance, iul-engine, long-term-care, income-for-life, outside-forces + /for, /for/:slug // +1: /portal/interior, the internal design-system reference added in 549521b
     for (const route of [...addedRoutes, ...unifiedPlatformRoutes]) {
       expect(currentRoutes.has(route), route).toBe(true);
     }

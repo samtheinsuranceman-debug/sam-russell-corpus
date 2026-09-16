@@ -124,10 +124,10 @@ export default function HomeLeadFactFinder() {
   const greeting = recognize.data?.known && recognize.data.firstName ? recognize.data.firstName : null;
 
   return (
-    <section id="planning-estimator" aria-label="Tax and savings estimator" className="rc-plate relative isolate py-24">
+    <section id="planning-estimator" aria-label="Tax and savings estimator" className="rc-plate relative isolate py-24" style={{ backgroundImage: "url(/rcs-city-bridge.webp)", backgroundPosition: "center" }}>
       {/* The bridge, crisp and pinned to the screen behind the estimator, like every city plate above it (no black fade). */}
       <div className="rc-plate-bg" aria-hidden="true">
-        <img src="/rcs-city-bridge.webp" alt="" aria-hidden="true" className="rc-plate-pic saturate-[1.1]" style={{ objectPosition: "center" }} loading="lazy" decoding="async" />
+        <img src="/rcs-city-bridge.webp" alt="" aria-hidden="true" className="rc-plate-pic saturate-[1.1]" style={{ objectPosition: "center" }} loading="eager" decoding="async" />
         <div className="rc-plate-shade" />
       </div>
       <div className="container relative z-10">

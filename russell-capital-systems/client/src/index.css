@@ -1513,19 +1513,21 @@ img.object-cover, img[class*="h-full"] { height: 100%; }
    three screens high and never fades to black: the next plate's picture takes over at the
    very pixel where this one ends. No overflow:hidden on the plate — that would unpin the
    backdrop — the backdrop clips itself instead. 100vh first for older browsers, 100svh after. */
-.rc-plate { position: relative; background: #03090a; }
+/* The plate: the city image is painted on the section itself (background-image, set inline) as well as on the
+   sticky picture, so no seam, no lazy-load gap and no overscroll ever shows black between two pages. */
+.rc-plate { position: relative; background-color: #0b1a16; background-size: cover; background-position: center 40%; background-repeat: no-repeat; }
 .rc-plate-bg { position: sticky; top: 0; z-index: 0; height: 100vh; height: 100svh; margin-bottom: -100vh; margin-bottom: -100svh; overflow: hidden; }
 .rc-plate-pic { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 40%; }
-.rc-plate-shade { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(3,9,10,.5) 0%, rgba(3,9,10,.26) 14%, rgba(3,9,10,.26) 100%); }
+.rc-plate-shade { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(3,9,10,.28) 0%, rgba(3,9,10,.12) 12%, rgba(3,9,10,.12) 100%); }
 .rc-plate-body { position: relative; z-index: 1; min-height: 100vh; min-height: 100svh; display: flex; flex-direction: column; justify-content: center; padding-top: 7rem; padding-bottom: 5rem; }
 @media (min-width: 640px) { .rc-plate-body { padding-top: 8rem; padding-bottom: 6rem; } }
 .rc-plaque {
   position: relative; padding: 2rem 1.5rem 2.25rem; border-radius: 20px;
-  border: 1px solid rgba(110,231,183,.55); background: rgba(3,12,10,.66);
+  border: 1px solid rgba(110,231,183,.5); background: rgba(3,12,10,.5);
   -webkit-backdrop-filter: blur(16px) saturate(120%); backdrop-filter: blur(16px) saturate(120%);
   box-shadow: 0 0 0 1px rgba(110,231,183,.12) inset, 0 30px 80px rgba(0,0,0,.55), 0 0 40px rgba(16,185,129,.12);
 }
-@media (min-width: 640px) { .rc-plaque { padding: 2.5rem 2.75rem 2.75rem; } }
+@media (min-width: 640px) { .rc-plaque { padding: 2rem 2.25rem 2.25rem; } }
 .rc-plaque-eyebrow { font-size: .68rem; font-weight: 800; letter-spacing: .24em; text-transform: uppercase; color: rgba(110,231,183,.85); text-shadow: 0 0 10px rgba(52,211,153,.5); }
 .rc-plaque-eyebrow span { margin: 0 .35em; color: rgba(110,231,183,.5); }
 .rc-plaque-link { display: inline-block; font-size: 1rem; font-weight: 700; letter-spacing: .02em; color: #d98b4a; text-decoration: none; text-shadow: 0 0 12px rgba(217,139,74,.45); border-bottom: 1px solid rgba(217,139,74,.5); padding-bottom: .1rem; }
