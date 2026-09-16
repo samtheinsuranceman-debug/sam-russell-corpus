@@ -106,6 +106,7 @@ import { createCheckoutSession, ensureStripeCustomer, createPortalSession } from
 import { storagePut } from "./storage";
 import { experienceRouter, willWriterRouter, petRouter, morningRitualRouter, withdrawalRouter, revenueGuaranteeRouter, warStoryAIRouter, questProgressRouter, rivalryRouter, revenueAttributionRouter, dealScoringRouter, monthlyReportRouter, errorLogRouter } from "./experienceRouter";
 import { planningCasesRouter } from "./planningCasesRouter";
+import { chainRouter } from "./chainRouter";
 import { notifyOwner } from "./_core/notification";
 import { ENV } from "./_core/env";
 import { sendInvitationEmail, sendStaleClientDigest, sendStrategyNotification, sendProjectionFollowUp, sendQuoteRequestNotification, sendDriftAlertEmail } from "./email";
@@ -326,6 +327,7 @@ const mortgageKillerInputSchema = z.object({
 export const appRouter = router({
   system: systemRouter,
   planningCases: planningCasesRouter,
+  chain: chainRouter,
   ultra: ultraRouter,
   leads: leadsRouter,
   factFinder: factFinderRouter,

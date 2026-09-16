@@ -80,6 +80,16 @@ const MassiveCalculatorsPage: React.FC = () => {
             calculators are necessary vs. optional for your situation. Speak to it with the 🎙 button on any page.
           </p>
         </Link>
+        <Link to="/portal/chain"
+          className="block mb-8 rounded-xl border border-[#22c55e]/50 bg-[#22c55e]/10 p-5 hover:bg-[#22c55e]/20 transition-all"
+        >
+          <h2 className="text-2xl font-bold text-[#22c55e]">🔗 The Calculator Chain — list them in a row, hand off between them</h2>
+          <p className="mt-1 text-gray-300 text-sm">
+            Enter your picture once. Each calculator runs for the years you choose, saves its final outcome, and hands the
+            share you pick of its cash value into the next one. Then run the whole row 10,000 times with money printing,
+            hard-asset inflation, loan availability, future taxation and your ZIP's own record switched on or off.
+          </p>
+        </Link>
         <input
           type="text"
           placeholder="Search calculators..."

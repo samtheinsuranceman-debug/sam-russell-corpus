@@ -9,8 +9,8 @@ import { TRPCError } from "@trpc/server";
 import { protectedProcedure, publicProcedure, router } from "./_core/trpc";
 import { ENV } from "./_core/env";
 import { getFactFinderForUser } from "./factFinderDb";
-import { COHORT_THRESHOLDS, DEFAULT_THRESHOLD, ZIP_SOURCES, interestSheet } from "@shared/zipEngine";
-import { cohortFor, pmms, reportFor, yearRange, zipStatus, zipSweep } from "./zipData";
+import { COHORT_THRESHOLDS, DEFAULT_THRESHOLD, ZIP_SOURCES, annualAppreciation, backcastLevels, firstYear, interestSheet, lastYear, windowRate } from "@shared/zipEngine";
+import { cohortFor, pmms, reportFor, seriesFor, yearRange, zipStatus, zipSweep } from "./zipData";
 import { STR_PROTOCOL, STR_SOURCES, configuredStrApis } from "@shared/strSources";
 import { readStrPage, suggestStr } from "./strSources";
 
@@ -48,6 +48,42 @@ export const zipRouter = router({
     }));
     const cohort = await cohortFor(input.threshold, input.startYear);
     return { answers, cohort, pmms: rate ? { asOf: rate.asOf, url: ZIP_SOURCES.find((s) => s.id === "pmms")!.url } : null, window: { from: input.startYear }, method: { backcast: "Dollar levels before Zillow's first year are the FHFA index scaled to Zillow's first-year value: level(y) = level(anchor) × HPI(y) ÷ HPI(anchor).", annual: "A year's home value or rent is the last month Zillow published in that year; a year's mortgage rate is the average of Freddie Mac's weekly readings." } };
+  }),
+
+  /**
+   * The year-by-year record for one ZIP over any window the client picks:
+   * home-value appreciation each year (FHFA index back-cast behind Zillow's
+   * levels, from the 1970s–1990s depending on the ZIP) and rent growth each
+   * year (Zillow ZORI, 2015 onward — the record does not reach 36 years and
+   * says so). Compound window rates feed the calculator chain.
+   */
+  history: publicProcedure.input(z.object({ zip: z.string().regex(/^\d{5}$/), fromYear: z.number().int().min(1970).max(2100), toYear: z.number().int().min(1970).max(2100).optional() })).query(async ({ input }) => {
+    const [z, h, r] = await Promise.all([seriesFor(input.zip, "zhvi"), seriesFor(input.zip, "hpi"), seriesFor(input.zip, "zori")]);
+    const bc = backcastLevels(z?.data ?? null, h?.data ?? null);
+    const levels = bc?.levels ?? h?.data ?? null;
+    const rent = r?.data ?? null;
+    const to = input.toYear ?? (levels ? lastYear(levels) ?? input.fromYear : input.fromYear);
+    const inWindow = (rows: Array<{ year: number; pct: number }>) => rows.filter((a) => a.year > input.fromYear && a.year <= to);
+    const appreciation = levels ? inWindow(annualAppreciation(levels)) : [];
+    const rentGrowth = rent ? inWindow(annualAppreciation(rent)) : [];
+    const rentFrom = rent ? Math.max(input.fromYear, firstYear(rent) ?? input.fromYear) : null;
+    const wa = windowRate(levels, input.fromYear, to);
+    const wr = rent && rentFrom != null ? windowRate(rent, rentFrom, to) : null;
+    return {
+      zip: input.zip,
+      window: { from: input.fromYear, to },
+      appreciation: appreciation.map((a) => ({ year: a.year, pct: Math.round(a.pct * 10000) / 100 })),
+      rentGrowth: rentGrowth.map((a) => ({ year: a.year, pct: Math.round(a.pct * 10000) / 100 })),
+      windowAppreciationPct: wa ? Math.round(wa.rate * 10000) / 100 : null,
+      windowRentGrowthPct: wr ? Math.round(wr.rate * 10000) / 100 : null,
+      coverage: {
+        levelsFrom: levels ? firstYear(levels) : null, levelsTo: levels ? lastYear(levels) : null, backcastThrough: bc?.backcastThrough ?? null,
+        rentFrom: rent ? firstYear(rent) : null, rentTo: rent ? lastYear(rent) : null,
+        yearsOfAppreciation: appreciation.length, yearsOfRent: rentGrowth.length,
+      },
+      sources: { zhvi: z ? { asOf: z.asOf, url: z.source } : null, hpi: h ? { asOf: h.asOf, url: h.source } : null, zori: r ? { asOf: r.asOf, url: r.source } : null },
+      note: rent ? `Rent record covers ${firstYear(rent)}–${lastYear(rent)}; years before that are blank, not estimated.` : "No rent record for this ZIP.",
+    };
   }),
 
   /** Owner: read every source now. */
