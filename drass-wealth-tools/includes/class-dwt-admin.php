@@ -30,6 +30,23 @@ class DWT_Admin {
 			'sanitize_callback' => 'esc_url_raw',
 			'default'           => '',
 		] );
+		// Single sign-on. Until both of these are set the sign-in button says
+		// so rather than sending anyone to a broken handshake.
+		register_setting( 'dwt', DWT_SSO::OPT_ISSUER, [
+			'type'              => 'string',
+			'sanitize_callback' => 'esc_url_raw',
+			'default'           => '',
+		] );
+		register_setting( 'dwt', DWT_SSO::OPT_SECRET, [
+			'type'              => 'string',
+			'sanitize_callback' => 'sanitize_text_field',
+			'default'           => '',
+		] );
+		register_setting( 'dwt', DWT_SSO::OPT_AQAL_URL, [
+			'type'              => 'string',
+			'sanitize_callback' => 'esc_url_raw',
+			'default'           => '',
+		] );
 		register_setting( 'dwt', DWT_API::OPT_KEY, [
 			'type'              => 'string',
 			'sanitize_callback' => 'sanitize_text_field',
@@ -80,6 +97,27 @@ class DWT_Admin {
 							</p>
 						</td>
 					</tr>
+						<tr>
+							<th scope="row"><label for="dwt_sso_issuer">Sign-on origin</label></th>
+							<td><input type="url" class="regular-text" id="dwt_sso_issuer"
+								name="<?php echo esc_attr( DWT_SSO::OPT_ISSUER ); ?>"
+								value="<?php echo esc_attr( get_option( DWT_SSO::OPT_ISSUER, '' ) ); ?>">
+								<p class="description">The Russell Capital Systems origin, with no trailing slash.</p></td>
+						</tr>
+						<tr>
+							<th scope="row"><label for="dwt_sso_secret">Sign-on secret</label></th>
+							<td><input type="password" class="regular-text" id="dwt_sso_secret" autocomplete="off"
+								name="<?php echo esc_attr( DWT_SSO::OPT_SECRET ); ?>"
+								value="<?php echo esc_attr( get_option( DWT_SSO::OPT_SECRET, '' ) ); ?>">
+								<p class="description">Supplied with this package. Treat it like a password; anyone holding it can mint a sign-in.</p></td>
+						</tr>
+						<tr>
+							<th scope="row"><label for="dwt_aqal_url">JoinAQAL link</label></th>
+							<td><input type="url" class="regular-text" id="dwt_aqal_url"
+								name="<?php echo esc_attr( DWT_SSO::OPT_AQAL_URL ); ?>"
+								value="<?php echo esc_attr( get_option( DWT_SSO::OPT_AQAL_URL, '' ) ); ?>">
+								<p class="description">Shown as a tab in the <code>[dwt_account_nav]</code> bar. Leave blank to hide it.</p></td>
+						</tr>
 				</table>
 				<?php submit_button(); ?>
 			</form>
