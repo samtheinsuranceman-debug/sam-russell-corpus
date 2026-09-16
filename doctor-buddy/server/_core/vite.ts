@@ -3,12 +3,17 @@ import fs from "fs";
 import { type Server } from "http";
 import { nanoid } from "nanoid";
 import path from "path";
+import { pathToFileURL } from "url";
 
 export async function setupVite(app: Express, server: Server) {
   // vite is a devDependency: the production image does not carry it, so it
   // is loaded here, on the development path only, never at module load.
-  const { createServer: createViteServer, createLogger } = await import("vite");
-  const { default: viteConfig } = await import("../../vite.config");
+  // Development only. The specifiers are resolved at runtime so the bundler
+  // cannot inline vite.config (and its dev-only plugins) into dist/index.js.
+  const viteModule = "vite";
+  const { createServer: createViteServer, createLogger } = await import(viteModule);
+  const configHref = pathToFileURL(path.resolve(process.cwd(), "vite.config.ts")).href;
+  const { default: viteConfig } = await import(configHref);
   const serverOptions = {
     middlewareMode: true,
     hmr: { server },

@@ -219,6 +219,28 @@ const resolveApiUrl = () => {
   return "https://forge.manus.im/v1/chat/completions";
 };
 
+export const isManusForge = (url: string) => /forge\.manus\.im/i.test(url);
+
+/**
+ * The model is chosen by the operator (BUILT_IN_FORGE_MODEL). Without it, the
+ * Manus forge keeps its historical default and an OpenAI endpoint gets a
+ * current vision-capable small model, so the AI chat and the companion's
+ * frame reads both work from the same key.
+ */
+export const resolveModel = (url: string, env: NodeJS.ProcessEnv = process.env): string => {
+  const configured = (env.BUILT_IN_FORGE_MODEL || "").trim();
+  if (configured) return configured;
+  if (isManusForge(url)) return "gemini-2.5-flash";
+  if (/openai\.com/i.test(url)) return "gpt-4o-mini";
+  return "gpt-4o-mini";
+};
+
+export const maxTokensFor = (forge: boolean, env: NodeJS.ProcessEnv = process.env): number => {
+  const configured = Number(env.BUILT_IN_FORGE_MAX_TOKENS);
+  if (Number.isFinite(configured) && configured > 0) return Math.floor(configured);
+  return forge ? 32768 : 4096;
+};
+
 const assertApiKey = () => {
   if (!ENV.forgeApiKey) {
     throw new Error("BUILT_IN_FORGE_API_KEY is not configured");
@@ -284,8 +306,9 @@ export async function invokeLLM(params: InvokeParams): Promise<InvokeResult> {
     response_format,
   } = params;
 
+  const apiUrl = resolveApiUrl();
   const payload: Record<string, unknown> = {
-    model: "gemini-2.5-flash",
+    model: resolveModel(apiUrl),
     messages: messages.map(normalizeMessage),
   };
 
@@ -301,10 +324,12 @@ export async function invokeLLM(params: InvokeParams): Promise<InvokeResult> {
     payload.tool_choice = normalizedToolChoice;
   }
 
-  payload.max_tokens = 32768
-  payload.thinking = {
-    "budget_tokens": 128
-  }
+  // The Manus forge accepts a thinking budget and a very large completion
+  // ceiling; a plain OpenAI-compatible endpoint rejects unknown fields and
+  // enforces its own per-model output limit, so those only go to the forge.
+  const forge = isManusForge(apiUrl);
+  payload.max_tokens = maxTokensFor(forge);
+  if (forge) payload.thinking = { budget_tokens: 128 };
 
   const normalizedResponseFormat = normalizeResponseFormat({
     responseFormat,
@@ -317,7 +342,7 @@ export async function invokeLLM(params: InvokeParams): Promise<InvokeResult> {
     payload.response_format = normalizedResponseFormat;
   }
 
-  const response = await fetch(resolveApiUrl(), {
+  const response = await fetch(apiUrl, {
     method: "POST",
     headers: {
       "content-type": "application/json",
