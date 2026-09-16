@@ -1,0 +1,25 @@
+name: Intake API probe
+
+on:
+  workflow_dispatch:
+    inputs:
+      base_url:
+        required: true
+        default: https://web-production-4b215.up.railway.app
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: .github/audit
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: node .github/audit/intake-probe.mjs
+        env:
+          BASE_URL: ${{ inputs.base_url }}
