@@ -35,7 +35,8 @@ const strApiLine = () => strApiLineFor(process.env);
 import { buildAnswerPdf } from "./answerPdf";
 import { mailMode, sendMail } from "./_core/mailer";
 import { recordEvent } from "./ledger";
-import { activeVoiceId, voiceOutConfigured } from "./voiceSettings";
+import { voiceOutConfigured } from "./voiceSettings";
+import { synthesize } from "./speech";
 
 // Owner's standing rule (2026-09-06): DeepSeek is not part of this platform and
 // must not be added back as a provider, a panel voice, or an OpenRouter route.
@@ -471,22 +472,16 @@ export const ultraRouter = router({
       };
     }),
 
-  // Voice output via ElevenLabs (the owner's cloned voice) — env-keyed only.
+  // Voice output in the site's voice: the owner's HeyGen or ElevenLabs clone (server/speech.ts).
   speak: publicProcedure
     .input(z.object({ text: z.string().min(1).max(2_000) }))
     .mutation(async ({ input }) => {
-      const apiKey = process.env.ELEVENLABS_API_KEY;
-      const voiceId = await activeVoiceId();
-      if (!apiKey || !voiceId) {
-        return { ok: false as const, reason: "Voice output not configured (ELEVENLABS_API_KEY / ELEVENLABS_VOICE_ID)." };
+      try {
+        const r = await synthesize(input.text);
+        if (!r) return { ok: false as const, reason: "Voice output not configured (HEYGEN_VOICE_NAME/ID with HEYGEN_API_KEY, or ELEVENLABS_API_KEY + ELEVENLABS_VOICE_ID)." };
+        return { ok: true as const, audioBase64: r.audio.toString("base64"), mimeType: r.mimeType, via: r.via, voiceId: r.voiceId, fallback: r.fallback ?? null };
+      } catch (e) {
+        return { ok: false as const, reason: `voice service error: ${String((e as Error).message ?? e).slice(0, 160)}` };
       }
-      const res = await timedFetch(`https://api.elevenlabs.io/v1/text-to-speech/${encodeURIComponent(voiceId)}`, {
-        method: "POST",
-        headers: { "content-type": "application/json", "xi-api-key": apiKey },
-        body: JSON.stringify({ text: input.text, model_id: "eleven_multilingual_v2" }),
-      });
-      if (!res.ok) return { ok: false as const, reason: `voice service error (HTTP ${res.status})` };
-      const audio = Buffer.from(await res.arrayBuffer()).toString("base64");
-      return { ok: true as const, audioBase64: audio, mimeType: "audio/mpeg" };
     }),
 });

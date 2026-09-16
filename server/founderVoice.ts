@@ -4,7 +4,8 @@
 // ELEVENLABS_VOICE_ID are set in the host environment; 404 otherwise, so the
 // homepage player stays hidden. The synthesis is done once per process and
 // cached in memory (the text lives in shared/homeManifesto.json).
-import { activeVoiceId, voiceOutConfigured } from "./voiceSettings";
+import { activeVoice, voiceOutConfigured } from "./voiceSettings";
+import { synthesize as speak } from "./speech";
 import type { Express, Request, Response } from "express";
 import { createHash } from "node:crypto";
 import manifesto from "../shared/homeManifesto.json";
@@ -31,34 +32,23 @@ async function configured() {
   return voiceOutConfigured();
 }
 
-async function synthesize(text: string): Promise<Buffer | null> {
-  const apiKey = process.env.ELEVENLABS_API_KEY!;
-  const voiceId = (await activeVoiceId())!;
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), 45_000);
+async function synthesizeFounder(text: string): Promise<Buffer | null> {
   try {
-    const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${encodeURIComponent(voiceId)}`, {
-      method: "POST",
-      headers: { "content-type": "application/json", "xi-api-key": apiKey, accept: "audio/mpeg" },
-      body: JSON.stringify({ text, model_id: "eleven_multilingual_v2" }),
-      signal: controller.signal,
-    });
-    if (!res.ok) return null;
-    return Buffer.from(await res.arrayBuffer());
+    const r = await speak(text);
+    return r?.audio ?? null;
   } catch {
     return null;
-  } finally {
-    clearTimeout(timer);
   }
 }
 
 export async function founderMessageAudio(): Promise<Buffer | null> {
   if (!(await configured())) return null;
   const text = manifesto.founderMessage;
-  const key = createHash("sha256").update(`${await activeVoiceId()}\n${text}`).digest("hex");
+  const v = await activeVoice();
+  const key = createHash("sha256").update(`${v?.provider}:${v?.voiceId}\n${text}`).digest("hex");
   if (cache?.key === key) return cache.audio;
   if (!inflight) {
-    inflight = synthesize(text).then((audio) => {
+    inflight = synthesizeFounder(text).then((audio) => {
       if (audio) cache = { key, audio };
       inflight = null;
       return audio;
