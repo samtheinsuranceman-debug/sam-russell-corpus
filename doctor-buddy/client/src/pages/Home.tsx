@@ -21,7 +21,7 @@ const FEATURES = [
   { icon: Sparkles, title: "AI support & education", copy: "General education, structured reflection, care-preparation, and question generation with server-enforced medical boundaries." },
   { icon: BookOpen, title: "Research-aware learning", copy: "Explore general mental-health and wellness information, then bring individualized medical questions to the licensed professional responsible for your care." },
   { icon: Pill, title: "Medication organizer", copy: "Keep your own list and reminders organized. Doctor Buddy does not choose medications, doses, tapers, or start/stop instructions." },
-  { icon: Landmark, title: "Educational finance tools that adapt to you", copy: "Fifty-six financial calculators and six strategy guides. Your wellness check-ins suggest guardrails for these tools, like a cooling-off period, an emergency fund target, and a borrowing limit. For educational purposes only; not individualized financial advice." },
+  { icon: Landmark, title: "Educational finance tools that adapt to you", copy: "Fifty-six financial calculators and six strategy guides. Your wellness check-ins suggest guardrails for these tools, like a cooling-off period, an emergency fund target, and a borrowing limit. For educational purposes only, not advice for your own situation." },
   { icon: FileText, title: "User-controlled history", copy: "Save the pieces that help you, keep support sessions ephemeral where offered, and delete consumer health data from your account." },
 ];
 
