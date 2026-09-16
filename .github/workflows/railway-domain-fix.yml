@@ -1,0 +1,90 @@
+name: Railway custom domain fix
+
+on:
+  workflow_dispatch:
+    inputs:
+      railway_token:
+        description: Railway account token (masked in logs)
+        required: true
+      domain:
+        description: Custom domain to (re)attach
+        required: true
+        default: www.russellcapitalsystems.com
+      delete_ids:
+        description: Comma-separated custom domain IDs to delete first
+        required: false
+        default: ""
+      project_id:
+        required: true
+        default: a16ef4bb-3aea-4147-a751-20661ae76eb8
+      service_id:
+        required: true
+        default: e8d1eb7b-21e6-41ca-a567-aa2dc0e20f28
+      environment_id:
+        required: true
+        default: fe806289-faed-4850-b030-b47f8dc4c70f
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Mask token
+        run: echo "::add-mask::${{ inputs.railway_token }}"
+
+      - name: Delete, recreate and verify
+        env:
+          RT: ${{ inputs.railway_token }}
+          DOMAIN: ${{ inputs.domain }}
+          DELETE_IDS: ${{ inputs.delete_ids }}
+          PID: ${{ inputs.project_id }}
+          SID: ${{ inputs.service_id }}
+          EID: ${{ inputs.environment_id }}
+        run: |
+          set -euo pipefail
+          API=https://backboard.railway.app/graphql/v2
+          gql() {
+            curl -sS -m 60 -X POST "$API" \
+              -H "Authorization: Bearer $RT" \
+              -H "Content-Type: application/json" \
+              --data-binary "$1"
+          }
+          q() { jq -cn --arg q "$1" --argjson v "${2:-{\}}" '{query:$q,variables:$v}'; }
+
+          echo "== whoami"
+          gql "$(q '{ me { id email name } }')" | jq .
+
+          echo "== existing custom domains"
+          gql "$(q 'query($p:String!,$e:String!,$s:String!){ customDomains(projectId:$p,environmentId:$e,serviceId:$s){ id domain } }' \
+              "$(jq -cn --arg p "$PID" --arg e "$EID" --arg s "$SID" '{p:$p,e:$e,s:$s}')")" | jq .
+
+          IFS=',' read -ra IDS <<< "$DELETE_IDS"
+          for id in "${IDS[@]}"; do
+            id="$(echo "$id" | xargs)"; [ -z "$id" ] && continue
+            echo "== delete $id"
+            gql "$(q 'mutation($id:String!){ customDomainDelete(id:$id) }' "$(jq -cn --arg id "$id" '{id:$id}')")" | jq .
+          done
+
+          echo "== create $DOMAIN"
+          CREATE=$(gql "$(q 'mutation($i:CustomDomainCreateInput!){ customDomainCreate(input:$i){ id domain status { dnsRecords { hostlabel fqdn recordType requiredValue currentValue status } certificateStatus } } }' \
+              "$(jq -cn --arg d "$DOMAIN" --arg p "$PID" --arg e "$EID" --arg s "$SID" '{i:{domain:$d,projectId:$p,environmentId:$e,serviceId:$s}}')")")
+          echo "$CREATE" | jq .
+          NEW_ID=$(echo "$CREATE" | jq -r '.data.customDomainCreate.id // empty')
+          if [ -z "$NEW_ID" ]; then echo "create failed"; exit 1; fi
+          echo "new_id=$NEW_ID" >> "$GITHUB_OUTPUT"
+
+          echo "== poll certificate status (up to 15 min)"
+          for i in $(seq 1 45); do
+            ST=$(gql "$(q 'query($id:String!,$p:String!){ customDomain(id:$id,projectId:$p){ id domain status { certificateStatus dnsRecords { fqdn requiredValue currentValue status } } } }' \
+                "$(jq -cn --arg id "$NEW_ID" --arg p "$PID" '{id:$id,p:$p}')")")
+            CS=$(echo "$ST" | jq -r '.data.customDomain.status.certificateStatus // "unknown"')
+            DS=$(echo "$ST" | jq -r '.data.customDomain.status.dnsRecords[0].status // "unknown"')
+            echo "[$i] cert=$CS dns=$DS"
+            case "$CS" in
+              CERTIFICATE_STATUS_TYPE_VALID|CERTIFICATE_STATUS_TYPE_ISSUED) echo "$ST" | jq .; echo "CERT OK"; exit 0;;
+            esac
+            if echo "$ST" | jq -e '.errors' >/dev/null; then echo "$ST" | jq .; fi
+            sleep 20
+          done
+          echo "$ST" | jq .
+          echo "certificate still not valid after polling; DNS/create were applied"
+          exit 2
