@@ -134,13 +134,28 @@ export default function Landing() {
               {NAV.map(({ href, label }) => <a key={href} href={href} className="text-white/80 transition-colors hover:text-emerald-300">{label}</a>)}
             </div>
             <div className="flex items-center gap-2">
-              <ManagedPortalAction href="/portal/dashboard" className="rc-btn whitespace-nowrap border border-emerald-300/35 bg-emerald-300/10 text-sm text-white hover:bg-emerald-300/20"><Lock size={14} /> {isAuthenticated ? "Dashboard" : "Physician Login"}</ManagedPortalAction>
+              {isAuthenticated ? (
+                <ManagedPortalAction href="/portal/dashboard" className="rc-btn whitespace-nowrap border border-emerald-300/35 bg-emerald-300/10 text-sm text-white hover:bg-emerald-300/20"><Lock size={14} /> Dashboard</ManagedPortalAction>
+              ) : (
+                <div className="flex items-center gap-1.5" role="group" aria-label="Sign in">
+                  <ManagedPortalAction href="/portal/physician" className="rc-btn whitespace-nowrap border border-emerald-300/35 bg-emerald-300/10 text-sm text-white hover:bg-emerald-300/20"><Lock size={14} /> <span className="hidden sm:inline">Physician </span>Login</ManagedPortalAction>
+                  <ManagedPortalAction href="/portal/client" className="rc-btn hidden whitespace-nowrap border border-sky-300/35 bg-sky-300/10 text-sm text-white hover:bg-sky-300/20 md:inline-flex"><Lock size={14} /> Client Login</ManagedPortalAction>
+                  <ManagedPortalAction href="/portal/advisor" className="rc-btn hidden whitespace-nowrap border border-amber-300/35 bg-amber-300/10 text-sm text-white hover:bg-amber-300/20 md:inline-flex"><Lock size={14} /> Advisor Login</ManagedPortalAction>
+                </div>
+              )}
               <button type="button" className="rounded-lg border border-white/15 p-2 text-white xl:hidden" aria-label={menuOpen ? "Close navigation menu" : "Open navigation menu"} aria-expanded={menuOpen} onClick={() => setMenuOpen((open) => !open)}>{menuOpen ? <X size={20} /> : <Menu size={20} />}</button>
             </div>
           </div>
           {menuOpen && (
             <div className="mt-2 rounded-2xl border border-emerald-300/20 bg-[#020a09]/95 p-3 shadow-xl backdrop-blur-xl xl:hidden">
               {NAV.map(({ href, label }) => <a key={href} href={href} className="block rounded-lg px-4 py-3 text-white/80 hover:bg-white/5 hover:text-emerald-300" onClick={() => setMenuOpen(false)}>{label}</a>)}
+              {!isAuthenticated && (
+                <div className="mt-2 grid grid-cols-3 gap-2 border-t border-white/10 pt-3">
+                  <a href="/login?role=physician" className="rounded-lg border border-emerald-300/35 px-3 py-2 text-center text-sm text-white hover:bg-emerald-300/10">Physician</a>
+                  <a href="/login?role=client" className="rounded-lg border border-sky-300/35 px-3 py-2 text-center text-sm text-white hover:bg-sky-300/10">Client</a>
+                  <a href="/login?role=advisor" className="rounded-lg border border-amber-300/35 px-3 py-2 text-center text-sm text-white hover:bg-amber-300/10">Advisor</a>
+                </div>
+              )}
             </div>
           )}
         </div>
