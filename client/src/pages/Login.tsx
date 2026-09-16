@@ -3,10 +3,21 @@ import { startLogin } from "@/const";
 import { LOGIN_DISCLAIMERS } from "@shared/loginDisclaimers";
 import { ArrowRight, LockKeyhole, ShieldCheck } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
+import { INTAKE_ROLES, isIntakeRole, type IntakeRole } from "@shared/aiIntakeScript";
+
+function requestedRole(): IntakeRole | null {
+  const params = new URLSearchParams(window.location.search);
+  const role = params.get("role");
+  if (isIntakeRole(role)) return role;
+  const returnTo = params.get("returnTo") ?? "";
+  for (const r of Object.keys(INTAKE_ROLES) as IntakeRole[]) if (returnTo.startsWith(INTAKE_ROLES[r].path)) return r;
+  return null;
+}
 
 function requestedReturnPath() {
   const params = new URLSearchParams(window.location.search);
-  const value = params.get("returnTo") ?? "/portal/dashboard";
+  const role = requestedRole();
+  const value = params.get("returnTo") ?? (role ? INTAKE_ROLES[role].path : "/portal/dashboard");
   return value.startsWith("/") && !value.startsWith("//") ? value : "/portal/dashboard";
 }
 
@@ -14,7 +25,8 @@ type AuthMode = { managedOAuth: boolean; ownerLogin: boolean; ownerTotp?: boolea
 const NO_MODE: AuthMode = { managedOAuth: false, ownerLogin: false, guestLogin: false };
 
 export default function Login() {
-  const returnPath = requestedReturnPath();
+  const [role, setRole] = useState<IntakeRole | null>(requestedRole);
+  const [returnPath, setReturnPath] = useState(requestedReturnPath);
   const { loading: authLoading, isAuthenticated } = useAuth();
   const [mode, setMode] = useState<AuthMode | null>(null);
 
@@ -30,6 +42,7 @@ export default function Login() {
   const [accepted, setAccepted] = useState<Record<string, boolean>>({});
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const pickRole = (r: IntakeRole) => { setRole(r); setReturnPath(INTAKE_ROLES[r].path); setError(null); };
 
   useEffect(() => {
     let cancelled = false;
@@ -93,7 +106,16 @@ export default function Login() {
       <section className="grid place-items-center px-6 py-16">
         <div className="w-full max-w-md rounded-3xl border border-emerald-400/20 bg-white/[0.045] p-8 shadow-[0_30px_100px_rgba(6,95,70,.28)] backdrop-blur-xl">
           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-emerald-300">Russell Capital Systems</p>
-          <h2 className="mt-3 text-3xl font-semibold tracking-tight">Sign in</h2>
+          <h2 className="mt-3 text-3xl font-semibold tracking-tight">{role ? `${INTAKE_ROLES[role].label} sign in` : "Sign in"}</h2>
+          <div className="mt-4 grid grid-cols-3 gap-2" role="group" aria-label="Who is signing in">
+            {(Object.keys(INTAKE_ROLES) as IntakeRole[]).map((r) => (
+              <button key={r} type="button" onClick={() => pickRole(r)} aria-pressed={role === r} data-testid={`login-role-${r}`}
+                className={`rounded-xl border px-3 py-2.5 text-sm font-semibold transition ${role === r ? "border-emerald-300 bg-emerald-500 text-white" : "border-emerald-300/25 bg-black/30 text-emerald-100/75 hover:border-emerald-300/60 hover:text-white"}`}>
+                {INTAKE_ROLES[r].loginLabel}
+              </button>
+            ))}
+          </div>
+          {role && <p className="mt-2 text-xs leading-5 text-emerald-200/60">{INTAKE_ROLES[role].blurb} You land on the {INTAKE_ROLES[role].label.toLowerCase()} dashboard with the 12-AI system and the blue microphone.</p>}
 
           {mode === null && <p className="mt-3 leading-7 text-emerald-100/60">Checking sign-in options…</p>}
 

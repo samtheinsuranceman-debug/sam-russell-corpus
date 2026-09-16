@@ -44,6 +44,9 @@ const UltraCalculatorPage = lazy(() => import("./pages/UltraCalculatorPage"));
 const FactFinderPage = lazy(() => import("./pages/FactFinderPage"));
 const MassiveCalculatorsPage = lazy(() => import("./pages/MassiveCalculatorsPage"));
 const ChainBuilder = lazy(() => import("./pages/portal/ChainBuilder"));
+const PhysicianDashboard = lazy(() => import("./pages/portal/RoleDashboard").then((m) => ({ default: m.PhysicianDashboard })));
+const ClientDashboard = lazy(() => import("./pages/portal/RoleDashboard").then((m) => ({ default: m.ClientDashboard })));
+const AdvisorDashboard = lazy(() => import("./pages/portal/RoleDashboard").then((m) => ({ default: m.AdvisorDashboard })));
 const SharedProjection = lazy(() => import("./pages/SharedProjection"));
 const SharedSlidesViewer = lazy(() => import("./pages/SharedSlidesViewer"));
 
@@ -370,6 +373,10 @@ function Router() {
       <Route path="/portal" component={gated(InfiniteScroll, "/portal")} />
       <Route path="/portal/dashboard" component={gated(Dashboard, "/portal/dashboard")} />
       <Route path="/portal/chain" component={gated(ChainBuilder, "/portal/chain")} />
+      {/* Three doors: physician, client, advisor — each with the 12-AI panel and the blue microphone */}
+      <Route path="/portal/physician" component={gated(PhysicianDashboard, "/portal/physician")} />
+      <Route path="/portal/client" component={gated(ClientDashboard, "/portal/client")} />
+      <Route path="/portal/advisor" component={gated(AdvisorDashboard, "/portal/advisor")} />
       <Route path="/portal/advisory-summary" component={gated(AdvisorySummary, "/portal/advisory-summary")} />
       <Route path="/portal/advisor-directory" component={gated(AdvisorDirectory, "/portal/advisor-directory")} />
       <Route path="/portal/clients" component={gated(Clients, "/portal/clients")} />
