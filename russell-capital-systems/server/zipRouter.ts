@@ -67,7 +67,9 @@ export const zipRouter = router({
     const appreciation = levels ? inWindow(annualAppreciation(levels)) : [];
     const rentGrowth = rent ? inWindow(annualAppreciation(rent)) : [];
     const rentFrom = rent ? Math.max(input.fromYear, firstYear(rent) ?? input.fromYear) : null;
-    const wa = windowRate(levels, input.fromYear, to);
+    // A window that starts before the record begins measures from the first recorded year (and says so via coverage).
+    const levelsFrom = levels ? Math.max(input.fromYear, firstYear(levels) ?? input.fromYear) : input.fromYear;
+    const wa = windowRate(levels, levelsFrom, to);
     const wr = rent && rentFrom != null ? windowRate(rent, rentFrom, to) : null;
     return {
       zip: input.zip,
