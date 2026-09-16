@@ -2,7 +2,8 @@ import { z } from "zod";
 import { nanoid } from "nanoid";
 import { TRPCError } from "@trpc/server";
 import { COOKIE_NAME } from "@shared/const";
-import { CONSUMER_HEALTH_CONSENT_VERSION, TERMS_OF_USE_VERSION, PRIVACY_POLICY_VERSION, HEALTH_DATA_POLICY_VERSION, MEDICAL_DISCLAIMER_VERSION } from "@shared/legalVersions";
+import { CONSUMER_HEALTH_CONSENT_VERSION, RECORDING_CONSENT_VERSION, TERMS_OF_USE_VERSION, PRIVACY_POLICY_VERSION, HEALTH_DATA_POLICY_VERSION, MEDICAL_DISCLAIMER_VERSION } from "@shared/legalVersions";
+import { companionRouter } from "./companion";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { adminProcedure, publicProcedure, protectedProcedure, router } from "./_core/trpc";
@@ -23,6 +24,7 @@ import {
   createMedication, getMedicationsByUser, updateMedication, deleteMedication,
   logMedicationTaken, getMedicationLogs,
 } from "./db";
+import type { InsertHipaaConsent } from "../drizzle/schema";
 import { ACTIVITY_EVENTS, drBuddySessions, doctorPatients, assessments, diagnosticReports, digitalTwins, crisisEvents, users, clientLeads, personalityProfiles, personalityResponses, hipaaConsents, privacyRequests } from "../drizzle/schema";
 import type { PersonalityResponse, NeedsGapItem, TransformationStage } from "../drizzle/schema";
 import type { DigitalTwinSnapshot, DigitalTwinAlert } from "../drizzle/schema";
@@ -260,6 +262,9 @@ export const appRouter = router({
         agreedToHealthData: z.literal(true),
         agreedToWellnessBoundary: z.literal(true),
         agreedToActivityLogging: z.boolean(),
+        // Optional and separate: voice and camera analysis in the companion.
+        agreedToAudioAnalysis: z.boolean().optional().default(false),
+        agreedToVideoAnalysis: z.boolean().optional().default(false),
       }))
       .mutation(async ({ input, ctx }) => {
         // Legacy database column `agreedToHipaa` is retained for migration compatibility;
@@ -277,6 +282,9 @@ export const appRouter = router({
           processorDisclosureSnapshot,
           wellnessBoundary: true,
           activityLoggingOptional: input.agreedToActivityLogging,
+          recordingConsentVersion: RECORDING_CONSENT_VERSION,
+          audioAnalysisOptional: input.agreedToAudioAnalysis,
+          videoAnalysisOptional: input.agreedToVideoAnalysis,
         });
 
         await saveHipaaConsent({
@@ -291,6 +299,8 @@ export const appRouter = router({
           agreedToTerms: true,
           agreedToHipaa: true,
           agreedToActivityLogging: input.agreedToActivityLogging,
+          agreedToAudioAnalysis: input.agreedToAudioAnalysis,
+          agreedToVideoAnalysis: input.agreedToVideoAnalysis,
           adult18Plus: true,
           termsVersion: TERMS_OF_USE_VERSION,
           privacyVersion: PRIVACY_POLICY_VERSION,
@@ -313,6 +323,28 @@ export const appRouter = router({
         }
 
         return { success: true, consentVersion: CONSUMER_HEALTH_CONSENT_VERSION };
+      }),
+
+    /**
+     * Turn voice or camera analysis on or off after the fact, on the current
+     * consent record for this session (and account, when signed in). Turning
+     * either off takes effect on the next companion turn.
+     */
+    setRecording: publicProcedure
+      .input(z.object({ sessionId: z.string().min(8).max(128), audio: z.boolean().optional(), video: z.boolean().optional() }))
+      .mutation(async ({ input, ctx }) => {
+        const db = await getDb();
+        if (!db) throw new TRPCError({ code: "SERVICE_UNAVAILABLE", message: "Consent storage is not available right now." });
+        const consent = (ctx.user ? await getConsentByUserId(ctx.user.id) : null) ?? await getConsentBySession(input.sessionId);
+        if (!consent || consent.withdrawnAt || consent.consentVersion !== CONSUMER_HEALTH_CONSENT_VERSION) {
+          throw new TRPCError({ code: "PRECONDITION_FAILED", message: "Please accept the current consumer-health consent first." });
+        }
+        if (ctx.user && consent.userId && consent.userId !== ctx.user.id) throw new TRPCError({ code: "FORBIDDEN", message: "Forbidden" });
+        const patch: Partial<InsertHipaaConsent> = {};
+        if (input.audio !== undefined) patch.agreedToAudioAnalysis = input.audio;
+        if (input.video !== undefined) patch.agreedToVideoAnalysis = input.video;
+        if (Object.keys(patch).length) await db.update(hipaaConsents).set(patch).where(eq(hipaaConsents.id, consent.id));
+        return { audio: patch.agreedToAudioAnalysis ?? consent.agreedToAudioAnalysis, video: patch.agreedToVideoAnalysis ?? consent.agreedToVideoAnalysis };
       }),
 
     withdraw: protectedProcedure
@@ -1388,6 +1420,9 @@ Respond to the user's actual request. For reflection modules, produce a useful s
         return { response };
       }),
   }),
+
+  // ─── The companion: the whisperer for the person (shared/nlp) ─────────────
+  companion: companionRouter,
 
   // ─── Doctor Buddy adaptive support companion ────────────────────────────────
   drBuddy: router({

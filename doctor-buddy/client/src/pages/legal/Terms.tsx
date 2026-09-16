@@ -1,5 +1,7 @@
 import LegalShell from "./LegalShell";
+import { usePageTitle } from "@/lib/usePageTitle";
 export default function Terms() {
+  usePageTitle("Terms of Use");
   return <LegalShell title="Terms of Use">
     <h2>What Doctor Buddy is</h2>
     <p>Doctor Buddy's public edition is an adult wellness, reflection, education, organization, and care-preparation service. It is software. It is not a medical practice, psychotherapy practice, psychiatry service, physician, therapist, psychiatrist, emergency service, or substitute for licensed professional care.</p>

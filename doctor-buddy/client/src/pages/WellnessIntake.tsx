@@ -3,6 +3,7 @@ import NavBar from "@/components/NavBar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Brain, CheckCircle2, RotateCcw } from "lucide-react";
+import { usePageTitle } from "@/lib/usePageTitle";
 
 const QUESTIONS = [
   "How satisfied are you with your sleep routine lately?",
@@ -20,6 +21,7 @@ const QUESTIONS = [
 ];
 
 export default function WellnessIntake() {
+  usePageTitle("Wellness check-in");
   const [answers, setAnswers] = useState<Record<number, number>>({});
   const complete = Object.keys(answers).length === QUESTIONS.length;
   const avg = useMemo(() => complete ? Object.values(answers).reduce((a,b)=>a+b,0) / QUESTIONS.length : 0, [answers, complete]);

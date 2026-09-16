@@ -1,7 +1,9 @@
 import LegalShell from "./LegalShell";
 import { CLINICAL_TOOLS_ENABLED } from "@/lib/releasePolicy";
+import { usePageTitle } from "@/lib/usePageTitle";
 
 export default function FinancialDisclaimer() {
+  usePageTitle("Financial disclaimer");
   return <LegalShell title="Financial Education Disclaimer">
     <h2>Education, not advice</h2>
     <p>The Finance section contains educational calculators, strategy explainers and a readiness panel. Every figure is an illustration under stated assumptions that you can change. Nothing in it is individualized tax, legal, investment, insurance, or medical advice, an offer or recommendation of any product or security, or a determination that anything is suitable for you. Results are not guaranteed and past index or market history does not predict future results.</p>

@@ -41,6 +41,7 @@ import FDACompliance from "./pages/FDACompliance";
 import PhysicianWellness from "./pages/PhysicianWellness";
 import { AIBrainAdvisorConnector } from "./components/AIBrainAdvisorConnector";
 import SupportLab from "./pages/SupportLab";
+import Companion from "./pages/Companion";
 import ClinicalToolsUnavailable from "./pages/ClinicalToolsUnavailable";
 import Terms from "./pages/legal/Terms";
 import Privacy from "./pages/legal/Privacy";
@@ -134,6 +135,7 @@ function Router() {
       <Route path="/fda-compliance" component={clinicalClinician(FDACompliance)} />
       <Route path="/physician-wellness" component={clinicalProtected(PhysicianWellness)} />
       <Route path="/support-lab" component={CLINICAL_TOOLS_ENABLED ? clinicalProtected(SupportLab) : paid(SupportLab)} />
+      <Route path="/companion" component={CLINICAL_TOOLS_ENABLED ? clinicalProtected(Companion) : paid(Companion)} />
       {/* Medically-driven financial planning. The calculators are educational and
           not medical, so they take the edition's ordinary gate: paid membership in
           the public edition, clinical sign-in in the clinical edition. The one

@@ -24,6 +24,7 @@ import { useBrain } from "@/contexts/UnifiedDataBus";
 import { SupportModeSelector } from "@/components/SupportModeSelector";
 import { SUPPORT_MODE_COPY, useSupportMode } from "@/contexts/SupportModeContext";
 import { CLINICAL_TOOLS_ENABLED } from "@/lib/releasePolicy";
+import { usePageTitle } from "@/lib/usePageTitle";
 
 interface ChatMessage {
   id: string;
@@ -71,6 +72,7 @@ const sidebarNavItems = [
 ].filter(item => CLINICAL_TOOLS_ENABLED || !["/dashboard", "/digital-twin", "/life-maps", "/prs", "/vital-signs"].includes(item.href));
 
 export default function PatientPortal() {
+  usePageTitle("Your space");
   const { user, isAuthenticated, loading } = useAuth();
   const { mode } = useSupportMode();
   const [, navigate] = useLocation();

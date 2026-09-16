@@ -150,7 +150,13 @@ function vitePluginManusDebugCollector(): Plugin {
   };
 }
 
-const plugins = [react(), tailwindcss(), jsxLocPlugin(), vitePluginManusRuntime(), vitePluginManusDebugCollector()];
+// The Manus host runtime (an inline script the production CSP rightly
+// blocks), the JSX source-location attributes and the browser debug
+// collector exist for the Manus preview host and local development only.
+// A production build ships none of them.
+const isProductionBuild = process.env.NODE_ENV === "production" || process.argv.includes("build");
+const hostPlugins = isProductionBuild ? [] : [jsxLocPlugin(), vitePluginManusRuntime(), vitePluginManusDebugCollector()];
+const plugins = [react(), tailwindcss(), ...hostPlugins];
 
 export default defineConfig({
   plugins,

@@ -36,8 +36,9 @@ function gateOf(proc: unknown): Kind | undefined {
 
 /** Procedure names declared in the source, to make sure none is missing from the router. */
 function declaredCount(): number {
-  const src = fs.readFileSync("server/routers.ts", "utf8");
-  return (src.match(/\b\w+: (public|protected|admin)Procedure/g) ?? []).length + 2; // + systemRouter
+  // routers.ts plus every router file it mounts (companion.ts), plus systemRouter.
+  const src = ["server/routers.ts", "server/companion.ts"].map(f => fs.readFileSync(f, "utf8")).join("\n");
+  return (src.match(/\b\w+: (public|protected|admin)Procedure/g) ?? []).length + 2;
 }
 
 function ctxFor(role: "anon" | "user" | "admin"): TrpcContext {

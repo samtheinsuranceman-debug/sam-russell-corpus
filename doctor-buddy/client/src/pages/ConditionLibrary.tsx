@@ -442,7 +442,9 @@ const EVIDENCE_CONFIG = {
   emerging: { color: "bg-violet-500/20 text-violet-400", label: "Emerging Research" },
 };
 
+import { usePageTitle } from "@/lib/usePageTitle";
 export default function ConditionLibrary() {
+  usePageTitle("Conditions library");
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [expandedId, setExpandedId] = useState<string | null>(null);

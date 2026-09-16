@@ -125,7 +125,9 @@ function MoodChart({ entries }: { entries: Array<{ moodScore: number | null; cre
   );
 }
 
+import { usePageTitle } from "@/lib/usePageTitle";
 export default function MoodJournal() {
+  usePageTitle("Journal");
   const { isAuthenticated, loading } = useAuth();
   const [content, setContent] = useState("");
   const [moodScore, setMoodScore] = useState<number | null>(null);

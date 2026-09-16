@@ -28,3 +28,10 @@ No OAuth portal exists for this host, so sign-in is by email link (`/login`): HM
 ## Database
 
 `mysql://…@MySQL.railway.internal:3306/doctor_buddy` on the project's existing MySQL service; the migration runner creates the database and applies `drizzle/0000`–`0012` on every deploy, once each, with checksums. Doctor Buddy shares the MySQL server with the RCS site but uses its own database.
+
+## Update, later on September 16: live, and the NLP foundation
+
+- **Live.** https://doctor-buddy-production.up.railway.app answers; the GitHub probe (`drbuddy-probe` workflow, 17 checks) passed and Perplexity Computer's second pass confirmed the pages, banner, JSON 404/405 and healthz. Two boot failures on the way (vite config inlined by the bundler; a hardcoded Gemini model against the OpenAI endpoint) are fixed and recorded in `doctor-buddy/LESSONS.md` cycle 6.
+- **Sign-in mail** answered 422 from Resend on the outside pass: `MAIL_FROM` (referenced from the `web` service) must be an address on a domain verified in Resend (`russellcapitalsystems.com` is verified; `joinaqal.com` is not). The server log now shows Resend's message. Owner action: confirm `MAIL_FROM` on `web` is `…@russellcapitalsystems.com`.
+- **NLP foundation** (`doctor-buddy/NLP_FOUNDATION.md`): the Sourcebook of Magic (all 77 patterns), the Meta-Model, the 51 meta-programs, Sleight of Mouth, representational-system languaging, the companion engine, recording consent (version 4.1, migration 0013), and the Wealth Genome durability bridge. The book texts are in `books/text/` so no re-OCR is needed.
+- **Companion** at `/companion` (paid gate in the public edition, like the Support Lab): listens, reflects in the person's own sensory language, asks permission before steering, pattern-interrupts a loop, and goes to safety language on any C-SSRS level. Voice and camera analysis are separate optional consents.

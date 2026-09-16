@@ -67,3 +67,12 @@ Learned:
 - Every procedure declares its gate where the machine can read it.
 - Whatever the browser was built to say, the server checks before serving it.
 - A build report that did not run the build is a description, not a verification.
+
+
+## Cycle 6 (deploy to live, 2026-09-16)
+
+- A literal dynamic `import("../../vite.config")` is still followed by esbuild: the config and its dev plugins were inlined and hoisted, and production failed on a dev-only package. Resolve development-only module paths at runtime (`pathToFileURL(path.resolve(cwd, "vite.config.ts"))`) so the bundler cannot see them.
+- The delivered LLM client hardcoded a Gemini model and Manus-forge-only request fields. Any OpenAI-compatible endpoint rejects unknown fields and enforces per-model output limits. Model and ceiling are now operator-configured; forge fields only go to the forge.
+- Host-preview plugins (Manus runtime, JSX loc, debug collector) belong to the preview host, not the product. The production CSP correctly blocked the inline script they emitted; the fix is to not ship them.
+- Per-page titles and a path-normalizing consent bypass (`/crisis/` with a trailing slash was gated) came from the outside pass; a second pair of eyes on the live site finds what the harness cannot.
+- Standing rule: an engine that speaks (the companion) must have its decision made in code and tested, with the model only rephrasing inside the decision; and it must never speak twice on the same silence.

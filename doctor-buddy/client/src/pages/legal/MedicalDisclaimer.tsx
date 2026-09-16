@@ -1,5 +1,7 @@
 import LegalShell from "./LegalShell";
+import { usePageTitle } from "@/lib/usePageTitle";
 export default function MedicalDisclaimer() {
+  usePageTitle("Wellness & Medical Disclaimer");
   return <LegalShell title="Wellness & Medical Disclaimer">
     <h2>General wellness only</h2>
     <p>The public edition is designed to support healthy routines, reflection, communication preparation, organization, and general education. It is not intended to diagnose, cure, mitigate, prevent, or treat a disease or condition.</p>

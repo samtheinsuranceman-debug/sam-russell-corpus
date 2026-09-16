@@ -67,7 +67,8 @@ for (const file of claimScanRoots.flatMap(walk)) {
 }
 
 const legalVersions = fs.readFileSync(path.join(root, "shared/legalVersions.ts"), "utf8");
-if (!legalVersions.includes('CONSUMER_HEALTH_CONSENT_VERSION = "4.0"')) failures.push("Final consumer-health consent version is not locked to 4.0");
+if (!legalVersions.includes('CONSUMER_HEALTH_CONSENT_VERSION = "4.1"')) failures.push("Final consumer-health consent version is not locked to 4.1 (recording disclosure)");
+if (!legalVersions.includes('RECORDING_CONSENT_VERSION')) failures.push("Recording consent version missing from legalVersions");
 for (const key of ["TERMS_OF_USE_VERSION", "PRIVACY_POLICY_VERSION", "HEALTH_DATA_POLICY_VERSION", "MEDICAL_DISCLAIMER_VERSION", "SUBSCRIPTION_TERMS_VERSION", "FINANCIAL_DISCLAIMER_VERSION"]) {
   if (!legalVersions.includes(key)) failures.push(`Missing shared legal version: ${key}`);
 }

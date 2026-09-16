@@ -117,7 +117,9 @@ const ONLINE_RESOURCES = [
   { name: "7 Cups — Free Online Therapy", url: "https://7cups.com", description: "Free emotional support from trained listeners, 24/7." },
 ];
 
+import { usePageTitle } from "@/lib/usePageTitle";
 export default function CrisisResources() {
+  usePageTitle("Crisis resources");
   return (
     <div className="min-h-screen bg-background">
       <NavBar />

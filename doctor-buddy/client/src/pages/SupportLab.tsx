@@ -15,8 +15,10 @@ import { Streamdown } from "streamdown";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "@/const";
 import { PUBLIC_WELLNESS_MODE } from "@/lib/releasePolicy";
+import { usePageTitle } from "@/lib/usePageTitle";
 
 export default function SupportLab() {
+  usePageTitle("Support Lab");
   const { mode, privacy, setPrivacy } = useSupportMode();
   const { isAuthenticated } = useAuth();
   const [query, setQuery] = useState("");

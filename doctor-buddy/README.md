@@ -71,3 +71,8 @@ Database changes for subscription controls, jurisdiction-aware breach tracking, 
 ## Clinical/patent material
 
 Patent-engine and clinician-module source remains available for continued R&D. Its presence in the repository does not make those functions part of the public product and does not establish FDA clearance, HIPAA compliance, clinical validation, efficacy, safety, or patentability. Draft patent materials should be reviewed by qualified patent counsel before filing, and any future regulated clinical product should receive an independent regulatory and clinical-validation review before release.
+
+
+## 2.2 — the NLP foundation and the Companion
+
+`shared/nlp/` holds the representational-system languaging engine, the Meta-Model (Structure of Magic), the 51 meta-programs (Hall & Bodenhamer), the 77 Sourcebook of Magic patterns with Dilts' 14 Sleight of Mouth reframes, and the companion engine that decides whether, when and how to speak. The AI chat's system prompt is built from it on every turn; `/companion` is the live voice version with optional, separately consented voice and camera analysis. See `NLP_FOUNDATION.md`.

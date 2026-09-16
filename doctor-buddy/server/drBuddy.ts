@@ -10,6 +10,10 @@ import { brainEvents, digitalTwins, diagnosticReports, moodJournalEntries, medic
 import { eq, desc, and } from "drizzle-orm";
 import { invokeLLM } from "./_core/llm";
 import { assessCSSRS, type CSSRSLevel } from "@shared/engines/crisisDetection";
+import { readRepSystemOverTurns, repSystemPromptBlock } from "@shared/nlp/repSystems";
+import { metaModel, loadBearing, metaModelPromptBlock } from "@shared/nlp/metaModel";
+import { readMetaPrograms, metaProgramsPromptBlock } from "@shared/nlp/metaPrograms";
+import { suggestPatterns, patternsPromptBlock } from "@shared/nlp/patterns";
 import { PUBLIC_WELLNESS_MODE } from "./compliance/releasePolicy";
 
 // ─── Crisis Keywords (Grok-3 generated) ──────────────────────────────────────
@@ -314,15 +318,22 @@ export async function drBuddyChat(
   userMessage: string,
   supportMode: DoctorBuddySupportMode,
   existingMessages: Array<{ role: string; content: string }>
-): Promise<{ reply: string; crisisDetected: boolean; cssrsLevel: CSSRSLevel; urgent: boolean; suggestedActions: string[] }> {
+): Promise<{ reply: string; crisisDetected: boolean; cssrsLevel: CSSRSLevel; urgent: boolean; suggestedActions: string[]; languaging: LanguagingSummary }> {
   const screen = screenCrisis(userMessage);
   const crisisDetected = screen.crisisDetected;
 
   // Build context
   const patientContext = await synthesizePatientContext(userId);
 
+  // The NLP layer (shared/nlp): the person's representational system, the
+  // Meta-Model shape of what they just said, the meta-programs that show, and
+  // at most one Sourcebook pattern that fits. Server-owned; the model is told
+  // to speak in the person's system, reflect before asking, and ask one
+  // question at most. Nothing here diagnoses.
+  const nlp = languagingContext(userMessage, existingMessages);
+
   // Build system prompt with context injected
-  const systemPrompt = `${DR_BUDDY_SYSTEM_PROMPT}\n\n${SUPPORT_MODE_PROMPTS[supportMode]}\n\n${patientContext}`;
+  const systemPrompt = `${DR_BUDDY_SYSTEM_PROMPT}\n\n${SUPPORT_MODE_PROMPTS[supportMode]}\n\n${patientContext}\n\n${nlp.block}`;
 
   // Build messages array
   const messages = [
@@ -383,7 +394,41 @@ export async function drBuddyChat(
     sessionId,
   });
 
-  return { reply, crisisDetected, cssrsLevel: screen.cssrsLevel, urgent: screen.urgent, suggestedActions };
+  return { reply, crisisDetected, cssrsLevel: screen.cssrsLevel, urgent: screen.urgent, suggestedActions, languaging: nlp.summary };
+}
+
+export interface LanguagingSummary {
+  repSystem: string | null;
+  confidence: number;
+  loadBearing: { name: string; match: string; challenge: string } | null;
+  pattern: { id: number; name: string } | null;
+}
+
+/** The NLP prompt block and a small summary the chat UI may show. Pure. */
+export function languagingContext(userMessage: string, history: Array<{ role: string; content: string }>): { block: string; summary: LanguagingSummary } {
+  const personTexts = [...history.filter(m => m.role === "user").slice(-8).map(m => m.content), userMessage];
+  const rep = readRepSystemOverTurns(personTexts);
+  const findings = metaModel(userMessage);
+  const programs = readMetaPrograms(personTexts);
+  const patterns = suggestPatterns({ text: userMessage, metaModel: findings, metaPrograms: programs, edition: PUBLIC_WELLNESS_MODE ? "public" : "clinical", limit: 3 });
+  const lb = loadBearing(findings);
+  const offer = patterns.find(p => p.offerable) ?? null;
+  const block = [
+    "LANGUAGING (server-owned; Bandler & Grinder, Hall). Speak in the person's own sensory system. Reflect first. Ask at most ONE question per reply. Never name a pattern or a technique to the person.",
+    repSystemPromptBlock(rep),
+    metaModelPromptBlock(findings),
+    metaProgramsPromptBlock(programs),
+    patternsPromptBlock(patterns, PUBLIC_WELLNESS_MODE ? "public" : "clinical"),
+  ].join("\n\n");
+  return {
+    block,
+    summary: {
+      repSystem: rep.primary,
+      confidence: rep.confidence,
+      loadBearing: lb ? { name: lb.name, match: lb.match, challenge: lb.challenge } : null,
+      pattern: offer ? { id: offer.id, name: offer.name } : null,
+    },
+  };
 }
 
 // ─── AI Whisperer — Doctor-Side Clinical Suggestions ─────────────────────────

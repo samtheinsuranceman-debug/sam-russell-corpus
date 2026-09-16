@@ -10,8 +10,10 @@ import { Badge } from "@/components/ui/badge";
 import { ShieldCheck, Download, Trash2, LogOut, CreditCard, ExternalLink, AlertTriangle, UserRound, MessageSquareText } from "lucide-react";
 import { toast } from "sonner";
 import { CONSUMER_HEALTH_CONSENT_VERSION } from "@shared/legalVersions";
+import { usePageTitle } from "@/lib/usePageTitle";
 
 export default function AccountSettings() {
+  usePageTitle("Settings");
   const { user, isAuthenticated } = useAuth();
   const [deleteConfirm, setDeleteConfirm] = useState(false);
   const utils = trpc.useUtils();

@@ -6,12 +6,14 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { EMAIL_AUTH_ENABLED, isLoginConfigured, oauthLoginUrl } from "@/const";
+import { usePageTitle } from "@/lib/usePageTitle";
 
 /**
  * Sign in by email link. The link works once and expires in fifteen minutes.
  * No password is stored anywhere; the account id is derived from the address.
  */
 export default function Login() {
+  usePageTitle("Sign in");
   const [location] = useLocation();
   const [email, setEmail] = useState("");
   const [state, setState] = useState<"idle" | "sending" | "sent" | "error">("idle");

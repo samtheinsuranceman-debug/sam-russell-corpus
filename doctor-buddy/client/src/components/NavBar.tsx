@@ -7,8 +7,7 @@ import { trpc } from "@/lib/trpc";
 import {
   Brain, Heart, BookOpen, Activity, AlertTriangle, BarChart3, TrendingUp,
   LayoutDashboard, Menu, X, FlaskConical, Dna, Settings, Pill, Stethoscope,
-  Bot, Shield, Users, BrainCircuit, Landmark, ClipboardList
-} from "lucide-react";
+  Bot, Shield, Users, BrainCircuit, Landmark, ClipboardList, Sparkles } from "lucide-react";
 import { CLINICAL_TOOLS_ENABLED } from "@/lib/releasePolicy";
 
 /**
@@ -22,6 +21,7 @@ import { CLINICAL_TOOLS_ENABLED } from "@/lib/releasePolicy";
  */
 const PRIMARY_NAV = [
   { label: "Support", href: "/support-lab", icon: BrainCircuit },
+  { label: "Companion", href: "/companion", icon: Sparkles },
   { label: "Finance", href: "/finance", icon: Landmark },
   { label: "Check-In", href: "/progress", icon: Activity },
   { label: "Journal", href: "/journal", icon: Heart },

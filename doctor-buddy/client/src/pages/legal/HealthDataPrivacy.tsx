@@ -1,10 +1,14 @@
 import LegalShell from "./LegalShell";
 import { HEALTH_DATA_PROCESSORS, LEGAL_BUSINESS_ADDRESS, LEGAL_BUSINESS_NAME, PRIVACY_CONTACT_EMAIL } from "@/lib/releasePolicy";
+import { usePageTitle } from "@/lib/usePageTitle";
 export default function HealthDataPrivacy() {
+  usePageTitle("Consumer Health Data Privacy Policy");
   return <LegalShell title="Consumer Health Data Privacy Policy">
     <p>This separate policy covers consumer health data and health-related information you choose to provide to the public Doctor Buddy service operated by {LEGAL_BUSINESS_NAME}.</p>
     <h2>Categories we may collect</h2>
     <ul><li>Self-described mood, stress, sleep, goals, habits, experiences, and wellness reflections.</li><li>Journal and check-in content you choose to save.</li><li>Medication names or schedules you choose to organize; the public edition does not prescribe or change them.</li><li>Support prompts, conversations, and saved takeaways when you choose persistence instead of ephemeral use.</li><li>Account and subscription information needed to provide paid access.</li></ul>
+    <h3>Voice and camera analysis (optional, Companion only)</h3>
+    <p>If you choose to, the Companion can analyse your voice (tone and energy, computed in your browser and never uploaded as audio) and your camera (a single still frame about every twenty seconds, sent to the configured AI processor and not stored; only a short text description of posture and expression is kept for the session). Both are off by default, are separate optional checkboxes in the consent notice, can be turned off at any time on the Companion page, and are never used for identification, advertising, or any decision about you. Turning them off takes effect on the next turn.</p>
     <h2>Sources</h2>
     <p>Consumer health data comes directly from you and from product interactions you intentionally save. The public edition does not silently import medical records, wearable data, precise location, or third-party health records.</p>
     <h2>Purposes</h2>

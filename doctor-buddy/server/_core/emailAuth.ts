@@ -108,7 +108,13 @@ async function sendWithResend(to: string, subject: string, text: string): Promis
     body: JSON.stringify({ from: process.env.MAIL_FROM, to: [to], subject, text }),
     signal: AbortSignal.timeout(15_000),
   });
-  if (!res.ok) throw new Error(`Mail provider answered ${res.status}`);
+  if (!res.ok) {
+    // Resend's validation message names the field at fault ("from", "to") and
+    // never echoes the key; it goes to the server log only.
+    let detail = "";
+    try { detail = String(((await res.json()) as { message?: unknown }).message ?? "").slice(0, 160); } catch { /* no body */ }
+    throw new Error(`Mail provider answered ${res.status}${detail ? `: ${detail}` : ""}`);
+  }
 }
 
 export function registerEmailAuthRoutes(app: Express, mailer: Mailer = sendWithResend) {

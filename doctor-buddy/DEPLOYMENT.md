@@ -159,3 +159,12 @@ npm audit --omit=dev
 ```
 
 This workspace does not contain a complete dependency installation, so a fresh typecheck/test/build and dependency vulnerability scan must be completed in the networked deployment environment before public launch.
+
+
+## Companion, recording consent and the NLP layer (2.2)
+
+- Migration `0013_recording_consent.sql` adds `agreedToAudioAnalysis` / `agreedToVideoAnalysis` to `hipaa_consents`; the consent version is 4.1, so every visitor is shown the notice again (two new optional checkboxes).
+- `BUILT_IN_FORGE_MODEL` should name a vision-capable chat model (default `gpt-4o-mini` on an OpenAI endpoint); the companion's camera reads use the same key and endpoint as the AI chat. Frames are sent about every 20 s per person, at low detail, and are not stored.
+- The Content-Security-Policy stays `script-src 'self'`: production builds no longer include the Manus host runtime plugin (an inline script) or the JSX source-location plugin; those are development-only.
+- Speech recognition and synthesis run in the browser (Web Speech API). Browsers without recognition fall back to typing; everything else is unchanged.
+- Sign-in mail: Resend answers 422 when the `from` address is not on a verified domain; the server log now includes Resend's message. `MAIL_FROM` must be an address on a domain verified in the Resend account.

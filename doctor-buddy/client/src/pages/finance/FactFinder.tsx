@@ -14,6 +14,7 @@ import { useClinicalEvidence } from "@/lib/clinicalEvidence";
 import { money } from "@shared/finance/format";
 import { TIER_STYLE } from "@/components/finance/ReadinessPanel";
 import { Badge } from "@/components/ui/badge";
+import { usePageTitle } from "@/lib/usePageTitle";
 
 type Section = keyof FactFinderData;
 
@@ -65,6 +66,7 @@ function Toggle({ label, checked, onChange }: { label: string; checked: boolean;
 }
 
 export default function FactFinder() {
+  usePageTitle("Financial fact finder");
   const stored = useMemo(() => loadFactFinder(), []);
   const [data, setData] = useState<FactFinderData>(() => stored?.data ?? emptyFactFinder());
   const [section, setSection] = useState<number>(() => Math.min(stored?.section ?? 0, SECTIONS.length - 1));

@@ -4,6 +4,7 @@ import NavBar from "@/components/NavBar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Activity, ArrowLeft, CheckCircle2, Shield } from "lucide-react";
+import { usePageTitle } from "@/lib/usePageTitle";
 
 const AREAS = [
   ["mood", "Overall mood"],
@@ -14,6 +15,7 @@ const AREAS = [
 ] as const;
 
 export default function WellnessProgressCheckIn() {
+  usePageTitle("Check-in");
   const [scores, setScores] = useState<Record<string, number>>({});
   const [saved, setSaved] = useState(false);
   const complete = AREAS.every(([id]) => scores[id]);

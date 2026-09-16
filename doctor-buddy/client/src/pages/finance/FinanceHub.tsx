@@ -3,6 +3,7 @@ import { Link } from "wouter";
 import { Calculator, ClipboardList, Landmark, Lock, ArrowRight, Sparkles } from "lucide-react";
 import NavBar from "@/components/NavBar";
 import ReadinessPanel from "@/components/finance/ReadinessPanel";
+import DurabilityCard, { loadMetaProgramReadings } from "@/components/finance/DurabilityCard";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useClinicalEvidence } from "@/lib/clinicalEvidence";
@@ -11,6 +12,7 @@ import { CLINICAL_TOOLS_ENABLED } from "@/lib/releasePolicy";
 import { STRATEGIES } from "@shared/finance/strategies";
 import { calcsByCategory } from "@shared/finance/calc";
 import { calculatorFlags, type StrategyStatus } from "@shared/engines/psychFinancialBridge";
+import { usePageTitle } from "@/lib/usePageTitle";
 
 const STATUS_STYLE: Record<StrategyStatus, string> = {
   recommended: "bg-emerald-400/15 text-emerald-300 border-emerald-400/30",
@@ -20,6 +22,7 @@ const STATUS_STYLE: Record<StrategyStatus, string> = {
 };
 
 export default function FinanceHub() {
+  usePageTitle("Finance");
   const stored = useMemo(() => loadFactFinder(), []);
   const context = useMemo(() => financialContextFrom(stored?.data ?? null), [stored]);
   const [pause, setPause] = useState(() => loadPause());
@@ -49,6 +52,7 @@ export default function FinanceHub() {
         </div>
 
         <ReadinessPanel profile={profile} hasClinicalData={evidence.hasClinicalData} hasIntake={evidence.hasIntake} pause={pause} onPauseChange={setPause} />
+        <DurabilityCard readings={loadMetaProgramReadings()} source="your last Companion conversation (only the sorting readings are kept on this device, never the words)" />
 
         <div className="mt-6 grid gap-4 md:grid-cols-2">
           <Link href="/finance/fact-finder">

@@ -41,6 +41,10 @@ export const hipaaConsents = mysqlTable("hipaa_consents", {
   agreedToTerms: boolean("agreedToTerms").default(false).notNull(),
   agreedToHipaa: boolean("agreedToHipaa").default(false).notNull(),
   agreedToActivityLogging: boolean("agreedToActivityLogging").default(false).notNull(),
+  /** Optional: analyse the person's voice (tone, energy) during companion conversations. */
+  agreedToAudioAnalysis: boolean("agreedToAudioAnalysis").default(false).notNull(),
+  /** Optional: analyse camera frames (posture, expression) during companion conversations. */
+  agreedToVideoAnalysis: boolean("agreedToVideoAnalysis").default(false).notNull(),
   adult18Plus: boolean("adult18Plus").default(false).notNull(),
   termsVersion: varchar("termsVersion", { length: 64 }),
   privacyVersion: varchar("privacyVersion", { length: 64 }),

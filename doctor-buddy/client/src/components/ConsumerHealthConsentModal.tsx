@@ -34,8 +34,9 @@ const BYPASS_EXACT_PATHS = [
   "/404",
 ];
 
-function bypassConsentGate(path: string) {
-  return BYPASS_EXACT_PATHS.includes(path);
+export function bypassConsentGate(path: string) {
+  const clean = (path.split("?")[0].split("#")[0].replace(/\/+$/, "") || "/").toLowerCase();
+  return BYPASS_EXACT_PATHS.includes(clean);
 }
 
 export default function ConsumerHealthConsentModal() {
@@ -47,6 +48,8 @@ export default function ConsumerHealthConsentModal() {
   const [agreedHealthData, setAgreedHealthData] = useState(false);
   const [agreedWellnessBoundary, setAgreedWellnessBoundary] = useState(false);
   const [agreedActivity, setAgreedActivity] = useState(false);
+  const [agreedAudio, setAgreedAudio] = useState(false);
+  const [agreedVideo, setAgreedVideo] = useState(false);
   const [error, setError] = useState("");
 
   const sessionId = useMemo(() => getSessionId(), []);
@@ -98,6 +101,8 @@ export default function ConsumerHealthConsentModal() {
       agreedToHealthData: agreedHealthData,
       agreedToWellnessBoundary: agreedWellnessBoundary,
       agreedToActivityLogging: agreedActivity,
+      agreedToAudioAnalysis: agreedAudio,
+      agreedToVideoAnalysis: agreedVideo,
     });
   };
 
@@ -153,6 +158,8 @@ export default function ConsumerHealthConsentModal() {
                   { id: "health", label: "I consent to Doctor Buddy collecting and using the health-related information I choose to enter and, when necessary to provide a feature I request, sending the minimum necessary information to the service providers identified in the Consumer Health Data Privacy Policy (including the configured AI processor for AI features).", required: true, checked: agreedHealthData, onChange: setAgreedHealthData },
                   { id: "boundary", label: "I understand Doctor Buddy is a wellness/support product and the Friend, Therapist and Psychiatrist Zones are communication styles only—not licensed care, diagnosis, psychotherapy, psychiatry, or prescribing.", required: true, checked: agreedWellnessBoundary, onChange: setAgreedWellnessBoundary },
                   { id: "activity", label: "Optional: I allow product-usage logging that excludes the content of my health reflections and support messages.", required: false, checked: agreedActivity, onChange: setAgreedActivity },
+                  { id: "audio", label: "Optional: in the Companion, I agree that my voice may be analysed in real time (tone and energy, in my browser) so the companion can notice how I sound, not only what I say. No audio recording is stored.", required: false, checked: agreedAudio, onChange: setAgreedAudio },
+                  { id: "video", label: "Optional: in the Companion, I agree that my camera may be analysed in real time (posture and expression). A frame is sent to the configured AI processor about every twenty seconds and is not stored; only a short text description is kept for the session. I can turn this off at any time.", required: false, checked: agreedVideo, onChange: setAgreedVideo },
                 ].map(item => (
                   <label key={item.id} className="flex items-start gap-3 cursor-pointer group">
                     <input type="checkbox" checked={item.checked} onChange={e => item.onChange(e.target.checked)} className="mt-0.5 accent-cyan-400" />

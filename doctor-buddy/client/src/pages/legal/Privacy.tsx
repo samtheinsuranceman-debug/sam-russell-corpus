@@ -1,6 +1,8 @@
 import LegalShell from "./LegalShell";
 import { LEGAL_BUSINESS_ADDRESS, LEGAL_BUSINESS_NAME, PRIVACY_CONTACT_EMAIL } from "@/lib/releasePolicy";
+import { usePageTitle } from "@/lib/usePageTitle";
 export default function Privacy() {
+  usePageTitle("Privacy Policy");
   return <LegalShell title="Privacy Policy">
     <h2>Who operates Doctor Buddy</h2>
     <p>{LEGAL_BUSINESS_NAME} operates the public Doctor Buddy service. Privacy requests may be sent to {PRIVACY_CONTACT_EMAIL} or mailed to {LEGAL_BUSINESS_ADDRESS}.</p>
