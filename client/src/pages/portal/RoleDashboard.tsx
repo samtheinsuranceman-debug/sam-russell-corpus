@@ -7,7 +7,7 @@
 // and the blue microphone that runs the spoken fact finder the moment
 // it is pressed. Below them, the shortcuts that matter to that role.
 // ============================================================
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useSearch } from "wouter";
 import { AppShell } from "@/components/AppShell";
 import AiIntake from "@/components/AiIntake";
@@ -62,7 +62,29 @@ export default function RoleDashboard({ role }: { role: IntakeRole }) {
   const { data: clientData } = useClientData();
   const providers = trpc.ultra.providers.useQuery(undefined, { staleTime: 5 * 60_000 });
   const panel = trpc.ultra.panel.useMutation();
+  const speak = trpc.ultra.speak.useMutation();
   const [question, setQuestion] = useState("");
+  const [readAloud, setReadAloud] = useState(true);
+  const [speaking, setSpeaking] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  useEffect(() => () => { audioRef.current?.pause(); }, []);
+
+  // The panel's answer, spoken in the site's voice (the owner's ElevenLabs clone).
+  const sayAnswer = async (text: string) => {
+    if (!text || !providers.data?.voiceOut) return;
+    try {
+      audioRef.current?.pause();
+      setSpeaking(true);
+      const audio = await speak.mutateAsync({ text: text.slice(0, 1900) });
+      if (!audio.ok) { setSpeaking(false); return; }
+      const el = new Audio(`data:${audio.mimeType};base64,${audio.audioBase64}`);
+      audioRef.current = el;
+      el.onended = () => setSpeaking(false);
+      el.onerror = () => setSpeaking(false);
+      await el.play();
+    } catch { setSpeaking(false); }
+  };
+  const stopSpeaking = () => { audioRef.current?.pause(); setSpeaking(false); };
   const [hasIntake, setHasIntake] = useState(false);
 
   useEffect(() => {
@@ -79,7 +101,9 @@ export default function RoleDashboard({ role }: { role: IntakeRole }) {
     const q = question.trim();
     if (!q) return;
     const profile = clientData ? JSON.stringify(clientData).slice(0, 1500) : "";
-    await panel.mutateAsync({ question: q, profileSummary: profile }).catch(() => undefined);
+    const r = await panel.mutateAsync({ question: q, profileSummary: profile }).catch(() => undefined);
+    const spoken = r?.synthesis ?? r?.responses.find((x) => x.ok)?.text ?? "";
+    if (readAloud && spoken) void sayAnswer(spoken);
   };
 
   const name = user?.name ?? "";
@@ -135,15 +159,23 @@ export default function RoleDashboard({ role }: { role: IntakeRole }) {
                 <textarea value={question} onChange={(e) => setQuestion(e.target.value)} rows={3} placeholder="e.g. Should I convert my 401k to Roth before I sell the practice?" data-testid="panel-question"
                   className="mt-1 w-full rounded-xl border border-emerald-300/25 bg-black/30 px-4 py-3 text-white placeholder:text-emerald-100/35 focus:border-emerald-300 focus:outline-none" />
               </label>
-              <button type="submit" disabled={panel.isPending || !question.trim()} className="mt-2 rounded-xl bg-emerald-500 px-5 py-2.5 font-semibold text-white hover:bg-emerald-400 disabled:opacity-50">
-                {panel.isPending ? "Asking every voice…" : "Ask all twelve"}
-              </button>
+              <div className="mt-2 flex flex-wrap items-center gap-3">
+                <button type="submit" disabled={panel.isPending || !question.trim()} className="rounded-xl bg-emerald-500 px-5 py-2.5 font-semibold text-white hover:bg-emerald-400 disabled:opacity-50">
+                  {panel.isPending ? "Asking every voice…" : "Ask all twelve"}
+                </button>
+                <label className="flex items-center gap-1.5 text-xs text-emerald-100/70"><input type="checkbox" className="accent-emerald-400" checked={readAloud} onChange={(e) => setReadAloud(e.target.checked)} /> Read the answer aloud{providers.data && !providers.data.voiceOut ? " (voice not configured)" : ""}</label>
+              </div>
             </form>
             {panel.data && (
               <div className="mt-4 space-y-3" data-testid="panel-answers">
                 {panel.data.synthesis && (
                   <div className="rounded-xl border border-emerald-300/30 bg-emerald-500/10 p-3">
-                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-300">Synthesis</p>
+                    <div className="flex items-center justify-between gap-2">
+                      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-300">Synthesis</p>
+                      {providers.data?.voiceOut && (
+                        <button type="button" onClick={() => (speaking ? stopSpeaking() : void sayAnswer(panel.data!.synthesis!))} aria-label={speaking ? "Stop reading" : "Read aloud"} className={`rounded-full px-3 py-1 text-xs font-semibold ${speaking ? "bg-red-500/80" : "bg-sky-500 hover:bg-sky-400"}`}>{speaking ? "Stop" : speak.isPending ? "…" : "Hear it"}</button>
+                      )}
+                    </div>
                     <p className="mt-1 text-sm leading-6">{panel.data.synthesis}</p>
                   </div>
                 )}
