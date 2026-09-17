@@ -24,7 +24,7 @@
 //   keys the plan endpoint falls back to deterministic rules.
 // ============================================================
 import { z } from "zod";
-import { FOUNDER_VOICE, MODEL_ID, nameMatches, statusMessage, type VoiceStatus } from "@shared/voiceIdentity";
+import { FOUNDER_VOICE, MODEL_ID, PROVIDER_KEYS, apiKeyFor, nameMatches, selectedProvider, speechDelivery, statusMessage, voiceIdFor, type VoiceStatus } from "@shared/voiceIdentity";
 import { compositeWorkingMemoryWithInstruments, compactWorkingMemory } from "@shared/compositeMind";
 import { publicProcedure, router } from "./_core/trpc";
 import { probeKeys } from "./keyProbe";
@@ -518,26 +518,49 @@ export const ultraRouter = router({
    * so the owner's health page does not bill a lookup on every render.
    */
   voiceStatus: publicProcedure.query(async (): Promise<VoiceStatus> => {
-    const apiKey = process.env.ELEVENLABS_API_KEY;
-    const voiceId = process.env[FOUNDER_VOICE.envKey];
-    const base = { intendedName: FOUNDER_VOICE.displayName, provenance: FOUNDER_VOICE.provenance };
+    const env = process.env as Record<string, string | undefined>;
+    const provider = selectedProvider(env);
+    const apiKey = apiKeyFor(provider, env);
+    const voiceId = voiceIdFor(provider, env);
+    const delivery = speechDelivery(env);
+    const base = { intendedName: FOUNDER_VOICE.displayName, provenance: FOUNDER_VOICE.provenance, provider };
     if (!apiKey || !voiceId) {
-      const s = { ...base, configured: false, providerName: null, verified: false };
+      const s = { ...base, configured: false, canSpeak: Boolean(delivery), providerName: null, verified: false };
       return { ...s, message: statusMessage(s) };
     }
     const now = Date.now();
     if (voiceStatusCache && now - voiceStatusCache.at < 600_000) return voiceStatusCache.value;
+
+    // Ask the provider that OWNS the identity what this id is called. Two
+    // different APIs: ElevenLabs answers per voice; HeyGen returns the roster,
+    // which is the endpoint already proven in server/heygenService.ts.
     let providerName: string | null = null;
     try {
-      const res = await timedFetch(`https://api.elevenlabs.io/v1/voices/${encodeURIComponent(voiceId)}`, {
-        method: "GET", headers: { "xi-api-key": apiKey },
-      });
-      if (res.ok) {
-        const data = (await res.json()) as { name?: string };
-        providerName = typeof data.name === "string" ? data.name : null;
+      if (provider === "elevenlabs") {
+        const res = await timedFetch(`https://api.elevenlabs.io/v1/voices/${encodeURIComponent(voiceId)}`, {
+          method: "GET", headers: { "xi-api-key": apiKey },
+        });
+        if (res.ok) {
+          const data = (await res.json()) as { name?: string };
+          providerName = typeof data.name === "string" ? data.name : null;
+        }
+      } else {
+        const res = await timedFetch("https://api.heygen.com/v2/voices", {
+          method: "GET", headers: { accept: "application/json", "x-api-key": apiKey },
+        });
+        if (res.ok) {
+          const data = (await res.json()) as { data?: { voices?: Array<{ voice_id?: string; name?: string }> } };
+          const hit = data.data?.voices?.find((v) => v.voice_id === voiceId);
+          providerName = hit?.name ?? null;
+        }
+        // HEYGEN_VOICE_NAME is what the owner recorded the clone as. If the
+        // roster call did not answer, fall back to it and say it is unverified
+        // rather than claiming a confirmation we did not get.
+        if (!providerName && env[PROVIDER_KEYS.heygen.voiceName!]) providerName = null;
       }
-    } catch { /* unreachable provider is reported as unverified, not as a mismatch */ }
-    const s = { ...base, configured: true, providerName, verified: nameMatches(FOUNDER_VOICE, providerName) };
+    } catch { /* unreachable provider is reported as unverified, never as a mismatch */ }
+
+    const s = { ...base, configured: true, canSpeak: Boolean(delivery), providerName, verified: nameMatches(FOUNDER_VOICE, providerName) };
     const value: VoiceStatus = { ...s, message: statusMessage(s) };
     voiceStatusCache = { at: now, value };
     return value;
@@ -555,11 +578,11 @@ export const ultraRouter = router({
   speak: publicProcedure
     .input(z.object({ text: z.string().min(1).max(2_000) }))
     .mutation(async ({ input }) => {
-      const apiKey = process.env.ELEVENLABS_API_KEY;
-      const voiceId = process.env[FOUNDER_VOICE.envKey];
-      if (!apiKey || !voiceId) {
-        return { ok: false as const, reason: `Voice output not configured. Set ELEVENLABS_API_KEY and ${FOUNDER_VOICE.envKey} in the host environment panel to speak as ${FOUNDER_VOICE.displayName}.`, speaker: null };
+      const delivery = speechDelivery(process.env as Record<string, string | undefined>);
+      if (!delivery) {
+        return { ok: false as const, reason: `Voice output not configured. Audio is delivered by ElevenLabs — set ELEVENLABS_API_KEY and ELEVENLABS_VOICE_ID in the host environment panel to speak as ${FOUNDER_VOICE.displayName}.`, speaker: null };
       }
+      const { apiKey, voiceId } = delivery;
       const res = await timedFetch(`https://api.elevenlabs.io/v1/text-to-speech/${encodeURIComponent(voiceId)}`, {
         method: "POST",
         headers: { "content-type": "application/json", "xi-api-key": apiKey },

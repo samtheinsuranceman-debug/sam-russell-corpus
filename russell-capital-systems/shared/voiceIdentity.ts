@@ -67,6 +67,56 @@ export const MANIFESTO_VOICE_SETTINGS: VoiceSettings = {
 
 export const MODEL_ID = "eleven_multilingual_v2";
 
+/**
+ * Which provider actually delivers the audio.
+ *
+ * `VOICE_PROVIDER` on the host selects it. The two are not interchangeable:
+ *  - elevenlabs — full text-to-speech. This is what speaks on the site today.
+ *  - heygen     — where the clone was RECORDED. HeyGen's v2 API serves avatars
+ *                 and video and exposes the voice roster at /v2/voices, which
+ *                 is how a HeyGen-provenance voice gets its name verified. It
+ *                 has no plain "speak this sentence" audio endpoint proven in
+ *                 this codebase, so when heygen is selected the name is checked
+ *                 against HeyGen and the audio is still delivered by
+ *                 ElevenLabs. If no ElevenLabs key is present the status says
+ *                 so in those words rather than failing silently.
+ */
+export type VoiceProvider = "elevenlabs" | "heygen";
+
+export const DEFAULT_PROVIDER: VoiceProvider = "elevenlabs";
+
+export function selectedProvider(env: Record<string, string | undefined>): VoiceProvider {
+  const raw = (env.VOICE_PROVIDER ?? "").trim().toLowerCase();
+  return raw === "heygen" ? "heygen" : DEFAULT_PROVIDER;
+}
+
+/** The env keys each provider reads. Never the values. */
+export const PROVIDER_KEYS: Record<VoiceProvider, { apiKey: string; voiceId: string; voiceName?: string }> = {
+  elevenlabs: { apiKey: "ELEVENLABS_API_KEY", voiceId: "ELEVENLABS_VOICE_ID" },
+  heygen: { apiKey: "HEYGEN_API_KEY", voiceId: "HEYGEN_VOICE_ID", voiceName: "HEYGEN_VOICE_NAME" },
+};
+
+/** The id of the voice to load, for the selected provider. */
+export function voiceIdFor(provider: VoiceProvider, env: Record<string, string | undefined>): string | undefined {
+  return env[PROVIDER_KEYS[provider].voiceId];
+}
+
+/** The key for the selected provider. */
+export function apiKeyFor(provider: VoiceProvider, env: Record<string, string | undefined>): string | undefined {
+  return env[PROVIDER_KEYS[provider].apiKey];
+}
+
+/**
+ * Audio is always delivered by ElevenLabs today (see VoiceProvider above), so
+ * this is what the speak endpoint needs regardless of which provider owns the
+ * clone's identity.
+ */
+export function speechDelivery(env: Record<string, string | undefined>): { apiKey: string; voiceId: string } | null {
+  const apiKey = env.ELEVENLABS_API_KEY;
+  const voiceId = env.ELEVENLABS_VOICE_ID;
+  return apiKey && voiceId ? { apiKey, voiceId } : null;
+}
+
 export const FOUNDER_VOICE: VoiceIdentity = {
   id: "samuel-andrew-russell-v",
   displayName: "Samuel Andrew Russell V",
@@ -104,6 +154,10 @@ export function nameMatches(identity: VoiceIdentity, providerName: string | null
 
 export type VoiceStatus = {
   configured: boolean;
+  /** Which provider owns the clone's identity, per VOICE_PROVIDER. */
+  provider: VoiceProvider;
+  /** Whether audio can actually be produced right now. */
+  canSpeak: boolean;
   /** The name the provider reports for the loaded id. Null when unchecked or unreachable. */
   providerName: string | null;
   intendedName: string;
@@ -116,14 +170,18 @@ export type VoiceStatus = {
 
 /** The status message for each state, so the owner sees the same words everywhere. */
 export function statusMessage(s: Omit<VoiceStatus, "message">): string {
+  const keys = PROVIDER_KEYS[s.provider];
   if (!s.configured) {
-    return `No voice configured. Set ELEVENLABS_API_KEY and ELEVENLABS_VOICE_ID in the host environment panel to speak as ${s.intendedName}. Until then the site uses the browser's own speech and says so.`;
+    return `No voice configured for ${s.provider}. Set ${keys.apiKey} and ${keys.voiceId} in the host environment panel to speak as ${s.intendedName}. Until then the site uses the browser's own speech and says so.`;
+  }
+  if (!s.canSpeak) {
+    return `The ${s.provider} voice identity is configured, but audio is delivered by ElevenLabs and ELEVENLABS_API_KEY / ELEVENLABS_VOICE_ID are not both set. The site will use the browser's own speech until they are.`;
   }
   if (s.verified) {
-    return `Speaking as ${s.intendedName} (${s.provenance}), confirmed against the provider.`;
+    return `Speaking as ${s.intendedName}, identity held by ${s.provider} (${s.provenance}) and confirmed against it; audio delivered by ElevenLabs.`;
   }
   if (s.providerName) {
-    return `MISMATCH: the configured voice id belongs to "${s.providerName}", not ${s.intendedName}. The site is speaking in the wrong voice. Correct ELEVENLABS_VOICE_ID in the host environment panel.`;
+    return `MISMATCH: the configured ${keys.voiceId} belongs to "${s.providerName}", not ${s.intendedName}. The site is speaking in the wrong voice. Correct ${keys.voiceId} in the host environment panel.`;
   }
-  return `A voice id is configured but could not be confirmed with the provider just now. Audio will still play; the identity is unverified.`;
+  return `A voice id is configured but could not be confirmed with ${s.provider} just now. Audio will still play; the identity is unverified.`;
 }

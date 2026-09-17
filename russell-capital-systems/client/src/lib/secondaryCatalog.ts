@@ -29,6 +29,7 @@ export const SECONDARY_CATALOG: SecondaryCatalogItem[] = [
   { path: "/portal/divorce-recovery", label: "Divorce Recovery Planner", category: "Advanced Analysis" },
   { path: "/portal/index-backtester-pro", label: "Index Backtester Pro", category: "Advanced Analysis" },
   { path: "/portal/fia-collateral", label: "FIA as Collateral", category: "Advanced Analysis" },
+  { path: "/portal/qbi-optimizer", label: "QBI / Section 199A Optimizer", category: "Advanced Analysis" },
   { path: "/portal/strategy-combos", label: "Strategy Combinations", category: "Advanced Analysis" },
   { path: "/portal/interop-engine", label: "Interop Engine", category: "Reference & Education" },
   { path: "/portal/ai-brain-hub", label: "AI Brain Hub", category: "Reference & Education" },
