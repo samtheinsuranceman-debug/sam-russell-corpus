@@ -70,6 +70,7 @@ const FIACollateralStrategy = lazy(() => import("./pages/portal/FIACollateralStr
 const QbiOptimizer = lazy(() => import("./pages/portal/QbiOptimizer"));
 const MortgageLedger = lazy(() => import("./pages/portal/MortgageLedger"));
 const LiquidityRoutesPage = lazy(() => import("./pages/portal/LiquidityRoutes"));
+const HowAFigureIsMade = lazy(() => import("./pages/portal/HowAFigureIsMade"));
 const ComboRecommender = lazy(() => import("./pages/portal/ComboRecommender"));
 const ClientReportGenerator = lazy(() => import("./pages/portal/ClientReportGenerator"));
 const ExitRating = lazy(() => import("./components/ExitRating"));
@@ -731,6 +732,7 @@ function Router() {
       <Route path="/portal/qbi-optimizer" component={gated(QbiOptimizer, "/portal/qbi-optimizer")} />
       <Route path="/portal/mortgage-ledger" component={gated(MortgageLedger, "/portal/mortgage-ledger")} />
       <Route path="/portal/liquidity-routes" component={gated(LiquidityRoutesPage, "/portal/liquidity-routes")} />
+      <Route path="/portal/how-a-figure-is-made" component={gated(HowAFigureIsMade, "/portal/how-a-figure-is-made")} />
       <Route path="/portal/client-report-generator" component={gated(ClientReportGenerator, "/portal/client-report-generator")} />
 
       {/* Fallback */}

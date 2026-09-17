@@ -35,7 +35,7 @@ describe("managed primary-port safeguards", () => {
     const auditedRoutes = new Set(auditedRecords.map((record: { route: string }) => record.route));
     expect(auditedRoutes.size).toBeGreaterThanOrEqual(231);
     for (const route of auditedRoutes) expect(currentRoutes.has(String(route)), String(route)).toBe(true);
-    expect(currentRoutes.size).toBe(308); // 232 + the original platform routes + /for and /for/:slug + /portal/interior // master: +1 /portal/voice (Voice Studio), +1 /portal/whisperer, +3 role dashboards, +1 /portal/chain // branch: +39 calculators and tools restored in the catalogue pass (page files that existed on disk but were never routed), +1 /portal/qbi-optimizer, +2 /portal/mortgage-ledger and /portal/liquidity-routes
+    expect(currentRoutes.size).toBe(309); // 232 + the original platform routes + /for and /for/:slug + /portal/interior // master: +1 /portal/voice (Voice Studio), +1 /portal/whisperer, +3 role dashboards, +1 /portal/chain // branch: +39 calculators and tools restored in the catalogue pass (page files that existed on disk but were never routed), +1 /portal/qbi-optimizer, +2 /portal/mortgage-ledger and /portal/liquidity-routes // +1: /portal/how-a-figure-is-made, the provenance page
   });
 
   it("keeps managed analytics and runtime public assets", () => {
