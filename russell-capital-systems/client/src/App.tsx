@@ -67,6 +67,8 @@ const SettingsPage = lazy(() => import("./pages/SettingsPage"));
 const SupportPage = lazy(() => import("./pages/SupportPage"));
 const FIACollateralStrategy = lazy(() => import("./pages/portal/FIACollateralStrategy"));
 const QbiOptimizer = lazy(() => import("./pages/portal/QbiOptimizer"));
+const MortgageLedger = lazy(() => import("./pages/portal/MortgageLedger"));
+const LiquidityRoutesPage = lazy(() => import("./pages/portal/LiquidityRoutes"));
 const ComboRecommender = lazy(() => import("./pages/portal/ComboRecommender"));
 const ClientReportGenerator = lazy(() => import("./pages/portal/ClientReportGenerator"));
 const ExitRating = lazy(() => import("./components/ExitRating"));
@@ -712,6 +714,8 @@ function Router() {
       <Route path="/portal/fia-collateral" component={gated(FIACollateralStrategy, "/portal/fia-collateral")} />
       <Route path="/portal/strategy-combos" component={gated(ComboRecommender, "/portal/strategy-combos")} />
       <Route path="/portal/qbi-optimizer" component={gated(QbiOptimizer, "/portal/qbi-optimizer")} />
+      <Route path="/portal/mortgage-ledger" component={gated(MortgageLedger, "/portal/mortgage-ledger")} />
+      <Route path="/portal/liquidity-routes" component={gated(LiquidityRoutesPage, "/portal/liquidity-routes")} />
       <Route path="/portal/client-report-generator" component={gated(ClientReportGenerator, "/portal/client-report-generator")} />
 
       {/* Fallback */}
