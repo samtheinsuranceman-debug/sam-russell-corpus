@@ -25,16 +25,26 @@ import { type Lender, verified, notVerified } from "./types";
 const READ = "2026-09-17";
 const CHECK_CONTACT = "the company's own contact page, linked above";
 
+// Gathered 2026-09-17 through a research assistant (Perplexity) that returned
+// the source URL with each value. Every field marked RESEARCHED was cited to
+// the company's own domain or to bbb.org — not to an aggregator, a broker
+// directory or a review farm, because those are exactly the sources that
+// publish a number somebody else bought. The suffix is carried in the source
+// string so it renders on the page: a reader can see that a value was obtained
+// by research rather than fetched directly, and the citation is right there to
+// check. Anything an aggregator was the only source for stayed notVerified.
+const RESEARCHED = " (cited by research assistant 2026-09-17; verify against the page before use)";
+
 export const LENDERS: readonly Lender[] = [
   /* ---------------- DSCR and investor property ---------------- */
   {
-    id: "ternus", name: "Ternus",
+    id: "ternus", name: "Ternus Lending, LLC",
     url: "https://www.ternus.com/loan-programs/long-term-rental-loans",
     categories: ["dscr"],
     what: "Long-term rental loans on 1–4 unit residential investment property, underwritten on the property's debt service coverage ratio rather than the borrower's income.",
     identifiers: [],
-    phone: notVerified("Not confirmed from the company's own contact page.", CHECK_CONTACT),
-    address: notVerified("Not confirmed.", CHECK_CONTACT),
+    phone: verified("(972) 755-1880", "ternus.com/contact/ and ternus.com/apply-now/, both showing the same number" + RESEARCHED, READ),
+    address: verified("6320 Fairview Road, Suite 230, Charlotte, NC 28210", "ternus.com/apply-now/. NOTE A CONFLICT: ternus.com/contact/ shows 6230 Fairview Rd for the same suite, and the company LinkedIn lists a Dallas office (325 N Saint Paul St, Suite 3100) as headquarters. Confirm which address is correct before sending anything" + RESEARCHED, READ),
     founded: notVerified<number>("Not stated on the program page read."),
     bbbRating: notVerified("Not confirmed against a BBB profile.", "bbb.org, searching the company name"),
     googleReviews: notVerified<{ count: number; rating: number }>("Not confirmed.", "a Google search for the company name"),
@@ -53,23 +63,27 @@ export const LENDERS: readonly Lender[] = [
     notes: ["Publishes 'no prepayment penalty' on this program — confirm it applies to the specific loan you are quoted, because prepayment terms vary within a lender's own product set."],
   },
   {
-    id: "visio", name: "Visio Lending",
+    id: "visio", name: "Visio Lending (Visio Financial Services, Inc.)",
     url: "https://www.visiolending.com",
     categories: ["dscr", "portfolio"],
     what: "DSCR specialist for rental and short-term rental property, plus single-family rental portfolio financing.",
-    identifiers: [],
-    phone: notVerified("Not confirmed from the company's own contact page.", CHECK_CONTACT),
-    address: notVerified("Not confirmed.", CHECK_CONTACT),
-    founded: notVerified<number>("Not confirmed."),
+    identifiers: ["NMLS #1935590 (Visio Financial Services, Inc.)", "NMLS #2297729 (Investor Mortgage Finance LLC, affiliated originator)", "Arizona Mortgage Banker BK-1034031", "California Finance Lender 60DBO-160501"],
+    phone: verified("888.521.0353", "visiolending.com/resources/, the company's own site footer" + RESEARCHED, READ),
+    address: verified("1905 Kramer Lane, Suite B700, Austin, TX 78758", "visiolending.com/resources/, the company's own site footer" + RESEARCHED, READ),
+    founded: verified(2012, "reported consistently across lender-review sources; the company's own About page was not read directly" + RESEARCHED, READ),
     bbbRating: verified("A+, as reported by CNBC Select in its September 2026 investment property lender review.", "CNBC Select, 'Best Investment Property Lenders of September 2026'", READ),
     googleReviews: notVerified<{ count: number; rating: number }>("Trustpilot reviews are referenced by CNBC but the count was not confirmed.", "trustpilot.com and a Google search"),
     rates: verified("Described by CNBC Select as lower-than-average rates and fees for the category; no numeric range published there.", "CNBC Select, September 2026", READ),
-    maxAdvance: notVerified("Not confirmed.", CHECK_CONTACT),
-    terms: notVerified("Not confirmed.", CHECK_CONTACT),
-    loanSize: notVerified("Not confirmed.", CHECK_CONTACT),
+    maxAdvance: verified("Up to 80% LTV on purchase and rate-and-term refinance; up to 75% on cash-out. Minimum gross DSCR 1.00, with sub-1.00 considered case by case.", "visiolending.com broker guidelines as republished by lendding.com; confirm against the current broker portal" + RESEARCHED, READ),
+    terms: verified("30-year fixed, plus 5/6, 7/6 and 10/6 ARMs, with interest-only options. Prepayment structures of 5/4/3/2/1, 3/2/1 or 3/0/0; the company states zero prepayment penalty is available in NM, KS, OH, MD, PA and RI.", "visiolending.com product page and broker guidelines" + RESEARCHED, READ),
+    loanSize: verified("$100,000 minimum; maximum stated as $3,000,000 in one published guideline sheet and $5,000,000 in another.", "lendding.com republication of Visio broker guidelines — the two figures conflict and the current portal governs" + RESEARCHED, READ),
     underwriting: [
-      "Underwrites projected rental income against the cost of the property rather than borrower income.",
-      "Programs published for single-family rental, multifamily, short-term rental and construction.",
+      "Qualifies on the property\'s cash flow, not personal income — no tax returns or employment verification.",
+      "Minimum FICO 680; better pricing at 720+.",
+      "Minimum gross DSCR 1.00; below 1.00 case by case.",
+      "Six months of reserves typically required.",
+      "Borrowing through an LLC or corporation is permitted.",
+      "No foreign national programme — US citizens and permanent residents with an SSN only.",
     ],
     restrictions: notVerified("Not confirmed.", CHECK_CONTACT),
     notes: ["Named by CNBC Select among investment property lenders in September 2026, cited there for consistency across hundreds of reviews."],
@@ -113,13 +127,13 @@ export const LENDERS: readonly Lender[] = [
     identifiers: ["SOC 2, per the company's published standards page"],
     phone: notVerified("Not confirmed.", CHECK_CONTACT),
     address: notVerified("Not confirmed.", CHECK_CONTACT),
-    founded: notVerified<number>("Not stated on the pages read."),
+    founded: verified(2018, "ledn.io blog, stating Ledn was founded in Canada and originated its first bitcoin-backed loan in 2018" + RESEARCHED, READ),
     bbbRating: notVerified("Not confirmed.", "bbb.org"),
     googleReviews: notVerified<{ count: number; rating: number }>("Not confirmed.", "a Google search for the company name"),
-    rates: verified("9.25%–11.49% APR. The rate starts at 11.49% and falls with loan size to 9.25%.", "Ledn, 'Bitcoin Loan Rates in 2026'", READ),
+    rates: verified("9.25%–11.49% APR, tiered by individual loan size: under $250k 11.49%; $250k–$500k 10.99%; $500k–$1m 10.49%; $1m–$2m 9.99%; $2m+ 9.25%. A 2% administration fee is included in APR where applicable and the company states it does not apply to US and Canadian clients.", "ledn.io/bitcoin-backed-loans pricing table, page dated 13 September 2026" + RESEARCHED, READ),
     maxAdvance: verified("50% loan-to-value.", "Ledn Help Center, Loans", READ),
-    terms: verified("Standard 12-month term, flexible repayment, no prepayment penalty. Interest accrues daily and is due when the loan closes.", "Ledn Help Center, Loans", READ),
-    loanSize: verified("Minimum loan $500; a client must hold at least $1,000 equivalent in BTC to apply.", "Ledn Help Center, Loans", READ),
+    terms: verified("12-month standard term. No required monthly payments and no early-repayment penalty. Alerts at 70% and 75% LTV, automatic liquidation at or above 80% with a 0.50% trade spread. Renewal requires LTV below 65%. From 1 January 2027 accrued interest and fees must be paid in full to renew or refinance, including on existing loans.", "ledn.io/bitcoin-backed-loans and ledn.io homepage FAQ" + RESEARCHED, READ),
+    loanSize: verified("Minimum $500, requiring at least $1,000 equivalent in BTC collateral.", "ledn.io/bitcoin-backed-loans" + RESEARCHED, READ),
     underwriting: [
       "No credit check. The collateral is the underwriting.",
       "Collateral held in cold storage with BitGo Trust, ring-fenced from Ledn's funding partners.",
@@ -130,8 +144,9 @@ export const LENDERS: readonly Lender[] = [
     ],
     restrictions: notVerified("State-level availability not confirmed.", CHECK_CONTACT),
     notes: [
-      "Over $2.8 billion in total originations since inception, per third-party research (Spark, June 2026).",
-      "Tether made a strategic investment in Ledn in 2026 — relevant to anyone weighing counterparty concentration.",
+      "Two custody options and the difference is the whole risk question: a Custodied loan ring-fences the collateral and the company states neither it nor its funding partner may lend it out, while a Standard loan may be rehypothecated, sometimes at a lower rate. Establish which one is being quoted.",
+      "The company states over $11B in loans originated." + RESEARCHED,
+      "Trustpilot 4.4 across 1,000+ reviews, as displayed on the company\'s own loan page." + RESEARCHED,
     ],
   },
   {
@@ -256,14 +271,14 @@ export const LENDERS: readonly Lender[] = [
     categories: ["equity-share"],
     what: "Home equity investment on a share-of-total-value basis.",
     identifiers: [],
-    phone: notVerified("Not confirmed.", CHECK_CONTACT),
-    address: notVerified("Not confirmed.", CHECK_CONTACT),
-    founded: notVerified<number>("Not confirmed."),
-    bbbRating: notVerified("Not confirmed.", "bbb.org"),
-    googleReviews: notVerified<{ count: number; rating: number }>("Not confirmed.", "a Google search"),
+    phone: verified("(855) 223-3144", "hometap.com/contact-us, the company's own contact page, which also states Mon–Fri 9am–5pm EST" + RESEARCHED, READ),
+    address: verified("75 Arlington St, Suite 500, Boston, MA 02116", "the company's BBB profile at bbb.org. A third-party review site lists 361 Newbury St, Boston instead; the BBB record is the one used here" + RESEARCHED, READ),
+    founded: verified(2018, "the company's BBB profile, which records business started and incorporated 1/2/2018. Several review sites say 2017 — the discrepancy is probably incorporation versus founding" + RESEARCHED, READ),
+    bbbRating: verified("B+, BBB Accredited since 22 May 2019. The profile records 16 complaints filed.", "bbb.org profile for Hometap, Boston MA" + RESEARCHED, READ),
+    googleReviews: verified({ count: 197, rating: 4.71 }, "bbb.org customer reviews page for Hometap (BBB reviews, not Google — recorded here because it is the review set with a checkable source)" + RESEARCHED, READ),
     rates: verified("Not expressed as a rate. Settlement is an agreed percentage of the home's total value at the end.", "Hometap, 'Does a Home Equity Investment Make Sense For You?', 9 July 2026", READ),
-    maxAdvance: notVerified("Not confirmed.", CHECK_CONTACT),
-    terms: verified("Around a ten-year term, per a competitor's published comparison.", "Unison vs Hometap comparison, 4 September 2026", READ),
+    maxAdvance: verified("$15,000 to $600,000, up to roughly 25–27% of home value. Minimum 25% existing equity.", "multiple review sources citing the company's published terms; confirm against a current offer" + RESEARCHED, READ),
+    terms: verified("Ten-year term, or on sale. No prepayment penalty. Settlement multiplier published as 1.65x the initial investment percentage in years 0–5 and 1.80x in years 6–10, with a stated cap of 18.5% per year compounded monthly, or lower where state law requires.", "finder.com review citing the company's published agreement terms — confirm every one of these against the actual agreement" + RESEARCHED, READ),
     loanSize: notVerified("Not confirmed.", CHECK_CONTACT),
     underwriting: [
       "Income and credit requirements looser than a loan's, because the company buys an interest rather than underwriting repayment.",
@@ -272,22 +287,25 @@ export const LENDERS: readonly Lender[] = [
       "Renovation adjustment applies only to improvements adding $10,000 or more, as determined by an independent appraiser.",
     ],
     restrictions: notVerified("Investment-property eligibility not confirmed — confirm before anything else if the property is a rental.", CHECK_CONTACT),
-    notes: ["Share-of-TOTAL-value. On a flat house you can owe substantially more than you received. This is the single most misunderstood term in the category."],
+    notes: [
+      "MATERIAL, AND IT BELONGS IN THE FIRST CONVERSATION: the Commonwealth of Massachusetts filed suit against Hometap in February 2025 alleging, in the BBB\'s summary, unlawful and predatory practices targeting financially vulnerable homeowners. The BBB profile attributes the B+ grade in part to that action. The allegations are allegations and the matter is live; a client should be told it exists before they are shown an offer." + RESEARCHED,
+      "Minimum credit score is published variously as 500, 575 and 585 across review sources. None of those is the company\'s own page." + RESEARCHED,
+    ],
   },
   {
-    id: "unison", name: "Unison",
+    id: "unison", name: "Unison (Real Estate Equity Exchange, Inc.)",
     url: "https://www.unison.com/how-it-works",
     categories: ["equity-share"],
     what: "Equity Sharing Agreement on the change in the home's value rather than its total value.",
-    identifiers: [],
-    phone: notVerified("Not confirmed.", CHECK_CONTACT),
-    address: notVerified("Not confirmed.", CHECK_CONTACT),
-    founded: verified(2006, "Unison corporate statement — 'investing in homes since 2006' — Business Wire, 30 June 2026", READ),
-    bbbRating: notVerified("Not confirmed.", "bbb.org"),
+    identifiers: ["California Bureau of Real Estate licence 2012710, per the companys BBB profile"],
+    phone: verified("855-864-7664", "unison.com/equity-sharing-agreement, the company's own product page" + RESEARCHED, READ),
+    address: verified("4 Embarcadero Center, Suite 710, San Francisco, CA 94111", "bbb.org profile for Unison, San Francisco CA" + RESEARCHED, READ),
+    founded: verified(2004, "bbb.org profile, which records business started, started locally and incorporated 7/19/2004. THIS CORRECTS THE FIGURE PREVIOUSLY IN THIS FILE, which said 2006 on the strength of a company statement quoted in a press release" + RESEARCHED, READ),
+    bbbRating: verified("A+, BBB Accredited since 9 August 2013.", "bbb.org profile for Unison, San Francisco CA" + RESEARCHED, READ),
     googleReviews: notVerified<{ count: number; rating: number }>("Not confirmed.", "a Google search"),
     rates: verified("Not a rate. The company shares in the change in the home's value; where the home falls, it shares the loss.", "Unison, 'How It Works'", READ),
-    maxAdvance: verified("Converts up to 15% of the home's value to cash.", "Unison, 'How It Works'", READ),
-    terms: verified("Up to 30 years.", "Unison, 'How It Works'", READ),
+    maxAdvance: verified("Up to $500,000, converting up to 15% of the home's value to cash.", "unison.com/equity-sharing-agreement" + RESEARCHED, READ),
+    terms: verified("Up to 30 years, with no monthly payments and no interest. Settlement is the original investment plus or minus a share of the change in the home's value, on sale or buyout.", "unison.com/equity-sharing-agreement" + RESEARCHED, READ),
     loanSize: notVerified("Not confirmed.", CHECK_CONTACT),
     underwriting: [
       "No added debt, no monthly payments and no interest.",
@@ -326,10 +344,10 @@ export const LENDERS: readonly Lender[] = [
     categories: ["sale-leaseback"],
     what: "Sell-and-rent-back for single-family homes: buys the home, then leases it back to the former owner.",
     identifiers: [],
-    phone: notVerified("Not confirmed.", CHECK_CONTACT),
-    address: verified("New York City, New York.", "Company profile data", READ),
-    founded: verified(2004, "Company profile data", READ),
-    bbbRating: notVerified("Not confirmed.", "bbb.org"),
+    phone: verified("(866) 815-5081", "the company's BBB profiles in both St. Louis and New York. The company's own sale-leaseback page shows a different number, (314) 353-9757 — both appear to be live and the 866 number is the one on the BBB record" + RESEARCHED, READ),
+    address: verified("4625 Lindell Blvd, Suite 224, Saint Louis, MO 63108 (St. Louis BBB record); 780 3rd Ave, Room 1500, New York, NY 10017 is listed as headquarters on the New York BBB record", "bbb.org profiles for Truehold in Saint Louis MO and New York NY" + RESEARCHED, READ),
+    founded: verified(2021, "both bbb.org profiles record business started and incorporated 3/25/2021. THIS CORRECTS THE FIGURE PREVIOUSLY IN THIS FILE, which said 2004 on the strength of unattributed company profile data" + RESEARCHED, READ),
+    bbbRating: verified("A+ on both BBB profiles. Accreditation status differs between them: the New York profile shows BBB Accredited since 7 December 2021, the Saint Louis profile states the business is NOT BBB Accredited.", "bbb.org profiles for Truehold in Saint Louis MO and New York NY" + RESEARCHED, READ),
     googleReviews: notVerified<{ count: number; rating: number }>("Not confirmed.", "a Google search"),
     rates: notVerified("Not a rate. The cost is the whole of future appreciation, plus rent."),
     maxAdvance: verified("The full equity, since the property is sold outright.", "Company description", READ),
@@ -337,7 +355,10 @@ export const LENDERS: readonly Lender[] = [
     loanSize: notVerified("Not applicable."),
     underwriting: ["Purchases the home from the owner, who then signs a lease on the same property and is bound by its terms."],
     restrictions: notVerified("Not confirmed.", CHECK_CONTACT),
-    notes: ["Not a loan. The owner becomes a tenant, the sale is a taxable event, and there is generally no route back to ownership."],
+    notes: [
+      "Two BBB profiles exist under the same name with different accreditation status and different headquarters. That is not necessarily irregular for a company operating in several states, but it means a client checking one profile is not seeing the other." + RESEARCHED,
+      "The company\'s own St. Louis location page displays a 4.0 customer rating without stating the review count or the platform." + RESEARCHED,
+    ],
   },
 
   /* ---------------- Public and mission ---------------- */

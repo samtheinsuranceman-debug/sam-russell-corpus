@@ -24,10 +24,62 @@ describe("no fabricated contact data", () => {
     }
   });
 
-  it("contains no bare phone-number-shaped string anywhere in the directory", () => {
-    const text = JSON.stringify(LENDERS);
-    expect(text).not.toMatch(/\b\d{3}[-.\s]\d{3}[-.\s]\d{4}\b/);
-    expect(text).not.toMatch(/\(\d{3}\)\s?\d{3}[-.\s]?\d{4}/);
+  it("keeps every phone-shaped string inside the phone field that sources it", () => {
+    // This guard used to say the directory contained no phone-shaped string at
+    // all, which was right while every number was unverified and is the wrong
+    // test now that sourced numbers exist. What still must never happen is a
+    // number appearing loose — in a note, a description, an address — where a
+    // reader would take it for a contact number with nothing standing behind
+    // it. So: every phone-shaped string in a record must also appear inside
+    // that record's own phone field, which is the only field that carries a
+    // source and a date for it.
+    const SHAPES = [/\b\d{3}[-.\s]\d{3}[-.\s]\d{4}\b/g, /\(\d{3}\)\s?\d{3}[-.\s]?\d{4}/g];
+    for (const l of LENDERS) {
+      const whole = JSON.stringify(l);
+      const phoneField = JSON.stringify(l.phone);
+      for (const shape of SHAPES) {
+        for (const hit of whole.match(shape) ?? []) {
+          expect(phoneField, `${l.name}: "${hit}" appears outside the phone field`).toContain(hit);
+        }
+      }
+      // And a number that IS there must carry a real source and a real date.
+      if (l.phone.verified) {
+        expect(l.phone.source.length, `${l.name} phone source is too thin`).toBeGreaterThan(25);
+        expect(l.phone.asOf).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+      }
+    }
+  });
+
+  it("records a correction as a correction when research overturns a figure", () => {
+    // Two founding years in this file were wrong and the research pass fixed
+    // them. A registry that silently overwrites a wrong figure teaches nobody
+    // anything; the correction has to be legible in the source string.
+    const corrected = LENDERS.filter((l) => l.founded.verified && /CORRECTS/i.test(l.founded.source));
+    expect(corrected.map((l) => l.id).sort()).toEqual(["truehold", "unison"]);
+    expect(valueOf(lender("truehold")!.founded)).toBe(2021);
+    expect(valueOf(lender("unison")!.founded)).toBe(2004);
+  });
+
+  it("carries the live Massachusetts action against Hometap where a client would see it", () => {
+    // A B+ BBB grade with a state attorney general suit behind it is the single
+    // most material fact in that record, and it is not the kind of thing that
+    // should live only in a rating letter.
+    const notes = lender("hometap")!.notes.join(" ");
+    expect(notes).toMatch(/Commonwealth of Massachusetts/i);
+    expect(notes).toMatch(/February 2025/);
+    expect(notes).toMatch(/allegations are allegations/i);
+  });
+
+  it("marks research-gathered values as research-gathered, in the string the page renders", () => {
+    // The reader is entitled to know a value was cited by a research assistant
+    // rather than fetched from the page directly. It is in the source string,
+    // so it renders wherever the source renders.
+    const researched = LENDERS.flatMap((l) =>
+      Object.values(l).filter((f): f is { verified: true; source: string } =>
+        Boolean(f) && typeof f === "object" && (f as { verified?: boolean }).verified === true &&
+        /research assistant/i.test((f as { source?: string }).source ?? "")));
+    expect(researched.length, "nothing is marked as research-gathered").toBeGreaterThan(15);
+    for (const f of researched) expect(f.source).toMatch(/verify against the page before use/i);
   });
 
   it("contains no email addresses", () => {
@@ -349,8 +401,8 @@ describe("the standing disclosure", () => {
 describe("helpers", () => {
   it("valueOf returns the value or null, never a fabricated default", () => {
     const l = lender("unison")!;
-    expect(valueOf(l.founded)).toBe(2006);
-    expect(valueOf(lender("ternus")!.phone)).toBeNull();
+    expect(valueOf(l.founded)).toBe(2004);
+    expect(valueOf(lender("ternus")!.googleReviews)).toBeNull();
   });
 
   it("has a directory large enough to be useful", () => {
