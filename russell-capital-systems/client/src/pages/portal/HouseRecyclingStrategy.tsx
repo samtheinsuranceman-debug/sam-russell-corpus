@@ -1,4 +1,5 @@
 // @ts-nocheck
+import { AltCreditLink } from "@/components/AltCreditLink";
 import { AppShell } from "@/components/AppShell";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -1376,6 +1377,8 @@ export default function HouseRecyclingStrategy() {
                 </div>
               </CardContent>
             </Card>
+
+            <AltCreditLink context="Recycling a house turns one line of credit into the next property." />
 
             {/* ─── NAIC Disclaimer ─────────────────────────────────────── */}
             <NAICDisclaimer

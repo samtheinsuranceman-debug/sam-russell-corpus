@@ -148,6 +148,9 @@ export default function MortgageLedger() {
               <a href="/portal/liquidity-routes" className="mt-3 inline-block text-[12.5px] text-amber-300 hover:underline">
                 Fifteen ways to reach that equity without a bank →
               </a>
+              <a href="/portal/alt-credit" className="mt-1.5 inline-block text-[12.5px] text-amber-300 hover:underline">
+                Alternative lines of credit for rental properties — named lenders, and what to do with the money →
+              </a>
             </div>
           </section>
 
