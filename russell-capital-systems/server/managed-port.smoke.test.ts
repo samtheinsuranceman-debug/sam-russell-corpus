@@ -35,7 +35,7 @@ describe("managed primary-port safeguards", () => {
     const auditedRoutes = new Set(auditedRecords.map((record: { route: string }) => record.route));
     expect(auditedRoutes.size).toBeGreaterThanOrEqual(231);
     for (const route of auditedRoutes) expect(currentRoutes.has(String(route)), String(route)).toBe(true);
-    expect(currentRoutes.size).toBe(260); // 232 + ultra-calculator, fact-finder, calculators + portal/leads + financial-assessment, ai-advisor, wealth-genome, my-journey, plan-ledger, connections, controls, erosion, sphere, forgiveness, tax-schedule, site-health, zip-engine, short-term-rentals, rental-enterprise, inheritance, iul-engine, long-term-care, income-for-life, outside-forces + /for, /for/:slug // +1: /portal/interior, the internal design-system reference added in 549521b
+    expect(currentRoutes.size).toBe(299); // 232 + ultra-calculator, fact-finder, calculators + portal/leads + financial-assessment, ai-advisor, wealth-genome, my-journey, plan-ledger, connections, controls, erosion, sphere, forgiveness, tax-schedule, site-health, zip-engine, short-term-rentals, rental-enterprise, inheritance, iul-engine, long-term-care, income-for-life, outside-forces + /for, /for/:slug // +1: /portal/interior, the internal design-system reference added in 549521b // +39: the calculators and tools restored in the catalogue pass — page files that existed on disk but were never routed, so every link to them 404'd (see shared/calculatorCatalog.ts)
   });
 
   it("keeps managed analytics and runtime public assets", () => {

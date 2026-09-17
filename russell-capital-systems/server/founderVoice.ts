@@ -7,24 +7,25 @@
 import type { Express, Request, Response } from "express";
 import { createHash } from "node:crypto";
 import manifesto from "../shared/homeManifesto.json";
+import { FOUNDER_VOICE, MANIFESTO_VOICE_SETTINGS, MODEL_ID } from "../shared/voiceIdentity";
 
 let cache: { key: string; audio: Buffer } | null = null;
 let inflight: Promise<Buffer | null> | null = null;
 
 function configured() {
-  return Boolean(process.env.ELEVENLABS_API_KEY && process.env.ELEVENLABS_VOICE_ID);
+  return Boolean(process.env.ELEVENLABS_API_KEY && process.env[FOUNDER_VOICE.envKey]);
 }
 
 async function synthesize(text: string): Promise<Buffer | null> {
   const apiKey = process.env.ELEVENLABS_API_KEY!;
-  const voiceId = process.env.ELEVENLABS_VOICE_ID!;
+  const voiceId = process.env[FOUNDER_VOICE.envKey]!;
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), 45_000);
   try {
     const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${encodeURIComponent(voiceId)}`, {
       method: "POST",
       headers: { "content-type": "application/json", "xi-api-key": apiKey, accept: "audio/mpeg" },
-      body: JSON.stringify({ text, model_id: "eleven_multilingual_v2" }),
+      body: JSON.stringify({ text, model_id: MODEL_ID, voice_settings: MANIFESTO_VOICE_SETTINGS }),
       signal: controller.signal,
     });
     if (!res.ok) return null;
@@ -39,7 +40,7 @@ async function synthesize(text: string): Promise<Buffer | null> {
 export async function founderMessageAudio(): Promise<Buffer | null> {
   if (!configured()) return null;
   const text = manifesto.founderMessage;
-  const key = createHash("sha256").update(`${process.env.ELEVENLABS_VOICE_ID}\n${text}`).digest("hex");
+  const key = createHash("sha256").update(`${process.env[FOUNDER_VOICE.envKey]}\n${text}`).digest("hex");
   if (cache?.key === key) return cache.audio;
   if (!inflight) {
     inflight = synthesize(text).then((audio) => {

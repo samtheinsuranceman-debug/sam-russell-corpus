@@ -37,6 +37,8 @@ export default function TapeRecorderAdvisor({ onJourney }: { onJourney?: (j: Jou
   const ask = trpc.librarian.ask.useMutation();
   const journey = trpc.librarian.journey.useMutation();
   const speakMut = trpc.ultra.speak.useMutation();
+  // Who the listener is actually hearing. null = the browser's own voice.
+  const [speaker, setSpeaker] = useState<string | null>(null);
 
   const [mode, setMode] = useState<Mode>("idle");
   const [lines, setLines] = useState<Line[]>([]);
@@ -64,6 +66,7 @@ export default function TapeRecorderAdvisor({ onJourney }: { onJourney?: (j: Jou
     try {
       const r = await speakMut.mutateAsync({ text: text.slice(0, 2000) });
       if (r.ok) {
+        setSpeaker(r.speaker ?? null);
         const a = new Audio(`data:${r.mimeType};base64,${r.audioBase64}`);
         audioRef.current = a;
         a.onended = done; a.onerror = done;
@@ -71,6 +74,10 @@ export default function TapeRecorderAdvisor({ onJourney }: { onJourney?: (j: Jou
         return;
       }
     } catch { /* fall through to the browser voice */ }
+    // The founder's voice is not available. Use the browser's own speech and
+    // SAY SO on screen — a synthetic stand-in passed off silently as a named
+    // person is the one thing this deck must never do.
+    setSpeaker(null);
     if (typeof window !== "undefined" && window.speechSynthesis) {
       const u = new SpeechSynthesisUtterance(text);
       u.rate = 0.98; u.pitch = 1;
@@ -171,6 +178,13 @@ export default function TapeRecorderAdvisor({ onJourney }: { onJourney?: (j: Jou
           </div>
         </div>
         <p className="mt-1 text-[11px] uppercase tracking-[0.22em] text-slate-400">The Financial Librarian · {contributorLine}</p>
+        {/* Whose voice the listener is hearing. Named when it is the founder's
+            clone; explicitly disclosed when it is the browser standing in. */}
+        {mode === "speaking" && (
+          <p className="mt-0.5 text-[10px] uppercase tracking-[0.22em] text-slate-500">
+            {speaker ? `Voice · ${speaker}` : "Voice · device speech (founder's voice not configured)"}
+          </p>
+        )}
 
         {/* cassette window */}
         <div className="mt-5 rounded-2xl border border-white/10 bg-[#05070b] p-4 shadow-[inset_0_10px_30px_rgba(0,0,0,.8)]">

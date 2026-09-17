@@ -26,6 +26,48 @@ const Landing = lazy(() => import("./pages/Landing"));
 const Pricing = lazy(() => import("./pages/Pricing"));
 const SpecialtyIndexPage = lazy(() => import("./pages/SpecialtyIndexPage"));
 const SpecialtyPage = lazy(() => import("./pages/SpecialtyPage"));
+
+// Restored calculators and tools: these page files existed on disk but were
+// never routed, so every link to them 404'd. See docs/CALCULATOR_CATALOG.md.
+const IulProjectionPage = lazy(() => import("./pages/IulProjectionPage"));
+const MygaWaterfallPage = lazy(() => import("./pages/MygaWaterfallPage"));
+const CryptoCyclePage = lazy(() => import("./pages/CryptoCyclePage"));
+const OilGasPage = lazy(() => import("./pages/OilGasPage"));
+const EstatePlanningPage = lazy(() => import("./pages/EstatePlanningPage"));
+const RealEstatePage = lazy(() => import("./pages/RealEstatePage"));
+const STRTaxEliminatorPage = lazy(() => import("./pages/STRTaxEliminatorPage"));
+const IncomeAnnuityPage = lazy(() => import("./pages/IncomeAnnuityPage"));
+const AnnuityExplorerPage = lazy(() => import("./pages/AnnuityExplorerPage"));
+const DivorceILITStrategyPage = lazy(() => import("./pages/DivorceILITStrategyPage"));
+const MortgageKillerV2Page = lazy(() => import("./pages/MortgageKillerV2Page"));
+const RiskScorePage = lazy(() => import("./pages/RiskScorePage"));
+const RetirementOpportunitiesPage = lazy(() => import("./pages/RetirementOpportunitiesPage"));
+const InteropEnginePage = lazy(() => import("./pages/InteropEnginePage"));
+const AIBrainHubPage = lazy(() => import("./pages/AIBrainHubPage"));
+const MatchAndDeployPage = lazy(() => import("./pages/MatchAndDeployPage"));
+const AutoCloserPage = lazy(() => import("./pages/AutoCloserPage"));
+const DealRoomPage = lazy(() => import("./pages/DealRoomPage"));
+const MeetingPrepPage = lazy(() => import("./pages/MeetingPrepPage"));
+const WhisperCoachPage = lazy(() => import("./pages/WhisperCoachPage"));
+const MarketPulsePage = lazy(() => import("./pages/MarketPulsePage"));
+const ReferralEnginePage = lazy(() => import("./pages/ReferralEnginePage"));
+const CareerPathPage = lazy(() => import("./pages/CareerPathPage"));
+const TheExperiencePage = lazy(() => import("./pages/TheExperiencePage"));
+const TranscendPage = lazy(() => import("./pages/TranscendPage"));
+const CompetePage = lazy(() => import("./pages/CompetePage"));
+const EarnPage = lazy(() => import("./pages/EarnPage"));
+const TrainingPage = lazy(() => import("./pages/TrainingPage"));
+const CertificationsPage = lazy(() => import("./pages/CertificationsPage"));
+const ComplianceVaultPage = lazy(() => import("./pages/ComplianceVaultPage"));
+const ExplorePage = lazy(() => import("./pages/ExplorePage"));
+const CommandPage = lazy(() => import("./pages/CommandPage"));
+const DivorceCalculatorPage = lazy(() => import("./pages/DivorceCalculatorPage"));
+const IndexBacktesterPage = lazy(() => import("./pages/IndexBacktesterPage"));
+const SettingsPage = lazy(() => import("./pages/SettingsPage"));
+const SupportPage = lazy(() => import("./pages/SupportPage"));
+const FIACollateralStrategy = lazy(() => import("./pages/portal/FIACollateralStrategy"));
+const ComboRecommender = lazy(() => import("./pages/portal/ComboRecommender"));
+const ClientReportGenerator = lazy(() => import("./pages/portal/ClientReportGenerator"));
 const ExitRating = lazy(() => import("./components/ExitRating"));
 const Privacy = lazy(() => import("./pages/Legal").then(m => ({ default: m.Privacy })));
 const Terms = lazy(() => import("./pages/Legal").then(m => ({ default: m.Terms })));
@@ -628,6 +670,47 @@ function Router() {
       <Route path="/portal/planning-cases" component={gated(PlanningCases, "/portal/planning-cases")} />
       <Route path="/portal/system-health" component={gated(SystemHealth, "/portal/system-health")} />
       <Route path="/portal/site-health" component={gated(SiteHealth, "/portal/site-health")} />
+
+      {/* Restored calculators and tools — see shared/calculatorCatalog.ts */}
+      <Route path="/portal/iul-projection" component={gated(IulProjectionPage, "/portal/iul-projection")} />
+      <Route path="/portal/myga-waterfall" component={gated(MygaWaterfallPage, "/portal/myga-waterfall")} />
+      <Route path="/portal/crypto-cycle" component={gated(CryptoCyclePage, "/portal/crypto-cycle")} />
+      <Route path="/portal/oil-gas" component={gated(OilGasPage, "/portal/oil-gas")} />
+      <Route path="/portal/estate-planning" component={gated(EstatePlanningPage, "/portal/estate-planning")} />
+      <Route path="/portal/real-estate" component={gated(RealEstatePage, "/portal/real-estate")} />
+      <Route path="/portal/str-tax-eliminator" component={gated(STRTaxEliminatorPage, "/portal/str-tax-eliminator")} />
+      <Route path="/portal/income-annuity" component={gated(IncomeAnnuityPage, "/portal/income-annuity")} />
+      <Route path="/portal/annuity-explorer" component={gated(AnnuityExplorerPage, "/portal/annuity-explorer")} />
+      <Route path="/portal/divorce-ilit" component={gated(DivorceILITStrategyPage, "/portal/divorce-ilit")} />
+      <Route path="/portal/mortgage-killer-v2" component={gated(MortgageKillerV2Page, "/portal/mortgage-killer-v2")} />
+      <Route path="/portal/risk-score" component={gated(RiskScorePage, "/portal/risk-score")} />
+      <Route path="/portal/retirement-opportunities" component={gated(RetirementOpportunitiesPage, "/portal/retirement-opportunities")} />
+      <Route path="/portal/interop-engine" component={gated(InteropEnginePage, "/portal/interop-engine")} />
+      <Route path="/portal/ai-brain-hub" component={gated(AIBrainHubPage, "/portal/ai-brain-hub")} />
+      <Route path="/portal/match-and-deploy" component={gated(MatchAndDeployPage, "/portal/match-and-deploy")} />
+      <Route path="/portal/auto-closer" component={gated(AutoCloserPage, "/portal/auto-closer")} />
+      <Route path="/portal/deal-room" component={gated(DealRoomPage, "/portal/deal-room")} />
+      <Route path="/portal/meeting-prep" component={gated(MeetingPrepPage, "/portal/meeting-prep")} />
+      <Route path="/portal/whisper-coach" component={gated(WhisperCoachPage, "/portal/whisper-coach")} />
+      <Route path="/portal/market-pulse" component={gated(MarketPulsePage, "/portal/market-pulse")} />
+      <Route path="/portal/referral-engine" component={gated(ReferralEnginePage, "/portal/referral-engine")} />
+      <Route path="/portal/career-path" component={gated(CareerPathPage, "/portal/career-path")} />
+      <Route path="/portal/the-experience" component={gated(TheExperiencePage, "/portal/the-experience")} />
+      <Route path="/portal/transcend" component={gated(TranscendPage, "/portal/transcend")} />
+      <Route path="/portal/compete" component={gated(CompetePage, "/portal/compete")} />
+      <Route path="/portal/earn" component={gated(EarnPage, "/portal/earn")} />
+      <Route path="/portal/training" component={gated(TrainingPage, "/portal/training")} />
+      <Route path="/portal/certifications" component={gated(CertificationsPage, "/portal/certifications")} />
+      <Route path="/portal/compliance-vault" component={gated(ComplianceVaultPage, "/portal/compliance-vault")} />
+      <Route path="/portal/explore" component={gated(ExplorePage, "/portal/explore")} />
+      <Route path="/portal/command" component={gated(CommandPage, "/portal/command")} />
+      <Route path="/portal/divorce-recovery" component={gated(DivorceCalculatorPage, "/portal/divorce-recovery")} />
+      <Route path="/portal/index-backtester-pro" component={gated(IndexBacktesterPage, "/portal/index-backtester-pro")} />
+      <Route path="/portal/settings-classic" component={gated(SettingsPage, "/portal/settings-classic")} />
+      <Route path="/portal/support-desk" component={gated(SupportPage, "/portal/support-desk")} />
+      <Route path="/portal/fia-collateral" component={gated(FIACollateralStrategy, "/portal/fia-collateral")} />
+      <Route path="/portal/strategy-combos" component={gated(ComboRecommender, "/portal/strategy-combos")} />
+      <Route path="/portal/client-report-generator" component={gated(ClientReportGenerator, "/portal/client-report-generator")} />
 
       {/* Fallback */}
       <Route path="/404" component={NotFound} />

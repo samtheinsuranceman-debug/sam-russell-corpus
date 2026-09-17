@@ -24,6 +24,8 @@
 //   keys the plan endpoint falls back to deterministic rules.
 // ============================================================
 import { z } from "zod";
+import { FOUNDER_VOICE, MODEL_ID, nameMatches, statusMessage, type VoiceStatus } from "@shared/voiceIdentity";
+import { compositeWorkingMemoryWithInstruments, compactWorkingMemory } from "@shared/compositeMind";
 import { publicProcedure, router } from "./_core/trpc";
 import { probeKeys } from "./keyProbe";
 import { anthropicHeaders } from "./_core/anthropic";
@@ -160,12 +162,31 @@ export const ADVISOR_SYSTEM =
   "label every number as a projection under stated assumptions, and never invent facts about " +
   "the client that were not provided. " + STR_PROTOCOL;
 
+/**
+ * The advisor's system prompt with the language layer attached. Callers that
+ * hold the person's own words should use advisorSystemFor() instead, which
+ * reads them; this constant is the standing floor for callers that do not.
+ */
+export const ADVISOR_SYSTEM_WIRED = `${ADVISOR_SYSTEM}\n\n${compositeWorkingMemoryWithInstruments().text}`;
+
+/**
+ * The advisor's system prompt with the twelve channels' live reading of THIS
+ * person attached. The reading comes from their own words — the question they
+ * typed plus whatever profile they have shared — so the channel match, the
+ * meta-program lean, the arc phase and the decision signals are specific to
+ * them rather than generic. With no words it degrades to the standing layer.
+ */
+export function advisorSystemFor(question: string, profileSummary?: string): string {
+  const { text } = compositeWorkingMemoryWithInstruments({ text: question, priorText: profileSummary });
+  return `${ADVISOR_SYSTEM}\n\n${text}`;
+}
+
 // Public homepage concierge. This prompt DELIBERATELY withholds the firm's
 // proprietary method ("the secret sauce"): it names the strategy pillars and
 // the general frame, but gives NO dollar amounts, NO percentages, NO formulas,
 // and NO step-by-step numeric sequences. The detailed math lives behind the
 // planning estimator and the licensed-advisor review, never in a public answer.
-const PUBLIC_TEASER_SYSTEM =
+const PUBLIC_TEASER_SYSTEM_BASE =
   "You are the AI concierge on the Russell Capital Systems PUBLIC homepage, speaking to a prospective " +
   "client — often a physician, psychiatrist, or surgeon — who may know nothing about the firm yet. " +
   "Explain, in warm and confident plain language, the KINDS of strategies and the general FRAME that " +
@@ -179,6 +200,15 @@ const PUBLIC_TEASER_SYSTEM =
   "State plainly that this is general education, not tax, legal, or investment advice, and that a licensed " +
   "professional confirms every specific in a personal review. Close by inviting them to complete the short " +
   "planning estimator and book a thorough evaluation. Under 180 words.";
+
+/**
+ * The public concierge speaking through the language layer, read from the
+ * visitor's own question. Compact form: the homepage prompt is already long
+ * and a visitor has given us one question rather than a profile.
+ */
+export function publicTeaserSystemFor(question: string): string {
+  return `${PUBLIC_TEASER_SYSTEM_BASE}\n\n${compactWorkingMemory({ text: question }).text}`;
+}
 
 /** Lead-model call: Claude direct if keyed, else the built-in Forge LLM, else null. */
 export async function leadModel(system: string, user: string): Promise<{ text: string; via: string } | null> {
@@ -264,7 +294,7 @@ type AskInput = { question: string; pagePath: string; profileSummary: string };
 async function answerInMode(input: AskInput, mode: AdvisorMode): Promise<{ text: string; via: string } | null> {
   const def = modeDef(mode);
   return leadModel(
-    ADVISOR_SYSTEM,
+    advisorSystemFor(input.question, input.profileSummary),
     `The user is on page "${input.pagePath}" of Russell Capital Systems.\n` +
     (input.profileSummary ? `Their stated profile:\n${input.profileSummary}\n\n` : "No profile has been shared yet.\n\n") +
     `They asked: "${input.question}"\n\n` +
@@ -397,6 +427,10 @@ export const ultraRouter = router({
     }))
     .mutation(async ({ input }) => {
       const team = configuredProviders();
+      // The language layer read from this visitor's own question. Every
+      // provider in the panel answers through the same reading, so the
+      // synthesis below is twelve channels agreeing rather than averaging.
+      const wired = publicTeaserSystemFor(input.question);
       const userMsg =
         (input.profileSummary ? `Client profile:\n${input.profileSummary}\n\n` : "") +
         `Question: ${input.question}\n\nAnswer in under 150 words. Projections only — no guarantees.`;
@@ -434,13 +468,17 @@ export const ultraRouter = router({
     }))
     .mutation(async ({ input }) => {
       const team = configuredProviders();
+      // The language layer read from this visitor's own question. Every
+      // provider in the panel answers through the same reading, so the
+      // synthesis below is twelve channels agreeing rather than averaging.
+      const wired = publicTeaserSystemFor(input.question);
       const userMsg =
         (input.contextSummary ? `What the visitor has shared so far:\n${input.contextSummary}\n\n` : "") +
         `The visitor asked: "${input.question}"\n\n` +
         `Answer per your hard rules — concepts and frames only, no numbers or formulas.`;
       const results = await Promise.all(team.map(async (p) => {
         try {
-          return { id: p.id, label: p.label, ok: true as const, text: await p.call(process.env[p.envKey]!, PUBLIC_TEASER_SYSTEM, userMsg) };
+          return { id: p.id, label: p.label, ok: true as const, text: await p.call(process.env[p.envKey]!, wired, userMsg) };
         } catch (e) {
           return { id: p.id, label: p.label, ok: false as const, text: `unavailable (${String(e).slice(0, 60)})` };
         }
@@ -449,7 +487,7 @@ export const ultraRouter = router({
       let answer: string | null = null;
       if (contributors.length > 0) {
         const lead = await leadModel(
-          PUBLIC_TEASER_SYSTEM,
+          wired,
           `${contributors.length} AI advisors each answered the same visitor question below. ` +
           `Synthesize them into ONE warm, plain-language answer that follows every hard rule ` +
           `(concepts and frames only — absolutely no dollar amounts, percentages, or formulas). ` +
@@ -471,21 +509,66 @@ export const ultraRouter = router({
     }),
 
   // Voice output via ElevenLabs (the owner's cloned voice) — env-keyed only.
+  /**
+   * Whose voice is the site actually speaking in?
+   *
+   * Asks the provider for the name attached to the configured id and compares
+   * it with the voice we intend to be. Never returns the id or the key — only
+   * the name the provider reports and whether it matched. Cached ten minutes
+   * so the owner's health page does not bill a lookup on every render.
+   */
+  voiceStatus: publicProcedure.query(async (): Promise<VoiceStatus> => {
+    const apiKey = process.env.ELEVENLABS_API_KEY;
+    const voiceId = process.env[FOUNDER_VOICE.envKey];
+    const base = { intendedName: FOUNDER_VOICE.displayName, provenance: FOUNDER_VOICE.provenance };
+    if (!apiKey || !voiceId) {
+      const s = { ...base, configured: false, providerName: null, verified: false };
+      return { ...s, message: statusMessage(s) };
+    }
+    const now = Date.now();
+    if (voiceStatusCache && now - voiceStatusCache.at < 600_000) return voiceStatusCache.value;
+    let providerName: string | null = null;
+    try {
+      const res = await timedFetch(`https://api.elevenlabs.io/v1/voices/${encodeURIComponent(voiceId)}`, {
+        method: "GET", headers: { "xi-api-key": apiKey },
+      });
+      if (res.ok) {
+        const data = (await res.json()) as { name?: string };
+        providerName = typeof data.name === "string" ? data.name : null;
+      }
+    } catch { /* unreachable provider is reported as unverified, not as a mismatch */ }
+    const s = { ...base, configured: true, providerName, verified: nameMatches(FOUNDER_VOICE, providerName) };
+    const value: VoiceStatus = { ...s, message: statusMessage(s) };
+    voiceStatusCache = { at: now, value };
+    return value;
+  }),
+
+  /**
+   * Speak a line in the founder's voice.
+   *
+   * The voice reads what the language layer already wrote and adds nothing:
+   * no text is generated here. When no voice is configured the failure is
+   * named so the client can fall back to the browser's own speech and TELL
+   * the listener it is doing so, rather than passing a synthetic voice off
+   * as the founder.
+   */
   speak: publicProcedure
     .input(z.object({ text: z.string().min(1).max(2_000) }))
     .mutation(async ({ input }) => {
       const apiKey = process.env.ELEVENLABS_API_KEY;
-      const voiceId = process.env.ELEVENLABS_VOICE_ID;
+      const voiceId = process.env[FOUNDER_VOICE.envKey];
       if (!apiKey || !voiceId) {
-        return { ok: false as const, reason: "Voice output not configured (ELEVENLABS_API_KEY / ELEVENLABS_VOICE_ID)." };
+        return { ok: false as const, reason: `Voice output not configured. Set ELEVENLABS_API_KEY and ${FOUNDER_VOICE.envKey} in the host environment panel to speak as ${FOUNDER_VOICE.displayName}.`, speaker: null };
       }
       const res = await timedFetch(`https://api.elevenlabs.io/v1/text-to-speech/${encodeURIComponent(voiceId)}`, {
         method: "POST",
         headers: { "content-type": "application/json", "xi-api-key": apiKey },
-        body: JSON.stringify({ text: input.text, model_id: "eleven_multilingual_v2" }),
+        body: JSON.stringify({ text: input.text, model_id: MODEL_ID, voice_settings: FOUNDER_VOICE.settings }),
       });
-      if (!res.ok) return { ok: false as const, reason: `voice service error (HTTP ${res.status})` };
+      if (!res.ok) return { ok: false as const, reason: `voice service error (HTTP ${res.status})`, speaker: null };
       const audio = Buffer.from(await res.arrayBuffer()).toString("base64");
-      return { ok: true as const, audioBase64: audio, mimeType: "audio/mpeg" };
+      return { ok: true as const, audioBase64: audio, mimeType: "audio/mpeg", speaker: FOUNDER_VOICE.displayName };
     }),
 });
+
+let voiceStatusCache: { at: number; value: VoiceStatus } | null = null;
