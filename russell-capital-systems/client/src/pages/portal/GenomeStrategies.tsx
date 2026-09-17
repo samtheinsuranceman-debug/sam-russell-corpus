@@ -262,9 +262,13 @@ export default function GenomeStrategies() {
             evaluate, scored against the configuration, with the confidence shown beside every score — because a
             high fit built on four answers is a prompt to ask more questions, not a plan.
           </p>
-          <Link to="/portal/wealth-genome" className="mt-3 inline-block text-[13px] text-amber-300 hover:underline">
-            ← Back to the solid
-          </Link>
+          <div className="mt-3 flex flex-wrap gap-3 text-[13px]">
+            <Link to="/portal/wealth-genome" className="text-amber-300 hover:underline">← Back to the solid</Link>
+            <span className="text-slate-600">·</span>
+            <Link to="/portal/household-genome" className="text-amber-300 hover:underline">
+              Married? Every fit below is read on one person — pair it
+            </Link>
+          </div>
         </header>
 
         <div className="mt-6 flex items-start gap-2.5 rounded-xl border border-rose-400/30 bg-rose-400/[0.07] p-4">

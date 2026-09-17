@@ -328,6 +328,10 @@ export const CALCULATORS: readonly CalculatorEntry[] = [
     blurb: "Twenty-four strategies scored against the genome — property, policies, credit arbitrage, tax, markets — each with its confidence, its gates, who it is wrong for, and whether this firm actually does it.",
     engine: "shared/genomeStrategyFit.ts",
     keywords: ["strategy fit", "what should i do", "allocation", "how much", "bitcoin", "annuity", "oil and gas", "iul", "rental", "roth conversion", "1031", "personality", "temperament"] },
+  { path: "/portal/household-genome", name: "Wealth Genome Pairing Protocol", category: "diagnostics", featured: true,
+    blurb: "Both spouses read separately, weighted per pot of money by who owns it, who bears the loss and who depends on it — with the divergences that will end a plan named before it is chosen.",
+    engine: "shared/householdGenome.ts",
+    keywords: ["spouse", "husband", "wife", "partner", "couple", "household", "marital", "joint", "pairing", "consent", "his ira", "her 401k", "home equity", "who decides", "friction", "conflict"] },
 
   // ---------------- Markets & Outside Forces ----------------
   { path: "/portal/outside-forces", name: "Outside Forces", category: "markets", featured: true,
