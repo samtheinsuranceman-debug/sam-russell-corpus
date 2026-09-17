@@ -32,6 +32,7 @@ export const SECONDARY_CATALOG: SecondaryCatalogItem[] = [
   { path: "/portal/qbi-optimizer", label: "QBI / Section 199A Optimizer", category: "Advanced Analysis" },
   { path: "/portal/mortgage-ledger", label: "The Mortgage Ledger", category: "Advanced Analysis" },
   { path: "/portal/liquidity-routes", label: "Liquidity Without the Bank", category: "Advanced Analysis" },
+  { path: "/portal/how-a-figure-is-made", label: "How a Figure Gets Made", category: "Reference & Education" },
   { path: "/portal/strategy-combos", label: "Strategy Combinations", category: "Advanced Analysis" },
   { path: "/portal/interop-engine", label: "Interop Engine", category: "Reference & Education" },
   { path: "/portal/ai-brain-hub", label: "AI Brain Hub", category: "Reference & Education" },

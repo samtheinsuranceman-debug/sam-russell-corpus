@@ -179,6 +179,23 @@ export default function FinancialAssessment() {
           )}
         </div>
 
+        {/* Money is half of it. The Fact Finder collects only the financial
+            side; the non-financial drivers decide whether a retirement works
+            at all, and they have their own page. */}
+        <div className="mb-5 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-emerald-400/25 bg-white/[0.03] px-4 py-3.5">
+          <div className="min-w-0">
+            <p className="text-sm font-semibold text-white">This page only asks about money.</p>
+            <p className="mt-0.5 max-w-[68ch] text-[13px] leading-relaxed text-slate-400">
+              Health, purpose, relationships and where you live decide whether a retirement works as much as the
+              balance sheet does — and none of them appear above. The Ecological Drivers of Retirement Success
+              covers that half.
+            </p>
+          </div>
+          <Link href="/portal/ecological-drivers" className="shrink-0 rounded-lg border border-emerald-300/40 px-3.5 py-2 text-sm text-emerald-100 hover:bg-emerald-500/20">
+            The other half →
+          </Link>
+        </div>
+
         <div className="grid gap-5 lg:grid-cols-[260px_1fr]">
           {/* section rail */}
           <nav aria-label="Assessment sections" className={`${CARD} p-3 lg:sticky lg:top-24 lg:self-start`}>
