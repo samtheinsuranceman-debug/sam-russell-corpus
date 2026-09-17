@@ -101,6 +101,12 @@ export type WorkedExample = {
 /** A question people actually type into a search engine about this topic. */
 export type CommonQuestion = { question: string; answer: string };
 
+/**
+ * How far a page is written out. Every route and every strategy is currently
+ * "full" — over a thousand words, with worked arithmetic — and a test enforces
+ * it. "structured" remains in the type for anything added in outline first, so
+ * that a half-written page is labelled rather than passed off as finished.
+ */
 export type Depth = "full" | "structured";
 
 export type CreditRoute = {
