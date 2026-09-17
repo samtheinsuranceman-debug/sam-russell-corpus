@@ -324,6 +324,10 @@ export const CALCULATORS: readonly CalculatorEntry[] = [
   { path: "/portal/wealth-genome", name: "The Wealth Genome", category: "life-events", featured: true,
     blurb: "Twenty-one factors — durability, obligation, structure, disposition — weighted into a shape that is yours and nobody else's.",
     engine: "shared/wealthGenomeFactors.ts", keywords: ["genome", "profile", "factors", "shape", "personality"] },
+  { path: "/portal/genome-strategies", name: "What the Genome Says to Do", category: "diagnostics", featured: true,
+    blurb: "Twenty-four strategies scored against the genome — property, policies, credit arbitrage, tax, markets — each with its confidence, its gates, who it is wrong for, and whether this firm actually does it.",
+    engine: "shared/genomeStrategyFit.ts",
+    keywords: ["strategy fit", "what should i do", "allocation", "how much", "bitcoin", "annuity", "oil and gas", "iul", "rental", "roth conversion", "1031", "personality", "temperament"] },
 
   // ---------------- Markets & Outside Forces ----------------
   { path: "/portal/outside-forces", name: "Outside Forces", category: "markets", featured: true,
