@@ -125,6 +125,16 @@ export default function WealthGenomePage() {
           </div>
         )}
 
+        <div className={`${CARD} p-6`}>
+          <h2 className="text-lg font-semibold text-white">The shape is the diagnosis. This is the formulary.</h2>
+          <p className="mt-1 max-w-[62ch] text-sm leading-relaxed text-slate-400">
+            Twenty-four strategies scored against this configuration — property, policies, credit arbitrage, tax,
+            markets — each with the confidence beside the score, the gates shown separately from the score, and an
+            honest account of who each one is wrong for.
+          </p>
+          <Link href="/portal/genome-strategies" className="mt-4 inline-flex items-center gap-1 rounded-lg bg-emerald-500 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-400">What the genome says to do <ArrowRight size={14} /></Link>
+        </div>
+
         <p className="text-center text-xs text-slate-500">Scores are a map of where the plan must work hardest — education only, not tax, legal, or investment advice. Your licensed advisor and the tax professional team review suitability before anything is implemented.</p>
       </div>
     </AppShell>

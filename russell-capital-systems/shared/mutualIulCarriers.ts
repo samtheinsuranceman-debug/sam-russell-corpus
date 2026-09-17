@@ -91,6 +91,40 @@ export const MUTUAL_IUL_CARRIERS: MutualIulCarrier[] = [
     home: "https://nationwidefinancial.com",
   },
   {
+    id: "massmutual",
+    // Added in the genome strategy-fit pass. MassMutual's mutual structure is
+    // long-established and widely stated, but this system's rule is that a
+    // carrier fact counts only once its own page has been read — and the
+    // agent proxy refused the connection to massmutual.com on the day this was
+    // added. So it goes in as unverified with the page named, rather than as a
+    // read that did not happen.
+    name: "Massachusetts Mutual Life Insurance Company (MassMutual)",
+    ownership: unverified("Mutual company owned by its policyholders.", NOT_READ + " Proxy refused the connection on 2026-09-17.", "https://www.massmutual.com/about-us"),
+    founded: unverified(null, NOT_READ, "https://www.massmutual.com/about-us"),
+    ratings: [],
+    size: [],
+    product: unverified(null, NOT_READ, "https://www.massmutual.com/insurance/life-insurance"),
+    strategies: [],
+    firstYearLoans: unverified("unknown", "Not read."),
+    notes: [unverified("Issues indexed universal life. Product name, index accounts and loan provisions to be read from the carrier's own pages before this entry is used in a plan.", NOT_READ)],
+    backtestKey: null,
+    home: "https://www.massmutual.com",
+  },
+  {
+    id: "guardian",
+    name: "The Guardian Life Insurance Company of America",
+    ownership: unverified("Mutual company owned by its policyholders.", NOT_READ + " Proxy refused the connection on 2026-09-17.", "https://www.guardianlife.com/about-guardian"),
+    founded: unverified(null, NOT_READ, "https://www.guardianlife.com/about-guardian"),
+    ratings: [],
+    size: [],
+    product: unverified(null, NOT_READ, "https://www.guardianlife.com/life-insurance/indexed-universal-life"),
+    strategies: [],
+    firstYearLoans: unverified("unknown", "Not read."),
+    notes: [unverified("Issues indexed universal life. Product name, index accounts and loan provisions to be read from the carrier's own pages before this entry is used in a plan.", NOT_READ)],
+    backtestKey: null,
+    home: "https://www.guardianlife.com",
+  },
+  {
     id: "penn-mutual",
     name: "The Penn Mutual Life Insurance Company",
     ownership: v("Mutual company since 1847; owned by its policyholders.", "https://www.pennmutual.com/about-us", D),

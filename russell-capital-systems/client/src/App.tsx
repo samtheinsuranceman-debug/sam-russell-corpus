@@ -73,6 +73,7 @@ const LiquidityRoutesPage = lazy(() => import("./pages/portal/LiquidityRoutes"))
 const HowAFigureIsMade = lazy(() => import("./pages/portal/HowAFigureIsMade"));
 const AltCreditHub = lazy(() => import("./pages/portal/AltCreditHub"));
 const AltCreditDetail = lazy(() => import("./pages/portal/AltCreditDetail"));
+const GenomeStrategies = lazy(() => import("./pages/portal/GenomeStrategies"));
 const ComboRecommender = lazy(() => import("./pages/portal/ComboRecommender"));
 const ClientReportGenerator = lazy(() => import("./pages/portal/ClientReportGenerator"));
 const ExitRating = lazy(() => import("./components/ExitRating"));
@@ -737,6 +738,7 @@ function Router() {
       <Route path="/portal/how-a-figure-is-made" component={gated(HowAFigureIsMade, "/portal/how-a-figure-is-made")} />
       <Route path="/portal/alt-credit" component={gated(AltCreditHub, "/portal/alt-credit")} />
       <Route path="/portal/alt-credit/:slug" component={gated(AltCreditDetail, "/portal/alt-credit")} />
+      <Route path="/portal/genome-strategies" component={gated(GenomeStrategies, "/portal/genome-strategies")} />
       <Route path="/portal/client-report-generator" component={gated(ClientReportGenerator, "/portal/client-report-generator")} />
 
       {/* Fallback */}
