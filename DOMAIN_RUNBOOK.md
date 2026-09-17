@@ -1,13 +1,19 @@
 # russellcapitalsystems.com — domain runbook (16 Sep 2026)
 
-## Current state
+## Current state (17 Sep 2026, 00:40 UTC)
 | Address | State | Served by |
 |---|---|---|
-| https://russellcapitalsystems.com | LIVE, valid TLS, **the app itself** | GitHub Pages (this repo, `docs/`, static client build); API calls go to the Railway origin |
-| https://www.russellcapitalsystems.com | BROKEN (TLS mismatch) — CNAME fixed 16 Sep ~22:00 UTC, TXT still missing | GoDaddy CNAME → `tjkj8nc5` (correct); Railway shows VALIDATING_OWNERSHIP until the TXT below exists |
-| https://web-production-4b215.up.railway.app | LIVE, valid TLS | Railway service `web` (server + client, same origin) |
+| https://www.russellcapitalsystems.com | **LIVE, own certificate (Let's Encrypt, issued 16 Sep 22:52 UTC), canonical** | Railway service `web` (server + client, same origin) |
+| https://russellcapitalsystems.com | LIVE, valid TLS, serves the app as a fallback front door | GitHub Pages (this repo, `docs/`); `/api` calls go to the Railway origin; canonical links point at www |
+| https://web-production-4b215.up.railway.app | LIVE, valid TLS | Railway service `web` (the API origin the apex front door uses) |
 
-## How the front door works (no registrar dependency)
+The GoDaddy edits landed on 16 Sep: the `www` CNAME to `tjkj8nc5.up.railway.app` (~22:00 UTC) and the
+`_railway-verify.www` TXT (~22:50 UTC). Railway verified the domain and issued the certificate within
+minutes. `CANONICAL_HOST=www.russellcapitalsystems.com` and `PUBLIC_BASE_URL=https://www.russellcapitalsystems.com`
+are set on the service again (the apex values were a stop-gap while www was broken); once www reaches the
+server it serves the app, and any request that reaches the server with the bare host 301s to www.
+
+## The apex front door (kept as a fallback, no registrar dependency)
 The apex `A` records already pointed at GitHub Pages with a valid Let's Encrypt certificate, so the
 app is published there instead of a redirect:
 
@@ -30,7 +36,7 @@ app is published there instead of a redirect:
 OAuth callbacks are served by the API origin (`const.ts` builds `redirectUri` from `VITE_API_ORIGIN`),
 so any provider console must list `https://web-production-4b215.up.railway.app/api/oauth/callback`.
 
-## Why www is still broken (Railway "validating ownership")
+## Why www was broken for a week (Railway "validating ownership")
 Railway requires **two** DNS records per custom domain: the CNAME **and** a TXT ownership
 record (`status.verificationToken` in the API; shown behind the pencil icon in the dashboard).
 Only the CNAME was ever created. Source: https://docs.railway.com/integrations/api/manage-domains#dns-configuration

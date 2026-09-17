@@ -79,3 +79,11 @@ the blueprint so re-running it cannot touch mail).
   on the Railway service now, so mail links, Whisperer report links and the sitemap point at the
   address that works; www 301s to the apex once it reaches the server. Revisit which host is
   canonical after www has its certificate.
+
+## 2026-09-17 — www is live
+
+Both records landed at GoDaddy on the evening of 16 Sep (CNAME `www` → `tjkj8nc5.up.railway.app`, then
+TXT `_railway-verify.www`). Railway verified the domain and issued the www certificate at 22:52 UTC.
+`CANONICAL_HOST` and `PUBLIC_BASE_URL` are back on `www.russellcapitalsystems.com`. The apex keeps the
+GitHub Pages front door (the app itself, calling the Railway origin) as a fallback, with canonical links,
+robots and sitemap pointing at www. The zone row for `www` above now reads `tjkj8nc5`, not `dd56isi9`.
