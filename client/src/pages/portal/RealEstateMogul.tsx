@@ -1,4 +1,5 @@
 // @ts-nocheck
+import { AltCreditLink } from "@/components/AltCreditLink";
 import { AppShell } from "@/components/AppShell";
 import { GenerateOutcomeTab } from "@/components/GenerateOutcomeTab";
 import { CalculationSyncBar } from "@/components/CalculationSyncBar";
@@ -1706,6 +1707,7 @@ export default function RealEstateMogul() {
           </TabsContent>
         </Tabs>
 
+        <AltCreditLink context="Every property added to this portfolio needs capital, and this page does not say where it comes from." />
         <NAICDisclaimer variant="footer" showsProjections showsCashValues showsPolicyLoans />
       </div>
       <PageInsights pageId="real-estate-mogul" />

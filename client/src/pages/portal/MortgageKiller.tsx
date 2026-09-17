@@ -1,4 +1,5 @@
 // @ts-nocheck
+import { AltCreditLink } from "@/components/AltCreditLink";
 import { AppShell } from "@/components/AppShell";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -3143,6 +3144,7 @@ export default function MortgageKiller() {
             />
           </TabsContent>
         </Tabs>
+        <AltCreditLink context="The HELOC in this calculator is the whole engine — without a line of credit there is no recycle cycle at all." />
         <NAICDisclaimer variant="footer" showsProjections showsCashValues showsPolicyLoans showsComparisons />
       </div>
           <PageInsights pageId="mortgage-killer" />
