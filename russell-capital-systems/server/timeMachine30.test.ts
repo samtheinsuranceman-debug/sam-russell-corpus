@@ -3,7 +3,7 @@ import {
   shuffle, mulberry32, creditedPct, realYears, runTimeMachine,
   liquidityWindows, pickYears, everyNthYear, compareMultiplier,
   breakEvenPerformanceFactor, EPFR_DESIGNS, MissingPerformanceFactorError,
-  TIME_MACHINE_RULES, DEFAULT_WINDOW_YEARS,
+  TIME_MACHINE_RULES, DEFAULT_WINDOW_YEARS, issueAgeFromCurrentAge,
 } from "../shared/timeMachine30";
 import { HORIZON_ACCOUNTS, HORIZON_ILLUSTRATION_FACTS } from "../shared/pacificHorizonEcv";
 
@@ -234,5 +234,54 @@ describe("never-printed list", () => {
 
   it("matches the maximum illustrated rate on the illustration", () => {
     expect(HORIZON_ILLUSTRATION_FACTS.maximumIllustratedRatePct).toBe(6.35);
+  });
+});
+
+describe("the framing — a policy opened thirty years ago, at the client's age today", () => {
+  it("derives the issue age by subtracting the window from the client's real age", () => {
+    expect(issueAgeFromCurrentAge(70)).toBe(40);
+    expect(issueAgeFromCurrentAge(62)).toBe(32);
+    expect(issueAgeFromCurrentAge(50, 20)).toBe(30);
+  });
+
+  it("ends the table at the age the client is now", () => {
+    const r = runTimeMachine({ ...BASE, issueAge: undefined, currentAge: 70 });
+    expect(r.issueAge).toBe(40);
+    expect(r.endingAge).toBe(69);
+    expect(r.years[0].attainedAge).toBe(40);
+    expect(r.years[r.years.length - 1].attainedAge).toBe(69);
+  });
+
+  it("refuses a client too young for a thirty-year look-back rather than going negative", () => {
+    expect(() => issueAgeFromCurrentAge(28)).toThrow(RangeError);
+    expect(() => runTimeMachine({ ...BASE, issueAge: undefined, currentAge: 25 })).toThrow(RangeError);
+  });
+
+  it("refuses to run with neither age supplied", () => {
+    expect(() => runTimeMachine({ ...BASE, issueAge: undefined })).toThrow(/Supply currentAge/);
+  });
+
+  it("still accepts an explicit issue age", () => {
+    const r = runTimeMachine({ ...BASE, issueAge: 45 });
+    expect(r.issueAge).toBe(45);
+    expect(r.years[0].attainedAge).toBe(45);
+  });
+
+  it("reports borrowable cash value on every single year — always", () => {
+    const r = runTimeMachine({ ...BASE, issueAge: undefined, currentAge: 70, seed: 3 });
+    for (const y of r.years) {
+      expect(y).toHaveProperty("borrowable");
+      expect(y.borrowable).toBeGreaterThanOrEqual(0);
+      expect(y.borrowable).toBeLessThanOrEqual(y.surrenderValue);
+    }
+    expect(r.years.filter((y) => y.borrowable > 0).length).toBeGreaterThan(20);
+  });
+
+  it("reshuffles to a different outcome on each press of the button", () => {
+    const seen = new Set<number>();
+    for (const seed of [1, 2, 3, 4, 5]) {
+      seen.add(runTimeMachine({ ...BASE, issueAge: undefined, currentAge: 70, seed }).endingAccountValue);
+    }
+    expect(seen.size).toBeGreaterThan(3);
   });
 });

@@ -239,11 +239,40 @@ function resolveEpfr(setting: EpfrSetting): { factor: number; chargePct: number 
 
 // ─── The run ────────────────────────────────────────────────────────────────
 
+/**
+ * Derive the issue age from the client's real age today.
+ *
+ * The framing is a policy taken out THIRTY YEARS AGO on someone who is the
+ * client's age now. A 70-year-old sees what a policy opened at 40 would have done
+ * across the thirty years that followed, and the last row of the table is the age
+ * they are today.
+ *
+ * Derived rather than asked for, so the two figures cannot drift apart.
+ */
+export function issueAgeFromCurrentAge(
+  currentAge: number,
+  windowYears = DEFAULT_WINDOW_YEARS,
+): number {
+  if (!Number.isFinite(currentAge) || currentAge <= windowYears) {
+    throw new RangeError(
+      `A ${windowYears}-year look-back needs a current age above ${windowYears}; received ${currentAge}. ` +
+        'Shorten the window, or this framing does not apply to this client.',
+    );
+  }
+  return Math.round(currentAge - windowYears);
+}
+
 export interface RunInputs {
   readonly accountId: string;
   readonly annualPremium: number;
   readonly premiumYears: number;
-  readonly issueAge: number;
+  /**
+   * Age the hypothetical policy was issued at, thirty years ago. Prefer
+   * `currentAge` and let the engine subtract.
+   */
+  readonly issueAge?: number;
+  /** The client's real age today. The engine derives the issue age from it. */
+  readonly currentAge?: number;
   readonly specifiedAmount: number;
   /** Seed for the shuffle. Omit to run history in the order it happened. */
   readonly seed?: number;
@@ -283,6 +312,10 @@ export interface RunYear {
 
 export interface RunResult {
   readonly account: HorizonAccount;
+  /** Age the hypothetical policy was issued at, thirty years before today. */
+  readonly issueAge: number;
+  /** Age in the final row — the client's age today, when currentAge was supplied. */
+  readonly endingAge: number;
   readonly basis: Basis;
   readonly seed: number | null;
   readonly shuffled: boolean;
@@ -314,8 +347,19 @@ export function runTimeMachine(inputs: RunInputs): RunResult {
   const account = HORIZON_ACCOUNTS.find((a) => a.id === inputs.accountId);
   if (!account) throw new Error(`Unknown Pacific Horizon account: ${inputs.accountId}`);
 
+  const windowYears = inputs.windowYears ?? DEFAULT_WINDOW_YEARS;
+  if (inputs.issueAge === undefined && inputs.currentAge === undefined) {
+    throw new RangeError(
+      'Supply currentAge — the client’s real age today — or issueAge. ' +
+        'currentAge is preferred; the engine subtracts the look-back window itself.',
+    );
+  }
+  const issueAge = inputs.currentAge !== undefined
+    ? issueAgeFromCurrentAge(inputs.currentAge, windowYears)
+    : inputs.issueAge!;
+
   const basis = inputs.basis ?? 'current';
-  const source = realYears(account, inputs.endYear ?? 2025, inputs.windowYears ?? DEFAULT_WINDOW_YEARS, basis);
+  const source = realYears(account, inputs.endYear ?? 2025, windowYears, basis);
   if (source.length === 0) {
     throw new Error(
       `No public index series is held on this platform for ${account.name}. ` +
@@ -354,7 +398,7 @@ export function runTimeMachine(inputs: RunInputs): RunResult {
 
     years.push({
       policyYear,
-      attainedAge: inputs.issueAge + i,
+      attainedAge: issueAge + i,
       sourceYear: y.sourceYear,
       rawReturnPct: y.rawReturnPct,
       baseCreditedPct: y.creditedPct,
@@ -373,6 +417,8 @@ export function runTimeMachine(inputs: RunInputs): RunResult {
 
   return {
     account,
+    issueAge,
+    endingAge: issueAge + years.length - 1,
     basis,
     seed: inputs.seed ?? null,
     shuffled: inputs.seed !== undefined,
