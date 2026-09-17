@@ -27,6 +27,7 @@
 // ============================================================
 
 import type { Express, Request, Response } from "express";
+import { compactWorkingMemory } from "@shared/compositeMind";
 import { leadModel } from "./ultraAI";
 
 /** Where a visitor is sent to book. Unset means no booking offer is made. */
@@ -42,7 +43,7 @@ const MAX_QUESTION = 600;
  * the constraint set is the part worth copying; only the subject matter and
  * the closing invitation differ.
  */
-function systemPrompt(): string {
+function systemPrompt(question = ""): string {
   return (
     `You are the AI concierge on the public website of ${FIRM()}, an insurance and wealth ` +
     `management firm, speaking with a prospective client who may know nothing about the firm. ` +
@@ -57,7 +58,8 @@ function systemPrompt(): string {
     `outcome. Never state or imply what any investment or policy will return. ` +
     `Say plainly that this is general education and not tax, legal or investment advice, and that ` +
     `a licensed professional confirms every specific in a personal review. ` +
-    `Close by inviting them to book a short conversation. Under 180 words.`
+    `Close by inviting them to book a short conversation. Under 180 words.` +
+    `\n\n${compactWorkingMemory({ text: question }).text}`
   );
 }
 
@@ -115,7 +117,7 @@ export function registerPartnerConcierge(
       return;
     }
 
-    const lead = await leadModel(systemPrompt(), q);
+    const lead = await leadModel(systemPrompt(q), q);
     if (!lead) {
       // Named failure rather than a canned reassurance. If no model answered,
       // the visitor is told that, not handed a generic paragraph pretending to

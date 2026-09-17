@@ -38,7 +38,7 @@ describe("verified Grok delta merge", () => {
   const currentRoutes = routeSet(currentApp);
 
   it("retains every Grok and unified-platform route in the 239-route application", () => {
-    expect(currentRoutes.size).toBe(260); // 232 + ultra-calculator, fact-finder, calculators + portal/leads + financial-assessment, ai-advisor, wealth-genome, my-journey, plan-ledger, connections, controls, erosion, sphere, forgiveness, tax-schedule, site-health, zip-engine, short-term-rentals, rental-enterprise, inheritance, iul-engine, long-term-care, income-for-life, outside-forces + /for, /for/:slug // +1: /portal/interior, the internal design-system reference added in 549521b
+    expect(currentRoutes.size).toBe(299); // 232 + ultra-calculator, fact-finder, calculators + portal/leads + financial-assessment, ai-advisor, wealth-genome, my-journey, plan-ledger, connections, controls, erosion, sphere, forgiveness, tax-schedule, site-health, zip-engine, short-term-rentals, rental-enterprise, inheritance, iul-engine, long-term-care, income-for-life, outside-forces + /for, /for/:slug // +1: /portal/interior, the internal design-system reference added in 549521b // +39: the calculators and tools restored in the catalogue pass — page files that existed on disk but were never routed, so every link to them 404'd (see shared/calculatorCatalog.ts)
     for (const route of [...addedRoutes, ...unifiedPlatformRoutes]) {
       expect(currentRoutes.has(route), route).toBe(true);
     }

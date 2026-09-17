@@ -17,12 +17,18 @@ import { z } from "zod";
 import { recordEvent } from "./ledger";
 import { factsUsed, recordAdvice } from "./advice";
 import { protectedProcedure, router } from "./_core/trpc";
-import { ADVISOR_SYSTEM, configuredProviders, leadModel } from "./ultraAI";
+import { ADVISOR_SYSTEM, advisorSystemFor, configuredProviders, leadModel } from "./ultraAI";
+import { compositeWorkingMemory } from "@shared/compositeMind";
 import { getFactFinderForUser, getLatestJourneyForUser, markJourneyStepVisited, saveJourneyForUser } from "./factFinderDb";
 import { factFinderCompleteness, factFinderSummary, type ClientFactFinder } from "@shared/clientFactFinder";
 import { JOURNEY_CATALOG } from "@shared/journeyCatalog";
 import { buildJourney, factFinderSignals, fmtMoney, validateJourney, type Journey } from "@shared/journeyEngine";
 
+/**
+ * The librarian's own rules. The language layer is attached per-question by
+ * librarianSystemFor() below, so the channel match and arc reading come from
+ * the client's actual words and their assessment rather than a fixed string.
+ */
 const LIBRARIAN_RULES =
   " You are the Financial Librarian of Russell Capital Systems: one calm, warm voice that speaks for a team of AI models. " +
   "You are talking to a client (or their advisor) inside a private portal, and you have their complete Financial Assessment, " +
@@ -31,6 +37,12 @@ const LIBRARIAN_RULES =
   "advisor and the tax professional team review every strategy for suitability and IRS compliance before anything is implemented. " +
   "Do not invent facts that are not in the assessment. Speak plainly, as if reading aloud, in under 200 words. " +
   "When a page on the site answers part of the question, name it (the catalog is provided) so the client can click through.";
+
+/** The librarian speaking through the twelve channels, read from this client's own words. */
+function librarianSystemFor(question: string, assessmentSummary: string): string {
+  const { text } = compositeWorkingMemory({ text: question, priorText: assessmentSummary });
+  return `${ADVISOR_SYSTEM}${LIBRARIAN_RULES}\n\n${text}`;
+}
 
 function catalogText(): string {
   return JOURNEY_CATALOG.map((p) => `- ${p.title} (${p.path}): ${p.purpose}`).join("\n");
@@ -108,7 +120,13 @@ export const librarianRouter = router({
         const answer = offlineAnswer(input.question, data, hint);
         return { gated: false as const, answer, spoken: answer, contributors: [] as string[], contributorCount: 0, percent: 100, missingSections: [] as string[] };
       }
-      const system = ADVISOR_SYSTEM + LIBRARIAN_RULES;
+      // The twelve channels read from this client's own question plus their
+      // recent turns and their completed assessment — so the channel match,
+      // the arc phase and the decision signals are theirs, not generic.
+      const system = librarianSystemFor(
+        input.question,
+        [input.history.filter((h) => h.role === "user").map((h) => h.text).join("\n"), factFinderSummary(data)].join("\n"),
+      );
       const history = input.history.slice(-6).map((h) => `${h.role === "user" ? "Client" : "Librarian"}: ${h.text}`).join("\n");
       const userMsg =
         `CLIENT FACT FINDER (complete):\n${factFinderSummary(data)}\n\n` +
@@ -132,7 +150,7 @@ export const librarianRouter = router({
         question: input.question, answer, via: ok.length > 1 ? "synthesis" : ok[0] ? "single-voice" : "offline",
         voices: ok.map((r) => r.label), dataUsed: factsUsed(data),
         assumptions: ["Answers are projections under the client's stated facts; no market or tax outcome is guaranteed."],
-        rulesApplied: ["LIBRARIAN_RULES", "ADVISOR_SYSTEM", "journey-engine catalog"],
+        rulesApplied: ["LIBRARIAN_RULES", "ADVISOR_SYSTEM", "NLP_CHANNEL_LAYER", "journey-engine catalog"],
       }, { actorName: "Financial Librarian" }).catch(() => undefined);
       return { gated: false as const, answer, spoken: answer, contributors: ok.map((r) => r.label), contributorCount: ok.length, percent: 100, missingSections: [] as string[] };
     }),

@@ -1,115 +1,190 @@
-import React, { useState } from 'react';
-import { Link } from 'wouter';
-import PageBackdrop from '../components/PageBackdrop';
-import { EngineWhyFooter } from '@/components/rooms/Reveal';
+// ============================================================
+// THE CALCULATOR CATALOGUE.
+//
+// Every card on this page comes from shared/calculatorCatalog.ts, which is
+// verified against the real router by server/calculatorCatalog.test.ts. The
+// previous version of this page carried its list as hand-typed JSX and
+// eighteen of its thirty-five cards pointed at routes that did not exist.
+// Nothing here can 404 any more without a test failing first.
+// ============================================================
+import React, { useMemo, useState } from "react";
+import { Link } from "wouter";
+import PageBackdrop from "../components/PageBackdrop";
+import { EngineWhyFooter } from "@/components/rooms/Reveal";
+import {
+  CALCULATOR_COUNT, CATEGORY_ORDER, CATEGORY_LABELS, CATEGORY_BLURBS,
+  searchCalculators, categoryCounts, featured,
+  type CalculatorCategory, type CalculatorEntry,
+} from "@shared/calculatorCatalog";
 
-const categories = {
-  'RETIREMENT & INCOME': [
-    { slug: 'social-security', name: 'Social Security Optimizer', desc: 'Optimal claiming strategy for both spouses with IUL bridge.' },
-    { slug: 'retirement-drivers', name: 'Retirement Drivers', desc: 'Key factors driving your retirement readiness score.' },
-    { slug: 'income-gap-analyzer', name: 'Income Gap Analyzer', desc: 'Identify and close gaps in your retirement income plan.' },
-    { slug: 'withdrawal-sequencing', name: 'Withdrawal Sequencing', desc: 'Optimal order for drawing down retirement accounts.' },
-    { slug: 'lifetime-income', name: 'Lifetime Income', desc: 'Model guaranteed income streams across your lifetime.' },
-    { slug: 'income-timeline', name: 'Income Timeline', desc: 'Visual timeline of all income sources through retirement.' },
-    { slug: 'income-calculator', name: 'Income Calculator', desc: 'Calculate total retirement income from all sources.' },
-  ],
-  'TAX & ESTATE': [
-    { slug: 'tax-waterfall', name: 'Tax Waterfall', desc: 'Visualize tax brackets and optimize Roth conversion strategy.' },
-    { slug: 'roth-conversion', name: 'Roth Conversion', desc: 'Model multi-year Roth conversion ladders with tax impact.' },
-    { slug: 'estate-planning', name: 'Estate Planning', desc: 'Estate tax minimization and wealth transfer strategies.' },
-    { slug: 'hot-income', name: 'Hot Income', desc: 'Identify and optimize high-tax income sources.' },
-    { slug: 'tax-arbitrage', name: 'Tax Arbitrage', desc: 'Exploit tax rate differentials across time and accounts.' },
-    { slug: 'dynamic-tax', name: 'Dynamic Tax', desc: 'Real-time tax bracket modeling with scenario comparison.' },
-  ],
-  'IUL & INSURANCE': [
-    { slug: 'iul-projection', name: 'IUL Projection', desc: 'Advanced Indexed Universal Life policy projections.' },
-    { slug: 'iul-historical', name: 'IUL Historical', desc: 'Backtest IUL performance against historical index data.' },
-    { slug: 'premium-financing', name: 'Premium Financing', desc: 'Model leveraged premium financing strategies.' },
-    { slug: 'fia-collateral', name: 'FIA Collateral', desc: 'Fixed Indexed Annuity as collateral strategies.' },
-    { slug: 'ilit-estate', name: 'ILIT Estate', desc: 'Irrevocable Life Insurance Trust planning.' },
-  ],
-  'REAL ESTATE': [
-    { slug: 'mortgage-killer', name: 'Mortgage Killer', desc: 'HELOC-to-IUL strategy to eliminate mortgage debt.' },
-    { slug: 'house-recycling', name: 'House Recycling', desc: 'Equity recycling strategies for wealth building.' },
-    { slug: 'household-wealth', name: 'Household Wealth', desc: 'Total household wealth optimization.' },
-    { slug: 'real-estate-mogul', name: 'Real Estate Mogul', desc: 'Multi-property investment analysis.' },
-    { slug: 'reverse-heloc', name: 'Reverse HELOC', desc: 'Reverse HELOC strategies for retirement income.' },
-  ],
-  'LIFE EVENTS': [
-    { slug: 'divorce-calculator', name: 'Divorce Recovery', desc: 'Asset protection and recovery planning for divorce.' },
-    { slug: 'newborn-launchpad', name: 'Newborn Launchpad', desc: 'Financial planning from birth to independence.' },
-    { slug: 'special-needs', name: 'Special Needs', desc: 'Financial planning for special needs dependents.' },
-    { slug: 'caregiver-impact', name: 'Caregiver Impact', desc: 'Financial impact analysis of caregiving responsibilities.' },
-  ],
-  'ADVANCED STRATEGIES': [
-    { slug: 'time-machine', name: 'Time Machine', desc: 'Historical "what if" scenario simulation.' },
-    { slug: 'strategy-lab', name: 'Strategy Lab', desc: 'Experiment with financial strategies using interoperable tools.' },
-    { slug: 'index-backtester', name: 'Index Backtester', desc: 'Backtest any index strategy against historical data.' },
-    { slug: 'crypto-cycle', name: 'Crypto Cycle', desc: 'Cryptocurrency cycle analysis and allocation.' },
-    { slug: 'oil-gas', name: 'Oil & Gas', desc: 'Oil and gas royalty income and tax optimization.' },
-  ],
-  'LIFESTYLE & PROTECTION': [
-    { slug: 'inflation-analysis', name: 'Inflation Analysis', desc: 'Model inflation impact on your financial plan.' },
-    { slug: 'healthcare-bomb', name: 'Healthcare Bomb', desc: 'Healthcare cost explosion modeling and protection.' },
-    { slug: 'myga-waterfall', name: 'MYGA Waterfall', desc: 'Multi-Year Guaranteed Annuity laddering strategy.' },
-  ],
-};
+function Card({ c, big = false }: { c: CalculatorEntry; big?: boolean }) {
+  return (
+    <Link
+      to={c.path}
+      className={`group relative flex flex-col justify-between overflow-hidden rounded-2xl border transition-all duration-300
+        ${big
+          ? "border-emerald-400/30 bg-gradient-to-br from-emerald-500/[0.10] to-transparent p-6 hover:border-emerald-400/60"
+          : "border-white/10 bg-white/[0.035] p-5 hover:border-emerald-400/40 hover:bg-emerald-400/[0.07]"}
+        focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-400`}
+    >
+      <span
+        aria-hidden
+        className="pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full bg-emerald-400/10 opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-100"
+      />
+      <div className="relative">
+        <h3 className={`font-semibold tracking-tight text-white ${big ? "text-xl" : "text-[17px]"}`} style={{ textWrap: "balance" }}>
+          {c.name}
+        </h3>
+        <p className={`mt-1.5 leading-relaxed text-slate-300/90 ${big ? "text-[14.5px]" : "text-[13.5px]"}`}>{c.blurb}</p>
+      </div>
+      <div className="relative mt-4 flex items-center justify-between gap-3">
+        <span className="text-[10.5px] uppercase tracking-[0.18em] text-emerald-300/60">
+          {CATEGORY_LABELS[c.category]}
+        </span>
+        <span className="text-[11px] font-medium text-emerald-300/0 transition-colors group-hover:text-emerald-300/90">Open →</span>
+      </div>
+    </Link>
+  );
+}
 
 const MassiveCalculatorsPage: React.FC = () => {
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
+  const [only, setOnly] = useState<CalculatorCategory | "all">("all");
+
+  const counts = useMemo(() => categoryCounts(), []);
+  const hits = useMemo(() => searchCalculators(search), [search]);
+  const searching = search.trim().length > 0;
+
+  const visible = useMemo(
+    () => (only === "all" ? hits : hits.filter((c) => c.category === only)),
+    [hits, only],
+  );
+
+  const grouped = useMemo(
+    () =>
+      CATEGORY_ORDER
+        .map((cat) => ({ cat, items: visible.filter((c) => c.category === cat) }))
+        .filter((g) => g.items.length > 0),
+    [visible],
+  );
 
   return (
-    <div className="rc-room-frame relative min-h-screen bg-[#0a0f1a] text-white p-8 font-sans">
-      <PageBackdrop src="/rcs-city-river.webp" phoneSrc="/rcs-city-lattice.webp" alt="Emerald-lit skyline at dusk with a river curving through the city" fade="#0a0f1a" />
-      <div className="relative z-10 max-w-7xl mx-auto">
-        <div className="flex items-center mb-4">
-          <span className="text-4xl mr-4">🧮</span>
-          <h1 className="text-4xl font-bold">Massive Calculators</h1>
-        </div>
-        <p className="mb-6 text-lg text-gray-300">
-          Our comprehensive suite of 67+ interconnected financial calculators, organized by category.
-          Each calculator shares data with all others through the Interop Engine.
-        </p>
-        <Link to="/ultra-calculator"
-          className="block mb-8 rounded-xl border border-amber-500/50 bg-amber-500/10 p-5 hover:bg-amber-500/20 transition-all"
-        >
-          <h2 className="text-2xl font-bold text-amber-400">⚡ The Decade Machine — every calculator, one machine</h2>
-          <p className="mt-1 text-gray-300 text-sm">
-            One mega calculator with module toggles, chained 5/10/20/30-year windows that carry every number forward,
-            the mortgage-killer recycle cycle, trust-owned IUL flows, and the AI team that tells you which
-            calculators are necessary vs. optional for your situation. Speak to it with the 🎙 button on any page.
+    <div className="rc-room-frame relative min-h-screen bg-[#0a0f1a] font-sans text-white">
+      <PageBackdrop
+        src="/rcs-city-river.webp"
+        phoneSrc="/rcs-city-lattice.webp"
+        alt="Emerald-lit skyline at dusk with a river curving through the city"
+        fade="#0a0f1a"
+      />
+      <div className="relative z-10 mx-auto max-w-[1280px] px-4 py-10 sm:px-6 lg:px-8">
+
+        {/* ---- masthead ---- */}
+        <header className="border-b border-white/10 pb-8">
+          <p className="text-[11px] uppercase tracking-[0.3em] text-emerald-300/70">Russell Capital Systems</p>
+          <h1 className="mt-2 text-4xl font-bold tracking-tight sm:text-5xl" style={{ textWrap: "balance" }}>
+            The Calculators
+          </h1>
+          <p className="mt-3 max-w-[62ch] text-[15px] leading-relaxed text-slate-300">
+            {CALCULATOR_COUNT} instruments across {CATEGORY_ORDER.length} rooms. Every one of them shares your
+            numbers with every other through the Interop Engine, so a figure entered once is never entered twice —
+            and the AI reads the same engines you do, which is why it can tell you where a number came from.
           </p>
+        </header>
+
+        {/* ---- the machine that contains the rest ---- */}
+        <Link
+          to="/ultra-calculator"
+          className="group mt-8 block overflow-hidden rounded-2xl border border-amber-400/40 bg-gradient-to-r from-amber-500/[0.14] via-amber-500/[0.06] to-transparent p-6 transition-all hover:border-amber-400/70 sm:p-8"
+        >
+          <p className="text-[11px] uppercase tracking-[0.28em] text-amber-300/80">Start here</p>
+          <h2 className="mt-2 text-2xl font-bold text-amber-200 sm:text-3xl" style={{ textWrap: "balance" }}>
+            The Decade Machine
+          </h2>
+          <p className="mt-2 max-w-[70ch] text-[14.5px] leading-relaxed text-slate-200/90">
+            Every calculator below, in one machine, with module toggles and chained 5/10/20/30-year windows that
+            carry each number into the next — the mortgage recycle cycle, trust-owned policy flows, and the AI
+            team that tells you which of these are necessary for your situation and which are not.
+            Speak to it with the 🎙 button on any page.
+          </p>
+          <span className="mt-4 inline-block text-sm font-medium text-amber-300/70 transition-colors group-hover:text-amber-200">
+            Open the machine →
+          </span>
         </Link>
-        <input
-          type="text"
-          placeholder="Search calculators..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="w-full bg-[#1a1f2a] border border-gray-600 rounded-xl px-4 py-3 text-white mb-8 focus:border-[#22c55e] focus:outline-none"
-        />
-        {Object.entries(categories).map(([category, calcs]) => {
-          const filtered = calcs.filter(c =>
-            c.name.toLowerCase().includes(search.toLowerCase()) ||
-            c.desc.toLowerCase().includes(search.toLowerCase())
-          );
-          if (filtered.length === 0) return null;
-          return (
-            <div key={category} className="mb-10">
-              <h2 className="text-xl font-semibold text-[#22c55e] mb-4">{category}</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {filtered.map((calc) => (
-                  <Link key={calc.slug} to={`/portal/${calc.slug}`}
-                    className="bg-[#1a1f2a] border border-white/10 rounded-xl p-5 hover:bg-[#22c55e]/10 hover:scale-[1.02] transition-all duration-300"
-                  >
-                    <h3 className="text-lg font-semibold mb-1">{calc.name}</h3>
-                    <p className="text-gray-400 text-sm">{calc.desc}</p>
-                  </Link>
-                ))}
-              </div>
+
+        {/* ---- search and filter ---- */}
+        <div className="mt-10 flex flex-col gap-4">
+          <label className="sr-only" htmlFor="calculator-search">Search the calculators</label>
+          <input
+            id="calculator-search"
+            type="search"
+            placeholder="Search — try “airbnb”, “death tax”, “doctor”, “mortgage”…"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full rounded-xl border border-white/15 bg-black/40 px-4 py-3.5 text-[15px] text-white placeholder:text-slate-500 focus:border-emerald-400 focus:outline-none"
+          />
+          <div className="flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={() => setOnly("all")}
+              className={`rounded-full border px-3.5 py-1.5 text-[12.5px] transition-colors ${
+                only === "all"
+                  ? "border-emerald-400/60 bg-emerald-400/15 text-emerald-200"
+                  : "border-white/15 text-slate-300 hover:border-white/30"}`}
+            >
+              Everything <span className="tabular-nums opacity-60">{CALCULATOR_COUNT}</span>
+            </button>
+            {counts.map(({ category, label, count }) => (
+              <button
+                key={category}
+                type="button"
+                onClick={() => setOnly(category)}
+                className={`rounded-full border px-3.5 py-1.5 text-[12.5px] transition-colors ${
+                  only === category
+                    ? "border-emerald-400/60 bg-emerald-400/15 text-emerald-200"
+                    : "border-white/15 text-slate-300 hover:border-white/30"}`}
+              >
+                {label} <span className="tabular-nums opacity-60">{count}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* ---- the most-used, when not searching ---- */}
+        {!searching && only === "all" && (
+          <section className="mt-12">
+            <h2 className="text-[11px] uppercase tracking-[0.28em] text-emerald-300/70">Most used</h2>
+            <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+              {featured().map((c) => <Card key={c.path} c={c} big />)}
             </div>
-          );
-        })}
-        <EngineWhyFooter />
+          </section>
+        )}
+
+        {/* ---- everything, by room ---- */}
+        {grouped.length === 0 ? (
+          <p className="mt-16 text-center text-[15px] text-slate-400">
+            Nothing matches “{search}”. Try a plainer word — the search reads the names, the descriptions
+            and the terms people actually type.
+          </p>
+        ) : (
+          grouped.map(({ cat, items }) => (
+            <section key={cat} className="mt-14">
+              <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1 border-b border-white/10 pb-3">
+                <h2 className="text-xl font-semibold text-emerald-300">{CATEGORY_LABELS[cat]}</h2>
+                <span className="text-[11px] uppercase tracking-[0.2em] text-slate-500 tabular-nums">{items.length}</span>
+                <p className="w-full text-[13.5px] leading-relaxed text-slate-400 sm:w-auto sm:flex-1">
+                  {CATEGORY_BLURBS[cat]}
+                </p>
+              </div>
+              <div className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+                {items.map((c) => <Card key={c.path} c={c} />)}
+              </div>
+            </section>
+          ))
+        )}
+
+        <div className="mt-16">
+          <EngineWhyFooter />
+        </div>
       </div>
     </div>
   );
