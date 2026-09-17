@@ -10,6 +10,7 @@ import { DEPLOYMENT_STRATEGIES, DEPLOYMENT_COUNT, ranked, strategy } from "@shar
 import { LENDERS, LENDER_COUNT, lender, lendersFor, completeness } from "@shared/altCredit/lenders";
 import { ALT_CREDIT_DISCLOSURE, FAMILY_ORDER, valueOf } from "@shared/altCredit/types";
 import { simulateCycles, breakEvenReturnPerCycle, utilisation, DEFAULT_CYCLE } from "@shared/altCredit/simulator";
+import { STRATEGY_PRESETS, presetFor, applyPreset, presetsRanked } from "@shared/altCredit/presets";
 
 describe("no fabricated contact data", () => {
   it("records no phone number that is not marked verified with a source", () => {
@@ -197,6 +198,32 @@ describe("the deployment strategies", () => {
     expect(mca.risks.some((r) => /borrowed money|borrowing to fund/i.test(r.risk + r.mitigation))).toBe(true);
   });
 
+  it("carries all fifteen strategies, each at full depth", () => {
+    expect(DEPLOYMENT_COUNT).toBe(15);
+    for (const s of DEPLOYMENT_STRATEGIES) {
+      // "About two pages each" was the requirement. 500 words is the floor
+      // that separates an explanation from a summary of one.
+      const words = s.body.join(" ").split(/\s+/).length;
+      expect(words, `${s.slug} is ${words} words — too thin to be a page`).toBeGreaterThan(500);
+      expect(s.depth, s.slug).toBe("full");
+      expect(s.mechanics.length, s.slug).toBeGreaterThanOrEqual(4);
+      expect(s.risks.length, s.slug).toBeGreaterThanOrEqual(3);
+      expect(s.scoreReasoning.length, `${s.slug} must justify its score`).toBeGreaterThan(120);
+    }
+  });
+
+  it("spreads the scores across the range rather than rating everything a seven", () => {
+    const scores = DEPLOYMENT_STRATEGIES.map((s) => s.riskRewardScore);
+    expect(Math.min(...scores)).toBeLessThanOrEqual(2);
+    expect(Math.max(...scores)).toBeGreaterThanOrEqual(8);
+    expect(new Set(scores).size, "a ranking with three distinct scores is not a ranking").toBeGreaterThanOrEqual(6);
+  });
+
+  it("numbers the strategies 1..15 without a gap or a repeat", () => {
+    const ns = [...DEPLOYMENT_STRATEGIES].map((s) => s.n).sort((a, b) => a - b);
+    expect(ns).toEqual(Array.from({ length: DEPLOYMENT_COUNT }, (_, i) => i + 1));
+  });
+
   it("gives every strategy three real questions and a term range", () => {
     for (const s of DEPLOYMENT_STRATEGIES) {
       expect(s.questions.length, s.slug).toBe(3);
@@ -375,5 +402,91 @@ describe("the tab is reachable", () => {
     // catalogue — navigation-organization.test.ts requires the two to be
     // disjoint, and a page listed twice is a page a reader cannot place.
     expect(readFileSync(resolve("client/src/lib/secondaryCatalog.ts"), "utf8")).not.toContain("/portal/alt-credit");
+  });
+});
+
+// ------------------------------------------------------------------
+// THE STRATEGY PRESETS.
+//
+// The simulator lets a reader pick a strategy instead of typing twelve
+// numbers, which is only defensible if every preset is tied to a strategy
+// that exists and carries a written account of where its figures came from.
+// ------------------------------------------------------------------
+describe("the simulator presets", () => {
+  it("covers every deployment strategy, exactly once", () => {
+    const slugs = STRATEGY_PRESETS.map((p) => p.slug);
+    expect(new Set(slugs).size).toBe(slugs.length);
+    expect([...slugs].sort()).toEqual([...DEPLOYMENT_STRATEGIES.map((s) => s.slug)].sort());
+  });
+
+  it("states the basis for every preset rather than presenting figures as measured", () => {
+    for (const p of STRATEGY_PRESETS) {
+      expect(p.basis.length, `${p.slug} has no stated basis`).toBeGreaterThan(120);
+    }
+  });
+
+  it("keeps every preset inside the ranges the simulator can actually take", () => {
+    for (const p of STRATEGY_PRESETS) {
+      expect(p.defaultProbability, p.slug).toBeGreaterThanOrEqual(0);
+      expect(p.defaultProbability, p.slug).toBeLessThanOrEqual(1);
+      expect(p.recoveryRate, p.slug).toBeGreaterThanOrEqual(0);
+      expect(p.recoveryRate, p.slug).toBeLessThanOrEqual(1);
+      expect(p.cycleMonths, p.slug).toBeGreaterThan(0);
+      expect(p.idleDays, p.slug).toBeGreaterThanOrEqual(0);
+      expect(p.positionsPerCycle, p.slug).toBeGreaterThanOrEqual(1);
+    }
+  });
+
+  it("marks the two strategies that do not recycle capital as non-cycling", () => {
+    const nonCycling = STRATEGY_PRESETS.filter((p) => !p.cycles).map((p) => p.slug).sort();
+    expect(nonCycling).toEqual(["life-settlement-purchases", "litigation-funding"]);
+    for (const p of STRATEGY_PRESETS.filter((x) => !x.cycles)) {
+      expect(p.basis, `${p.slug} must say why it does not cycle`).toMatch(/non-cycling/i);
+    }
+  });
+
+  it("orders the selector by rank, best first", () => {
+    const scores = presetsRanked().map((r) => r.score);
+    expect(scores).toEqual([...scores].sort((a, b) => b - a));
+    expect(presetsRanked().length).toBe(DEPLOYMENT_STRATEGIES.length);
+  });
+
+  it("changes only the strategy-determined fields and leaves the reader's own alone", () => {
+    const p = presetFor("invoice-factoring")!;
+    const out = applyPreset(DEFAULT_CYCLE, p);
+    expect(out.principal).toBe(DEFAULT_CYCLE.principal);
+    expect(out.borrowAnnualRate).toBe(DEFAULT_CYCLE.borrowAnnualRate);
+    expect(out.years).toBe(DEFAULT_CYCLE.years);
+    expect(out.taxRate).toBe(DEFAULT_CYCLE.taxRate);
+    expect(out.runs).toBe(DEFAULT_CYCLE.runs);
+    expect(out.seed).toBe(DEFAULT_CYCLE.seed);
+    expect(out.cycleMonths).toBe(p.cycleMonths);
+    expect(out.defaultProbability).toBe(p.defaultProbability);
+  });
+
+  it("produces a runnable simulation for every preset, with ten thousand runs", () => {
+    for (const p of STRATEGY_PRESETS) {
+      const result = simulateCycles(applyPreset(DEFAULT_CYCLE, p));
+      expect(Number.isFinite(result.median), p.slug).toBe(true);
+      expect(result.probabilityOfLoss, p.slug).toBeGreaterThanOrEqual(0);
+      expect(result.probabilityOfLoss, p.slug).toBeLessThanOrEqual(1);
+      expect(result.cyclesPerRun, p.slug).toBeGreaterThanOrEqual(1);
+    }
+    expect(DEFAULT_CYCLE.runs).toBe(10_000);
+  });
+
+  it("ranks the secured presets above the unsecured ones on chance of ruin", () => {
+    // Not a claim about the world — a check that the presets are internally
+    // consistent with the pages they came from. If merchant advances ever look
+    // safer here than first-position notes, a preset has drifted from its text.
+    const notes = simulateCycles(applyPreset(DEFAULT_CYCLE, presetFor("private-mortgage-notes")!));
+    const mca = simulateCycles(applyPreset(DEFAULT_CYCLE, presetFor("merchant-cash-advance")!));
+    expect(mca.probabilityOfRuin).toBeGreaterThan(notes.probabilityOfRuin);
+  });
+
+  it("opens the page on the strategy that prompted the section", () => {
+    const page = readFileSync(resolve("client/src/pages/portal/AltCreditHub.tsx"), "utf8");
+    expect(page).toContain('const OPENING_STRATEGY = "merchant-cash-advance"');
+    expect(page).toContain("applyPreset(DEFAULT_CYCLE, p)");
   });
 });

@@ -11,6 +11,7 @@ import { CREDIT_ROUTES, ROUTE_COUNT } from "@shared/altCredit/routes";
 import { DEPLOYMENT_STRATEGIES, ranked } from "@shared/altCredit/deployment";
 import { ALT_CREDIT_DISCLOSURE, FAMILY_ORDER, FAMILY_LABEL } from "@shared/altCredit/types";
 import { simulateCycles, breakEvenReturnPerCycle, utilisation, DEFAULT_CYCLE, type CycleInput } from "@shared/altCredit/simulator";
+import { presetsRanked, presetFor, applyPreset } from "@shared/altCredit/presets";
 
 const CARD = "rounded-2xl border border-amber-400/20 bg-white/[0.04]";
 const INPUT = "w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-white tabular-nums";
@@ -30,12 +31,35 @@ function Score({ n }: { n: number }) {
   );
 }
 
+/**
+ * The page opens on the strategy that prompted this whole section — merchant
+ * lending at forty percent over six to nine months. It opens there because the
+ * simulator's first honest act is to show what that idea does once the line's
+ * interest, the idle days and a realistic default rate are all charged to it.
+ */
+const OPENING_STRATEGY = "merchant-cash-advance";
+const OPENING_CYCLE: CycleInput = (() => {
+  const p = presetFor(OPENING_STRATEGY);
+  return p ? applyPreset(DEFAULT_CYCLE, p) : DEFAULT_CYCLE;
+})();
+
 export default function AltCreditHub() {
-  const [cfg, setCfg] = useState<CycleInput>(DEFAULT_CYCLE);
+  const [cfg, setCfg] = useState<CycleInput>(OPENING_CYCLE);
+  // Which strategy's figures are loaded. Null once the reader edits anything,
+  // because at that point the numbers are theirs rather than the page's and
+  // labelling them with a strategy name would be a small lie.
+  const [picked, setPicked] = useState<string | null>(OPENING_STRATEGY);
+  const preset = picked ? presetFor(picked) : undefined;
+  const choose = (slug: string) => {
+    const p = presetFor(slug);
+    if (!p) return;
+    setPicked(slug);
+    setCfg((c) => applyPreset(c, p));
+  };
   const sim = useMemo(() => simulateCycles(cfg), [cfg]);
   const breakEven = useMemo(() => breakEvenReturnPerCycle(cfg), [cfg]);
   const util = useMemo(() => utilisation(cfg), [cfg]);
-  const set = <K extends keyof CycleInput>(k: K, v: CycleInput[K]) => setCfg((c) => ({ ...c, [k]: v }));
+  const set = <K extends keyof CycleInput>(k: K, v: CycleInput[K]) => { setPicked(null); setCfg((c) => ({ ...c, [k]: v })); };
   const num = (s: string) => { const n = Number(s.replace(/[^0-9.-]/g, "")); return Number.isFinite(n) ? n : 0; };
 
   return (
@@ -132,6 +156,45 @@ export default function AltCreditHub() {
             every day of the year while a six-month deployment only earns for six of them — that mismatch is
             modelled here as idle time, and it is what most back-of-envelope versions of this plan leave out.
           </p>
+
+          {/* ---- pick a strategy, then argue with its numbers ---- */}
+          <div className="mt-5">
+            <p className={LABEL}>Which strategy are you running?</p>
+            <div className="mt-2 flex flex-wrap gap-2">
+              {presetsRanked().map(({ preset: p, title, score }) => (
+                <button key={p.slug} type="button" onClick={() => choose(p.slug)}
+                        aria-pressed={picked === p.slug}
+                        className={`rounded-full border px-3 py-1.5 text-[12.5px] transition-colors ${
+                          picked === p.slug
+                            ? "border-amber-400/70 bg-amber-400/15 text-amber-100"
+                            : "border-white/15 text-slate-300 hover:border-amber-400/40 hover:text-amber-200"}`}>
+                  {title} <span className="tabular-nums text-slate-500">{score}/10</span>
+                </button>
+              ))}
+            </div>
+            {preset ? (
+              <div className="mt-3 rounded-xl border border-white/10 bg-black/20 p-4">
+                <p className="text-[13px] leading-relaxed text-slate-300">
+                  <span className="text-slate-500">Where these numbers come from: </span>{preset.basis}
+                </p>
+                {!preset.cycles && (
+                  <p className="mt-2 text-[13px] leading-relaxed text-rose-200">
+                    This strategy does not recycle capital on a schedule. It pays once, years later, on a date you
+                    do not set. Read the figures below as one turn of a distribution, not as a plan — and note what
+                    the line costs you for every month of the wait.
+                  </p>
+                )}
+                <Link to={`/portal/alt-credit/${preset.slug}`}
+                      className="mt-2 inline-block text-[12.5px] text-amber-300 hover:underline">
+                  Read the full page on this strategy →
+                </Link>
+              </div>
+            ) : (
+              <p className="mt-3 text-[12.5px] leading-relaxed text-slate-500">
+                These are your figures now, not a strategy's. Pick one above to reload its starting numbers.
+              </p>
+            )}
+          </div>
 
           <div className="mt-5 grid gap-4 md:grid-cols-3 lg:grid-cols-4">
             {([
