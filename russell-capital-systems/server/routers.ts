@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { createHash, randomBytes } from "crypto";
 import { z } from "zod";
 import { COOKIE_NAME } from "@shared/const";
-import { SYSTEM_PREAMBLE, BRAND_SYSTEM_IDENTITY } from "@shared/branding";
+import { SYSTEM_PREAMBLE, CLIENT_FACING_PREAMBLE, BRAND_SYSTEM_IDENTITY } from "@shared/branding";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { invokeLLM } from "./_core/llm";
 import { invokePortalAI } from "./portalAI";
@@ -635,7 +635,7 @@ export const appRouter = router({
         const prompt = `You are a financial advisor assistant. Summarize the following client activity notes for ${input.clientName ?? "the client"} in one concise paragraph (3-5 sentences). Focus on key interactions, outstanding follow-ups, and the overall relationship status. Be factual and professional.\n\nNotes:\n${noteLines}`;
         const response = await invokeLLM({
           messages: [
-            { role: "system", content: `${SYSTEM_PREAMBLE} Summarize client activity notes concisely and professionally.` },
+            { role: "system", content: `${CLIENT_FACING_PREAMBLE} Summarize client activity notes concisely and professionally.` },
             { role: "user", content: prompt },
           ],
         });
@@ -835,8 +835,8 @@ export const appRouter = router({
       }
       const prompt = `You are ${BRAND_SYSTEM_IDENTITY}.\nClient: ${input.clientName}, Age ${input.age}, Income $${input.income.toLocaleString()}, IRA $${input.iraBalance.toLocaleString()}, Roth $${input.rothBalance.toLocaleString()}, Real Estate Equity $${input.realEstateEquity.toLocaleString()}.\nOpportunity Score: ${score}/100. Roth Ladder Year 1 conversion: $${ladder[0]?.conversion.toLocaleString()}, estimated tax: $${ladder[0]?.taxEstimate.toLocaleString()}.\n${input.notes ? `Advisor notes: ${input.notes}` : ""}${knowledgeContext}\nProvide a concise, grounded 3-part strategy: (1) Tax Plan, (2) Insurance/IUL Plan, (3) Investment/Real Estate Plan. Be specific with dollar amounts and bracket references. End with a 2-sentence advisor script.`;
       const systemPrompt = groundingDocCount > 0
-        ? `${SYSTEM_PREAMBLE} Use specific numbers and bracket references. You have been provided with ${groundingDocCount} document(s) from the firm's knowledge library — reference them where relevant.`
-        : `${SYSTEM_PREAMBLE} Use specific numbers and bracket references.`;
+        ? `${CLIENT_FACING_PREAMBLE} Use specific numbers and bracket references. You have been provided with ${groundingDocCount} document(s) from the firm's knowledge library — reference them where relevant.`
+        : `${CLIENT_FACING_PREAMBLE} Use specific numbers and bracket references.`;
       const response = await invokePortalAI(
         { messages: [{ role: "system", content: systemPrompt }, { role: "user", content: prompt }] },
         { operation: "generate_strategy" },
@@ -848,7 +848,7 @@ export const appRouter = router({
     })).mutation(async ({ input }) => {
       const prompt = `Generate a concise, stage-aware closing script for advisor use.\nClient: ${input.clientName}, Deal Stage: ${input.stage}, Value: $${input.dealValue.toLocaleString()}.\n${input.notes ? `Context: ${input.notes}` : ""}\nProvide: (1) Opening reframe, (2) Key objection handler, (3) Next-best-action close. Keep it under 150 words total.`;
       const response = await invokePortalAI(
-        { messages: [{ role: "system", content: `${SYSTEM_PREAMBLE} You are an expert sales coach for institutional financial advisors.` }, { role: "user", content: prompt }] },
+        { messages: [{ role: "system", content: `${CLIENT_FACING_PREAMBLE} You are an expert sales coach for institutional financial advisors.` }, { role: "user", content: prompt }] },
         { operation: "closing_script", timeoutMs: 30_000 },
       );
       return { content: response.content };
@@ -873,7 +873,7 @@ export const appRouter = router({
           clientContext = `\nActive client context: ${client.name}, Age ${client.age ?? "N/A"}, Income $${Number(client.income ?? 0).toLocaleString()}, Total Assets $${totalAssets.toLocaleString()}, IRA $${Number(client.iraBalance ?? 0).toLocaleString()}, Roth $${Number(client.rothBalance ?? 0).toLocaleString()}, Real Estate $${Number(client.realEstateEquity ?? 0).toLocaleString()}, Life Insurance CV $${Number(client.lifeInsuranceCv ?? 0).toLocaleString()}.`;
         }
       }
-      const systemMsg = `${SYSTEM_PREAMBLE} You are the Russell Capital Systems™ Advisor — an expert institutional financial planning assistant. You help advisors with portfolio analysis, tax strategy, Roth conversions, IUL planning, real estate leverage, and client communication. Be specific with dollar amounts and tax brackets. Keep responses concise and actionable.${clientContext}\n\nAfter your main response, output a JSON block on a new line starting with |||ALERTS||| containing harvest alerts and action steps in this format:\n|||ALERTS|||{"alerts":[{"title":"string","description":"string","urgency":"high|medium|low"}],"actionSteps":["string","string"]}`;
+      const systemMsg = `${CLIENT_FACING_PREAMBLE} You are the Russell Capital Systems™ Advisor — an expert institutional financial planning assistant. You help advisors with portfolio analysis, tax strategy, Roth conversions, IUL planning, real estate leverage, and client communication. Be specific with dollar amounts and tax brackets. Keep responses concise and actionable.${clientContext}\n\nAfter your main response, output a JSON block on a new line starting with |||ALERTS||| containing harvest alerts and action steps in this format:\n|||ALERTS|||{"alerts":[{"title":"string","description":"string","urgency":"high|medium|low"}],"actionSteps":["string","string"]}`;
       const llmMessages: { role: "system" | "user" | "assistant"; content: string }[] = [
         { role: "system", content: systemMsg },
         ...input.messages.map(m => ({ role: m.role as "user" | "assistant", content: m.content })),
@@ -1011,7 +1011,7 @@ Do NOT include any disclaimers in the slides themselves — those are added sepa
 
       const response = await invokeLLM({
         messages: [
-          { role: "system", content: `${SYSTEM_PREAMBLE} You are an expert presentation designer for financial advisors. Create polished, data-driven slide decks.` },
+          { role: "system", content: `${CLIENT_FACING_PREAMBLE} You are an expert presentation designer for financial advisors. Create polished, data-driven slide decks.` },
           { role: "user", content: prompt },
         ],
         response_format: {
@@ -1121,7 +1121,7 @@ All content must be branded as Russell Capital Systems™.`;
 
       const response = await invokeLLM({
         messages: [
-          { role: "system", content: `${SYSTEM_PREAMBLE} You are an expert presentation designer for financial advisors. Create polished, data-driven slide decks that impress clients and close deals.` },
+          { role: "system", content: `${CLIENT_FACING_PREAMBLE} You are an expert presentation designer for financial advisors. Create polished, data-driven slide decks that impress clients and close deals.` },
           { role: "user", content: fullPrompt },
         ],
         response_format: {
@@ -1351,7 +1351,7 @@ Provide a personalized "Your Stated Goals Accelerator" memo:
 Keep it personal, specific with dollar amounts, and actionable. Use their actual numbers. End with a provocative question that makes them want to explore further.`;
       const response = await invokeLLM({
         messages: [
-          { role: "system", content: `${SYSTEM_PREAMBLE} You are the Goals Accelerator module. Be specific, personal, and use actual dollar amounts from the client's portfolio. Challenge them to think bigger.` },
+          { role: "system", content: `${CLIENT_FACING_PREAMBLE} You are the Goals Accelerator module. Be specific, personal, and use actual dollar amounts from the client's portfolio. Challenge them to think bigger.` },
           { role: "user", content: prompt },
         ],
       });
@@ -9319,8 +9319,8 @@ If a field cannot be determined, use 0 for numbers and "unknown" for strings. Be
       mode: z.enum(["copilot", "wwsd"]).default("copilot"),
     })).mutation(async ({ ctx, input }) => {
       const systemPrompt = input.mode === "wwsd"
-        ? `${SYSTEM_PREAMBLE}\n\nYou are "Sam Russell" — the legendary financial advisor persona within Russell Capital Systems. You speak in first person as Sam. You are confident, direct, charismatic, and always close. You've closed thousands of deals and mentored hundreds of advisors. Your advice is tactical, specific, and battle-tested.\n\nRules:\n- Always speak as Sam in first person\n- Give specific, actionable advice — never generic platitudes\n- Use real financial concepts (Roth conversions, IUL, MYGA, estate planning, tax strategies)\n- Include exact phrases and scripts advisors can use word-for-word\n- Be dramatic and compelling — you're telling war stories and sharing hard-won wisdom\n- Format with **bold** for key phrases, *italics* for scripts to say verbatim\n- Keep responses focused and under 400 words\n- End with a clear next action step`
-        : `${SYSTEM_PREAMBLE}\n\nYou are the Live Co-Pilot — an AI coaching assistant for financial advisors using Russell Capital Systems. You help advisors in real-time during client meetings and preparation.\n\nRules:\n- Give specific, actionable financial advisory coaching\n- Include exact scripts, phrases, and rebuttals advisors can use\n- Reference Russell Capital tools (Mortgage Killer, Time Machine, Strategy Lab, IUL projections, Roth conversions, MYGA waterfalls, estate planning)\n- Format with **bold** for emphasis, *italics* for verbatim scripts\n- Be concise but thorough — advisors need quick answers during meetings\n- Always include a specific next step or action item\n- Keep responses under 400 words\n- If asked about products, explain benefits in client-friendly language`;
+        ? `${CLIENT_FACING_PREAMBLE}\n\nYou are "Sam Russell" — the legendary financial advisor persona within Russell Capital Systems. You speak in first person as Sam. You are confident, direct, charismatic, and always close. You've closed thousands of deals and mentored hundreds of advisors. Your advice is tactical, specific, and battle-tested.\n\nRules:\n- Always speak as Sam in first person\n- Give specific, actionable advice — never generic platitudes\n- Use real financial concepts (Roth conversions, IUL, MYGA, estate planning, tax strategies)\n- Include exact phrases and scripts advisors can use word-for-word\n- Be dramatic and compelling — you're telling war stories and sharing hard-won wisdom\n- Format with **bold** for key phrases, *italics* for scripts to say verbatim\n- Keep responses focused and under 400 words\n- End with a clear next action step`
+        : `${CLIENT_FACING_PREAMBLE}\n\nYou are the Live Co-Pilot — an AI coaching assistant for financial advisors using Russell Capital Systems. You help advisors in real-time during client meetings and preparation.\n\nRules:\n- Give specific, actionable financial advisory coaching\n- Include exact scripts, phrases, and rebuttals advisors can use\n- Reference Russell Capital tools (Mortgage Killer, Time Machine, Strategy Lab, IUL projections, Roth conversions, MYGA waterfalls, estate planning)\n- Format with **bold** for emphasis, *italics* for verbatim scripts\n- Be concise but thorough — advisors need quick answers during meetings\n- Always include a specific next step or action item\n- Keep responses under 400 words\n- If asked about products, explain benefits in client-friendly language`;
 
       const llmMessages = [
         { role: "system" as const, content: systemPrompt },

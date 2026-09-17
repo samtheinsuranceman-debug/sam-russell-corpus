@@ -24,6 +24,7 @@
 //   keys the plan endpoint falls back to deterministic rules.
 // ============================================================
 import { z } from "zod";
+import { compositeWorkingMemoryWithInstruments, compactWorkingMemory } from "@shared/compositeMind";
 import { publicProcedure, router } from "./_core/trpc";
 import { probeKeys } from "./keyProbe";
 import { anthropicHeaders } from "./_core/anthropic";
@@ -162,12 +163,31 @@ export const ADVISOR_SYSTEM =
   "label every number as a projection under stated assumptions, and never invent facts about " +
   "the client that were not provided. " + STR_PROTOCOL;
 
+/**
+ * The advisor's system prompt with the language layer attached. Callers that
+ * hold the person's own words should use advisorSystemFor() instead, which
+ * reads them; this constant is the standing floor for callers that do not.
+ */
+export const ADVISOR_SYSTEM_WIRED = `${ADVISOR_SYSTEM}\n\n${compositeWorkingMemoryWithInstruments().text}`;
+
+/**
+ * The advisor's system prompt with the twelve channels' live reading of THIS
+ * person attached. The reading comes from their own words — the question they
+ * typed plus whatever profile they have shared — so the channel match, the
+ * meta-program lean, the arc phase and the decision signals are specific to
+ * them rather than generic. With no words it degrades to the standing layer.
+ */
+export function advisorSystemFor(question: string, profileSummary?: string): string {
+  const { text } = compositeWorkingMemoryWithInstruments({ text: question, priorText: profileSummary });
+  return `${ADVISOR_SYSTEM}\n\n${text}`;
+}
+
 // Public homepage concierge. This prompt DELIBERATELY withholds the firm's
 // proprietary method ("the secret sauce"): it names the strategy pillars and
 // the general frame, but gives NO dollar amounts, NO percentages, NO formulas,
 // and NO step-by-step numeric sequences. The detailed math lives behind the
 // planning estimator and the licensed-advisor review, never in a public answer.
-const PUBLIC_TEASER_SYSTEM =
+const PUBLIC_TEASER_SYSTEM_BASE =
   "You are the AI concierge on the Russell Capital Systems PUBLIC homepage, speaking to a prospective " +
   "client — often a physician, psychiatrist, or surgeon — who may know nothing about the firm yet. " +
   "Explain, in warm and confident plain language, the KINDS of strategies and the general FRAME that " +
@@ -181,6 +201,15 @@ const PUBLIC_TEASER_SYSTEM =
   "State plainly that this is general education, not tax, legal, or investment advice, and that a licensed " +
   "professional confirms every specific in a personal review. Close by inviting them to complete the short " +
   "planning estimator and book a thorough evaluation. Under 180 words.";
+
+/**
+ * The public concierge speaking through the language layer, read from the
+ * visitor's own question. Compact form: the homepage prompt is already long
+ * and a visitor has given us one question rather than a profile.
+ */
+export function publicTeaserSystemFor(question: string): string {
+  return `${PUBLIC_TEASER_SYSTEM_BASE}\n\n${compactWorkingMemory({ text: question }).text}`;
+}
 
 /** Lead-model call: Claude direct if keyed, else the built-in Forge LLM, else null. */
 export async function leadModel(system: string, user: string): Promise<{ text: string; via: string } | null> {
@@ -266,7 +295,7 @@ type AskInput = { question: string; pagePath: string; profileSummary: string };
 async function answerInMode(input: AskInput, mode: AdvisorMode): Promise<{ text: string; via: string } | null> {
   const def = modeDef(mode);
   return leadModel(
-    ADVISOR_SYSTEM,
+    advisorSystemFor(input.question, input.profileSummary),
     `The user is on page "${input.pagePath}" of Russell Capital Systems.\n` +
     (input.profileSummary ? `Their stated profile:\n${input.profileSummary}\n\n` : "No profile has been shared yet.\n\n") +
     `They asked: "${input.question}"\n\n` +
@@ -399,6 +428,10 @@ export const ultraRouter = router({
     }))
     .mutation(async ({ input }) => {
       const team = configuredProviders();
+      // The language layer read from this visitor's own question. Every
+      // provider in the panel answers through the same reading, so the
+      // synthesis below is twelve channels agreeing rather than averaging.
+      const wired = publicTeaserSystemFor(input.question);
       const userMsg =
         (input.profileSummary ? `Client profile:\n${input.profileSummary}\n\n` : "") +
         `Question: ${input.question}\n\nAnswer in under 150 words. Projections only — no guarantees.`;
@@ -436,13 +469,17 @@ export const ultraRouter = router({
     }))
     .mutation(async ({ input }) => {
       const team = configuredProviders();
+      // The language layer read from this visitor's own question. Every
+      // provider in the panel answers through the same reading, so the
+      // synthesis below is twelve channels agreeing rather than averaging.
+      const wired = publicTeaserSystemFor(input.question);
       const userMsg =
         (input.contextSummary ? `What the visitor has shared so far:\n${input.contextSummary}\n\n` : "") +
         `The visitor asked: "${input.question}"\n\n` +
         `Answer per your hard rules — concepts and frames only, no numbers or formulas.`;
       const results = await Promise.all(team.map(async (p) => {
         try {
-          return { id: p.id, label: p.label, ok: true as const, text: await p.call(process.env[p.envKey]!, PUBLIC_TEASER_SYSTEM, userMsg) };
+          return { id: p.id, label: p.label, ok: true as const, text: await p.call(process.env[p.envKey]!, wired, userMsg) };
         } catch (e) {
           return { id: p.id, label: p.label, ok: false as const, text: `unavailable (${String(e).slice(0, 60)})` };
         }
@@ -451,7 +488,7 @@ export const ultraRouter = router({
       let answer: string | null = null;
       if (contributors.length > 0) {
         const lead = await leadModel(
-          PUBLIC_TEASER_SYSTEM,
+          wired,
           `${contributors.length} AI advisors each answered the same visitor question below. ` +
           `Synthesize them into ONE warm, plain-language answer that follows every hard rule ` +
           `(concepts and frames only — absolutely no dollar amounts, percentages, or formulas). ` +
@@ -485,3 +522,4 @@ export const ultraRouter = router({
       }
     }),
 });
+
