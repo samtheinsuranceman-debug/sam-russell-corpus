@@ -33,6 +33,16 @@ import { CLAIMS, builtClaims, claimCounts } from "@shared/patentCatalog";
 import { APPLICATIONS, DRAFTED_COUNT, ENGINE_COUNT, statusBadge, statusSentence } from "@shared/patentStatus";
 import { SEGMENT_ACCOUNTS, summarizeWindow } from "@shared/balancedIndexedAccount";
 import { provenanceWarning, SP500_SERIES_VERIFIED } from "@shared/sp500SeriesAudit";
+import {
+  STRATEGIES as GENOME_STRATEGIES,
+  META_PROGRAM_LINKS,
+  AXIS_QUESTIONS,
+  AXES as GENOME_AXES,
+  wealthGenomeReport,
+  type Signal as GenomeSignal,
+  type DurabilityAxis,
+  type EvidenceKind,
+} from "@shared/wealthGenomeDurability";
 import { registerPartnerConcierge } from "./partnerConcierge";
 import { runMonteCarlo } from "@shared/monteCarloEngine";
 import { calculateTax, getStateCodes } from "@shared/taxBracketEngine";
@@ -541,6 +551,101 @@ export function registerPartnerApi(app: Express): void {
         account.termYears > 1
           ? `Every credited_pct is for a ${account.termYears}-year segment. Label it with its term, or show annualized_pct instead.`
           : "Segments are annual; credited_pct and annualized_pct are the same figure.",
+    });
+  });
+
+  /**
+   * The Wealth Genome — which strategies a person can actually hold.
+   * POST /api/partner/wealth-genome  { signals: [{axis, direction, kind, note, asOfYear}] }
+   *
+   * Takes no identifying data and stores nothing. A partner sends observations
+   * about durability; what comes back is which strategies are supported, which
+   * are strained, and the specific mechanism that would cost money in each
+   * strained case.
+   *
+   * GET on the same path returns the vocabulary — the axes, the strategies and
+   * their demands, the opening questions, the meta-program links — so a front
+   * end can be built before any client exists.
+   */
+  app.get("/api/partner/wealth-genome", requireKey, (_req, res) => {
+    res.json({
+      axes: GENOME_AXES,
+      evidence_kinds: ["observed", "corroborated", "volunteered", "stated", "inferred"],
+      evidence_note:
+        "Ranked strongest first. Observed behaviour outranks any amount of self-report, and confidence is capped by the strongest single piece of evidence rather than by how much of it there is.",
+      opening_questions: AXIS_QUESTIONS,
+      strategies: GENOME_STRATEGIES.map((s) => ({
+        id: s.id,
+        name: s.name,
+        source: s.source,
+        demands: s.demands,
+      })),
+      meta_programs: META_PROGRAM_LINKS,
+      basis:
+        "Meta-program numbering follows Hall & Bodenhamer, The Sourcebook of Magic, as transcribed in nlp-knowledge/meta_programs. It is a framework from the NLP literature, not a validated psychometric instrument.",
+    });
+  });
+
+  app.post("/api/partner/wealth-genome", requireKey, (req, res) => {
+    const body = (req.body ?? {}) as { signals?: unknown; currentYear?: unknown };
+    const raw = Array.isArray(body.signals) ? body.signals : [];
+
+    const validAxes = new Set<string>(GENOME_AXES);
+    const validKinds = new Set(["observed", "corroborated", "volunteered", "stated", "inferred"]);
+
+    const signals: GenomeSignal[] = [];
+    const rejected: string[] = [];
+    for (let i = 0; i < raw.length; i++) {
+      const r = raw[i];
+      const o = (r ?? {}) as Record<string, unknown>;
+      if (!validAxes.has(String(o.axis))) {
+        rejected.push(`signal ${i}: unknown axis "${String(o.axis)}"`);
+        continue;
+      }
+      if (!validKinds.has(String(o.kind))) {
+        rejected.push(`signal ${i}: unknown evidence kind "${String(o.kind)}"`);
+        continue;
+      }
+      const dir = Number(o.direction);
+      if (!Number.isFinite(dir)) {
+        rejected.push(`signal ${i}: direction is not a number`);
+        continue;
+      }
+      signals.push({
+        axis: String(o.axis) as DurabilityAxis,
+        direction: dir,
+        kind: String(o.kind) as EvidenceKind,
+        // Truncated rather than stored: this endpoint keeps nothing, but a
+        // partner should not be able to push a paragraph of client narrative
+        // through it either.
+        note: String(o.note ?? "").slice(0, 300),
+        asOfYear: Number.isFinite(Number(o.asOfYear)) ? Number(o.asOfYear) : undefined,
+      });
+    }
+
+    const year = Number.isFinite(Number(body.currentYear)) ? Number(body.currentYear) : 2026;
+    const report = wealthGenomeReport(signals, year);
+
+    res.json({
+      accepted: signals.length,
+      rejected,
+      coverage: report.genome.coverage,
+      unassessed: report.genome.unassessed,
+      coverage_note: report.genome.note,
+      readings: report.genome.readings,
+      strategies: report.ordered.map((f) => ({
+        id: f.strategyId,
+        name: f.strategyName,
+        verdict: f.verdict,
+        unmet: f.unmet,
+        met_count: f.met.length,
+        what_would_make_it_work: f.whatWouldMakeItWork,
+        source: f.source,
+        caveat: f.caveat,
+      })),
+      next_best_question: report.nextBestQuestion,
+      disclaimer: report.disclaimer,
+      stored: false,
     });
   });
 

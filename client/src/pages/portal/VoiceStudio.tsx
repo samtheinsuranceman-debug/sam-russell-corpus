@@ -107,7 +107,7 @@ export default function VoiceStudio() {
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
                   <p className="truncate font-semibold">{v.name}{v.active && <span className="ml-2 rounded-full bg-emerald-500/30 px-2 py-0.5 text-xs">speaking now</span>}</p>
-                  <p className="text-xs text-white/50"><span className={`rounded px-1 ${v.provider === "heygen" ? "bg-violet-500/30" : "bg-sky-500/30"}`}>{v.provider}</span> · {v.category}{v.labels.gender ? ` · ${v.labels.gender}` : ""}{v.labels.accent ? ` · ${v.labels.accent}` : ""}{v.labels.age ? ` · ${v.labels.age}` : ""}</p>
+                  <p className="text-xs text-white/50"><span className={`rounded px-1 ${v.provider === "heygen" ? "bg-amber-500/30" : "bg-sky-500/30"}`}>{v.provider}</span> · {v.category}{v.labels.gender ? ` · ${v.labels.gender}` : ""}{v.labels.accent ? ` · ${v.labels.accent}` : ""}{v.labels.age ? ` · ${v.labels.age}` : ""}</p>
                   {v.description && <p className="mt-1 line-clamp-2 text-xs text-white/60">{v.description}</p>}
                 </div>
                 <button type="button" onClick={() => void play(v.voiceId, v.provider)} aria-label={playing === v.voiceId ? `Stop ${v.name}` : `Play ${v.name}`} className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full ${playing === v.voiceId ? "bg-red-500/80" : "bg-sky-500 hover:bg-sky-400"}`}>
