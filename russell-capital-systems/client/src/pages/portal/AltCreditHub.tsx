@@ -18,6 +18,9 @@ const INPUT = "w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2 te
 const LABEL = "block text-[11px] uppercase tracking-[0.16em] text-slate-400";
 const usd = (n: number) => (Number.isFinite(n) ? `$${Math.round(n).toLocaleString("en-US")}` : "—");
 const pc = (n: number, d = 1) => `${(n * 100).toFixed(d)}%`;
+/** 220 words a minute, rounded up. Every route on this page runs past a thousand words. */
+const readingMinutes = (body: readonly string[]) =>
+  Math.max(1, Math.round(body.join(" ").split(/\s+/).length / 220));
 
 function Score({ n }: { n: number }) {
   const tone = n >= 7 ? "bg-emerald-400" : n >= 5 ? "bg-amber-400" : "bg-rose-400";
@@ -103,7 +106,7 @@ export default function AltCreditHub() {
                       <div className="flex items-start justify-between gap-3">
                         <h4 className="text-[16px] font-semibold text-white" style={{ textWrap: "balance" }}>{r.title}</h4>
                         <span className="shrink-0 text-[10.5px] uppercase tracking-[0.14em] text-slate-500">
-                          {r.depth === "full" ? "full" : "outline"}
+                          {readingMinutes(r.body)} min
                         </span>
                       </div>
                       <p className="mt-1.5 text-[13.5px] leading-relaxed text-slate-300">{r.description}</p>

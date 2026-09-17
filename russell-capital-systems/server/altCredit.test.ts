@@ -156,6 +156,33 @@ describe("the fifteen borrowing routes", () => {
   });
 });
 
+describe("every route is a page, not a summary", () => {
+  it("runs past a thousand words on all fifteen", () => {
+    for (const r of CREDIT_ROUTES) {
+      const words = r.body.join(" ").split(/\s+/).length;
+      expect(words, `${r.slug} is ${words} words`).toBeGreaterThan(1000);
+      expect(r.depth, r.slug).toBe("full");
+    }
+  });
+
+  it("carries mechanics, risks, examples and questions on all fifteen", () => {
+    for (const r of CREDIT_ROUTES) {
+      expect(r.underwritingMechanics.length, r.slug).toBeGreaterThanOrEqual(4);
+      expect(r.risks.length, r.slug).toBeGreaterThanOrEqual(3);
+      expect(r.examples.length, r.slug).toBeGreaterThanOrEqual(2);
+      expect(r.questions.length, r.slug).toBe(3);
+      expect(r.collateral.length, r.slug).toBeGreaterThan(40);
+      expect(r.scoreReasoning.length, r.slug).toBeGreaterThan(80);
+    }
+  });
+
+  it("works at least one example at ten million dollars of equity", () => {
+    const tenM = CREDIT_ROUTES.filter((r) =>
+      JSON.stringify(r.examples).includes("10 million") || JSON.stringify(r.examples).includes("10,000,000"));
+    expect(tenM.length, "no route works the $10m case").toBeGreaterThanOrEqual(5);
+  });
+});
+
 describe("the deployment strategies", () => {
   it("ranks most viable first", () => {
     const scores = ranked().map((s) => s.riskRewardScore);
