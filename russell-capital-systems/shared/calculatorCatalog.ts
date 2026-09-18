@@ -368,6 +368,10 @@ export const CALCULATORS: readonly CalculatorEntry[] = [
     blurb: "Every gate a mechanism has to clear, the standard number, every documented way it is lower, and the ones that are a statute or somebody else's contract. Each figure links the page it was read from.",
     engine: "shared/thresholds.ts",
     keywords: ["seasoning", "delayed financing", "ltv", "dscr", "coverage", "due on sale", "garn st germain", "seven pay", "mec", "blanket", "partial release", "ten property limit", "loophole", "exception"] },
+  { path: "/portal/integration-scorecard", name: "The Integration Scorecard", category: "practice",
+    blurb: "Every page scored on ten dimensions read from the code — routed, engine, brain, tested, genome, cross-linked, sphere, live data, provenance — beside what it is worth and how often it is needed. The gap is the work list, and every missing item names a file.",
+    engine: "shared/pageRatings.ts",
+    keywords: ["integration", "scorecard", "audit", "wired", "connections", "10 out of 10", "gaps", "what is missing", "brain coverage", "test coverage"] },
 
   // ---------------- Markets & Outside Forces ----------------
   { path: "/portal/outside-forces", name: "Outside Forces", category: "markets", featured: true,

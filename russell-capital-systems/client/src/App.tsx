@@ -82,6 +82,7 @@ const MechanismProviders = lazy(() => import("./pages/portal/MechanismDetail").t
 const MechanismSequences = lazy(() => import("./pages/portal/MechanismDetail").then((m) => ({ default: m.MechanismSequences })));
 const SequencePlanner = lazy(() => import("./pages/portal/SequencePlanner"));
 const Thresholds = lazy(() => import("./pages/portal/Thresholds"));
+const IntegrationScorecard = lazy(() => import("./pages/portal/IntegrationScorecard"));
 const ComboRecommender = lazy(() => import("./pages/portal/ComboRecommender"));
 const ClientReportGenerator = lazy(() => import("./pages/portal/ClientReportGenerator"));
 const ExitRating = lazy(() => import("./components/ExitRating"));
@@ -755,6 +756,7 @@ function Router() {
       <Route path="/portal/mechanism/:slug" component={gated(MechanismDetail, "/portal/mechanisms")} />
       <Route path="/portal/sequence-planner" component={gated(SequencePlanner, "/portal/sequence-planner")} />
       <Route path="/portal/thresholds" component={gated(Thresholds, "/portal/thresholds")} />
+      <Route path="/portal/integration-scorecard" component={gated(IntegrationScorecard, "/portal/integration-scorecard")} />
       <Route path="/portal/client-report-generator" component={gated(ClientReportGenerator, "/portal/client-report-generator")} />
 
       {/* Fallback */}

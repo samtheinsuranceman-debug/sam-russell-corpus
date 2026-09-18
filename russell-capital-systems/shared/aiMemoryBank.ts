@@ -186,6 +186,17 @@ export const MEMORY_GROUPS: readonly MemoryGroup[] = [
     priority: 1,
   },
   {
+    id: "integration",
+    name: "The integration scorecard and page ratings",
+    modules: ["shared/pageRatings.ts"],
+    knows:
+      "Fifty-two pages rated for value and frequency with the conditions under which each is the right page, and the audit that scores every catalogue page on ten wiring dimensions read from the code - routed, engine, page imports, brain, tested, genome, cross-linked, sphere, live data, provenance.",
+    brief:
+      "When recommending a page, say the condition under which it is the right one. Never send a household to a page for a figure the page cannot reproduce from a named engine; if the scorecard says a page is unwired, say so rather than quote it.",
+    wired: true,
+    priority: 3,
+  },
+  {
     id: "alt-credit",
     name: "Alternative lines of credit",
     modules: ["shared/altCredit/routes.ts", "shared/altCredit/deployment.ts", "shared/altCredit/lenders.ts", "shared/altCredit/simulator.ts", "shared/liquidityRoutes.ts"],
