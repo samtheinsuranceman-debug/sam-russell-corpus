@@ -4,7 +4,7 @@
 // this client prudently borrow, through which instrument, and what breaks
 // first?
 //
-// Deliberately separate from realEstateCapitalStackEngine.ts, which models the
+// Deliberately separate from realEstateDealModel.ts, which models the
 // sponsor side (LP/GP waterfall, promote, exit IRR). Same domain, different
 // question, different contract.
 //
@@ -39,7 +39,7 @@
 // any amount is deductible. Those are lender, advisor and CPA determinations;
 // the engine emits review flags instead.
 
-import { pmt } from "./realEstateCapitalStackEngine";
+import { pmt } from "./realEstateDealModel";
 import type {
   BindingConstraint,
   CapacityStressResult,

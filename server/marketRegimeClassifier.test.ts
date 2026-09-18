@@ -4,7 +4,7 @@ import {
   mostRecentRegime, percentilePath, compound,
   DEFAULT_THRESHOLDS, MIN_OBSERVATIONS, REGIME_PRECEDENCE,
   type RegimeYear,
-} from "../shared/historicalMarketRegimeEngine";
+} from "../shared/marketRegimeClassifier";
 import type { AnnualSeries } from "../shared/rentalMarketEngine";
 
 const S = (startYear: number, values: Array<number | null>): AnnualSeries => ({ startYear, values });

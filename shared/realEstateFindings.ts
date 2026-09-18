@@ -11,7 +11,7 @@ import {
   debtConstant,
   goingInCapRate,
   weightedAverageDebtCost,
-} from "./realEstateCapitalStackEngine";
+} from "./realEstateDealModel";
 import type {
   CapitalStackInput,
   CapitalStackResult,
