@@ -85,11 +85,6 @@ describe("divorce state rules — the refusal contract", () => {
   });
 });
 
-// HARVEST NOTE (base consolidation): the four `it.skip` cases below assert a
-// divorceFinancialEngine that is WIRED to divorceStateRules (returns `statutory`,
-// `rulesVersion`, `neverPrinted`). No such engine exists anywhere in the corpus —
-// the kit shipped the rules table and this test, never the wiring. The table's own
-// tests below pass. Wiring the engine is tracked as follow-up work; un-skip then.
 describe("divorce engine — wired to the table", () => {
   const base = {
     spouse1Income: 400_000,
@@ -103,20 +98,20 @@ describe("divorce engine — wired to the table", () => {
     realEstate: [{ value: 1_200_000, mortgage: 400_000, equity: 800_000 }],
   } as Parameters<typeof modelDivorceImpact>[0];
 
-  it.skip("marks the community-property split as statutory in Texas", () => {
+  it("marks the community-property split as statutory in Texas", () => {
     const r = modelDivorceImpact({ ...base, state: "TX" });
     expect(r.scenarios[0].statutory).toBe(true);
     expect(r.scenarios[0].basis).toContain("community-property");
     expect(r.stateBasis).toContain("Texas");
   });
 
-  it.skip("does NOT mark the even split as statutory in an equitable state", () => {
+  it("does NOT mark the even split as statutory in an equitable state", () => {
     const r = modelDivorceImpact({ ...base, state: "NY" });
     expect(r.scenarios[0].statutory).toBe(false);
     expect(r.scenarios[0].name).toContain("ILLUSTRATIVE ONLY");
   });
 
-  it.skip("labels every negotiated scenario as non-statutory, in every state", () => {
+  it("labels every negotiated scenario as non-statutory, in every state", () => {
     for (const code of allStateCodes()) {
       const r = modelDivorceImpact({ ...base, state: code });
       for (const s of r.scenarios.slice(1)) {
@@ -126,7 +121,7 @@ describe("divorce engine — wired to the table", () => {
     }
   });
 
-  it.skip("carries the rules version and the never-printed list onto the result", () => {
+  it("carries the rules version and the never-printed list onto the result", () => {
     const r = modelDivorceImpact(base);
     expect(r.rulesVersion).toBe(RULES_VERSION.version);
     expect(r.neverPrinted.length).toBeGreaterThan(0);
