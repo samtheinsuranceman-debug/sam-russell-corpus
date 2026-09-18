@@ -1,0 +1,803 @@
+Russell Capital Solutions — 57-Patent Commercial
+Dossier
+15 core inventions + 42 sister inventions, deduplicated and organized into five commercial
+groups. Prepared for Samuel A. Russell V, Russell Holdings Management LLC.
+HOW TO READ THIS DOCUMENT — All revenue, expense, valuation, and account figures are
+ILLUSTRATIVE CONSERVATIVE SCENARIOS built from stated assumptions, not forecasts, promises, or
+valuations by a licensed appraiser. Named companies are TARGET candidates chosen for market fit; no
+relationship, discussion, or interest is implied. Descriptions state what each invention DOES and who it
+serves; mechanisms and claim details are deliberately excluded from this commercial document. Patent
+status: applications per the owner's records; confirm current status with patent counsel before citing.
+
+
+The One-Page Picture
+Measure                                     Year 1               Year 2              Year 3
+
+Total revenue (all 57, all strategies)      $1,371,000           $3,286,000          $6,067,000
+
+Total paying accounts (SaaS + enterprise)   209                  579                 1156
+
+Total expenses (4 teams, all-in)            $2,402,150           $2,502,150          $2,602,150
+
+Profit / (loss)                             $-1,031,150          $783,850            $3,464,850
+
+Profit margin                               —(investment year)   24%                 57%
+
+Portfolio fair-market value (3.0× Year-3                                             $18,201,000
+revenue)
+
+Year 1 is deliberately a build-and-sell investment year: four teams are hired before revenue
+matures. Slow-to-moderate success breaks even during Year 2 and reaches a healthy
+software margin in Year 3. The valuation multiple (3.0× revenue) is conservative for
+recurring-revenue software with under 1% market penetration; strategic acquirers routinely
+pay more for patent-protected capability they cannot build around.
+
+
+How the money is made — six strategies applied across every
+group
+Per-seat SaaS subscriptions. Advisors and firms pay monthly per seat for the working
+software. Steadiest income; powers the account counts below.
+Enterprise licensing. Carriers, broker-dealers, and platforms license an engine to embed in
+their own product — the largest checks, the longest sales cycles.
+Patent licensing / royalties. Competitors who want the capability license the patent instead
+of engineering around 57 interlocking claims.
+Consulting & implementation fees. Paid engagements to configure an engine inside a
+large firm; also funds discovery of the next invention.
+Build-to-sell. Each group is run as a stand-alone product with its own P&L so it can be sold
+whole — the per-group valuations below are the price tags.
+Channel revenue-share. IMOs, BGAs, and custodians distribute to thousands of advisors
+for a share of revenue — reach no direct team can match.
+Group 1 — Planning & Calculation Engines (11 patents)
+Industry & market: Financial-planning software for advisors, insurance carriers, and fintech
+platforms.
+Why this family is patentable: Each engine produces coordinated, compliance-aware
+financial projections that today require several disconnected tools and manual reconciliation.
+The patent position rests on the specific interlocking method — one change flowing correctly
+through every dependent calculation — which no shipping planning platform performs as a
+single system.
+Seven named target purchasers / licensees (candidates by market fit — no relationship
+implied): Envestnet / MoneyGuidePro, eMoney Advisor (Fidelity), RightCapital, Orion Advisor
+Solutions, InvestCloud (NaviPlan), Holistiplan, Boldin (NewRetirement).
+
+The patents in this group — what each one does (plain language;
+mechanisms excluded)
+ID        Invention                     What it does — 5th-grade version
+
+PAT-001   Cascading Multi-Calculator    One planning tool where changing a single number updates the
+          Financial Planning Engine     WHOLE financial plan at once — nothing gets forgotten.
+
+PAT-010   Time Machine                  Lets a family see their financial future at different ages — like a time
+          Dual-Illustration Method      machine for money decisions.
+
+PAT-013   Monte Carlo Simulation        Stress-tests a plan thousands of times, including protections that
+          Engine with IUL Floor/Cap     stop the worst years from ruining it.
+
+SI-001    Dynamic IUL Illustration      A helper invention: dynamic IUL Illustration Compliance Engine — it
+          Compliance Engine             extends its parent engine into this one specialized job.
+
+SI-002    Multi-Carrier IUL             A helper invention: multi-Carrier IUL Comparison Optimizer — it
+          Comparison Optimizer          extends its parent engine into this one specialized job.
+
+SI-003    Automated Policy Review &     A helper invention: automated Policy Review & Replacement
+          Replacement Analyzer          Analyzer — it extends its parent engine into this one specialized job.
+
+SI-021    Quantum-Resistant Portfolio   A helper invention: quantum-Resistant Portfolio Stress Testing — it
+          Stress Testing                extends its parent engine into this one specialized job.
+
+SI-023    Real-Time Market              A helper invention: real-Time Market Sentiment Integration for IUL
+          Sentiment Integration for     Crediting — it extends its parent engine into this one specialized job.
+          IUL Crediting
+
+SI-025    Automated Annuity             A helper invention: automated Annuity Comparison with Hidden Fee
+          Comparison with Hidden        Detection — it extends its parent engine into this one specialized
+          Fee Detection                 job.
+
+SI-026    Regulatory Sandbox            A helper invention: regulatory Sandbox Simulation Environment — it
+          Simulation Environment        extends its parent engine into this one specialized job.
+ID         Invention                      What it does — 5th-grade version
+
+SI-040     Concentrated Stock Position    A helper invention: concentrated Stock Position Diversi■cation
+           Diversi■cation Planner with    Planner with IUL — it extends its parent engine into this one
+           IUL                            specialized job.
+
+
+Three-year conservative revenue scenario
+                                               Year 1                Year 2               Year 3
+
+SaaS accounts (seats/firms)                    40                    110                  220
+
+Enterprise licenses                            1                     2                    4
+
+Consulting engagements                         4                     8                    12
+
+Revenue — SaaS                                 $120,000              $330,000             $660,000
+
+Revenue — enterprise                           $60,000               $120,000             $240,000
+
+Revenue — consulting                           $60,000               $120,000             $180,000
+
+Group revenue                                  $240,000              $570,000             $1,080,000
+
+Assumptions: SaaS at $3,000/seat/year; enterprise licenses at $60,000/year; consulting at
+$15,000/engagement. Accounts are cumulative paying accounts at year end.
+
+Marketing plan — where the hours and dollars go
+Tactic                                                                     Hours/week         Hours/year
+
+Direct LinkedIn + email outreach to named targets — the highest-yield      8                  384
+tactic for enterprise licensing
+
+Industry conferences & booth demos (T3, FinCon, carrier summits) —         4                  192
+average of ~10 events/yr amortized
+
+Live webinar demos for advisor groups — one session/week, recorded         4                  192
+for reuse
+
+IMO/BGA & custodian channel partnerships — revenue-share                   6                  288
+distribution beats direct sales for reach
+
+Direct carrier innovation-team pitches — long cycle, biggest contracts     3                  144
+
+Content, SEO & case-study publishing — compounding; feeds every            4                  192
+other tactic
+
+Trade-press PR & podcast circuit — credibility air-cover                   2                  96
+
+TOTAL dedicated marketing time for this group                              31                 1488
+
+Cash marketing budget for this group: $70,000 (Y1) → $90,000 (Y2) → $110,000 (Y3),
+covering events, ads, tools, and travel. The single most effective technique for this group is
+direct outreach to the seven named targets combined with channel partnerships —
+enterprise conversations are won person-to-person, not by advertising.
+Per-patent valuation inside this group
+ID            Y3 revenue allocation             Stand-alone fair-market value (3.0×)
+
+PAT-001       $154,286                          $462,857
+
+PAT-010       $154,286                          $462,857
+
+PAT-013       $154,286                          $462,857
+
+SI-001        $77,143                           $231,429
+
+SI-002        $77,143                           $231,429
+
+SI-003        $77,143                           $231,429
+
+SI-021        $77,143                           $231,429
+
+SI-023        $77,143                           $231,429
+
+SI-025        $77,143                           $231,429
+
+SI-026        $77,143                           $231,429
+
+SI-040        $77,143                           $231,429
+
+GROUP         $1,080,000                        $3,240,000
+TOTAL
+
+Valued as a stand-alone company, this group is worth about $3,240,000 on Year-3 recurring
+revenue. Market penetration at that point is well under 1% of the roughly 300,000 U.S.
+financial advisors and dozens of carriers — over 99% of the addressable market remains
+unsold, which is what an acquirer is buying.
+Group 2 — Tax-Free Income & Advanced Tax Strategy (14
+patents)
+Industry & market: Tax-planning software and advanced-planning desks at RIAs, CPA
+firms, and insurance distributors.
+Why this family is patentable: The inventions sequence withdrawals, conversions, and
+offsets across tax years and entity types as one orchestrated plan. Tax tools on the market
+score a single year or a single account; the claimed multi-year, multi-entity sequencing with
+insurance funding built in is the novel step.
+Seven named target purchasers / licensees (candidates by market fit — no relationship
+implied): Holistiplan, Corvee, Bloomberg Tax, Wealth.com, Vanilla, Avantax, Savant Wealth
+(advanced-planning desk).
+
+The patents in this group — what each one does (plain language;
+mechanisms excluded)
+ID        Invention                    What it does — 5th-grade version
+
+PAT-005   Tax-Free Retirement          Maps the smartest ORDER to take retirement money out so more of
+          Income Waterfall Engine      it arrives tax-free.
+
+PAT-012   Roth Conversion with         Pairs a big tax bill from a retirement conversion with something that
+          Short-Term Rental Tax        helps cancel it out.
+          O■set Strategy
+
+SI-006    Real-Time Tax Code           A helper invention: real-Time Tax Code Change Impact Simulator —
+          Change Impact Simulator      it extends its parent engine into this one specialized job.
+
+SI-007    Multi-Entity Tax             A helper invention: multi-Entity Tax Optimization Router — it extends
+          Optimization Router          its parent engine into this one specialized job.
+
+SI-008    Charitable Remainder Trust   A helper invention: charitable Remainder Trust + IUL Wealth
+          + IUL Wealth Replacement     Replacement — it extends its parent engine into this one specialized
+                                       job.
+
+SI-010    State Tax Arbitrage          A helper invention: state Tax Arbitrage Migration Planner — it
+          Migration Planner            extends its parent engine into this one specialized job.
+
+SI-024    Multi-Currency Wealth        A helper invention: multi-Currency Wealth Optimization for
+          Optimization for             International Clients — it extends its parent engine into this one
+          International Clients        specialized job.
+
+SI-030    Spousal Income Splitting &   A helper invention: spousal Income Splitting & IUL Arbitrage
+          IUL Arbitrage Optimizer      Optimizer — it extends its parent engine into this one specialized
+                                       job.
+
+SI-031    Disability Insurance Gap     A helper invention: disability Insurance Gap Analyzer with IUL
+          Analyzer with IUL Bridge     Bridge Funding — it extends its parent engine into this one
+          Funding                      specialized job.
+ID         Invention                      What it does — 5th-grade version
+
+SI-032     Multi-Generational Wealth      A helper invention: multi-Generational Wealth Transfer Sequencing
+           Transfer Sequencing Engine     Engine — it extends its parent engine into this one specialized job.
+
+SI-037     Tax Loss Harvesting            A helper invention: tax Loss Harvesting Coordination Engine with
+           Coordination Engine with       IUL Premium — it extends its parent engine into this one specialized
+           IUL Premium                    job.
+
+SI-039     Dynamic Bene■ciary             A helper invention: dynamic Bene■ciary Optimization Engine — it
+           Optimization Engine            extends its parent engine into this one specialized job.
+
+SI-041     Medicare Optimization &        A helper invention: medicare Optimization & IRMAA Avoidance
+           IRMAA Avoidance Planning       Planning Engine — it extends its parent engine into this one
+           Engine                         specialized job.
+
+SI-042     Integrated Estate Freeze &     A helper invention: integrated Estate Freeze & IUL Wealth
+           IUL Wealth Replacement         Replacement System — it extends its parent engine into this one
+           System                         specialized job.
+
+
+Three-year conservative revenue scenario
+                                               Year 1                Year 2                Year 3
+
+SaaS accounts (seats/firms)                    50                    140                   280
+
+Enterprise licenses                            1                     2                     3
+
+Consulting engagements                         6                     12                    18
+
+Revenue — SaaS                                 $180,000              $504,000              $1,008,000
+
+Revenue — enterprise                           $75,000               $150,000              $225,000
+
+Revenue — consulting                           $90,000               $180,000              $270,000
+
+Group revenue                                  $345,000              $834,000              $1,503,000
+
+Assumptions: SaaS at $3,600/seat/year; enterprise licenses at $75,000/year; consulting at
+$15,000/engagement. Accounts are cumulative paying accounts at year end.
+
+Marketing plan — where the hours and dollars go
+Tactic                                                                     Hours/week          Hours/year
+
+Direct LinkedIn + email outreach to named targets — the highest-yield      8                   384
+tactic for enterprise licensing
+
+Industry conferences & booth demos (T3, FinCon, carrier summits) —         4                   192
+average of ~10 events/yr amortized
+
+Live webinar demos for advisor groups — one session/week, recorded         4                   192
+for reuse
+
+IMO/BGA & custodian channel partnerships — revenue-share                   6                   288
+distribution beats direct sales for reach
+
+Direct carrier innovation-team pitches — long cycle, biggest contracts     3                   144
+Tactic                                                                  Hours/week        Hours/year
+
+Content, SEO & case-study publishing — compounding; feeds every         4                 192
+other tactic
+
+Trade-press PR & podcast circuit — credibility air-cover                2                 96
+
+TOTAL dedicated marketing time for this group                           31                1488
+
+Cash marketing budget for this group: $70,000 (Y1) → $90,000 (Y2) → $110,000 (Y3),
+covering events, ads, tools, and travel. The single most effective technique for this group is
+direct outreach to the seven named targets combined with channel partnerships —
+enterprise conversations are won person-to-person, not by advertising.
+
+Per-patent valuation inside this group
+ID                Y3 revenue allocation                    Stand-alone fair-market value (3.0×)
+
+PAT-005           $187,875                                 $563,625
+
+PAT-012           $187,875                                 $563,625
+
+SI-006            $93,938                                  $281,812
+
+SI-007            $93,938                                  $281,812
+
+SI-008            $93,938                                  $281,812
+
+SI-010            $93,938                                  $281,812
+
+SI-024            $93,938                                  $281,812
+
+SI-030            $93,938                                  $281,812
+
+SI-031            $93,938                                  $281,812
+
+SI-032            $93,938                                  $281,812
+
+SI-037            $93,938                                  $281,812
+
+SI-039            $93,938                                  $281,812
+
+SI-041            $93,938                                  $281,812
+
+SI-042            $93,938                                  $281,812
+
+GROUP             $1,503,000                               $4,509,000
+TOTAL
+
+Valued as a stand-alone company, this group is worth about $4,509,000 on Year-3 recurring
+revenue. Market penetration at that point is well under 1% of the roughly 300,000 U.S.
+financial advisors and dozens of carriers — over 99% of the addressable market remains
+unsold, which is what an acquirer is buying.
+Group 3 — Insurance Arbitrage & Protection Strategies (9
+patents)
+Industry & market: Life-insurance carriers, premium-finance lenders, IMOs/BGAs, and
+real-estate-heavy advisory firms.
+Why this family is patentable: Each invention turns a hand-built, error-prone
+advanced-markets strategy (home-equity arbitrage, divorce shielding, mortgage recycling,
+collateral assignment) into a governed, repeatable calculation product. Carriers and IMOs
+currently rely on spreadsheets from individual agents; a certified engine is the patentable and
+saleable step.
+Seven named target purchasers / licensees (candidates by market fit — no relationship
+implied): Pacific Life, Nationwide, Allianz Life, Transamerica, F&G Annuities & Life, National
+Life Group, Simplicity Group (IMO).
+
+The patents in this group — what each one does (plain language;
+mechanisms excluded)
+ID        Invention                     What it does — 5th-grade version
+
+PAT-002   HELOC-to-IUL Arbitrage        Shows a family whether the value sitting in their house could safely
+          Optimization Engine           do a second job for their future.
+
+PAT-006   Divorce Asset Protection      Helps a person understand, before trouble starts, which assets stay
+          Calculator with IUL           protected if a marriage ends.
+          Shielding
+
+PAT-009   Mortgage Elimination          Shows homeowners a path to owning their home outright sooner
+          Through Real Estate           while their money keeps working.
+          Recycling & IUL
+
+PAT-014   FIA Collateral Assignment     Lets one protected asset safely stand behind another goal without
+          Lending Optimization          giving up its safety.
+          System
+
+SI-004    Premium Financing             A helper invention: premium Financing Arbitrage Calculator — it
+          Arbitrage Calculator          extends its parent engine into this one specialized job.
+
+SI-009    Opportunity Zone + IUL        A helper invention: opportunity Zone + IUL Capital Gains Deferral
+          Capital Gains Deferral        Engine — it extends its parent engine into this one specialized job.
+          Engine
+
+SI-028    Physician Student Loan        A helper invention: physician Student Loan Forgiveness
+          Forgiveness Optimization      Optimization Engine — it extends its parent engine into this one
+          Engine                        specialized job.
+
+SI-029    Real Estate Syndication Tax   A helper invention: real Estate Syndication Tax Bene■t Aggregation
+          Bene■t Aggregation            Platform — it extends its parent engine into this one specialized job.
+          Platform
+ID         Invention                      What it does — 5th-grade version
+
+SI-034     Automated 1031 Exchange        A helper invention: automated 1031 Exchange Chain Optimization
+           Chain Optimization with IUL    with IUL Exit — it extends its parent engine into this one specialized
+           Exit                           job.
+
+
+Three-year conservative revenue scenario
+                                               Year 1                Year 2                 Year 3
+
+SaaS accounts (seats/firms)                    25                    70                     140
+
+Enterprise licenses                            1                     2                      4
+
+Consulting engagements                         5                     9                      14
+
+Revenue — SaaS                                 $90,000               $252,000               $504,000
+
+Revenue — enterprise                           $90,000               $180,000               $360,000
+
+Revenue — consulting                           $90,000               $162,000               $252,000
+
+Group revenue                                  $270,000              $594,000               $1,116,000
+
+Assumptions: SaaS at $3,600/seat/year; enterprise licenses at $90,000/year; consulting at
+$18,000/engagement. Accounts are cumulative paying accounts at year end.
+
+Marketing plan — where the hours and dollars go
+Tactic                                                                     Hours/week           Hours/year
+
+Direct LinkedIn + email outreach to named targets — the highest-yield      8                    384
+tactic for enterprise licensing
+
+Industry conferences & booth demos (T3, FinCon, carrier summits) —         4                    192
+average of ~10 events/yr amortized
+
+Live webinar demos for advisor groups — one session/week, recorded         4                    192
+for reuse
+
+IMO/BGA & custodian channel partnerships — revenue-share                   6                    288
+distribution beats direct sales for reach
+
+Direct carrier innovation-team pitches — long cycle, biggest contracts     3                    144
+
+Content, SEO & case-study publishing — compounding; feeds every            4                    192
+other tactic
+
+Trade-press PR & podcast circuit — credibility air-cover                   2                    96
+
+TOTAL dedicated marketing time for this group                              31                   1488
+
+Cash marketing budget for this group: $70,000 (Y1) → $90,000 (Y2) → $110,000 (Y3),
+covering events, ads, tools, and travel. The single most effective technique for this group is
+direct outreach to the seven named targets combined with channel partnerships —
+enterprise conversations are won person-to-person, not by advertising.
+Per-patent valuation inside this group
+ID            Y3 revenue allocation             Stand-alone fair-market value (3.0×)
+
+PAT-002       $171,692                          $515,077
+
+PAT-006       $171,692                          $515,077
+
+PAT-009       $171,692                          $515,077
+
+PAT-014       $171,692                          $515,077
+
+SI-004        $85,846                           $257,538
+
+SI-009        $85,846                           $257,538
+
+SI-028        $85,846                           $257,538
+
+SI-029        $85,846                           $257,538
+
+SI-034        $85,846                           $257,538
+
+GROUP         $1,116,000                        $3,348,000
+TOTAL
+
+Valued as a stand-alone company, this group is worth about $3,348,000 on Year-3 recurring
+revenue. Market penetration at that point is well under 1% of the roughly 300,000 U.S.
+financial advisors and dozens of carriers — over 99% of the addressable market remains
+unsold, which is what an acquirer is buying.
+Group 4 — Client Intelligence, Behavior & AI Advisor Tools (14
+patents)
+Industry & market: Wealth-tech CRM, advisor enablement, and behavioral-finance
+platforms.
+Why this family is patentable: The claims combine live client-state signals with automated
+advisor guidance in one loop — detection, scoring, prepared response. CRM incumbents
+record what happened; the patented loop anticipates and acts, which is the emergent
+capability none of the point tools provide.
+Seven named target purchasers / licensees (candidates by market fit — no relationship
+implied): Salesforce (Financial Services Cloud), Orion (Redtail), Wealthbox, Nitrogen
+(Riskalyze), Morningstar, SmartAsset, Catchlight (Fidelity Labs).
+
+The patents in this group — what each one does (plain language;
+mechanisms excluded)
+ID        Invention                      What it does — 5th-grade version
+
+PAT-003   AI Whisper Coaching            A quiet AI helper that gives an advisor the right thing to say and
+          System for Financial           check at exactly the right moment.
+          Advisors
+
+PAT-004   Wealth Genome Scoring &        Reads a family's whole financial picture and gives it one clear score,
+          Classi■cation System           like a report card for wealth health.
+
+PAT-008   Behavioral Lock-In             Catches people right before a classic money mistake and helps
+          Prevention System              them pause.
+
+SI-005    Living Bene■ts Probability     A helper invention: living Bene■ts Probability Engine — it extends its
+          Engine                         parent engine into this one specialized job.
+
+SI-011    Gami■ed Financial Literacy     A helper invention: gami■ed Financial Literacy Platform — it
+          Platform                       extends its parent engine into this one specialized job.
+
+SI-012    Predictive Client Churn        A helper invention: predictive Client Churn Prevention System — it
+          Prevention System              extends its parent engine into this one specialized job.
+
+SI-013    Automated Life Event           A helper invention: automated Life Event Detection & Response
+          Detection & Response           Engine — it extends its parent engine into this one specialized job.
+          Engine
+
+SI-014    Client Family Tree Financial   A helper invention: client Family Tree Financial Mapping — it
+          Mapping                        extends its parent engine into this one specialized job.
+
+SI-015    Voice-Activated Financial      A helper invention: voice-Activated Financial Dashboard — it
+          Dashboard                      extends its parent engine into this one specialized job.
+
+SI-016    AI-Powered Compliance          A helper invention: aI-Powered Compliance Pre-Check System — it
+          Pre-Check System               extends its parent engine into this one specialized job.
+
+SI-022    Blockchain-Veri■ed             A helper invention: blockchain-Veri■ed Financial Plan Audit Trail —
+          Financial Plan Audit Trail     it extends its parent engine into this one specialized job.
+ID         Invention                       What it does — 5th-grade version
+
+SI-027     Client Digital Twin Financial   A helper invention: client Digital Twin Financial Modeling — it
+           Modeling                        extends its parent engine into this one specialized job.
+
+SI-035     Client Risk Tolerance Drift     A helper invention: client Risk Tolerance Drift Detection &
+           Detection &                     Auto-Rebalancing — it extends its parent engine into this one
+           Auto-Rebalancing                specialized job.
+
+SI-038     Advisor-Client                  A helper invention: advisor-Client Communication Sentiment
+           Communication Sentiment         Analysis & — it extends its parent engine into this one specialized
+           Analysis &                      job.
+
+
+Three-year conservative revenue scenario
+                                                Year 1                Year 2                 Year 3
+
+SaaS accounts (seats/firms)                     60                    170                    340
+
+Enterprise licenses                             1                     2                      3
+
+Consulting engagements                          4                     8                      12
+
+Revenue — SaaS                                  $144,000              $408,000               $816,000
+
+Revenue — enterprise                            $60,000               $120,000               $180,000
+
+Revenue — consulting                            $48,000               $96,000                $144,000
+
+Group revenue                                   $252,000              $624,000               $1,140,000
+
+Assumptions: SaaS at $2,400/seat/year; enterprise licenses at $60,000/year; consulting at
+$12,000/engagement. Accounts are cumulative paying accounts at year end.
+
+Marketing plan — where the hours and dollars go
+Tactic                                                                      Hours/week           Hours/year
+
+Direct LinkedIn + email outreach to named targets — the highest-yield       8                    384
+tactic for enterprise licensing
+
+Industry conferences & booth demos (T3, FinCon, carrier summits) —          4                    192
+average of ~10 events/yr amortized
+
+Live webinar demos for advisor groups — one session/week, recorded          4                    192
+for reuse
+
+IMO/BGA & custodian channel partnerships — revenue-share                    6                    288
+distribution beats direct sales for reach
+
+Direct carrier innovation-team pitches — long cycle, biggest contracts      3                    144
+
+Content, SEO & case-study publishing — compounding; feeds every             4                    192
+other tactic
+
+Trade-press PR & podcast circuit — credibility air-cover                    2                    96
+
+TOTAL dedicated marketing time for this group                               31                   1488
+Cash marketing budget for this group: $70,000 (Y1) → $90,000 (Y2) → $110,000 (Y3),
+covering events, ads, tools, and travel. The single most effective technique for this group is
+direct outreach to the seven named targets combined with channel partnerships —
+enterprise conversations are won person-to-person, not by advertising.
+
+Per-patent valuation inside this group
+ID             Y3 revenue allocation                Stand-alone fair-market value (3.0×)
+
+PAT-003        $134,118                             $402,353
+
+PAT-004        $134,118                             $402,353
+
+PAT-008        $134,118                             $402,353
+
+SI-005         $67,059                              $201,176
+
+SI-011         $67,059                              $201,176
+
+SI-012         $67,059                              $201,176
+
+SI-013         $67,059                              $201,176
+
+SI-014         $67,059                              $201,176
+
+SI-015         $67,059                              $201,176
+
+SI-016         $67,059                              $201,176
+
+SI-022         $67,059                              $201,176
+
+SI-027         $67,059                              $201,176
+
+SI-035         $67,059                              $201,176
+
+SI-038         $67,059                              $201,176
+
+GROUP          $1,140,000                           $3,420,000
+TOTAL
+
+Valued as a stand-alone company, this group is worth about $3,420,000 on Year-3 recurring
+revenue. Market penetration at that point is well under 1% of the roughly 300,000 U.S.
+financial advisors and dozens of carriers — over 99% of the addressable market remains
+unsold, which is what an acquirer is buying.
+Group 5 — Advisor Practice & Scoring Platforms (9 patents)
+Industry & market: Practice-management, M&A, and benchmarking services for advisory
+and insurance practices.
+Why this family is patentable: The inventions score whole practices and advisors on
+multi-dimensional, evidence-fed indexes and drive succession, acquisition, and territory
+decisions from the score. Existing benchmarking is survey-based and static; a live scored
+operating system for a practice is the distinct claim.
+Seven named target purchasers / licensees (candidates by market fit — no relationship
+implied): LPL Financial, Commonwealth (LPL), Osaic, Kestra, Carson Group, FP Transitions,
+Succession Resource Group.
+
+The patents in this group — what each one does (plain language;
+mechanisms excluded)
+ID        Invention                    What it does — 5th-grade version
+
+PAT-007   Ecological Drivers           Checks a retirement plan against real-life risks people forget —
+          Retirement Risk              health, family, place — not just markets.
+          Assessment Framework
+
+PAT-011   Russell Number               Scores financial advisors on many skills at once, so quality is
+          Multi-Dimensional Advisor    measured instead of guessed.
+          Scoring
+
+PAT-015   Automated Advisor Practice   A control room for an advisor's whole business — what it earns,
+          Revenue & Territory          where it grows, what needs attention today.
+          Strategy
+
+SI-017    Automated Succession         A helper invention: automated Succession Planning Valuation
+          Planning Valuation Engine    Engine — it extends its parent engine into this one specialized job.
+
+SI-018    Dynamic Commission           A helper invention: dynamic Commission Optimization Router — it
+          Optimization Router          extends its parent engine into this one specialized job.
+
+SI-019    Peer Benchmarking            A helper invention: peer Benchmarking Intelligence Network — it
+          Intelligence Network         extends its parent engine into this one specialized job.
+
+SI-020    Automated CE Credit          A helper invention: automated CE Credit Tracker &
+          Tracker & Recommendation     Recommendation Engine — it extends its parent engine into this one
+          Engine                       specialized job.
+
+SI-033    Practice Acquisition Due     A helper invention: practice Acquisition Due Diligence Scoring
+          Diligence Scoring Platform   Platform — it extends its parent engine into this one specialized job.
+
+SI-036    Physician Buy-In/Buy-Out     A helper invention: physician Buy-In/Buy-Out Partnership Valuation
+          Partnership Valuation        Engine — it extends its parent engine into this one specialized job.
+          Engine
+
+
+Three-year conservative revenue scenario
+                                               Year 1                Year 2              Year 3
+
+SaaS accounts (seats/firms)                    30                    80                  160
+
+Enterprise licenses                            0                     1                   2
+
+Consulting engagements                         6                     10                  15
+
+Revenue — SaaS                                 $144,000              $384,000            $768,000
+
+Revenue — enterprise                           $0                    $80,000             $160,000
+
+Revenue — consulting                           $120,000              $200,000            $300,000
+
+Group revenue                                  $264,000              $664,000            $1,228,000
+
+Assumptions: SaaS at $4,800/seat/year; enterprise licenses at $80,000/year; consulting at
+$20,000/engagement. Accounts are cumulative paying accounts at year end.
+
+Marketing plan — where the hours and dollars go
+Tactic                                                                    Hours/week         Hours/year
+
+Direct LinkedIn + email outreach to named targets — the highest-yield     8                  384
+tactic for enterprise licensing
+
+Industry conferences & booth demos (T3, FinCon, carrier summits) —        4                  192
+average of ~10 events/yr amortized
+
+Live webinar demos for advisor groups — one session/week, recorded        4                  192
+for reuse
+
+IMO/BGA & custodian channel partnerships — revenue-share                  6                  288
+distribution beats direct sales for reach
+
+Direct carrier innovation-team pitches — long cycle, biggest contracts    3                  144
+
+Content, SEO & case-study publishing — compounding; feeds every           4                  192
+other tactic
+
+Trade-press PR & podcast circuit — credibility air-cover                  2                  96
+
+TOTAL dedicated marketing time for this group                             31                 1488
+
+Cash marketing budget for this group: $70,000 (Y1) → $90,000 (Y2) → $110,000 (Y3),
+covering events, ads, tools, and travel. The single most effective technique for this group is
+direct outreach to the seven named targets combined with channel partnerships —
+enterprise conversations are won person-to-person, not by advertising.
+
+Per-patent valuation inside this group
+ID                Y3 revenue allocation                      Stand-alone fair-market value (3.0×)
+
+PAT-007           $204,667                                   $614,000
+
+PAT-011           $204,667                                   $614,000
+
+PAT-015           $204,667                                   $614,000
+ID            Y3 revenue allocation             Stand-alone fair-market value (3.0×)
+
+SI-017        $102,333                          $307,000
+
+SI-018        $102,333                          $307,000
+
+SI-019        $102,333                          $307,000
+
+SI-020        $102,333                          $307,000
+
+SI-033        $102,333                          $307,000
+
+SI-036        $102,333                          $307,000
+
+GROUP         $1,228,000                        $3,684,000
+TOTAL
+
+Valued as a stand-alone company, this group is worth about $3,684,000 on Year-3 recurring
+revenue. Market penetration at that point is well under 1% of the roughly 300,000 U.S.
+financial advisors and dozens of carriers — over 99% of the addressable market remains
+unsold, which is what an acquirer is buying.
+The People — teams, titles, and what they cost
+Four professional teams cover all 57 patents; no team carries more than 20. Each team runs
+its groups as a business: selling, marketing, and managing licensing end-to-end.
+
+Team                    Groups (patents)                               Annual cost (salaried)
+
+Team 1                  G1+G3 (20 patents)                             $533,000
+
+Team 2                  G2 (14 patents)                                $533,000
+
+Team 3                  G4 (14 patents)                                $533,000
+
+Team 4 (lean)           G5 (9 patents)                                 $293,150
+
+
+Standard team roster (Team 4 runs the same roles at ~55% time)
+Title                               Salary basis          OR 5% commission basis (Year-3 team revenue)
+
+Licensing Director                  $140,000/yr           Team 1: $109,800, Team 2: $75,150, Team 3:
+                                                          $57,000, Team 4: $61,400
+
+Enterprise Account Executive        $95,000/yr            Team 1: $109,800, Team 2: $75,150, Team 3:
+                                                          $57,000, Team 4: $61,400
+
+Product Marketing Manager           $85,000/yr            Team 1: $109,800, Team 2: $75,150, Team 3:
+                                                          $57,000, Team 4: $61,400
+
+Solutions Engineer                  $110,000/yr           Team 1: $109,800, Team 2: $75,150, Team 3:
+(demos/integration)                                       $57,000, Team 4: $61,400
+
+Fractional IP Counsel               $48,000/yr            Team 1: $109,800, Team 2: $75,150, Team 3:
+                                                          $57,000, Team 4: $61,400
+
+Operations & Contracts Admin        $55,000/yr            Team 1: $109,800, Team 2: $75,150, Team 3:
+                                                          $57,000, Team 4: $61,400
+
+Reading the commission column: if a role is hired on 5% of team revenue instead of salary, that is the
+Year-3 dollar figure per team. In early years, salary beats commission for the employee; by Year 3 the
+sales roles do better on 5% — which is exactly the incentive you want.
+
+
+The Global Summary — everything netted out
+                                                 Year 1             Year 2              Year 3
+
+Revenue, all 57 patents                          $1,371,000         $3,286,000          $6,067,000
+
+All expenses (teams + marketing +                $2,402,150         $2,502,150          $2,602,150
+overhead)
+
+Profit / (loss)                                  $-1,031,150        $783,850            $3,464,850
+
+Margin                                           investment year    24%                 57%
+
+With slow-to-moderate success, the portfolio loses about $1,031,150 in the build year, earns
+roughly $783,850 in Year 2, and $3,464,850 in Year 3 at a 57% margin. On those recurring
+revenues the 57 patents carry an illustrative combined fair-market value of $18,201,000 —
+with more than 99% of the addressable market still unsold. Selling any single group does not
+impair the others; each is a complete, separable business.
+

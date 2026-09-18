@@ -1,0 +1,295 @@
+The Combined Patent Universe — 78 Base Patents &
+Their Emergent Combinations
+Dr. Buddy (14) + JoinAQAL (7) + Russell Capital Systems (57) = 78 base inventions.
+Prepared for Samuel A. Russell V, Russell Holdings Management LLC.
+READ FIRST — Combination candidates below are engineering-identified concepts for counsel review. A
+combination is patentable ONLY when it produces a non-obvious emergent function beyond its parts (KSR
+v. Teleflex); mere aggregation is not an invention, and only a registered patent attorney can confirm which
+candidates clear that bar.
+
+
+Part 1 — The honest mathematics of the combination space
+  Combo size (k)                      Raw combinations of 78 base patents
+
+  2-combo                             3,003
+
+  3-combo                             76,076
+
+  4-combo                             1,426,425
+
+  5-combo                             21,111,090
+
+  6-combo                             256,851,595
+
+  7-combo                             2,641,902,120
+
+  8-combo                             23,446,881,315
+
+  9-combo                             182,364,632,450
+
+  TOTAL, sizes 2 through 9            208,732,884,074
+
+Allowing every size up to all 78: about 3.0 × 10²³ subsets — more combinations than grains
+of sand on Earth. This number is why the strategy is CURATION, not enumeration: the law
+only rewards combinations whose members interlock to do something none can do alone.
+The value of the raw math is defensive — a competitor cannot search this space either, so a
+curated web of filed combinations is practically impossible to design around.
+
+Part 2 — Combinations identified SO FAR (named in the existing
+portfolio)
+Tier                                          Count     Sizes                          Scope
+
+Sister combinations (implemented in           17        2-combo ×5, 3-combo ×7,        JoinAQAL engines
+JoinAQAL code)                                          4-combo ×3, 5-combo ×1,        only
+                                                        7-combo ×1
+
+Emergent combinations                         6         2- and 3-combos                two companies
+                                                                                       each
+
+Super-emergent combinations                   16        2-combo ×4, 3-combo ×8,        up to all three
+(SE-001…016)                                            4–7-combo ×4                   companies
+Tier                                 Count     Sizes                         Scope
+
+TOTAL named so far                   39        2 → 7 members
+
+78 base + 39 named combinations = 117 identified IP assets before this document. Every
+named combination traces its parents explicitly (e.g., SE-006
+Cognitive-Mental-Health-Financial Twin = JoinAQAL-001 Consensus + Dr. Buddy-02 Digital
+Twin + RCS-004 Wealth Genome).
+
+Part 3 — THIRTY-SIX NEW candidate combinations (this analysis)
+Curated from the actual subject matter of all 78 base patents, chosen only where the
+members interlock to produce a genuinely new capability. Each names its members, its
+emergent utility, and its market. Sizes run from 2 to 9 base patents, as requested.
+
+2-COMBOS (twelve)
+Crisis-Aware Goal Clocks (2 patents: DRB-09 Crisis Detection + AQAL-005 Coaching
+Synthesis)
+Emergent utility: Goal timelines that automatically soften pace and change coaching tone
+when psychiatric early-warning signals rise — a planning system that protects the planner.
+Market: Digital-wellness platforms, EAP providers
+Voice Vital Signs (2 patents: AQAL-002 Voice Extraction + DRB-10 Vital Signs Monitor)
+Emergent utility: A daily 60-second voice check that yields tracked mental-health vitals with
+no wearable and no questionnaire.
+Market: Telehealth, employer wellness
+Underwriting Twin (2 patents: DRB-02 Psychiatric Digital Twin + RCS PAT-004 Wealth
+Genome)
+Emergent utility: One consented profile that lets insurance underwriting see stability and
+wealth trajectory together — faster, fairer offers.
+Market: Life carriers, underwriting bureaus
+Divorce Shield with Emotional Guardrails (2 patents: RCS PAT-006 Divorce Asset
+Protection + DRB-09 Crisis Detection)
+Emergent utility: Asset-protection planning that pauses irreversible financial steps when the
+client's crisis indicators spike mid-divorce.
+Market: Family-law fintech, advisory firms
+Honest Illustration Ledger (2 patents: AQAL-007 Transparency Layer + RCS SI-001 IUL
+Illustration Compliance)
+Emergent utility: Every insurance illustration carries a tamper-evident provenance trail a
+regulator can verify in one click.
+Market: Carriers, compliance vendors
+Impulse Circuit-Breaker (2 patents: RCS PAT-008 Behavioral Lock-In Prevention +
+AQAL-004 Weakness Identification)
+Emergent utility: The purchase-pause system keyed to the individual's OWN measured
+controlling weakness, not generic nudges.
+Market: Brokerages, 401(k) platforms
+Neuroplasticity Money Rehab (2 patents: DRB-12 Neuroplasticity Training + RCS SI-011
+Gamified Financial Literacy)
+Emergent utility: Financial-habit retraining sequenced like clinical neuroplasticity protocols —
+practice that sticks.
+Market: Banks' financial-wellness apps
+Stage-Matched Client Communication (2 patents: AQAL-003 Stage-Band Reporting +
+RCS SI-038 Communication Sentiment Analysis)
+Emergent utility: Advisor messages automatically pitched to the client's measured
+developmental band and current sentiment.
+Market: Wealth-tech CRMs
+Research-Grounded Prescriptions (2 patents: DRB-14 PubMed Integration + AQAL-005
+Coaching Synthesis)
+Emergent utility: Every growth prescription carries live literature citations refreshed from the
+source — coaching that footnotes itself.
+Market: Digital therapeutics, coaching platforms
+Life-Event Trigger Planning (2 patents: RCS SI-013 Life Event Detection + DRB-01
+Dual-Path Trajectory)
+Emergent utility: Detected life events instantly re-simulate both life paths so the family sees
+the fork in the road the week it appears.
+Market: Planning software
+Adaptive Intake Everywhere (2 patents: DRB-06 Adaptive Assessment + AQAL-001 Panel
+Consensus)
+Emergent utility: Any intake interview that shortens itself question-by-question while an AI
+panel keeps scoring honest.
+Market: HR assessment, clinical intake
+Succession Stress-Test (2 patents: RCS SI-017 Succession Valuation + DRB-01
+Dual-Path Trajectory)
+Emergent utility: Practice-sale valuations stress-tested against the owner's own two life
+trajectories, not market averages alone.
+Market: Advisor M&A brokers
+
+3-COMBOS (ten)
+The Guardian Stack (3 patents: DRB-09 Crisis + RCS PAT-008 Lock-In + AQAL-004
+Weakness)
+Emergent utility: Detects the wobble, knows the person's controlling weakness, and blocks
+the classic catastrophic move — one guardian across mind and money.
+Market: Fiduciary platforms, trust companies
+Voice-First Underwriting (3 patents: AQAL-002 Voice + DRB-03 Multi-Modal Intake + RCS
+PAT-004 Wealth Genome)
+Emergent utility: A spoken interview becomes a scored, multi-modal underwriting file —
+application-to-offer in one conversation.
+Market: Insurtech, accelerated underwriting
+Transparent Twin Planning (3 patents: DRB-02 Twin + RCS PAT-001 Cascading Engine +
+AQAL-007 Transparency)
+Emergent utility: A living financial-psychological twin whose every recalculation is
+provenance-logged — plan simulation a court could audit.
+Market: Trust & estate, litigation support
+Family Constellation Finance (3 patents: RCS SI-014 Family Tree Mapping + DRB-05 Life
+Maps + AQAL-003 Stage-Bands)
+Emergent utility: Three-generation wealth planning that sees each family member's life map
+and developmental band on one canvas.
+Market: Family offices, estate attorneys
+Calibrated Crisis Lending (3 patents: DRB-09 Crisis + RCS PAT-002 HELOC Arbitrage +
+AQAL-001 Consensus)
+Emergent utility: Home-equity strategies that an AI panel re-scores and throttles when the
+borrower's stability indicators dip.
+Market: Lenders, HELOC fintechs
+The Honest Annuity Desk (3 patents: RCS SI-025 Hidden-Fee Detection + AQAL-007
+Transparency + DRB-08 Auto Reports)
+Emergent utility: Annuity comparison that finds the buried fees, logs the proof, and writes the
+client-readable report automatically.
+Market: Broker-dealers, RIAs, regulators
+Retirement Readiness Trio (3 patents: RCS PAT-005 Tax Waterfall + DRB-10 Vital Signs +
+AQAL-004 Weakness)
+Emergent utility: Retirement income sequencing that accounts for the retiree's mental-health
+vitals and their controlling weakness — readiness measured whole.
+Market: Retirement platforms, pension consultants
+Practice Health Monitor (3 patents: RCS PAT-015 Practice Engine + DRB-10 Vital Signs +
+AQAL-011-style Advisor Scoring (RCS PAT-011))
+Emergent utility: An advisory practice scored like a patient: business vitals, owner vitals, and
+advisor skill on one dashboard.
+Market: IMOs, OSJ supervisors
+Adaptive Tax Coaching (3 patents: RCS SI-006 Tax-Change Simulator + AQAL-005
+Coaching + DRB-14 PubMed/Evidence)
+Emergent utility: When tax law changes, every affected client gets a coached, evidence-cited
+action plan within hours.
+Market: CPA networks, tax platforms
+The Trusted Referral Loop (3 patents: AQAL-001 Consensus + RCS SI-019 Peer
+Benchmarking + DRB-11 Alliance Modeling)
+Emergent utility: Advisor-client matches scored by panel consensus, peer benchmark, and
+predicted working-alliance quality.
+Market: Custodian referral programs
+
+4- TO 6-COMBOS (eight)
+The Whole-Person Underwriter (4 patents: AQAL-001+002 + DRB-02+03 (4 patents))
+Emergent utility: Voice-first, multi-modal, panel-scored digital-twin underwriting — a complete
+replacement for the 6-week application.
+Market: Tier-1 life carriers
+Guardian Wealth OS (4 patents: RCS PAT-001+008 + DRB-09 + AQAL-004 (4))
+Emergent utility: The cascading plan, the impulse brake, the crisis radar, and the weakness
+map running as one operating system for a family's money.
+Market: Private banks, trust platforms
+The Advisor Cockpit (5 patents: RCS PAT-015+011 + SI-018+019 + AQAL-005 (5))
+Emergent utility: A practice that prices itself, scores its advisors, optimizes its comp,
+benchmarks its peers, and coaches its people — autonomously.
+Market: Broker-dealer enterprise
+Longevity Household Twin (5 patents: DRB-02+05 + RCS PAT-010+005 + AQAL-003 (5))
+Emergent utility: A household twin that ages: life maps, time-machine views, tax-waterfall
+income, and developmental stages across decades.
+Market: Longevity-economy platforms, carriers
+The Compliance Fortress (6 patents: AQAL-007 + RCS SI-001+016+022 + DRB-08 + RCS
+SI-026 (6))
+Emergent utility: Illustration compliance, pre-check AI, blockchain audit trail, auto-reporting,
+and sandbox simulation — a compliance department in software.
+Market: Carriers, national broker-dealers
+Crisis-to-Recovery Pipeline (6 patents: DRB-09+10+12 + AQAL-004+005 + RCS PAT-008
+(6))
+Emergent utility: Detect the crisis, read the vitals, block the damage, find the weakness,
+coach the recovery, retrain the habit — end to end.
+Market: Health plans, EAPs, courts
+The Family Office Brain (6 patents: RCS PAT-001+005 + SI-032+042 + DRB-01 +
+AQAL-006 (6))
+Emergent utility: Multi-generational transfer sequencing with integral-framework family
+mapping and dual-path simulation — a family office's thinking, systematized.
+Market: UHNW family offices
+Physician Wealth Guardian (6 patents: RCS SI-028+036+031 + DRB-09+10 + AQAL-004
+(6))
+Emergent utility: The physician-specific stack: loan forgiveness, buy-in valuation, disability
+bridge — wrapped in burnout-aware guardrails.
+Market: Physician-focused RIAs, hospital systems
+
+7- TO 9-COMBOS (six)
+The Complete Intake-to-Plan Engine (7 patents: AQAL-001+002+003 + DRB-03+06 +
+RCS PAT-001+004 (7))
+Emergent utility: One spoken conversation becomes a scored 32-line profile, a
+psychiatric-grade intake, a wealth genome, and a full cascading plan.
+Market: Enterprise wealth platforms
+The Honesty Machine (7 patents: AQAL-007 + RCS SI-001+016+022+025 + DRB-08+14
+(7))
+Emergent utility: Every number, fee, illustration, and claim in a client's file continuously
+verified, provenance-logged, and literature-grounded.
+Market: Regulators, fiduciary certifiers
+The Self-Driving Practice (8 patents: RCS PAT-015+011+003 + SI-012+013+018 +
+AQAL-005 + DRB-11 (8))
+Emergent utility: A practice that detects client drift, prepares the conversation, scores the
+advisor, optimizes the economics, and coaches the relationship — before the human asks.
+Market: National advisory networks
+Household Resilience Grid (8 patents: DRB-01+02+09+10 + RCS PAT-005+008 +
+AQAL-004+005 (8))
+Emergent utility: The household as a monitored system: twin, trajectories, vitals, crisis radar,
+income waterfall, impulse brake, weakness map, coach.
+Market: Bancassurance, super-apps
+The Life Transitions Engine (9 patents: DRB-01+05+09 + RCS PAT-006+012 +
+SI-013+034 + AQAL-003+005 (9))
+Emergent utility: Every major life transition — divorce, sale, conversion, relocation, loss —
+detected, simulated on both paths, tax-sequenced, and coached through the person's
+developmental stage.
+Market: Life-transition platforms, family law, HR
+The Sovereign Client Record (9 patents: AQAL-001+002+007 + DRB-02+08+14 + RCS
+PAT-004 + SI-022 + SI-039 (9))
+Emergent utility: A portable, provenance-proven, literature-grounded record of a person's
+cognitive, psychological, and financial identity — owned by the person.
+Market: Digital-identity consortia, private banks
+
+Part 4 — The mechanics layer (Patent Mechanics Comprehensive
+Definitions v3.0)
+A separate RCS strategy reference defines a fourth layer of IP assets beneath the base
+patents — detection rules, conversational method claims, multi-patent synergy effects, and
+cross-pollination mechanics. Thirty-nine assets:
+ Category                             Count     What they are
+
+ Anti-Patterns (AP-001…008)           8         Computationally detectable advisor-mistake patterns with
+                                                real-time detection and intervention claims
+
+ Conversation Combos                  5         Structured advisory-conversation method sequences
+ (COMBO-001…005)                                (Mirror-Pivot-Close, Socratic Trap…)
+
+ Hidden Combos (HC-001…008)           8         Multi-patent strategy stacks (Cascade Bomb, Divorce
+                                                Shield Wall, Immortal Policy…)
+
+ Cross-Pollination Mechanics          8         Defined data-flow bridges between specific base-patent
+ (CP-001…008)                                   pairs
+
+ Compound Synergy Effects (1…10)      10        Named emergent system effects (Perpetual Capital
+                                                Recycling, Self-Optimizing Insurance Topology…)
+
+These are claim-strategy assets: several read as method claims an attorney can fold into the
+base filings rather than file separately — the cheapest way to widen the moat.
+
+Part 5 — The scoreboard after this analysis
+ Category                                                                         Count
+
+ Base patents (Dr. Buddy 14 + JoinAQAL 7 + RCS 57)                                78
+
+ Previously named combinations                                                    39
+
+ New candidates in this document (2-combo 12, 3-combo 10, 4–6 combo 8, 7–9        36
+ combo 6)
+
+ Mechanics-layer assets (Anti-Patterns 8, Conversation Combos 5, Hidden Combos    39
+ 8, Cross-Pollination 8, Synergy Effects 10)
+
+ TOTAL identified IP assets                                                       192
+
+ Raw 2–9-member combination space still unexplored                                208,732,883,999
+
+Next tranche: the same curation method can be run again against any target industry
+(banking, courts, HR, health plans) to mine the next 30–50 candidates. Attorney review
+decides which candidates become filings; this document decides which are worth the
+attorney's hour.
+
