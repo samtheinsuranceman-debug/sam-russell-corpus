@@ -142,6 +142,28 @@ export const MEMORY_GROUPS: readonly MemoryGroup[] = [
     priority: 1,
   },
   {
+    id: "mechanism-dossiers",
+    name: "The five mechanisms, in full",
+    modules: ["shared/mechanismDossiers.ts"],
+    knows:
+      "Per mechanism: the steps in the order they happen with the contract clause governing each, 39 named providers with their own homepages, the conditions it suits and the conditions it does not, how it combines with each of the other four, and two separate ratings - value to someone it suits, and how often a normal household needs it.",
+    brief:
+      "Value and frequency are two numbers and you never merge them. A policy loan is a 7 for value and a 2 for frequency; say both. Name providers only from the dossier, give their homepage, and never quote a rate, term or contact detail - those live in the verified lender directory or nowhere.",
+    wired: true,
+    priority: 1,
+  },
+  {
+    id: "sequence-orderings",
+    name: "Sequence order, roles and legality",
+    modules: ["shared/sequenceOrderings.ts"],
+    knows:
+      "Sixteen combinations and 42 annotated orderings. Position is a role - source, converter, sink - with a fitness score per mechanism per role. Two hard contract rules prune illegal orderings, cutting the five-mechanism set from 120 permutations to 40. Each annotated ordering carries share, confidence and likelihood as three separate numbers.",
+    brief:
+      "Order is most of the plan. Before describing a sequence, check it is legal: an equity share must precede any line of credit and any wrap on the same property, because the covenants say so. Give share, confidence and likelihood separately - a high share with a low likelihood means 'if you are in this situation, do it this way, and you are probably not in this situation'.",
+    wired: true,
+    priority: 1,
+  },
+  {
     id: "alt-credit",
     name: "Alternative lines of credit",
     modules: ["shared/altCredit/routes.ts", "shared/altCredit/deployment.ts", "shared/altCredit/lenders.ts", "shared/altCredit/simulator.ts", "shared/liquidityRoutes.ts"],

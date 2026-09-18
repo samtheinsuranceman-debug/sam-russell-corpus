@@ -151,6 +151,7 @@ const NAV_SECTIONS: NavSection[] = [
       { path: "/portal/real-estate-mogul", label: "Real Estate Mogul", icon: Home, color: "green" },
       { path: "/portal/alt-credit", label: "Alternative Lines of Credit", icon: Landmark, color: "green" },
       { path: "/portal/infinite-banking", label: "Infinite Banking", icon: Landmark, color: "green" },
+      { path: "/portal/mechanisms", label: "The Five Mechanisms", icon: Landmark, color: "green" },
     ],
   },
   // ── 2. CLIENTS ───────────────────────────────────────────────────
