@@ -1,0 +1,653 @@
+{
+ "DivorceCalculatorPage.tsx": [
+  "fabricated-constant:1"
+ ],
+ "VideoViewer.tsx": [
+  "ts-nocheck"
+ ],
+ "WhisperCoachPage.tsx": [
+  "fabricated-constant:1"
+ ],
+ "portal/AIPolicyReviewGap.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/AdvancedReporting.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/AdvisorChat.tsx": [
+  "ts-nocheck",
+  "literal-chart-data"
+ ],
+ "portal/AdvisorDirectory.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/AdvisorIncomeCalculator.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/AdvisorTraining.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/AdvisorySummary.tsx": [
+  "ts-nocheck",
+  "frozen-chart:categoryDistribution,averageScoresByCategory,complexityVsImportance"
+ ],
+ "portal/AffiliateLinkManager.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/AgencyTutorial.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/AiAssist.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/AiStrategyRecommender.tsx": [
+  "ts-nocheck",
+  "fabricated-constant:1"
+ ],
+ "portal/AnnuityAccumulationDB.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/AnnuityMemory.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/Arena.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/AtheneGuaranteedIncome.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/AthenePEPlus15.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/AuditTimeline.tsx": [
+  "ts-nocheck",
+  "frozen-chart:eventsByType,eventsByActor,riskScoreData"
+ ],
+ "portal/AvatarTwins.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/AxonicSP500.tsx": [
+  "ts-nocheck",
+  "literal-chart-data"
+ ],
+ "portal/BatchIllustration.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/BatchSlides.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/BeneficiaryOptimization.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/BlackMirror.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/BulkGeneration.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/BusinessOwnerPlanning.tsx": [
+  "ts-nocheck",
+  "literal-chart-data"
+ ],
+ "portal/CarrierComparison.tsx": [
+  "ts-nocheck",
+  "frozen-chart:scoreData"
+ ],
+ "portal/CarrierQuotes.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/CarrierSettings.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/CharitableGivingOptimizer.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/ClientComparison.tsx": [
+  "ts-nocheck",
+  "fabricated-constant:1"
+ ],
+ "portal/ClientDetail.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/ClientEngagementScore.tsx": [
+  "ts-nocheck",
+  "frozen-chart:radarData"
+ ],
+ "portal/ClientFiles.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/ClientHealthDashboard.tsx": [
+  "ts-nocheck",
+  "frozen-chart:historicalHealthData,revenueForecast"
+ ],
+ "portal/ClientIntakeInterview.tsx": [
+  "ts-nocheck",
+  "frozen-chart:sectionProgressData"
+ ],
+ "portal/ClientOnboardingAutomation.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/ClientOnboardingWizard.tsx": [
+  "ts-nocheck",
+  "literal-chart-data"
+ ],
+ "portal/ClientPortal.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/ClientPortfolioDashboard.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/ClientReportGenerator.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/ClientScorecard.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/ClientSelfServicePortal.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/ClientSnapshotMap.tsx": [
+  "ts-nocheck",
+  "literal-chart-data"
+ ],
+ "portal/ClientStoryGenerator.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/Clients.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/CollaborativePlanning.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/ComboDetail.tsx": [
+  "frozen-chart:projections"
+ ],
+ "portal/CommissionCalculator.tsx": [
+  "ts-nocheck",
+  "fabricated-constant:1"
+ ],
+ "portal/CommissionTracker.tsx": [
+  "ts-nocheck",
+  "frozen-chart:historicalData,categoryData"
+ ],
+ "portal/ComparisonDashboard.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/CompetitiveAnalysis.tsx": [
+  "ts-nocheck",
+  "frozen-chart:radarData,pieData,lineData"
+ ],
+ "portal/ComplianceAlerts.tsx": [
+  "ts-nocheck",
+  "frozen-chart:resolutionTimeData,radarData"
+ ],
+ "portal/ComplianceAuditCenter.tsx": [
+  "ts-nocheck",
+  "frozen-chart:chartData,radarData,userActivityData"
+ ],
+ "portal/ComplianceAuditTrail.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/ComplianceExport.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/ComplianceMonitoringDashboard.tsx": [
+  "ts-nocheck",
+  "frozen-chart:trendData,radarData,composedData"
+ ],
+ "portal/ComplianceReportGenerator.tsx": [
+  "ts-nocheck",
+  "literal-chart-data"
+ ],
+ "portal/CouplesMode.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/CryptoCurrencyCorner.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/DailyBriefing.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/DailyDiscovery.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/Dashboard.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/DivorceCalculator.tsx": [
+  "literal-chart-data"
+ ],
+ "portal/DocumentTemplates.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/DocumentVault.tsx": [
+  "ts-nocheck",
+  "frozen-chart:activityChartData"
+ ],
+ "portal/EcologicalDrivers.tsx": [
+  "ts-nocheck",
+  "literal-chart-data"
+ ],
+ "portal/EducationHub.tsx": [
+  "ts-nocheck",
+  "frozen-chart:difficultyStats"
+ ],
+ "portal/EmailCampaignManager.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/Endgame.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/EnterpriseAdmin.tsx": [
+  "ts-nocheck",
+  "frozen-chart:userGrowthData,systemPerformanceData,featureUsageData"
+ ],
+ "portal/EstateDocumentGenerator.tsx": [
+  "ts-nocheck",
+  "frozen-chart:categoryChartData,complexityChartData,generatedStatsData"
+ ],
+ "portal/EstateFlowChart.tsx": [
+  "ts-nocheck",
+  "literal-chart-data"
+ ],
+ "portal/EstateTax.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/ExistingAnnuities.tsx": [
+  "ts-nocheck",
+  "literal-chart-data"
+ ],
+ "portal/FIACollateralStrategy.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/FIATop10.tsx": [
+  "ts-nocheck",
+  "literal-chart-data"
+ ],
+ "portal/FeeTransparencyDashboard.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/FinancialVitalsScorecard.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/GoalsBasedPlanning.tsx": [
+  "ts-nocheck",
+  "literal-chart-data"
+ ],
+ "portal/GrowthAnnuities.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/HiddenMaterial.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/HotIncome.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/HouseRecyclingStrategy.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/HouseholdWealth.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/HubSpotSync.tsx": [
+  "ts-nocheck",
+  "frozen-chart:mockDailyStats,mockPerformanceData"
+ ],
+ "portal/IULHistoricalPerformance.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/IULvsRoth.tsx": [
+  "ts-nocheck",
+  "literal-chart-data"
+ ],
+ "portal/IbbotsonCharts.tsx": [
+  "ts-nocheck",
+  "literal-chart-data"
+ ],
+ "portal/IllustrationCompare.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/IncomeAnnuityTop10.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/IncomeGapAnalyzer.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/IncomeTimeline.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/IndexBacktester.tsx": [
+  "ts-nocheck",
+  "frozen-chart:chartData",
+  "literal-chart-data"
+ ],
+ "portal/IndexStrategyComparison.tsx": [
+  "ts-nocheck",
+  "literal-chart-data"
+ ],
+ "portal/IndividualAgentTutorial.tsx": [
+  "ts-nocheck",
+  "literal-chart-data"
+ ],
+ "portal/InfiniteScroll.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/InflationAnalysis.tsx": [
+  "ts-nocheck",
+  "frozen-chart:chartData"
+ ],
+ "portal/Integrations.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/Knowledge.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/LeadGenerator.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/Leaderboard.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/LifetimeGuaranteedIncome.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/LiveCoPilot.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/MYGAFixedRate.tsx": [
+  "ts-nocheck",
+  "literal-chart-data"
+ ],
+ "portal/MarketDataDashboard.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/MarketScenarioStressTest.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/MedicareIRMAA.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/MeetingAgenda.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/Meetings.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/MorningRitual.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/MortgageKiller.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/MultiGenWealthTransfer.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/MultiScenarioPlayZone.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/MySlides.tsx": [
+  "ts-nocheck",
+  "frozen-chart:audienceData"
+ ],
+ "portal/MyWorld.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/NaturalLanguageQuery.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/NerveCenter.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/Onboarding.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/OnboardingWizard.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/OnboardingWizardV2.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/OwnerOversight.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/OwnerWarRoom.tsx": [
+  "ts-nocheck",
+  "frozen-chart:userDistributionData"
+ ],
+ "portal/PetSystem.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/Pipeline.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/PolicyLoans.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/PolicyReview.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/PolicyReviewChecklist.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/PortfolioDriftMonitor.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/PredictiveAnalytics.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/PremiumFinancing.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/PresentationBuilder.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/QuickQuote.tsx": [
+  "ts-nocheck",
+  "frozen-chart:chartData,feeBreakdownData"
+ ],
+ "portal/RealEstateMogul.tsx": [
+  "ts-nocheck",
+  "fabricated-constant:1",
+  "literal-chart-data"
+ ],
+ "portal/RebalanceAlerts.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/Recommendations.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/ReferralTracker.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/ReferralTracking.tsx": [
+  "ts-nocheck",
+  "frozen-chart:partnerTierData"
+ ],
+ "portal/RetirementGuardrails.tsx": [
+  "ts-nocheck",
+  "literal-chart-data"
+ ],
+ "portal/RetirementIncomeProjection.tsx": [
+  "ts-nocheck",
+  "fabricated-constant:1"
+ ],
+ "portal/RevenueGuarantee.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/ReverseHeloc.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/RewardsVault.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/RiskToleranceScoring.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/RothConversionSTR.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/RussellNumber.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/RussellWrapped.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/SalesStoryBuilder.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/SavedScenariosHub.tsx": [
+  "ts-nocheck",
+  "literal-chart-data"
+ ],
+ "portal/ScenarioAdjustments.tsx": [
+  "ts-nocheck",
+  "fabricated-constant:1"
+ ],
+ "portal/ScenarioSideBySide.tsx": [
+  "ts-nocheck",
+  "frozen-chart:projections",
+  "literal-chart-data"
+ ],
+ "portal/SecretDetail.tsx": [
+  "frozen-chart:projections"
+ ],
+ "portal/SeminarGenerator.tsx": [
+  "ts-nocheck",
+  "literal-chart-data"
+ ],
+ "portal/SlackIntegration.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/SmartRebalancingAlerts.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/SocialNarcotic.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/SocialSecurityOptimizer.tsx": [
+  "ts-nocheck",
+  "fabricated-constant:1"
+ ],
+ "portal/StaleDigest.tsx": [
+  "ts-nocheck",
+  "frozen-chart:riskAumData,contactMethodData"
+ ],
+ "portal/StrategyCompare.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/StrategyLab.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/SuccessionPlanningWizard.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/SupervisorMonitoringAgreement.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/TaxAdvantagedGrowth.tsx": [
+  "ts-nocheck",
+  "literal-chart-data"
+ ],
+ "portal/TaxBracketVisualizer.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/TaxLossHarvestingScanner.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/TaxOpportunityDetector.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/TaxReturnUpload.tsx": [
+  "ts-nocheck",
+  "literal-chart-data"
+ ],
+ "portal/TaxWaterfall.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/Team.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/TeamManagement.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/TheArrival.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/TheBrotherhood.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/TheField.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/TheLegacy.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/TheMap.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/TheMirror.tsx": [
+  "ts-nocheck",
+  "literal-chart-data"
+ ],
+ "portal/TheStrategyTable.tsx": [
+  "ts-nocheck",
+  "fabricated-constant:1"
+ ],
+ "portal/TimeLapse.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/TimeMachine.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/TimeMachineAG49.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/TimeMachineCalculator.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/TimeMachineMethod.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/ToiletDashboard.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/VideoProposalGenerator.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/VoicePlanBuilder.tsx": [
+  "ts-nocheck",
+  "literal-chart-data"
+ ],
+ "portal/WarRoom.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/WarStoryGenerator.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/Webhooks.tsx": [
+  "ts-nocheck",
+  "frozen-chart:endpointPerformanceData",
+  "literal-chart-data"
+ ],
+ "portal/WebsiteUsage.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/WillWriter.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/WithdrawalSequencing.tsx": [
+  "ts-nocheck",
+  "frozen-chart:results",
+  "fabricated-constant:1"
+ ],
+ "portal/WorkflowAutomations.tsx": [
+  "ts-nocheck",
+  "frozen-chart:radarData"
+ ],
+ "portal/WorkspaceBranding.tsx": [
+  "ts-nocheck"
+ ],
+ "portal/_genome/GenomeKit.tsx": [
+  "ts-nocheck"
+ ]
+}
