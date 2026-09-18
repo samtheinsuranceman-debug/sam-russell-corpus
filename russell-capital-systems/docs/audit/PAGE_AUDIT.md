@@ -1,7 +1,7 @@
-# Russell Capital Systems — 688-Page Audit
+# Russell Capital Systems — 316-Page Audit
 
-Generated from static analysis of every page in `client/src/pages`, cross-checked
-against the deployed build. Every number below is measured, not estimated.
+Generated from static analysis of every page in `client/src/pages`.
+Every number below is measured, not estimated.
 
 ## Scoreboard
 
@@ -19,7 +19,6 @@ against the deployed build. Every number below is measured, not estimated.
 - **Mean effectiveness (value × discoverability): 2.47 / 10**
 - Pages with a URL: 309 — of which **231 are linked from nowhere**
 - Pages with no route at all (dead files): 7
-- Pages already present in the deployed build: 316
 
 ## Integrity findings
 
