@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { analyzeCapitalStack, STANDARD_WATERFALL } from "../shared/realEstateCapitalStackEngine";
+import { analyzeCapitalStack, STANDARD_WATERFALL } from "../shared/realEstateDealModel";
 import {
   applyScenario,
   DEFAULT_STRESS_SCENARIOS,

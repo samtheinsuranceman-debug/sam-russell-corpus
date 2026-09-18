@@ -1,0 +1,1043 @@
+{
+  "generated": "2026-09-18",
+  "note": "Every value here is read from the modules in code/ at generation time; nothing is typed by hand. Change the module, regenerate, and this file follows.",
+  "cycleEngine": {
+    "defaultCycle": {
+      "sequence": [
+        "brrrr-dscr"
+      ],
+      "startingAsset": 400000,
+      "years": 20,
+      "appreciation": 0.035,
+      "annualSurplus": 36000,
+      "reserve": 50000,
+      "pace": "typical",
+      "renovationUplift": 1.18,
+      "redeployRate": 0.85,
+      "reserveFloorMonths": 6
+    },
+    "mechanisms": [
+      {
+        "id": "policy-loan",
+        "releaseRate": 0.9,
+        "turnMonths": {
+          "fast": 6,
+          "typical": 12,
+          "slow": 24
+        },
+        "amortises": false,
+        "repeatableOnSameAsset": true,
+        "settlementYears": null,
+        "costOfCapital": {
+          "low": 0.04,
+          "high": 0.08
+        },
+        "rampYears": 10
+      },
+      {
+        "id": "velocity-heloc",
+        "releaseRate": 0.12,
+        "turnMonths": {
+          "fast": 1,
+          "typical": 1,
+          "slow": 3
+        },
+        "amortises": true,
+        "repeatableOnSameAsset": true,
+        "settlementYears": null,
+        "costOfCapital": {
+          "low": 0.07,
+          "high": 0.11
+        },
+        "rampYears": 0
+      },
+      {
+        "id": "brrrr-dscr",
+        "releaseRate": 0.72,
+        "turnMonths": {
+          "fast": 9,
+          "typical": 14,
+          "slow": 24
+        },
+        "amortises": true,
+        "repeatableOnSameAsset": false,
+        "settlementYears": null,
+        "costOfCapital": {
+          "low": 0.065,
+          "high": 0.095
+        },
+        "rampYears": 1
+      },
+      {
+        "id": "equity-share",
+        "releaseRate": 0.2,
+        "turnMonths": {
+          "fast": 12,
+          "typical": 24,
+          "slow": 36
+        },
+        "amortises": false,
+        "repeatableOnSameAsset": false,
+        "settlementYears": 10,
+        "costOfCapital": {
+          "low": 0.09,
+          "high": 0.16
+        },
+        "rampYears": 0
+      },
+      {
+        "id": "seller-wrap",
+        "releaseRate": 0.55,
+        "turnMonths": {
+          "fast": 3,
+          "typical": 8,
+          "slow": 18
+        },
+        "amortises": true,
+        "repeatableOnSameAsset": false,
+        "settlementYears": 5,
+        "costOfCapital": {
+          "low": 0.05,
+          "high": 0.12
+        },
+        "rampYears": 0
+      }
+    ],
+    "brrrrArithmetic": {
+      "cashBackPerTurn": "0.75 × renovationUplift × allIn",
+      "breakEvenUplift": 1.3333333333333333,
+      "note": "Below break-even the cycle shrinks every turn; at 1.18 it shrinks 11.5% per turn."
+    }
+  },
+  "planner": {
+    "constants": {
+      "dscrCashOutLtv": 0.75,
+      "dscrSeasoningMonths": 6,
+      "delayedFinancingMonths": 4,
+      "blanketLtv": 0.7,
+      "blanketCoverageOver10Properties": 1.2,
+      "rentalOperatingHaircut": 0.45,
+      "saleCostPct": 0.06,
+      "sellerCarryDownPct": 0.1,
+      "sellerNoteRate": 0.085,
+      "equityShareAdvancePct": 0.2,
+      "equityShareSettlementMultiplier": 1.8,
+      "policyPremiumShareOfSurplus": 0.3,
+      "policyPremiumCapMonthly": 4000,
+      "policyEarlyCashValueEfficiency": 0.65,
+      "policyLateCashValueEfficiency": 0.97,
+      "policyCreditedRate": 0.045,
+      "policyLoanRate": 0.055,
+      "policyBorrowMinMonths": 60,
+      "policyBorrowMinCashValue": 100000,
+      "refiSingleMaxLtvForCashOut": 0.72,
+      "velocityIdleCashShare": 0.5
+    },
+    "moves": [
+      {
+        "id": "velocity:standard",
+        "mechanism": "velocity-heloc",
+        "target": "primary",
+        "label": "Velocity on the primary residence"
+      },
+      {
+        "id": "velocity:first-lien",
+        "mechanism": "velocity-heloc",
+        "target": "primary",
+        "label": "First-lien line replacing the mortgage"
+      },
+      {
+        "id": "brrrr:standard",
+        "mechanism": "brrrr-dscr",
+        "target": "new",
+        "label": "BRRRR, six-month seasoning"
+      },
+      {
+        "id": "brrrr:delayed-financing",
+        "mechanism": "brrrr-dscr",
+        "target": "new",
+        "label": "BRRRR via delayed financing"
+      },
+      {
+        "id": "brrrr:portfolio-blanket",
+        "mechanism": "brrrr-dscr",
+        "target": "portfolio",
+        "label": "Portfolio refinance on a blanket loan"
+      },
+      {
+        "id": "policy:fund",
+        "mechanism": "policy-loan",
+        "target": "policy",
+        "label": "Begin funding a policy"
+      },
+      {
+        "id": "policy:borrow",
+        "mechanism": "policy-loan",
+        "target": "policy",
+        "label": "Borrow against cash value"
+      },
+      {
+        "id": "equity:10y",
+        "mechanism": "equity-share",
+        "target": "primary",
+        "label": "Equity share, ten-year term"
+      },
+      {
+        "id": "equity:30y",
+        "mechanism": "equity-share",
+        "target": "primary",
+        "label": "Equity share, thirty-year term"
+      },
+      {
+        "id": "wrap:carry",
+        "mechanism": "seller-wrap",
+        "target": "rental",
+        "label": "Sell a rental on terms"
+      },
+      {
+        "id": "wrap:buy-on-terms",
+        "mechanism": "seller-wrap",
+        "target": "new",
+        "label": "Buy a property on seller terms"
+      },
+      {
+        "id": "refi:single",
+        "mechanism": "refinance",
+        "target": "rental",
+        "label": "Refinance one rental"
+      },
+      {
+        "id": "sale:outright",
+        "mechanism": "sale",
+        "target": "rental",
+        "label": "Sell one rental outright"
+      }
+    ],
+    "presets": {
+      "THIRTY_HOUSE_OPERATOR": {
+        "rentals": 30,
+        "avgRentalValue": 250000,
+        "avgRentalLtv": 0.6,
+        "avgRent": 2100,
+        "hasPrimary": true,
+        "primaryValue": 650000,
+        "primaryLtv": 0.4,
+        "monthlySurplus": 14000,
+        "reserve": 180000,
+        "documentation": "full",
+        "goal": "payoff-then-expand",
+        "horizonYears": 10,
+        "insurable": true,
+        "offMarketAccess": true,
+        "renovationUplift": 1.3,
+        "appreciation": 0.035,
+        "existingRate": 0.065
+      },
+      "FIRST_TIME_HOUSEHOLD": {
+        "rentals": 0,
+        "avgRentalValue": 0,
+        "avgRentalLtv": 0,
+        "avgRent": 0,
+        "hasPrimary": true,
+        "primaryValue": 450000,
+        "primaryLtv": 0.55,
+        "monthlySurplus": 2200,
+        "reserve": 40000,
+        "documentation": "full",
+        "goal": "expand",
+        "horizonYears": 10,
+        "insurable": true,
+        "offMarketAccess": false,
+        "renovationUplift": 1.18,
+        "appreciation": 0.035,
+        "existingRate": 0.065
+      }
+    },
+    "archetypes": [
+      {
+        "id": "thirty-house-clear-and-grow",
+        "name": "Sell Eight, Clear a Third, Then Grow",
+        "stages": 22,
+        "confidence": 7,
+        "likelihood": 2,
+        "situation": {
+          "rentals": 30,
+          "avgRentalValue": 250000,
+          "avgRentalLtv": 0.6,
+          "avgRent": 2100,
+          "hasPrimary": true,
+          "primaryValue": 650000,
+          "primaryLtv": 0.4,
+          "monthlySurplus": 14000,
+          "reserve": 180000,
+          "documentation": "full",
+          "goal": "payoff-then-expand",
+          "horizonYears": 10,
+          "insurable": true,
+          "offMarketAccess": true,
+          "renovationUplift": 1.3,
+          "appreciation": 0.035,
+          "existingRate": 0.065
+        }
+      },
+      {
+        "id": "ten-house-doubler",
+        "name": "The Doubler",
+        "stages": 13,
+        "confidence": 7,
+        "likelihood": 3,
+        "situation": {
+          "rentals": 10,
+          "avgRentalValue": 250000,
+          "avgRentalLtv": 0.55,
+          "avgRent": 2100,
+          "hasPrimary": true,
+          "primaryValue": 650000,
+          "primaryLtv": 0.4,
+          "monthlySurplus": 8000,
+          "reserve": 120000,
+          "documentation": "full",
+          "goal": "expand",
+          "horizonYears": 6,
+          "insurable": true,
+          "offMarketAccess": true,
+          "renovationUplift": 1.3,
+          "appreciation": 0.035,
+          "existingRate": 0.065
+        }
+      },
+      {
+        "id": "mortgage-destroyer",
+        "name": "The Mortgage Destroyer",
+        "stages": 4,
+        "confidence": 8,
+        "likelihood": 5,
+        "situation": {
+          "rentals": 5,
+          "avgRentalValue": 250000,
+          "avgRentalLtv": 0.5,
+          "avgRent": 2100,
+          "hasPrimary": true,
+          "primaryValue": 650000,
+          "primaryLtv": 0.4,
+          "monthlySurplus": 6000,
+          "reserve": 60000,
+          "documentation": "full",
+          "goal": "payoff",
+          "horizonYears": 5,
+          "insurable": true,
+          "offMarketAccess": false,
+          "renovationUplift": 1.3,
+          "appreciation": 0.035,
+          "existingRate": 0.065
+        }
+      },
+      {
+        "id": "landlord-exit",
+        "name": "The Landlord Exit",
+        "stages": 12,
+        "confidence": 6,
+        "likelihood": 3,
+        "situation": {
+          "rentals": 15,
+          "avgRentalValue": 250000,
+          "avgRentalLtv": 0.35,
+          "avgRent": 2100,
+          "hasPrimary": true,
+          "primaryValue": 650000,
+          "primaryLtv": 0.4,
+          "monthlySurplus": 9000,
+          "reserve": 100000,
+          "documentation": "full",
+          "goal": "income",
+          "horizonYears": 8,
+          "insurable": true,
+          "offMarketAccess": true,
+          "renovationUplift": 1.3,
+          "appreciation": 0.035,
+          "existingRate": 0.065
+        }
+      },
+      {
+        "id": "thin-file-bootstrap",
+        "name": "The Thin-File Bootstrap",
+        "stages": 5,
+        "confidence": 8,
+        "likelihood": 3,
+        "situation": {
+          "rentals": 0,
+          "avgRentalValue": 180000,
+          "avgRentalLtv": 0,
+          "avgRent": 1600,
+          "hasPrimary": true,
+          "primaryValue": 600000,
+          "primaryLtv": 0.35,
+          "monthlySurplus": 3000,
+          "reserve": 25000,
+          "documentation": "thin",
+          "goal": "expand",
+          "horizonYears": 10,
+          "insurable": true,
+          "offMarketAccess": true,
+          "renovationUplift": 1.3,
+          "appreciation": 0.035,
+          "existingRate": 0.065
+        }
+      },
+      {
+        "id": "household-bank",
+        "name": "The Household Bank",
+        "stages": 10,
+        "confidence": 8,
+        "likelihood": 6,
+        "situation": {
+          "rentals": 0,
+          "avgRentalValue": 190000,
+          "avgRentalLtv": 0,
+          "avgRent": 1700,
+          "hasPrimary": true,
+          "primaryValue": 450000,
+          "primaryLtv": 0.55,
+          "monthlySurplus": 3500,
+          "reserve": 90000,
+          "documentation": "full",
+          "goal": "expand",
+          "horizonYears": 10,
+          "insurable": true,
+          "offMarketAccess": false,
+          "renovationUplift": 1.18,
+          "appreciation": 0.035,
+          "existingRate": 0.065
+        }
+      },
+      {
+        "id": "off-market-operator",
+        "name": "The Off-Market Operator",
+        "stages": 11,
+        "confidence": 6,
+        "likelihood": 2,
+        "situation": {
+          "rentals": 5,
+          "avgRentalValue": 250000,
+          "avgRentalLtv": 0.5,
+          "avgRent": 2100,
+          "hasPrimary": true,
+          "primaryValue": 650000,
+          "primaryLtv": 0.4,
+          "monthlySurplus": 7000,
+          "reserve": 90000,
+          "documentation": "full",
+          "goal": "expand",
+          "horizonYears": 5,
+          "insurable": true,
+          "offMarketAccess": true,
+          "renovationUplift": 1.3,
+          "appreciation": 0.035,
+          "existingRate": 0.065
+        }
+      },
+      {
+        "id": "delayed-financing-sprinter",
+        "name": "The Delayed-Financing Sprinter",
+        "stages": 8,
+        "confidence": 8,
+        "likelihood": 2,
+        "situation": {
+          "rentals": 0,
+          "avgRentalValue": 250000,
+          "avgRentalLtv": 0,
+          "avgRent": 2100,
+          "hasPrimary": true,
+          "primaryValue": 450000,
+          "primaryLtv": 0.55,
+          "monthlySurplus": 5000,
+          "reserve": 650000,
+          "documentation": "full",
+          "goal": "expand",
+          "horizonYears": 3,
+          "insurable": true,
+          "offMarketAccess": false,
+          "renovationUplift": 1.42,
+          "appreciation": 0.035,
+          "existingRate": 0.065
+        }
+      },
+      {
+        "id": "cap-escape",
+        "name": "The Cap Escape",
+        "stages": 6,
+        "confidence": 8,
+        "likelihood": 3,
+        "situation": {
+          "rentals": 10,
+          "avgRentalValue": 250000,
+          "avgRentalLtv": 0.6,
+          "avgRent": 2100,
+          "hasPrimary": true,
+          "primaryValue": 650000,
+          "primaryLtv": 0.4,
+          "monthlySurplus": 7000,
+          "reserve": 80000,
+          "documentation": "full",
+          "goal": "expand",
+          "horizonYears": 4,
+          "insurable": true,
+          "offMarketAccess": false,
+          "renovationUplift": 1.3,
+          "appreciation": 0.035,
+          "existingRate": 0.065
+        }
+      },
+      {
+        "id": "income-converter",
+        "name": "The Income Converter",
+        "stages": 10,
+        "confidence": 6,
+        "likelihood": 2,
+        "situation": {
+          "rentals": 20,
+          "avgRentalValue": 250000,
+          "avgRentalLtv": 0.3,
+          "avgRent": 2100,
+          "hasPrimary": true,
+          "primaryValue": 650000,
+          "primaryLtv": 0.4,
+          "monthlySurplus": 10000,
+          "reserve": 120000,
+          "documentation": "full",
+          "goal": "income",
+          "horizonYears": 3,
+          "insurable": true,
+          "offMarketAccess": true,
+          "renovationUplift": 1.3,
+          "appreciation": 0.035,
+          "existingRate": 0.065
+        }
+      },
+      {
+        "id": "rescue",
+        "name": "The Rescue",
+        "stages": 6,
+        "confidence": 7,
+        "likelihood": 2,
+        "situation": {
+          "rentals": 8,
+          "avgRentalValue": 250000,
+          "avgRentalLtv": 0.65,
+          "avgRent": 2100,
+          "hasPrimary": true,
+          "primaryValue": 650000,
+          "primaryLtv": 0.4,
+          "monthlySurplus": 500,
+          "reserve": 15000,
+          "documentation": "thin",
+          "goal": "payoff",
+          "horizonYears": 2,
+          "insurable": false,
+          "offMarketAccess": false,
+          "renovationUplift": 1.3,
+          "appreciation": 0.035,
+          "existingRate": 0.065
+        }
+      },
+      {
+        "id": "unlocked-household",
+        "name": "The Unlocked Household",
+        "stages": 6,
+        "confidence": 9,
+        "likelihood": 3,
+        "situation": {
+          "rentals": 1,
+          "avgRentalValue": 200000,
+          "avgRentalLtv": 0.6,
+          "avgRent": 1800,
+          "hasPrimary": true,
+          "primaryValue": 450000,
+          "primaryLtv": 0.4,
+          "monthlySurplus": 2800,
+          "reserve": 40000,
+          "documentation": "thin",
+          "goal": "expand",
+          "horizonYears": 10,
+          "insurable": true,
+          "offMarketAccess": false,
+          "renovationUplift": 1.28,
+          "appreciation": 0.035,
+          "existingRate": 0.065
+        }
+      }
+    ]
+  },
+  "orderings": {
+    "roleFitness": {
+      "policy-loan": {
+        "source": {
+          "fit": 5,
+          "meaning": "Starting the funding period. Produces nothing usable for ten to fifteen years, so as a source it only works when the sequence is explicitly a long one and the next step is not waiting on it."
+        },
+        "converter": {
+          "fit": 6,
+          "meaning": "Borrowing against accumulated cash value to fund the next step while the full balance keeps being credited. The only converter on the list that does not remove capital from the thing that was producing."
+        },
+        "sink": {
+          "fit": 9,
+          "meaning": "Where proceeds come to rest. Liquid, not correlated to the property market, and the death benefit reprices the whole plan as an estate rather than a portfolio. The best terminal state here."
+        }
+      },
+      "velocity-heloc": {
+        "source": {
+          "fit": 9,
+          "meaning": "The cheapest possible start: no new asset, no ramp, no underwriting beyond the line itself, and the effect is computable from a bank statement before anything is signed."
+        },
+        "converter": {
+          "fit": 7,
+          "meaning": "Compressing the gap between turns. Holds acquisition capital at a falling balance instead of a static one, which is worth roughly the line rate on the average daily balance."
+        },
+        "sink": {
+          "fit": 3,
+          "meaning": "Nearly pointless. Velocity compresses an income stream against a balance; at the end of a sequence the balance is what you were trying to eliminate. Ending here means the plan never arrived anywhere."
+        }
+      },
+      "brrrr-dscr": {
+        "source": {
+          "fit": 4,
+          "meaning": "Self-funded acquisition. Possible only with reserve already in hand, which is exactly the constraint the rest of the list exists to relieve — so as a source it usually means the sequence did not need a sequence."
+        },
+        "converter": {
+          "fit": 9,
+          "meaning": "The engine of the middle. Takes capital in, returns roughly 75% of the after-repair value out, and leaves behind an obligation a tenant retires. The only converter that amortises."
+        },
+        "sink": {
+          "fit": 7,
+          "meaning": "Ending on held property. Solid, but illiquid and rate-exposed at every future refinance, so it is a good ending rather than the best one."
+        }
+      },
+      "equity-share": {
+        "source": {
+          "fit": 9,
+          "meaning": "The unlock. No payment means no debt-service test, which reaches a household no lender will underwrite. As a first move for the documentation-poor it is often the only move."
+        },
+        "converter": {
+          "fit": 3,
+          "meaning": "Poor. The no-further-encumbrance covenant closes off the tools that would normally come next, so it narrows the sequence at the exact point a converter is supposed to widen it."
+        },
+        "sink": {
+          "fit": 2,
+          "meaning": "The worst ending available. A ten-year settlement on a date you do not choose, sized to a share of a value you do not control, with nothing amortising in the meantime."
+        }
+      },
+      "seller-wrap": {
+        "source": {
+          "fit": 6,
+          "meaning": "Acquiring on paper with no institution involved — fast, and available when nothing else is. Carries due-on-sale exposure from day one of the sequence rather than late in it."
+        },
+        "converter": {
+          "fit": 7,
+          "meaning": "Turning a carried note back into capital by hypothecating or partially selling it, without ending the instrument. Genuinely useful throughput with a counterparty attached."
+        },
+        "sink": {
+          "fit": 6,
+          "meaning": "Ending as the note holder. Income without management, which is a real outcome — undercut by the balloon most seller notes carry and by a payer who has to keep paying."
+        }
+      }
+    },
+    "rules": [
+      {
+        "id": "hei-before-line",
+        "before": "equity-share",
+        "after": "velocity-heloc",
+        "strength": "hard",
+        "penalty": 0
+      },
+      {
+        "id": "hei-before-wrap",
+        "before": "equity-share",
+        "after": "seller-wrap",
+        "strength": "hard",
+        "penalty": 0
+      },
+      {
+        "id": "hei-funds-acquisition",
+        "before": "equity-share",
+        "after": "brrrr-dscr",
+        "strength": "soft",
+        "penalty": 9
+      },
+      {
+        "id": "surplus-before-paper",
+        "before": "velocity-heloc",
+        "after": "seller-wrap",
+        "strength": "soft",
+        "penalty": 5
+      },
+      {
+        "id": "note-income-funds-premium",
+        "before": "seller-wrap",
+        "after": "policy-loan",
+        "strength": "soft",
+        "penalty": 4
+      }
+    ]
+  },
+  "thresholds": [
+    {
+      "id": "dscr-seasoning",
+      "mechanism": "brrrr-dscr",
+      "unit": "months",
+      "standard": 6,
+      "fixed": false,
+      "variants": [
+        {
+          "name": "Delayed financing exception",
+          "value": 0,
+          "evidence": 10
+        },
+        {
+          "name": "90-day seasoning program",
+          "value": 3,
+          "evidence": 5
+        }
+      ]
+    },
+    {
+      "id": "dscr-cashout-ltv",
+      "mechanism": "brrrr-dscr",
+      "unit": "percent",
+      "standard": 75,
+      "fixed": false,
+      "variants": [
+        {
+          "name": "80% cash-out on strong files",
+          "value": 80,
+          "evidence": 5
+        },
+        {
+          "name": "70% on higher-risk files",
+          "value": 70,
+          "evidence": 6
+        }
+      ]
+    },
+    {
+      "id": "dscr-coverage",
+      "mechanism": "brrrr-dscr",
+      "unit": "ratio",
+      "standard": 1,
+      "fixed": false,
+      "variants": [
+        {
+          "name": "Sub-1.0 and no-ratio programs",
+          "value": 0.75,
+          "evidence": 5
+        },
+        {
+          "name": "Portfolio in-place DSCR at 1.00",
+          "value": 1,
+          "evidence": 8
+        }
+      ]
+    },
+    {
+      "id": "financed-property-cap",
+      "mechanism": "brrrr-dscr",
+      "unit": "count",
+      "standard": 10,
+      "fixed": false,
+      "variants": [
+        {
+          "name": "Portfolio / blanket DSCR loan",
+          "value": 999,
+          "evidence": 7
+        },
+        {
+          "name": "Entity borrower",
+          "value": 999,
+          "evidence": 6
+        }
+      ]
+    },
+    {
+      "id": "portfolio-partial-release",
+      "mechanism": "brrrr-dscr",
+      "unit": "percent",
+      "standard": 0,
+      "fixed": false,
+      "variants": [
+        {
+          "name": "Negotiated release schedule",
+          "value": 100,
+          "evidence": 7
+        }
+      ]
+    },
+    {
+      "id": "due-on-sale-exposure",
+      "mechanism": "seller-wrap",
+      "unit": "years",
+      "standard": 5,
+      "fixed": true,
+      "variants": [
+        {
+          "name": "Refinance out within the seasoning window",
+          "value": 1,
+          "evidence": 9
+        },
+        {
+          "name": "Formal assumption with lender consent",
+          "value": 0,
+          "evidence": 8
+        },
+        {
+          "name": "Lease of three years or less with no option",
+          "value": 0,
+          "evidence": 10
+        }
+      ]
+    },
+    {
+      "id": "note-seasoning-for-sale",
+      "mechanism": "seller-wrap",
+      "unit": "months",
+      "standard": 12,
+      "fixed": false,
+      "variants": [
+        {
+          "name": "Partial sale of the payment stream",
+          "value": 6,
+          "evidence": 6
+        }
+      ]
+    },
+    {
+      "id": "hei-no-further-encumbrance",
+      "mechanism": "equity-share",
+      "unit": "count",
+      "standard": 0,
+      "fixed": true,
+      "variants": [
+        {
+          "name": "Open the line FIRST, then take the agreement behind it",
+          "value": 1,
+          "evidence": 6
+        },
+        {
+          "name": "A different property",
+          "value": 999,
+          "evidence": 10
+        }
+      ]
+    },
+    {
+      "id": "hei-term",
+      "mechanism": "equity-share",
+      "unit": "years",
+      "standard": 10,
+      "fixed": false,
+      "variants": [
+        {
+          "name": "30-year term",
+          "value": 30,
+          "evidence": 8
+        },
+        {
+          "name": "Early buy-back",
+          "value": 0,
+          "evidence": 8
+        }
+      ]
+    },
+    {
+      "id": "hei-investment-property",
+      "mechanism": "equity-share",
+      "unit": "count",
+      "standard": 0,
+      "fixed": true,
+      "variants": []
+    },
+    {
+      "id": "policy-loan-value",
+      "mechanism": "policy-loan",
+      "unit": "percent",
+      "standard": 90,
+      "fixed": false,
+      "variants": [
+        {
+          "name": "Non-direct recognition contract",
+          "value": 95,
+          "evidence": 6
+        },
+        {
+          "name": "Preferred / wash loan after year 10",
+          "value": 95,
+          "evidence": 8
+        }
+      ]
+    },
+    {
+      "id": "seven-pay",
+      "mechanism": "policy-loan",
+      "unit": "years",
+      "standard": 7,
+      "fixed": true,
+      "variants": []
+    },
+    {
+      "id": "policy-ramp",
+      "mechanism": "policy-loan",
+      "unit": "years",
+      "standard": 10,
+      "fixed": false,
+      "variants": [
+        {
+          "name": "Maximum-funded with paid-up additions",
+          "value": 5,
+          "evidence": 6
+        }
+      ]
+    },
+    {
+      "id": "heloc-cltv",
+      "mechanism": "velocity-heloc",
+      "unit": "percent",
+      "standard": 80,
+      "fixed": false,
+      "variants": [
+        {
+          "name": "First-lien HELOC replacing the mortgage",
+          "value": 90,
+          "evidence": 7
+        }
+      ]
+    }
+  ],
+  "dossierRatings": [
+    {
+      "id": "policy-loan",
+      "value": 7,
+      "frequency": 2,
+      "providers": 8
+    },
+    {
+      "id": "velocity-heloc",
+      "value": 5,
+      "frequency": 6,
+      "providers": 8
+    },
+    {
+      "id": "brrrr-dscr",
+      "value": 8,
+      "frequency": 3,
+      "providers": 10
+    },
+    {
+      "id": "equity-share",
+      "value": 4,
+      "frequency": 2,
+      "providers": 6
+    },
+    {
+      "id": "seller-wrap",
+      "value": 6,
+      "frequency": 2,
+      "providers": 7
+    }
+  ],
+  "integrationScorecard": {
+    "pages": 115,
+    "mean": 3.3,
+    "perfect": 0,
+    "below5": 76,
+    "gaps": {
+      "routed": 0,
+      "engine": 71,
+      "pageImports": 77,
+      "brain": 66,
+      "tested": 67,
+      "genome": 101,
+      "crossLinked": 104,
+      "sphere": 77,
+      "liveData": 104,
+      "provenance": 112
+    },
+    "dataRouters": [
+      "career",
+      "erosion",
+      "forgiveness",
+      "incomeLife",
+      "inheritance",
+      "integration",
+      "ltc",
+      "outsideForces",
+      "rental",
+      "taxSchedule",
+      "unasked",
+      "zip"
+    ]
+  },
+  "facades": {
+    "note": "Added this session. One call per domain; they compute nothing the owning modules compute.",
+    "capitalStack": {
+      "thirtyHouse": {
+        "available": [
+          "policy-loan",
+          "velocity-heloc",
+          "brrrr-dscr",
+          "equity-share",
+          "seller-wrap"
+        ],
+        "blocked": [],
+        "bindingThresholds": 14,
+        "legalPlanCount": 9423,
+        "nearest": "thirty-house-clear-and-grow",
+        "closeness": 100
+      },
+      "firstTime": {
+        "available": [
+          "policy-loan",
+          "velocity-heloc",
+          "equity-share"
+        ],
+        "blocked": [
+          "brrrr-dscr",
+          "seller-wrap"
+        ],
+        "bindingThresholds": 7,
+        "legalPlanCount": 29,
+        "nearest": "household-bank",
+        "closeness": 88
+      }
+    },
+    "regime": {
+      "thinSampleThreshold": 15,
+      "coverage": {
+        "firstYear": 1945,
+        "lastYear": 2026,
+        "years": 82,
+        "shocks": 6,
+        "sources": 7
+      },
+      "topMarginal10y": [
+        {
+          "bucket": "left",
+          "pHigher": 0.071,
+          "n": 14,
+          "thin": true
+        },
+        {
+          "bucket": "divided",
+          "pHigher": 0.385,
+          "n": 52,
+          "thin": false
+        },
+        {
+          "bucket": "right",
+          "pHigher": 0,
+          "n": 5,
+          "thin": true
+        }
+      ],
+      "powerSwing10y": null,
+      "powerSwingNote": "null means at least one bucket is thin; the engine refuses to state a swing the record cannot support."
+    }
+  }
+}

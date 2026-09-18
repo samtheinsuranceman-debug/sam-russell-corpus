@@ -9,7 +9,7 @@ import {
   pmt,
   runWaterfall,
   STANDARD_WATERFALL,
-} from "../shared/realEstateCapitalStackEngine";
+} from "../shared/realEstateDealModel";
 import type {
   CapitalStackInput,
   DebtLayer,

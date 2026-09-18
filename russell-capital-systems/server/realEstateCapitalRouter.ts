@@ -17,7 +17,7 @@ import {
   goingInCapRate,
   STANDARD_WATERFALL,
   weightedAverageDebtCost,
-} from "@shared/realEstateCapitalStackEngine";
+} from "@shared/realEstateDealModel";
 import {
   DEFAULT_STRESS_SCENARIOS,
   findBreakEvens,
@@ -386,7 +386,7 @@ const reviewableFindingSchema = z.object({
 export const realEstateCapitalRouter = router({
   /** Reference data for building a deal in the UI. */
   defaults: protectedProcedure.query(() => ({
-    standardWaterfall: STANDARD_WATERFALL.map((t) => ({
+    standardWaterfall: STANDARD_WATERFALL.map((t: typeof STANDARD_WATERFALL[number]) => ({
       ...t,
       irrHurdle: Number.isFinite(t.irrHurdle) ? t.irrHurdle : 99,
     })),

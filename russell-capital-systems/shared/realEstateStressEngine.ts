@@ -16,7 +16,7 @@
 // insulated from a rate move — right up until it matures, at which point the
 // exposure is refinance risk, surfaced separately via `refinanceRequired`.
 
-import { analyzeCapitalStack } from "./realEstateCapitalStackEngine";
+import { analyzeCapitalStack } from "./realEstateDealModel";
 import type {
   BreakEvenPoints,
   CapitalStackInput,
