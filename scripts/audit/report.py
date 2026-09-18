@@ -34,9 +34,9 @@ def band(v):
 # ── Markdown report ─────────────────────────────────────────────────────────
 L = []
 w = L.append
-w("# Russell Capital Systems — 688-Page Audit\n")
-w("Generated from static analysis of every page in `client/src/pages`, cross-checked")
-w("against the deployed build. Every number below is measured, not estimated.\n")
+w(f"# Russell Capital Systems — {len(scored)}-Page Audit\n")
+w("Generated from static analysis of every page in `client/src/pages`.")
+w(("Cross-checked against the build at `" + B + "`. " if B != A else "") + "Every number below is measured, not estimated.\n")
 
 tot = len(scored)
 w("## Scoreboard\n")
@@ -51,7 +51,7 @@ w(f"- **Mean value as built (before integrity penalties): {sum(r['built'] for r 
 w(f"- **Mean effectiveness (value × discoverability): {sum(r['effectiveness'] for r in scored)/tot:.2f} / 10**")
 w(f"- Pages with a URL: {sum(1 for r in scored if r['routed'])} — of which **{sum(1 for r in scored if r['routed'] and not r['linked'])} are linked from nowhere**")
 w(f"- Pages with no route at all (dead files): {sum(1 for r in scored if not r['routed'])}")
-w(f"- Pages already present in the deployed build: {sum(1 for r in scored if r['in_live'])}")
+if B != A: w(f"- Pages already present in the compared build: {sum(1 for r in scored if r['in_live'])}")
 w("")
 
 w("## Integrity findings\n")
