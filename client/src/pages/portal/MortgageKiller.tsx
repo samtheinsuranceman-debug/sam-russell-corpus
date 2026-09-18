@@ -132,6 +132,21 @@ export default function MortgageKiller() {
 
   const [ibbotsonStartYear, setIbbotsonStartYear] = useState(IBBOTSON_DEFAULT_START_YEAR);
   const [useIbbotsonModel, setUseIbbotsonModel] = useState(true);
+  // 36-year evidence toggles: every one off by default (the engine's flat constants). On, the run
+  // goes through mortgageEvidence.withEvidence and comes back with a source ledger beside the result.
+  const [evidence, setEvidence] = useState({
+    zip: "",
+    county: "",
+    useZipAppreciation: false,
+    realDollars: false,
+    propertyTax: false,
+    helocFromPrime: false,
+    helocMargin: 0.01,
+    pessimistic: false,
+  });
+  const [lastRun, setLastRun] = useState<"plain" | "evidence">("plain");
+  const evidenceOn = evidence.useZipAppreciation || evidence.realDollars || evidence.propertyTax || evidence.helocFromPrime;
+  const zipValid = /^\d{5}$/.test(evidence.zip);
 
   const [activeTab, setActiveTab] = useState("factfinder");
   const [uploading, setUploading] = useState(false);
@@ -251,11 +266,22 @@ export default function MortgageKiller() {
 
   const analyzeMut = trpc.mortgageKiller.analyze.useMutation({
     onSuccess: () => {
+      setLastRun("plain");
       setActiveTab("current");
       toast.success("Analysis complete! Review your Current Plan and Recommended Plan.");
     },
     onError: (err) => toast.error(err.message),
   });
+  const evidenceMut = trpc.mortgageEvidence.withEvidence.useMutation({
+    onSuccess: (d) => {
+      setLastRun("evidence");
+      setActiveTab("current");
+      const applied = d.ledger.filter((l) => l.applied).length;
+      toast.success(`Analysis complete with ${applied} evidence path${applied === 1 ? "" : "s"} applied — see the source ledger.`);
+    },
+    onError: (err) => toast.error(err.message),
+  });
+  const rentalStatus = trpc.rentalMarket.status.useQuery(undefined, { enabled: evidenceOn, staleTime: 5 * 60_000 });
   const exportPdfMut = trpc.mortgageKiller.exportPdf.useMutation();
   const emailPdfMut = trpc.mortgageKiller.emailPdf.useMutation();
 
@@ -281,7 +307,9 @@ export default function MortgageKiller() {
     },
   });
 
-  const result = analyzeMut.data;
+  const result = lastRun === "evidence" ? evidenceMut.data?.result : analyzeMut.data;
+  const evidenceLedger = lastRun === "evidence" ? evidenceMut.data : undefined;
+  const analysisPending = analyzeMut.isPending || evidenceMut.isPending;
 
   const { publishResult } = useStrategy();
   useEffect(() => {
@@ -388,6 +416,12 @@ export default function MortgageKiller() {
   };
 
   const runAnalysis = () => {
+    if (evidenceOn) {
+      if (!zipValid) { toast.error("Enter the property's 5-digit ZIP to use the 36-year evidence toggles."); return; }
+      const { zip, county, ...toggles } = evidence;
+      evidenceMut.mutate({ input: { ...form, ...strategyParams }, zip, county: /^\d{5}$/.test(county) ? county : undefined, toggles });
+      return;
+    }
     analyzeMut.mutate({ ...form, ...strategyParams });
   };
 
@@ -913,6 +947,34 @@ export default function MortgageKiller() {
           />
         )}
 
+        {/* ─── Source ledger: which paths came from the record, which fell back, and why ─── */}
+        {evidenceLedger && (
+          <Card className="border-emerald-200">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-base">Evidence ledger — ZIP {evidence.zip}</CardTitle>
+              <CardDescription>{evidenceLedger.disclosure}</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-2">
+              {evidenceLedger.ledger.map((l, i) => (
+                <div key={i} className="flex flex-col sm:flex-row sm:items-start gap-1 sm:gap-3 text-xs border-b last:border-b-0 pb-2">
+                  <Badge variant={l.applied ? "default" : "outline"} className="shrink-0">{l.applied ? "applied" : "fallback"}</Badge>
+                  <div className="min-w-0">
+                    <div className="font-medium">{l.path}</div>
+                    <div className="text-muted-foreground">{l.source}{l.asOf ? ` · as of ${l.asOf}` : ""}</div>
+                    <div className="text-muted-foreground">{l.method}</div>
+                    {l.reason && <div className="text-amber-700">{l.reason}</div>}
+                  </div>
+                </div>
+              ))}
+              {evidenceLedger.evictionContext && (
+                <p className="text-xs text-muted-foreground">
+                  County eviction context: {JSON.stringify(evidenceLedger.evictionContext).slice(0, 400)}
+                </p>
+              )}
+            </CardContent>
+          </Card>
+        )}
+
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList className="flex flex-wrap h-auto gap-1 p-1 w-full">
             <TabsTrigger value="factfinder" className="text-[11px] sm:text-xs px-2 py-1.5 flex-1 min-w-[80px] whitespace-nowrap">Fact Finder</TabsTrigger>
@@ -1178,6 +1240,54 @@ export default function MortgageKiller() {
                       />
                     )}
                   </div>
+                  {/* ─── 36-Year Evidence by ZIP (optional; off = the flat constants above) ─── */}
+                  <div className="space-y-3 rounded-lg border border-emerald-200 bg-emerald-50/40 p-3">
+                    <div className="flex items-center justify-between">
+                      <Label className="text-sm font-semibold">36-Year Evidence by ZIP</Label>
+                      <Badge variant="outline" className="text-[10px]">{evidenceOn ? "ON — sourced paths" : "OFF — flat assumptions"}</Badge>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2">
+                      <div className="space-y-1">
+                        <Label className="text-xs">Property ZIP</Label>
+                        <Input value={evidence.zip} inputMode="numeric" maxLength={5} placeholder="28429"
+                          onChange={(e) => setEvidence((p) => ({ ...p, zip: e.target.value.replace(/\D/g, "").slice(0, 5) }))} />
+                      </div>
+                      <div className="space-y-1">
+                        <Label className="text-xs">County FIPS (optional)</Label>
+                        <Input value={evidence.county} inputMode="numeric" maxLength={5} placeholder="37129"
+                          onChange={(e) => setEvidence((p) => ({ ...p, county: e.target.value.replace(/\D/g, "").slice(0, 5) }))} />
+                      </div>
+                    </div>
+                    {([
+                      ["useZipAppreciation", "Home appreciation from this ZIP's record", "FHFA / Zillow index, 1975→ where the file reaches; median of 10,000 block-bootstrap paths"],
+                      ["pessimistic", "Pessimistic (10th-percentile path)", "Requires the appreciation toggle; swaps the median path for the 10th percentile"],
+                      ["realDollars", "Real dollars (money-printing lens)", "Deflates by CPI rent-of-primary-residence, 1947→; M2 shown beside it, never blended"],
+                      ["propertyTax", "Property tax from the ZIP's ACS record", "Census ACS B25103 ÷ B25077, 2009→, drift carried forward; subtracted from net worth"],
+                      ["helocFromPrime", "HELOC rate from prime", "FRED DPRIME (1955→) + margin, replaces the slider above"],
+                    ] as const).map(([key, label, note]) => (
+                      <div key={key} className="flex items-start justify-between gap-3">
+                        <div>
+                          <Label className="text-sm">{label}</Label>
+                          <p className="text-[11px] text-muted-foreground">{note}</p>
+                        </div>
+                        <Switch checked={evidence[key]} disabled={key === "pessimistic" && !evidence.useZipAppreciation}
+                          onCheckedChange={(v) => setEvidence((p) => ({ ...p, [key]: v }))} />
+                      </div>
+                    ))}
+                    {evidence.helocFromPrime && (
+                      <div className="space-y-2">
+                        <Label className="text-xs">Margin over prime: {(evidence.helocMargin * 100).toFixed(2)}%</Label>
+                        <Slider value={[evidence.helocMargin * 100]} min={0} max={5} step={0.25}
+                          onValueChange={([v]) => setEvidence((p) => ({ ...p, helocMargin: v / 100 }))} />
+                      </div>
+                    )}
+                    {evidenceOn && !zipValid && <p className="text-xs text-red-600">A 5-digit ZIP is required for the evidence paths.</p>}
+                    {evidenceOn && rentalStatus.data && (
+                      <p className="text-[11px] text-muted-foreground">
+                        Record on file: {rentalStatus.data.series?.length ?? 0} rental series loaded. Not modelled (no public source): bathroom counts, security deposits.
+                      </p>
+                    )}
+                  </div>
                   <div className="space-y-3">
                     <Label className="text-sm font-medium">Premium Years: {strategyParams.premiumYears}</Label>
                     <Slider
@@ -1272,9 +1382,9 @@ export default function MortgageKiller() {
                 size="lg"
                 className="flex-1 bg-gradient-to-r from-red-600 to-orange-500 hover:from-red-700 hover:to-orange-600 text-white h-14 text-lg"
                 onClick={runAnalysis}
-                disabled={analyzeMut.isPending}
+                disabled={analysisPending}
               >
-                {analyzeMut.isPending ? (
+                {analysisPending ? (
                   <>
                     <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
                     Running Analysis...
