@@ -149,6 +149,7 @@ const NAV_SECTIONS: NavSection[] = [
       { path: "/portal/zip-engine", label: "The Zip Engine", icon: Home, color: "green" },
       { path: "/portal/house-recycling", label: "House Recycling", icon: Home, color: "green" },
       { path: "/portal/real-estate-mogul", label: "Real Estate Mogul", icon: Home, color: "green" },
+      { path: "/portal/recin", label: "Real Estate Intelligence", icon: Landmark, color: "green" },
       { path: "/portal/alt-credit", label: "Alternative Lines of Credit", icon: Landmark, color: "green" },
       { path: "/portal/infinite-banking", label: "Infinite Banking", icon: Landmark, color: "green" },
       { path: "/portal/mechanisms", label: "The Five Mechanisms", icon: Landmark, color: "green" },

@@ -1,6 +1,6 @@
 -- Russell Capital Systems — complete database schema
 -- Generated from drizzle/schema.ts by scripts/export_schema_sql.sh; do not hand-edit.
--- Tables: 148
+-- Tables: 154
 -- Import: mysql -u USER -p DBNAME < database/rcs-schema.sql   (or phpMyAdmin → Import)
 -- The database itself must already exist (create it in cPanel → MySQL Databases).
 
@@ -1482,6 +1482,113 @@ CREATE TABLE `rebalance_alerts` (
 	`resolvedAt` timestamp,
 	`createdAt` timestamp NOT NULL DEFAULT (now()),
 	CONSTRAINT `rebalance_alerts_id` PRIMARY KEY(`id`)
+);
+CREATE TABLE `recin_consents` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`householdId` int,
+	`userId` int NOT NULL,
+	`scope` varchar(120) NOT NULL,
+	`provider` varchar(200),
+	`grantedBy` int NOT NULL,
+	`grantedAt` timestamp NOT NULL DEFAULT (now()),
+	`expiresAt` timestamp,
+	`revokedAt` timestamp,
+	`consentText` text NOT NULL,
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	CONSTRAINT `recin_consents_id` PRIMARY KEY(`id`)
+);
+CREATE TABLE `recin_findings` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`scenarioRunId` int NOT NULL,
+	`householdId` int,
+	`userId` int NOT NULL,
+	`agentKey` varchar(60) NOT NULL,
+	`findingCode` varchar(80) NOT NULL,
+	`severity` enum('critical','high','medium','low','info') NOT NULL,
+	`confidence` decimal(4,3) NOT NULL,
+	`materiality` decimal(4,3) NOT NULL,
+	`title` varchar(300) NOT NULL,
+	`explanation` text NOT NULL,
+	`evidence` json NOT NULL,
+	`recommendation` json,
+	`invalidatedBy` text,
+	`requiredReviewer` enum('advisor','cpa','attorney','lender','compliance','insurance') NOT NULL DEFAULT 'advisor',
+	`requiresReview` boolean NOT NULL DEFAULT true,
+	`advisorStatus` enum('pending','accepted','rejected','annotated','escalated') NOT NULL DEFAULT 'pending',
+	`advisorNote` text,
+	`reviewedBy` int,
+	`reviewedAt` timestamp,
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	CONSTRAINT `recin_findings_id` PRIMARY KEY(`id`)
+);
+CREATE TABLE `recin_loans` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`propertyId` int,
+	`householdId` int,
+	`userId` int NOT NULL,
+	`category` varchar(40) NOT NULL,
+	`lienPosition` int,
+	`originalBalance` decimal(16,2),
+	`currentBalance` decimal(16,2),
+	`availableLine` decimal(16,2),
+	`interestRate` decimal(8,5),
+	`rateType` varchar(20),
+	`maturityDate` timestamp,
+	`paymentMode` varchar(30),
+	`collateralMode` varchar(40),
+	`recourseType` varchar(30),
+	`sourceLedgerId` int,
+	`asOf` timestamp NOT NULL,
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	CONSTRAINT `recin_loans_id` PRIMARY KEY(`id`)
+);
+CREATE TABLE `recin_properties` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`householdId` int,
+	`userId` int NOT NULL,
+	`externalKey` varchar(64) NOT NULL,
+	`name` varchar(200) NOT NULL,
+	`useType` enum('primary','second_home','rental_1_4','multifamily_5_plus','commercial') NOT NULL,
+	`ownershipType` enum('personal','llc','trust','partnership','corporation') NOT NULL,
+	`addressEncrypted` text,
+	`currentValue` decimal(16,2),
+	`valueAsOf` timestamp,
+	`valueSource` varchar(60),
+	`sourceLedgerId` int,
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	`updatedAt` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,
+	CONSTRAINT `recin_properties_id` PRIMARY KEY(`id`)
+);
+CREATE TABLE `recin_scenario_runs` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`householdId` int,
+	`userId` int NOT NULL,
+	`scenarioName` varchar(200) NOT NULL,
+	`inputSnapshot` json NOT NULL,
+	`assumptions` json NOT NULL,
+	`engineVersions` json NOT NULL,
+	`policyUsed` json,
+	`output` json NOT NULL,
+	`createdBy` int,
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	CONSTRAINT `recin_scenario_runs_id` PRIMARY KEY(`id`)
+);
+CREATE TABLE `recin_source_ledger` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`householdId` int,
+	`userId` int NOT NULL,
+	`sourceType` enum('user','advisor','document','api','derived') NOT NULL,
+	`sourceName` varchar(200) NOT NULL,
+	`sourceUri` text,
+	`asOf` timestamp,
+	`retrievedAt` timestamp NOT NULL DEFAULT (now()),
+	`consentId` int,
+	`sensitivity` enum('public','confidential','restricted') NOT NULL DEFAULT 'confidential',
+	`confidence` decimal(4,3) NOT NULL DEFAULT '1.000',
+	`contentHash` varchar(128),
+	`extraction` json,
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	CONSTRAINT `recin_source_ledger_id` PRIMARY KEY(`id`)
 );
 CREATE TABLE `recommendation_history` (
 	`id` int AUTO_INCREMENT NOT NULL,

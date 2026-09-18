@@ -2835,3 +2835,145 @@ export const whispererReports = mysqlTable("whisperer_reports", {
   createdAt:     timestamp("createdAt").defaultNow().notNull(),
 }, (t) => ({ bySession: index("whisperer_reports_session").on(t.sessionId), byClient: index("whisperer_reports_client").on(t.clientId) }));
 export type WhispererReportRow = typeof whispererReports.$inferSelect;
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   RECIN — Real Estate Capital Intelligence Network (Sprint C)
+   ═══════════════════════════════════════════════════════════════════════════
+   Append-only by discipline: facts, calculation runs and findings are never
+   overwritten in place. A recommendation that cannot be traced back to the
+   inputs, engine version and evidence that produced it is not defensible, and
+   on this platform that is the only kind worth storing.
+
+   Blueprint §9 specifies Postgres; this platform is MySQL, so types are mapped
+   to the repo's existing drizzle/mysql-core conventions.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+// ── SOURCE LEDGER (provenance for every external value) ─────────────────────
+export const recinSourceLedger = mysqlTable("recin_source_ledger", {
+  id:            int("id").primaryKey().autoincrement(),
+  householdId:   int("householdId"),
+  userId:        int("userId").notNull(),
+  sourceType:    mysqlEnum("sourceType", ["user", "advisor", "document", "api", "derived"]).notNull(),
+  sourceName:    varchar("sourceName", { length: 200 }).notNull(),
+  sourceUri:     text("sourceUri"),
+  /** When the SOURCE says the value was true — not when we fetched it. */
+  asOf:          timestamp("asOf"),
+  retrievedAt:   timestamp("retrievedAt").defaultNow().notNull(),
+  consentId:     int("consentId"),
+  sensitivity:   mysqlEnum("sensitivity", ["public", "confidential", "restricted"]).default("confidential").notNull(),
+  /** 0..1 — how much weight a finding derived from this may carry. */
+  confidence:    decimal("confidence", { precision: 4, scale: 3 }).default("1.000").notNull(),
+  contentHash:   varchar("contentHash", { length: 128 }),
+  extraction:    json("extraction"),
+  createdAt:     timestamp("createdAt").defaultNow().notNull(),
+});
+export type RecinSourceLedgerEntry = typeof recinSourceLedger.$inferSelect;
+export type InsertRecinSourceLedgerEntry = typeof recinSourceLedger.$inferInsert;
+
+// ── CONSENT RECORDS (required before any external aggregation) ──────────────
+export const recinConsents = mysqlTable("recin_consents", {
+  id:           int("id").primaryKey().autoincrement(),
+  householdId:  int("householdId"),
+  userId:       int("userId").notNull(),
+  scope:        varchar("scope", { length: 120 }).notNull(), // e.g. "bank_aggregation"
+  provider:     varchar("provider", { length: 200 }),
+  grantedBy:    int("grantedBy").notNull(),
+  grantedAt:    timestamp("grantedAt").defaultNow().notNull(),
+  expiresAt:    timestamp("expiresAt"),
+  revokedAt:    timestamp("revokedAt"),
+  /** Exact text the person agreed to, retained verbatim. */
+  consentText:  text("consentText").notNull(),
+  createdAt:    timestamp("createdAt").defaultNow().notNull(),
+});
+export type RecinConsent = typeof recinConsents.$inferSelect;
+export type InsertRecinConsent = typeof recinConsents.$inferInsert;
+
+// ── PROPERTIES ──────────────────────────────────────────────────────────────
+export const recinProperties = mysqlTable("recin_properties", {
+  id:               int("id").primaryKey().autoincrement(),
+  householdId:      int("householdId"),
+  userId:           int("userId").notNull(),
+  externalKey:      varchar("externalKey", { length: 64 }).notNull(),
+  name:             varchar("name", { length: 200 }).notNull(),
+  useType:          mysqlEnum("useType", ["primary", "second_home", "rental_1_4", "multifamily_5_plus", "commercial"]).notNull(),
+  ownershipType:    mysqlEnum("ownershipType", ["personal", "llc", "trust", "partnership", "corporation"]).notNull(),
+  /** Encrypted at rest; never passed to an LLM. */
+  addressEncrypted: text("addressEncrypted"),
+  currentValue:     decimal("currentValue", { precision: 16, scale: 2 }),
+  valueAsOf:        timestamp("valueAsOf"),
+  valueSource:      varchar("valueSource", { length: 60 }),
+  sourceLedgerId:   int("sourceLedgerId"),
+  createdAt:        timestamp("createdAt").defaultNow().notNull(),
+  updatedAt:        timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type RecinProperty = typeof recinProperties.$inferSelect;
+export type InsertRecinProperty = typeof recinProperties.$inferInsert;
+
+// ── LOANS / LIENS ───────────────────────────────────────────────────────────
+export const recinLoans = mysqlTable("recin_loans", {
+  id:             int("id").primaryKey().autoincrement(),
+  propertyId:     int("propertyId"),
+  householdId:    int("householdId"),
+  userId:         int("userId").notNull(),
+  category:       varchar("category", { length: 40 }).notNull(),
+  lienPosition:   int("lienPosition"),
+  originalBalance: decimal("originalBalance", { precision: 16, scale: 2 }),
+  currentBalance: decimal("currentBalance", { precision: 16, scale: 2 }),
+  availableLine:  decimal("availableLine", { precision: 16, scale: 2 }),
+  interestRate:   decimal("interestRate", { precision: 8, scale: 5 }),
+  rateType:       varchar("rateType", { length: 20 }),
+  maturityDate:   timestamp("maturityDate"),
+  paymentMode:    varchar("paymentMode", { length: 30 }),
+  collateralMode: varchar("collateralMode", { length: 40 }),
+  recourseType:   varchar("recourseType", { length: 30 }),
+  sourceLedgerId: int("sourceLedgerId"),
+  asOf:           timestamp("asOf").notNull(),
+  createdAt:      timestamp("createdAt").defaultNow().notNull(),
+});
+export type RecinLoan = typeof recinLoans.$inferSelect;
+export type InsertRecinLoan = typeof recinLoans.$inferInsert;
+
+// ── SCENARIO RUNS (immutable calculation record) ────────────────────────────
+export const recinScenarioRuns = mysqlTable("recin_scenario_runs", {
+  id:             int("id").primaryKey().autoincrement(),
+  householdId:    int("householdId"),
+  userId:         int("userId").notNull(),
+  scenarioName:   varchar("scenarioName", { length: 200 }).notNull(),
+  /** The exact inputs, frozen. Re-running with today's data is a NEW run. */
+  inputSnapshot:  json("inputSnapshot").notNull(),
+  assumptions:    json("assumptions").notNull(),
+  engineVersions: json("engineVersions").notNull(),
+  policyUsed:     json("policyUsed"),
+  output:         json("output").notNull(),
+  createdBy:      int("createdBy"),
+  createdAt:      timestamp("createdAt").defaultNow().notNull(),
+});
+export type RecinScenarioRun = typeof recinScenarioRuns.$inferSelect;
+export type InsertRecinScenarioRun = typeof recinScenarioRuns.$inferInsert;
+
+// ── FINDINGS + ADVISOR REVIEW QUEUE ─────────────────────────────────────────
+export const recinFindings = mysqlTable("recin_findings", {
+  id:              int("id").primaryKey().autoincrement(),
+  scenarioRunId:   int("scenarioRunId").notNull(),
+  householdId:     int("householdId"),
+  userId:          int("userId").notNull(),
+  agentKey:        varchar("agentKey", { length: 60 }).notNull(),
+  findingCode:     varchar("findingCode", { length: 80 }).notNull(),
+  severity:        mysqlEnum("severity", ["critical", "high", "medium", "low", "info"]).notNull(),
+  confidence:      decimal("confidence", { precision: 4, scale: 3 }).notNull(),
+  materiality:     decimal("materiality", { precision: 4, scale: 3 }).notNull(),
+  title:           varchar("title", { length: 300 }).notNull(),
+  explanation:     text("explanation").notNull(),
+  evidence:        json("evidence").notNull(),
+  recommendation:  json("recommendation"),
+  invalidatedBy:   text("invalidatedBy"),
+  requiredReviewer: mysqlEnum("requiredReviewer", ["advisor", "cpa", "attorney", "lender", "compliance", "insurance"]).default("advisor").notNull(),
+  requiresReview:  boolean("requiresReview").default(true).notNull(),
+  advisorStatus:   mysqlEnum("advisorStatus", ["pending", "accepted", "rejected", "annotated", "escalated"]).default("pending").notNull(),
+  advisorNote:     text("advisorNote"),
+  reviewedBy:      int("reviewedBy"),
+  reviewedAt:      timestamp("reviewedAt"),
+  createdAt:       timestamp("createdAt").defaultNow().notNull(),
+});
+export type RecinFinding = typeof recinFindings.$inferSelect;
+export type InsertRecinFinding = typeof recinFindings.$inferInsert;
