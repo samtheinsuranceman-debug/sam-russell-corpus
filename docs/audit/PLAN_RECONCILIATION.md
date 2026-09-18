@@ -174,7 +174,7 @@ taxonomy: `shared/calculatorCatalog.ts` — **10 categories, 114 entries, path v
 | Public, Marketing & Legal | *(no page of this hub is catalogued on the BASE)* | 0 |
 | Real Estate Intelligence | `real-estate` — Real Estate & Property | 2 |
 | Reports & Deliverables | `diagnostics` — Diagnostics & Scoring | 1 |
-| Retirement Income & Drawdown | `retirement-income` — What the money has to do once the earning stops, and in which order it comes out. | 7 |
+| Retirement Income & Drawdown | `retirement-income` — Retirement & Income | 7 |
 | Risk, Divorce & Protection | `life-events` — Life Events | 1 |
 | Scenario Lab & Comparison | `diagnostics` — Diagnostics & Scoring | 3 |
 | Tax Strategy | `tax` — What is taken, when it is taken, and which of it is a choice rather than a rule. | 8 |
