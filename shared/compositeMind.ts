@@ -24,6 +24,7 @@
 // the arithmetic deserves a voice in the room alongside the psychology.
 // ============================================================
 
+import { memoryBankBlock } from "./aiMemoryBank";
 import { CALCULATORS, CATEGORY_LABELS } from "./calculatorCatalog";
 import {
   META_PROGRAMS,
@@ -234,5 +235,17 @@ export function instrumentBlock(): string {
 /** Working memory with the instrument list attached, for channels that recommend pages. */
 export function compositeWorkingMemoryWithInstruments(signal: PersonSignal = {}): { text: string; reading: ComposedDirective } {
   const base = compositeWorkingMemory(signal);
-  return { text: `${base.text}\n\n${instrumentBlock()}`, reading: base.reading };
+  // The instrument block says which pages exist. The memory bank says what is
+  // BEHIND them and how to use each body of knowledge honestly — without it a
+  // channel can name a page and cannot use the engine it fronts.
+  return {
+    text: `${base.text}\n\n${instrumentBlock()}\n\n${memoryBankBlock()}`,
+    reading: base.reading,
+  };
+}
+
+/** Working memory trimmed to the groups that must never be dropped, for tight budgets. */
+export function compactWorkingMemoryWithKnowledge(signal: PersonSignal = {}): { text: string; reading: ComposedDirective } {
+  const base = compactWorkingMemory(signal);
+  return { text: `${base.text}\n\n${memoryBankBlock(1)}`, reading: base.reading };
 }
