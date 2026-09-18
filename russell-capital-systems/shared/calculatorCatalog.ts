@@ -332,6 +332,10 @@ export const CALCULATORS: readonly CalculatorEntry[] = [
     blurb: "Both spouses read separately, weighted per pot of money by who owns it, who bears the loss and who depends on it — with the divergences that will end a plan named before it is chosen.",
     engine: "shared/householdGenome.ts",
     keywords: ["spouse", "husband", "wife", "partner", "couple", "household", "marital", "joint", "pairing", "consent", "his ira", "her 401k", "home equity", "who decides", "friction", "conflict"] },
+  { path: "/portal/infinite-banking", name: "Infinite Banking", category: "real-estate", featured: true,
+    blurb: "Five capital mechanisms, a twenty-year simulation whose headline output is the year the sequence breaks, and eighty sequenced combinations with the bottleneck each one relieves.",
+    engine: "shared/cycleEngine.ts",
+    keywords: ["infinite banking", "be your own bank", "policy loan", "velocity banking", "brrrr", "cycle", "recycle", "equity share", "seller financing", "wrap", "cash value", "whole life", "capital cycle", "break year"] },
 
   // ---------------- Markets & Outside Forces ----------------
   { path: "/portal/outside-forces", name: "Outside Forces", category: "markets", featured: true,

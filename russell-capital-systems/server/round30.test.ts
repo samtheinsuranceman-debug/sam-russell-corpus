@@ -2,7 +2,10 @@ import { describe, it, expect } from "vitest";
 
 // ─── Saved Strategies Router ──────────────────────────────────────────────────
 describe("Saved Strategies Router", () => {
-  it("savedStrategies router should exist in appRouter", async () => {
+  // The first dynamic import of ./routers compiles the entire router tree and
+  // takes ~4.6s cold — marginal against vitest's 5s default, so it passed alone
+  // and timed out under full-suite load. The work is real; the budget was wrong.
+  it("savedStrategies router should exist in appRouter", { timeout: 30_000 }, async () => {
     const mod = await import("./routers");
     expect(mod.appRouter).toBeDefined();
     const procNames = Object.keys(mod.appRouter._def.procedures);

@@ -499,3 +499,58 @@ export const CYCLE_DISCLOSURE =
   'Every mechanism here has a bottleneck, every non-amortising mechanism writes a settlement into a future year, and no sequence ' +
   'is infinite: the word describes the shape of the loop, never the supply of capital. Confirm any structure with your own ' +
   'attorney and CPA, and read what each mechanism costs before reading what it releases.';
+
+
+// ─── What people actually search ─────────────────────────────────────────────
+
+/**
+ * The questions people put into a search engine about infinite banking, with
+ * answers that correct rather than repeat the common framing.
+ *
+ * Gathered 2026-09-18 from the recurring "people also ask" set across
+ * betterwealth.com, bankingtruths.com, allstate.com, policyadvisor.com and
+ * insurancegeek.com. Every question is kept under 65 characters so it can be
+ * used as a heading, a meta description fragment, or a link title without
+ * truncation.
+ *
+ * The single most important correction across all five sources: you borrow
+ * FROM the insurance company AGAINST your cash value as collateral. You are
+ * not borrowing from yourself and you are not paying yourself interest. Every
+ * reputable source says this and most marketing says the opposite.
+ */
+export interface CommonQuestion {
+  readonly question: string;
+  readonly answer: string;
+}
+
+export const INFINITE_BANKING_QUESTIONS: readonly CommonQuestion[] = [
+  {
+    question: 'What is infinite banking?',
+    answer:
+      'Using an overfunded, dividend-paying whole life policy as a place to store capital and borrow against. You fund the policy, cash value builds, and when you need money you take a policy loan — the insurer lends you its own money using your cash value as collateral, so your full balance keeps compounding while the loan is outstanding. That last property is what nothing else offers, and it is the entire reason the strategy exists. It is a cash-flow management system, not an investment and not a way to beat a market.',
+  },
+  {
+    question: 'Is infinite banking a scam?',
+    answer:
+      'No, and it is routinely oversold. The mechanism is real and the contracts are ordinary permanent life insurance. What is not real is the social-media version where you "become your own bank" and "pay yourself interest" — you borrow from an insurance company and the interest goes to the company. It is also expensive early, slow to build, and genuinely wrong for anyone who cannot fund it for ten to fifteen years. Judge a specific design, not the concept.',
+  },
+  {
+    question: 'How much do you need to start infinite banking?',
+    answer:
+      'Most practitioners suggest a minimum around $10,000 a year to be worth the structure, and the more useful test is not the amount but the durability: can this premium be paid every year for the full funding period, including a bad year? A policy abandoned in year four is a realised loss, not a paused plan. Size the premium to the income floor rather than the average, and use a paid-up-additions rider so a good year can contribute without raising the base commitment.',
+  },
+  {
+    question: 'Do you pay taxes on infinite banking?',
+    answer:
+      'Policy loans are not taxable income, which is the tax advantage the strategy rests on. Two things remove it. If the policy becomes a modified endowment contract — usually from being funded too fast against the seven-pay limit — distributions come out as income first and a penalty applies before 59½. And if the policy lapses with a loan outstanding, the full gain becomes taxable in one year with no cash arriving to pay it. Get written MEC confirmation from the carrier before borrowing.',
+  },
+  {
+    question: 'Whole life or IUL for infinite banking?',
+    answer:
+      'Most practitioners favour dividend-paying whole life for this specific use, because the growth is contractual and the loan provisions are more predictable — an indexed policy introduces cap and participation-rate variability into a structure whose value comes from certainty. Indexed designs have their own case for accumulation. Either way the carrier should be mutual or mutual-holding, so surplus flows to policyholders rather than to outside shareholders, and the design should be maximum-funded for cash value rather than sized for commission.',
+  },
+];
+
+/** The one-line definition used in the page description and meta tags. */
+export const INFINITE_BANKING_DEFINITION =
+  'Borrowing against an overfunded whole life policy so capital keeps compounding while you use it — and what happens when you run that loop, and four others, for twenty years.';
