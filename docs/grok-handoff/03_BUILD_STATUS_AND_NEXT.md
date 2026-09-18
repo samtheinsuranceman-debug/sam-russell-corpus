@@ -1,0 +1,107 @@
+# Build status and what to build next (handoff for Grok)
+
+Read `01_FINANCIAL_LIBRARIAN_SPEC.md` and `02_ASSESSMENT_AND_JOURNEY_DATA.md`
+first. This file is the running ledger: what is done, what was verified, and the
+next work in priority order. Do not undo the rules in the spec.
+
+## Done and merged to `master`
+
+- Public homepage rebuilt around the six crisp images; published as a single
+  file (`docs/index.html`, GitHub Pages workflow) and mirrored in the React app;
+  parity test keeps the two in step.
+- Lead pipeline: homepage estimator → `public_leads` (IP, consent, fact finder,
+  advisor-only analysis) → owner alert email → prospect acknowledgement →
+  owner lead inbox with CSV export. Live smoke test: `scripts/smoke_lead_capture.mjs`.
+- Owner sign-in for self-hosted installs (bcrypt hash in env; rate-limited), so
+  `/portal/*` works on cPanel/VPS without the managed OAuth server.
+- Database: 117-table schema as `database/rcs-schema.sql`; `pnpm db:build`
+  applies and verifies it. Deploy bundle installs and runs from a clean unzip
+  with plain npm. Mail via Resend or plain SMTP.
+- **Financial Assessment** (15 sections, ~190 questions) with autosave,
+  completeness, and the printable Financial Analysis Document.
+- **Financial Librarian / tape recorder** with the assessment gate, unlimited
+  Q&A, and the journey composer (3–5 core questions, emergent question,
+  10–15 real pages in building order).
+- Navigation group **New Client Welcome List**: Financial Assessment → AI
+  Financial Advisor → Wealth Genome Analysis → The Arrival … The Brotherhood.
+- One-command release: `pnpm release` (typecheck → docs/index.html → schema SQL
+  → public-surface tests → build + bundle guard → deploy zip → code book).
+- **Wealth Genome driven by the assessment** (`shared/wealthGenome.ts`,
+  `factFinder.genome`): eight dimensions, 0–100, each with reasons from the
+  client's facts and what would raise it; tests prove no invented figures.
+- **Calculators pre-filled from the assessment** (`shared/assessmentBridge.ts`):
+  when no advisor client is selected, `ClientDataContext` maps the signed-in
+  user's assessment onto the flat data shape every calculator reads (Mortgage
+  Killer, Income Gap, Roth Strategies, Stress Test, …); the badge says
+  "Pre-filled from your Financial Assessment" and names any blank inputs.
+- **Eleven AI providers**: Cohere and Together AI join the nine (all keyed by
+  host env variables; skip-if-absent). DeepSeek was removed on 2026-09-06 by
+  owner decision and must not be re-added.
+- **The journey walks the client through**: every step has a librarian `guide`
+  (which question it works on + what to do on the page + what to carry forward),
+  every journey names the variables the client controls vs. what the plan must
+  survive, and `/portal/my-journey` (My Secret Journey) holds the latest journey
+  with resume.
+- **Journey carried page to page**: `JourneyProgressBar` in the portal shell
+  shows "Step N of M · next" on any page that is a journey step and stamps
+  `visitedAt` server-side (`librarian.markVisited`).
+
+## Verified how
+
+- Full vitest suite against a real MariaDB: all passing (see the latest PR).
+- Browser (headless Chromium) against the production build: sign in → compliance
+  signature → assessment complete → advisor answers → JOURNEY renders the core
+  questions, emergent question and ordered steps.
+
+## About the "Grok checkpoint" zip
+
+`GrokRussell_Capital_Systems_Checkpoint_bcfe0624.zip` was compared file-by-file
+with the repository: it contains **no page that is not already in the repo**
+(it is an older snapshot). The seven journey pages it refers to (The Arrival …
+The Brotherhood, with `_genome/GenomeKit.tsx`) and the Fact Finder / Wealth
+Genome pages were already merged; they are now grouped under New Client Welcome
+List, with the Wealth Genome page given a portal route (`/portal/wealth-genome`).
+One caveat for the owner: those pages are visually from the purple "genome"
+design and the public homepage is emerald/neon; the portal shell is purple, so
+inside the portal they match. `WealthGenomePage` is now driven by the
+assessment (`shared/wealthGenome.ts`), with reasons and "what would raise it"
+per dimension.
+
+## Added since: the automation layer (see `04_AI_PLATFORM_ROSTER_AND_AUTOMATION.md`)
+
+Lead follow-up sequence (email + SMS, consent-based, figure-free, stops on
+human contact), messaging from the client page and lead inbox with a delivery
+log, one-click unsubscribe + STOP handling, `pnpm mail:check` for real DNS
+deliverability, and FRED benchmark rates cached in the database.
+
+## Added since: the Plan Ledger (see `08_PLAN_LEDGER.md`)
+
+Append-only, hash-chained record per client/user/lead: every assessment
+field change, journey, message, lead status and advisor decision, with a
+client page that replays the assessment at any moment and an advisor panel
+on the client record. Idea 1 of doc 06 is live; ideas 2–5 build on it.
+
+## Next steps, in order
+
+0. **Financial gathering from live sources** — aggregator import (Era Context /
+   PocketSmith), document extraction, benchmark-fed calculator defaults, and
+   cross-field validation; the plan is in doc 04 §6.
+1. **Advisor view of a client's assessment and journey.** In the client
+   directory, show the client's completeness, the Financial Analysis Document,
+   and their latest journey; let the advisor ask the librarian *about* a client
+   (same gate, client's data).
+2. **Voice.** With `ELEVENLABS_API_KEY`/`ELEVENLABS_VOICE_ID` set the deck speaks
+   in the cloned voice. Consider streaming for long answers.
+3. **More catalog coverage.** Any planning page not yet in
+   `shared/journeyCatalog.ts` cannot be recommended; add it with honest tags.
+4. **Owner tasks (not code):** GitHub Pages → Source: GitHub Actions; set
+   `OWNER_EMAIL`/`OWNER_PASSWORD_HASH`, `DATABASE_URL`, mail (`SMTP_*` or
+   `RESEND_API_KEY`), AI keys; rotate the published credentials (see PR #10).
+
+## Working agreements for Grok on this repo
+
+- Build on a branch and open a PR to `master`; never force-push or delete files
+  you did not create. (PR #3 destroyed content and had to be restored.)
+- No secrets in code, tests, docs or commit messages. No fabricated numbers,
+  results, or patent statuses ("patent-pending / in process" only).
+- Run `pnpm check` and `pnpm release` before pushing; the tests encode the rules.

@@ -1,0 +1,84 @@
+{
+  "numTotalTestSuites": 685,
+  "numPassedTestSuites": 679,
+  "numFailedTestSuites": 6,
+  "numPendingTestSuites": 0,
+  "numTotalTests": 1962,
+  "numPassedTests": 1949,
+  "numFailedTests": 6,
+  "numPendingTests": 7,
+  "failed": [
+    {
+      "name": "/home/ubuntu/russell-capital-unified/server/annuityAccumulationDB.test.ts",
+      "assertionResults": [
+        {
+          "title": "hiddenMaterial.verifyPassword accepts correct password",
+          "ancestorTitles": [
+            "Annuity Accumulation Database — Password Gate"
+          ],
+          "failureMessages": [
+            "AssertionError: expected { verified: true, …(1) } to deeply equal { verified: true }\n    at /home/ubuntu/russell-capital-unified/server/annuityAccumulationDB.test.ts:139:20\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at file:///home/ubuntu/russell-capital-unified/node_modules/.pnpm/@vitest+runner@2.1.9/node_modules/@vitest/runner/dist/index.js:533:5\n    at runTest (file:///home/ubuntu/russell-capital-unified/node_modules/.pnpm/@vitest+runner@2.1.9/node_modules/@vitest/runner/dist/index.js:1056:11)\n    at runSuite (file:///home/ubuntu/russell-capital-unified/node_modules/.pnpm/@vitest+runner@2.1.9/node_modules/@vitest/runner/dist/index.js:1205:15)\n    at runSuite (file:///home/ubuntu/russell-capital-unified/node_modules/.pnpm/@vitest+runner@2.1.9/node_modules/@vitest/runner/dist/index.js:1205:15)\n    at runFiles (file:///home/ubuntu/russell-capital-unified/node_modules/.pnpm/@vitest+runner@2.1.9/node_modules/@vitest/runner/dist/index.js:1262:5)\n    at startTests (file:///home/ubuntu/russell-capital-unified/node_modules/.pnpm/@vitest+runner@2.1.9/node_modules/@vitest/runner/dist/index.js:1271:3)\n    at file:///home/ubuntu/russell-capital-unified/node_modules/.pnpm/vitest@2.1.9_@types+node@24.7.0_lightningcss@1.30.1/node_modules/vitest/dist/chunks/runBaseTests.3qpJUEJM.js:126:11\n    at withEnv (file:///home/ubuntu/russell-capital-unified/node_modules/.pnpm/vitest@2.1.9_@types+node@24.7.0_lightningcss@1.30.1/node_modules/vitest/dist/chunks/runBaseTests.3qpJUEJM.js:90:5)"
+          ]
+        },
+        {
+          "title": "hiddenMaterial.verifyPassword rejects incorrect password",
+          "ancestorTitles": [
+            "Annuity Accumulation Database — Password Gate"
+          ],
+          "failureMessages": [
+            "Error: promise resolved \"{ verified: true, …(1) }\" instead of rejecting\n    at _Assertion.__VITEST_REJECTS__ (file:///home/ubuntu/russell-capital-unified/node_modules/.pnpm/@vitest+expect@2.1.9/node_modules/@vitest/expect/dist/index.js:1805:21)\n    at _Assertion.propertyGetter (file:///home/ubuntu/russell-capital-unified/node_modules/.pnpm/chai@5.3.3/node_modules/chai/index.js:1557:27)\n    at Object.proxyGetter [as get] (file:///home/ubuntu/russell-capital-unified/node_modules/.pnpm/chai@5.3.3/node_modules/chai/index.js:1645:22)\n    at /home/ubuntu/russell-capital-unified/server/annuityAccumulationDB.test.ts:147:5\n    at file:///home/ubuntu/russell-capital-unified/node_modules/.pnpm/@vitest+runner@2.1.9/node_modules/@vitest/runner/dist/index.js:146:14\n    at file:///home/ubuntu/russell-capital-unified/node_modules/.pnpm/@vitest+runner@2.1.9/node_modules/@vitest/runner/dist/index.js:533:11\n    at runWithTimeout (file:///home/ubuntu/russell-capital-unified/node_modules/.pnpm/@vitest+runner@2.1.9/node_modules/@vitest/runner/dist/index.js:39:7)\n    at runTest (file:///home/ubuntu/russell-capital-unified/node_modules/.pnpm/@vitest+runner@2.1.9/node_modules/@vitest/runner/dist/index.js:1056:17)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at runSuite (file:///home/ubuntu/russell-capital-unified/node_modules/.pnpm/@vitest+runner@2.1.9/node_modules/@vitest/runner/dist/index.js:1205:15)"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "/home/ubuntu/russell-capital-unified/server/batch9-features.test.ts",
+      "assertionResults": [
+        {
+          "title": "canAccess should include all tiers including none",
+          "ancestorTitles": [
+            "Open Access — All Users Get Full Access"
+          ],
+          "failureMessages": [
+            "AssertionError: expected 'import { createContext, useCallback, …' to contain 'tier === \"none\"'\n    at /home/ubuntu/russell-capital-unified/server/batch9-features.test.ts:102:27\n    at file:///home/ubuntu/russell-capital-unified/node_modules/.pnpm/@vitest+runner@2.1.9/node_modules/@vitest/runner/dist/index.js:146:14\n    at file:///home/ubuntu/russell-capital-unified/node_modules/.pnpm/@vitest+runner@2.1.9/node_modules/@vitest/runner/dist/index.js:533:11\n    at runWithTimeout (file:///home/ubuntu/russell-capital-unified/node_modules/.pnpm/@vitest+runner@2.1.9/node_modules/@vitest/runner/dist/index.js:39:7)\n    at runTest (file:///home/ubuntu/russell-capital-unified/node_modules/.pnpm/@vitest+runner@2.1.9/node_modules/@vitest/runner/dist/index.js:1056:17)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at runSuite (file:///home/ubuntu/russell-capital-unified/node_modules/.pnpm/@vitest+runner@2.1.9/node_modules/@vitest/runner/dist/index.js:1205:15)\n    at runSuite (file:///home/ubuntu/russell-capital-unified/node_modules/.pnpm/@vitest+runner@2.1.9/node_modules/@vitest/runner/dist/index.js:1205:15)\n    at runFiles (file:///home/ubuntu/russell-capital-unified/node_modules/.pnpm/@vitest+runner@2.1.9/node_modules/@vitest/runner/dist/index.js:1262:5)\n    at startTests (file:///home/ubuntu/russell-capital-unified/node_modules/.pnpm/@vitest+runner@2.1.9/node_modules/@vitest/runner/dist/index.js:1271:3)"
+          ]
+        },
+        {
+          "title": "session timer should be disabled",
+          "ancestorTitles": [
+            "Open Access — All Users Get Full Access"
+          ],
+          "failureMessages": [
+            "AssertionError: expected 'import { createContext, useCallback, …' to contain 'Session timer disabled'\n    at /home/ubuntu/russell-capital-unified/server/batch9-features.test.ts:106:27\n    at file:///home/ubuntu/russell-capital-unified/node_modules/.pnpm/@vitest+runner@2.1.9/node_modules/@vitest/runner/dist/index.js:146:14\n    at file:///home/ubuntu/russell-capital-unified/node_modules/.pnpm/@vitest+runner@2.1.9/node_modules/@vitest/runner/dist/index.js:533:11\n    at runWithTimeout (file:///home/ubuntu/russell-capital-unified/node_modules/.pnpm/@vitest+runner@2.1.9/node_modules/@vitest/runner/dist/index.js:39:7)\n    at runTest (file:///home/ubuntu/russell-capital-unified/node_modules/.pnpm/@vitest+runner@2.1.9/node_modules/@vitest/runner/dist/index.js:1056:17)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at runSuite (file:///home/ubuntu/russell-capital-unified/node_modules/.pnpm/@vitest+runner@2.1.9/node_modules/@vitest/runner/dist/index.js:1205:15)\n    at runSuite (file:///home/ubuntu/russell-capital-unified/node_modules/.pnpm/@vitest+runner@2.1.9/node_modules/@vitest/runner/dist/index.js:1205:15)\n    at runFiles (file:///home/ubuntu/russell-capital-unified/node_modules/.pnpm/@vitest+runner@2.1.9/node_modules/@vitest/runner/dist/index.js:1262:5)\n    at startTests (file:///home/ubuntu/russell-capital-unified/node_modules/.pnpm/@vitest+runner@2.1.9/node_modules/@vitest/runner/dist/index.js:1271:3)"
+          ]
+        },
+        {
+          "title": "heartbeat should never return expired=true",
+          "ancestorTitles": [
+            "Open Access — All Users Get Full Access"
+          ],
+          "failureMessages": [
+            "AssertionError: expected 'import \"dotenv/config\";\\nimport expre…' to contain 'expired: false'\n    at /home/ubuntu/russell-capital-unified/server/batch9-features.test.ts:132:26\n    at file:///home/ubuntu/russell-capital-unified/node_modules/.pnpm/@vitest+runner@2.1.9/node_modules/@vitest/runner/dist/index.js:146:14\n    at file:///home/ubuntu/russell-capital-unified/node_modules/.pnpm/@vitest+runner@2.1.9/node_modules/@vitest/runner/dist/index.js:533:11\n    at runWithTimeout (file:///home/ubuntu/russell-capital-unified/node_modules/.pnpm/@vitest+runner@2.1.9/node_modules/@vitest/runner/dist/index.js:39:7)\n    at runTest (file:///home/ubuntu/russell-capital-unified/node_modules/.pnpm/@vitest+runner@2.1.9/node_modules/@vitest/runner/dist/index.js:1056:17)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at runSuite (file:///home/ubuntu/russell-capital-unified/node_modules/.pnpm/@vitest+runner@2.1.9/node_modules/@vitest/runner/dist/index.js:1205:15)\n    at runSuite (file:///home/ubuntu/russell-capital-unified/node_modules/.pnpm/@vitest+runner@2.1.9/node_modules/@vitest/runner/dist/index.js:1205:15)\n    at runFiles (file:///home/ubuntu/russell-capital-unified/node_modules/.pnpm/@vitest+runner@2.1.9/node_modules/@vitest/runner/dist/index.js:1262:5)\n    at startTests (file:///home/ubuntu/russell-capital-unified/node_modules/.pnpm/@vitest+runner@2.1.9/node_modules/@vitest/runner/dist/index.js:1271:3)"
+          ]
+        },
+        {
+          "title": "passwordGate should grant full access without limits",
+          "ancestorTitles": [
+            "Open Access — All Users Get Full Access"
+          ],
+          "failureMessages": [
+            "AssertionError: expected 'import { TRPCError } from \"@trpc/serv…' to contain 'Welcome! You have full access to all …'\n    at /home/ubuntu/russell-capital-unified/server/batch9-features.test.ts:137:28\n    at file:///home/ubuntu/russell-capital-unified/node_modules/.pnpm/@vitest+runner@2.1.9/node_modules/@vitest/runner/dist/index.js:146:14\n    at file:///home/ubuntu/russell-capital-unified/node_modules/.pnpm/@vitest+runner@2.1.9/node_modules/@vitest/runner/dist/index.js:533:11\n    at runWithTimeout (file:///home/ubuntu/russell-capital-unified/node_modules/.pnpm/@vitest+runner@2.1.9/node_modules/@vitest/runner/dist/index.js:39:7)\n    at runTest (file:///home/ubuntu/russell-capital-unified/node_modules/.pnpm/@vitest+runner@2.1.9/node_modules/@vitest/runner/dist/index.js:1056:17)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at runSuite (file:///home/ubuntu/russell-capital-unified/node_modules/.pnpm/@vitest+runner@2.1.9/node_modules/@vitest/runner/dist/index.js:1205:15)\n    at runSuite (file:///home/ubuntu/russell-capital-unified/node_modules/.pnpm/@vitest+runner@2.1.9/node_modules/@vitest/runner/dist/index.js:1205:15)\n    at runFiles (file:///home/ubuntu/russell-capital-unified/node_modules/.pnpm/@vitest+runner@2.1.9/node_modules/@vitest/runner/dist/index.js:1262:5)\n    at startTests (file:///home/ubuntu/russell-capital-unified/node_modules/.pnpm/@vitest+runner@2.1.9/node_modules/@vitest/runner/dist/index.js:1271:3)"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "/home/ubuntu/russell-capital-unified/server/round18.test.ts",
+      "assertionResults": []
+    },
+    {
+      "name": "/home/ubuntu/russell-capital-unified/server/round19.test.ts",
+      "assertionResults": []
+    }
+  ]
+}

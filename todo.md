@@ -1,0 +1,171 @@
+# Russell Capital Unified Portal TODO
+
+- [x] Freeze the 41,782,994-byte primary archive and 7,331,308-byte Grok addition archive with SHA-256 hashes and source manifests.
+- [x] Inventory both archives for package manifests, lockfiles, runtime entrypoints, environment assumptions, database schemas, migrations, tests, routes, static assets, and suspicious or embedded credentials.
+- [x] Identify the correct full platform application inside the primary archive and preserve any separate bundled marketing application as reference content.
+- [x] Establish an untouched source-reference directory and a separate verified release copy before importing code.
+- [x] Complete a per-archive inventory matrix covering package manifests, lockfiles, entrypoints, environment assumptions, schemas, migrations, tests, routes, static assets, and credential-risk findings for both source archives.
+- [x] Create and document a separate verified release-copy workspace distinct from the untouched source-reference directory before importing code into the managed project.
+- [x] Port the verified primary platform into the managed full-stack project while preserving managed runtime, authentication, database, storage, analytics, and project metadata.
+- [x] Complete the code-level post-port managed-auth reconciliation by removing source password/backdoor access, replacing the temporary `/login` compatibility path with managed OAuth, and verifying protected-route guard behavior; retain the owner-session round trip as separate acceptance testing.
+- [x] Audit and restore managed analytics/runtime artifacts potentially overwritten during the primary import, including managed public assets and analytics configuration.
+- [x] Verify managed storage and database integration after the port with targeted server smoke tests and document the results.
+- [x] Preserve every existing routed page from the primary platform; do not delete pages during merge or audit work.
+- [x] Merge the seven Grok-only pages—The Arrival, The Mirror, The Strategy Table, The Field, The Map, The Legacy, and The Brotherhood—plus their shared GenomeKit component.
+- [x] Register all merged page routes and ensure direct deep-link navigation works for every added page.
+- [x] Run browser or automated route smoke checks for all seven merged Grok deep links and document each render result.
+- [x] Verify no missing import or runtime dependency remains for the seven Grok page modules.
+- [x] Add a saved per-route Grok smoke matrix recording auth-guard rendering and module-load success for all seven routes.
+- [ ] Verify at least one authenticated Grok deep link through managed OAuth return-path handling before the final checkpoint.
+- [x] Build a consistent left navigation with clear primary workflow groups, active states, expandable branches, global search, breadcrumbs, and responsive mobile behavior.
+- [x] Add a clearly labeled Secondary Information library for low-priority, reference-oriented, duplicative, or non-core pages without removing their routes.
+- [x] Preserve the black-and-green city-at-night homepage with illuminated skyline, emerald lighting, dark overlays, and clear calls to action.
+- [x] Apply the scoped Grok-inspired purple typography, accents, gradients, card treatments, focus states, and component styling to the shared portal shell and managed-access interfaces.
+- [ ] Verify representative authenticated interior pages—dashboard, clients, planning, Secondary Information, and one Grok page—for purple-theme consistency and repair legacy green or navy styling that bypasses the shared theme.
+- [x] Add a targeted interior-style audit that inventories hardcoded legacy color tokens and distinguishes intentional semantic colors from theme-bypassing surface, accent, focus, and navigation colors.
+- [x] Upload the required homepage hero media through persistent web asset storage and replace its broken external reference with the stable uploaded URL.
+- [x] Audit all remaining source media references and migrate any deploy-blocking local assets to persistent web asset storage before the final checkpoint.
+- [x] Preserve the managed OAuth flow and reconcile source access controls without embedding passwords or credentials in client code.
+- [x] Remove the primary source’s hardcoded trial password, eternal backdoor passwords, and email-based owner bypass logic; replace them with managed OAuth roles and server-enforced authorization.
+- [x] Remove the hidden-material hardcoded default password and public reset-code procedures; protect the library with managed OAuth and server-side role checks instead.
+- [x] Remove the remaining hardcoded website-usage password and replace every usage-history query with managed owner/admin authorization only.
+- [x] Replace the legacy `/register`, `/forgot-password`, `/reset-password`, and `/trial` pages with managed-OAuth guidance or redirects so no public auth route calls a retired password procedure.
+- [x] Add route-level browser smoke coverage for protected deep links and OAuth return-path handling, then document the final managed-auth flow.
+- [ ] Verify a complete managed OAuth round trip from a protected deep link through callback to the requested return path.
+- [ ] Verify at least one authenticated protected portal page in the browser after managed OAuth sign-in.
+- [x] Re-validate `/login`, `/register`, `/forgot-password`, `/reset-password`, and `/trial` as consistent managed-OAuth entry routes before the final checkpoint.
+- [x] Define additive database tables for planning cases, case-scoped notes, page-audit runs and records, portal preferences, and workflow state while retaining the imported `clients`, `saved_scenarios`, `scenario_snapshots`, and `client_notes` models as the existing client persistence surface.
+- [x] Generate and apply non-destructive database migrations while preserving the managed users table.
+- [x] Bootstrap the existing core workspace, membership, client, deal, strategy, scenario, note, favorite, activity, notification, and error-log tables because the imported source migrations were placeholders and the live database contained only `users`.
+- [x] Verify every bootstrapped core table is queryable without inserting mock customer or financial data.
+- [x] Save a deterministic exact list of the 24 tables created by `0069_core_portal_bootstrap.sql` and fail verification if any table is omitted from the queryability check.
+- [x] Implement database-backed client creation, editing, listing, selection, and saved profile data.
+- [x] Implement database-backed planning cases with saved assumptions, workflow values, notes, status, and timestamps.
+- [x] Connect the unified dashboard to persisted client and planning data with explicit loading, empty, success, and failure states.
+- [x] Remove or suppress live AUM display from the dashboard until the owner explicitly requests it, while retaining non-AUM client, pipeline, planning-case, and activity metrics.
+- [ ] Verify the actual client directory and detail flows through tRPC and the browser: create, list, select, load, edit, reload, and confirm persisted profile data.
+- [x] Add client UI coverage for loading, empty, validation-error, save-success, and failed-save states.
+- [x] Add explicit loading, empty, and failure handling for dashboard analytics, recent activity, top clients, allocation, goals, meetings, and coaching queries.
+- [ ] Verify the dashboard renders persisted client and planning-case records after authenticated managed OAuth access.
+- [x] Convert the highest-value presentation-only controls in core workflows into working save, update, compare, restore, export, or delivery interactions where the implemented workflow contract supports them.
+- [x] Replace the Mortgage Killer page’s non-existent `/api/mortgage-killer/pdf` and `/api/mortgage-killer/send` calls with protected tRPC PDF and email mutations, including honest unavailable-email handling when `RESEND_API_KEY` is absent.
+- [x] Inventory all internet-dependent features and distinguish real integrations from simulations, hardcoded samples, and disconnected controls.
+- [x] Implement approved core internet-backed capabilities through secure server-side APIs only, with no credentials exposed to the browser.
+- [x] Add explicit loading, timeout, empty, unavailable, and retry states to the connected core AI, market-data, carrier-rating, and delivery workflows; classify remaining non-core integrations through the page audit.
+- [x] Add a bounded, sanitized server-side AI gateway adapter for core strategy generation, closing scripts, and advisor chat; reject empty model output instead of returning simulated success text.
+- [x] Remove randomized fallback prices from the market quote API and return transparent live, cached, static-reference, or unavailable provenance.
+- [x] Remove randomized and dummy values from the Carrier Ratings page; replace them with deterministic labeled reference content or verified live data before final delivery.
+- [x] Label data-feed provenance and timestamps in the Market Data Dashboard, expose retryable failures, and replace the fake delayed CSV export with an immediate export of the actual received feed snapshot.
+- [x] Add per-page React error boundaries with a Retry action so a single page failure cannot take down the application shell.
+- [x] Add an admin health-check dashboard for page-load failures, route audit status, tool usage counts, and recent errors.
+- [x] Audit every unique routed page for source-level render health, navigation reachability, broken-link risk, placeholder content, duplicate functionality, and client/server implementation evidence; retain runtime verification as a separate test phase.
+- [x] Assign every routed page a usefulness score from 1 to 10 using a documented scoring rubric.
+- [x] Assign every routed page one recommendation: Keep, Improve, Merge, Move to Secondary Information, or Retire; do not delete pages based on the recommendation alone.
+- [x] Record likely merge targets and concrete improvement instructions for pages scoring below 5.
+- [x] Export the page-by-page audit as complete JSON and CSV plus a readable Markdown summary.
+- [x] Add or update Vitest coverage for authentication boundaries, database workflows, route manifest integrity, navigation grouping, page audit records, and critical server procedures.
+- [x] Run TypeScript checks, Vitest, production build, representative deep-link checks, and automated route smoke tests.
+- [ ] Verify authenticated dashboard, primary workflows, Secondary Information, and added Grok pages on desktop and mobile after the owner completes managed OAuth and disclosure acknowledgment; public homepage desktop/mobile verification is complete.
+- [x] Inspect browser console and network logs for runtime errors, failed requests, and inaccessible assets; repair reproducible defects.
+- [x] Review the complete TODO, mark finished work accurately, and create one final reviewed checkpoint for the first delivery.
+- [ ] Deliver the unified project version, implementation audit, functionality audit, page usefulness report, known limitations, and next highest-value improvements.
+- [x] Do not produce or deliver any further 15-image comparison sets; focus all remaining work on the unified website implementation and final audit.
+- [x] Verify available server-side access for Grok/xAI, Gemini, Claude/Anthropic, Perplexity, OpenAI-compatible models, OpenRouter, Cohere, and any specifically identified Vibe provider before relying on them.
+- [x] Request only genuinely missing production credentials through the managed secrets interface; never place API keys in client code, source archives, logs, or audit reports.
+- [x] Use six successfully validated independent providers—OpenAI-compatible, Claude/Anthropic, Gemini, Cohere, Mistral/Le Chat, and GroqCloud—for architecture review while keeping deterministic build and test steps programmatic; record xAI/Grok as unavailable due account credits or licensing.
+- [x] Add Mistral AI / Le Chat to the collaborative review group and validate it with a server-side `MISTRAL_API_KEY` before use.
+- [x] Treat a direct `OPENAI_API_KEY` as optional only if direct OpenAI billing is required; otherwise use the existing secure OpenAI-compatible model gateway.
+- [x] Require successful live API responses from at least five independent AI providers before resuming website implementation; document successes, failures, and any missing keys.
+- [x] Request separate `XAI_API_KEY` and `GROQ_API_KEY` values; validate GroqCloud successfully and record xAI/Grok as unavailable because the xAI account reported no credits or license.
+- [ ] Rotate the OpenRouter credential that was pasted into chat, then store the replacement only through the managed secrets interface and verify it with an authenticated chat test.
+- [ ] Limit future credential requests to providers that are genuinely unavailable through the managed gateway and document the necessity of each requested direct key.
+- [x] Do not publish checkpoint `c82714b4` or any older restored version; publish only a new checkpoint created after the recovered repairs and validation pass.
+- [x] Validate Grok access through direct xAI, the managed model proxy, the configured Grok app, and OpenRouter without printing or copying credentials; no route authenticated for a Grok review.
+- [x] Attempt a focused Grok audit of the recovered build; no review was generated because direct xAI returned 403, no Grok model appeared in the managed catalog, the Grok app was not callable as an MCP server, and OpenRouter OAuth initialization failed.
+- [x] Record Grok’s exact participation status without fabricating a review; retain the successful GroqCloud review as a separate provider.
+- [x] Implement physician homepage Concept 16 as the functional top-of-page direction: glass navigation, Physician Wealth Command Center hero, physician login and planning CTAs, four planning pillars, and Review–Coordinate–Implement–Monitor workflow.
+- [x] Create a clean people-free emerald metropolitan interior background based on Concept 16 without baked-in UI text, then store it through persistent web asset storage.
+- [x] Preserve the useful physician-focused portal access, services, consultation, planning, and footer content below the Concept 16 hero as a complete scrolling homepage.
+- [x] Make the Concept 16 hero and command-center panel responsive and accessible on desktop and phone widths without horizontal overflow or hidden navigation dead ends.
+- [x] Re-run the complete audit validation and publish only the new Concept 16 checkpoint; do not publish `c82714b4` or change the custom domain.
+- [x] Visually inspect the final desktop and mobile Concept 16 screenshots and record pass/fail results for overflow, stacked layout, command-center usability, and lower-page scrolling continuity.
+- [x] Run a focused final navigation and accessibility check for the mobile menu, anchor targets, keyboard-reachable hero controls, labeled calculator fields, and absence of hidden homepage dead ends.
+- [x] Increase every visible homepage font size by exactly 60 percent, including navigation, hero, buttons, metrics, portal-access form, features, pricing, consultation, final CTA, and footer text.
+- [x] Keep the 60 percent typography increase scoped to the public homepage so managed login and portal interfaces are unchanged.
+- [x] Repair homepage spacing, line-height, wrapping, card height, grid layout, and section rhythm for the larger typography on desktop and mobile.
+- [x] Add a deterministic safeguard proving the homepage typography scale is 1.6 and scoped only to the homepage.
+- [x] Verify the enlarged homepage at desktop and mobile viewports, run TypeScript, focused tests, and production build, then leave the tested change in the current session preview for owner review.
+- [x] Do not publish or republish the homepage change; leave publication to the owner.
+- [x] Former no-checkpoint instruction superseded after the owner disabled auto-publish and explicitly requested a review checkpoint for manual publication.
+- [x] Create a timestamped unpublished ZIP of the exact current build without creating a Manus checkpoint or triggering publication.
+- [x] Exclude secrets, `.env` files, dependency folders, generated build output, runtime logs, temporary files, and local caches from the unpublished ZIP.
+- [x] GitHub remote exclusion verification canceled by the owner when the GitHub backup was removed from scope.
+- [x] GitHub repository search canceled by the owner when the GitHub backup was removed from scope.
+- [x] My Browser was enabled for GitHub access, but GitHub backup work was subsequently canceled by the owner.
+- [x] Private GitHub repository creation canceled by the owner when the GitHub backup was removed from scope.
+- [x] GitHub remote verification canceled by the owner when the GitHub backup was removed from scope.
+- [ ] Deliver the unpublished ZIP without a GitHub repository URL, as directed by the owner.
+- [x] Accept the owner’s confirmation that auto-publish is disabled before saving the next version.
+- [x] Finish all remaining code-completable build items and clearly separate owner-session OAuth acceptance checks that require manual sign-in or legal acknowledgment.
+- [x] Re-run the complete deterministic test suite, TypeScript, production build, 231-page route smoke test, and desktop/mobile homepage validation after the 60 percent typography change.
+- [x] Prepare the reviewed checkpoint after the owner confirmed auto-publish is disabled, leaving domain selection and publication entirely to the owner.
+- [x] Remove the GitHub backup and repository-address requirement from the final handoff at the owner’s direction.
+- [x] Create 25 numbered desktop homepage UI concept images using a metropolitan city-at-night skyline, illuminated buildings, and a green tint across the full landscape.
+- [x] Ensure all 25 homepage concepts contain no people, preserve Russell Capital Systems branding, and provide visibly distinct navigation, hero, typography, lighting, and CTA treatments.
+- [x] Verify and package the 25 concepts as labeled images plus contact sheets for owner selection.
+- [x] Earlier no-checkpoint/no-publication guardrail superseded by the owner’s explicit instruction to publish the audited website; the custom domain remains owner-controlled.
+- [x] Inspect `russell-capital-systems-full-backup(5).zip` for homepage, navigation, typography, color, component, and layout patterns that should influence the 25 concepts.
+- [x] Document which verified UI patterns from the new backup were incorporated into the concept set and which were rejected as inconsistent with the green metropolitan direction.
+- [x] Replace the prior general-audience concept set with 25 entirely new numbered homepage screenshots explicitly marketed to physicians, medical professionals, and medical practice owners.
+- [x] Make the physician audience unmistakable in each concept through the main headline, supporting copy, professional labels, or service architecture—not only through small secondary text.
+- [x] Preserve the people-free metropolitan city-at-night skyline, illuminated emerald buildings, Russell Capital Systems branding, and polished black-and-green visual direction across all 25 new concepts.
+- [x] Give all 25 physician-focused concepts visibly distinct navigation, hero, typography, lighting, CTA, calculator, specialty, or medical-practice planning treatments.
+- [x] Verify, package, and deliver all 25 new physician-focused concepts without changing the current homepage, creating a checkpoint, publishing, or changing the domain.
+- [x] Verify the active project publication setting from current project metadata without exposing or inspecting credentials.
+- [x] Create an immediate reviewable checkpoint of the current Russell Capital Systems project without changing or attaching any domain.
+- [x] Deliver the new checkpoint link in the session and report the publication outcome observed from the checkpoint operation.
+- [x] Create a fresh checkpoint version specifically to produce a new owner-facing checkpoint card for manual publication.
+- [x] Make no custom-domain or DNS changes while creating the fresh checkpoint; domain attachment remains owner-controlled.
+- [x] Deliver only the fresh checkpoint card and clearly report whether the platform independently triggered deployment.
+- [x] Restore the comprehensive audit repair set lost when the sandbox reset to checkpoint `c82714b4`; do not publish the older restored state as the audited build.
+- [x] Reapply the physician homepage, route, managed-auth, tenant-boundary, storage, token, and response-hardening repairs from the recorded audit history.
+- [x] Reapply the market/carrier provenance, LLM/Data API timeout, persistence, email-redaction, placeholder-removal, accessibility, and production-build repairs.
+- [x] Recreate the audit utilities, regression tests, creation-only migrations, 232-route artifacts, and comprehensive audit report.
+- [x] Re-run dependency security, TypeScript, all deterministic tests, custom production build, focused navigation/accessibility and secret guardrails, 232-route smoke, storage/header checks, and browser-executed production smoke.
+- [x] Create the final audited checkpoint with the owner’s explicit authorization for immediate publication; do not attach or change the custom domain.
+- [ ] Verify the published homepage and production runtime, then deliver the published version and complete audit report.
+- [x] Create a new secret-safe ZIP of the exact published Concept 16 source associated with checkpoint `d4a66fa9`.
+- [x] Exclude credentials, environment files, project configuration, Git metadata, dependencies, build output, logs, caches, temporary files, and generated local validation artifacts from the published-version ZIP.
+- [x] Verify ZIP integrity, file count, checksum, sensitive-path exclusions, and deployable-source secret safety, then deliver the archive in this session.
+- [ ] Request the replacement `XAI_API_KEY` only through the managed secret interface; never paste, print, log, or commit the key.
+- [ ] Validate the replacement xAI credential and available Grok models with a deterministic Vitest probe plus a direct server-side API check that reports no key material.
+- [ ] Send Grok a secret-safe focused audit brief for the published Concept 16 homepage, security boundaries, provenance, and release validation.
+- [ ] Verify Grok’s recommendations against current source or deterministic runtime evidence before making any change, then record its actual participation and supported findings.
+- [ ] Validate OpenAI through a secure direct or managed server-side route without printing, logging, or committing the credential.
+- [ ] Send Grok and OpenAI the same secret-safe focused audit brief for the published Concept 16 build and collect separate provider-attributed responses.
+- [ ] Compare the Grok and OpenAI findings against current source and deterministic runtime evidence; reject unsupported recommendations and record any change that would require a new checkpoint.
+- [x] Inspect secure environment and connector availability for Grok/xAI, OpenAI, OpenRouter, Cohere, Gemini, Perplexity, Anthropic/Claude, and Mistral/Le Chat without exposing credential values; all eight environment bindings are present and seven provider connectors are enabled.
+- [ ] Run a credential-safe connection test for each of the eight requested provider families and record only provider, model, HTTP/result status, and non-secret failure category.
+- [ ] Collect a separate provider-attributed Concept 16 audit from every service that authenticates successfully, using one identical secret-safe brief.
+- [ ] De-duplicate and verify all provider findings against the current published source and deterministic runtime evidence before recommending or implementing any change.
+- [ ] Request replacement credentials for xAI/Grok, Anthropic, Perplexity, Gemini, OpenRouter, Cloudflare, OpenAI, and GitHub through one managed secret form; never paste or print key values.
+- [ ] Validate all eight replacement credentials with provider-specific, credential-safe Vitest health checks that report only service, HTTP/result status, model or account availability, and non-secret failure category.
+- [ ] Use authenticated AI providers for separate provider-attributed Concept 16 reviews; keep GitHub and Cloudflare validation connection-only with no repository, DNS, zone, worker, or account changes.
+- [ ] Re-request only failed credentials through secure fields, then deliver the final connection matrix and supported AI-review status.
+- [ ] Include the existing `COHERE_API_KEY` and `MISTRAL_API_KEY` in the same credential-safe validation run so the complete scope covers ten services: xAI/Grok, Anthropic/Claude, Perplexity, Gemini, OpenRouter, OpenAI, Cohere, Mistral/Le Chat, Cloudflare, and GitHub.
+- [ ] Bring every authenticated AI provider into the same secret-safe Concept 16 review; keep Cloudflare and GitHub strictly read-only and connection-only unless the owner separately authorizes an action.
+- [ ] Investigate the current Concept 16 checkpoint, post-checkpoint working-tree changes, development and production logs, and both available domains before making another publication.
+- [ ] Obtain focused launch-readiness reviews from authenticated OpenAI, Gemini, Cohere, and Mistral/Le Chat using one secret-safe brief.
+- [ ] Verify every AI recommendation against current source, runtime, authentication, storage, route, and domain evidence before changing code.
+- [ ] Repair every reproducible Concept 16 launch blocker with targeted regression coverage while keeping live AUM hidden and preserving all 232 routes.
+- [ ] Re-run dependency security, TypeScript, full deterministic tests, production build, 232-route smoke, exact desktop/phone browser checks, storage authorization, and domain-readiness verification.
+- [ ] Create and immediately publish only the corrected Concept 16 checkpoint with the owner’s explicit authorization; do not publish an older checkpoint.
+- [ ] Verify the live Manus domain and `russellcap.com`, inspect post-publication production logs, and deliver the checkpoint and launch report.
+- [ ] Add the owner-confirmed existing domain `russellcapitalsystems.com` in the managed site Domains settings and capture the exact required DNS records.
+- [ ] Apply only the required records in the owner’s GoDaddy DNS manager; preserve `russellcap.com`, email records, verification records, and every unrelated DNS entry.
+- [ ] Verify the apex and `www` domain behavior, HTTPS certificate, canonical routing, Concept 16 homepage rendering, and one primary interaction after DNS propagation.
+- [ ] Record every DNS change and deliver the final domain-connection outcome without exposing account or credential information.
+- [x] Obtain separate launch and domain-readiness reviews from every currently authenticated AI provider—OpenAI, Gemini, Cohere, and Mistral/Le Chat—before applying DNS changes.
+- [ ] Add Grok, Claude, Perplexity, or OpenRouter to the review only after their provider-specific credential probes pass; never represent failed connections as participants.
+- [x] Verify all AI recommendations against the actual managed-domain requirements and live deployment before changing GoDaddy DNS.
+- [ ] Remove the expected anonymous `Missing session cookie` warning from public `auth.me` checks so production logs reserve warnings for malformed or invalid sessions.

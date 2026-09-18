@@ -1,0 +1,9 @@
+{
+  "ok": true,
+  "userFacingRoutesChecked": 231,
+  "requiredEndpointsChecked": [
+    "/",
+    "/api/trpc/auth.me"
+  ],
+  "baseUrl": "http://127.0.0.1:4177"
+}

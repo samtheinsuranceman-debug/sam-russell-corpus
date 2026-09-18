@@ -1,0 +1,292 @@
+# Terminal Full Output
+# Terminal: final_zero_failure_vitest
+# Command: cd /home/ubuntu/russell-capital-unified && NODE_OPTIONS=--max-old-space-size=3072 pnpm exec vitest run server/annuityAccumulationDB.test.ts server/batch9-features.test.ts server/round18.test.ts server/round19.test.ts && NODE_OPTIONS=--max-old-space-size=3072 pnpm exec vitest run --reporter=json --outputFile=audit/release-vitest.json >/tmp/release-vitest.log 2>&1; status=$?; echo "exit=$status"; jq '{numTotalTestSuites,numPassedTestSuites,numFailedTestSuites,numPendingTestSuites,numTotalTests,numPassedTests,numFailedTests,numPendingTests,failedFiles:[.testResults[]|select(.status=="failed")|.name]}' audit/release-vitest.json
+# PID: 753
+# Timestamp: 2026-08-26_21-05-15.550739
+# Original Length: 42111 characters
+# ----------------------------------------
+
+ubuntu@sandbox:~$ cd /home/ubuntu/russell-capital-unified && NODE_OPTIONS=--max-old-space-size=3072 pnpm exec vitest run server/annuityAccumulationDB.test.ts server/batch9-features.test.ts server/round18.test.ts server/round19.test.ts && NODE_OPTIONS=--max-old-space-size=3072 pnpm exec vitest run --reporter=json --outputFile=audit/release-vitest.json >/tmp/release-vitest.log 2>&1; status=$?; echo "exit=$status"; jq '{numTotalTestSuites,numPassedTestSuites,numFailedTestSuites,numPendingTestSuites,numTotalTests,numPassedTests,numFailedTests,numPendingTests,failedFiles:[.testResults[]|select(.status=="failed")|.name]}' audit/release-vitest.json
+{
+source /home/ubuntu/.user_env && source /opt/.manus/webdev.sh.env && cd . && cd /home/ubuntu/russell-capital-unified && NODE_OPTIONS=--max-old-space-size=3072 pnpm exec vitest run server/annuityAccumulationDB.test.ts server/batch9-features.test.ts server/round18.test.ts server/round19.test.ts && NODE_OPTIONS=--max-old-space-size=3072 pnpm exec vitest run --reporter=json --outputFile=audit/release-vitest.json >/tmp/release-vitest.log 2>&1; status=$?; echo "exit=$status"; jq '{numTotalTestSuites,n
+umPassedTestSuites,numFailedTestSuites,numPendingTestSuites,numTotalTests,numPassedTests,numFailedTests,numPendingTests,failedFiles:[.testResults[]|select(.status=="failed")|.name]}' audit/release-vitest.json
+}
+[WARN] The "pnpm" field in package.json is no longer read by pnpm. The following keys were ignored: "pnpm.patchedDependencies", "pnpm.overrides". See https://pnpm.io/settings for the new home of each setting.
+ RUN  v2.1.9 /home/ubuntu/russell-capital-unified
+stdout | server/round18.test.ts > sendLeaderboardDigest > should return sent:false when RESEND_API_KEY is not configured
+[Email] Leaderboard digest (no Resend key): test@example.com 1 advisors
+stdout | server/round18.test.ts > sendLeaderboardDigest > should handle empty entries array
+[Email] Leaderboard digest (no Resend key): test@example.com 0 advisors
+stdout | server/round18.test.ts > sendLeaderboardDigest > should format money values correctly
+[Email] Leaderboard digest (no Resend key): test@example.com 1 advisors
+ ✓ server/annuityAccumulationDB.test.ts (11)
+ ✓ server/batch9-features.test.ts (29)
+ ❯ server/round18.test.ts (20) 1378ms
+   ❯ riskScoring.history (3) 1127ms
+     ✓ should have a history procedure on the router
+     × should accept clientId and optional weeks parameter 1106ms
+     × should return empty array for non-existent client
+   ❯ riskScoring.historyBulk (3)
+     ✓ should have a historyBulk procedure on the router
+     × should return an object (clientId -> entries map)
+     × should accept optional input
+   ✓ storeRiskScoreSnapshots (2)
+   ❯ getRiskScoreHistory (2)
+     ✓ should be importable from db module
+     × should return array for valid params
+   ❯ getRiskScoreHistoryBulk (2)
+     ✓ should be importable from db module
+     × should return a Map
+   ✓ leaderboard.exportCsv (4)
+   ✓ sendLeaderboardDigest (4)
+ ❯ server/round19.test.ts (34) 1074ms
+   ✓ hubspot router (4)
+   ✓ hubspot DB helpers (7)
+   ✓ clientPortal.view (enhanced) (3) 998ms
+   ✓ complianceAlerts router (6)
+   ✓ compliance DB helpers (6)
+   ❯ compliance rules engine (3)
+     × ComplianceCheckResult interface should have required fields
+     ✓ should support all expected alert types
+     ✓ should support severity levels
+   ✓ hubspot schema fields (5)
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+ FAIL  server/round18.test.ts > riskScoring.history > should accept clientId and optional weeks parameter
+TRPCError: Failed query: select `id`, `score`, `level`, `factors`, `snapshotDate` from `risk_score_history` where (`risk_score_history`.`clientId` = ? and `risk_score_history`.`workspaceId` = ? and `risk_score_history`.`snapshotDate` >= ?) order by `risk_score_history`.`snapshotDate` limit ?
+params: 999,90002,2026-07-01 21:05:14.877,8
+ ❯ MySql2PreparedQuery.queryWithCache node_modules/.pnpm/drizzle-orm@0.44.6_mysql2@3.15.1/node_modules/src/mysql-core/session.ts:79:11
+ ❯ MySql2PreparedQuery.execute node_modules/.pnpm/drizzle-orm@0.44.6_mysql2@3.15.1/node_modules/src/mysql2/session.ts:132:18
+ ❯ resolveMiddleware node_modules/.pnpm/@trpc+server@11.6.0_typescript@5.9.3/node_modules/@trpc/server/src/unstable-core-do-not-import/procedureBuilder.ts:571:22
+ ❯ callRecursive node_modules/.pnpm/@trpc+server@11.6.0_typescript@5.9.3/node_modules/@trpc/server/src/unstable-core-do-not-import/procedureBuilder.ts:633:20
+ ❯ callRecursive node_modules/.pnpm/@trpc+server@11.6.0_typescript@5.9.3/node_modules/@trpc/server/src/unstable-core-do-not-import/procedureBuilder.ts:633:20
+ ❯ callRecursive node_modules/.pnpm/@trpc+server@11.6.0_typescript@5.9.3/node_modules/@trpc/server/src/unstable-core-do-not-import/procedureBuilder.ts:633:20
+ ❯ procedure node_modules/.pnpm/@trpc+server@11.6.0_typescript@5.9.3/node_modules/@trpc/server/src/unstable-core-do-not-import/procedureBuilder.ts:673:20
+ ❯ node_modules/.pnpm/@trpc+server@11.6.0_typescript@5.9.3/node_modules/@trpc/server/src/unstable-core-do-not-import/router.ts:474:20
+ ❯ server/round18.test.ts:50:20
+     48|     const caller = appRouter.createCaller(createAuthContext().ctx);
+     49|     // Should not throw for valid input
+     50|     const result = await caller.riskScoring.history({ clientId: 999, w…
+       |                    ^
+     51|     expect(Array.isArray(result)).toBe(true);
+     52|   });
+Caused by: Error: Failed query: select `id`, `score`, `level`, `factors`, `snapshotDate` from `risk_score_history` where (`risk_score_history`.`clientId` = ? and `risk_score_history`.`workspaceId` = ? and `risk_score_history`.`snapshotDate` >= ?) order by `risk_score_history`.`snapshotDate` limit ?
+params: 999,90002,2026-07-01 21:05:14.877,8
+ ❯ MySql2PreparedQuery.queryWithCache node_modules/.pnpm/drizzle-orm@0.44.6_mysql2@3.15.1/node_modules/src/mysql-core/session.ts:79:11
+ ❯ MySql2PreparedQuery.execute node_modules/.pnpm/drizzle-orm@0.44.6_mysql2@3.15.1/node_modules/src/mysql2/session.ts:132:18
+ ❯ resolveMiddleware node_modules/.pnpm/@trpc+server@11.6.0_typescript@5.9.3/node_modules/@trpc/server/src/unstable-core-do-not-import/procedureBuilder.ts:571:22
+ ❯ callRecursive node_modules/.pnpm/@trpc+server@11.6.0_typescript@5.9.3/node_modules/@trpc/server/src/unstable-core-do-not-import/procedureBuilder.ts:633:20
+ ❯ callRecursive node_modules/.pnpm/@trpc+server@11.6.0_typescript@5.9.3/node_modules/@trpc/server/src/unstable-core-do-not-import/procedureBuilder.ts:633:20
+ ❯ callRecursive node_modules/.pnpm/@trpc+server@11.6.0_typescript@5.9.3/node_modules/@trpc/server/src/unstable-core-do-not-import/procedureBuilder.ts:633:20
+ ❯ procedure node_modules/.pnpm/@trpc+server@11.6.0_typescript@5.9.3/node_modules/@trpc/server/src/unstable-core-do-not-import/procedureBuilder.ts:673:20
+ ❯ node_modules/.pnpm/@trpc+server@11.6.0_typescript@5.9.3/node_modules/@trpc/server/src/unstable-core-do-not-import/router.ts:474:20
+ ❯ server/round18.test.ts:50:20
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { query: 'select `id`, `score`, `level`, `factors`, `snapshotDate` from `risk_score_history` where (`risk_score_history`.`clientId` = ? and `risk_score_history`.`workspaceId` = ? and `risk_score_history`.`snapshotDate` >= ?) order by `risk_score_history`.`snapshotDate` limit ?', params: [ 999, 90002, '2026-07-01 21:05:14.877', 8 ] }
+Caused by: Error: Table 'gamo6r9wsyntelcqv8ahz3.risk_score_history' doesn't exist
+ ❯ PromisePool.query node_modules/.pnpm/mysql2@3.15.1/node_modules/mysql2/lib/promise/pool.js:36:22
+ ❯ node_modules/.pnpm/drizzle-orm@0.44.6_mysql2@3.15.1/node_modules/src/mysql2/session.ts:133:24
+ ❯ MySql2PreparedQuery.queryWithCache node_modules/.pnpm/drizzle-orm@0.44.6_mysql2@3.15.1/node_modules/src/mysql-core/session.ts:77:18
+ ❯ MySql2PreparedQuery.execute node_modules/.pnpm/drizzle-orm@0.44.6_mysql2@3.15.1/node_modules/src/mysql2/session.ts:132:29
+ ❯ MySqlSelectBase.execute node_modules/.pnpm/drizzle-orm@0.44.6_mysql2@3.15.1/node_modules/src/mysql-core/query-builders/select.ts:1145:25
+ ❯ MySqlSelectBase.then node_modules/.pnpm/drizzle-orm@0.44.6_mysql2@3.15.1/node_modules/src/query-promise.ts:31:15
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'ER_NO_SUCH_TABLE', errno: 1146, sql: 'select `id`, `score`, `level`, `factors`, `snapshotDate` from `risk_score_history` where (`risk_score_history`.`clientId` = 999 and `risk_score_history`.`workspaceId` = 90002 and `risk_score_history`.`snapshotDate` >= \'2026-07-01 21:05:14.877\') order by `risk_score_history`.`snapshotDate` limit 8', sqlState: '42S02', sqlMessage: 'Table \'gamo6r9wsyntelcqv8ahz3.risk_score_history\' doesn\'t exist' }
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯
+ FAIL  server/round18.test.ts > riskScoring.history > should return empty array for non-existent client
+TRPCError: Failed query: select `id`, `score`, `level`, `factors`, `snapshotDate` from `risk_score_history` where (`risk_score_history`.`clientId` = ? and `risk_score_history`.`workspaceId` = ? and `risk_score_history`.`snapshotDate` >= ?) order by `risk_score_history`.`snapshotDate` limit ?
+params: 99999,90002,2026-06-03 21:05:14.910,12
+ ❯ MySql2PreparedQuery.queryWithCache node_modules/.pnpm/drizzle-orm@0.44.6_mysql2@3.15.1/node_modules/src/mysql-core/session.ts:79:11
+ ❯ MySql2PreparedQuery.execute node_modules/.pnpm/drizzle-orm@0.44.6_mysql2@3.15.1/node_modules/src/mysql2/session.ts:132:18
+ ❯ resolveMiddleware node_modules/.pnpm/@trpc+server@11.6.0_typescript@5.9.3/node_modules/@trpc/server/src/unstable-core-do-not-import/procedureBuilder.ts:571:22
+ ❯ callRecursive node_modules/.pnpm/@trpc+server@11.6.0_typescript@5.9.3/node_modules/@trpc/server/src/unstable-core-do-not-import/procedureBuilder.ts:633:20
+ ❯ callRecursive node_modules/.pnpm/@trpc+server@11.6.0_typescript@5.9.3/node_modules/@trpc/server/src/unstable-core-do-not-import/procedureBuilder.ts:633:20
+ ❯ callRecursive node_modules/.pnpm/@trpc+server@11.6.0_typescript@5.9.3/node_modules/@trpc/server/src/unstable-core-do-not-import/procedureBuilder.ts:633:20
+ ❯ procedure node_modules/.pnpm/@trpc+server@11.6.0_typescript@5.9.3/node_modules/@trpc/server/src/unstable-core-do-not-import/procedureBuilder.ts:673:20
+ ❯ node_modules/.pnpm/@trpc+server@11.6.0_typescript@5.9.3/node_modules/@trpc/server/src/unstable-core-do-not-import/router.ts:474:20
+ ❯ server/round18.test.ts:56:20
+     54|   it("should return empty array for non-existent client", async () => {
+     55|     const caller = appRouter.createCaller(createAuthContext().ctx);
+     56|     const result = await caller.riskScoring.history({ clientId: 99999 …
+       |                    ^
+     57|     expect(result).toEqual([]);
+     58|   });
+Caused by: Error: Failed query: select `id`, `score`, `level`, `factors`, `snapshotDate` from `risk_score_history` where (`risk_score_history`.`clientId` = ? and `risk_score_history`.`workspaceId` = ? and `risk_score_history`.`snapshotDate` >= ?) order by `risk_score_history`.`snapshotDate` limit ?
+params: 99999,90002,2026-06-03 21:05:14.910,12
+ ❯ MySql2PreparedQuery.queryWithCache node_modules/.pnpm/drizzle-orm@0.44.6_mysql2@3.15.1/node_modules/src/mysql-core/session.ts:79:11
+ ❯ MySql2PreparedQuery.execute node_modules/.pnpm/drizzle-orm@0.44.6_mysql2@3.15.1/node_modules/src/mysql2/session.ts:132:18
+ ❯ resolveMiddleware node_modules/.pnpm/@trpc+server@11.6.0_typescript@5.9.3/node_modules/@trpc/server/src/unstable-core-do-not-import/procedureBuilder.ts:571:22
+ ❯ callRecursive node_modules/.pnpm/@trpc+server@11.6.0_typescript@5.9.3/node_modules/@trpc/server/src/unstable-core-do-not-import/procedureBuilder.ts:633:20
+ ❯ callRecursive node_modules/.pnpm/@trpc+server@11.6.0_typescript@5.9.3/node_modules/@trpc/server/src/unstable-core-do-not-import/procedureBuilder.ts:633:20
+ ❯ callRecursive node_modules/.pnpm/@trpc+server@11.6.0_typescript@5.9.3/node_modules/@trpc/server/src/unstable-core-do-not-import/procedureBuilder.ts:633:20
+ ❯ procedure node_modules/.pnpm/@trpc+server@11.6.0_typescript@5.9.3/node_modules/@trpc/server/src/unstable-core-do-not-import/procedureBuilder.ts:673:20
+ ❯ node_modules/.pnpm/@trpc+server@11.6.0_typescript@5.9.3/node_modules/@trpc/server/src/unstable-core-do-not-import/router.ts:474:20
+ ❯ server/round18.test.ts:56:20
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { query: 'select `id`, `score`, `level`, `factors`, `snapshotDate` from `risk_score_history` where (`risk_score_history`.`clientId` = ? and `risk_score_history`.`workspaceId` = ? and `risk_score_history`.`snapshotDate` >= ?) order by `risk_score_history`.`snapshotDate` limit ?', params: [ 99999, 90002, '2026-06-03 21:05:14.910', 12 ] }
+Caused by: Error: Table 'gamo6r9wsyntelcqv8ahz3.risk_score_history' doesn't exist
+ ❯ PromisePool.query node_modules/.pnpm/mysql2@3.15.1/node_modules/mysql2/lib/promise/pool.js:36:22
+ ❯ node_modules/.pnpm/drizzle-orm@0.44.6_mysql2@3.15.1/node_modules/src/mysql2/session.ts:133:24
+ ❯ MySql2PreparedQuery.queryWithCache node_modules/.pnpm/drizzle-orm@0.44.6_mysql2@3.15.1/node_modules/src/mysql-core/session.ts:77:18
+ ❯ MySql2PreparedQuery.execute node_modules/.pnpm/drizzle-orm@0.44.6_mysql2@3.15.1/node_modules/src/mysql2/session.ts:132:29
+ ❯ MySqlSelectBase.execute node_modules/.pnpm/drizzle-orm@0.44.6_mysql2@3.15.1/node_modules/src/mysql-core/query-builders/select.ts:1145:25
+ ❯ MySqlSelectBase.then node_modules/.pnpm/drizzle-orm@0.44.6_mysql2@3.15.1/node_modules/src/query-promise.ts:31:15
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'ER_NO_SUCH_TABLE', errno: 1146, sql: 'select `id`, `score`, `level`, `factors`, `snapshotDate` from `risk_score_history` where (`risk_score_history`.`clientId` = 99999 and `risk_score_history`.`workspaceId` = 90002 and `risk_score_history`.`snapshotDate` >= \'2026-06-03 21:05:14.910\') order by `risk_score_history`.`snapshotDate` limit 12', sqlState: '42S02', sqlMessage: 'Table \'gamo6r9wsyntelcqv8ahz3.risk_score_history\' doesn\'t exist' }
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯
+ FAIL  server/round18.test.ts > riskScoring.historyBulk > should return an object (clientId -> entries map)
+TRPCError: Failed query: select `clientId`, `score`, `snapshotDate` from `risk_score_history` where (`risk_score_history`.`workspaceId` = ? and `risk_score_history`.`snapshotDate` >= ?) order by `risk_score_history`.`snapshotDate`
+params: 90002,2026-07-29 21:05:14.928
+ ❯ MySql2PreparedQuery.queryWithCache node_modules/.pnpm/drizzle-orm@0.44.6_mysql2@3.15.1/node_modules/src/mysql-core/session.ts:79:11
+ ❯ MySql2PreparedQuery.execute node_modules/.pnpm/drizzle-orm@0.44.6_mysql2@3.15.1/node_modules/src/mysql2/session.ts:132:18
+ ❯ Module.getRiskScoreHistoryBulk server/db.ts:2336:16
+    2334|   cutoff.setDate(cutoff.getDate() - weeks * 7);
+    2335| 
+    2336|   const rows = await db.select({
+       |                ^
+    2337|     clientId: riskScoreHistory.clientId,
+    2338|     score: riskScoreHistory.score,
+ ❯ server/routers.ts:1953:21
+ ❯ resolveMiddleware node_modules/.pnpm/@trpc+server@11.6.0_typescript@5.9.3/node_modules/@trpc/server/src/unstable-core-do-not-import/procedureBuilder.ts:571:22
+ ❯ callRecursive node_modules/.pnpm/@trpc+server@11.6.0_typescript@5.9.3/node_modules/@trpc/server/src/unstable-core-do-not-import/procedureBuilder.ts:633:20
+ ❯ callRecursive node_modules/.pnpm/@trpc+server@11.6.0_typescript@5.9.3/node_modules/@trpc/server/src/unstable-core-do-not-import/procedureBuilder.ts:633:20
+ ❯ callRecursive node_modules/.pnpm/@trpc+server@11.6.0_typescript@5.9.3/node_modules/@trpc/server/src/unstable-core-do-not-import/procedureBuilder.ts:633:20
+ ❯ procedure node_modules/.pnpm/@trpc+server@11.6.0_typescript@5.9.3/node_modules/@trpc/server/src/unstable-core-do-not-import/procedureBuilder.ts:673:20
+Caused by: Error: Failed query: select `clientId`, `score`, `snapshotDate` from `risk_score_history` where (`risk_score_history`.`workspaceId` = ? and `risk_score_history`.`snapshotDate` >= ?) order by `risk_score_history`.`snapshotDate`
+params: 90002,2026-07-29 21:05:14.928
+ ❯ MySql2PreparedQuery.queryWithCache node_modules/.pnpm/drizzle-orm@0.44.6_mysql2@3.15.1/node_modules/src/mysql-core/session.ts:79:11
+ ❯ MySql2PreparedQuery.execute node_modules/.pnpm/drizzle-orm@0.44.6_mysql2@3.15.1/node_modules/src/mysql2/session.ts:132:18
+ ❯ Module.getRiskScoreHistoryBulk server/db.ts:2336:16
+ ❯ server/routers.ts:1953:21
+ ❯ resolveMiddleware node_modules/.pnpm/@trpc+server@11.6.0_typescript@5.9.3/node_modules/@trpc/server/src/unstable-core-do-not-import/procedureBuilder.ts:571:22
+ ❯ callRecursive node_modules/.pnpm/@trpc+server@11.6.0_typescript@5.9.3/node_modules/@trpc/server/src/unstable-core-do-not-import/procedureBuilder.ts:633:20
+ ❯ callRecursive node_modules/.pnpm/@trpc+server@11.6.0_typescript@5.9.3/node_modules/@trpc/server/src/unstable-core-do-not-import/procedureBuilder.ts:633:20
+ ❯ callRecursive node_modules/.pnpm/@trpc+server@11.6.0_typescript@5.9.3/node_modules/@trpc/server/src/unstable-core-do-not-import/procedureBuilder.ts:633:20
+ ❯ procedure node_modules/.pnpm/@trpc+server@11.6.0_typescript@5.9.3/node_modules/@trpc/server/src/unstable-core-do-not-import/procedureBuilder.ts:673:20
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { query: 'select `clientId`, `score`, `snapshotDate` from `risk_score_history` where (`risk_score_history`.`workspaceId` = ? and `risk_score_history`.`snapshotDate` >= ?) order by `risk_score_history`.`snapshotDate`', params: [ 90002, '2026-07-29 21:05:14.928' ] }
+Caused by: Error: Table 'gamo6r9wsyntelcqv8ahz3.risk_score_history' doesn't exist
+ ❯ PromisePool.query node_modules/.pnpm/mysql2@3.15.1/node_modules/mysql2/lib/promise/pool.js:36:22
+ ❯ node_modules/.pnpm/drizzle-orm@0.44.6_mysql2@3.15.1/node_modules/src/mysql2/session.ts:133:24
+ ❯ MySql2PreparedQuery.queryWithCache node_modules/.pnpm/drizzle-orm@0.44.6_mysql2@3.15.1/node_modules/src/mysql-core/session.ts:77:18
+ ❯ MySql2PreparedQuery.execute node_modules/.pnpm/drizzle-orm@0.44.6_mysql2@3.15.1/node_modules/src/mysql2/session.ts:132:29
+ ❯ MySqlSelectBase.execute node_modules/.pnpm/drizzle-orm@0.44.6_mysql2@3.15.1/node_modules/src/mysql-core/query-builders/select.ts:1145:25
+ ❯ MySqlSelectBase.then node_modules/.pnpm/drizzle-orm@0.44.6_mysql2@3.15.1/node_modules/src/query-promise.ts:31:15
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'ER_NO_SUCH_TABLE', errno: 1146, sql: 'select `clientId`, `score`, `snapshotDate` from `risk_score_history` where (`risk_score_history`.`workspaceId` = 90002 and `risk_score_history`.`snapshotDate` >= \'2026-07-29 21:05:14.928\') order by `risk_score_history`.`snapshotDate`', sqlState: '42S02', sqlMessage: 'Table \'gamo6r9wsyntelcqv8ahz3.risk_score_history\' doesn\'t exist' }
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/7]⎯
+ FAIL  server/round18.test.ts > riskScoring.historyBulk > should accept optional input
+TRPCError: Failed query: select `clientId`, `score`, `snapshotDate` from `risk_score_history` where (`risk_score_history`.`workspaceId` = ? and `risk_score_history`.`snapshotDate` >= ?) order by `risk_score_history`.`snapshotDate`
+params: 90002,2026-07-01 21:05:14.984
+ ❯ MySql2PreparedQuery.queryWithCache node_modules/.pnpm/drizzle-orm@0.44.6_mysql2@3.15.1/node_modules/src/mysql-core/session.ts:79:11
+ ❯ MySql2PreparedQuery.execute node_modules/.pnpm/drizzle-orm@0.44.6_mysql2@3.15.1/node_modules/src/mysql2/session.ts:132:18
+ ❯ Module.getRiskScoreHistoryBulk server/db.ts:2336:16
+    2334|   cutoff.setDate(cutoff.getDate() - weeks * 7);
+    2335| 
+    2336|   const rows = await db.select({
+       |                ^
+    2337|     clientId: riskScoreHistory.clientId,
+    2338|     score: riskScoreHistory.score,
+ ❯ server/routers.ts:1953:21
+ ❯ resolveMiddleware node_modules/.pnpm/@trpc+server@11.6.0_typescript@5.9.3/node_modules/@trpc/server/src/unstable-core-do-not-import/procedureBuilder.ts:571:22
+ ❯ callRecursive node_modules/.pnpm/@trpc+server@11.6.0_typescript@5.9.3/node_modules/@trpc/server/src/unstable-core-do-not-import/procedureBuilder.ts:633:20
+ ❯ callRecursive node_modules/.pnpm/@trpc+server@11.6.0_typescript@5.9.3/node_modules/@trpc/server/src/unstable-core-do-not-import/procedureBuilder.ts:633:20
+ ❯ callRecursive node_modules/.pnpm/@trpc+server@11.6.0_typescript@5.9.3/node_modules/@trpc/server/src/unstable-core-do-not-import/procedureBuilder.ts:633:20
+ ❯ procedure node_modules/.pnpm/@trpc+server@11.6.0_typescript@5.9.3/node_modules/@trpc/server/src/unstable-core-do-not-import/procedureBuilder.ts:673:20
+Caused by: Error: Failed query: select `clientId`, `score`, `snapshotDate` from `risk_score_history` where (`risk_score_history`.`workspaceId` = ? and `risk_score_history`.`snapshotDate` >= ?) order by `risk_score_history`.`snapshotDate`
+params: 90002,2026-07-01 21:05:14.984
+ ❯ MySql2PreparedQuery.queryWithCache node_modules/.pnpm/drizzle-orm@0.44.6_mysql2@3.15.1/node_modules/src/mysql-core/session.ts:79:11
+ ❯ MySql2PreparedQuery.execute node_modules/.pnpm/drizzle-orm@0.44.6_mysql2@3.15.1/node_modules/src/mysql2/session.ts:132:18
+ ❯ Module.getRiskScoreHistoryBulk server/db.ts:2336:16
+ ❯ server/routers.ts:1953:21
+ ❯ resolveMiddleware node_modules/.pnpm/@trpc+server@11.6.0_typescript@5.9.3/node_modules/@trpc/server/src/unstable-core-do-not-import/procedureBuilder.ts:571:22
+ ❯ callRecursive node_modules/.pnpm/@trpc+server@11.6.0_typescript@5.9.3/node_modules/@trpc/server/src/unstable-core-do-not-import/procedureBuilder.ts:633:20
+ ❯ callRecursive node_modules/.pnpm/@trpc+server@11.6.0_typescript@5.9.3/node_modules/@trpc/server/src/unstable-core-do-not-import/procedureBuilder.ts:633:20
+ ❯ callRecursive node_modules/.pnpm/@trpc+server@11.6.0_typescript@5.9.3/node_modules/@trpc/server/src/unstable-core-do-not-import/procedureBuilder.ts:633:20
+ ❯ procedure node_modules/.pnpm/@trpc+server@11.6.0_typescript@5.9.3/node_modules/@trpc/server/src/unstable-core-do-not-import/procedureBuilder.ts:673:20
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { query: 'select `clientId`, `score`, `snapshotDate` from `risk_score_history` where (`risk_score_history`.`workspaceId` = ? and `risk_score_history`.`snapshotDate` >= ?) order by `risk_score_history`.`snapshotDate`', params: [ 90002, '2026-07-01 21:05:14.984' ] }
+Caused by: Error: Table 'gamo6r9wsyntelcqv8ahz3.risk_score_history' doesn't exist
+ ❯ PromisePool.query node_modules/.pnpm/mysql2@3.15.1/node_modules/mysql2/lib/promise/pool.js:36:22
+ ❯ node_modules/.pnpm/drizzle-orm@0.44.6_mysql2@3.15.1/node_modules/src/mysql2/session.ts:133:24
+ ❯ MySql2PreparedQuery.queryWithCache node_modules/.pnpm/drizzle-orm@0.44.6_mysql2@3.15.1/node_modules/src/mysql-core/session.ts:77:18
+ ❯ MySql2PreparedQuery.execute node_modules/.pnpm/drizzle-orm@0.44.6_mysql2@3.15.1/node_modules/src/mysql2/session.ts:132:29
+ ❯ MySqlSelectBase.execute node_modules/.pnpm/drizzle-orm@0.44.6_mysql2@3.15.1/node_modules/src/mysql-core/query-builders/select.ts:1145:25
+ ❯ MySqlSelectBase.then node_modules/.pnpm/drizzle-orm@0.44.6_mysql2@3.15.1/node_modules/src/query-promise.ts:31:15
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'ER_NO_SUCH_TABLE', errno: 1146, sql: 'select `clientId`, `score`, `snapshotDate` from `risk_score_history` where (`risk_score_history`.`workspaceId` = 90002 and `risk_score_history`.`snapshotDate` >= \'2026-07-01 21:05:14.984\') order by `risk_score_history`.`snapshotDate`', sqlState: '42S02', sqlMessage: 'Table \'gamo6r9wsyntelcqv8ahz3.risk_score_history\' doesn\'t exist' }
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/7]⎯
+ FAIL  server/round18.test.ts > getRiskScoreHistory > should return array for valid params
+Error: Failed query: select `id`, `score`, `level`, `factors`, `snapshotDate` from `risk_score_history` where (`risk_score_history`.`clientId` = ? and `risk_score_history`.`workspaceId` = ? and `risk_score_history`.`snapshotDate` >= ?) order by `risk_score_history`.`snapshotDate` limit ?
+params: 99999,99999,2026-06-03 21:05:15.001,12
+ ❯ MySql2PreparedQuery.queryWithCache node_modules/.pnpm/drizzle-orm@0.44.6_mysql2@3.15.1/node_modules/src/mysql-core/session.ts:79:11
+ ❯ MySql2PreparedQuery.execute node_modules/.pnpm/drizzle-orm@0.44.6_mysql2@3.15.1/node_modules/src/mysql2/session.ts:132:18
+ ❯ server/round18.test.ts:109:20
+    107|   it("should return array for valid params", async () => {
+    108|     const { getRiskScoreHistory } = await import("./db");
+    109|     const result = await getRiskScoreHistory(99999, 99999, 12);
+       |                    ^
+    110|     expect(Array.isArray(result)).toBe(true);
+    111|   });
+Caused by: Error: Table 'gamo6r9wsyntelcqv8ahz3.risk_score_history' doesn't exist
+ ❯ PromisePool.query node_modules/.pnpm/mysql2@3.15.1/node_modules/mysql2/lib/promise/pool.js:36:22
+ ❯ node_modules/.pnpm/drizzle-orm@0.44.6_mysql2@3.15.1/node_modules/src/mysql2/session.ts:133:24
+ ❯ MySql2PreparedQuery.queryWithCache node_modules/.pnpm/drizzle-orm@0.44.6_mysql2@3.15.1/node_modules/src/mysql-core/session.ts:77:18
+ ❯ MySql2PreparedQuery.execute node_modules/.pnpm/drizzle-orm@0.44.6_mysql2@3.15.1/node_modules/src/mysql2/session.ts:132:29
+ ❯ MySqlSelectBase.execute node_modules/.pnpm/drizzle-orm@0.44.6_mysql2@3.15.1/node_modules/src/mysql-core/query-builders/select.ts:1145:25
+ ❯ MySqlSelectBase.then node_modules/.pnpm/drizzle-orm@0.44.6_mysql2@3.15.1/node_modules/src/query-promise.ts:31:15
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'ER_NO_SUCH_TABLE', errno: 1146, sql: 'select `id`, `score`, `level`, `factors`, `snapshotDate` from `risk_score_history` where (`risk_score_history`.`clientId` = 99999 and `risk_score_history`.`workspaceId` = 99999 and `risk_score_history`.`snapshotDate` >= \'2026-06-03 21:05:15.001\') order by `risk_score_history`.`snapshotDate` limit 12', sqlState: '42S02', sqlMessage: 'Table \'gamo6r9wsyntelcqv8ahz3.risk_score_history\' doesn\'t exist' }
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/7]⎯
+ FAIL  server/round18.test.ts > getRiskScoreHistoryBulk > should return a Map
+Error: Failed query: select `clientId`, `score`, `snapshotDate` from `risk_score_history` where (`risk_score_history`.`workspaceId` = ? and `risk_score_history`.`snapshotDate` >= ?) order by `risk_score_history`.`snapshotDate`
+params: 99999,2026-07-01 21:05:15.008
+ ❯ MySql2PreparedQuery.queryWithCache node_modules/.pnpm/drizzle-orm@0.44.6_mysql2@3.15.1/node_modules/src/mysql-core/session.ts:79:11
+ ❯ MySql2PreparedQuery.execute node_modules/.pnpm/drizzle-orm@0.44.6_mysql2@3.15.1/node_modules/src/mysql2/session.ts:132:18
+ ❯ getRiskScoreHistoryBulk server/db.ts:2336:16
+    2334|   cutoff.setDate(cutoff.getDate() - weeks * 7);
+    2335| 
+    2336|   const rows = await db.select({
+       |                ^
+    2337|     clientId: riskScoreHistory.clientId,
+    2338|     score: riskScoreHistory.score,
+ ❯ server/round18.test.ts:122:20
+Caused by: Error: Table 'gamo6r9wsyntelcqv8ahz3.risk_score_history' doesn't exist
+ ❯ PromisePool.query node_modules/.pnpm/mysql2@3.15.1/node_modules/mysql2/lib/promise/pool.js:36:22
+ ❯ node_modules/.pnpm/drizzle-orm@0.44.6_mysql2@3.15.1/node_modules/src/mysql2/session.ts:133:24
+ ❯ MySql2PreparedQuery.queryWithCache node_modules/.pnpm/drizzle-orm@0.44.6_mysql2@3.15.1/node_modules/src/mysql-core/session.ts:77:18
+ ❯ MySql2PreparedQuery.execute node_modules/.pnpm/drizzle-orm@0.44.6_mysql2@3.15.1/node_modules/src/mysql2/session.ts:132:29
+ ❯ MySqlSelectBase.execute node_modules/.pnpm/drizzle-orm@0.44.6_mysql2@3.15.1/node_modules/src/mysql-core/query-builders/select.ts:1145:25
+ ❯ MySqlSelectBase.then node_modules/.pnpm/drizzle-orm@0.44.6_mysql2@3.15.1/node_modules/src/query-promise.ts:31:15
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'ER_NO_SUCH_TABLE', errno: 1146, sql: 'select `clientId`, `score`, `snapshotDate` from `risk_score_history` where (`risk_score_history`.`workspaceId` = 99999 and `risk_score_history`.`snapshotDate` >= \'2026-07-01 21:05:15.008\') order by `risk_score_history`.`snapshotDate`', sqlState: '42S02', sqlMessage: 'Table \'gamo6r9wsyntelcqv8ahz3.risk_score_history\' doesn\'t exist' }
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/7]⎯
+ FAIL  server/round19.test.ts > compliance rules engine > ComplianceCheckResult interface should have required fields
+Error: Failed query: select `id`, `clientId`, `workspaceId`, `alertType`, `severity`, `title`, `message`, `dueDate`, `dismissed`, `dismissedBy`, `dismissedAt`, `resolvedAt`, `metadata`, `createdAt` from `compliance_alerts` where (`compliance_alerts`.`workspaceId` = ? and `compliance_alerts`.`dismissed` = ?)
+params: 99999,false
+ ❯ MySql2PreparedQuery.queryWithCache node_modules/.pnpm/drizzle-orm@0.44.6_mysql2@3.15.1/node_modules/src/mysql-core/session.ts:79:11
+ ❯ MySql2PreparedQuery.execute node_modules/.pnpm/drizzle-orm@0.44.6_mysql2@3.15.1/node_modules/src/mysql2/session.ts:132:18
+ ❯ runComplianceChecks server/db.ts:2582:26
+    2580| 
+    2581|   // Get existing active alerts to avoid duplicates
+    2582|   const existingAlerts = await db.select().from(complianceAlerts)
+       |                          ^
+    2583|     .where(and(eq(complianceAlerts.workspaceId, workspaceId), eq(compl…
+    2584|   const existingKeys = new Set(existingAlerts.map(a => `${a.clientId}-…
+ ❯ server/round19.test.ts:187:21
+Caused by: Error: Table 'gamo6r9wsyntelcqv8ahz3.compliance_alerts' doesn't exist
+ ❯ PromisePool.query node_modules/.pnpm/mysql2@3.15.1/node_modules/mysql2/lib/promise/pool.js:36:22
+ ❯ node_modules/.pnpm/drizzle-orm@0.44.6_mysql2@3.15.1/node_modules/src/mysql2/session.ts:133:24
+ ❯ MySql2PreparedQuery.queryWithCache node_modules/.pnpm/drizzle-orm@0.44.6_mysql2@3.15.1/node_modules/src/mysql-core/session.ts:77:18
+ ❯ MySql2PreparedQuery.execute node_modules/.pnpm/drizzle-orm@0.44.6_mysql2@3.15.1/node_modules/src/mysql2/session.ts:132:29
+ ❯ MySqlSelectBase.execute node_modules/.pnpm/drizzle-orm@0.44.6_mysql2@3.15.1/node_modules/src/mysql-core/query-builders/select.ts:1145:25
+ ❯ MySqlSelectBase.then node_modules/.pnpm/drizzle-orm@0.44.6_mysql2@3.15.1/node_modules/src/query-promise.ts:31:15
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'ER_NO_SUCH_TABLE', errno: 1146, sql: 'select `id`, `clientId`, `workspaceId`, `alertType`, `severity`, `title`, `message`, `dueDate`, `dismissed`, `dismissedBy`, `dismissedAt`, `resolvedAt`, `metadata`, `createdAt` from `compliance_alerts` where (`compliance_alerts`.`workspaceId` = 99999 and `compliance_alerts`.`dismissed` = false)', sqlState: '42S02', sqlMessage: 'Table \'gamo6r9wsyntelcqv8ahz3.compliance_alerts\' doesn\'t exist' }
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/7]⎯
+ Test Files  2 failed | 2 passed (4)
+      Tests  7 failed | 87 passed (94)
+   Start at  21:05:11
+   Duration  3.67s (transform 1.21s, setup 0ms, collect 6.03s, tests 2.50s, environment 1ms, prepare 315ms)
+exit=1
+jq: error: Could not open file audit/release-vitest.json: No such file or directory
+ubuntu@sandbox:~/russell-capital-unified$ 

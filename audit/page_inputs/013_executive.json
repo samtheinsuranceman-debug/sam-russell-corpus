@@ -1,0 +1,47 @@
+{
+  "route_metadata": {
+    "index": 13,
+    "route": "/executive",
+    "component": "ExecutiveEntrance",
+    "category": "public_or_auth",
+    "source_file": "client/src/pages/ExecutiveEntrance.tsx",
+    "source_hash": "8f1f5a22fef2b8d1f9fb2eb0e1b65155ef711d9bb702d4ca6dbad6edd7a04922",
+    "metrics": {
+      "lines": 119,
+      "trpc_queries": 0,
+      "trpc_mutations": 0,
+      "forms": 1,
+      "buttons": 1,
+      "links": 1,
+      "charts": 0,
+      "loading_states": 1,
+      "error_states": 0,
+      "empty_states": 0,
+      "simulated_timers": 0,
+      "random_values": 0,
+      "placeholder_terms": 2,
+      "hardcoded_success_toasts": 0,
+      "external_urls": 0,
+      "local_storage": 3,
+      "download_actions": 0
+    },
+    "same_source_routes": [
+      "/executive"
+    ]
+  },
+  "audit_rubric": {
+    "usefulness_9_10": "Essential differentiated workflow with real persistence or reliable server behavior and strong user states.",
+    "usefulness_7_8": "High-value page with clear workflow; minor integration, duplication, or state gaps.",
+    "usefulness_5_6": "Useful supporting page but partial, narrow, duplicative, or presentation-heavy.",
+    "usefulness_3_4": "Low-value prototype, mostly static or simulated; better merged or moved to Secondary Information.",
+    "usefulness_1_2": "Broken, misleading, near-empty, unsafe, or obsolete; retire only after owner approval.",
+    "recommendations": [
+      "Keep",
+      "Improve",
+      "Merge",
+      "Move to Secondary Information",
+      "Retire"
+    ]
+  },
+  "source": "import { useState } from \"react\";\nimport { useLocation } from \"wouter\";\nimport { Button } from \"@/components/ui/button\";\nimport { Input } from \"@/components/ui/input\";\nimport { Card, CardContent, CardHeader } from \"@/components/ui/card\";\nimport { Label } from \"@/components/ui/label\";\nimport { ArrowRight, AlertCircle, KeyRound, ShieldCheck } from \"lucide-react\";\nimport { BRAND_NAME } from \"@shared/branding\";\n\nexport default function ExecutiveEntrance() {\n  const [, navigate] = useLocation();\n  const [passcode, setPasscode] = useState(\"\");\n  const [error, setError] = useState(\"\");\n  const [loading, setLoading] = useState(false);\n\n  const handleSubmit = async (e: React.FormEvent) => {\n    e.preventDefault();\n    setError(\"\");\n    setLoading(true);\n    try {\n      const res = await fetch(\"/api/executive/login\", {\n        method: \"POST\",\n        headers: { \"Content-Type\": \"application/json\" },\n        body: JSON.stringify({ passcode }),\n        credentials: \"include\",\n      });\n      const data = await res.json();\n      if (!res.ok) {\n        setError(data.error || \"Invalid passcode\");\n        return;\n      }\n      // Store session info\n      localStorage.setItem(\"rc_trial_active\", \"true\");\n      localStorage.setItem(\"rc_trial_expires\", data.expiresAt);\n      localStorage.setItem(\"rc_trial_email\", \"executive\");\n      // Navigate to portal\n      navigate(\"/portal\");\n    } catch (err) {\n      setError(\"Network error. Please try again.\");\n    } finally {\n      setLoading(false);\n    }\n  };\n\n  return (\n    <div className=\"min-h-screen bg-gradient-to-br from-[#0a1628] via-[#0f1d35] to-[#0a1628] flex items-center justify-center p-4\">\n      <div className=\"w-full max-w-md\">\n        {/* Logo & Title */}\n        <div className=\"text-center mb-8\">\n          <div className=\"inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-emerald-500/20 border border-emerald-500/30 mb-4\">\n            <KeyRound className=\"w-8 h-8 text-emerald-400\" />\n          </div>\n          <h1 className=\"text-2xl font-bold text-white mb-1\">{BRAND_NAME}</h1>\n          <p className=\"text-emerald-400 text-sm font-medium italic\">Turn Capital Into Income&trade;</p>\n          <div className=\"mt-3 flex items-center justify-center gap-2\">\n            <ShieldCheck className=\"w-4 h-4 text-amber-400\" />\n            <span className=\"text-amber-400 text-sm font-semibold uppercase tracking-wider\">Executive Entrance</span>\n          </div>\n        </div>\n\n        {/* Passcode Card */}\n        <Card className=\"bg-[#111c32]/80 border-slate-700/50 backdrop-blur-sm shadow-2xl\">\n          <CardHeader className=\"pb-2 pt-6 px-6\">\n            <p className=\"text-slate-400 text-sm text-center\">\n              Enter the executive passcode to access the advisor portal\n            </p>\n          </CardHeader>\n          <CardContent className=\"px-6 pb-6\">\n            <form onSubmit={handleSubmit} className=\"space-y-5\">\n              <div className=\"space-y-2\">\n                <Label htmlFor=\"passcode\" className=\"text-slate-300\">Passcode</Label>\n                <Input\n                  id=\"passcode\"\n                  type=\"password\"\n                  placeholder=\"Enter executive passcode\"\n                  value={passcode}\n                  onChange={(e) => { setPasscode(e.target.value); setError(\"\"); }}\n                  required\n                  autoFocus\n                  className=\"bg-[#0a1628] border-slate-600 text-white placeholder:text-slate-500 focus:border-emerald-500 text-center text-lg tracking-wider h-12\"\n                />\n              </div>\n\n              {error && (\n                <div className=\"flex items-center gap-2 text-sm rounded-lg p-3 bg-red-500/10 text-red-400\">\n                  <AlertCircle className=\"w-4 h-4 flex-shrink-0\" />\n                  {error}\n                </div>\n              )}\n\n              <Button\n                type=\"submit\"\n                disabled={loading || !passcode}\n                className=\"w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-3 text-base h-12\"\n              >\n                {loading ? (\n                  <span className=\"flex items-center gap-2\">\n                    <span className=\"w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin\" />\n                    Verifying...\n                  </span>\n                ) : (\n                  <span className=\"flex items-center gap-2\">\n                    Enter Portal <ArrowRight className=\"w-4 h-4\" />\n                  </span>\n                )}\n              </Button>\n            </form>\n\n            <div className=\"mt-6 pt-5 border-t border-slate-700/50 text-center\">\n              <a href=\"/\" className=\"text-slate-500 hover:text-slate-400 text-xs transition-colors\">\n                &larr; Back to Homepage\n              </a>\n            </div>\n          </CardContent>\n        </Card>\n      </div>\n    </div>\n  );\n}\n"
+}

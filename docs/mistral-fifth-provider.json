@@ -1,0 +1,10 @@
+{
+  "provider": "Mistral AI / Le Chat",
+  "transport": "Direct Mistral API",
+  "model": "mistral-small-latest",
+  "success": true,
+  "status": 200,
+  "latency_ms": 2388,
+  "response": "\"Ready to merge the 222-route primary app with seven new pages, with top priority safeguard being strict input validation to prevent injection attacks or data corruption during the integration.\"",
+  "error": ""
+}

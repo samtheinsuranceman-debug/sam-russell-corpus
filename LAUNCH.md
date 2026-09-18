@@ -1,0 +1,520 @@
+# Russell Capital Systems — Launch Runbook
+
+**Audience:** an operating agent or engineer with real access to a host machine
+(VPS, dedicated server, or Bluehost cPanel with Node.js Selector) and a MySQL
+database. This document is self-contained: follow it top to bottom to take the
+site from source to live.
+
+**What this app is:** a full‑stack web app — React 19 + Vite SPA on the client,
+an Express + tRPC (v11) server, Drizzle ORM over MySQL. It is **not** a static
+site; it needs a running Node process and a database.
+
+**Source of truth**
+- Repo: `samtheinsuranceman-debug/sam-russell-corpus`
+- Branch: `master` (work lands via PRs from `claude/claude-md-docs-0qgcvw`)
+- App subfolder: `russell-capital-systems/` (run everything from here)
+
+---
+
+## ⚡ Where the public site lives
+
+**https://www.russellcapitalsystems.com** is the application on Railway
+(project `RCS`, service `web`). The `www` host is a CNAME to Railway
+(`dd56isi9.up.railway.app`), written through the Make DNS scenario in
+`docs/grok-handoff/09_DNS_AND_MAIL_RECORDS.md`. `CANONICAL_HOST` and
+`PUBLIC_BASE_URL` on the service name `www`, so plain http 301s to https,
+canonical links and the sitemap carry the www origin, and the Railway
+`*.up.railway.app` address keeps working as a fallback.
+
+**The bare domain** (`russellcapitalsystems.com`, no www) stays on GitHub
+Pages, because the Railway plan allows one custom domain per service. The
+Pages folder `docs/` at the repo root holds `CNAME`, a one-line forwarding
+page (`docs/index.html` sends the visitor to the same path on www), `robots.txt`
+and `sitemap.xml` pointing at www, and `og-card.jpg`. When the plan allows a
+second domain, attach the apex to the same service, change the apex A
+records to Railway's, and the forwarding page is no longer needed.
+
+**A static mirror** of the homepage, with no server, database or keys, is
+still built from `russell-capital-systems/live/rcs-live-homepage.template.html`
+to `docs/mirror/index.html` (`pnpm live:build`, also part of `pnpm release`).
+It is a fallback for any static host; it is not what the public sees.
+
+The full app (portal, lead inbox, nine-AI panel, database) still deploys per the
+sections below.
+
+## 🎙 What a new client gets in the portal (New Client Welcome List)
+
+1. **Financial Assessment** (`/portal/financial-assessment`) — the 15-section,
+   ~190-question fact finder with autosave and a printable Financial Analysis
+   Document. Nothing is advised until it is complete.
+2. **AI Financial Advisor** (`/portal/ai-advisor`) — the tape recorder. The whole
+   AI team answers as one Financial Librarian, by voice or text, only once the
+   assessment is complete. Press **JOURNEY** and it distils everything asked into
+   3–5 core questions, names the question the client hasn't asked, and lays out
+   10–15 pages of this site — calculators included — in order.
+3. **Wealth Genome Analysis**, then **The Arrival → The Brotherhood** (the seven
+   journey pages).
+
+Voice output uses `ELEVENLABS_API_KEY` + `ELEVENLABS_VOICE_ID` when set; otherwise
+the browser's own voice. With no AI keys the librarian still answers from the
+assessment alone (no invented figures). Builder notes for the next engineer are in
+`docs/grok-handoff/`.
+
+## ⚙ One command to regenerate everything
+
+From `russell-capital-systems/`:
+
+```bash
+pnpm release
+```
+
+runs typecheck → builds `docs/mirror/index.html` → public-surface tests (including the
+live-page ↔ React parity test) → production build → `rcs-deploy-<date>.zip` →
+`rcs-code-book/`. Any failing step aborts, so stale artifacts are never produced
+from a broken build. Then commit and push.
+
+---
+
+## 0. Security contract (do not violate)
+
+- **API keys and secrets live ONLY in the host's environment variables.** Never
+  put them in the code, the repo, logs, or any chat. The app reads every key
+  from `process.env` and skips any provider whose key is absent.
+- **Rotate the three burned keys before use:** OpenAI, Mistral, HeyGen.
+- The Resend sender domain (`russellcapitalsystems.com`) must be **verified in
+  Resend** or acknowledgement emails will not send.
+- **Never fabricate** financial figures, results, or patent statuses. The app is
+  built to keep figures out of the public view; keep it that way.
+
+---
+
+## 1. Prerequisites
+
+- **Node.js 20.19+ or 22** (`node -v`)
+- **pnpm** (`npm i -g pnpm`) — the repo ships `pnpm-lock.yaml`
+- **MySQL 8** database (host, port 3306, a database name, user, password)
+- Outbound HTTPS from the server (the AI/email providers are called server‑side)
+
+---
+
+## 2. Get the code
+
+```bash
+git clone https://github.com/samtheinsuranceman-debug/sam-russell-corpus.git
+cd sam-russell-corpus/russell-capital-systems   # master is the release branch
+```
+
+## 3. Install dependencies
+
+```bash
+pnpm install --frozen-lockfile
+# npm also works: `npm install` (the repo's .npmrc sets legacy-peer-deps, which
+# npm needs here — without it npm refuses to resolve the tree)
+```
+
+## 4. Configure environment variables
+
+Set these in the host's environment (cPanel "Environment variables" panel, a
+systemd unit, a `.env` loaded by your process manager, etc.) — **not** in the repo.
+
+### Required (app will not run correctly without these)
+| Variable | Value |
+|---|---|
+| `DATABASE_URL` | `mysql://USER:PASS@HOST:3306/DBNAME` |
+| `JWT_SECRET` | long random string (session signing) |
+| `OWNER_EMAIL` | the owner's sign‑in email — **this is how you reach `/portal/leads` on your own host** |
+| `OWNER_PASSWORD_HASH` | bcrypt hash of the owner password; generate with `pnpm owner:password` (never store the password itself) |
+| `OWNER_NAME` | display name for the owner account (optional) |
+| `OWNER_OPEN_ID` | the owner's user id (optional; defaults to `owner`). Also gates the inbox for a managed‑OAuth user |
+| `ROOM_VIDEO_URLS` | Optional. JSON map of HeyGen room key → https URL (`{"engines":"https://…mp4"}`); keys in `shared/roomVideos.ts`, plus the page slots `heloc-before` and `heloc-after`. A tile appears on that room's pages once set. `ROOM_VIDEO_POSTERS` is the same shape for stills. |
+| `PUBLIC_HOMEPAGE` | leave unset: the homepage sits behind the entrance and an unsigned visitor to `/` is sent to `/login` first. Set to `1` to open the homepage to the public without signing in |
+| `GUEST_PASSCODE_HASH` | bcrypt hash of the **entrance passcode**: any email plus this passcode signs in as a regular user (never admin). Generate with `pnpm owner:password`; the passcode itself is never stored. Unset = no passcode entrance |
+| `OAUTH_SERVER_URL` | **managed host only** (Manus). Leave unset on cPanel/VPS — the owner sign‑in above replaces it |
+| `NODE_ENV` | `production` |
+| `PORT` | port to listen on (default `3000`) |
+
+### AI advisors (optional — each is skip‑if‑absent; add the ones you use)
+`ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, `XAI_API_KEY`, `GEMINI_API_KEY`,
+`PERPLEXITY_API_KEY`, `OPENROUTER_API_KEY`, `MISTRAL_API_KEY`, `GROQ_API_KEY`,
+`COHERE_API_KEY`, `TOGETHER_API_KEY`,
+`BUILT_IN_FORGE_API_KEY` (Manus / built‑in gateway; also powers `BUILT_IN_FORGE_API_URL` if self‑hosted).
+> With zero AI keys the homepage concierge degrades gracefully to a written teaser.
+> **Owner's standing rule:** DeepSeek is excluded from this platform. Do not add it as a
+> provider, a panel voice, or an OpenRouter route.
+
+### Email (pick one — this is how you hear about new leads)
+- **Plain SMTP, nothing to verify:** `SMTP_HOST`, `SMTP_PORT` (587), `SMTP_USER`,
+  `SMTP_PASS`, optional `SMTP_FROM`. For Gmail: host `smtp.gmail.com`, port `587`,
+  user = your Gmail address, pass = a Google **App Password** (Google Account →
+  Security → 2‑Step Verification → App passwords). Bluehost's own mail server
+  works the same way with a cPanel mailbox.
+- **Or Resend:** `RESEND_API_KEY` (the sender domain `russellcapitalsystems.com`
+  must be verified in Resend first).
+- `LEAD_NOTIFY_EMAIL` — where "new lead" alerts go (defaults to `OWNER_EMAIL`).
+
+Every new homepage lead then emails you (name, contact, best time, their question,
+and a link to the inbox — never the figures) and sends the prospect a warm
+acknowledgement. With no mail configured, leads are still saved to the inbox;
+you just won't be emailed.
+
+**Keep mail out of spam.** Set `MAIL_FROM="Russell Capital Systems <hello@russellcapitalsystems.com>"`
+and `MAIL_REPLY_TO=<your inbox>`, then run `pnpm mail:check` — it reads the real
+SPF, DKIM and DMARC records for the sending domain and prints what is missing.
+(On 2026‑09‑06 the domain had SPF and DMARC but **no DKIM key**; with DMARC at
+`p=quarantine` that alone sends mail to spam. Publish the DKIM record from
+Resend or Google Workspace, re‑run the check.) Follow‑up mail carries one‑click
+unsubscribe headers automatically; set `PUBLIC_BASE_URL=https://russellcapitalsystems.com`
+so the links point at the live site.
+
+### Text messages (optional — leads and clients by SMS)
+- **Twilio:** `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, and `TWILIO_FROM`
+  (your number, E.164) or `TWILIO_MESSAGING_SERVICE_SID`. Register the 10DLC
+  brand + campaign in the Twilio console before sending. Point the number's
+  inbound webhook at `https://<your-domain>/api/sms/inbound` so STOP/START/HELP
+  are honoured.
+- **Or any relay:** `SMS_WEBHOOK_URL` (+ `SMS_WEBHOOK_TOKEN`) — the app POSTs
+  `{to, body}` JSON (Inkbox, Speko, Zapier, Make).
+- `LEAD_NOTIFY_PHONE` — your mobile; you get a text for every new lead.
+
+### Automated lead follow‑up (on by default once mail or SMS is configured)
+Text an hour after capture, emails on days 1, 3 and 7, text on day 5 — no
+figures, unsubscribe/STOP built in, and it stops the moment you mark the lead
+contacted or message them yourself. `FOLLOWUPS_DISABLED=1` switches it off.
+On a host that sleeps the process, add a cron that runs `pnpm followups:run`
+(set `SCHEDULER_TOKEN` first) every 5 minutes.
+
+### Live benchmark rates
+The Treasury curve, CPI, the inflation ladder, the 30‑year mortgage and Fed
+funds rates come from FRED on any host with no key, through FRED's public
+CSV download, dated and cached. `FRED_API_KEY` (free at fred.stlouisfed.org)
+is optional and switches the same series to the keyed API. If neither
+answers, dated reference values are shown and labelled as such.
+
+### Erosion engine harvest (optional)
+With any AI key set, the owner can have the council read each forecaster's
+page from the Purchasing Power page ("Harvest"); figures arrive with their
+verbatim sentence and wait for approval. `EROSION_HARVEST_DAYS=7` runs that
+sweep weekly on its own, then scores every closed-year claim against the
+published outcome on FRED and regrades each source. Nothing enters the panel
+without the owner. Harvests read PDFs as well as pages. The same sweep takes
+the political pulse first: live seat counts, the federal bench, and the
+prediction-market odds of a change of control, all keyless, so the tax path
+is read against who is expected to hold the levers. The pulse itself is free
+and runs weekly on its own (`POWER_PULSE_DAYS`, default 7; 0 turns it off),
+with a first reading half a minute after boot.
+
+### The Zip Engine (optional data sweep)
+`/portal/zip-engine`: home values since the record began for the client's own
+zip codes (FHFA five-digit-zip index back-cast onto Zillow's dollar levels),
+rents where Zillow publishes them, the cohort of zips worth at least a chosen
+threshold at the start of the chosen window, and the loan's true 30-year
+interest at each year's Freddie Mac rate. All four sources are public and
+keyless. The owner reads them with "Read the files now" on the page;
+`ZIP_DATA_DAYS=30` re-reads them monthly (first pass two minutes after boot).
+The Zillow files are large (tens of MB); a read takes a few minutes and stores
+about fifty thousand compact rows in `zip_series`.
+
+### The Career Ledger (optional data sweep)
+`/for` and `/for/<specialty>`: one public landing page per kind of doctor
+(38 in pass 1: physicians, surgeons, psychiatry, dentists, dental
+specialists, veterinarians, attorneys) with the training length beside its
+accreditor's page, BLS wages nationally and by state year by year since May
+2014, NCES tuition since 1963-64, the cost of the degree at each year's
+federal rate, what the residency years forgo, a peer comparison, the vision
+questions, and an exit rating on every page. All sources are public and
+keyless. `CAREER_DATA_DAYS=90` re-reads BLS and NCES quarterly (first pass
+four minutes after boot); the owner can also call `career.refresh`. The BLS
+state files are tens of MB each and a full first read takes several minutes.
+Spec: `docs/engines/CAREER_LEDGER_ENGINE.md`.
+
+### Long-Term Care (no switch)
+`/portal/long-term-care` carries the 2025 national medians for six care
+settings (CareScout survey), the federal figures on how much care people
+need, §7702B and §101(g), the CPI medical-care escalation, each family
+member's shortfall against the policy's chronic-illness rider (terms typed
+from the form), and a standalone quote beside it. Standalone premium
+increases are an owner-entered registry (`ltc.addFiling`, filing URL
+required). Spec: `docs/engines/LONG_TERM_CARE_ENGINE.md`.
+
+### Tax-Free Income for Life + the Longevity Engine (no switch)
+`/portal/income-for-life` shows the studies on guaranteed income and
+wellbeing first (RAND/HRS, a peer-reviewed mixed result, an industry
+survey, each cited with its caveat), then survival odds for one life or
+two from the SSA 2023 period life table (either / both at 80–100), then
+the plan: the pre-tax account through the conversion pass, the sheet's
+bonus and payout, expected years and total, and what tax would take. It
+refuses taxable money. Payouts are an owner-entered registry
+(`incomeLife.addRateSheet`, rate-sheet URL and date required); the exit
+provision is described without a company name; the flow-through policy is
+shown as four questions with authorities. Spec:
+`docs/engines/INCOME_FOR_LIFE_ENGINE.md`.
+
+### The IUL Engine's links (no switch)
+`/portal/iul-engine` reads the backtester's credited history for a chosen
+index account beside CPI-U and M2 from FRED (December over December), prints
+the median split and the correlation under a caveat that it is the record
+and not a mechanism, gives the tax-equivalent yield at the client's marginal
+rate, the liquidity contrast with §72 cited, and the direct versus
+non-direct-recognition loan note. Spec: `docs/engines/IUL_ENGINE_LINKS.md`.
+
+### The Inheritance Engine (no switch)
+`/portal/inheritance` reads the Fact Finder's new `inheritances` list (Estate
+section), taxes each item the way the Code taxes that kind on arrival with
+the section linked, multiplies by the erosion trajectory's burden for the
+year expected, discounts with the CPI-U ladder, checks the benefactor's
+estate against the IRS filing threshold, and offers the remarriage and
+step-family follow-up only when the client asks. The partner's saving
+figure stays off the page until `PARTNER_COPY.quote.approved` is set true
+in `shared/inheritanceEngine.ts`. Spec: `docs/engines/INHERITANCE_ENGINE.md`.
+
+### The Rental Enterprise (optional switch)
+`/portal/rental-enterprise` sizes the client's purchasing power from the
+Fact Finder under Fannie Mae's published investment-property rules, ranks
+every zip the Zip Engine stores (yield + appreciation over the chosen window
+− the county's FEMA hazard rating − drawdown), proposes one property or
+three to four with the same money, writes each loan at Freddie Mac's rate
+plus the typed investor add-on, runs the 20- or 30-year pro-forma, and
+recycles the tax saved through an irrevocable trust holding indexed
+universal life (mutual carriers only, `shared/mutualIulCarriers.ts`, every
+unverified item flagged). `HAZARD_DATA_DAYS=180` re-reads FEMA's National
+Risk Index county file twice a year (first pass three minutes after boot;
+the owner can also call `rental.refreshHazards`). Attorneys shown are
+the owner's vetted rows only (`rental.addAttorney`); ACTEC's directory
+is linked otherwise. Spec: `docs/engines/RENTAL_ENTERPRISE_ENGINE.md`.
+
+### Short-term rental sources (optional keys)
+`/portal/short-term-rentals` carries a registry of ten short-term-rental data
+sites (`shared/strSources.ts`, each verified on a dated page): Rabbu first,
+then AirDNA, Mashvisor, AirROI, PriceLabs, Awning, Airbnb and Vrbo search,
+Inside Airbnb's public files, Beyond Pricing. The advisor follows the same
+registry as a protocol whenever a plan touches a rental (`STR_PROTOCOL`, in
+its system prompt). Every site works as a button with no key. Optional keys,
+names only, each in the host env panel: `AIRROI_API_KEY` (self-serve,
+pay-as-you-go), `MASHVISOR_API_KEY` (self-serve, credits),
+`PRICELABS_API_KEY`, `AIRDNA_API_KEY` (contract), `EXPEDIA_RAPID_API_KEY`
+(contract), `BEYOND_API_TOKEN` (own listings). The page shows which are set
+by name. "Read this page with the AI" fetches the registry page on the
+server and reports only figures whose sentence is on the page, dated;
+nothing read is stored.
+
+### Loan forgiveness engine
+`/portal/forgiveness`: the record of every federal forgiveness and
+repayment program since 1987 with its statute, the computed political
+correlation, an eleven-authority panel, and the client's own outlook (PSLF,
+IDR, NHSC, IHS, VA, NIH) with the date, the amount, the tax, the odds, the
+references, and what the freed payment becomes if invested. No switches;
+any AI key lets the owner harvest new figures into its panel.
+
+### SEO, hosting, security and backups (see docs/grok-handoff/16_SEO_HOSTING_SECURITY.md)
+```bash
+CANONICAL_HOST=www.russellcapitalsystems.com   # http and the apex/www sibling 301 here; HSTS on
+PUBLIC_BASE_URL=https://www.russellcapitalsystems.com
+# CSP_MODE=report-only        # enforce (default) | report-only | off
+# CSP_EXTRA_SRC=https://cdn.example.com
+GOOGLE_SITE_VERIFICATION=…    # Search Console → HTML tag content
+GA_MEASUREMENT_ID=G-…         # GA4 (loads only when set)
+# Local SEO — the same name/address/phone in the footer and the schema:
+BUSINESS_PHONE="+1 304 555 0100"
+BUSINESS_STREET="1 Main Street"  BUSINESS_CITY=Charleston  BUSINESS_STATE=WV  BUSINESS_POSTAL_CODE=25301
+BUSINESS_HOURS="Mo-Fr 09:00-17:00"  BUSINESS_AREA_SERVED="West Virginia"
+GOOGLE_BUSINESS_PROFILE_URL=https://g.page/…
+# Backups — daily at 04:00 UTC; off-site when a bucket is set (any S3-compatible store):
+BACKUP_S3_BUCKET=rcs-backups   BACKUP_S3_PREFIX=rcs-backups/
+S3_ENDPOINT=…  S3_REGION=…  S3_ACCESS_KEY_ID=…  S3_SECRET_ACCESS_KEY=…
+# BACKUP_HOUR_UTC=4  BACKUP_DIR=./backups  BACKUP_KEEP=14  BACKUP_DISABLED=1
+# Owner sign-in second factor:
+OWNER_TOTP_SECRET=…           # pnpm owner:totp prints it and the authenticator URI
+```
+`/portal/site-health` (administrator) runs the whole checklist against the
+live server and names the next step for anything not green. `/healthz` is
+the probe for an uptime monitor. `pnpm db:restore <file|s3://…>` restores a
+backup (docs/RECOVERY_PLAN.md).
+
+### Connections (every outside platform, switched on by variables)
+The portal page **Connections** (`/portal/connections`) shows every platform the
+site can use and whether it is on. The Plan Ledger is the spine: every event it
+records is sent to the automation receivers below, so Zapier / Make / n8n can
+route leads, decisions and messages anywhere.
+
+- `ZAPIER_HOOK_URL`, `MAKE_HOOK_URL`, `N8N_HOOK_URL`, `EVENT_WEBHOOK_URLS` (comma list)
+  — JSON `plan.ledger` events; `EVENT_WEBHOOK_SECRET` signs them (X-RCS-Signature,
+  HMAC-SHA256); `EVENT_WEBHOOK_KINDS` narrows the kinds; facts (financial values)
+  are only sent with `EVENT_WEBHOOK_INCLUDE_FACTS=1`.
+- `SLACK_WEBHOOK_URL` — status, decision, outcome and note events as a Slack message.
+- `HUBSPOT_ACCESS_TOKEN` (private app) — every lead with an email becomes a contact.
+- `CALENDLY_URL` — booking link in follow-ups and templates.
+- Browser: `POSTHOG_KEY` (+`POSTHOG_HOST`), `GA_MEASUREMENT_ID`, `SENTRY_LOADER_URL`,
+  `INTERCOM_APP_ID` — loaded only when set; only public ids ever reach the browser.
+
+### Railway (the full app, one click)
+The project **russell-capital-systems** on Railway runs the whole site (Express +
+React + MySQL). Source: branch **`deploy/rcs`**, root `/`. That branch is only
+this folder, rebuilt from `master` by the `Publish deploy/rcs` GitHub Action on
+every push that touches `russell-capital-systems/` (Railway snapshots the whole
+repo per build, and the corpus is ~800 MB, so the full repo cannot be its source).
+Build `pnpm install --frozen-lockfile --prod=false && pnpm build`; start
+`bash scripts/build_database.sh && node dist/index.js` (creates any missing
+tables on every boot). Variables set: `DATABASE_URL` (from the MySQL service),
+`JWT_SECRET`, `SCHEDULER_TOKEN`, `OWNER_EMAIL`, `PUBLIC_BASE_URL`, mail From/Reply-To.
+Add `OWNER_PASSWORD_HASH` (run `pnpm owner:password` locally) and the AI /
+mail / SMS keys in the Railway Variables panel. DNS records to publish are in
+`docs/grok-handoff/09_DNS_AND_MAIL_RECORDS.md`.
+
+### Controls — consent, mandates, firewall, runtime, bridges (optional)
+`ADVICE_SIGNING_KEY` (signs advice + document provenance; falls back to `JWT_SECRET`),
+`INBOUND_EVENT_SECRET` (signed events into `POST /api/events/inbound`; falls back to
+`EVENT_WEBHOOK_SECRET`), `FHIR_BASE_URL` + `FHIR_ACCESS_TOKEN` (health-data bridge),
+`TAX_FEED_URL` + `TAX_FEED_TOKEN` (tax fact feed). See `docs/grok-handoff/11_CONTROLS_AUTHORITY_LAYER.md`.
+
+### Voice (optional)
+`ELEVENLABS_API_KEY` + `ELEVENLABS_VOICE_ID` (spoken answers).
+
+### Client build‑time (optional)
+`VITE_APP_ID`.
+
+## 5. Create / migrate the database
+
+The homepage lead capture needs the `public_leads` table (plus the existing
+schema — 115 tables in all). Create an empty database first (cPanel → MySQL
+Databases, or `CREATE DATABASE rcs CHARACTER SET utf8mb4;`), then build it in
+**either** of two ways:
+
+**A. With shell access (recommended)**
+```bash
+# DATABASE_URL must be exported in this shell
+DATABASE_URL="mysql://USER:PASS@HOST:3306/DBNAME" pnpm db:build
+```
+`db:build` applies `drizzle/schema.ts` directly to the database and then verifies
+that every table exists (it prints `✔ database is complete`). Safe to re-run:
+existing tables are kept, missing tables/columns are added, nothing is dropped
+without drizzle-kit telling you first.
+
+**B. No shell access (phpMyAdmin)**
+Import `russell-capital-systems/database/rcs-schema.sql` — the complete schema
+as one plain SQL file (regenerated by `pnpm db:schema` / `pnpm release`).
+phpMyAdmin → select the database → **Import** → choose the file → Go. You
+should see 115 tables afterwards.
+
+> Do **not** use `drizzle-kit migrate` on a fresh database: the historical
+> migration chain in `drizzle/` is incomplete (files 0001–0066 were never
+> committed), so it cannot replay from zero. `db:build` and the SQL export
+> both come straight from the schema and don't depend on that history.
+
+## 6. Build
+
+```bash
+pnpm check            # typecheck (optional but recommended)
+pnpm build            # client -> dist/public, server -> dist/index.js
+```
+
+## 7. Run
+
+```bash
+pnpm start            # = NODE_ENV=production node dist/index.js
+```
+The server serves the SPA (from `dist/public`) and the tRPC API on `PORT`.
+
+### Keep it alive (VPS / dedicated) — pick one
+**pm2**
+```bash
+npm i -g pm2
+PORT=3000 NODE_ENV=production pm2 start dist/index.js --name rcs
+pm2 save && pm2 startup
+```
+**systemd** (`/etc/systemd/system/rcs.service`)
+```ini
+[Service]
+WorkingDirectory=/path/to/russell-capital-systems
+Environment=NODE_ENV=production
+Environment=PORT=3000
+EnvironmentFile=/path/to/rcs.env      # holds DATABASE_URL, JWT_SECRET, keys, ...
+ExecStart=/usr/bin/node dist/index.js
+Restart=always
+[Install]
+WantedBy=multi-user.target
+```
+```bash
+systemctl daemon-reload && systemctl enable --now rcs
+```
+
+### Bluehost cPanel (Node.js Selector) alternative
+- Node 20.19+/22, **Application root** = the app folder, **Startup file** =
+  `dist/index.js`, **Mode** = Production.
+- Add every env var in the panel, "Run NPM Install" (`--omit=dev`), run the
+  step‑5 migration in the app's virtualenv terminal, then Restart.
+
+## 8. Put it on the domain
+
+Point `russellcapitalsystems.com` at the running app.
+
+**nginx reverse proxy** (VPS)
+```nginx
+server {
+  server_name russellcapitalsystems.com www.russellcapitalsystems.com;
+  location / { proxy_pass http://127.0.0.1:3000; proxy_set_header Host $host;
+               proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+               proxy_set_header X-Forwarded-Proto $scheme; }
+}
+```
+Then issue TLS (e.g. `certbot --nginx`). On cPanel, map the domain/subdomain to
+the Node app and enable AutoSSL. The app already respects `X-Forwarded-Proto`
+for secure cookies.
+
+## 9. Verify it's live
+
+**Automated check (30 seconds):** from the app directory on the host, or from
+any machine that can reach the site:
+```bash
+node scripts/smoke_lead_capture.mjs https://russellcapitalsystems.com
+# add DATABASE_URL=... in front to also confirm the row landed in public_leads
+```
+It submits a clearly-fake test lead through the real API, checks that the
+visitor sees only the qualitative teaser (no figures), that the returning-visitor
+cookie works, and (with `DATABASE_URL`) that the `public_leads` row exists with
+the advisor analysis. Delete "Smoke Test" from `/portal/leads` afterwards.
+
+Add `SMOKE_OWNER_EMAIL=… SMOKE_OWNER_PASSWORD=…` to also sign in as the owner and
+confirm the lead is visible in the inbox.
+
+**Manual check:**
+- Homepage loads at the domain over HTTPS.
+- **Sign in**: `/login` is the entrance. With `GUEST_PASSCODE_HASH` set it shows the
+  passcode form (any email + the passcode); with `OWNER_EMAIL` and
+  `OWNER_PASSWORD_HASH` set it also shows the owner tab. Five acknowledgements
+  (`shared/loginDisclaimers.ts`) must be checked before the button enables, and the
+  server refuses a sign-in that does not carry all five; each accepted sign-in is
+  written to `compliance_signatures` with date, address and browser. Five wrong
+  attempts lock that client out for 15 minutes.
+- **Ask AI Brain Trust**: press the mic / type a question → an answer returns
+  (or the graceful teaser if no AI keys are set).
+- **Tax & Savings Estimate**: submit a test lead with consent → you see the
+  qualitative teaser (no dollar figures).
+- Owner login → **`/portal/leads`** shows the test lead with the illustrative
+  advisor figures; the CSV export works; you receive an owner notification and
+  (if Resend is configured) the test address gets an acknowledgement email.
+- Returning-visitor greeting shows your name on reload.
+
+## 10. Troubleshooting
+
+- **Blank page / 502:** app not started or wrong startup file → confirm
+  `dist/index.js` exists (`pnpm build`) and the process is running on `PORT`.
+- **DB errors / leads not saving:** `DATABASE_URL` wrong or migration not run →
+  re-run step 5; confirm the DB user can `CREATE TABLE`.
+- **Concierge says "not configured":** no AI keys set → add at least one AI key
+  (e.g. `ANTHROPIC_API_KEY`) in the env and restart.
+- **No acknowledgement emails:** `RESEND_API_KEY` missing or sender domain not
+  verified in Resend (or no `SMTP_*`).
+- **Emails land in spam:** run `pnpm mail:check` — fix whatever it marks ✘
+  (usually DKIM), and make sure `MAIL_FROM` is on that domain.
+- **Texts not sending:** `TWILIO_*` or `SMS_WEBHOOK_URL` unset, the number
+  replied STOP (see `sms_opt_outs`), or 10DLC registration is incomplete.
+- **Follow‑ups not going out:** the process is asleep between requests — set
+  `SCHEDULER_TOKEN` and cron `pnpm followups:run`; or `FOLLOWUPS_DISABLED` is set.
+- **Owner inbox 403:** `OWNER_OPEN_ID` doesn't match your logged-in user, or the
+  user's role isn't `admin`.
+
+---
+
+*Build is verified: `pnpm check`, the test suite, and `pnpm build` all pass on
+this branch. Everything above is standard Node deployment — no repo‑specific
+magic beyond the scripts named here (`build`, `start`, `check`, `db:push`).*

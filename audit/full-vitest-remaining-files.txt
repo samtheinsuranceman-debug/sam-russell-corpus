@@ -1,0 +1,11 @@
+      1 server/batch9-features.test.ts
+      1 server/data-integrity.test.ts
+      2 server/integration.test.ts
+      2 server/mortgage-killer-pdf-scenarios.test.ts
+      1 server/openrouter.secret.test.ts
+      2 server/resend.secret.test.ts
+     14 server/round67-70-features.test.ts
+      3 server/slide-ratelimit.test.ts
+      3 server/slides-ratelimit.test.ts
+      6 server/trialAndCommission.test.ts
+      1 server/xai.secret.test.ts

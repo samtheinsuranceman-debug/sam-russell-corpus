@@ -1,0 +1,47 @@
+{
+  "route_metadata": {
+    "index": 7,
+    "route": "/login",
+    "component": "Login",
+    "category": "public_or_auth",
+    "source_file": "client/src/pages/Login.tsx",
+    "source_hash": "be33a28609f592f22385a9c9ab8648e3b812d92077d4e904621415bea2ee103f",
+    "metrics": {
+      "lines": 47,
+      "trpc_queries": 0,
+      "trpc_mutations": 0,
+      "forms": 0,
+      "buttons": 1,
+      "links": 1,
+      "charts": 0,
+      "loading_states": 0,
+      "error_states": 0,
+      "empty_states": 0,
+      "simulated_timers": 0,
+      "random_values": 0,
+      "placeholder_terms": 0,
+      "hardcoded_success_toasts": 0,
+      "external_urls": 0,
+      "local_storage": 0,
+      "download_actions": 0
+    },
+    "same_source_routes": [
+      "/login"
+    ]
+  },
+  "audit_rubric": {
+    "usefulness_9_10": "Essential differentiated workflow with real persistence or reliable server behavior and strong user states.",
+    "usefulness_7_8": "High-value page with clear workflow; minor integration, duplication, or state gaps.",
+    "usefulness_5_6": "Useful supporting page but partial, narrow, duplicative, or presentation-heavy.",
+    "usefulness_3_4": "Low-value prototype, mostly static or simulated; better merged or moved to Secondary Information.",
+    "usefulness_1_2": "Broken, misleading, near-empty, unsafe, or obsolete; retire only after owner approval.",
+    "recommendations": [
+      "Keep",
+      "Improve",
+      "Merge",
+      "Move to Secondary Information",
+      "Retire"
+    ]
+  },
+  "source": "import { startLogin } from \"@/const\";\nimport { ArrowRight, LockKeyhole, ShieldCheck } from \"lucide-react\";\n\nfunction requestedReturnPath() {\n  const params = new URLSearchParams(window.location.search);\n  const value = params.get(\"returnTo\") ?? \"/portal/dashboard\";\n  return value.startsWith(\"/\") && !value.startsWith(\"//\") ? value : \"/portal/dashboard\";\n}\n\nexport default function Login() {\n  const returnPath = requestedReturnPath();\n\n  return (\n    <main className=\"min-h-screen grid lg:grid-cols-[1.05fr_.95fr] bg-[#07060d] text-white\">\n      <section className=\"relative hidden overflow-hidden border-r border-violet-400/15 lg:block\">\n        <div className=\"absolute inset-0 bg-[radial-gradient(circle_at_28%_20%,rgba(124,58,237,.34),transparent_32%),radial-gradient(circle_at_70%_70%,rgba(34,197,94,.16),transparent_30%),linear-gradient(155deg,#07060d,#100a1d_55%,#08070d)]\" />\n        <div className=\"relative z-10 flex h-full flex-col justify-between p-12\">\n          <p className=\"text-sm font-semibold uppercase tracking-[0.26em] text-violet-300\">Russell Capital Systems</p>\n          <div className=\"max-w-xl\">\n            <div className=\"mb-6 flex h-14 w-14 items-center justify-center rounded-2xl border border-violet-300/20 bg-violet-500/10\">\n              <LockKeyhole className=\"h-7 w-7 text-violet-300\" />\n            </div>\n            <h1 className=\"text-5xl font-semibold leading-tight tracking-tight\">One secure identity for every planning workflow.</h1>\n            <p className=\"mt-5 max-w-lg text-lg leading-8 text-violet-100/60\">Managed OAuth protects client records, saved plans, scenarios, and advisor tools without client-side passwords or hidden bypasses.</p>\n          </div>\n          <div className=\"flex items-center gap-2 text-sm text-violet-200/60\"><ShieldCheck className=\"h-4 w-4\" /> Server-enforced access controls</div>\n        </div>\n      </section>\n      <section className=\"grid place-items-center px-6 py-16\">\n        <div className=\"w-full max-w-md rounded-3xl border border-violet-400/20 bg-white/[0.045] p-8 shadow-[0_30px_100px_rgba(76,29,149,.28)] backdrop-blur-xl\">\n          <p className=\"text-xs font-semibold uppercase tracking-[0.24em] text-violet-300\">Advisor portal</p>\n          <h2 className=\"mt-3 text-3xl font-semibold tracking-tight\">Sign in securely</h2>\n          <p className=\"mt-3 leading-7 text-violet-100/60\">Continue with your authorized account. Password-gate access has been retired.</p>\n          <button\n            type=\"button\"\n            onClick={() => startLogin(returnPath)}\n            className=\"mt-7 flex w-full items-center justify-center gap-2 rounded-xl bg-violet-500 px-5 py-3 font-semibold text-white shadow-lg shadow-violet-950/40 transition duration-200 hover:bg-violet-400 active:scale-[0.97]\"\n          >\n            Continue to sign in <ArrowRight className=\"h-5 w-5\" />\n          </button>\n          <a href=\"/\" className=\"mt-5 block text-center text-sm text-violet-200/55 hover:text-violet-100\">Return to homepage</a>\n        </div>\n      </section>\n    </main>\n  );\n}\n\n"
+}

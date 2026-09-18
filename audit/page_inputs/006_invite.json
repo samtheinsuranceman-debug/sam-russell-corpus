@@ -1,0 +1,47 @@
+{
+  "route_metadata": {
+    "index": 6,
+    "route": "/invite",
+    "component": "AcceptInvite",
+    "category": "public_or_auth",
+    "source_file": "client/src/pages/AcceptInvite.tsx",
+    "source_hash": "3471ccf15d292b93478134a77ef04acf40c4d7dd3e1ae2de4078679268a8d191",
+    "metrics": {
+      "lines": 103,
+      "trpc_queries": 1,
+      "trpc_mutations": 0,
+      "forms": 0,
+      "buttons": 0,
+      "links": 4,
+      "charts": 0,
+      "loading_states": 2,
+      "error_states": 1,
+      "empty_states": 0,
+      "simulated_timers": 1,
+      "random_values": 0,
+      "placeholder_terms": 0,
+      "hardcoded_success_toasts": 0,
+      "external_urls": 0,
+      "local_storage": 0,
+      "download_actions": 0
+    },
+    "same_source_routes": [
+      "/invite"
+    ]
+  },
+  "audit_rubric": {
+    "usefulness_9_10": "Essential differentiated workflow with real persistence or reliable server behavior and strong user states.",
+    "usefulness_7_8": "High-value page with clear workflow; minor integration, duplication, or state gaps.",
+    "usefulness_5_6": "Useful supporting page but partial, narrow, duplicative, or presentation-heavy.",
+    "usefulness_3_4": "Low-value prototype, mostly static or simulated; better merged or moved to Secondary Information.",
+    "usefulness_1_2": "Broken, misleading, near-empty, unsafe, or obsolete; retire only after owner approval.",
+    "recommendations": [
+      "Keep",
+      "Improve",
+      "Merge",
+      "Move to Secondary Information",
+      "Retire"
+    ]
+  },
+  "source": "import { trpc } from \"@/lib/trpc\";\nimport { CheckCircle, XCircle, Loader2, Shield } from \"lucide-react\";\nimport { useEffect } from \"react\";\nimport { useLocation } from \"wouter\";\n\nexport default function AcceptInvite() {\n  const [, navigate] = useLocation();\n\n  const params = new URLSearchParams(window.location.search);\n  const token = params.get(\"token\") ?? \"\";\n\n  const acceptQuery = trpc.team.acceptInvite.useQuery(\n    { token },\n    { enabled: !!token, retry: false }\n  );\n\n  useEffect(() => {\n    if (acceptQuery.data?.valid) {\n      const timer = setTimeout(() => navigate(\"/portal\"), 3000);\n      return () => clearTimeout(timer);\n    }\n  }, [acceptQuery.data, navigate]);\n\n  const inv = acceptQuery.data?.valid ? acceptQuery.data.invitation : null;\n\n  return (\n    <div className=\"min-h-screen bg-[#060f20] flex items-center justify-center p-4\">\n      <div className=\"w-full max-w-md\">\n        <div className=\"text-center mb-8\">\n          <div className=\"inline-flex items-center gap-2 mb-2\">\n            <div className=\"w-8 h-8 rounded-lg bg-[#22c55e] flex items-center justify-center\">\n              <Shield size={16} className=\"text-white\" />\n            </div>\n            <span className=\"text-white font-extrabold text-lg\" style={{ fontFamily: \"DM Sans, sans-serif\" }}>\n              Russell Capital Systems\u2122\n            </span>\n          </div>\n        </div>\n\n        <div className=\"rc-card text-center\">\n          {!token && (\n            <>\n              <XCircle size={48} className=\"text-[#ef4444] mx-auto mb-4\" />\n              <h2 className=\"text-white font-bold text-xl mb-2\">Invalid Invitation Link</h2>\n              <p className=\"text-[#7a95b8] text-sm mb-6\">\n                This invitation link is missing a token. Please use the link from your invitation email.\n              </p>\n              <a href=\"/\" className=\"rc-btn rc-btn-primary inline-flex\">Go to Homepage</a>\n            </>\n          )}\n\n          {token && acceptQuery.isLoading && (\n            <>\n              <Loader2 size={48} className=\"text-[#22c55e] mx-auto mb-4 animate-spin\" />\n              <h2 className=\"text-white font-bold text-xl mb-2\">Verifying Invitation</h2>\n              <p className=\"text-[#7a95b8] text-sm\">Checking your invitation token\u2026</p>\n            </>\n          )}\n\n          {token && acceptQuery.isError && (\n            <>\n              <XCircle size={48} className=\"text-[#ef4444] mx-auto mb-4\" />\n              <h2 className=\"text-white font-bold text-xl mb-2\">Invitation Invalid or Expired</h2>\n              <p className=\"text-[#7a95b8] text-sm mb-6\">\n                This invitation link may have expired or already been used. Please ask your workspace admin to send a new invitation.\n              </p>\n              <a href=\"/\" className=\"rc-btn rc-btn-primary inline-flex\">Go to Homepage</a>\n            </>\n          )}\n\n          {token && acceptQuery.data && !acceptQuery.data.valid && (\n            <>\n              <XCircle size={48} className=\"text-[#ef4444] mx-auto mb-4\" />\n              <h2 className=\"text-white font-bold text-xl mb-2\">Invitation Invalid or Expired</h2>\n              <p className=\"text-[#7a95b8] text-sm mb-6\">\n                This invitation link has expired or already been used. Please ask your workspace admin to send a new invitation.\n              </p>\n              <a href=\"/\" className=\"rc-btn rc-btn-primary inline-flex\">Go to Homepage</a>\n            </>\n          )}\n\n          {token && acceptQuery.data?.valid && inv && (\n            <>\n              <CheckCircle size={48} className=\"text-[#22c55e] mx-auto mb-4\" />\n              <h2 className=\"text-white font-bold text-xl mb-2\">Invitation Verified!</h2>\n              <p className=\"text-[#7a95b8] text-sm mb-2\">\n                You have been invited as{\" \"}\n                <span className=\"text-[#22c55e] font-semibold\">{inv.role}</span>.\n              </p>\n              {inv.firstName && (\n                <p className=\"text-white text-sm mb-4\">\n                  Welcome, <span className=\"font-semibold\">{inv.firstName} {inv.lastName ?? \"\"}</span>!\n                </p>\n              )}\n              <p className=\"text-xs text-[#7a95b8] mb-4\">Sign in to complete joining your workspace. Redirecting in 3 seconds\u2026</p>\n              <a href=\"/portal\" className=\"rc-btn rc-btn-primary inline-flex\">Go to Dashboard</a>\n            </>\n          )}\n        </div>\n      </div>\n    </div>\n  );\n}\n"
+}

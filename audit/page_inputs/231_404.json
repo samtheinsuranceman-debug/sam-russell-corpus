@@ -1,0 +1,47 @@
+{
+  "route_metadata": {
+    "index": 231,
+    "route": "/404",
+    "component": "NotFound",
+    "category": "public_or_auth",
+    "source_file": "client/src/pages/NotFound.tsx",
+    "source_hash": "97b5f0fbb4b0e31402d4d43510288730d58845be2a6d2c4f78d42088bc95fcaf",
+    "metrics": {
+      "lines": 52,
+      "trpc_queries": 0,
+      "trpc_mutations": 0,
+      "forms": 0,
+      "buttons": 2,
+      "links": 0,
+      "charts": 0,
+      "loading_states": 0,
+      "error_states": 0,
+      "empty_states": 0,
+      "simulated_timers": 0,
+      "random_values": 0,
+      "placeholder_terms": 0,
+      "hardcoded_success_toasts": 0,
+      "external_urls": 0,
+      "local_storage": 0,
+      "download_actions": 0
+    },
+    "same_source_routes": [
+      "/404"
+    ]
+  },
+  "audit_rubric": {
+    "usefulness_9_10": "Essential differentiated workflow with real persistence or reliable server behavior and strong user states.",
+    "usefulness_7_8": "High-value page with clear workflow; minor integration, duplication, or state gaps.",
+    "usefulness_5_6": "Useful supporting page but partial, narrow, duplicative, or presentation-heavy.",
+    "usefulness_3_4": "Low-value prototype, mostly static or simulated; better merged or moved to Secondary Information.",
+    "usefulness_1_2": "Broken, misleading, near-empty, unsafe, or obsolete; retire only after owner approval.",
+    "recommendations": [
+      "Keep",
+      "Improve",
+      "Merge",
+      "Move to Secondary Information",
+      "Retire"
+    ]
+  },
+  "source": "import { Button } from \"@/components/ui/button\";\nimport { AlertCircle, Home, ArrowLeft } from \"lucide-react\";\nimport { useLocation } from \"wouter\";\n\nexport default function NotFound() {\n  const [, setLocation] = useLocation();\n\n  return (\n    <div className=\"min-h-screen w-full flex items-center justify-center bg-[#0a0f1a]\">\n      <div className=\"w-full max-w-lg mx-4 text-center\">\n        {/* Animated glow ring */}\n        <div className=\"flex justify-center mb-8\">\n          <div className=\"relative\">\n            <div className=\"absolute inset-0 bg-emerald-500/10 rounded-full blur-xl animate-pulse\" style={{ width: 96, height: 96, top: -16, left: -16 }} />\n            <div className=\"w-16 h-16 rounded-full border border-emerald-500/30 flex items-center justify-center bg-[#0d1526]\">\n              <AlertCircle className=\"h-8 w-8 text-emerald-400\" />\n            </div>\n          </div>\n        </div>\n\n        <h1 className=\"text-6xl font-bold text-white mb-2 tracking-tight\">404</h1>\n\n        <h2 className=\"text-xl font-medium text-[#7a95b8] mb-4\">\n          Page Not Found\n        </h2>\n\n        <p className=\"text-[#5a7a9b] mb-8 leading-relaxed max-w-sm mx-auto\">\n          The page you're looking for doesn't exist or has been moved.\n          Let's get you back on track.\n        </p>\n\n        <div className=\"flex flex-col sm:flex-row gap-3 justify-center\">\n          <Button\n            onClick={() => window.history.back()}\n            variant=\"outline\"\n            className=\"border-[#1e3a5f] text-[#7a95b8] hover:text-white hover:border-emerald-500/50 px-6\"\n          >\n            <ArrowLeft className=\"w-4 h-4 mr-2\" />\n            Go Back\n          </Button>\n          <Button\n            onClick={() => setLocation(\"/portal\")}\n            className=\"bg-emerald-600 hover:bg-emerald-500 text-white px-6\"\n          >\n            <Home className=\"w-4 h-4 mr-2\" />\n            Go to Dashboard\n          </Button>\n        </div>\n      </div>\n    </div>\n  );\n}\n"
+}

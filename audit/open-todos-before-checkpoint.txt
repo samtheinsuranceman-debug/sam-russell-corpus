@@ -1,0 +1,16 @@
+10:- [ ] Complete the post-port managed-auth reconciliation by removing source password/backdoor access, replacing the temporary `/login` compatibility path with managed OAuth, and verifying protected-route behavior.
+19:- [ ] Verify at least one authenticated Grok deep link through managed OAuth return-path handling before the final checkpoint.
+24:- [ ] Verify representative authenticated interior pages—dashboard, clients, planning, Secondary Information, and one Grok page—for purple-theme consistency and repair legacy green or navy styling that bypasses the shared theme.
+28:- [ ] Preserve the managed OAuth flow and reconcile source access controls without embedding passwords or credentials in client code.
+33:- [ ] Add route-level browser smoke coverage for protected deep links and OAuth return-path handling, then document the final managed-auth flow.
+34:- [ ] Verify a complete managed OAuth round trip from a protected deep link through callback to the requested return path.
+35:- [ ] Verify at least one authenticated protected portal page in the browser after managed OAuth sign-in.
+46:- [ ] Verify the actual client directory and detail flows through tRPC and the browser: create, list, select, load, edit, reload, and confirm persisted profile data.
+49:- [ ] Verify the dashboard renders persisted client and planning-case records after authenticated managed OAuth access.
+54:- [ ] Add explicit loading, timeout, empty, unavailable, and retry states to all connected internet-backed workflows.
+68:- [ ] Verify the homepage, dashboard, primary workflows, Secondary Information library, and added Grok pages on desktop and mobile viewports.
+70:- [ ] Review the complete TODO, mark finished work accurately, and create one final reviewed checkpoint for the first delivery.
+71:- [ ] Deliver the unified project version, implementation audit, functionality audit, page usefulness report, known limitations, and next highest-value improvements.
+79:- [ ] Request and validate `XAI_API_KEY` for xAI/Grok independently from `GROQ_API_KEY` for GroqCloud; do not conflate the two providers.
+80:- [ ] Rotate the OpenRouter credential that was pasted into chat, then store the replacement only through the managed secrets interface and verify it with an authenticated chat test.
+81:- [ ] Limit future credential requests to providers that are genuinely unavailable through the managed gateway and document the necessity of each requested direct key.

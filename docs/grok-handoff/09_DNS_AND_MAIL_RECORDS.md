@@ -1,0 +1,89 @@
+# DNS + mail records for russellcapitalsystems.com (applied 2026-09-06)
+
+Authoritative DNS is at GoDaddy (`ns43/ns44.domaincontrol.com`). DNS is now
+written **through Make.com**, never through GoDaddy's panel: the Make team
+"My Team" holds a GoDaddy connection (`GoDaddy — russellcapitalsystems.com`,
+API key + secret, created once by the owner) and two scenarios:
+
+| Scenario | What it does |
+|---|---|
+| `RCS DNS — read zone (russellcapitalsystems.com)` | lists every record and writes them to the data store `RCS DNS zone snapshot` as `TYPE\|name\|data` keys |
+| `RCS DNS — apply records (russellcapitalsystems.com)` | raw GoDaddy v1 API calls (DELETE / PUT / PATCH) for the change set below; stores `apply\|<codes>` on success |
+
+Edit the apply scenario's blueprint for the next change set and run it. The
+GoDaddy DNS API is open to any account with one registered domain (policy
+relaxed April 2026).
+
+## The zone as it stands
+
+| Host | Type | Value | Purpose |
+|---|---|---|---|
+| `@` | A ×4 | 185.199.108–111.153 | GitHub Pages (apex): `docs/index.html` forwards every path to `www` |
+| `www` | **CNAME** | `dd56isi9.up.railway.app` | **Railway** — the application (was GitHub Pages until 2026-09-10; before that 4 A records) |
+| `@` | MX ×5 | Google (`aspmx.l.google.com` …) | inbound mail |
+| `@` | TXT | `v=spf1 include:dc-aa8e722993._spfm.russellcapitalsystems.com ~all` | SPF (Google, via GoDaddy's flattening host) |
+| `dc-aa8e722993._spfm` | TXT | `v=spf1 include:_spf.google.com ~all` | SPF include target |
+| `_dmarc` | TXT | `v=DMARC1; p=quarantine; adkim=r; aspf=r; rua=…` | DMARC |
+| `resend._domainkey` | **TXT** | `p=MIGf…AQAB` (Resend key) | **DKIM (added 2026-09-06)** |
+| `send` | **MX 10** | `feedback-smtp.us-east-1.amazonses.com` | Resend return-path (added) |
+| `send` | **TXT** | `v=spf1 include:amazonses.com ~all` | Resend return-path SPF (added) |
+| `pay` | CNAME | `paylinks.commerce.godaddy.com` | GoDaddy pay links (pre-existing) |
+| `_domainconnect` | CNAME | `_domainconnect.gd.domaincontrol.com` | GoDaddy Domain Connect (pre-existing) |
+| `@` | TXT | Google site/recovery verifications, `2048` | pre-existing |
+
+Verified after the change from public DNS: `www` resolves to the CNAME, the DKIM
+key, `send` MX and `send` TXT all resolve, and `pnpm mail:check
+russellcapitalsystems.com` reports MX ✔ SPF ✔ DKIM ✔ DMARC ✔.
+
+## Resend
+
+Domain `russellcapitalsystems.com` (id `4d58f44c-1349-4b02-aa3e-95e88ebd72b1`,
+us-east-1) was added and verification triggered once the records resolved.
+When it shows *verified*, set `RESEND_API_KEY` and `MAIL_FROM` (an address on
+this domain) on the host and marketing + transactional mail goes out signed.
+
+## Where each host goes (2026-09-10)
+
+- `www.russellcapitalsystems.com` → Railway service `web` (custom domain
+  attached; Railway asked for CNAME `www` → `dd56isi9.up.railway.app`, which the
+  apply scenario wrote). `CANONICAL_HOST=www.russellcapitalsystems.com` and
+  `PUBLIC_BASE_URL=https://www.russellcapitalsystems.com` are set on the service.
+- `russellcapitalsystems.com` (apex) → still GitHub Pages. The Railway plan
+  allows one custom domain per service, so the apex could not be attached
+  (`You have reached the limit for custom domains per service on your plan`).
+  `docs/index.html` is now a forwarding page to the same path on www; `docs/CNAME`
+  stays so Pages keeps answering for the apex over https.
+- To finish the move later: raise the plan (or free the slot), attach the apex
+  in Railway, replace the four apex A records with what Railway asks for, and
+  delete the forwarding page.
+
+The apply scenario now holds only the `www` CNAME PUT (the DKIM/MX/SPF PATCH and
+the A-record DELETE from 2026-09-06 were already applied and were removed from
+the blueprint so re-running it cannot touch mail).
+
+## 2026-09-16 — the apex is the front door; www waits on GoDaddy
+
+- The GoDaddy account went on an identity-verification hold after 2026-09-10: the panel
+  refuses DNS edits and the API (so both Make scenarios) answers 403. Until GoDaddy lifts it
+  (support 480-505-8877), nothing can change the `www` CNAME.
+- Railway's `www` domain row was re-created at some point, so it now asks for CNAME
+  `www` → `tjkj8nc5.up.railway.app` **and** TXT `_railway-verify.www` (value in
+  `DOMAIN_RUNBOOK.md`). The zone still says `dd56isi9`, an edge hostname no project owns, so
+  https://www.russellcapitalsystems.com fails TLS. Two edits at GoDaddy fix it.
+- Meanwhile **https://russellcapitalsystems.com serves the application itself** with the
+  domain's own certificate: GitHub Pages holds the built client (`docs/`), and every `/api`
+  call goes to `https://web-production-4b215.up.railway.app` with credentialed CORS, a CSRF
+  guard and a cookie/header session bridge (`server/_core/crossSite.ts`,
+  `client/src/lib/api.ts`). Full description in `DOMAIN_RUNBOOK.md`.
+- `CANONICAL_HOST=russellcapitalsystems.com` and `PUBLIC_BASE_URL=https://russellcapitalsystems.com`
+  on the Railway service now, so mail links, Whisperer report links and the sitemap point at the
+  address that works; www 301s to the apex once it reaches the server. Revisit which host is
+  canonical after www has its certificate.
+
+## 2026-09-17 — www is live
+
+Both records landed at GoDaddy on the evening of 16 Sep (CNAME `www` → `tjkj8nc5.up.railway.app`, then
+TXT `_railway-verify.www`). Railway verified the domain and issued the www certificate at 22:52 UTC.
+`CANONICAL_HOST` and `PUBLIC_BASE_URL` are back on `www.russellcapitalsystems.com`. The apex keeps the
+GitHub Pages front door (the app itself, calling the Railway origin) as a fallback, with canonical links,
+robots and sitemap pointing at www. The zone row for `www` above now reads `tjkj8nc5`, not `dd56isi9`.
