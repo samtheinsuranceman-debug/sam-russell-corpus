@@ -76,14 +76,14 @@ Measured, with the caveats stated plainly.
 | **Accelerated amortisation with recast** | `shared/mortgageKiller.ts` — correct irregular-month recast with proper guards |
 | **Per-carrier index-option catalog** | `shared/timeMachineEngine.ts` — cap/floor/participation/spread applied in the correct order, multi-index blends. Rare; most competitors don't attempt it. |
 | **Portfolio roll-up to 150 properties** | `RealEstateMogul.tsx` — correct NOI / cap-rate separation from debt service, per-property assumptions |
-
-**Four engines carry verified defects and are listed here as capability, not as
-correct**: `monteCarloEngine`, `ibbotsonModel`, `taxBracketEngine`,
-`timeMachineEngine`. See §3.
 | **Real-estate capital stack + capacity + stress engines** | `shared/realEstate*` — 6 engines, all tested, added Sept 2026 |
 | **Source ledger with consent gating and staleness rules** | `server/realEstateSourceLedger.ts` |
 | **Cinematic engine + C-major ambience** | `client/src/lib/capitalAmbience.ts`, `CinematicEngine.tsx` — verified by spectrum analysis |
 | **Single-password gate, constant-time, HMAC cookie** | `server/gatePassword.ts`, 28 tests |
+
+**Four engines carry verified defects and are listed here as capability, not as
+correct**: `monteCarloEngine`, `ibbotsonModel`, `taxBracketEngine`,
+`timeMachineEngine`. See §3.
 
 ### Scaffolding, not yet load-bearing
 
