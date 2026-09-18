@@ -247,6 +247,8 @@ inline, at the assumption, where the advisor is looking.
 
 ## 4. Worked example — the Mortgage Killer hub
 
+> Factor-page paths below are grouping labels; the BASE destination for each hub is given in `PLAN_RECONCILIATION.md` (hub remap onto `calculatorCatalog.ts` categories).
+
 The engine depends on **eleven factors**. Today it hardcodes most of them.
 
 | # | Factor | Currently | Source | Factor page | Status |

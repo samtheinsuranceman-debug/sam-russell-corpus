@@ -390,6 +390,8 @@ Ordered by return on effort.
 
 ## 6. The embedding architecture
 
+> **Superseded in part.** The 21 hub *paths* in this section (`/portal/tax-command`, `/portal/estate-command`, …) were invented for grouping. The BASE has a real, test-enforced, brain-visible taxonomy — the 10 categories of `shared/calculatorCatalog.ts`. `PLAN_RECONCILIATION.md` maps each hub onto its BASE category by majority vote. The *pattern* — every page keeps its URL, only hubs get navigation, factor pages embed as tabs — stands unchanged.
+
 Your instinct is exactly right: keep the pages, keep the URLs, stop giving every
 one of them a navigation claim.
 
