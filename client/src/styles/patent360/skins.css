@@ -1,0 +1,167 @@
+/* ══════════════════════════════════════════════════════════════════════════
+   INTERIOR SKINS — seven light rooms.
+
+   The home page stays dark: it is a thirty-second impression and the
+   mystery is the point. The interior is where an attorney sits for an
+   hour reading claim language, and dark-on-dark at that length is where
+   reading speed and accuracy fall off. So the room gets lit.
+
+   Each skin overrides only tokens. Nothing structural changes, so all
+   thirteen interior screens re-skin together.
+
+   Switch with data-skin="1".."7" on <html>.
+   Every body colour below clears 7:1 on its own ground; muted text and
+   hairlines clear 4.5:1 and 3:1 respectively.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+:root[data-skin] {
+  /* Paper is lighter than the panels sitting on it, so the ink ramp
+     inverts: 950 is the desk, 800 is the sheet of paper on the desk. */
+  --on-accent: #ffffff;
+}
+
+/* Lines were white-on-dark. On paper they have to be ink-on-white. */
+:root[data-skin] {
+  --line-soft: rgba(20, 26, 38, 0.10);
+  --line-mid:  rgba(20, 26, 38, 0.17);
+}
+
+/* The city plates and figure imprints belong to the dark home page.
+   Behind a lit room they turn to smudges, so they step back to a trace. */
+:root[data-skin] .p360-backdrop,
+:root[data-skin] .plate,
+:root[data-skin] .plate-img,
+:root[data-skin] .plate-zoom,
+:root[data-skin] .plate-scrim,
+:root[data-skin] .plate-pulses,
+:root[data-skin] .pulse,
+:root[data-skin] .plate-imprint { display: none !important; }
+
+/* Primary buttons carry white type on light skins, not near-black. */
+:root[data-skin] .btn-primary {
+  color: var(--on-accent);
+  box-shadow: 0 1px 2px rgba(16, 24, 40, .10), 0 4px 14px -8px rgba(var(--accent-rgb), .55);
+}
+:root[data-skin] .btn-primary:hover { background: var(--accent-600); }
+
+/* Panels on paper need a real edge, since there is no glow to separate them. */
+:root[data-skin] .table-wrap,
+:root[data-skin] .panel-quiet { box-shadow: 0 1px 2px rgba(16, 24, 40, .05); }
+
+
+
+/* On paper every overlay inverts, and the chrome is a shade of the page
+   rather than a dark rail bolted to the side of it. */
+:root[data-skin] {
+  --tint-2: rgba(20,26,38,0.02);
+  --tint-3: rgba(20,26,38,0.03);
+  --tint-4: rgba(20,26,38,0.04);
+  --tint-5: rgba(20,26,38,0.05);
+  --tint-8: rgba(20,26,38,0.08);
+  --tint-12: rgba(20,26,38,0.12);
+  --tint-13: rgba(20,26,38,0.13);
+  --tint-18: rgba(20,26,38,0.18);
+  --tint-35: rgba(20,26,38,0.035);
+  --tint-45: rgba(20,26,38,0.045);
+  --chrome-side: var(--ink-900);
+  --chrome-top: var(--ink-900);
+}
+
+/* ── 1 · VELLUM & NAVY ────────────────────────────────────────────────────
+   Legal stationery. Warm cream paper, navy ink, royal blue for action.
+   The most conservative of the seven and the one a partner will recognise. */
+:root[data-skin="1"] {
+  --ink-950: #F4F0E6;  --ink-900: #F8F5EC;  --ink-800: #FCFAF4;
+  --ink-700: #EFEADD;  --ink-600: #E7E0CE;  --ink-500: #D9D0B8;
+  --text-head: #12284C; --text-body: #2E3F5E; --text-muted: #6B7A93;
+  --accent-300: #1E4FB8; --accent-400: #2F66E0; --accent-500: #2A5FD0;
+  --accent-600: #1E4FB8; --accent-rgb: 47, 102, 224;
+  --signal: #4A6FA5; --seal: #96690F; --warn: #A96B12; --alert: #A62B2A;
+  --scrim-rgb: 244, 240, 230;
+  --line-soft: rgba(18, 40, 76, 0.11); --line-mid: rgba(18, 40, 76, 0.19);
+}
+
+/* ── 2 · DRAFTING PAPER ───────────────────────────────────────────────────
+   The blueprint the product is named after. Cool paper-white, engineering
+   navy, a true blue accent. Figures and claim text sit on it naturally. */
+:root[data-skin="2"] {
+  --ink-950: #EAEFF5;  --ink-900: #F2F6FA;  --ink-800: #FFFFFF;
+  --ink-700: #E3EAF3;  --ink-600: #D6E0EC;  --ink-500: #C2D0E2;
+  --text-head: #0F2A4E; --text-body: #2C4468; --text-muted: #62758F;
+  --accent-300: #1560BC; --accent-400: #1A76DC; --accent-500: #1668C4;
+  --accent-600: #12559F; --accent-rgb: 26, 118, 220;
+  --signal: #3E7FA8; --seal: #8E6310; --warn: #A06A14; --alert: #A62828;
+  --scrim-rgb: 234, 239, 245;
+  --line-soft: rgba(15, 42, 78, 0.11); --line-mid: rgba(15, 42, 78, 0.19);
+}
+
+/* ── 3 · BOND & EMERALD ───────────────────────────────────────────────────
+   The one that keeps faith with the home page. Bond-paper off-white and
+   the same emerald, darkened until it is legible on white. */
+:root[data-skin="3"] {
+  --ink-950: #F1F1EB;  --ink-900: #F7F7F2;  --ink-800: #FDFDFA;
+  --ink-700: #E9E9E1;  --ink-600: #DEE0D5;  --ink-500: #CBCEBF;
+  --text-head: #10291F; --text-body: #2B4438; --text-muted: #627568;
+  --accent-300: #0A6B45; --accent-400: #0D8E5B; --accent-500: #0B7A4E;
+  --accent-600: #08603D; --accent-rgb: 13, 142, 91;
+  --signal: #4E7F6C; --seal: #8A6512; --warn: #9C6C16; --alert: #A32E2E;
+  --scrim-rgb: 241, 241, 235;
+  --line-soft: rgba(16, 41, 31, 0.11); --line-mid: rgba(16, 41, 31, 0.19);
+}
+
+/* ── 4 · COURT GREY ───────────────────────────────────────────────────────
+   Neutral warm grey with oxblood. The law-library option: nothing on the
+   page competes with the document, and the accent reads as a seal. */
+:root[data-skin="4"] {
+  --ink-950: #EEEDE9;  --ink-900: #F5F4F0;  --ink-800: #FBFAF7;
+  --ink-700: #E6E4DF;  --ink-600: #DAD7D0;  --ink-500: #C6C2B9;
+  --text-head: #1C1A17; --text-body: #3A3733; --text-muted: #6A665F;
+  --accent-300: #8C2230; --accent-400: #A5293A; --accent-500: #932433;
+  --accent-600: #741B26; --accent-rgb: 165, 41, 58;
+  --signal: #4F6274; --seal: #7E5C10; --warn: #96680F; --alert: #A5293A;
+  --scrim-rgb: 238, 237, 233;
+  --line-soft: rgba(28, 26, 23, 0.11); --line-mid: rgba(28, 26, 23, 0.19);
+}
+
+/* ── 5 · LINEN & BRASS ────────────────────────────────────────────────────
+   The most expensive-looking. Warm linen, near-black brown ink, brass.
+   Best if Patent360 is sold to boutique firms rather than volume shops. */
+:root[data-skin="5"] {
+  --ink-950: #F4EFE3;  --ink-900: #F9F5EB;  --ink-800: #FDFAF3;
+  --ink-700: #EDE6D6;  --ink-600: #E2DAC5;  --ink-500: #D0C4A8;
+  --text-head: #241F18; --text-body: #433A2C; --text-muted: #766A58;
+  --accent-300: #7A5C12; --accent-400: #96721A; --accent-500: #856415;
+  --accent-600: #664C0E; --accent-rgb: 150, 114, 26;
+  --signal: #5C6A56; --seal: #856415; --warn: #96680F; --alert: #9E2F26;
+  --scrim-rgb: 244, 239, 227;
+  --line-soft: rgba(36, 31, 24, 0.12); --line-mid: rgba(36, 31, 24, 0.20);
+}
+
+/* ── 6 · COBALT SLATE ─────────────────────────────────────────────────────
+   Cool light slate, strong cobalt. The one that looks like current
+   software rather than a law firm — best for the client-facing side. */
+:root[data-skin="6"] {
+  --ink-950: #EBEEF3;  --ink-900: #F3F5F9;  --ink-800: #FFFFFF;
+  --ink-700: #E2E7EF;  --ink-600: #D4DBE6;  --ink-500: #BFC9D9;
+  --text-head: #131E2C; --text-body: #303E52; --text-muted: #667487;
+  --accent-300: #1A46C8; --accent-400: #2358E2; --accent-500: #1C4BD2;
+  --accent-600: #163AA6; --accent-rgb: 35, 88, 226;
+  --signal: #47698F; --seal: #82600F; --warn: #966A12; --alert: #A82C33;
+  --scrim-rgb: 235, 238, 243;
+  --line-soft: rgba(19, 30, 44, 0.11); --line-mid: rgba(19, 30, 44, 0.19);
+}
+
+/* ── 7 · SAGE STUDY ───────────────────────────────────────────────────────
+   The lowest-fatigue of the seven. A green-tinted white and deep teal —
+   the least blue light, which matters for the person still drafting at
+   eleven at night. Quietest, and the closest in family to the home page. */
+:root[data-skin="7"] {
+  --ink-950: #EEF1EA;  --ink-900: #F5F7F1;  --ink-800: #FBFCF8;
+  --ink-700: #E5E9DE;  --ink-600: #D8DECE;  --ink-500: #C3CCB6;
+  --text-head: #16261E; --text-body: #334034; --text-muted: #647466;
+  --accent-300: #136058; --accent-400: #18796F; --accent-500: #156A61;
+  --accent-600: #0F4F49; --accent-rgb: 24, 121, 111;
+  --signal: #567A70; --seal: #7E6112; --warn: #926A14; --alert: #9E3129;
+  --scrim-rgb: 238, 241, 234;
+  --line-soft: rgba(22, 38, 30, 0.11); --line-mid: rgba(22, 38, 30, 0.19);
+}

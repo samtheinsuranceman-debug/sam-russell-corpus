@@ -80,6 +80,9 @@ export const CATEGORY_BLURBS: Record<CalculatorCategory, string> = {
 
 export const CALCULATORS: readonly CalculatorEntry[] = [
   // ---------------- Retirement & Income ----------------
+  { path: "/portal/recin", name: "Real Estate Intelligence Workspace", category: "real-estate", featured: false,
+    blurb: "Borrower-side capacity, capital stack, stress, exit and sale analysis for a property portfolio, with every external figure traced to its source.",
+    engine: "shared/realEstateCapacityEngine.ts", keywords: ["recin", "capacity", "dscr", "capital stack", "syndication", "stress", "refinance"] },
   { path: "/ultra-calculator", name: "The Decade Machine", category: "retirement-income", featured: true,
     blurb: "Every calculator in one machine, with chained 5/10/20/30-year windows that carry each number into the next.",
     engine: "shared/ultraEngine.ts", keywords: ["ultra", "everything", "mega", "decade", "all"] },
