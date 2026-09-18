@@ -263,6 +263,10 @@ function projectIulPolicy(
 ): IULPolicyYear[] {
   let cv = 0;
   let cumulativePolicyLoans = 0;
+  // The carrying cost of policy loans, accumulated. Before this was wired the
+  // per-year figure was computed, written into the row, displayed — and
+  // subtracted from nothing. A cost that reduces no total is not a cost.
+  let cumulativeLoanDrag = 0;
   const rows: IULPolicyYear[] = [];
   const specifiedAmount = annualPremium * 10;
   const perUnitCharge = (specifiedAmount / 1000) * 7.78;
@@ -295,6 +299,7 @@ function projectIulPolicy(
     const surrenderValue = Math.max(0, cv - surrenderCharge);
 
     const loanDragCost = cumulativePolicyLoans * loanDragRate;
+    cumulativeLoanDrag += loanDragCost;
 
     // Life loan strategy:
     // Year 2: take 80% of surrender value as life loan → principal-only mortgage payment
@@ -337,7 +342,7 @@ function projectIulPolicy(
       surrenderValue: Math.round(surrenderValue),
       policyLoan,
       policyLoanAppliedTo: "mortgage_principal",
-      netCashValue: Math.round(cv - cumulativePolicyLoans),
+      netCashValue: Math.round(cv - cumulativePolicyLoans - cumulativeLoanDrag),
       cumulativePolicyLoans: Math.round(cumulativePolicyLoans),
       loanDragCost: Math.round(loanDragCost),
       loanableValue,
