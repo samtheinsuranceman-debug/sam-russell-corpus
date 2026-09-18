@@ -1,4 +1,3 @@
-// @ts-nocheck
 // ───────────────────────────────────────────────────────────────────────────
 // GenomeKit — shared cinematic primitives for The Wealth Genome (Sacred Seven)
 // Front-end design system: somatic orbs, glow cards, section labels, backdrops.
@@ -6,6 +5,8 @@
 // The Legacy, and The Brotherhood.
 // ───────────────────────────────────────────────────────────────────────────
 import { motion } from "framer-motion";
+import type { LucideIcon } from "lucide-react";
+import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 export const GENOME = {
@@ -26,7 +27,15 @@ export const SACRED_SEVEN = [
   { key: "the-brotherhood",    title: "The Brotherhood",    tagline: "Community & gamification" },
 ];
 
-export function SectionLabel({ children, icon: Icon, className }) {
+export function SectionLabel({
+  children,
+  icon: Icon,
+  className,
+}: {
+  children: ReactNode;
+  icon?: LucideIcon;
+  className?: string;
+}) {
   return (
     <div className={cn("flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-emerald-300/80", className)}>
       {Icon ? <Icon className="h-3.5 w-3.5" /> : null}
@@ -35,7 +44,11 @@ export function SectionLabel({ children, icon: Icon, className }) {
   );
 }
 
-export function GlowCard({ className, children, ...props }) {
+export function GlowCard({
+  className,
+  children,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
       className={cn(
@@ -50,12 +63,27 @@ export function GlowCard({ className, children, ...props }) {
   );
 }
 
-export function GenomeOrb({ size = 132, label, pulsing = true, onClick, active = false }) {
+export function GenomeOrb({
+  size = 132,
+  label,
+  pulsing = true,
+  onClick,
+  active = false,
+  disabled = false,
+}: {
+  size?: number;
+  label?: string;
+  pulsing?: boolean;
+  onClick?: () => void;
+  active?: boolean;
+  disabled?: boolean;
+}) {
   return (
     <motion.button
       type="button"
       onClick={onClick}
-      whileTap={{ scale: 0.94 }}
+      disabled={disabled}
+      whileTap={disabled ? undefined : { scale: 0.94 }}
       animate={pulsing ? {
         boxShadow: [
           `0 0 0 0 ${GENOME.glow}`,
@@ -64,13 +92,13 @@ export function GenomeOrb({ size = 132, label, pulsing = true, onClick, active =
         ],
       } : {}}
       transition={{ duration: 3.4, repeat: Infinity, ease: "easeInOut" }}
-      className="relative grid place-items-center rounded-full outline-none"
+      className="relative grid place-items-center rounded-full outline-none disabled:cursor-not-allowed"
       style={{
         width: size,
         height: size,
         background: active
           ? "radial-gradient(circle at 35% 30%, rgba(186,162,255,1), rgba(91,33,182,0.5) 60%, rgba(2,6,23,0.2))"
-          : "radial-gradient(circle at 35% 30%, rgba(110,231,183,0.9), rgba(6,95,70,0.35) 60%, rgba(2,6,23,0.2))",
+          : "radial-gradient(circle at 35% 30%, rgba(167,139,250,0.9), rgba(76,29,149,0.35) 60%, rgba(2,6,23,0.2))",
       }}
     >
       <span className="absolute inset-0 rounded-full border border-emerald-300/30" />
@@ -95,7 +123,7 @@ export function GenomeBackdrop() {
   );
 }
 
-export function Stat({ label, value, hint }) {
+export function Stat({ label, value, hint }: { label: string; value: ReactNode; hint?: string }) {
   return (
     <div className="rounded-xl border border-white/10 bg-white/[0.02] px-4 py-3">
       <p className="text-[11px] uppercase tracking-wider text-slate-400">{label}</p>
@@ -105,7 +133,7 @@ export function Stat({ label, value, hint }) {
   );
 }
 
-export function fmt$(n) {
+export function fmt$(n: number) {
   if (!isFinite(n)) return "$0";
   if (Math.abs(n) >= 1_000_000) return `$${(n / 1_000_000).toFixed(2)}M`;
   if (Math.abs(n) >= 1_000) return `$${(n / 1_000).toFixed(0)}K`;

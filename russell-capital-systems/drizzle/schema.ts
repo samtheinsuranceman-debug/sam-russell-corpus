@@ -2977,3 +2977,22 @@ export const recinFindings = mysqlTable("recin_findings", {
 });
 export type RecinFinding = typeof recinFindings.$inferSelect;
 export type InsertRecinFinding = typeof recinFindings.$inferInsert;
+
+// ─── Rental-market evidence: rents by configuration, property tax, evictions, tenure, money supply ───
+// One annual series per (geo, series, config). Bathroom count is NOT a dimension: no public
+// national source splits rent by bathrooms, so the engine reports null with that reason rather
+// than a guess. Coverage windows differ by source and are carried on every row (startYear, asOf).
+export const rentalSeries = mysqlTable("rental_series", {
+  id:        int("id").autoincrement().primaryKey(),
+  geo:       varchar("geo", { length: 12 }).notNull(),           // zip5 | county FIPS (5) | CBSA code | "US"
+  geoType:   varchar("geoType", { length: 8 }).notNull(),        // zip | county | cbsa | us
+  series:    varchar("series", { length: 20 }).notNull(),        // fmr | safmr | acs_rent | acs_tax | evict_filings | evict_judgments | evict_filing_rate | evict_rate | renter_hh | m2 | cpi_rent | fed_assets | ahs_tenure
+  config:    varchar("config", { length: 6 }).notNull(),         // bedrooms: "0","1","2","3","4","5+" or "all"
+  startYear: int("startYear").notNull(),
+  values:    json("values").$type<Array<number | null>>().notNull(),
+  asOf:      varchar("asOf", { length: 10 }).notNull(),
+  source:    varchar("source", { length: 200 }).notNull(),
+  meta:      json("meta").$type<{ name?: string; state?: string; lowFlag?: boolean; note?: string }>(),
+  fetchedAt: timestamp("fetchedAt").defaultNow().notNull(),
+}, (t) => ({ once: uniqueIndex("rental_series_once").on(t.geo, t.series, t.config), bySeries: index("rental_series_series").on(t.series) }));
+export type RentalSeriesRow = typeof rentalSeries.$inferSelect;
