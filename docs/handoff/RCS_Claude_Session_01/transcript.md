@@ -115830,3 +115830,484 @@ Two deliverables: the session export and the Perplexity roadmap. First I need th
 
 > *tool result: 1,420 chars*
 
+
+
+## ASSISTANT
+
+> **tool** `Bash` — SP=/tmp/claude-0/-home-user-sam-russell-corpus/197abb7d-14de-57f0-bbd0-4d1c910b0bf0/scratchpad && mkdir -p $SP/export && cat > $SP/export_transcript.py <<'PYEOF
+
+
+
+## USER
+
+> *tool result: 926 chars*
+
+
+
+## ASSISTANT
+
+> **tool** `Bash` — cat > docs/PERPLEXITY_ROADMAP.md <<'MDEOF' # Roadmap to a 10 out of 10 ## Russell Capital Systems — the unresolved work, how it integrates, and the criteria  Pr
+
+
+
+## USER
+
+> *tool result: 200 chars*
+
+
+
+## ASSISTANT
+
+> **tool** `Bash` — SP=/tmp/claude-0/-home-user-sam-russell-corpus/197abb7d-14de-57f0-bbd0-4d1c910b0bf0/scratchpad && cd $SP/export && echo "=== residual secret scan ===" && grep -
+
+> **tool** `AskUserQuestion` — The branch has three commits master lacks: the integration scorecard (new page + router), the provider brief, and the roadmap. Pushing master redeploys production. Merge now?
+
+
+
+## USER
+
+> *tool result: 797 chars*
+
+> *tool result: 283 chars*
+
+
+
+## ASSISTANT
+
+> **tool** `SendUserFile` — /tmp/claude-0/-home-user-sam-russell-corpus/197abb7d-14de-57f0-bbd0-4d1c910b0bf0/scratchpad/RCS_Session_Export.zip
+
+
+
+## USER
+
+> *tool result: 192 chars*
+
+
+
+## ASSISTANT
+
+> **tool** `Bash` — git fetch origin master -q && echo "origin/master: $(git log --oneline -1 origin/master)" && if git merge-base --is-ancestor origin/master HEAD; then echo "fast
+
+
+
+## USER
+
+> *tool result: 362 chars*
+
+
+
+## ASSISTANT
+
+Zip delivered (1.09 MB) and master is at `ec3d057` — another backup commit had landed from elsewhere, merged cleanly. Since that deploys production, verifying the merged tree before I call it done:
+
+> **tool** `Bash` — cd /home/user/sam-russell-corpus/russell-capital-systems && npx tsc --noEmit 2>&1 | head -3; echo "--- tsc ---"; npx vitest run 2>&1 | grep -E "FAIL|Test Files|
+
+
+
+## USER
+
+> *tool result: 98 chars*
+
+
+
+## ASSISTANT
+
+Merged tree is clean — types pass, 192 files / 3,422 tests green. Nothing further to request; everything you asked for is delivered and on master.
+
+## What you have
+
+**The zip (1.09 MB, well under 5 MB)** — `RCS_Session_Export.zip`:
+- `SESSION_TRANSCRIPT.md` — every turn between us, 3.8 MB of readable text. Tool calls as one-line summaries, results as sizes. System-reminder blocks stripped; your relay email and anything token-shaped scrubbed (scan came back zero).
+- `RCS_Roadmap_to_10.pdf` + `.md` — the Perplexity roadmap.
+- `RCS_Provider_Verification_Brief.pdf` + `.md` — the 39-company research instructions.
+- `RCS_Integration_Scorecard.pdf` + `.md` — 115 pages scored from the code.
+- `README.txt` explaining each.
+
+All three documents are also on master under `russell-capital-systems/docs/` so Perplexity can pull them straight from the repo.
+
+## What the roadmap tells Perplexity
+
+**Where I got stuck** — ten specific blockers, none of them preferences: provider facts needing primary sources (the brief is the fix); HEI investment-property eligibility and subordinate-lien consent unverifiable at all five providers (the single fact that most changes the planner's legal space); the Railway variables I can't read or set; three MCP servers needing your authorisation; the provisional patent filing that flips every "patent pending" surface to true with one record; the named-client illustration that can't enter the repo; no account aggregation.
+
+**Unresolved tasks in build order** — P0 unblock the data (verify → ingest → dossiers → thresholds → planner stages cite lenders → 90-day freshness sweep). P1 close the scorecard gaps systematically, each with a numeric "done when." P1 make `Situation` the one object that flows fact-finder → genome → strategy fit → planner → provenance with no re-typing. The ten upgrade branches, with 2, 1, 3 first because they *are* the risk-mitigation criteria.
+
+**The 10/10 criteria** — five dimensions, ~40 criteria, and I only listed ones a test, a scorecard dimension, or an outside read can fail. A criterion that can't fail is a slogan.
+
+**The comparison, stated fairly** — JPM, Edward Jones and Money Pro have custody, aggregation, advisor networks, compliance infrastructure and mobile. Beating them there is a product-and-legal decision. What none of them publish: per-property covenant planning that counts the legal plans, provenance traces on figures, tax odds conditioned on who holds power with sample sizes, genome pairing with veto weights, the cycle break-year. On that ground the site is already ahead — the roadmap is what makes the lead visible on every page instead of the best twelve.
+
+One number I'd want you to sit with: **mean wiring is 3.3 out of 10**, zero pages at ten. The engines are genuinely strong. The connections between them are the gap, it's measured, and every missing point on the scorecard names the file to change.
+
+
+
+## USER
+
+Please apply these instructions to every zip folder that you've created for me for perplexity. He can't, doesn't always have access to zip folders. So please follow these instructions and recreate the, the necessary files that he, that he can digest and understand. Please do this immediately.
+
+
+
+RCS_Claude_Session_01/
+  MANIFEST.md
+  executive_summary.md
+  transcript.md
+  recommendations.md
+  architecture.md
+  code/
+    realEstateCapitalStackEngine.ts
+    historicalMarketRegimeEngine.ts
+    README.md
+  data/
+    questions.csv
+    assumptions.json
+    sources.csv
+  reports/
+    scorecard.pdf
+
+
+
+## ASSISTANT
+
+Understood — a plain folder Perplexity can read file by file, not a zip. I'll build it inside the repo (`russell-capital-systems/docs/handoff/RCS_Claude_Session_01/`) so it can be pulled from GitHub, and send you the files directly as well. The template's two engine names don't match real files, so `code/` carries the actual engines with a README mapping the names. Three independent build steps at once:
+
+> **tool** `Bash` — SP=/tmp/claude-0/-home-user-sam-russell-corpus/197abb7d-14de-57f0-bbd0-4d1c910b0bf0/scratchpad; R=/home/user/sam-russell-corpus/russell-capital-systems; H=$R/do
+
+
+
+## USER
+
+> *tool result: 133 chars*
+
+
+
+## ASSISTANT
+
+> **tool** `Bash` — cd /home/user/sam-russell-corpus/russell-capital-systems && SP=/tmp/claude-0/-home-user-sam-russell-corpus/197abb7d-14de-57f0-bbd0-4d1c910b0bf0/scratchpad && ca
+
+
+
+## USER
+
+> *tool result: 46 chars*
+
+
+
+## ASSISTANT
+
+> **tool** `Bash` — H=/home/user/sam-russell-corpus/russell-capital-systems/docs/handoff/RCS_Claude_Session_01 && cat > $H/executive_summary.md <<'EOF' # Executive summary — Claude
+
+
+
+## USER
+
+> *tool result: 77 chars*
+
+
+
+## ASSISTANT
+
+All content is in place. Remaining: the MANIFEST with sizes and checksums (needs everything present — it is), commit and push, and hand you the files directly. Both now:
+
+> **tool** `Bash` — H=/home/user/sam-russell-corpus/russell-capital-systems/docs/handoff/RCS_Claude_Session_01 && cd $H && python3 - <<'PY' import os, hashlib H='.' desc = {  'MANI
+
+> **tool** `SendUserFile` — /home/user/sam-russell-corpus/russell-capital-systems/docs/handoff/RCS_Claude_Session_01/MANIFEST.md, /home/user/sam-russell-corpus/russell-capital-systems/docs/handoff/RCS_Claude_Session_01/executive_summary.md, /home/user/sam-russell-corpus/russell-capital-systems/docs/handoff/RCS_Claude_Session_01/recommendations.md, /home/user/sam-russell-corpus/russell-capital-systems/docs/handoff/RCS_Claude_Session_01/architecture.md, /home/user/sam-russell-corpus/russell-capital-systems/docs/handoff/RCS_Claude_Session_01/provider_verification_brief.md, /home/user/sam-russell-corpus/russell-capital-systems/docs/handoff/RCS_Claude_Session_01/transcript.md, /home/user/sam-russell-corpus/russell-capital-systems/docs/handoff/RCS_Claude_Session_01/code/README.md, /home/user/sam-russell-corpus/russell-capital-systems/docs/handoff/RCS_Claude_Session_01/data/questions.csv, /home/user/sam-russell-corpus/russell-capital-systems/docs/handoff/RCS_Claude_Session_01/data/assumptions.json, /home/user/sam-russell-corpus/russell-capital-systems/docs/handoff/RCS_Claude_Session_01/data/sources.csv, /home/user/sam-russell-corpus/russell-capital-systems/docs/handoff/RCS_Claude_Session_01/reports/scorecard.pdf, /home/user/sam-russell-corpus/russell-capital-systems/docs/handoff/RCS_Claude_Session_01/reports/roadmap.pdf, /home/user/sam-russell-corpus/russell-capital-systems/docs/handoff/RCS_Claude_Session_01/reports/provider_verification_brief.pdf
+
+
+
+## USER
+
+> *tool result: 334 chars*
+
+> *tool result: 2,128 chars*
+
+
+
+## ASSISTANT
+
+Done. Nothing further to request — the folder exists in two places Perplexity can reach.
+
+## `RCS_Claude_Session_01/` — 27 plain files, no archive
+
+**On GitHub (master):**
+```
+https://github.com/samtheinsuranceman-debug/sam-russell-corpus/tree/master/russell-capital-systems/docs/handoff/RCS_Claude_Session_01
+```
+
+**Sent to you directly:** the 13 files above. The 15 engine `.ts` files are in the repo folder under `code/` (sending TypeScript source one file at a time seemed less useful than the README that explains them; say the word if you want them attached too).
+
+## What's in it, matched to your template
+
+| Your template | What's there |
+|---|---|
+| `MANIFEST.md` | All 27 files with bytes, SHA-256, purpose, and the read order |
+| `executive_summary.md` | Two pages: asked / built / stopped short / three numbers / where to start |
+| `transcript.md` | Every turn, 3.8 MB, scrubbed — zero secret-shaped strings |
+| `recommendations.md` | The roadmap: blockers, P0–P3 tasks with dependencies and done-when, five-dimension criteria, definition of done |
+| `architecture.md` | Stack, the one object, data flow, every registry and its guard test, the 12 live-data routers, the seven conventions |
+| `code/` | The **real** engines, verbatim from master |
+| `code/README.md` | Maps the template's `realEstateCapitalStackEngine` / `historicalMarketRegimeEngine` to the actual files, describes each, names its tests |
+| `data/questions.csv` | 16 open questions — priority, why it matters, exact file the answer goes into |
+| `data/assumptions.json` | Every constant the engines run on, **read from the modules at generation time**, not typed |
+| `data/sources.csv` | 92 rows: every threshold URL with evidence score, every provider homepage, every live-data host |
+| `reports/scorecard.pdf` | Plus `roadmap.pdf`, `provider_verification_brief.pdf`, and `scorecard.md` |
+
+One thing I did not do, and want to be clear about: your template named two engine files that don't exist in this codebase. I didn't create files with those names to match — that would have been a fabrication in a handoff whose whole purpose is that Perplexity can trust it. `code/README.md` opens with the mapping table so nothing is lost.
+
+I also added `provider_verification_brief.md` at the top level even though the template didn't list it, because it's Perplexity's first job and the MANIFEST read order sends him there third.
+
+
+
+## USER
+
+<command-name>/model</command-name>
+            <command-message>model</command-message>
+            <command-args>claude-opus-5</command-args>
+
+<local-command-stdout>Set model to `claude-opus-5`</local-command-stdout>
+
+Please reformat every zip folder, every file into the following instructions so that Perplexity can read and digest, digest them. He can't do it with zip folders. Also create additional uh, information such as um, any the chat history, put the entire chat history from the whole session from beginning to end in these new, new files and add a roadmap for any outstanding projects that are still incomplete and what needs to be included to complete them. Include your adjacent ideas of how to maximize the code and the uh, utilities that you personally built in reference to the master build. And you can go and check the most recent master build in the GitHub before you finish making those statements and putting it into these new files. Do that first. Go to the, mo go to the most three most recent GitHub saves and treat them all the same, correlate them to your code and what you produced and what we discussed and tell him uh, how to integrate it with each one and give a roadmap and additional ideas. Give him 25 additional ideas on how to produce in, in 800% more valuable utility, predictable, uh, objective, consistent, uh, even changing of words to make it, per to get rid of a legal way, uh, in addition to the user interface on how what recommendations you would make for the user to have a better experience. Uh, make, give, give 25 suggestions that would provide at least a 300% increase in value and give the detailed explanations and your reasoning why. And do all that first and then place everything into these instructions and create new files that I can give him. Take your time, do it right.
+RCS_Claude_Session_01/
+MANIFEST.md
+executive_summary.md
+transcript.md
+recommendations.md
+architecture.md
+code/
+realEstateCapitalStackEngine.ts
+historicalMarketRegimeEngine.ts
+README.md
+data/
+questions.csv
+assumptions.json
+sources.csv
+reports/
+scorecard.pdf
+
+
+
+## ASSISTANT
+
+Starting with what you asked me to do first — reading the three most recent master commits and correlating them to what I built. Let me also check whether the transcript I built covers the full session or just the post-compaction part.
+
+> **tool** `Bash` — git fetch origin master -q 2>&1 | tail -1; echo "=== 3 MOST RECENT MASTER COMMITS ==="; git log origin/master -3 --format="%n===== %h | %an | %ad%n%s%n%n%b" --d
+
+> **tool** `Bash` — ls -la /root/.claude/projects/-home-user-sam-russell-corpus/*.jsonl 2>/dev/null | awk '{printf "%10.1f MB  %s\n", $5/1048576, $9}' | sort -rn -k1 | head -12; ec
+
+
+
+## USER
+
+> *tool result: 1,356 chars*
+
+> *tool result: 138 chars*
+
+
+
+## ASSISTANT
+
+Three most recent are all mine. But `ec3d057` was a merge — let me see what came in from the other session behind it, since that's the master build I need to correlate against:
+
+> **tool** `Bash` — echo "=== MERGE PARENTS of ec3d057 ==="; git log -1 --format="%h parents: %p" ec3d057; echo; echo "=== The other-session commits that came in via that merge ===
+
+
+
+## USER
+
+> *tool result: 1,165 chars*
+
+
+
+## ASSISTANT
+
+Now I have the real picture — the three most recent *non-mine* saves are backup commits from a parallel session. Let me examine each one's contents so the correlation is grounded in what's actually there:
+
+> **tool** `Bash` — for c in 7ab685c 5e3c1ec 482865c; do echo "######## $c — $(git log -1 --format='%s' $c)"; git show --stat --format="" $c | head -40; echo; done 2>&1 | head -130
+
+> **tool** `Bash` — echo "=== 8e87543 + 0795f90 (patent archive) ==="; git show --stat --format="" 8e87543 | head -25; git show --stat --format="" 0795f90 | head -8
+
+
+
+## USER
+
+> *tool result: 3,375 chars*
+
+> *tool result: 1,773 chars*
+
+
+
+## ASSISTANT
+
+Major finding — there's a **parallel codebase** at `russell-capital/` duplicating engines in `russell-capital-systems/`. Let me quantify the overlap precisely, since this is the single most important integration fact for Perplexity:
+
+> **tool** `Bash` — echo "=== TOP-LEVEL APP FOLDERS ==="; for d in russell-capital russell-capital-systems; do [ -d "$d" ] && echo "$d: $(find $d -name '*.ts' -not -path '*/node_mo
+
+> **tool** `Bash` — echo "=== ENGINES ONLY IN russell-capital/ (candidates to port into the systems build) ==="; comm -23 <(ls russell-capital/shared/*.ts 2>/dev/null | xargs -n1 b
+
+
+
+## USER
+
+> *tool result: 565 chars*
+
+> *tool result: 619 chars*
+
+
+
+## ASSISTANT
+
+Two more checks, then I'll write. Is the orphan code referenced anywhere, and what do its two biggest engines actually do?
+
+> **tool** `Bash` — echo "=== does the DEPLOYED app import anything from russell-capital/ ? ==="; grep -rl "russell-capital/" russell-capital-systems/shared russell-capital-systems
+
+
+
+## USER
+
+> *tool result: 1,816 chars*
+
+
+
+## ASSISTANT
+
+> **tool** `Bash` — echo "=== aiCouncil exports (vs my compositeMind/aiMemoryBank) ==="; grep -n "^export " russell-capital/shared/council/aiCouncil.ts | head -12; echo; echo "===
+
+
+
+## USER
+
+> *tool result: 990 chars*
+
+
+
+## ASSISTANT
+
+Complete picture now. The central finding is significant enough to reshape the whole handoff. Let me verify the exports I need, then build the two façade modules the template asks for — as real, compiling code rather than renamed copies:
+
+> **tool** `Bash` — cd /home/user/sam-russell-corpus/russell-capital-systems && for f in powerHistory taxHistory historicalShocks erosion; do echo "=== $f ==="; grep -n "^export \(
+
+> **tool** `Bash` — cd /home/user/sam-russell-corpus/russell-capital-systems && echo "=== sequencePlanner key exports ==="; grep -n "^export \(function\|const\|type\|interface\)" s
+
+
+
+## USER
+
+> *tool result: 2,801 chars*
+
+> *tool result: 2,402 chars*
+
+
+
+## ASSISTANT
+
+Now building the two façade modules the template names — as real, compiling code that adds a genuine single-call API over the engines, not renamed copies:
+
+> **tool** `Bash` — cat > shared/realEstateCapitalStackEngine.ts <<'TSEOF' // ============================================================ // REAL ESTATE CAPITAL STACK ENGINE — one
+
+
+
+## USER
+
+> *tool result: 30 chars*
+
+
+
+## ASSISTANT
+
+> **tool** `Bash` — cat > shared/historicalMarketRegimeEngine.ts <<'TSEOF' // ============================================================ // HISTORICAL MARKET REGIME ENGINE — what
+
+
+
+## USER
+
+> *tool result: 2,105 chars*
+
+
+
+## ASSISTANT
+
+Both façades work, but the sample size is coming back as 0 while the probabilities resolve — my field-name guess missed. That's the one number this engine exists to protect, so let me read the real shape and fix it:
+
+> **tool** `Bash` — sed -n '/export type ConditionalWindowStats/,/^}/p' shared/powerHistory.ts; echo "=== WindowStats ==="; sed -n '/export type WindowStats/,/^}/p' shared/taxHisto
+
+
+
+## USER
+
+> *tool result: 610 chars*
+
+
+
+## ASSISTANT
+
+The field is `windows`, and both types are fully typed — my defensive casts were both wrong and unnecessary. Replacing them with direct typed access:
+
+> **tool** `Bash` — python3 - <<'PY' p='shared/historicalMarketRegimeEngine.ts'; s=open(p).read() old = """  const s = SERIES[series];   const c = conditionalWindowStats(s.series,
+
+
+
+## USER
+
+> *tool result: 406 chars*
+
+
+
+## ASSISTANT
+
+Now the sample sizes are real — and `powerSwing` correctly returns `null` at 10 years because left has only 14 windows and right 5. The engine refuses to state a swing the record can't support. Writing tests to lock that behaviour in:
+
+> **tool** `Bash` — cat > server/facadeEngines.test.ts <<'TSEOF' // The two façade engines named in the handoff template. They compute almost // nothing of their own, so what is wo
+
+
+
+## USER
+
+> *tool result: 53 chars*
+
+
+
+## ASSISTANT
+
+All 17 pass. Now the documents. Starting with the correlation — the thing you asked me to do first:
+
+> **tool** `Bash` — H=/home/user/sam-russell-corpus/russell-capital-systems/docs/handoff/RCS_Claude_Session_01 && cat > $H/master_build_correlation.md <<'MDEOF' # Master build corr
+
+
+
+## USER
+
+> *tool result: 120 chars*
+
+
+
+## ASSISTANT
+
+Now the two idea sets. These need to be specific to this codebase to be worth anything — writing the 25 utility multipliers first:
+
+> **tool** `Bash` — H=/home/user/sam-russell-corpus/russell-capital-systems/docs/handoff/RCS_Claude_Session_01 && cat > $H/value_multipliers_25.md <<'MDEOF' # 25 utility multiplier
+
+
+
+## USER
+
+> *tool result: 119 chars*
+
+
+
+## ASSISTANT
+
+25 confirmed. Now the 25 experience upgrades — user-facing and advisor-facing:
+
+> **tool** `Bash` — H=/home/user/sam-russell-corpus/russell-capital-systems/docs/handoff/RCS_Claude_Session_01 && cat > $H/experience_upgrades_25.md <<'MDEOF' # 25 experience upgra
+
+
+
+## USER
+
+> *tool result: 26 chars*
+
+
+
+## ASSISTANT
+
+Now the inventory, the façade copies, and a fresh transcript through this turn:
+
+> **tool** `Bash` — H=/home/user/sam-russell-corpus/russell-capital-systems/docs/handoff/RCS_Claude_Session_01; R=/home/user/sam-russell-corpus/russell-capital-systems; cd /home/us
+

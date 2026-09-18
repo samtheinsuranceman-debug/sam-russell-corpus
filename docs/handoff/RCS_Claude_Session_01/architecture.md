@@ -1,8 +1,43 @@
 # Architecture — how the pieces connect
 
+## Two codebases — read this before anything else
+
+| | `russell-capital-systems/` | `russell-capital/` |
+|---|---|---|
+| TypeScript files | 502 | 80 |
+| Shared engines | 125 | 20 |
+| Test files | 201 | 11 |
+| `package.json` / router | yes / yes | **no / no** |
+| Imported by the deployed app | — | **nothing imports it** |
+
+`russell-capital-systems/` is the deployed app. `russell-capital/` is a staging folder that
+looks like an app and is not one: ~5,900 lines of finished, tested engine code that executes
+nowhere, including an adverse-scenario stress tester, a full property-and-loan amortisation
+engine, an illustration-compliance layer and a small-business lending vertical. Four module
+names exist in **both** folders and have diverged.
+
+**Before writing any new engine, search both folders for its name.** The file-by-file
+correlation and the integration order are in `master_build_correlation.md`; the machine-readable
+version is `data/master_build_inventory.csv`.
+
 ## The stack
 
 Express + tRPC 11 server · Vite/React 19 client with wouter · Drizzle ORM on MySQL · Vitest · Tailwind 4. Railway deploys from `master`. Shared TypeScript modules under `shared/` hold every engine so the server, the client and the tests run the same arithmetic.
+
+## The façade layer (added this session)
+
+Six domains, each reachable in one call. Two exist:
+
+- `realEstateCapitalStackEngine.ts` — `capitalStack(situation)` returns open and blocked
+  mechanisms with reasons, the thresholds that actually bind, the legal-plan count at a fixed
+  depth, ranked plans, and the nearest archetype with a closeness score.
+- `historicalMarketRegimeEngine.ts` — `regimeAt(year)`, `conditionalOdds(series, horizon, bucket)`
+  carrying the window count, `powerSwing()` returning `null` rather than a number when a bucket
+  is thin, and `coverage()`.
+
+Four are still owed: `taxEngine`, `insuranceEngine`, `householdEngine`, `careerEngine`. The
+façade pattern is what makes the system addressable by an AI channel, a partner API or a mobile
+client without knowing five module names and their call order.
 
 ## The one object
 
@@ -39,6 +74,7 @@ Fact finder (shared/clientFactFinder.ts)
 | `thresholds.ts` (14) | same | a figure without a source URL; a threshold neither fixed nor movable |
 | `pageRatings.ts` (52) | `server/integrationAudit.test.ts` | a rated path not in the catalogue; a featured page unrated |
 | `patentStatus.ts` | `server/patentClaimGuard.test.ts` | any surface says "patent pending" while `APPLICATIONS` is empty |
+| Façades (2) | `server/facadeEngines.test.ts` | a capital-stack refusal lacks a reason; a regime figure lacks its sample size; `powerSwing` states a number from a thin bucket |
 | App routes (321) | `grok-merge.smoke.test.ts`, `managed-port.smoke.test.ts` | the route count changes without the test being updated |
 
 ## Live data
@@ -58,6 +94,16 @@ Twelve tRPC routers fetch external sources on sweeps and store with as-of dates:
 5. **Two numbers, never one** — value/frequency, confidence/likelihood, share/likelihood, wiring/worth. Tests assert they differ.
 6. **Amortisation is the dividing line** — obligations that pay themselves down stack; those that don't are counted as balloons and penalised.
 7. **Priority trimming is a decision** — memory groups at priority 1 are never trimmed; 3 drops first.
+
+## The convention this codebase should adopt
+
+`UnsourcedFindingError` (in `russell-capital/shared/council/aiCouncil.ts`) and
+`UnsourcedQuoteError` (in `helocLenders.ts`) make an unsourced figure a runtime error that
+throws. `Verified<T>` plus guard tests make the *shape* hard to get wrong and catch source-text
+violations at build time — but no test can scan a value that did not exist when the test ran.
+The two together are belt and braces: the type makes it hard, the test makes it visible, the
+error makes it impossible. Promote both classes into `shared/sourcing.ts` and route every
+client-visible number through `assertSourced`.
 
 ## What to build next, structurally
 
