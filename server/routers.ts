@@ -18,6 +18,9 @@ import { erosionRouter } from "./erosionRouter";
 import { outsideForcesRouter } from "./outsideForcesRouter";
 import { zipRouter } from "./zipRouter";
 import { realEstateCapitalRouter } from "./realEstateCapitalRouter";
+import { fieldRouter } from "./fieldRouter";
+import { sisterInventionsRouter } from "./sisterInventionsRouter";
+import { rentalRouter, mortgageEvidenceRouter } from "./rentalRouter";
 import { careerRouter } from "./careerRouter";
 import { enterpriseRouter } from "./enterpriseRouter";
 import { inheritanceRouter } from "./inheritanceRouter";
@@ -347,6 +350,10 @@ export const appRouter = router({
   outsideForces: outsideForcesRouter,
   zip: zipRouter,
   realEstateCapital: realEstateCapitalRouter,
+  field: fieldRouter,
+  si: sisterInventionsRouter,
+  rentalMarket: rentalRouter,
+  mortgageEvidence: mortgageEvidenceRouter,
   career: careerRouter,
   rental: enterpriseRouter,
   inheritance: inheritanceRouter,

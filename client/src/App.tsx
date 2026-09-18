@@ -335,6 +335,14 @@ const Erosion = lazy(() => import("./pages/portal/Erosion"));
 const OutsideForces = lazy(() => import("./pages/portal/OutsideForces"));
 const ZipEngine = lazy(() => import("./pages/portal/ZipEngine"));
 const RECINWorkspace = lazy(() => import("./pages/portal/RECINWorkspace"));
+const PhysicianLoanRefi = lazy(() => import("./pages/portal/PhysicianLoanRefi"));
+const IULLoanOptimizer = lazy(() => import("./pages/portal/IULLoanOptimizer"));
+const HybridIncomeFloor = lazy(() => import("./pages/portal/HybridIncomeFloor"));
+const DisabilityGapAnalyzerPro = lazy(() => import("./pages/portal/DisabilityGapAnalyzerPro"));
+const MultiGenTransfer = lazy(() => import("./pages/portal/MultiGenTransfer"));
+const PracticeAcquisitionDiligence = lazy(() => import("./pages/portal/PracticeAcquisitionDiligence"));
+const ExchangeChainOptimizer = lazy(() => import("./pages/portal/ExchangeChainOptimizer"));
+const KeyPersonValuation = lazy(() => import("./pages/portal/KeyPersonValuation"));
 const ShortTermRentals = lazy(() => import("./pages/portal/ShortTermRentals"));
 const RentalEnterprise = lazy(() => import("./pages/portal/RentalEnterprise"));
 const Inheritance = lazy(() => import("./pages/portal/Inheritance"));
@@ -681,6 +689,15 @@ function Router() {
       <Route path="/portal/outside-forces" component={gated(OutsideForces, "/portal/outside-forces")} />
       <Route path="/portal/zip-engine" component={gated(ZipEngine, "/portal/zip-engine")} />
       <Route path="/portal/recin" component={gated(RECINWorkspace, "/portal/recin")} />
+      <Route path="/portal/the-field" component={gated(TheField, "/portal/the-field")} />
+      <Route path="/portal/physician-loan-refi" component={gated(PhysicianLoanRefi, "/portal/physician-loan-refi")} />
+      <Route path="/portal/iul-loan-optimizer" component={gated(IULLoanOptimizer, "/portal/iul-loan-optimizer")} />
+      <Route path="/portal/hybrid-income-floor" component={gated(HybridIncomeFloor, "/portal/hybrid-income-floor")} />
+      <Route path="/portal/disability-gap-analyzer" component={gated(DisabilityGapAnalyzerPro, "/portal/disability-gap-analyzer")} />
+      <Route path="/portal/multi-gen-transfer" component={gated(MultiGenTransfer, "/portal/multi-gen-transfer")} />
+      <Route path="/portal/practice-acquisition" component={gated(PracticeAcquisitionDiligence, "/portal/practice-acquisition")} />
+      <Route path="/portal/exchange-chain" component={gated(ExchangeChainOptimizer, "/portal/exchange-chain")} />
+      <Route path="/portal/key-person-valuation" component={gated(KeyPersonValuation, "/portal/key-person-valuation")} />
       <Route path="/portal/short-term-rentals" component={gated(ShortTermRentals, "/portal/short-term-rentals")} />
       <Route path="/portal/rental-enterprise" component={gated(RentalEnterprise, "/portal/rental-enterprise")} />
       <Route path="/portal/inheritance" component={gated(Inheritance, "/portal/inheritance")} />
@@ -694,8 +711,7 @@ function Router() {
       <Route path="/portal/the-arrival" component={gated(TheArrival, "/portal/the-arrival")} />
       <Route path="/portal/the-mirror" component={gated(TheMirror, "/portal/the-mirror")} />
       <Route path="/portal/the-strategy-table" component={gated(TheStrategyTable, "/portal/the-strategy-table")} />
-      <Route path="/portal/the-field" component={gated(TheField, "/portal/the-field")} />
-      <Route path="/portal/the-map" component={gated(TheMap, "/portal/the-map")} />
+            <Route path="/portal/the-map" component={gated(TheMap, "/portal/the-map")} />
       <Route path="/portal/the-legacy" component={gated(TheLegacy, "/portal/the-legacy")} />
       <Route path="/portal/the-brotherhood" component={gated(TheBrotherhood, "/portal/the-brotherhood")} />
       <Route path="/portal/secondary-information" component={gated(SecondaryInformation, "/portal/secondary-information")} />

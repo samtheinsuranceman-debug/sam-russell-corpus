@@ -1,6 +1,6 @@
 -- Russell Capital Systems — complete database schema
 -- Generated from drizzle/schema.ts by scripts/export_schema_sql.sh; do not hand-edit.
--- Tables: 154
+-- Tables: 155
 -- Import: mysql -u USER -p DBNAME < database/rcs-schema.sql   (or phpMyAdmin → Import)
 -- The database itself must already exist (create it in cPanel → MySQL Databases).
 
@@ -1647,6 +1647,21 @@ CREATE TABLE `referrals` (
 	`createdAt` timestamp NOT NULL DEFAULT (now()),
 	`updatedAt` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,
 	CONSTRAINT `referrals_id` PRIMARY KEY(`id`)
+);
+CREATE TABLE `rental_series` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`geo` varchar(12) NOT NULL,
+	`geoType` varchar(8) NOT NULL,
+	`series` varchar(20) NOT NULL,
+	`config` varchar(6) NOT NULL,
+	`startYear` int NOT NULL,
+	`values` json NOT NULL,
+	`asOf` varchar(10) NOT NULL,
+	`source` varchar(200) NOT NULL,
+	`meta` json,
+	`fetchedAt` timestamp NOT NULL DEFAULT (now()),
+	CONSTRAINT `rental_series_id` PRIMARY KEY(`id`),
+	CONSTRAINT `rental_series_once` UNIQUE(`geo`,`series`,`config`)
 );
 CREATE TABLE `report_exports` (
 	`id` int AUTO_INCREMENT NOT NULL,
