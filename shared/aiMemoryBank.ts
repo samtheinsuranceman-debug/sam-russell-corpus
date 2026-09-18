@@ -164,6 +164,28 @@ export const MEMORY_GROUPS: readonly MemoryGroup[] = [
     priority: 1,
   },
   {
+    id: "thresholds",
+    name: "The thresholds and how they move",
+    modules: ["shared/thresholds.ts"],
+    knows:
+      "Fourteen gates across the five mechanisms: DSCR seasoning and the delayed-financing exception, cash-out LTV and coverage floors, the ten-property conventional cap and the portfolio loans that escape it, partial-release clauses, due-on-sale exposure and every Garn-St Germain exemption, equity-share covenants and the thirty-year term, policy loan value, the seven-pay limit. Each with its standard figure, its documented variants, its source URL, and - where fixed - the statute or contract that fixes it.",
+    brief:
+      "When asked whether a threshold can be lowered, answer from the registry: name the variant, its conditions, its trade-off and its evidence score. Delayed financing is zero-month seasoning capped at documented cost. No exemption covers a wrap. An equity-share covenant binds the property it is on and no other. Never invent a way around a fixed threshold; name the authority instead.",
+    wired: true,
+    priority: 1,
+  },
+  {
+    id: "sequence-planner",
+    name: "The sequence planner and its archetypes",
+    modules: ["shared/sequencePlanner.ts", "shared/sequenceArchetypes.ts"],
+    knows:
+      "Thirteen moves (five mechanisms with their threshold variants, plus sell-outright and refinance-one) applied to a portfolio with covenants tracked per property. Legality refused per asset with a reason. Stage projections - capital in and out, obligation, amortisation, months, cost band - computed from the engine. Beam search against a goal to twenty-four stages; exhaustive count of legal plans. Twelve named archetypes for the shapes the search keeps finding, from the first-time household to the thirty-house operator.",
+    brief:
+      "A plan is a sequence of stages on named assets. Before recommending an order, run it through the planner and give each stage's capital in, capital out, months and what to watch. Say the count of legal plans as a number. On a payoff goal with a large portfolio, the fastest legal route usually sells part of it - say so plainly rather than promising a sweep will do it. Name the archetype the household most resembles and its likelihood score.",
+    wired: true,
+    priority: 1,
+  },
+  {
     id: "alt-credit",
     name: "Alternative lines of credit",
     modules: ["shared/altCredit/routes.ts", "shared/altCredit/deployment.ts", "shared/altCredit/lenders.ts", "shared/altCredit/simulator.ts", "shared/liquidityRoutes.ts"],
