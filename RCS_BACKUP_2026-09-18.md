@@ -17,6 +17,29 @@ any other chat.
 
 ---
 
+## Patent archive — `patents/2026-09-18/` and `patent360-build-2026-09-18.zip`
+
+Added in commit two. None of it was on `master`; it existed only in a session
+scratchpad. The `Patent360/` app at the repo root is the running application — this
+is the research and the document build behind it.
+
+- `master-patent-document/` — the PDF and HTML, **plus `build.py`, `adjust.py` and
+  the three data modules that generate them**. The generators are the point; a PDF
+  alone cannot be extended.
+- `source-scans/` — the ten raw scans that resolved the count discrepancy (97 / 90 /
+  88 / 78 / 76 / 57 / 20 / 6, each from a different artifact).
+- `uploaded-extracts/` — text from PDFs that were attachments rather than repo files.
+- `scale-readiness.html` — the scale-blocker readiness page.
+- `patent360-build-2026-09-18.zip` (root, 15 MB) — the 342-file PATENT360-BUILD tree.
+
+**Carried forward:** these are claim counts, not granted patents. Six were drafted.
+About half the model-proposed candidates failed prior art, verification against real
+source, or a §101 attack; Alice scores were revised from a 7.4 mean to 5.4 after an
+adversarial pass. Mark "patent pending" only where an application exists — 35 U.S.C.
+§292 penalizes false marking per offense.
+
+---
+
 ## New engines — `russell-capital/shared/`
 
 Master had no `shared/`, `server/`, or `docs/` under `russell-capital/` at all.
