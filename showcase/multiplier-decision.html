@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Multiplier Decision Engine</title>
+<style>
+:root{
+  --bg:#ffffff; --surface:#f7f8fa; --line:#e3e6ea;
+  --ink:#14181d; --ink2:#4a545e; --ink3:#78838e;
+  --blue:#2a78d6; --orange:#eb6834; --green:#1baf7a; --gold:#eda100; --red:#d1344b;
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,monospace;
+}
+:root:not([data-theme="light"]){@media(prefers-color-scheme:dark){
+  --bg:#0f1317; --surface:#171c22; --line:#2a323b;
+  --ink:#eef2f6; --ink2:#b3bec9; --ink3:#7d8893;
+  --blue:#5b9ee8; --orange:#ff8a5c; --green:#3fd39b; --gold:#ffc23d; --red:#ff6076;
+}}
+:root[data-theme="dark"]{
+  --bg:#0f1317; --surface:#171c22; --line:#2a323b;
+  --ink:#eef2f6; --ink2:#b3bec9; --ink3:#7d8893;
+  --blue:#5b9ee8; --orange:#ff8a5c; --green:#3fd39b; --gold:#ffc23d; --red:#ff6076;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,sans-serif;
+  -webkit-font-smoothing:antialiased}
+.wrap{max-width:1080px;margin:0 auto;padding:0 16px 96px}
+header{padding:56px 0 32px;border-bottom:1px solid var(--line);margin-bottom:40px}
+.eyebrow{font:600 12px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--blue);margin-bottom:14px}
+h1{font-size:clamp(28px,5vw,44px);line-height:1.12;margin:0 0 16px;letter-spacing:-.02em;font-weight:680}
+.lede{font-size:clamp(16px,2.2vw,19px);color:var(--ink2);max-width:62ch;margin:0}
+h2{font-size:clamp(21px,3vw,27px);margin:56px 0 8px;letter-spacing:-.01em;font-weight:650}
+h3{font-size:17px;margin:28px 0 8px;font-weight:620}
+p{color:var(--ink2);max-width:72ch}
+.sub{color:var(--ink3);font-size:14px;margin-top:-2px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:22px;margin:20px 0}
+.alert{border-left:3px solid var(--red)}
+.good{border-left:3px solid var(--green)}
+.note{border-left:3px solid var(--gold)}
+.hero-num{font:700 clamp(34px,7vw,60px)/1 var(--mono);letter-spacing:-.03em;margin:4px 0 6px}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));margin:20px 0}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px}
+.tile .k{font:600 11px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin-bottom:9px}
+.tile .v{font:700 27px/1.1 var(--mono);letter-spacing:-.02em}
+.tile .d{font-size:13px;color:var(--ink3);margin-top:7px;line-height:1.45}
+table{width:100%;border-collapse:collapse;font-size:14px;margin:16px 0}
+th{text-align:left;font:600 11px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;
+  color:var(--ink3);padding:9px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:9px 10px;border-bottom:1px solid var(--line);color:var(--ink2)}
+td.n{font-family:var(--mono);text-align:right;font-size:13px;white-space:nowrap}
+tr:last-child td{border-bottom:none}
+.tag{display:inline-block;font:600 10px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;
+  padding:4px 7px;border-radius:5px;white-space:nowrap}
+.t-green{background:color-mix(in srgb,var(--green) 16%,transparent);color:var(--green)}
+.t-red{background:color-mix(in srgb,var(--red) 16%,transparent);color:var(--red)}
+.t-gold{background:color-mix(in srgb,var(--gold) 18%,transparent);color:var(--gold)}
+.t-blue{background:color-mix(in srgb,var(--blue) 16%,transparent);color:var(--blue)}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+svg{display:block;max-width:100%;height:auto}
+.legend{display:flex;gap:18px;flex-wrap:wrap;font-size:13px;color:var(--ink2);margin:10px 0 0}
+.legend i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+label{display:block;font:600 11px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);margin-bottom:6px}
+input,select{width:100%;padding:9px 11px;border:1px solid var(--line);border-radius:8px;
+  background:var(--bg);color:var(--ink);font:14px var(--mono)}
+.ctl{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(130px,1fr))}
+.big{font:700 30px/1.1 var(--mono);letter-spacing:-.02em;margin:6px 0}
+blockquote{margin:18px 0;padding:14px 18px;border-left:3px solid var(--blue);
+  background:var(--surface);border-radius:0 8px 8px 0;color:var(--ink2);font-size:15px}
+code{font:13px var(--mono);background:var(--surface);padding:2px 5px;border-radius:4px;color:var(--ink)}
+footer{margin-top:64px;padding-top:24px;border-top:1px solid var(--line);font-size:13px;color:var(--ink3)}
+@media print{
+  body{background:#fff;color:#000}
+  .wrap{max-width:100%}
+  .card,.tile{break-inside:avoid;border:1px solid #ccc;background:#fff}
+  h2{break-after:avoid}
+  table{break-inside:auto;font-size:11px}
+  tr{break-inside:avoid}
+  header{padding-top:0}
+}
+</style></head><body><div class="wrap">
+
+<header>
+<div class="eyebrow">Russell Capital Systems · Decision Engine</div>
+<h1>The multiplier decision is arithmetic.<br>It is not a prediction.</h1>
+<p class="lede">Every indexed policy asks the same question: pay for the higher participation rate, or don't. The industry answers it with a guess about next year. There is a better answer, and it doesn't require knowing anything about next year at all.</p>
+</header>
+
+<div class="card good">
+<h3 style="margin-top:0">Read this before the Mortgage Killer or Time Machine pages</h3>
+<p style="margin-bottom:0">Those pages show what a policy <em>did</em>. This one shows which <em>version</em> of the policy you should have owned — and it is the only page here that answers that with math rather than opinion. The numbers on the other two are only as good as the option chosen on this one.</p>
+</div>
+
+<h2>The one insight</h2>
+<p>A multiplier costs a <strong>known, contractual charge</strong>. It pays a <strong>higher share of whatever the index does</strong>. So there is exactly one index return where the two options credit the same amount. Below it the multiplier loses by a knowable amount. Above it, it wins by a knowable amount.</p>
+<p>That threshold is computable today, to the basis point, with no forecast of any kind.</p>
+
+<blockquote><strong>And here is what almost everyone misses.</strong> In a floored product, the multiplier is worst exactly when the floor matters. A 0% year credits zero either way — but the charge is still taken. The multiplier does not protect you in a bad year. It costs you more in one.<br><br>So the decision turns on <strong>how many floor years</strong> the holding period contains — not on next year's return. And floor frequency over 30 years is vastly more knowable than next year.</blockquote>
+
+<h2>Floor years: the number this all turns on</h2>
+<p class="sub">Real index history, <span id="yr-range"></span>. A floor year is any year the index finished at or below zero.</p>
+<div id="floor-chart"></div>
+<div class="legend"><span><i style="background:var(--blue)"></i>Years up</span><span><i style="background:var(--orange)"></i>Floor years (credit = 0)</span></div>
+<div class="grid" id="floor-tiles"></div>
+<div class="card note"><p style="margin:0"><strong>Read the Russell 2000 line again.</strong> It floored in 12 of 32 years — nearly four years in ten. A multiplier charged every year against an index that credits nothing 38% of the time is a very different product from the same multiplier on the S&amp;P.</p></div>
+
+<h2>The crossover: pure product arithmetic</h2>
+<p>No history, no forecast — only the two contracts. A capped option and an uncapped-with-spread option cross at exactly one return.</p>
+<div class="card">
+  <div class="hero-num" id="xover" style="color:var(--blue)"></div>
+  <p id="xover-text" style="margin:0"></p>
+</div>
+
+<h2>Breakeven calculator</h2>
+<p>Set any two options. This solves for the index return where the enhanced one starts winning, and what it costs you in a floor year.</p>
+<div class="card">
+  <h3 style="margin-top:0;color:var(--ink3);font:600 11px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase">Base option</h3>
+  <div class="ctl">
+    <div><label>Participation %</label><input id="b-par" type="number" value="100" step="5"></div>
+    <div><label>Cap % (blank = none)</label><input id="b-cap" type="number" value="10.25" step="0.25"></div>
+    <div><label>Spread %</label><input id="b-spr" type="number" value="0" step="0.25"></div>
+    <div><label>Charge %</label><input id="b-chg" type="number" value="0" step="0.25"></div>
+  </div>
+  <h3 style="color:var(--ink3);font:600 11px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase">Enhanced option</h3>
+  <div class="ctl">
+    <div><label>Participation %</label><input id="e-par" type="number" value="150" step="5"></div>
+    <div><label>Cap % (blank = none)</label><input id="e-cap" type="number" value="10.25" step="0.25"></div>
+    <div><label>Spread %</label><input id="e-spr" type="number" value="0" step="0.25"></div>
+    <div><label>Charge %</label><input id="e-chg" type="number" value="3" step="0.25"></div>
+  </div>
+  <div style="margin-top:22px;padding-top:18px;border-top:1px solid var(--line)">
+    <label>Breakeven index return</label>
+    <div class="big" id="be-val" style="color:var(--blue)">—</div>
+    <p id="be-text" style="margin:8px 0 0"></p>
+    <div class="grid" style="margin-top:16px">
+      <div class="tile"><div class="k">Floor-year cost</div><div class="v" id="be-floor" style="color:var(--red)">—</div><div class="d">What the enhanced option gives up in a 0% year, with nothing in return.</div></div>
+      <div class="tile"><div class="k">S&amp;P years cleared</div><div class="v" id="be-hit">—</div><div class="d">How often the S&amp;P 500 actually exceeded this threshold, 1994–2025.</div></div>
+    </div>
+  </div>
+</div>
+
+<h2>Every enhanced option, scored against its own baseline</h2>
+<p class="sub">Breakeven, hit rate, and the compounded net over the full history. Net is what the enhancement was actually worth after its charge.</p>
+<div class="scroll"><table id="scorecard"><thead><tr>
+<th>Carrier</th><th>Option</th><th>Par</th><th>Charge</th><th>Breakeven</th><th>Floor cost</th><th>Hit rate</th><th>Net vs baseline</th>
+</tr></thead><tbody></tbody></table></div>
+<div class="card note"><p style="margin:0"><strong>Look at the High-Cap options.</strong> Buying 3 extra points of cap for a 1.50% charge came out <em>behind</em> the plain capped option over 32 years. That is the whole thesis of this page in one row: a charge paid every year against a benefit collected in some years is a losing trade unless the threshold clears often enough.</p></div>
+
+<h2 style="color:var(--red)">Data integrity: options in this book that cannot be real</h2>
+<p>The engine audits every option definition mechanically. These fail.</p>
+<div id="audit"></div>
+
+<h2>What 32 years actually produced</h2>
+<p class="sub">Realized compound rate after each option's own cap, participation, spread, and charge. This is history, not projection.</p>
+<div class="scroll"><table id="realized"><thead><tr><th>#</th><th>Option</th><th>Carrier</th><th>Floor yrs</th><th>Compound / yr</th></tr></thead><tbody></tbody></table></div>
+
+<h2 style="color:var(--red)">The 80%-every-year loan strategy</h2>
+<p>Pay the full premium. Borrow 80% of surrender value every year. Participating loan, so the borrowed money keeps earning. Tested against real history with real charges.</p>
+<div class="card alert">
+<div class="hero-num" style="color:var(--red)">It lapses.</div>
+<p>Every start year tested. Every charge assumption tested. <strong>Including a 0% loan rate with no charges at all</strong> — literally free money — it still lapses, because drawing 80% of surrender value annually drains the account faster than it can compound, while cost of insurance on the rising net amount at risk accelerates.</p>
+<p style="margin-bottom:0">A lapse with a loan outstanding is the worst outcome in this platform: the gain becomes ordinary income in that year, with no policy left and no cash to pay the bill.</p>
+</div>
+<div class="scroll"><table id="stress"><thead><tr><th>Assumption set</th><th>Outcome</th><th>Peak loan / AV</th><th>Total drawn</th><th>Ending net equity</th></tr></thead><tbody></tbody></table></div>
+
+<h3>Where the draw stops being fatal</h3>
+<p class="sub">Same policy, same history. Only the annual draw changes.</p>
+<div id="draw-chart"></div>
+<div class="legend"><span><i style="background:var(--green)"></i>Survived</span><span><i style="background:var(--red)"></i>Lapsed</span></div>
+<div class="scroll"><table id="drawtbl"><thead><tr><th>Annual draw</th><th>Outcome</th><th>Peak loan / AV</th><th>Total drawn</th><th>Ending net equity</th></tr></thead><tbody></tbody></table></div>
+<div class="card good"><p style="margin:0"><strong>The sustainable number is 5–10%, not 80%.</strong> At a 5% annual draw the policy survives with the loan peaking at 77% of account value and real equity left. At 10% it survives but peaks at 98% — one bad year from forced repayment. At 15% and above it lapses. The strategy isn't wrong in kind; it's wrong by roughly a factor of ten in degree.</p></div>
+
+<h2>The signals — and what each one cannot tell you</h2>
+<p>Every signal is published with its limits. A signal without its limits is a claim, and a claim about future index returns is the one thing an illustration may not make.</p>
+<div id="signals"></div>
+
+<footer>
+<p>Generated from the Russell Capital Systems engines — <code>multiplierDecision.ts</code>, <code>annualLoanStrategy.ts</code>, <code>indexCreditingData.ts</code>. Index history 1994–2025. Cost of insurance is approximated pending the carrier rate table; replace before client use. Nothing here is a projection of future results, an illustration, or investment advice.</p>
+<p id="gen"></p>
+</footer>
+</div>
+<script>
+const D = {"generatedAt":"2026-09-18T14:54:21.643Z","returns":{"SP500":{"1994":4.33,"1995":31.4,"1996":23.48,"1997":32.69,"1998":18.01,"1999":10.34,"2000":-9.26,"2001":-10.74,"2002":-24,"2003":36.12,"2004":5.12,"2005":6.4,"2006":9.85,"2007":-5.42,"2008":-44.76,"2009":50.25,"2010":20.17,"2011":2.9,"2012":10.91,"2013":22.76,"2014":13.18,"2015":-8.19,"2016":22.33,"2017":14.82,"2018":2.6,"2019":6.1,"2020":29.01,"2021":14.77,"2022":-9.23,"2023":28.36,"2024":16.84,"2025":15.52},"NASDAQ100":{"1994":1.5,"1995":42.54,"1996":42.54,"1997":20.63,"1998":85.3,"1999":101.95,"2000":-36.84,"2001":-32.65,"2002":-37.58,"2003":49.12,"2004":10.44,"2005":1.49,"2006":6.79,"2007":18.67,"2008":-41.89,"2009":53.54,"2010":19.22,"2011":2.7,"2012":16.82,"2013":34.99,"2014":17.94,"2015":8.43,"2016":5.89,"2017":31.52,"2018":-1.04,"2019":37.96,"2020":47.58,"2021":26.63,"2022":-32.97,"2023":53.81,"2024":24.88,"2025":20.17},"RUSSELL2000":{"1994":-3.37,"1995":26.64,"1996":10.81,"1997":28.27,"1998":-15.06,"1999":47.28,"2000":-17.89,"2001":-1.06,"2002":-23.19,"2003":62.42,"2004":8.28,"2005":15.23,"2006":8.58,"2007":-13.5,"2008":-43.31,"2009":61.58,"2010":31.01,"2011":-1.52,"2012":12.35,"2013":29.84,"2014":4.26,"2015":-16.17,"2016":34.12,"2017":9.07,"2018":4.17,"2019":-6.29,"2020":49.08,"2021":-6.95,"2022":-7.38,"2023":8.32,"2024":5.27,"2025":21.7}},"crossover":{"capName":"S&P 500 Point-to-Point","cap":10.25,"uncappedSpread":5.75,"point":16.01},"scorecard":[{"carrier":"A Mutual","baseline":"S&P 500 Point-to-Point","name":"Uncapped S&P 500 PtP","par":100,"charge":0,"cap":null,"spread":5.75,"bonus":0,"breakeven":16.01,"floorCost":0,"hit":0.375,"net":102.91,"floorYears":7},{"carrier":"A Mutual","baseline":"S&P 500 Point-to-Point","name":"High-Cap S&P 500 PtP","par":100,"charge":1.5,"cap":13.25,"spread":0,"bonus":0,"breakeven":11.76,"floorCost":1.5,"hit":0.5,"net":-1.11,"floorYears":7},{"carrier":"A Mutual","baseline":"S&P 500 Point-to-Point","name":"Multi-Index Monthly Average","par":100,"charge":0,"cap":14,"spread":0,"bonus":0,"breakeven":"always","floorCost":0,"hit":0.5625,"net":70.7,"floorYears":7},{"carrier":"A Mutual","baseline":"S&P 500 Point-to-Point","name":"High-Cap Multi-Index Monthly Avg","par":100,"charge":1.5,"cap":25,"spread":0,"bonus":0,"breakeven":11.76,"floorCost":1.5,"hit":0.5,"net":176.51,"floorYears":7},{"carrier":"A Mutual","baseline":"S&P 500 Point-to-Point","name":"2-Year S&P 500 PtP (Spread)","par":100,"charge":0,"cap":null,"spread":4.5,"bonus":0,"breakeven":14.76,"floorCost":0,"hit":0.4688,"net":156.74,"floorYears":7},{"carrier":"A+ Mutual Life","baseline":"S&P 500 Capped PtP","name":"S&P 500 with Multiplier","par":110,"charge":0.75,"cap":14,"spread":0,"bonus":0,"breakeven":7.51,"floorCost":0.75,"hit":0.5938,"net":39.82,"floorYears":7},{"carrier":"A+ Mutual Life","baseline":"S&P 500 Capped PtP","name":"S&P 500 Low Volatility","par":100,"charge":0,"cap":null,"spread":3,"bonus":0,"breakeven":13.51,"floorCost":0,"hit":0.4688,"net":233.08,"floorYears":7},{"carrier":"A+ Mutual Life","baseline":"S&P 500 Capped PtP","name":"Hindsight Account (S&P/Nasdaq/Russell)","par":100,"charge":0,"cap":12,"spread":0,"bonus":0,"breakeven":"always","floorCost":0,"hit":0.5313,"net":24.54,"floorYears":7},{"carrier":"A+ Mutual Life","baseline":"S&P 500 Capped PtP","name":"2-Year S&P 500 PtP (110% Participation)","par":110,"charge":0,"cap":null,"spread":2.5,"bonus":0,"breakeven":11.82,"floorCost":0,"hit":0.5,"net":432.44,"floorYears":7},{"carrier":"A+ Mutual Life","baseline":"S&P 500 Capped PtP","name":"1-Year S&P 500 Capped PtP","par":100,"charge":0,"cap":10.5,"spread":0,"bonus":0,"breakeven":"always","floorCost":0,"hit":0,"net":0,"floorYears":7},{"carrier":"A- Mutual (Pacific)","baseline":"S&P 500 Core PtP","name":"S&P 500 Smart Strategy","par":100,"charge":0,"cap":null,"spread":5,"bonus":0,"breakeven":14.51,"floorCost":0,"hit":0.4688,"net":164.49,"floorYears":7},{"carrier":"A- Mutual (Pacific)","baseline":"S&P 500 Core PtP","name":"S&P 500 High Participation","par":85,"charge":0,"cap":null,"spread":0,"bonus":0,"breakeven":11.18,"floorCost":0,"hit":0.5,"net":332.88,"floorYears":7},{"carrier":"A- Mutual (Pacific)","baseline":"S&P 500 Core PtP","name":"Dynamic Low Vol with Bonus","par":125,"charge":0,"cap":null,"spread":0,"bonus":0.75,"breakeven":"always","floorCost":-0.75,"hit":1,"net":2123.71,"floorYears":7},{"carrier":"A- Mutual (Pacific)","baseline":"S&P 500 Core PtP","name":"2-Year S&P 500 PtP (110% Participation)","par":110,"charge":0,"cap":null,"spread":2.5,"bonus":0,"breakeven":10.91,"floorCost":0,"hit":0.5313,"net":528.2,"floorYears":7},{"carrier":"A- Mutual (Pacific)","baseline":"S&P 500 Core PtP","name":"1-Year S&P 500 Capped PtP","par":100,"charge":0,"cap":10.5,"spread":0,"bonus":0,"breakeven":"always","floorCost":0,"hit":0.5938,"net":17.98,"floorYears":7}],"realized":[{"name":"Dynamic Low Vol with Bonus","carrier":"a-minus-mutual","n":32,"cagr":17.26,"floor":0},{"name":"2-Year S&P 500 PtP (110% Participation)","carrier":"a-plus-mutual-life","n":32,"cagr":12.71,"floor":7},{"name":"2-Year S&P 500 PtP (110% Participation)","carrier":"a-minus-mutual","n":32,"cagr":12.71,"floor":7},{"name":"S&P 500 High Participation","carrier":"a-minus-mutual","n":32,"cagr":11.41,"floor":7},{"name":"S&P 500 Low Volatility","carrier":"a-plus-mutual-life","n":32,"cagr":11.07,"floor":9},{"name":"High-Cap Multi-Index Monthly Avg","carrier":"a-mutual","n":32,"cagr":10.29,"floor":7},{"name":"2-Year S&P 500 PtP (Spread)","carrier":"a-mutual","n":32,"cagr":10.04,"floor":10},{"name":"S&P 500 Smart Strategy","carrier":"a-minus-mutual","n":32,"cagr":9.71,"floor":10},{"name":"Uncapped S&P 500 PtP","carrier":"a-mutual","n":32,"cagr":9.23,"floor":11},{"name":"Multi-Index Monthly Average","carrier":"a-mutual","n":32,"cagr":8.64,"floor":7},{"name":"S&P 500 with Multiplier","carrier":"a-plus-mutual-life","n":32,"cagr":8.1,"floor":7},{"name":"Hindsight Account (S&P/Nasdaq/Russell)","carrier":"a-plus-mutual-life","n":32,"cagr":7.71,"floor":7},{"name":"Nasdaq-100 CCAR","carrier":"a-minus-mutual","n":32,"cagr":7.59,"floor":6},{"name":"S&P 500 Capped PtP","carrier":"a-plus-mutual-life","n":32,"cagr":6.97,"floor":7},{"name":"1-Year S&P 500 Capped PtP","carrier":"a-plus-mutual-life","n":32,"cagr":6.97,"floor":7},{"name":"1-Year S&P 500 Capped PtP","carrier":"a-minus-mutual","n":32,"cagr":6.97,"floor":7},{"name":"S&P 500 Point-to-Point","carrier":"a-mutual","n":32,"cagr":6.84,"floor":7},{"name":"High-Cap S&P 500 PtP","carrier":"a-mutual","n":32,"cagr":6.81,"floor":7},{"name":"S&P 500 Core PtP","carrier":"a-minus-mutual","n":32,"cagr":6.42,"floor":7},{"name":"Fixed Interest","carrier":"a-mutual","n":32,"cagr":4.25,"floor":0},{"name":"Fixed Account","carrier":"a-plus-mutual-life","n":32,"cagr":4,"floor":0},{"name":"Fixed Account","carrier":"a-minus-mutual","n":32,"cagr":3.75,"floor":0}],"drawCurve":[{"draw":5,"lapsed":false,"lapseYear":null,"peak":77,"drawn":973096,"netEquity":615382,"phantom":0,"negSpread":9},{"draw":10,"lapsed":false,"lapseYear":null,"peak":98,"drawn":1056486,"netEquity":108322,"phantom":0,"negSpread":9},{"draw":15,"lapsed":true,"lapseYear":26,"peak":100,"drawn":971405,"netEquity":-7449,"phantom":2096402,"negSpread":8},{"draw":20,"lapsed":true,"lapseYear":22,"peak":102,"drawn":927570,"netEquity":-36040,"phantom":1684181,"negSpread":7},{"draw":25,"lapsed":true,"lapseYear":15,"peak":103,"drawn":876643,"netEquity":-32719,"phantom":1116834,"negSpread":5},{"draw":30,"lapsed":true,"lapseYear":15,"peak":106,"drawn":890109,"netEquity":-73835,"phantom":1130300,"negSpread":5},{"draw":35,"lapsed":true,"lapseYear":14,"peak":101,"drawn":897514,"netEquity":-14125,"phantom":1162096,"negSpread":4},{"draw":40,"lapsed":true,"lapseYear":14,"peak":103,"drawn":903442,"netEquity":-35635,"phantom":1168024,"negSpread":4},{"draw":45,"lapsed":true,"lapseYear":14,"peak":104,"drawn":905328,"netEquity":-49954,"phantom":1169910,"negSpread":4},{"draw":50,"lapsed":true,"lapseYear":14,"peak":105,"drawn":904979,"netEquity":-59681,"phantom":1169561,"negSpread":4},{"draw":55,"lapsed":true,"lapseYear":14,"peak":105,"drawn":903449,"netEquity":-66441,"phantom":1168031,"negSpread":4},{"draw":60,"lapsed":true,"lapseYear":14,"peak":106,"drawn":901354,"netEquity":-71260,"phantom":1165936,"negSpread":4},{"draw":65,"lapsed":true,"lapseYear":14,"peak":106,"drawn":899058,"netEquity":-74804,"phantom":1163640,"negSpread":4},{"draw":70,"lapsed":true,"lapseYear":14,"peak":106,"drawn":896779,"netEquity":-77514,"phantom":1161361,"negSpread":4},{"draw":75,"lapsed":true,"lapseYear":14,"peak":106,"drawn":894649,"netEquity":-79690,"phantom":1159231,"negSpread":4},{"draw":80,"lapsed":true,"lapseYear":12,"peak":100,"drawn":868580,"netEquity":-626,"phantom":1065933,"negSpread":3},{"draw":85,"lapsed":true,"lapseYear":12,"peak":100,"drawn":867889,"netEquity":-3134,"phantom":1065242,"negSpread":3}],"stress":[{"label":"80% draw \u00b7 5% loan \u00b7 normal charges","lapsed":true,"lapseYear":12,"peak":100,"drawn":868580,"netEquity":-626},{"label":"80% draw \u00b7 3% loan \u00b7 no load, no charges","lapsed":true,"lapseYear":14,"peak":102,"drawn":1235838,"netEquity":-36361},{"label":"80% draw \u00b7 0% loan (free money) \u00b7 no charges","lapsed":true,"lapseYear":15,"peak":100,"drawn":1503149,"netEquity":-6945},{"label":"50% draw \u00b7 3% loan \u00b7 no charges","lapsed":true,"lapseYear":15,"peak":103,"drawn":1216813,"netEquity":-46013}],"audit":[{"optionId":"am-fixed","name":"Fixed Interest","severity":"blocker","issue":"Credits a positive rate when the index falls 40%. The bonus is being added after the floor instead of scaling the credit, so it pays in years nothing was earned.","evidence":"creditRate(-40%) = 4.25%, floor = 4.25%, bonus = 0%."},{"optionId":"apm-fixed","name":"Fixed Account","severity":"blocker","issue":"Credits a positive rate when the index falls 40%. The bonus is being added after the floor instead of scaling the credit, so it pays in years nothing was earned.","evidence":"creditRate(-40%) = 4.00%, floor = 4%, bonus = 0%."},{"optionId":"amm-dynamic-bonus","name":"Dynamic Low Vol with Bonus","severity":"blocker","issue":"Credits a positive rate when the index falls 40%. The bonus is being added after the floor instead of scaling the credit, so it pays in years nothing was earned.","evidence":"creditRate(-40%) = 0.75%, floor = 0%, bonus = 0.75%."},{"optionId":"amm-dynamic-bonus","name":"Dynamic Low Vol with Bonus","severity":"blocker","issue":"Uncapped, above-100% participation, no spread and no charge. Nothing pays for the extra participation, so this option dominates every alternative at every return. No carrier sells this.","evidence":"cap = none, participation = 125%, spread = 0%, charge = 0%."},{"optionId":"amm-fixed","name":"Fixed Account","severity":"blocker","issue":"Credits a positive rate when the index falls 40%. The bonus is being added after the floor instead of scaling the credit, so it pays in years nothing was earned.","evidence":"creditRate(-40%) = 3.75%, floor = 3.75%, bonus = 0%."}],"signals":[{"id":"cap-crossover","name":"Cap crossover point","kind":"structural","observable":"Both option contracts. Available today, no history needed.","whatItTellsYou":"The exact index return above which an uncapped option overtakes a capped one. Below the crossover the cap wins; above it the cap is a ceiling the other option does not have.","whatItDoesNotTellYou":"Whether the index will reach it. That is a separate and unanswerable question.","strength":1},{"id":"multiplier-breakeven","name":"Multiplier breakeven","kind":"structural","observable":"Both option contracts.","whatItTellsYou":"The index return at which the enhanced participation rate earns back its charge, and exactly what it costs in a floor year.","whatItDoesNotTellYou":"How many floor years the next thirty will contain.","strength":1},{"id":"floor-frequency","name":"Historical floor-year frequency","kind":"probabilistic","observable":"The index return history in this repository, 1994 onward.","whatItTellsYou":"How often this index has finished a year at or below zero. This is the single most decision-relevant number for a multiplier, because floor years are where it bleeds.","whatItDoesNotTellYou":"Which years those will be, or that the historical rate will persist. Thirty-two observations is a small sample for a tail.","strength":0.6},{"id":"volatility-clustering","name":"Volatility clustering","kind":"probabilistic","observable":"Realized volatility of the index over the trailing year.","whatItTellsYou":"High-volatility periods tend to be followed by high-volatility periods. This is one of the most robust findings in empirical finance and it matters here because a volatility-controlled index mechanically de-levers when volatility rises, which cuts its participation in a recovery.","whatItDoesNotTellYou":"The direction of returns. Volatility clusters; direction does not. A high-volatility year is not a down year.","strength":0.5},{"id":"term-spread","name":"Treasury term spread (10y minus 2y)","kind":"probabilistic","observable":"FRED series T10Y2Y, already wired into outsideForces.ts.","whatItTellsYou":"An inverted curve has preceded most post-war recessions, and recessions raise the odds of a floor year.","whatItDoesNotTellYou":"Timing, which has ranged from months to over two years, or magnitude. It has also produced false positives. This shifts odds slightly; it does not make a call.","strength":0.35},{"id":"valuation-cape","name":"Cyclically adjusted price/earnings","kind":"probabilistic","observable":"Published CAPE for the index.","whatItTellsYou":"Elevated valuations have been associated with lower returns over TEN-YEAR horizons.","whatItDoesNotTellYou":"Anything useful about next year. The one-year relationship is close to nothing, and CAPE has read expensive for long stretches that delivered strong returns. Do not use this to make an annual allocation decision.","strength":0.2}]};
+const $ = (s)=>document.querySelector(s);
+const pct = (n,d=2)=>(n>=0?'':'')+n.toFixed(d)+'%';
+const money = (n)=>'$'+Math.round(n).toLocaleString();
+const C = (v)=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+
+function creditRate(o,r){
+  let x = r*(o.par/100) - (o.spr||0);
+  if(o.cap!==null && o.cap!==undefined && !isNaN(o.cap)) x = Math.min(x,o.cap);
+  x = Math.max(x, 0);
+  return x + (o.bonus||0) - (o.chg||0);
+}
+function breakEven(b,e){
+  let cross=null, everWin=false, everLose=false;
+  for(let r=-50;r<=100;r=Math.round((r+0.01)*100)/100){
+    const d = creditRate(e,r)-creditRate(b,r);
+    if(d>1e-4) everWin=true;
+    if(d<-1e-4) everLose=true;
+    if(cross===null && d>1e-4 && everLose) cross=r;
+  }
+  return {cross, never:!everWin, always:!everLose, floorCost:+(creditRate(b,-20)-creditRate(e,-20)).toFixed(2)};
+}
+
+/* ---------- floor chart ---------- */
+(function(){
+  const keys=Object.keys(D.returns);
+  const yrs=Object.keys(D.returns.SP500).map(Number).sort((a,b)=>a-b);
+  $('#yr-range').textContent=yrs[0]+'–'+yrs[yrs.length-1];
+  const W=1000,rowH=62,H=keys.length*rowH+30, cw=(W-150)/yrs.length;
+  let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Floor years by index">`;
+  keys.forEach((k,i)=>{
+    const y=i*rowH+16, t=D.returns[k];
+    s+=`<text x="0" y="${y+13}" font-size="14" font-weight="620" fill="${C('--ink')}">${k}</text>`;
+    const down=yrs.filter(v=>t[v]<=0).length;
+    s+=`<text x="0" y="${y+31}" font-size="12" fill="${C('--ink3')}" font-family="${C('--mono')}">${down}/${yrs.length} floor · ${(down/yrs.length*100).toFixed(0)}%</text>`;
+    yrs.forEach((v,j)=>{
+      const neg=t[v]<=0;
+      s+=`<rect x="${150+j*cw}" y="${y}" width="${Math.max(1,cw-2)}" height="26" rx="3"
+        fill="${neg?C('--orange'):C('--blue')}" opacity="${neg?1:.82}"><title>${v}: ${t[v]}%</title></rect>`;
+    });
+  });
+  yrs.forEach((v,j)=>{ if(v%5===0) s+=`<text x="${150+j*cw+cw/2}" y="${H-4}" font-size="10" text-anchor="middle" fill="${C('--ink3')}" font-family="${C('--mono')}">${String(v).slice(2)}</text>`; });
+  s+='</svg>';
+  $('#floor-chart').innerHTML=s;
+  $('#floor-tiles').innerHTML=keys.map(k=>{
+    const t=D.returns[k], n=yrs.length, down=yrs.filter(v=>t[v]<=0).length;
+    const vals=yrs.map(v=>t[v]);
+    return `<div class="tile"><div class="k">${k}</div><div class="v" style="color:var(--orange)">${(down/n*100).toFixed(0)}%</div>
+      <div class="d">${down} of ${n} years floored. Worst ${Math.min(...vals).toFixed(1)}%, best ${Math.max(...vals).toFixed(1)}%.</div></div>`;
+  }).join('');
+})();
+
+/* ---------- crossover ---------- */
+(function(){
+  const x=D.crossover;
+  $('#xover').textContent=x.point!==null?x.point.toFixed(2)+'%':'—';
+  const t=D.returns.SP500, yrs=Object.keys(t).map(Number);
+  const above=yrs.filter(y=>t[y]>x.point);
+  $('#xover-text').innerHTML=`Below <strong>${x.point.toFixed(2)}%</strong> the ${x.cap}% cap wins. Above it, the uncapped option minus its ${x.uncappedSpread}% spread wins. The S&amp;P 500 cleared it in <strong>${above.length} of ${yrs.length}</strong> years (${(above.length/yrs.length*100).toFixed(0)}%). This is algebra about two contracts — it involves no forecast whatsoever.`;
+})();
+
+/* ---------- breakeven calculator ---------- */
+function recalc(){
+  const num=(id)=>{const v=$(id).value.trim(); return v===''?null:parseFloat(v);};
+  const b={par:num('#b-par')||0,cap:num('#b-cap'),spr:num('#b-spr')||0,chg:num('#b-chg')||0,bonus:0};
+  const e={par:num('#e-par')||0,cap:num('#e-cap'),spr:num('#e-spr')||0,chg:num('#e-chg')||0,bonus:0};
+  const r=breakEven(b,e);
+  const t=D.returns.SP500, yrs=Object.keys(t).map(Number);
+  if(r.always){ $('#be-val').textContent='Always wins'; $('#be-val').style.color=C('--green');
+    $('#be-text').textContent='The enhanced option credits at least as much at every possible index return. No trade-off exists — take it.';
+    $('#be-hit').textContent='100%'; }
+  else if(r.never){ $('#be-val').textContent='Never wins'; $('#be-val').style.color=C('--red');
+    $('#be-text').textContent='There is no index return at which the enhanced option beats the base. The charge exceeds what the extra participation can produce, everywhere on the curve.';
+    $('#be-hit').textContent='0%'; }
+  else { $('#be-val').textContent=r.cross.toFixed(2)+'%'; $('#be-val').style.color=C('--blue');
+    const hit=yrs.filter(y=>t[y]>r.cross).length;
+    $('#be-text').innerHTML=`The index must return more than <strong>${r.cross.toFixed(2)}%</strong> for the enhanced option to win. Below that it loses.`;
+    $('#be-hit').textContent=`${hit}/${yrs.length} · ${(hit/yrs.length*100).toFixed(0)}%`; }
+  $('#be-floor').textContent=r.floorCost>0?('−'+r.floorCost.toFixed(2)+' pt'):(r.floorCost===0?'0.00 pt':'+'+Math.abs(r.floorCost).toFixed(2)+' pt');
+}
+['#b-par','#b-cap','#b-spr','#b-chg','#e-par','#e-cap','#e-spr','#e-chg'].forEach(id=>$(id).addEventListener('input',recalc));
+recalc();
+
+/* ---------- scorecard ---------- */
+$('#scorecard tbody').innerHTML=D.scorecard.map(r=>{
+  const be = r.breakeven==='always'?'<span class="tag t-green">Always wins</span>'
+    : r.breakeven==='never'?'<span class="tag t-red">Never wins</span>'
+    : '&gt;'+r.breakeven.toFixed(2)+'%';
+  const netTag = r.net>=0?'t-green':'t-red';
+  return `<tr><td>${r.carrier}</td><td>${r.name}</td><td class="n">${r.par}%</td><td class="n">${r.charge.toFixed(2)}%</td>
+  <td class="n">${be}</td><td class="n">${r.floorCost>0?'−'+r.floorCost.toFixed(2):r.floorCost.toFixed(2)}</td>
+  <td class="n">${(r.hit*100).toFixed(0)}%</td>
+  <td class="n"><span class="tag ${netTag}">${r.net>=0?'+':''}${r.net.toFixed(1)}%</span></td></tr>`;
+}).join('');
+
+/* ---------- audit ---------- */
+$('#audit').innerHTML=D.audit.length? D.audit.map(a=>
+  `<div class="card alert"><div style="display:flex;gap:10px;align-items:center;margin-bottom:8px;flex-wrap:wrap">
+   <span class="tag t-red">${a.severity}</span><strong>${a.name}</strong><code>${a.optionId}</code></div>
+   <p style="margin:0 0 8px">${a.issue}</p><p style="margin:0;font-family:var(--mono);font-size:13px;color:var(--ink3)">${a.evidence}</p></div>`
+).join('') : '<div class="card good"><p style="margin:0">No defects found.</p></div>';
+
+/* ---------- realized ---------- */
+$('#realized tbody').innerHTML=D.realized.map((r,i)=>
+  `<tr><td class="n">${i+1}</td><td>${r.name}</td><td>${r.carrier}</td><td class="n">${r.floor}</td>
+   <td class="n"><strong>${r.cagr.toFixed(2)}%</strong></td></tr>`).join('');
+
+/* ---------- stress ---------- */
+$('#stress tbody').innerHTML=D.stress.map(s=>
+  `<tr><td>${s.label}</td><td>${s.lapsed?`<span class="tag t-red">Lapsed yr ${s.lapseYear}</span>`:'<span class="tag t-green">Survived</span>'}</td>
+   <td class="n">${s.peak}%</td><td class="n">${money(s.drawn)}</td><td class="n">${money(s.netEquity)}</td></tr>`).join('');
+
+/* ---------- draw curve ---------- */
+(function(){
+  const d=D.drawCurve, W=1000,H=300,pad={l:64,r:20,t:20,b:44};
+  const maxEq=Math.max(...d.map(x=>Math.abs(x.netEquity)),1);
+  const bw=(W-pad.l-pad.r)/d.length;
+  const y0=pad.t+(H-pad.t-pad.b)/2;
+  let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Ending net equity by annual draw">`;
+  s+=`<line x1="${pad.l}" y1="${y0}" x2="${W-pad.r}" y2="${y0}" stroke="${C('--line')}" stroke-width="1"/>`;
+  s+=`<text x="8" y="${y0+4}" font-size="11" fill="${C('--ink3')}" font-family="${C('--mono')}">$0</text>`;
+  d.forEach((x,i)=>{
+    const h=Math.abs(x.netEquity)/maxEq*((H-pad.t-pad.b)/2-8);
+    const px=pad.l+i*bw, up=x.netEquity>=0;
+    s+=`<rect x="${px+2}" y="${up?y0-h:y0}" width="${bw-6}" height="${Math.max(2,h)}" rx="3"
+      fill="${x.lapsed?C('--red'):C('--green')}"><title>${x.draw}% draw — ${x.lapsed?'lapsed yr '+x.lapseYear:'survived'}, net equity ${money(x.netEquity)}</title></rect>`;
+    if(x.draw%10===0) s+=`<text x="${px+bw/2}" y="${H-16}" font-size="11" text-anchor="middle" fill="${C('--ink3')}" font-family="${C('--mono')}">${x.draw}%</text>`;
+  });
+  s+=`<text x="${(W)/2}" y="${H-2}" font-size="11" text-anchor="middle" fill="${C('--ink3')}">Annual draw as % of surrender value</text>`;
+  s+='</svg>';
+  $('#draw-chart').innerHTML=s;
+  $('#drawtbl tbody').innerHTML=d.map(x=>
+    `<tr><td class="n">${x.draw}%</td><td>${x.lapsed?`<span class="tag t-red">Lapsed yr ${x.lapseYear}</span>`:'<span class="tag t-green">Survived</span>'}</td>
+     <td class="n">${x.peak}%</td><td class="n">${money(x.drawn)}</td><td class="n">${money(x.netEquity)}</td></tr>`).join('');
+})();
+
+/* ---------- signals ---------- */
+$('#signals').innerHTML=D.signals.map(s=>
+  `<div class="card"><div style="display:flex;gap:10px;align-items:center;margin-bottom:10px;flex-wrap:wrap">
+   <span class="tag ${s.kind==='structural'?'t-blue':'t-gold'}">${s.kind}</span><strong>${s.name}</strong>
+   <span style="margin-left:auto;font:600 12px var(--mono);color:var(--ink3)">strength ${s.strength}</span></div>
+   <p style="margin:0 0 10px"><strong style="color:var(--ink)">Observable:</strong> ${s.observable}</p>
+   <p style="margin:0 0 10px"><strong style="color:var(--green)">Tells you:</strong> ${s.whatItTellsYou}</p>
+   <p style="margin:0"><strong style="color:var(--red)">Does NOT tell you:</strong> ${s.whatItDoesNotTellYou}</p></div>`
+).join('');
+
+$('#gen').textContent='Generated '+new Date(D.generatedAt).toLocaleString()+' · '+D.scorecard.length+' options scored · '+D.realized.length+' ranked · '+D.drawCurve.length+' draw levels tested.';
+</script></body></html>
