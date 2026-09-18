@@ -1,0 +1,219 @@
+{
+  "$comment": "Every assumption baked into the Russell Capital Systems engines, its current value, whether it is sourced or flat, and what would replace it. Verified against the BASE build (claude/base-consolidation) on 2026-09-18. An assumption marked sourced:false is a number the platform currently asserts without evidence.",
+  "generatedAt": "2026-09-18",
+  "build": {
+    "repo": "samtheinsuranceman-debug/sam-russell-corpus",
+    "path": "russell-capital-systems",
+    "branch": "claude/base-consolidation",
+    "typecheckErrors": 0,
+    "testFiles": 214,
+    "tests": 4095
+  },
+
+  "mortgageKiller": {
+    "file": "shared/mortgageKiller.ts",
+    "assumptions": [
+      {
+        "name": "HOME_APPRECIATION_RATE",
+        "line": 207,
+        "value": 0.05,
+        "unit": "annual decimal",
+        "sourced": false,
+        "status": "fallback-only",
+        "note": "Now a fallback. When the ZIP appreciation toggle is on, appreciationPath from the FHFA/Zillow record replaces it entirely.",
+        "replacedBy": "appreciationPath — median or 10th-percentile of 10,000 five-year-block bootstrap paths over the ZIP's record"
+      },
+      {
+        "name": "iulCreditRate (default)",
+        "line": 645,
+        "value": 0.075,
+        "unit": "annual decimal",
+        "sourced": false,
+        "status": "DEFECT — exceeds the product cap",
+        "note": "A header comment at line 14 asserts '7.5% max illustrated rate' under AG 49. The illustrated product's actual AG 49-A maximum illustrated rate is 6.35% (pacificHorizonEcv.ts). Illustrating above a product's maximum illustrated rate is a compliance problem.",
+        "replacedBy": "A per-product maximum illustrated rate table sourced from each carrier's disclosure. See questions.csv Q-03."
+      },
+      {
+        "name": "MAX_PREMIUM_YEARS",
+        "line": 208,
+        "value": 5,
+        "unit": "years",
+        "sourced": false,
+        "status": "design constraint",
+        "note": "Caps the premium funding window. A product decision, not a market fact."
+      },
+      {
+        "name": "HELOC_LTV_DEFAULT",
+        "line": 209,
+        "value": 0.7,
+        "unit": "decimal of home value",
+        "sourced": false,
+        "status": "flat",
+        "note": "A common lender ceiling, but not verified against any specific lender's published guidelines.",
+        "replacedBy": "Verified lender records from the provider verification brief. See questions.csv Q-01."
+      },
+      {
+        "name": "LIFE_LOAN_PCT",
+        "line": 210,
+        "value": 0.8,
+        "unit": "decimal of cash value",
+        "sourced": false,
+        "status": "flat",
+        "note": "Maximum policy loan as a share of cash value. Carrier-specific in reality."
+      },
+      {
+        "name": "MGA_RATE",
+        "line": 211,
+        "value": 0.0625,
+        "unit": "annual decimal",
+        "sourced": false,
+        "status": "flat",
+        "note": "Multi-year guaranteed annuity crediting rate used for the interest-savings reinvestment. Real MYGA rates move with the rate environment.",
+        "replacedBy": "A dated MYGA rate table, or a spread over the Treasury curve"
+      },
+      {
+        "name": "costOfInsurance",
+        "line": null,
+        "value": null,
+        "sourced": false,
+        "status": "DEFECT — ABSENT ENTIRELY",
+        "note": "A search for coi, costOfInsurance and insuranceCharge returns nothing in this engine. The IUL policy accumulates with no mortality or expense charges, which materially overstates cash value. This is the most serious defect in the flagship.",
+        "replacedBy": "A per-product COI table by issue age and band, from the carrier's illustration"
+      },
+      {
+        "name": "loanDragCost",
+        "line": 297,
+        "value": "computed",
+        "sourced": true,
+        "status": "DEFECT — computed and reported but never deducted",
+        "note": "Calculated at line 297 as cumulativePolicyLoans * loanDragRate and written into the result row at line 342. No total subtracts it. The user is shown a cost that reduces nothing.",
+        "replacedBy": "Deduct from netCashValue, and therefore from netWorth"
+      }
+    ],
+    "withdrawnClaims": [
+      {
+        "claim": "Interest-savings double-count in net worth",
+        "verdict": "DOES NOT EXIST in the BASE build",
+        "evidence": "netWorth at line 565 = homeEquity + netCashValue - cumulativePropertyTax. Interest saved is not added in. homeEquity at line 545 = homeValue - mortgageBalance - helocBalance, so both debts are correctly netted.",
+        "note": "This was reported earlier in the session from line numbers belonging to the 688-page build. Corrected here."
+      },
+      {
+        "claim": "Cost-of-insurance inversion at line 237",
+        "verdict": "WRONG LOCATION AND WRONG DIAGNOSIS",
+        "evidence": "Line 237 is inside the amortization row builder. There is no COI term anywhere in the engine.",
+        "note": "The real finding is absence, not inversion — which is more serious."
+      }
+    ]
+  },
+
+  "ibbotsonModel": {
+    "file": "shared/ibbotsonModel.ts",
+    "assumptions": [
+      {
+        "name": "annual index return table",
+        "line": "104-110 and surrounding",
+        "value": { "2008": -0.37, "2009": 0.2646 },
+        "sourced": true,
+        "status": "DEFECT — wrong return series",
+        "note": "These are TOTAL return figures. Index crediting is calculated on PRICE return: 2008 = -38.49%, 2009 = +23.45%. Every illustration built on this table is overstated.",
+        "replacedBy": "shared/indexCreditingData.ts, which already holds the correct price-return series and is used elsewhere in the trunk"
+      }
+    ]
+  },
+
+  "rentalMarketEngine": {
+    "file": "shared/rentalMarketEngine.ts",
+    "assumptions": [
+      {
+        "name": "block length for bootstrap resampling",
+        "value": 5,
+        "unit": "years",
+        "sourced": false,
+        "status": "documented convention",
+        "note": "Five-year blocks preserve medium-term autocorrelation. A defensible convention, stated in the evidence string so a reader can disagree with the number rather than the method."
+      },
+      {
+        "name": "default path count",
+        "value": 10000,
+        "sourced": false,
+        "status": "documented convention",
+        "note": "The owner's stated requirement for the simulation layer."
+      },
+      {
+        "name": "default seed",
+        "value": 42,
+        "sourced": false,
+        "status": "determinism requirement",
+        "note": "Fixed so that the same household always sees the same fan. Changing it changes every published illustration."
+      },
+      {
+        "name": "minimum growth observations for a path",
+        "value": 10,
+        "unit": "years",
+        "sourced": false,
+        "status": "refusal threshold",
+        "note": "Below ten growth observations the engine refuses to produce paths and states the reason rather than extrapolating from a short record."
+      },
+      {
+        "name": "bathroomAdjustment",
+        "value": null,
+        "sourced": false,
+        "status": "honest null",
+        "note": "No public national dataset splits residential rent by bathroom count. Always null, always with the reason. Never estimated."
+      }
+    ]
+  },
+
+  "historicalMarketRegimeEngine": {
+    "file": "shared/historicalMarketRegimeEngine.ts",
+    "assumptions": [
+      { "name": "deflationCpi", "value": 0.0, "sourced": false, "status": "named threshold", "note": "CPI year-over-year below zero is deflation." },
+      { "name": "highCpi", "value": 0.05, "sourced": false, "status": "named threshold", "note": "At or above 5% is an inflation shock." },
+      { "name": "stagnantRealGrowth", "value": 0.0, "sourced": false, "status": "named threshold", "note": "High inflation plus non-positive real asset growth is stagflation." },
+      { "name": "rateShockRise", "value": 0.02, "sourced": false, "status": "named threshold", "note": "A 2 percentage point rise over the trailing window." },
+      { "name": "rateShockWindow", "value": 2, "unit": "years", "sourced": false, "status": "named threshold" },
+      { "name": "contractionGrowth", "value": 0.0, "sourced": false, "status": "named threshold", "note": "Non-positive nominal asset growth." },
+      { "name": "bubbleMultiple", "value": 2, "sourced": false, "status": "named threshold", "note": "Two consecutive years at or above twice the record's long-run mean growth." },
+      { "name": "recoveryYears", "value": 2, "unit": "years", "sourced": false, "status": "named threshold" },
+      { "name": "MIN_OBSERVATIONS", "value": 5, "sourced": false, "status": "sparsity flag", "note": "A transition row built on fewer than five observations describes those years, not a probability, and is flagged sparse." }
+    ],
+    "note": "Every threshold above is reported verbatim in the evidence string returned with each classification, so a reader disagrees with a specific number rather than with 'the model'. All are caller-overridable."
+  },
+
+  "realEstateCapitalStackEngine": {
+    "file": "shared/realEstateCapitalStackEngine.ts",
+    "assumptions": [
+      { "name": "debt amortization frequency", "value": "monthly", "sourced": true, "status": "modelling decision", "note": "Rolled up to annual rows. Annual-only amortization materially understates interest and overstates DSCR." },
+      { "name": "DSCR basis", "value": "NOI net of capital reserve", "sourced": true, "status": "conservative convention", "note": "The lender definition. Underwriting on gross NOI flatters coverage by exactly the reserve." },
+      { "name": "exit value basis", "value": "forward NOI at exit cap", "sourced": true, "status": "market convention", "note": "Capitalizes the year after disposition — what a buyer actually underwrites to." },
+      { "name": "tranche maturity before disposition", "value": "continues on existing terms", "sourced": false, "status": "optimistic, flagged", "note": "Implicitly assumes refinance at the same rate. Sets refinanceRequired so the findings engine raises it. The alternative — letting debt vanish at maturity — would silently hand the deal free money." }
+    ]
+  },
+
+  "divorceFinancialEngine": {
+    "file": "shared/divorceFinancialEngine.ts",
+    "assumptions": [
+      {
+        "name": "state division regime",
+        "value": "from divorceStateRules",
+        "sourced": true,
+        "status": "WIRED — reference implementation",
+        "note": "Community property versus equitable distribution resolves per state. Any ratio no statute produces is flagged statutory:false with a plain-language basis. Carries rulesVersion and neverPrinted."
+      },
+      {
+        "name": "60/40 and mediated splits",
+        "value": "illustrative",
+        "sourced": false,
+        "status": "explicitly labelled non-statutory",
+        "note": "Marked statutory:false with the text 'No state statute produces this ratio; it is a negotiated or illustrative division.'"
+      }
+    ]
+  },
+
+  "globalRules": {
+    "evidenceContract": "Every figure carries {source, asOf, window, method}. Where no public series exists, the value is null with the reason — never an estimate.",
+    "toggleDefault": "off — reproducing the engine's original flat constants exactly, so enabling the evidence layer never silently changes an existing illustration.",
+    "refusalRule": "Tax, statutory and product values are never guessed. Where the rules table has no row, the calculation refuses rather than defaulting.",
+    "determinism": "All resampling is seeded. The same household always sees the same fan."
+  }
+}
