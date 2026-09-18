@@ -68,7 +68,7 @@ export const EvidenceToggles = z.object({
 
 export const mortgageEvidenceRouter = router({
   /** Run the Mortgage Killer with evidence paths built from the stored record, returning the result AND the ledger that says where each path came from. */
-  withEvidence: protectedProcedure.input(z.object({ input: z.custom<MortgageKillerInput>(), zip: z.string().regex(/^\d{5}$/), county: z.string().regex(/^\d{5}$/).optional(), toggles: EvidenceToggles }))
+  withEvidence: protectedProcedure.input(z.object({ input: z.custom<MortgageKillerInput>((v) => typeof v === "object" && v !== null && typeof (v as MortgageKillerInput).mortgageBalance === "number" && typeof (v as MortgageKillerInput).homeMarketValue === "number"), zip: z.string().regex(/^\d{5}$/), county: z.string().regex(/^\d{5}$/).optional(), toggles: EvidenceToggles }))
     .mutation(async ({ input: { input, zip, county, toggles } }) => {
       const ledger: Array<{ path: string; source: string; asOf: string; window: unknown; method: string; applied: boolean; reason?: string }> = [];
       const mk: MortgageKillerInput = { ...input };
