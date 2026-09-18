@@ -1,7 +1,7 @@
 # Roadmap to a 10 out of 10
 ## Russell Capital Systems — the unresolved work, how it integrates, and the criteria
 
-Prepared 2026-09-18 for Perplexity Computer, from the Claude session that built the cycle engine, the mechanism dossiers, the sequence planner, the threshold registry, the memory bank and the integration scorecard. Repo: `samtheinsuranceman-debug/sam-russell-corpus`, folder `russell-capital-systems/`, branch `master`. Read `docs/INTEGRATION_SCORECARD.md` and `docs/PROVIDER_VERIFICATION_BRIEF.md` alongside this.
+Prepared 2026-09-18 for Perplexity Computer, from the Claude session that built the cycle engine, the mechanism dossiers, the sequence planner, the threshold registry, the memory bank and the integration scorecard. Repo: `samtheinsuranceman-debug/sam-russell-corpus`, folder `russell-capital-systems/`, branch `master`. Read `master_build_correlation.md` FIRST — it contains a finding that reorders this roadmap — then `reports/scorecard.md` and `provider_verification_brief.md`.
 
 This document does three things. It says exactly where the previous builder got stuck and what it needed. It lists every unresolved task in build order with dependencies. And it states the criteria for "10 out of 10" on five dimensions as checks that can pass or fail — because a criterion that cannot fail is a slogan.
 
@@ -22,6 +22,11 @@ This document does three things. It says exactly where the previous builder got 
 | Pages with no provenance trace | 112 of 115 | same |
 | Pages with no live data | 104 of 115 | same |
 | Pages fewer than two surfaces link to | 104 of 115 | same |
+| **Deployed codebase** | `russell-capital-systems/` — 502 TS files, 125 engines, 201 test files | `find`/`ls` |
+| **Orphaned codebase** | `russell-capital/` — 80 TS files, 20 engines, 11 tests, **no package.json, no router, nothing imports it** | `grep -rl "russell-capital/" russell-capital-systems/` returns nothing |
+| Orphaned engine code | ~5,900 lines, finished and tested, executing nowhere | `master_build_correlation.md` |
+| Built-but-unrouted in the deployed app | `timeMachine30.ts`, 666 lines + 287-line test | absent from App.tsx, catalogue and memory bank |
+| Diverged duplicate modules | 4 (indexCreditingData, patentCatalog, patentStatus, policyLoanMechanics) | `comm -12` on the two shared/ folders |
 | Patent claims drafted / filed | 57 / 0 | `shared/patentStatus.ts` — nothing may be called "patent pending" until a provisional is on file; a test enforces it |
 | Lender directory records / with verified phone | 15 / 5 | `shared/altCredit/lenders.ts` |
 | Named providers on the mechanism pages / with a verified record | 39 / 6 | `shared/mechanismDossiers.ts` |
@@ -48,7 +53,30 @@ Each of these is a blocker, not a preference. Resolving them is the first phase.
 
 Dependencies are stated. Do not reorder P0.
 
-### P0 — unblock the data
+### P0a — recover the orphaned codebase (NEW, and ahead of everything else)
+
+This did not appear in the previous roadmap because the finding is new. It is first
+because the code already exists and is already tested: it is the cheapest capability
+per hour available anywhere in the project. Full file-by-file table in
+`master_build_correlation.md` §6; machine-readable in `data/master_build_inventory.csv`.
+
+| # | Task | Why first | Done when |
+|---|---|---|---|
+| 0a.1 | Route, catalogue and brain-wire `timeMachine30.ts` | Finished engine, zero risk, ~1 hour, proves the pipeline end to end | `/portal/time-machine-30` live; its scorecard wiring ≥ 8 |
+| 0a.2 | Create `shared/sourcing.ts` with `UnsourcedFindingError` + `assertSourced` | The other session's pattern is stronger than mine; everything built after this should stand on it | All twelve data routers route through it; a test asserts a source-less value throws |
+| 0a.3 | Port `sequenceStress.ts` and wire it to `Plan` | It is upgrade branch 2 (adverse replay) already written | Every plan shows its break year under all four recorded shocks |
+| 0a.4 | Port `realEstateMogul.ts`; replace the planner's internal amortisation | Makes every stage figure real rather than approximated by a 45% haircut | `Stage.after` carries a real schedule; planner tests still green |
+| 0a.5 | Diff and resolve the four diverged duplicates | Must happen before more code depends on either copy | One copy of each; the loser deleted, not left to rot |
+| 0a.6 | Reconcile `nextBestAction` with `genomeStrategyFit` (correlation §5, Option A) | Two ranking engines will disagree on the same page | One authoritative order; lens scores render as explanation |
+| 0a.7 | Port `helocLenders`, `divorceStateRules`, `evidenceRetrieval`, `timeMachineCompliance` | Pure additions, no conflicts | Each routed, catalogued, tested, brain-wired |
+| 0a.8 | Port `smallBusinessLending/*` as a new page group | Largest new surface; do it once the pattern is settled | Three pages live with full wiring |
+| 0a.9 | Merge `nlpEngine` into `nlpBrain`; reconcile `aiCouncil` with `compositeMind` | Highest-risk merge; do it last with the pattern proven | One roster, one voice, tests green |
+| 0a.10 | Delete `russell-capital/` or give it a README saying it is a staging folder and is not deployed | A folder that looks like an app and is not one is the root cause | Either gone, or labelled |
+
+**0a.10 matters more than its position suggests.** Fixing the symptom without fixing the
+cause means doing this again in a month.
+
+### P0b — unblock the data
 | # | Task | Depends on | Done when |
 |---|---|---|---|
 | 0.1 | Run the provider verification brief for all 39 (+ Roc Capital) | — | JSON returned per §8 of the brief |
@@ -194,5 +222,7 @@ The site is a ten when all of the following are true and the tests that check th
 6. Every featured page has a FigureTrace; every engine has a test.
 7. A provisional is filed, and the site's patent language is true.
 8. The owner's Railway variables are set and the key probes pass.
+9. `russell-capital/` is either merged into the deployed app or labelled as staging; no engine in the repository is unreachable from a route, and a test asserts it.
+10. `UnsourcedFindingError` is the house pattern: no client-visible figure can be produced without a source and an as-of date.
 
 Everything in this document is checkable against the repository. Where it is not yet true, the scorecard says so by number.

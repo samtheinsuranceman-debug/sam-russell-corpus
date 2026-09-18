@@ -973,5 +973,71 @@
       "unasked",
       "zip"
     ]
+  },
+  "facades": {
+    "note": "Added this session. One call per domain; they compute nothing the owning modules compute.",
+    "capitalStack": {
+      "thirtyHouse": {
+        "available": [
+          "policy-loan",
+          "velocity-heloc",
+          "brrrr-dscr",
+          "equity-share",
+          "seller-wrap"
+        ],
+        "blocked": [],
+        "bindingThresholds": 14,
+        "legalPlanCount": 9423,
+        "nearest": "thirty-house-clear-and-grow",
+        "closeness": 100
+      },
+      "firstTime": {
+        "available": [
+          "policy-loan",
+          "velocity-heloc",
+          "equity-share"
+        ],
+        "blocked": [
+          "brrrr-dscr",
+          "seller-wrap"
+        ],
+        "bindingThresholds": 7,
+        "legalPlanCount": 29,
+        "nearest": "household-bank",
+        "closeness": 88
+      }
+    },
+    "regime": {
+      "thinSampleThreshold": 15,
+      "coverage": {
+        "firstYear": 1945,
+        "lastYear": 2026,
+        "years": 82,
+        "shocks": 6,
+        "sources": 7
+      },
+      "topMarginal10y": [
+        {
+          "bucket": "left",
+          "pHigher": 0.071,
+          "n": 14,
+          "thin": true
+        },
+        {
+          "bucket": "divided",
+          "pHigher": 0.385,
+          "n": 52,
+          "thin": false
+        },
+        {
+          "bucket": "right",
+          "pHigher": 0,
+          "n": 5,
+          "thin": true
+        }
+      ],
+      "powerSwing10y": null,
+      "powerSwingNote": "null means at least one bucket is thin; the engine refuses to state a swing the record cannot support."
+    }
   }
 }
