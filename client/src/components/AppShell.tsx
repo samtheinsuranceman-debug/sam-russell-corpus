@@ -154,6 +154,7 @@ const NAV_SECTIONS: NavSection[] = [
       { path: "/portal/mechanisms", label: "The Five Mechanisms", icon: Landmark, color: "green" },
       { path: "/portal/sequence-planner", label: "Sequence Planner", icon: Landmark, color: "green" },
       { path: "/portal/thresholds", label: "Thresholds", icon: Landmark, color: "green" },
+      { path: "/portal/integration-scorecard", label: "Integration Scorecard", icon: Landmark, color: "green" },
     ],
   },
   // ── 2. CLIENTS ───────────────────────────────────────────────────
