@@ -71,6 +71,44 @@
  * All four are on an illustration. See docs/carriers/WHAT_TO_UPLOAD.md.
  */
 
+/**
+ * Facts established by the three Corrales illustrations run 16 September 2026.
+ *
+ * These are the four things the description page and the account-choices guide
+ * did NOT contain, now partly closed. What is still missing is listed below and
+ * is missing because Design A illustrations cannot supply it.
+ */
+export const HORIZON_ILLUSTRATION_FACTS = {
+  runDate: '2026-09-16',
+  producer: 'Samuel A Russell',
+  formSeries: 'ICC21 P21IUL or P21IUL, with S22ECV',
+  taxTest: 'GPT (Guideline Premium Test)',
+  rider: 'NLG (No-Lapse Guarantee)',
+  /**
+   * The AG 49-A maximum illustrated rate for this product, off the illustration's
+   * own account table: "1-Year Indexed Account 0 6.35% 6.35% 100.00%" — illustrated
+   * rate and maximum illustrated rate both 6.35%, 100% allocation.
+   *
+   * This is the ceiling a projection may use. It is NOT a rate the Time Machine
+   * produces or consumes; see shared/timeMachine30.ts.
+   */
+  maximumIllustratedRatePct: 6.35,
+  illustratedRatePct: 6.35,
+  illustratedAccountId: 'ph-1yr',
+  /** "the surrender charge reaches zero 120 policy months after the later of the
+   *  issue date or the last increase in Basic Coverage face amount." */
+  surrenderChargeZeroAtMonths: 120,
+  /** All three uploaded illustrations ran Design A: every EPFR credit and charge column is zero. */
+  epfrDesignIllustrated: 'Classic (Design A)',
+  stillMissing: [
+    'The cost-of-insurance rate table. The mechanic is confirmed (rate per $1,000 of net amount at risk, to age 121) but no rates are printed.',
+    'The coverage charge rates.',
+    'The surrender charge percentages. Only the 120-month duration is given.',
+    'The Enhanced Performance Factor Rider performance factors for Designs B and C. All three illustrations ran Design A, so the uploaded set establishes the mechanism and the design names and no factors.',
+    'The Design B charge percentage.',
+  ],
+} as const;
+
 export const PACIFIC_HORIZON_ECV = {
   carrier: 'Pacific Life Insurance Company',
   product: 'Pacific Horizon ECV IUL',
