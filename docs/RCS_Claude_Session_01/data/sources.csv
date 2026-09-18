@@ -1,0 +1,21 @@
+source_id,publisher,series,geography,coverage_start,coverage_end,frequency,wired,feeds,notes
+SRC-01,FHFA,House Price Index five-digit ZIP,ZIP,1975,2024,annual,yes,"Appreciation paths, equity projection","51 years. Exceeds the 36 the owner asked for."
+SRC-02,Zillow,ZHVI home value index,"ZIP, metro",2000,2026,monthly,yes,"Appreciation cross-check, current values","Back-cast before 2000 is not attempted."
+SRC-03,Zillow,ZORI observed rent index,"ZIP, metro",2015,2026,monthly,yes,Rent trend cross-check,"Short window; used as a check, not a base series."
+SRC-04,Freddie Mac,PMMS 30-year and 15-year mortgage rate,National,1971,2026,weekly,yes,"Rate environment, refinance modelling",55 years.
+SRC-05,HUD,Fair Market Rents by bedroom count,County,1983,2026,annual,yes,"Rent by configuration, fallback tier","43 years. Bedroom counts 0 through 4 only."
+SRC-06,HUD,Small Area Fair Market Rents,ZIP,2018,2026,annual,yes,"Rent by configuration, preferred tier","Only 8 years, but the finest geography available."
+SRC-07,Census,ACS 5-year B25031 gross rent by bedrooms,ZCTA,2009,2023,annual,yes,Rent by configuration,17 years. No ZIP-level coverage before 2009.
+SRC-08,Census,ACS 5-year B25103 real estate taxes paid,ZCTA,2009,2023,annual,yes,Property tax rate path,Divided by B25077 to yield an effective rate.
+SRC-09,Census,ACS 5-year B25077 median home value,ZCTA,2009,2023,annual,yes,Property tax rate denominator,
+SRC-10,FRED,M2SL money stock,National,1959,2026,monthly,yes,Monetary expansion overlay,"Displayed beside CPI, never blended into it."
+SRC-11,FRED,WALCL Federal Reserve total assets,National,2002,2026,weekly,yes,Balance sheet context,
+SRC-12,FRED,CUSR0000SEHA CPI rent of primary residence,National,1947,2026,monthly,yes,Real dollar deflation,79 years. The longest series in the platform.
+SRC-13,FRED,DPRIME bank prime loan rate,National,1955,2026,daily,yes,HELOC and variable rate paths,71 years.
+SRC-14,Eviction Lab,County eviction filings and judgments,County,2000,2018,annual,yes,"Eviction exposure, share of owners suing tenants","Series ends 2018. Nothing public replaces it at national coverage. Carries an undercount flag."
+SRC-15,Census,American Housing Survey year moved in,"National, selected metros",1985,2025,biennial,no,Tenant length of stay,"Adapter not yet built. See question Q-07."
+SRC-16,Robert Shiller,S&P composite dividends earnings CAPE,National,1871,2026,monthly,no,Long horizon equity modelling,"Adapter not yet built. 155 years."
+SRC-17,Trunk indexCreditingData,S&P 500 price return,National,1957,2025,annual,yes,Index crediting,"The CORRECT series. ibbotsonModel holds total return and must be replaced from this."
+SRC-18,NONE,Rent by bathroom count,—,—,—,—,no,—,"NO PUBLIC DATASET EXISTS. HUD, ACS and Zillow report bedrooms only. Returned as null with the reason."
+SRC-19,NONE,Security deposit amounts over time,—,—,—,—,no,—,"NOT A TIME SERIES. Governed by state statute — build a rules table. See question Q-04."
+SRC-20,State statutes,Divorce property division regime,State,—,2026,as amended,yes,Divorce financial engine,"Wired this session. Community property versus equitable distribution resolves per state."
