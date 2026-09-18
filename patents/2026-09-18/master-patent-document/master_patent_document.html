@@ -1,0 +1,397 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Master Patent Document</title>
+<style>
+@page { size: Letter; margin: 18mm 16mm; }
+* { box-sizing: border-box; }
+body { font-family: Georgia, "Times New Roman", serif; font-size: 11pt; line-height: 1.55; color: #14171a; margin: 0; }
+.cover { page-break-after: always; padding-top: 55mm; }
+.cover h1 { font-size: 34pt; line-height: 1.05; margin: 0 0 10px; letter-spacing: -.02em; }
+.cover .sub { font-size: 14pt; color: #4a5057; margin: 0 0 30px; }
+.cover .meta { font-family: "Courier New", monospace; font-size: 9.5pt; color: #6b7280; border-top: 1px solid #d5d0c5; padding-top: 12px; }
+h2.pri { font-size: 17pt; margin: 26px 0 4px; padding: 7px 11px; color: #fff; border-radius: 3px; page-break-after: avoid; }
+h2.pri .cnt { float: right; font-size: 10pt; font-weight: normal; opacity: .9; }
+.p-critical { background: #9e2a22; } .p-high { background: #a8650f; }
+.p-important { background: #2f5d7c; } .p-moderate { background: #5c666f; } .p-low { background: #7a8288; }
+span.tag.p-critical, span.tag.p-high, span.tag.p-important, span.tag.p-moderate, span.tag.p-low { color:#fff; }
+.pat { border: 1px solid #ded9cf; border-radius: 4px; padding: 13px 16px; margin: 12px 0; page-break-inside: avoid; }
+.ph { border-bottom: 1px solid #ebe7de; padding-bottom: 7px; margin-bottom: 9px; }
+.pid { font-family: "Courier New", monospace; font-size: 9pt; color: #8a6d1f; letter-spacing: .09em; }
+.ph h3 { font-size: 15pt; margin: 2px 0 7px; }
+.tag { display: inline-block; font-family: "Courier New", monospace; font-size: 8pt; padding: 2px 7px; border-radius: 2px; margin-right: 5px; }
+.tag.alice { background: #efe9d8; color: #6b5512; } .tag.ways { background: #eceef0; color: #4a5057; }
+h4 { font-size: 9pt; text-transform: uppercase; letter-spacing: .1em; color: #8a6d1f; margin: 11px 0 3px; font-family: Helvetica, Arial, sans-serif; }
+p { margin: 0 0 6px; }
+.par { font-size: 9.5pt; color: #4a5057; background: #faf8f3; padding: 6px 9px; border-left: 2px solid #c9a94a; }
+.k { font-weight: bold; color: #14171a; }
+.alicenote { font-size: 9pt; color: #5c666f; border-top: 1px dotted #ded9cf; padding-top: 6px; margin-top: 9px; }
+table { width: 100%; border-collapse: collapse; font-size: 9.5pt; margin: 10px 0 0; }
+th { text-align: left; border-bottom: 2px solid #14171a; padding: 5px 6px; font-family: Helvetica, Arial, sans-serif; font-size: 8.5pt; text-transform: uppercase; letter-spacing: .06em; }
+td { border-bottom: 1px solid #ebe7de; padding: 5px 6px; }
+.ctr { text-align: center; } .mono { font-family: "Courier New", monospace; }
+.note { background: #f6f3ec; border-left: 3px solid #9e2a22; padding: 12px 15px; margin: 14px 0; font-size: 10pt; }
+.note h3 { margin: 0 0 7px; font-size: 12pt; }
+.howto { background: #f4f6f8; border-left: 3px solid #2f5d7c; padding: 12px 15px; margin: 14px 0; font-size: 10pt; }
+.howto h3 { margin: 0 0 7px; font-size: 12pt; }
+h2.plain { font-size: 16pt; margin: 22px 0 6px; border-bottom: 1px solid #d5d0c5; padding-bottom: 5px; }
+</style></head><body>
+
+<div class="cover">
+  <h1>Master Patent Document</h1>
+  <p class="sub">New inventions that only exist because four platforms were built by the same person.<br>Written so a fifth grader can follow every one.</p>
+  <p class="meta">Samuel Andrew Russell V &nbsp;·&nbsp; Russell Holdings Management LLC<br>
+  23 patents &nbsp;·&nbsp; 2-way through 20-way combinations &nbsp;·&nbsp; 16 September 2026<br>
+  Platforms: Russell Capital Systems &nbsp;·&nbsp; JoinAQAL &nbsp;·&nbsp; Dr. Buddy &nbsp;·&nbsp; Drass Wealth Management</p>
+</div>
+
+<h1 style="font-size:22pt;margin:0 0 4px;">Start here</h1>
+<p>Every invention in this document is a <strong>combination</strong>. On their own the parts already exist and are already
+spoken for. Put together in the specific way described, each one does something none of the parts can do alone, and that
+new ability is the thing worth owning.</p>
+<p>These continue your existing numbering. Your earlier work covered SE-001 through SE-016 across three companies.
+This document adds <strong>Drass Wealth Management as the fourth platform</strong> (DR-01 to DR-04) and then
+<strong>SE-017 onward</strong> — combinations that reach across all four.</p>
+
+<div class="howto">
+<h3>How to read each entry</h3>
+<p><strong>The simple version</strong> — what it does, in plain words, with a picture you can hold in your head. Every
+entry uses a different picture; no metaphor is used twice in this document.</p>
+<p><strong>How it works</strong> — the way the thing behaves. Deliberately not a parts list.</p>
+<p><strong>Why it can be patented</strong> — what nobody else has done, and the new ability that appears when the pieces meet.</p>
+<p><strong>Why this one is urgent</strong> — the honest case for filing it now, or for waiting.</p>
+<p><strong>Alice score</strong> — a rough guess, out of 10, at whether US patent law will treat it as a real technical
+invention rather than an idea with a computer bolted on. Higher is safer.</p>
+</div>
+
+<div class="note">
+<h3>Read this before you spend money</h3>
+<p>Grok 4.3 reviewed every score in this document before it was finalised and
+called the first pass over-optimistic almost across the board. Its exact objection: most of
+these &quot;reduce to data gating, correlation checks, or selective display -- classic post-solution
+activity or field-of-use limitations; Alice treats them as abstract.&quot; It named three as weakest:
+Patent 360 (&quot;mere attribution display&quot;), The Plan That Reads The Room (&quot;standard RBAC
+rendering&quot;), and the Licensed Delivery Shell (&quot;architectural negative limitation adds no inventive
+concept&quot;).</p><p>Every score in this document was lowered in response. None of the original estimates survived
+unchanged. Three claims were held above where the panel would put them, and each of those
+three says so and explains why in its own entry.</p><p>This disagreement is printed rather than resolved because the honest position is that reasonable
+reviewers differ on software eligibility, and you are spending real money on filing decisions. Treat
+every number here as an estimate from software engineers, not an opinion from counsel. A
+registered patent attorney should re-score this list before a single application is filed.</p>
+</div>
+
+<h2 class="plain">All 23 at a glance</h2>
+<p>Ordered by how urgently they should be filed, then by how likely they are to survive an eligibility challenge.</p>
+<table><thead><tr><th>ID</th><th>Name</th><th class="ctr">Ways</th><th class="ctr">Alice</th><th>Priority</th></tr></thead><tbody><tr><td class="mono">SE-027</td><td>The Signal Box</td><td class="ctr">5</td><td class="ctr mono">7</td><td><span class="tag p-critical">Critical to file</span></td></tr><tr><td class="mono">DR-02</td><td>Refuse-Before-Render Compliance Gate</td><td class="ctr">—</td><td class="ctr mono">6</td><td><span class="tag p-critical">Critical to file</span></td></tr><tr><td class="mono">SE-017</td><td>The Money Stress Early Warning</td><td class="ctr">2</td><td class="ctr mono">6</td><td><span class="tag p-critical">Critical to file</span></td></tr><tr><td class="mono">SE-018</td><td>The Honest Sales Room</td><td class="ctr">2</td><td class="ctr mono">6</td><td><span class="tag p-critical">Critical to file</span></td></tr><tr><td class="mono">SE-021</td><td>The Whole Person Ledger</td><td class="ctr">3</td><td class="ctr mono">6</td><td><span class="tag p-critical">Critical to file</span></td></tr><tr><td class="mono">SE-023</td><td>The Tool That Knows When To Stay Shut</td><td class="ctr">3</td><td class="ctr mono">6</td><td><span class="tag p-critical">Critical to file</span></td></tr><tr><td class="mono">SE-026</td><td>Advice With Its Receipts Attached</td><td class="ctr">4</td><td class="ctr mono">6</td><td><span class="tag p-critical">Critical to file</span></td></tr><tr><td class="mono">SE-030</td><td>The Telescope Array</td><td class="ctr">8</td><td class="ctr mono">6</td><td><span class="tag p-critical">Critical to file</span></td></tr><tr><td class="mono">SE-031</td><td>The Watchmaker&#x27;s Escapement</td><td class="ctr">10</td><td class="ctr mono">6</td><td><span class="tag p-critical">Critical to file</span></td></tr><tr><td class="mono">SE-032</td><td>The Mycelium Under The Forest</td><td class="ctr">12</td><td class="ctr mono">6</td><td><span class="tag p-critical">Critical to file</span></td></tr><tr><td class="mono">SE-035</td><td>The Seed Vault</td><td class="ctr">20</td><td class="ctr mono">6</td><td><span class="tag p-critical">Critical to file</span></td></tr><tr><td class="mono">SE-034</td><td>The Tide That Moves The Whole Harbour</td><td class="ctr">20</td><td class="ctr mono">6</td><td><span class="tag p-high">High importance</span></td></tr><tr><td class="mono">DR-01</td><td>Licensed Delivery Shell</td><td class="ctr">—</td><td class="ctr mono">5</td><td><span class="tag p-high">High importance</span></td></tr><tr><td class="mono">DR-03</td><td>One Identity, Two Faces</td><td class="ctr">—</td><td class="ctr mono">5</td><td><span class="tag p-high">High importance</span></td></tr><tr><td class="mono">SE-019</td><td>Proof That Only Climbs</td><td class="ctr">2</td><td class="ctr mono">5</td><td><span class="tag p-high">High importance</span></td></tr><tr><td class="mono">SE-022</td><td>Retirement With The Brakes Checked</td><td class="ctr">3</td><td class="ctr mono">5</td><td><span class="tag p-high">High importance</span></td></tr><tr><td class="mono">SE-024</td><td>The Four-Corner Reading</td><td class="ctr">4</td><td class="ctr mono">5</td><td><span class="tag p-high">High importance</span></td></tr><tr><td class="mono">SE-025</td><td>The Free Door Between Houses</td><td class="ctr">4</td><td class="ctr mono">5</td><td><span class="tag p-high">High importance</span></td></tr><tr><td class="mono">SE-028</td><td>The Grafted Orchard</td><td class="ctr">5</td><td class="ctr mono">5</td><td><span class="tag p-high">High importance</span></td></tr><tr><td class="mono">SE-029</td><td>The Reservoir And The Dam</td><td class="ctr">6</td><td class="ctr mono">5</td><td><span class="tag p-high">High importance</span></td></tr><tr><td class="mono">SE-033</td><td>The Cathedral Scaffold</td><td class="ctr">15</td><td class="ctr mono">4</td><td><span class="tag p-high">High importance</span></td></tr><tr><td class="mono">DR-04</td><td>Patent 360 Advisor Console</td><td class="ctr">—</td><td class="ctr mono">4</td><td><span class="tag p-important">Important</span></td></tr><tr><td class="mono">SE-020</td><td>The Plan That Reads The Room</td><td class="ctr">2</td><td class="ctr mono">4</td><td><span class="tag p-moderate">Moderate</span></td></tr></tbody></table>
+<p style="margin-top:10px;font-size:10pt;color:#4a5057;">
+<strong>11</strong> critical &nbsp;·&nbsp; <strong>10</strong> high importance &nbsp;·&nbsp;
+<strong>1</strong> important &nbsp;·&nbsp; <strong>1</strong> moderate &nbsp;·&nbsp;
+<strong>0</strong> low priority</p>
+
+<h2 class="pri p-critical">Critical to file <span class="cnt">11 patents</span></h2>
+<article class="pat">
+  <header class="ph">
+    <div class="pid">SE-027</div>
+    <h3>The Signal Box</h3>
+    <div class="tags"><span class="tag p-critical">Critical to file</span><span class="tag alice">Alice 7/10</span><span class="tag ways">5-way combination</span></div>
+  </header>
+  <p class="par"><span class="k">Built from</span> RCS 001 (Cascading Recalculation) + RCS 013 (Monte Carlo) + Dr. Buddy 09 (Crisis Detection) + JoinAQAL PAT-004 (Weakness) + Drass DR-02 (Compliance Gate)</p>
+  <h4>The simple version</h4><p>In an old signal box the levers are locked against each other, so a signal cannot clear while the points ahead are wrong. The mechanism makes the unsafe move physically impossible. This invention does that for a financial plan: nothing recalculates and nothing displays until every dependency and every guard agrees. A plan cannot arrive at the screen in a half-changed state. The interlock is in the machine, not the procedure.</p>
+  <h4>How it works</h4><p>When one figure changes, the system works out everything downstream of it and the order those must move in. Thousands of scenarios are re-run against the new state, and the crisis and weakness signals are checked as part of the same pass. Only when all of it settles, and the compliance gate agrees, does anything appear. A failure anywhere leaves the previous good state on screen rather than a partial new one.</p>
+  <h4>Why it can be patented</h4><p>Financial tools recalculate optimistically and repair inconsistencies afterward, if at all. The emergent capability is a plan that is never observable in an inconsistent state, achieved by interlocking recalculation, simulation, risk detection and compliance into a single atomic step.</p>
+  <h4>Why this one is critical to file</h4><p>Atomicity across heterogeneous engines is genuinely hard and genuinely valuable, which is the combination that makes a patent worth owning. It also describes an architecture a competitor cannot easily design around, because the alternative is the inconsistency you are avoiding. Five parents make the claim dense and hard to invalidate piecemeal. This belongs in the very first filing batch.</p>
+  <p class="alicenote"><span class="k">On the Alice score.</span> Held highest in the set. Atomic multi-engine state transition is a genuine computing problem with a genuine technical solution; this is the least abstract claim here.</p>
+</article>
+<article class="pat">
+  <header class="ph">
+    <div class="pid">DR-02</div>
+    <h3>Refuse-Before-Render Compliance Gate</h3>
+    <div class="tags"><span class="tag p-critical">Critical to file</span><span class="tag alice">Alice 6/10</span><span class="tag ways">Platform patent — Drass Wealth Management</span></div>
+  </header>
+  
+  <h4>The simple version</h4><p>Imagine a pharmacist who physically cannot pass you a bottle until every warning is printed on the label. Not a reminder, not a sticky note, a hard stop. That is what this does for financial calculators. A tool that has not satisfied its compliance rules will not draw a single number on the screen. The refusal is part of the machine, not a policy someone can forget.</p>
+  <h4>How it works</h4><p>Before any figure reaches the page, the tool asks a separate checker whether this particular calculation is allowed to be shown, in this mode, with these assumptions. The checker answers yes or no, and a no produces a plain explanation instead of a result. Historical illustrations carry their own stricter test, because showing what would have happened is the easiest way to mislead someone. Nothing renders around the refusal, so there is no half-answer to misread.</p>
+  <h4>Why it can be patented</h4><p>Compliance software normally reviews output after it exists, or warns a human. Here the compliance decision happens upstream of generation, so a non-compliant figure is never produced at all. The emergent capability is a calculator that cannot be made to say the wrong thing, even by its own operator.</p>
+  <h4>Why this one is critical to file</h4><p>Regulated software is heading toward exactly this design, and whoever files first owns the shape of it. The mechanism is visible in the product&#x27;s behaviour, so any examiner or competitor can observe it working. It also protects the most dangerous surface you have, which is a number shown to a client who then acts on it. Delay here risks both the patent and a compliance incident that a filed claim would have forced you to design around anyway.</p>
+  <p class="alicenote"><span class="k">On the Alice score.</span> Panel: reads as data gating. Held above the floor because blocking GENERATION differs materially from flagging output, but lowered.</p>
+</article>
+<article class="pat">
+  <header class="ph">
+    <div class="pid">SE-017</div>
+    <h3>The Money Stress Early Warning</h3>
+    <div class="tags"><span class="tag p-critical">Critical to file</span><span class="tag alice">Alice 6/10</span><span class="tag ways">2-way combination</span></div>
+  </header>
+  <p class="par"><span class="k">Built from</span> Dr. Buddy 09 (Crisis Detection) + RCS 008 (Behavioral Lock-In Detection)</p>
+  <h4>The simple version</h4><p>Most smoke alarms wait for smoke. Imagine one wired straight into the fuse box, noticing the wire heating up an hour before anything burns. This invention watches for the moment a person&#x27;s money decisions start bending under emotional pressure, before the bad decision is made. It is not reading their mood and it is not reading their bank balance; it is watching the shape of the two moving together. When the pattern tightens, someone is told while there is still time to talk.</p>
+  <h4>How it works</h4><p>One side tracks the small signals that come before a mental health crisis; the other tracks the small signals that come before a panic financial move, like cashing out at the bottom. Alone, each is often a false alarm. Read against each other, a rise in both at once is far more meaningful than either on its own, and the system only speaks when both bend in the same direction at the same time.</p>
+  <h4>Why it can be patented</h4><p>Nobody has used psychiatric crisis prediction as the confirming signal for financial behaviour prediction. The emergent capability is a warning that arrives before the irreversible money decision rather than in the statement afterward, with a false-alarm rate low enough that an advisor will actually act on it.</p>
+  <h4>Why this one is critical to file</h4><p>This is the single most valuable idea in the cross-platform set because it prevents losses rather than reporting them. Both parent mechanisms already exist in code, so the combination is buildable immediately and therefore obvious to a competitor who holds both. It also sits on the border between two industries that rarely talk, which is exactly where the strongest claims live and where nobody has filed. Every month unfiled is a month a health-tech or fintech company could arrive at the same junction independently.</p>
+  <p class="alicenote"><span class="k">On the Alice score.</span> Panel: correlation checking. Held mid because the gating is between two independently trained time-series, not a threshold on one.</p>
+</article>
+<article class="pat">
+  <header class="ph">
+    <div class="pid">SE-018</div>
+    <h3>The Honest Sales Room</h3>
+    <div class="tags"><span class="tag p-critical">Critical to file</span><span class="tag alice">Alice 6/10</span><span class="tag ways">2-way combination</span></div>
+  </header>
+  <p class="par"><span class="k">Built from</span> JoinAQAL PAT-007 (Honest Mechanics Transparency) + RCS 003 (AI Whisper Coaching)</p>
+  <h4>The simple version</h4><p>Picture a teleprompter that goes blank the instant the speaker tries to read something that is not true. Not a warning light, just nothing to read. This invention sits in a live advisor meeting and only feeds the advisor claims the system can actually stand behind. If the maths does not support the sentence, the sentence never appears. The advisor is left saying only what the platform can prove.</p>
+  <h4>How it works</h4><p>During a meeting, the coaching side offers the advisor suggested lines in real time. Before any line is shown, the transparency side checks whether the underlying computation supports it and at what confidence. Weak support means the line is withheld or rewritten to a narrower claim. The advisor never sees the rejected version, so there is nothing to be tempted by.</p>
+  <h4>Why it can be patented</h4><p>Sales-assist tools optimise for persuasion; this one subordinates persuasion to provability inside the same live loop. The emergent capability is an advisor who is mechanically prevented from over-claiming in the moment, which no compliance review after the fact can achieve.</p>
+  <h4>Why this one is critical to file</h4><p>The Bonner call audit shows precisely what this prevents: sixteen minutes of over-claiming that closed a live prospect&#x27;s door. That makes the need demonstrable with your own evidence, which strengthens the application considerably. Sales-assist AI is the most crowded space in this portfolio, so first-to-file matters more here than anywhere else. Build and file together while you still have a clean record of the problem it solves.</p>
+  <p class="alicenote"><span class="k">On the Alice score.</span> Panel: selective display. Held mid because suppression occurs before the line exists, not after.</p>
+</article>
+<article class="pat">
+  <header class="ph">
+    <div class="pid">SE-021</div>
+    <h3>The Whole Person Ledger</h3>
+    <div class="tags"><span class="tag p-critical">Critical to file</span><span class="tag alice">Alice 6/10</span><span class="tag ways">3-way combination</span></div>
+  </header>
+  <p class="par"><span class="k">Built from</span> JoinAQAL PAT-001 (8-Model Consensus) + Dr. Buddy 10 (Mental Health Vital Signs) + RCS 004 (Wealth Genome)</p>
+  <h4>The simple version</h4><p>One surveyor guessing a mountain&#x27;s height is guessing. Three, standing far apart and comparing angles, get an answer none could reach alone. This invention takes three completely separate readings of a person, how they think, how they are holding up, and how they behave with money, and triangulates a single picture. No one reading is trusted on its own. The overlap is the answer.</p>
+  <h4>How it works</h4><p>Each side measures on its own terms and produces its own confidence. The system looks for where the three agree and, more usefully, where they disagree, because a sharp disagreement is itself information about the person. The combined picture carries the disagreements forward rather than averaging them away. Everything is written into a record that can be added to but never rewritten.</p>
+  <h4>Why it can be patented</h4><p>Nothing on the market measures cognition, mental health and financial behaviour as three independent instruments and treats their disagreement as signal. The emergent capability is a profile that can say not just what a person is like but how confident it is, and exactly where the evidence conflicts.</p>
+  <h4>Why this one is critical to file</h4><p>This is the spine that every four-way and larger combination hangs from, so its priority date protects far more than itself. All three parents exist in working code today, which makes the application unusually well supported. Preserving disagreement rather than averaging is the non-obvious step and it is easy to lose if someone else files a simpler fusion claim first. This should go in the first batch without exception.</p>
+  <p class="alicenote"><span class="k">On the Alice score.</span> Panel: correlation. Held mid because preserving disagreement changes the output type, not just its accuracy.</p>
+</article>
+<article class="pat">
+  <header class="ph">
+    <div class="pid">SE-023</div>
+    <h3>The Tool That Knows When To Stay Shut</h3>
+    <div class="tags"><span class="tag p-critical">Critical to file</span><span class="tag alice">Alice 6/10</span><span class="tag ways">3-way combination</span></div>
+  </header>
+  <p class="par"><span class="k">Built from</span> Drass DR-02 (Refuse-Before-Render) + RCS 010 (Time Machine Dual-Illustration) + JoinAQAL PAT-007 (Honest Mechanics)</p>
+  <h4>The simple version</h4><p>A drawbridge that lowers on schedule regardless of the water below is a disaster waiting to happen. The safe one refuses until the channel is clear. This invention refuses to show a what-would-have-happened illustration until the conditions for showing it honestly are met. Backward-looking illustrations are the easiest way to mislead someone, so this one will not draw at all rather than draw carefully. The refusal explains itself in plain words.</p>
+  <h4>How it works</h4><p>Before a historical illustration is built, the compliance gate tests whether this specific comparison is fair, given its assumptions and the period chosen. The transparency layer supplies what the person would need to know to judge it. If either is unsatisfied, nothing is drawn and the reason appears instead. When it does draw, both the figures and the reasoning behind them arrive together.</p>
+  <h4>Why it can be patented</h4><p>Historical illustration tools attach disclaimers to output that already exists. Here the ability to generate is conditioned on fairness being established first, and the explanation is produced by the same pass that produces the figures. The emergent capability is a backward-looking illustration that cannot be shown in a misleading configuration.</p>
+  <h4>Why this one is critical to file</h4><p>Backward-looking illustrations are the highest-risk thing any financial site displays and the most likely to draw regulatory attention. A filed claim here is both protection and evidence of good faith if anyone ever asks. The mechanism is already partly built inside the Drass plugin, which means public exposure has begun. File this with the compliance gate as one family.</p>
+  <p class="alicenote"><span class="k">On the Alice score.</span> Same reasoning as DR-02, to which it is closely related.</p>
+</article>
+<article class="pat">
+  <header class="ph">
+    <div class="pid">SE-026</div>
+    <h3>Advice With Its Receipts Attached</h3>
+    <div class="tags"><span class="tag p-critical">Critical to file</span><span class="tag alice">Alice 6/10</span><span class="tag ways">4-way combination</span></div>
+  </header>
+  <p class="par"><span class="k">Built from</span> RCS 005 (Income Waterfall) + JoinAQAL PAT-005 (Coaching Synthesis) + Dr. Buddy 14 (PubMed Research) + Drass DR-04 (Patent 360)</p>
+  <h4>The simple version</h4><p>Imagine a restaurant that plates your dinner and lays the morning&#x27;s market receipts beside it, showing where each ingredient came from. You can eat without reading them, but they are there. This invention delivers a financial recommendation with its sources attached: the research behind it, the models that shaped it, and the order the money should move. Anyone can trace the dish back to the market. Nothing is asserted without a paper trail.</p>
+  <h4>How it works</h4><p>The waterfall side works out the sequence money should be drawn in. Several coaching models propose how to present and stage it. The research side attaches the strongest published evidence for each element. The console records which engines produced which part, so the finished recommendation carries its own provenance rather than having it assembled afterward.</p>
+  <h4>Why it can be patented</h4><p>Financial recommendations cite sources rarely and never automatically at the level of the individual step. The emergent capability is advice where every component can be traced to both the published evidence and the specific engine that produced it, generated in the same pass as the advice itself.</p>
+  <h4>Why this one is critical to file</h4><p>Regulators are moving steadily toward demanding exactly this kind of traceability from advice software. Being first here is both a patent position and a licensing wedge into firms that will soon be required to comply. The mechanism is unusual because the provenance is produced with the advice rather than reconstructed, and that distinction is the whole claim. It should not wait for the second batch.</p>
+  <p class="alicenote"><span class="k">On the Alice score.</span> Inline per-step provenance is stronger than after-the-fact citation, but the panel&#x27;s attribution critique applies. Lowered.</p>
+</article>
+<article class="pat">
+  <header class="ph">
+    <div class="pid">SE-030</div>
+    <h3>The Telescope Array</h3>
+    <div class="tags"><span class="tag p-critical">Critical to file</span><span class="tag alice">Alice 6/10</span><span class="tag ways">8-way combination</span></div>
+  </header>
+  <p class="par"><span class="k">Built from</span> All 7 JoinAQAL patents + Dr. Buddy 13 (Integrated Platform)</p>
+  <h4>The simple version</h4><p>Astronomers link many modest telescopes so they behave as one giant mirror, seeing detail no single dish could resolve. This invention links every measuring instrument in the cognitive platform and points them at one person through the clinical platform&#x27;s frame. Each instrument is ordinary alone. Combined and aimed together, they resolve detail about a person that none of them could see separately.</p>
+  <h4>How it works</h4><p>All seven assessment engines run on the same person and their outputs are aligned to a shared frame of reference rather than simply listed. The clinical platform supplies that frame, so cognitive findings are expressed in terms a care plan can act on. Where instruments disagree, the disagreement is preserved and pointed at, because that is usually where something interesting is. Everything is written to a record that can only be appended.</p>
+  <h4>Why it can be patented</h4><p>Assessment suites report their subtests separately and leave synthesis to a human. Aligning all seven to a clinical frame, and treating instrument disagreement as a first-class finding, is new. The emergent capability is a resolution of detail about a person that is genuinely unavailable from any subset of the instruments.</p>
+  <h4>Why this one is critical to file</h4><p>This is the umbrella over the entire JoinAQAL portfolio, and umbrella claims are what survive when individual claims get narrowed. It is also the clearest expression of why the seven patents are worth more together than apart, which matters for valuation as much as for protection. All seven parents are built and running. File it as the anchor of the JoinAQAL family.</p>
+  <p class="alicenote"><span class="k">On the Alice score.</span> Frame-aligned synthesis holds up better than most, but the panel&#x27;s correlation critique lands. Lowered.</p>
+</article>
+<article class="pat">
+  <header class="ph">
+    <div class="pid">SE-031</div>
+    <h3>The Watchmaker&#x27;s Escapement</h3>
+    <div class="tags"><span class="tag p-critical">Critical to file</span><span class="tag alice">Alice 6/10</span><span class="tag ways">10-way combination</span></div>
+  </header>
+  <p class="par"><span class="k">Built from</span> RCS 001, 003, 005, 008, 013 + Dr. Buddy 09, 10, 11 + JoinAQAL PAT-004, PAT-007</p>
+  <h4>The simple version</h4><p>A wound mainspring wants to release all its force instantly. The escapement is the small clever part that lets it out one tick at a time, which is the only reason a watch tells time instead of exploding. This invention is the escapement for a person&#x27;s whole financial and emotional picture: enormous pressure, released in measured steps the person can actually absorb. Ten mechanisms, one regulated tick.</p>
+  <h4>How it works</h4><p>The financial engines know what should happen. The clinical engines know how much the person can take right now. The transparency layer decides how much can be explained honestly at each step. Instead of delivering the full plan at once, the system releases it in increments timed to the person&#x27;s measured capacity, and re-measures after each one. Pressure that would overwhelm is held back rather than discarded.</p>
+  <h4>Why it can be patented</h4><p>Financial planning delivers the whole plan and hopes the client copes; clinical pacing tools do not touch money. Pacing the release of financial change against continuously measured psychological capacity is unprecedented. The emergent capability is a plan that gets executed rather than abandoned, because it arrives at a survivable rate.</p>
+  <h4>Why this one is critical to file</h4><p>Abandonment is the real enemy of every financial plan, and this addresses it at the mechanism level rather than with encouragement. Ten parents make it extremely hard to design around, since a competitor needs most of the stack to reproduce it. It is also the most defensible expression of why the three platforms belong in one company. Put it in the first batch alongside the signal box.</p>
+  <p class="alicenote"><span class="k">On the Alice score.</span> Feedback-controlled release is closer to control systems than to business method. Held mid.</p>
+</article>
+<article class="pat">
+  <header class="ph">
+    <div class="pid">SE-032</div>
+    <h3>The Mycelium Under The Forest</h3>
+    <div class="tags"><span class="tag p-critical">Critical to file</span><span class="tag alice">Alice 6/10</span><span class="tag ways">12-way combination</span></div>
+  </header>
+  <p class="par"><span class="k">Built from</span> RCS 001, 004, 007, 008, 011 + Dr. Buddy 01, 02, 09, 13 + JoinAQAL PAT-001, PAT-006 + Drass DR-01</p>
+  <h4>The simple version</h4><p>Under a forest runs a fungal network that quietly moves nutrients from a thriving tree to a struggling one, though the trees never touch. This invention is that network for a household. What is learned in one part of a family&#x27;s life feeds the parts that need it, across platforms that never directly connect. The person sees healthy trees. They never see the network doing the work.</p>
+  <h4>How it works</h4><p>Findings from any platform are expressed in a shared internal language rather than passed as raw records. That shared form lets a clinical finding inform a financial risk model, or a cognitive finding reshape a care plan, without either platform needing to understand the other&#x27;s internals. The licensed delivery shell exposes the results without ever holding the network itself. Nothing crosses that could identify a person outside the boundary it belongs in.</p>
+  <h4>Why it can be patented</h4><p>Cross-domain data sharing is normally record-level integration, which is exactly what privacy rules obstruct. Sharing at the level of derived findings in a shared abstract form, with identifying detail never crossing, is new. The emergent capability is genuine cross-domain intelligence that remains compartmentalised.</p>
+  <h4>Why this one is critical to file</h4><p>This is the answer to the privacy objection that will otherwise block every multi-platform ambition you have. Filing it converts your biggest regulatory liability into an owned asset. Twelve parents make the claim formidable, and the shared-abstraction step is the kind of idea a determined competitor arrives at independently within a year or two. It is arguably the single most strategically important filing in this document.</p>
+  <p class="alicenote"><span class="k">On the Alice score.</span> Panel: data gating. Held mid because a provable non-crossing guarantee is an architectural property, not a policy.</p>
+</article>
+<article class="pat">
+  <header class="ph">
+    <div class="pid">SE-035</div>
+    <h3>The Seed Vault</h3>
+    <div class="tags"><span class="tag p-critical">Critical to file</span><span class="tag alice">Alice 6/10</span><span class="tag ways">20-way combination</span></div>
+  </header>
+  <p class="par"><span class="k">Built from</span> All 4 platforms, 20 engines spanning every family: RCS 001, 002, 005, 008, 009, 010, 013 + Dr. Buddy 01, 02, 05, 09, 12, 13, 14 + JoinAQAL PAT-001, PAT-003, PAT-004 + Drass DR-01, DR-02, DR-04</p>
+  <h4>The simple version</h4><p>Deep in the arctic sits a vault of seeds for crops nobody is growing right now, kept because someday someone will need them. This invention is that vault for a person&#x27;s own history. Every measurement, every plan, every version of who they were is kept in a form that can be replanted decades later. Not a backup of files, a vault of states. A grandchild could grow the same plan from the same seed.</p>
+  <h4>How it works</h4><p>Rather than storing results, the system stores the conditions and inputs that produced them, in an append-only record with the reasoning attached. Any past state can be reconstructed exactly, including which engines were involved and what they believed at the time. Later engines can be run against older states to ask what would have been different. Nothing is ever overwritten, so the history cannot quietly change.</p>
+  <h4>Why it can be patented</h4><p>Systems keep audit logs of what happened; they do not keep reconstructable states that later inventions can be run against retroactively. The emergent capability is a multi-generational record where future tools can be applied to past lives, which is what makes a family office durable across generations.</p>
+  <h4>Why this one is critical to file</h4><p>Multi-generational continuity is the promise the whole business rests on, and nothing currently protects it. The retroactive re-execution property is unusual enough that an examiner will see the novelty quickly. It also becomes more valuable every year it runs, which means filing late costs you the earliest and most valuable history. This is the one filing that is genuinely about the next fifty years.</p>
+  <p class="alicenote"><span class="k">On the Alice score.</span> Panel: state replay is logging. Held mid because retroactive re-execution of NEW engines against OLD states is not something a log supports.</p>
+</article><h2 class="pri p-high">High importance <span class="cnt">10 patents</span></h2>
+<article class="pat">
+  <header class="ph">
+    <div class="pid">SE-034</div>
+    <h3>The Tide That Moves The Whole Harbour</h3>
+    <div class="tags"><span class="tag p-high">High importance</span><span class="tag alice">Alice 6/10</span><span class="tag ways">20-way combination</span></div>
+  </header>
+  <p class="par"><span class="k">Built from</span> All 4 platforms, 20 engines: RCS 001, 003, 004, 005, 007, 008, 011, 013 + Dr. Buddy 01, 02, 09, 10, 11, 13 + JoinAQAL PAT-001, PAT-004, PAT-005, PAT-007 + Drass DR-02, DR-03</p>
+  <h4>The simple version</h4><p>A tide does not visit each boat in turn. It raises the whole harbour at once, the dinghy and the trawler alike, and every mooring line adjusts itself. This invention moves a person&#x27;s entire picture in one motion: what they know about themselves, how they are coping, what their money is doing, and who is helping them. One change, everything rises together. Nothing is left at the old level waiting to be updated.</p>
+  <h4>How it works</h4><p>A single verified change anywhere is expressed in the shared internal language and propagated to every engine that depends on it, in dependency order, as one transaction. Twenty mechanisms across four platforms settle into a consistent new state or none of them move at all. Compliance and crisis guards can veto the whole motion. The person experiences one coherent update rather than four systems disagreeing for an afternoon.</p>
+  <h4>Why it can be patented</h4><p>No system propagates a single change across cognitive, clinical, financial and delivery domains as one atomic transaction with domain-specific veto rights. The emergent capability is that four independent businesses behave as one organism without merging their data, their databases or their companies.</p>
+  <h4>Why this one is high importance</h4><p>This is the capstone claim that describes the whole enterprise in one invention, and capstones are valuable precisely because they are hard to work around. Its breadth is also its weakness, so it must be filed with narrower dependent claims beneath it rather than alone. It should follow the atomic and privacy filings, which give it firm ground to stand on. Treat it as the roof, not the foundation.</p>
+  <p class="alicenote"><span class="k">On the Alice score.</span> Distributed atomic commit with domain vetoes is real distributed-systems work. Held mid despite breadth risk.</p>
+</article>
+<article class="pat">
+  <header class="ph">
+    <div class="pid">DR-01</div>
+    <h3>Licensed Delivery Shell</h3>
+    <div class="tags"><span class="tag p-high">High importance</span><span class="tag alice">Alice 5/10</span><span class="tag ways">Platform patent — Drass Wealth Management</span></div>
+  </header>
+  
+  <h4>The simple version</h4><p>Imagine a concert hall that puts on a world-class show every night but does not own one violin. The musicians arrive, play, and leave with their instruments. Drass works the same way: the website shows the calculators, but the thinking happens somewhere else entirely. Nothing about how the math works ever lives on the Drass server. The firm gets the whole show without ever holding the sheet music.</p>
+  <h4>How it works</h4><p>The Drass website holds only the seats and the stage lighting: the page layout, the headings, the place where an answer appears. Every actual calculation is asked for over a protected connection, run on the owner&#x27;s platform, and sent back as a finished answer. If the connection is not set up, the page says so plainly instead of pretending to work. The licensed site can be taken away at any time without the engines going with it.</p>
+  <h4>Why it can be patented</h4><p>Nobody has built a licensing arrangement where the rendering site is deliberately incapable of performing the invention it displays. The emergent capability is that a firm can offer patented tools to its clients while the patent holder keeps every piece of the protected mechanism, and can withdraw it instantly. This separation of display from computation, enforced in the software rather than in a contract, is new.</p>
+  <h4>Why this one is high importance</h4><p>This is the pattern every future licensee will use, so it is the one that gets copied first. A competitor who sees the Drass site can infer the arrangement in an afternoon and build their own version before you file. It also underpins the revenue model for every firm after Drass, which makes it load-bearing rather than optional. File it before the second licensee goes live, because the second deployment is the public proof that the pattern works.</p>
+  <p class="alicenote"><span class="k">On the Alice score.</span> Panel: an architectural negative limitation (&#x27;cannot run the engines it shows&#x27;) may add no inventive concept on its own. Lowered.</p>
+</article>
+<article class="pat">
+  <header class="ph">
+    <div class="pid">DR-03</div>
+    <h3>One Identity, Two Faces</h3>
+    <div class="tags"><span class="tag p-high">High importance</span><span class="tag alice">Alice 5/10</span><span class="tag ways">Platform patent — Drass Wealth Management</span></div>
+  </header>
+  
+  <h4>The simple version</h4><p>Imagine one key card that opens completely different doors depending on whose hand it is in. Staff get the service corridors; guests get their room and the pool. Same card, same lock, different world behind it. This invention gives one sign-in that opens an advisor&#x27;s view or a client&#x27;s view without either person knowing the other view exists. The person never picks a role; the card already knows.</p>
+  <h4>How it works</h4><p>A person signs in once at the platform that owns the accounts. That platform hands back a sealed note saying who they are and what they are, and the licensed website checks the seal before believing a word of it. The note decides which interface is built, and the site never assembles the other one. Because the sealed note also carries its own expiry, the borrowed session can never outlive the real one.</p>
+  <h4>Why it can be patented</h4><p>Role-based access normally happens inside one application after login. Here the role travels across a company boundary inside a verified token and determines which interface is constructed at all. The emergent capability is that a licensed third-party site can serve two audiences with different rights while holding no account records of its own.</p>
+  <h4>Why this one is high importance</h4><p>This shipped as working code before this document was written, which starts a clock you cannot pause. Public use begins the moment the first advisor signs in on the live Drass site. The mechanism is also the doorway for every later feature, so a gap here weakens everything built on top. File within the grace window rather than counting on it.</p>
+  <p class="alicenote"><span class="k">On the Alice score.</span> Panel: token-driven interface selection is conventional customisation. Lowered.</p>
+</article>
+<article class="pat">
+  <header class="ph">
+    <div class="pid">SE-019</div>
+    <h3>Proof That Only Climbs</h3>
+    <div class="tags"><span class="tag p-high">High importance</span><span class="tag alice">Alice 5/10</span><span class="tag ways">2-way combination</span></div>
+  </header>
+  <p class="par"><span class="k">Built from</span> JoinAQAL PAT-004 (Weakness Identification) + Dr. Buddy 12 (Neuroplasticity Training)</p>
+  <h4>The simple version</h4><p>Harbours carve the highest tide into the stone, and that mark never moves down no matter how calm the sea gets later. This invention does the same for a person&#x27;s proven ability. Once someone has genuinely demonstrated a level, it is carved in, and a bad week cannot erase it. Training is then aimed at the one thing holding them back rather than at whatever they happened to score badly on today. The floor rises; it never falls.</p>
+  <h4>How it works</h4><p>The weakness side finds the single ability doing the most damage to everything else. The training side builds exercises aimed at that one thing. New results can only raise the recorded mark, never lower it, so a poor day is treated as noise rather than as loss. Each time the mark rises, the weakness is recalculated and training re-aims.</p>
+  <h4>Why it can be patented</h4><p>Adaptive training normally lets scores drift both ways, which lets short-term variance redirect a long-term programme. The emergent capability is a training loop that cannot be derailed by a bad day, because its target only updates on proven improvement.</p>
+  <h4>Why this one is high importance</h4><p>Both halves are already implemented, so this is close to free to demonstrate. The ratchet rule is the genuinely novel part and it is easy to describe, which cuts drafting cost. Educational technology moves fast and monotonic proof scoring is an idea whose time is arriving. File alongside the other JoinAQAL work so the family shares an early date.</p>
+  <p class="alicenote"><span class="k">On the Alice score.</span> Panel: monotonic tracking is an improved data structure, still abstract. Lowered.</p>
+</article>
+<article class="pat">
+  <header class="ph">
+    <div class="pid">SE-022</div>
+    <h3>Retirement With The Brakes Checked</h3>
+    <div class="tags"><span class="tag p-high">High importance</span><span class="tag alice">Alice 5/10</span><span class="tag ways">3-way combination</span></div>
+  </header>
+  <p class="par"><span class="k">Built from</span> RCS 007 (Ecological Drivers Retirement Risk) + Dr. Buddy 01 (Dual-Path Trajectory) + JoinAQAL PAT-003 (Stage-Band Reporting)</p>
+  <h4>The simple version</h4><p>A good guide does not only read the route. They check the sky, the gear, and the person standing in front of them. This invention plans a retirement the same way: the market risks, the health path ahead, and where the person actually is in their own development. It gives a range rather than a single confident number, because a guide who promises an exact arrival time is lying. The plan changes when any of the three change.</p>
+  <h4>How it works</h4><p>One side models the outside dangers to the money over time. Another models two futures for the person, one where health holds and one where it does not. The third places the person on a developmental band with an honest margin. The three are run together so the plan reflects the person walking the route, not an average person.</p>
+  <h4>Why it can be patented</h4><p>Retirement planning treats the human as a set of balances and a life expectancy. Running a dual health trajectory and a developmental band as first-class inputs to the risk model is new. The emergent capability is a plan whose confidence interval reflects the person&#x27;s own likely path rather than a population table.</p>
+  <h4>Why this one is high importance</h4><p>Retirement risk is the most commercially proven surface you have, so protection here converts directly to revenue. The health-trajectory input is what makes it novel and it is also what a large incumbent would most plausibly add next. Both the financial and the clinical parents are documented, making the application straightforward. File in the first batch or the second at the latest.</p>
+  <p class="alicenote"><span class="k">On the Alice score.</span> Coupled simulation, but the financial framing invites an abstract reading. Lowered.</p>
+</article>
+<article class="pat">
+  <header class="ph">
+    <div class="pid">SE-024</div>
+    <h3>The Four-Corner Reading</h3>
+    <div class="tags"><span class="tag p-high">High importance</span><span class="tag alice">Alice 5/10</span><span class="tag ways">4-way combination</span></div>
+  </header>
+  <p class="par"><span class="k">Built from</span> JoinAQAL PAT-002 (Voice Analysis) + Dr. Buddy 03 (Multi-Modal Intake) + RCS 003 (Whisper Coaching) + Drass DR-04 (Patent 360)</p>
+  <h4>The simple version</h4><p>A navigator with one lighthouse knows a direction. With four, they know exactly where the ship is. This invention takes a reading of a live conversation from four directions at once: how the person&#x27;s voice sounds, what their intake says, what the advisor is being told to do, and which engines are running underneath. It fixes a position no single reading could give. And it records the bearings so the fix can be checked later.</p>
+  <h4>How it works</h4><p>While a person is speaking, the voice side measures how they are saying it and the intake side measures what they are saying. The coaching side uses both to decide what the advisor should do next. The console records which protected engine produced each of those decisions, in order, as it happens. The result is a conversation that can be replayed afterward with its reasoning intact.</p>
+  <h4>Why it can be patented</h4><p>No system reads a live financial conversation through clinical intake, prosody, sales coaching and its own provenance trail at once. The emergent capability is a meeting that leaves behind a defensible record of why each thing was said, which is valuable for training, compliance and litigation alike.</p>
+  <h4>Why this one is high importance</h4><p>This is the first combination that genuinely requires all four platforms, which makes it a natural anchor for the four-way family. It is also the one most likely to be demonstrated to prospects, and demonstrations are public use. The Bonner audit already shows the shape of the output, giving the application concrete support. File once the voice wiring has run against real calls.</p>
+  <p class="alicenote"><span class="k">On the Alice score.</span> Synchronised capture is real; the provenance half drags it down. Lowered.</p>
+</article>
+<article class="pat">
+  <header class="ph">
+    <div class="pid">SE-025</div>
+    <h3>The Free Door Between Houses</h3>
+    <div class="tags"><span class="tag p-high">High importance</span><span class="tag alice">Alice 5/10</span><span class="tag ways">4-way combination</span></div>
+  </header>
+  <p class="par"><span class="k">Built from</span> Drass DR-03 (One Identity) + JoinAQAL PAT-006 (Integral Framework) + Dr. Buddy 13 (Integrated Platform) + RCS 001 (Cascading Recalculation)</p>
+  <h4>The simple version</h4><p>Imagine four houses in a row where every dividing wall has a door, and walking through costs nothing. You unlock the front door once and the whole row is yours. This invention makes four separate platforms behave like four rooms of one home, at no charge to the person walking between them. What they do in one room updates the others while they are still walking. Nobody has to sign in again or explain themselves twice.</p>
+  <h4>How it works</h4><p>One verified sign-in is honoured by all four platforms. A change made in any of them is announced to the others, and the connected calculators recompute in the right order rather than all at once. The integral framework decides which of a person&#x27;s many aspects a given update actually touches, so unrelated parts are left alone. The person experiences one place that happens to be very large.</p>
+  <h4>Why it can be patented</h4><p>Cross-platform single sign-on exists; what does not exist is a four-way arrangement where a change in one domain triggers ordered recomputation in the others under a shared model of the person. The emergent capability is that cognitive, clinical and financial states stay consistent with each other without anyone reconciling them by hand.</p>
+  <h4>Why this one is high importance</h4><p>This is the invention that makes &#x27;they all work together and it is all free&#x27; true rather than a slogan, so it protects the core promise of the offer. It is also the piece a large platform company would build if it decided to enter this space. The cascade ordering is subtle and hard to reinvent, which makes the claim durable. File in the second batch, directly after the identity patent.</p>
+  <p class="alicenote"><span class="k">On the Alice score.</span> Panel: sign-on is crowded art. The ordered recomputation is the only defensible part. Lowered.</p>
+</article>
+<article class="pat">
+  <header class="ph">
+    <div class="pid">SE-028</div>
+    <h3>The Grafted Orchard</h3>
+    <div class="tags"><span class="tag p-high">High importance</span><span class="tag alice">Alice 5/10</span><span class="tag ways">5-way combination</span></div>
+  </header>
+  <p class="par"><span class="k">Built from</span> JoinAQAL PAT-001 (Consensus) + JoinAQAL PAT-005 (Coaching) + Dr. Buddy 07 (Multi-Agent Clinical) + Dr. Buddy 02 (Digital Twin) + RCS 011 (Advisor Scoring)</p>
+  <h4>The simple version</h4><p>Graft branches from different trees onto one trunk and you get fruit none of the parent trees could produce. This invention grafts several panels of AI together on a single root: one panel scores the person, one plans their care, one plans their money, and one scores the humans advising them. The fruit is a recommendation that carries the judgement of all of them. No single panel could have grown it.</p>
+  <h4>How it works</h4><p>Each panel works independently and produces its own answer with its own confidence. A digital copy of the person is used to test the combined recommendation before any human sees it. Advisors are scored on how their past recommendations actually turned out, and that score weights how much their input counts next time. The system learns which voices to trust from outcomes rather than from seniority.</p>
+  <h4>Why it can be patented</h4><p>Multi-agent systems normally weight members by design or by static configuration. Weighting human advisors by measured outcome inside the same loop that weights AI panels is new. The emergent capability is a recommendation engine whose trust in each contributor, human or machine, is earned from results.</p>
+  <h4>Why this one is high importance</h4><p>The advisor scoring element is commercially explosive because it changes how a firm pays people. That also means it will be contested, so an early priority date matters more than usual. Four of the five parents are already built, leaving one clear gap to close before filing. Target the second batch and close that gap first.</p>
+  <p class="alicenote"><span class="k">On the Alice score.</span> Outcome-weighted contributor scoring is interesting but reads as a business rule. Lowered.</p>
+</article>
+<article class="pat">
+  <header class="ph">
+    <div class="pid">SE-029</div>
+    <h3>The Reservoir And The Dam</h3>
+    <div class="tags"><span class="tag p-high">High importance</span><span class="tag alice">Alice 5/10</span><span class="tag ways">6-way combination</span></div>
+  </header>
+  <p class="par"><span class="k">Built from</span> RCS 009 (Mortgage Elimination) + RCS 002 (HELOC-to-IUL) + RCS 012 (Roth with STR) + RCS 005 (Income Waterfall) + JoinAQAL PAT-004 (Weakness) + Dr. Buddy 08 (Automated Report)</p>
+  <h4>The simple version</h4><p>A reservoir is not one wall. It is a series of gates, and opening them in the wrong order floods the valley. This invention sequences a family&#x27;s money moves the same way: the house, the borrowing, the conversions and the withdrawals all have a right order and a right moment. Open them together and the tax bill drowns you. Opened in sequence, the same water arrives safely downstream. The plan is written out afterward in plain language.</p>
+  <h4>How it works</h4><p>Four financial mechanisms that each work alone are placed on a single timeline, with each one&#x27;s opening conditioned on the state the others have reached. The person&#x27;s own biggest weakness is used to decide which gates they can realistically operate and which should be automated. When the sequence is settled, a readable report explains what happens, in what order, and why.</p>
+  <h4>Why it can be patented</h4><p>Each mechanism is separately known; nobody has interlocked all four on a dependency timeline gated by the individual&#x27;s measured behavioural weakness. The emergent capability is a multi-year sequence that accounts for whether this particular person will actually execute each step.</p>
+  <h4>Why this one is high importance</h4><p>This is the richest single offer in the catalogue and the one most likely to be reverse-engineered from a client illustration. The behavioural gating is the part nobody else has and the part that makes the sequence actually work in practice. Six parents give it real defensive depth against piecemeal challenge. File once the sequencing engine is demonstrable end to end.</p>
+  <p class="alicenote"><span class="k">On the Alice score.</span> The scheduler is technical; the financial strategies underneath are not. Lowered.</p>
+</article>
+<article class="pat">
+  <header class="ph">
+    <div class="pid">SE-033</div>
+    <h3>The Cathedral Scaffold</h3>
+    <div class="tags"><span class="tag p-high">High importance</span><span class="tag alice">Alice 4/10</span><span class="tag ways">15-way combination</span></div>
+  </header>
+  <p class="par"><span class="k">Built from</span> RCS 001, 002, 003, 005, 007, 008, 009, 011, 013 + Dr. Buddy 01, 09, 13 + JoinAQAL PAT-001, PAT-004 + Drass DR-02</p>
+  <h4>The simple version</h4><p>A cathedral takes generations, and the scaffolding is rebuilt many times as the walls climb. The scaffold is never the point, but nothing rises without it. This invention is the scaffolding around a family&#x27;s wealth across decades: it assembles where work is happening, holds while the structure sets, and comes down when it is no longer needed. Fifteen mechanisms, appearing and retiring as the building demands. The family sees the cathedral, not the poles.</p>
+  <h4>How it works</h4><p>The system decides which mechanisms are relevant to this household at this stage of life and activates only those. As circumstances change, mechanisms retire and others stand up, with the compliance gate governing what may be shown at each stage. Crisis detection can freeze the whole structure if the family is in no state to build. Nothing runs simply because it exists.</p>
+  <h4>Why it can be patented</h4><p>Comprehensive platforms expose everything and let the user choose; this one decides what should exist for this household right now and withholds the rest. The emergent capability is that complexity scales with the family&#x27;s actual situation rather than with the vendor&#x27;s feature list.</p>
+  <h4>Why this one is high importance</h4><p>This is how the platform stays usable as it grows, which is the failure mode that kills comprehensive software. Fifteen parents make it a strong umbrella over most of the RCS portfolio at once. Its value rises as you add tools, so filing now protects work not yet built. Second batch, after the atomic and privacy claims are secured.</p>
+  <p class="alicenote"><span class="k">On the Alice score.</span> Panel: lifecycle activation is conventional configuration. Lowered sharply.</p>
+</article><h2 class="pri p-important">Important <span class="cnt">1 patent</span></h2>
+<article class="pat">
+  <header class="ph">
+    <div class="pid">DR-04</div>
+    <h3>Patent 360 Advisor Console</h3>
+    <div class="tags"><span class="tag p-important">Important</span><span class="tag alice">Alice 4/10</span><span class="tag ways">Platform patent — Drass Wealth Management</span></div>
+  </header>
+  
+  <h4>The simple version</h4><p>Imagine looking at a finished portrait and being able to switch on an X-ray that shows every bone underneath. The face stays the same, but now you can see the structure holding it up. Patent 360 does that for a client&#x27;s plan: the advisor sees which protected engines touched it, in what order, and what each one contributed. The client sees the portrait. The advisor sees the skeleton.</p>
+  <h4>How it works</h4><p>Every time a protected engine runs for a client, the system quietly notes which engine it was, when it ran, and what it changed. The advisor&#x27;s console reads that trail and lays it out as a map of the plan&#x27;s construction. Because the trail is written as the work happens rather than reconstructed afterward, it cannot drift from what actually occurred. Clients never see this view and are never told a different story because of it.</p>
+  <h4>Why it can be patented</h4><p>No planning platform exposes its own intellectual property as a navigable layer for the professional using it. The emergent capability is that an advisor can explain exactly which invention produced which part of a recommendation, turning a patent portfolio into a sales instrument and an audit record at once.</p>
+  <h4>Why this one is important</h4><p>The value here is commercial rather than defensive, so the filing can follow the stronger ones. It does become urgent the moment advisors start demonstrating it in client meetings, because that is public use. It is also the most copyable idea in the set, since the concept is obvious once seen. Keep it in the same filing family so it inherits the earlier priority date.</p>
+  <p class="alicenote"><span class="k">On the Alice score.</span> Panel named this among the three weakest: &#x27;mere attribution display&#x27;. Lowered sharply.</p>
+</article><h2 class="pri p-moderate">Moderate <span class="cnt">1 patent</span></h2>
+<article class="pat">
+  <header class="ph">
+    <div class="pid">SE-020</div>
+    <h3>The Plan That Reads The Room</h3>
+    <div class="tags"><span class="tag p-moderate">Moderate</span><span class="tag alice">Alice 4/10</span><span class="tag ways">2-way combination</span></div>
+  </header>
+  <p class="par"><span class="k">Built from</span> Dr. Buddy 11 (Therapeutic Alliance) + Drass DR-03 (One Identity, Two Faces)</p>
+  <h4>The simple version</h4><p>A good translator says the same true thing differently to a judge and to a worried family at a kitchen table. The facts do not move; the register does. This invention gives the advisor and the client the same financial truth in two different voices, chosen by who is signed in. Nobody gets a softened number. They get the number in the language that will actually land.</p>
+  <h4>How it works</h4><p>The identity layer already knows whether the person reading is an advisor or a client. The alliance model, borrowed from therapy, adjusts tone, pacing and how much is said at once to suit that reader. The underlying figures are identical and are drawn from the same computation, so the two views can be laid side by side without contradiction. Only the delivery changes.</p>
+  <h4>Why it can be patented</h4><p>Personalisation systems normally change what is shown; this one holds the content fixed and varies only the delivery, using a clinical alliance model in a financial setting. The emergent capability is two audiences receiving genuinely identical information without either being condescended to or overwhelmed.</p>
+  <h4>Why this one is moderate</h4><p>The weakest of the two-way group on eligibility, so it should not lead a filing. It is worth including as a dependent claim inside a stronger application rather than standing alone. Its commercial pull is real, because advisors will pay for anything that reduces client confusion. Hold it until the identity patent is filed and attach it there.</p>
+  <p class="alicenote"><span class="k">On the Alice score.</span> Panel named this among the three weakest: &#x27;standard RBAC rendering&#x27;. Lowered sharply.</p>
+</article>
+
+<div class="note" style="border-left-color:#5c666f;">
+<h3>One last honest note</h3>
+<p>Nothing in this document is a filed patent, and nothing in it is legal advice. These are proposed combination claims
+written by software engineers who read the code, plus one AI reviewer who argued the scores down. Every Alice number
+started higher and was lowered after that review. Before any money is spent, a registered patent attorney should read
+the full technical descriptions and confirm that what is claimed matches what is actually built.</p>
+</div>
+
+</body></html>

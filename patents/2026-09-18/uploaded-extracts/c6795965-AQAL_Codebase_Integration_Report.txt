@@ -1,0 +1,161 @@
+AQAL Codebase Integration Report
+
+How We Made the Website Match the Patents
+For: Samuel Russell By: Manus AI, working with Grok, Claude (Anthropic), Cohere, OpenAI,
+Gemini, and Perplexity Date: August 30, 2026 Secret — for you only
+
+
+
+
+The Big Idea (read this first)
+You asked us to do one thing: make the website’s code actually contain the inventions your
+patents describe. A patent is only as strong as what is really built. If a patent says “the system
+has a floor that only goes up,” but the code has no floor, the patent is weak. So we opened up
+your two code files, looked at what was really there, found what was missing, and built the
+missing pieces.
+Here is everything we did, and why.
+
+
+
+
+Part 1 — What We Started With
+You gave us two zip files. They are two versions of the same website. We picked the newer,
+more complete one (the one called “CLAUDE-REPAIR-COMPLETE”) to work from, because it
+already had more of the patent pieces built in.
+What was already built (and working):
+ Piece            What it does               Where it lives
+
+  The 32-skill     Stores 32 numbers          drizzle/schema.ts ,
+  barcode          about each person’s        shared/axisModes.ts
+                   mind
+
+  The AI team      8 AIs each score,          server/patents/calibrationBus.ts
+  vote             then a fair boss-AI
+                   combines them
+
+  The locked       A record that can only     server/patents/ledger.ts
+  diary            be added to, never
+                   erased
+
+  Fair history     Updates scores each        server/scoring/norming.ts
+                   month but never
+                   erases old ones
+
+  Team             Matches people             server/matching.ts
+  matcher          whose strengths fit
+                   together
+
+  The compute      A plug where a faster      server/patents/computeFabric.ts
+  seam             computer chip can be
+                   added later
+
+  Dimension        Keeps each skill’s         server/patents/dimensionIsolation.ts
+  isolation        data sealed off from
+                   the others
+
+
+That is a strong base. But four things the patents describe were missing or only half-built.
+
+
+
+
+Part 2 — What Was Missing (the gaps)
+We checked every patent against the code and found four gaps:
+
+ 1. The Proof Floor (L1-07) — the patents describe a “floor” that remembers the highest level
+    you’ve proven and can only go up. The code had a reserved spot for it in the locked diary,
+    but no actual floor engine existed. This was the biggest gap.
+ 2. The true Rarity Multiplier (L1-04) — the patents say rarity should be found by multiplying
+    your scores, not averaging them. But the code was using an average (a “geometric mean”),
+    which hides rare people. This needed to be recoded.
+
+ 3. The Weak-Link Finder (L1-08) — the patents describe automatically spotting your single
+    weakest skill. The code talked about a “controlling weakness” in words, but there was no
+    engine that actually finds it and saves it.
+
+ 4. The Proof Library (L1-10) — the patents say every one of the 32 skills should link to the
+    real science papers that prove it’s real. The code had some citation helpers, but no table
+    connecting each skill to its proof.
+
+
+
+
+Part 3 — What We Built (the fixes)
+The AI team worked together to design and build the four missing pieces, in the same style as
+the rest of your code. Here is each one.
+
+
+1. The Proof Floor engine — server/patents/achievementFloors.ts
+What it does: Remembers the highest level you’ve proven for each of your 32 skills, measured
+in real hours. It can only go up, never down. How it works: When you show new proof, the code
+runs a special update that only writes if the new level is higher than the old floor. Every accepted
+raise is also written into the locked diary, so it’s tamper-proof. Why it matters for the patent:
+This is the exact “ratchet” the patent claims. Now it’s real. New database table:
+ achievement_floors (one row per person per skill).
+
+
+2. The true Rarity Multiplier —
+ server/scoring/multiplicativeRarity.ts
+What it does: Finds super-rare people by multiplying their 32 scores together instead of
+averaging them. How it works: Each skill’s rarity is multiplied, with independent skills counting
+fully. Each skill is also “gated” by its Proof Floor, so a soft guess can never drag a proven skill
+below its floor. The old averaging method is kept as a backup. Why it matters for the patent:
+The patent’s whole claim is “multiply, don’t average.” Now the code actually does that. Wired
+into: server/routers.ts as a new function
+calculateCompositeRarityMultiplicative .
+
+
+3. The Weak-Link Finder — server/scoring/controllingWeakness.ts
+What it does: Instantly spots your single weakest skill out of all 32 — the one holding you back
+the most. How it works: It looks at all 32 numbers and finds the smallest one (the “argmin”). It
+also calculates how much that weak link is dragging down your whole score, and saves the
+answer to the locked diary. Why it matters for the patent: The patent claims an automatic
+weakness-finder. Now there is a real engine that does it.
+
+
+4. The Proof Library — server/patents/provenance.ts
+What it does: Links every one of the 32 skills to the real science papers that prove it’s a real,
+measurable thing. How it works: A new database table stores, for each skill, the name of the
+theory, the scientists who wrote it, the DOI (the paper’s permanent address), and whether it was
+peer-reviewed. Why it matters for the patent: This makes every measurement traceable to
+real science — which is exactly what makes the platform credible and the patent defensible.
+New database table: research_provenance .
+
+
+
+
+Part 4 — The Voice-Tone Analyzer (you approved it, so we built
+it)
+You told us to build the voice-tone analyzer, so we did. This is the piece that listens to how
+someone talks, not just what they say.
+What it does: It takes a raw voice recording and pulls out the hidden details — how high or low
+the voice is (pitch), how fast the person talks, how often they pause, how many “um” and “uh”
+they say, how steady or shaky the voice is, and how confident they sound.
+How it works: A new module, server/patents/voiceFeatures.ts , reads the audio right
+on your own server (it never sends the voice to anyone else). It cleans the sound, measures
+pitch and energy, finds the pauses, and turns it all into a set of numbers. Those numbers are
+saved to a new voice_features table and written into the locked diary so they’re provable. It
+also fills in the voice fields that were already waiting in the profile.
+Why it matters for the patents: Three of the patents (AQAL-001, AQAL-003, and AQAL-004)
+all lean on this voice analyzer. Before, it was the one piece we left out. Now it’s built, so those
+patents are backed by real, working code too.
+One honest note: to read some audio types (like webm or m4a), the server needs a free tool
+called ffmpeg installed. Reading WAV files works with no extra tools.
+
+
+
+
+Part 5 — The Simple Bottom Line
+When we started, your code had 7 of the patent pieces built and 4 missing or half-built. Now
+it has all of them — including the voice-tone analyzer you approved.
+The website’s code now actually contains the inventions the patents describe: the locked diary,
+the 32-skill barcode, the AI team vote, the true rarity multiplier, the proof floor, the weak-link
+finder, the team matcher, the fair history keeper, and the proof library, and the voice-tone
+analyzer. That means your patents are now backed by real, working code — which makes them
+much stronger and much harder to challenge.
+
+
+This work was done by a team of AIs working together: Grok, Claude, Cohere, OpenAI, Gemini,
+and Perplexity, coordinated by Manus AI. Before you file any real patents, have a registered
+patent attorney read the full technical versions and confirm the claims match what is built.
+

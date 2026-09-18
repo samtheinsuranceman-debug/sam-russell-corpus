@@ -1,0 +1,407 @@
+<title>JoinAQAL Scale Gaps</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --ground:#FAF9F6;
+    --surface:#FFFFFF;
+    --raise:#F2F0EA;
+    --ink:#16191C;
+    --ink-2:#4A5057;
+    --ink-3:#767D85;
+    --rule:#DFDBD1;
+    --rule-2:#EBE8E0;
+    --accent:#8A6D1F;
+    --crit:#A32B22;
+    --crit-bg:#F7E9E7;
+    --high:#9A6210;
+    --high-bg:#F8EEDF;
+    --med:#2F5D7C;
+    --med-bg:#E7EFF5;
+    --low:#5C666F;
+    --low-bg:#ECEEF0;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --ground:#131619;
+      --surface:#191D21;
+      --raise:#20252A;
+      --ink:#E9E6DF;
+      --ink-2:#A8AFB6;
+      --ink-3:#79818A;
+      --rule:#2C3238;
+      --rule-2:#232830;
+      --accent:#C9A94A;
+      --crit:#E0857C;
+      --crit-bg:#2E1C1A;
+      --high:#D9A051;
+      --high-bg:#2C2317;
+      --med:#8CB6D4;
+      --med-bg:#1A2530;
+      --low:#98A1AA;
+      --low-bg:#22272C;
+    }
+  }
+  :root[data-theme="dark"]{
+    --ground:#131619;
+    --surface:#191D21;
+    --raise:#20252A;
+    --ink:#E9E6DF;
+    --ink-2:#A8AFB6;
+    --ink-3:#79818A;
+    --rule:#2C3238;
+    --rule-2:#232830;
+    --accent:#C9A94A;
+    --crit:#E0857C;
+    --crit-bg:#2E1C1A;
+    --high:#D9A051;
+    --high-bg:#2C2317;
+    --med:#8CB6D4;
+    --med-bg:#1A2530;
+    --low:#98A1AA;
+    --low-bg:#22272C;
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    background:var(--ground);
+    color:var(--ink);
+    font-family:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    font-size:15px;
+    line-height:1.6;
+    margin:0;
+    padding:0 20px 96px;
+  }
+  .wrap{max-width:860px;margin:0 auto;}
+
+  header{padding:56px 0 0;}
+  .eyebrow{
+    font-family:"IBM Plex Mono",monospace;
+    font-size:11px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--accent);
+    margin:0 0 18px;
+  }
+  h1{
+    font-family:"Newsreader",Georgia,serif;
+    font-weight:600;
+    font-size:clamp(32px,5.2vw,46px);
+    line-height:1.1;
+    letter-spacing:-.015em;
+    margin:0 0 16px;
+    text-wrap:balance;
+  }
+  .standfirst{
+    font-family:"Newsreader",Georgia,serif;
+    font-size:19px;
+    line-height:1.55;
+    color:var(--ink-2);
+    max-width:62ch;
+    margin:0 0 8px;
+  }
+  .meta{
+    font-family:"IBM Plex Mono",monospace;
+    font-size:12px;
+    color:var(--ink-3);
+    margin:22px 0 0;
+    padding-top:18px;
+    border-top:1px solid var(--rule);
+  }
+
+  .tally{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:1px;
+    background:var(--rule);
+    border:1px solid var(--rule);
+    margin:32px 0 8px;
+  }
+  .tally div{background:var(--surface);padding:14px 16px;}
+  .tally .n{
+    font-family:"IBM Plex Mono",monospace;
+    font-size:26px;
+    font-weight:500;
+    font-variant-numeric:tabular-nums;
+    line-height:1;
+    display:block;
+    margin-bottom:6px;
+  }
+  .tally .l{
+    font-family:"IBM Plex Mono",monospace;
+    font-size:10.5px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--ink-3);
+  }
+  .t-crit .n{color:var(--crit);}
+  .t-high .n{color:var(--high);}
+  .t-med .n{color:var(--med);}
+  .t-low .n{color:var(--low);}
+
+  .note{
+    background:var(--raise);
+    border-left:2px solid var(--accent);
+    padding:16px 20px;
+    margin:32px 0 0;
+    font-size:14px;
+    color:var(--ink-2);
+    max-width:68ch;
+  }
+  .note strong{color:var(--ink);font-weight:600;}
+
+  h2{
+    font-family:"Newsreader",Georgia,serif;
+    font-weight:600;
+    font-size:24px;
+    letter-spacing:-.01em;
+    margin:56px 0 4px;
+    padding-top:22px;
+    border-top:1px solid var(--rule);
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:16px;
+  }
+  h2 .rng{
+    font-family:"IBM Plex Mono",monospace;
+    font-size:11px;
+    font-weight:400;
+    letter-spacing:.08em;
+    color:var(--ink-3);
+    white-space:nowrap;
+  }
+  .sect-note{
+    font-size:13.5px;
+    color:var(--ink-3);
+    margin:0 0 20px;
+    max-width:66ch;
+  }
+
+  ol.items{list-style:none;margin:0;padding:0;}
+  ol.items li{
+    display:grid;
+    grid-template-columns:34px 1fr auto;
+    gap:0 14px;
+    padding:13px 0;
+    border-bottom:1px solid var(--rule-2);
+    align-items:baseline;
+  }
+  .num{
+    font-family:"IBM Plex Mono",monospace;
+    font-size:12px;
+    color:var(--ink-3);
+    font-variant-numeric:tabular-nums;
+  }
+  .body-col{min-width:0;}
+  .title{font-weight:500;color:var(--ink);display:block;margin-bottom:3px;}
+  .ev{
+    font-family:"IBM Plex Mono",monospace;
+    font-size:12px;
+    line-height:1.5;
+    color:var(--ink-3);
+    display:block;
+    overflow-wrap:anywhere;
+  }
+  .sev{
+    font-family:"IBM Plex Mono",monospace;
+    font-size:9.5px;
+    letter-spacing:.09em;
+    text-transform:uppercase;
+    padding:3px 7px;
+    white-space:nowrap;
+    border-radius:2px;
+  }
+  .s-crit{color:var(--crit);background:var(--crit-bg);}
+  .s-high{color:var(--high);background:var(--high-bg);}
+  .s-med{color:var(--med);background:var(--med-bg);}
+  .s-low{color:var(--low);background:var(--low-bg);}
+
+  footer{
+    margin-top:60px;
+    padding-top:22px;
+    border-top:1px solid var(--rule);
+    font-size:13.5px;
+    color:var(--ink-3);
+    max-width:68ch;
+  }
+  footer code{font-family:"IBM Plex Mono",monospace;font-size:12.5px;color:var(--ink-2);}
+
+  @media (max-width:620px){
+    .tally{grid-template-columns:repeat(2,1fr);}
+    ol.items li{grid-template-columns:28px 1fr;}
+    .sev{grid-column:2;justify-self:start;margin-top:6px;}
+  }
+</style>
+
+<div class="wrap">
+<header>
+  <p class="eyebrow">Scale readiness audit · joinaqal</p>
+  <h1>100 things standing between here and thousands of users</h1>
+  <p class="standfirst">Every item was found by reading the consolidated codebase — 39 tables, 128 server modules, 102 client pages — not drawn from a generic checklist. Each carries the evidence that produced it.</p>
+  <p class="meta">Audited 2026-09-08 · branch canonical-consolidation · 403 tests passing · typecheck and build clean</p>
+</header>
+
+<div class="tally">
+  <div class="t-crit"><span class="n">22</span><span class="l">Critical</span></div>
+  <div class="t-high"><span class="n">54</span><span class="l">High</span></div>
+  <div class="t-med"><span class="n">22</span><span class="l">Medium</span></div>
+  <div class="t-low"><span class="n">2</span><span class="l">Low</span></div>
+</div>
+
+<div class="note">
+<strong>The load-bearing four.</strong> If you only fix a handful before traffic arrives, make them these: the database opens a <em>single connection</em> with no pool (#23); 39 tables carry only 6 indexes and none of them on a lookup column (#1); the rate limiter lives in one process's memory and wipes itself clean at 50,000 keys (#31, #32); and the Stripe webhook verifies signatures but never deduplicates, so one retried delivery charges or grants twice (#74). Everything else is degradation. These four are outages and money.
+</div>
+
+<h2>Database and data layer <span class="rng">01–20</span></h2>
+<p class="sect-note">The largest cluster, and where thousands of users will hurt first. Verified against <span class="ev" style="display:inline">drizzle/schema.ts</span> and <span class="ev" style="display:inline">server/db.ts</span>.</p>
+<ol class="items">
+<li><span class="num">01</span><span class="body-col"><span class="title">No performance indexes anywhere</span><span class="ev">39 pgTable definitions, 6 indexes — all uniqueIndex constraints. Zero on userId, assessmentId, or any foreign key.</span></span><span class="sev s-crit">Critical</span></li>
+<li><span class="num">02</span><span class="body-col"><span class="title">Hot query paths unindexed</span><span class="ev">responses, scores, analyticsEvents all filter by userId/assessmentId with no supporting index — full scans at volume.</span></span><span class="sev s-crit">Critical</span></li>
+<li><span class="num">03</span><span class="body-col"><span class="title">No composite indexes for multi-column filters</span><span class="ev">Queries filtering userId + createdAt need one index, not two.</span></span><span class="sev s-high">High</span></li>
+<li><span class="num">04</span><span class="body-col"><span class="title">Leaderboard queries unindexed and unbounded</span><span class="ev">leaderboardEntries sorted without index or cursor.</span></span><span class="sev s-high">High</span></li>
+<li><span class="num">05</span><span class="body-col"><span class="title">N+1 query patterns</span><span class="ev">13 sites with await inside a for-of loop across server/*.ts — each iteration a round trip.</span></span><span class="sev s-high">High</span></li>
+<li><span class="num">06</span><span class="body-col"><span class="title">Unbounded selects</span><span class="ev">37 db.select() calls in server/db.ts against 29 .limit() uses — some read whole tables.</span></span><span class="sev s-high">High</span></li>
+<li><span class="num">07</span><span class="body-col"><span class="title">No cursor pagination</span><span class="ev">Offset paging degrades linearly; research library and leaderboard both need keyset cursors.</span></span><span class="sev s-med">Medium</span></li>
+<li><span class="num">08</span><span class="body-col"><span class="title">analyticsEvents grows without bound</span><span class="ev">No partitioning, retention window, or rollup. Highest-volume table in the schema.</span></span><span class="sev s-high">High</span></li>
+<li><span class="num">09</span><span class="body-col"><span class="title">No archival path for assessments and responses</span><span class="ev">Every response retained live forever; no cold storage tier.</span></span><span class="sev s-med">Medium</span></li>
+<li><span class="num">10</span><span class="body-col"><span class="title">No read replica</span><span class="ev">All reads and writes hit one primary.</span></span><span class="sev s-med">Medium</span></li>
+<li><span class="num">11</span><span class="body-col"><span class="title">No slow-query logging</span><span class="ev">Nothing surfaces which queries degrade as tables grow.</span></span><span class="sev s-high">High</span></li>
+<li><span class="num">12</span><span class="body-col"><span class="title">No statement timeout</span><span class="ev">A single pathological query can hold a connection indefinitely — fatal with #23.</span></span><span class="sev s-high">High</span></li>
+<li><span class="num">13</span><span class="body-col"><span class="title">Migrations are a manual command</span><span class="ev">package.json db:push runs generate + migrate by hand; nothing gates a deploy on schema state.</span></span><span class="sev s-high">High</span></li>
+<li><span class="num">14</span><span class="body-col"><span class="title">No migration rollback procedure</span><span class="ev">Three-migration lineage with no documented down path.</span></span><span class="sev s-med">Medium</span></li>
+<li><span class="num">15</span><span class="body-col"><span class="title">No backup or restore runbook</span><span class="ev">Backups are not mentioned in OWNER_HANDOFF.md or RELEASE_NOTES.md.</span></span><span class="sev s-crit">Critical</span></li>
+<li><span class="num">16</span><span class="body-col"><span class="title">Restore has never been rehearsed</span><span class="ev">An untested backup is a hypothesis, not a backup.</span></span><span class="sev s-crit">Critical</span></li>
+<li><span class="num">17</span><span class="body-col"><span class="title">No point-in-time recovery verification</span><span class="ev">Recovery window and RPO/RTO undefined.</span></span><span class="sev s-high">High</span></li>
+<li><span class="num">18</span><span class="body-col"><span class="title">Database failure degrades silently</span><span class="ev">server/db.ts getDb() catches, warns to console, returns null; callers log and continue as if nothing happened.</span></span><span class="sev s-crit">Critical</span></li>
+<li><span class="num">19</span><span class="body-col"><span class="title">No connection retry or backoff</span><span class="ev">One failed connect nulls _db; nothing re-attempts on later calls beyond the same null-check.</span></span><span class="sev s-high">High</span></li>
+<li><span class="num">20</span><span class="body-col"><span class="title">No seed script for staging</span><span class="ev">No way to stand up a realistic dataset to test against.</span></span><span class="sev s-low">Low</span></li>
+</ol>
+
+<h2>Connection handling and caching <span class="rng">21–32</span></h2>
+<p class="sect-note">Nothing shared sits between the app and its data. Every instance is on its own.</p>
+<ol class="items">
+<li><span class="num">21</span><span class="body-col"><span class="title">No cache layer of any kind</span><span class="ev">No Redis, memcached, or in-process LRU anywhere in server/.</span></span><span class="sev s-crit">Critical</span></li>
+<li><span class="num">22</span><span class="body-col"><span class="title">Scoring recomputed on every request</span><span class="ev">No memoization on deterministic scoring or profile derivation.</span></span><span class="sev s-high">High</span></li>
+<li><span class="num">23</span><span class="body-col"><span class="title">No database connection pool</span><span class="ev">server/db.ts calls drizzle(process.env.DATABASE_URL) with no pool, max, or timeout config. Concurrent requests serialize.</span></span><span class="sev s-crit">Critical</span></li>
+<li><span class="num">24</span><span class="body-col"><span class="title">No pool sizing tied to instance count</span><span class="ev">Once pooling exists, max × instances must stay under the database's connection ceiling.</span></span><span class="sev s-high">High</span></li>
+<li><span class="num">25</span><span class="body-col"><span class="title">No Cache-Control on API responses</span><span class="ev">Only two files reference cache headers: productRoutes.ts and _core/storageProxy.ts.</span></span><span class="sev s-high">High</span></li>
+<li><span class="num">26</span><span class="body-col"><span class="title">No ETag or conditional requests</span><span class="ev">Every fetch transfers a full body even when unchanged.</span></span><span class="sev s-med">Medium</span></li>
+<li><span class="num">27</span><span class="body-col"><span class="title">Research corpus re-fetched per visitor</span><span class="ev">6,246 clusters through /manus-storage on every Research Library visit; storageProxy sets no long-lived immutable cache.</span></span><span class="sev s-high">High</span></li>
+<li><span class="num">28</span><span class="body-col"><span class="title">No CDN in front of managed storage</span><span class="ev">Corpus, founder photo and uploads all served through the app process.</span></span><span class="sev s-high">High</span></li>
+<li><span class="num">29</span><span class="body-col"><span class="title">Storage proxy is a throughput bottleneck</span><span class="ev">server/_core/storageProxy.ts streams every asset through Node rather than redirecting to signed URLs.</span></span><span class="sev s-high">High</span></li>
+<li><span class="num">30</span><span class="body-col"><span class="title">No stale-while-revalidate on static routes</span><span class="ev">Marketing and archetype pages are cacheable but uncached.</span></span><span class="sev s-med">Medium</span></li>
+<li><span class="num">31</span><span class="body-col"><span class="title">Rate limiter is per-instance memory</span><span class="ev">server/rateLimit.ts holds a module-level Map. Two instances mean double the effective limit; it resets on every deploy.</span></span><span class="sev s-crit">Critical</span></li>
+<li><span class="num">32</span><span class="body-col"><span class="title">Rate limiter flushes every limit at 50,000 keys</span><span class="ev">rateLimit.ts: if (windows.size &gt; 50_000) windows.clear(). An attacker who inflates the map clears everyone's counter, including their own.</span></span><span class="sev s-crit">Critical</span></li>
+</ol>
+
+<h2>Concurrency and horizontal scale <span class="rng">33–45</span></h2>
+<p class="sect-note">Several modules assume exactly one process. That assumption breaks the moment you add a second.</p>
+<ol class="items">
+<li><span class="num">33</span><span class="body-col"><span class="title">Nine scheduled jobs have no distributed lock</span><span class="ev">server/scheduledJobs.ts registers 9 jobs; on multiple instances each fires per instance — duplicate emails, duplicate deletions.</span></span><span class="sev s-crit">Critical</span></li>
+<li><span class="num">34</span><span class="body-col"><span class="title">Audio retention job can delete concurrently</span><span class="ev">scheduledAudioRetention runs bounded deletes with no lock; two runs race.</span></span><span class="sev s-high">High</span></li>
+<li><span class="num">35</span><span class="body-col"><span class="title">No graceful shutdown</span><span class="ev">No SIGTERM handler draining in-flight requests; a deploy cuts live assessments mid-write.</span></span><span class="sev s-high">High</span></li>
+<li><span class="num">36</span><span class="body-col"><span class="title">Readiness and liveness are the same endpoint</span><span class="ev">productRoutes.ts:67 — one /health returning ok:true. It does not check the database, so a DB-down instance still receives traffic.</span></span><span class="sev s-crit">Critical</span></li>
+<li><span class="num">37</span><span class="body-col"><span class="title">No concurrency cap on LLM calls</span><span class="ev">Unbounded parallel invokeLLM under load hits provider limits and stalls the pool.</span></span><span class="sev s-high">High</span></li>
+<li><span class="num">38</span><span class="body-col"><span class="title">No circuit breaker on providers</span><span class="ev">A slow LLM or STT provider holds every request thread until timeout.</span></span><span class="sev s-high">High</span></li>
+<li><span class="num">39</span><span class="body-col"><span class="title">No timeout on outbound fetches</span><span class="ev">Transcription downloads audio with plain fetch and no AbortSignal.</span></span><span class="sev s-high">High</span></li>
+<li><span class="num">40</span><span class="body-col"><span class="title">No idempotency on assessment submission</span><span class="ev">A double-tap or retry creates two assessments.</span></span><span class="sev s-high">High</span></li>
+<li><span class="num">41</span><span class="body-col"><span class="title">Founding-spot allocation can oversell</span><span class="ev">rateLimit.ts describes a 10,000-spot pool; without a transactional counter or unique constraint two requests can claim the last spot.</span></span><span class="sev s-crit">Critical</span></li>
+<li><span class="num">42</span><span class="body-col"><span class="title">No background job queue</span><span class="ev">No BullMQ or equivalent — scoring, transcription and video analysis run inside the request.</span></span><span class="sev s-high">High</span></li>
+<li><span class="num">43</span><span class="body-col"><span class="title">Long tasks block the request cycle</span><span class="ev">Video and voice analysis inline means a slow provider ties up a connection for its duration.</span></span><span class="sev s-high">High</span></li>
+<li><span class="num">44</span><span class="body-col"><span class="title">No backpressure or load shedding</span><span class="ev">Nothing rejects early when the process is saturated; requests queue until timeout.</span></span><span class="sev s-med">Medium</span></li>
+<li><span class="num">45</span><span class="body-col"><span class="title">No documented autoscaling policy</span><span class="ev">No thresholds, min/max instances, or scaling signal defined.</span></span><span class="sev s-med">Medium</span></li>
+</ol>
+
+<h2>Observability <span class="rng">46–57</span></h2>
+<p class="sect-note">At current scale you hear about problems from users. At thousands, you will not hear about most of them at all.</p>
+<ol class="items">
+<li><span class="num">46</span><span class="body-col"><span class="title">No error tracking</span><span class="ev">No Sentry, Bugsnag, Rollbar or Datadog in server/, client/src or package.json. Production exceptions vanish.</span></span><span class="sev s-crit">Critical</span></li>
+<li><span class="num">47</span><span class="body-col"><span class="title">Logging is console.log and console.warn</span><span class="ev">No structured logger, no levels, no JSON output for aggregation.</span></span><span class="sev s-high">High</span></li>
+<li><span class="num">48</span><span class="body-col"><span class="title">No request IDs or correlation</span><span class="ev">A user report cannot be traced to its request across modules.</span></span><span class="sev s-high">High</span></li>
+<li><span class="num">49</span><span class="body-col"><span class="title">No latency metrics</span><span class="ev">No p50/p95/p99 on any route.</span></span><span class="sev s-high">High</span></li>
+<li><span class="num">50</span><span class="body-col"><span class="title">No distributed tracing</span><span class="ev">Request → tRPC → DB → LLM spans are invisible.</span></span><span class="sev s-med">Medium</span></li>
+<li><span class="num">51</span><span class="body-col"><span class="title">No alerting</span><span class="ev">Nothing pages anyone on error-rate or latency regression.</span></span><span class="sev s-crit">Critical</span></li>
+<li><span class="num">52</span><span class="body-col"><span class="title">No external uptime monitoring</span><span class="ev">No synthetic check on the public site.</span></span><span class="sev s-high">High</span></li>
+<li><span class="num">53</span><span class="body-col"><span class="title">No operational dashboard</span><span class="ev">Signups, completions, revenue and errors are not visible in one place.</span></span><span class="sev s-med">Medium</span></li>
+<li><span class="num">54</span><span class="body-col"><span class="title">Cost monitor records but never alerts</span><span class="ev">server/costMonitor.ts captures LLM usage; nothing triggers on a spend threshold.</span></span><span class="sev s-high">High</span></li>
+<li><span class="num">55</span><span class="body-col"><span class="title">Provider failures are unmeasured</span><span class="ev">LLM and STT error rates and latency are not tracked, so silent degradation reads as normal.</span></span><span class="sev s-high">High</span></li>
+<li><span class="num">56</span><span class="body-col"><span class="title">No log aggregation or retention</span><span class="ev">Container logs die with the container.</span></span><span class="sev s-med">Medium</span></li>
+<li><span class="num">57</span><span class="body-col"><span class="title">Failed transcriptions are not surfaced</span><span class="ev">Errors return to the caller; nothing counts them for review.</span></span><span class="sev s-med">Medium</span></li>
+</ol>
+
+<h2>Security hardening <span class="rng">58–73</span></h2>
+<p class="sect-note">No security middleware is installed. Each item below is a header or control that does not currently exist.</p>
+<ol class="items">
+<li><span class="num">58</span><span class="body-col"><span class="title">No security headers</span><span class="ev">helmet is absent from server/ and package.json — no HSTS, no X-Frame-Options, no nosniff.</span></span><span class="sev s-crit">Critical</span></li>
+<li><span class="num">59</span><span class="body-col"><span class="title">No Content-Security-Policy</span><span class="ev">Nothing constrains script or connect sources.</span></span><span class="sev s-high">High</span></li>
+<li><span class="num">60</span><span class="body-col"><span class="title">No explicit CORS policy</span><span class="ev">No cors configuration in server/; origin behavior is whatever the host defaults to.</span></span><span class="sev s-high">High</span></li>
+<li><span class="num">61</span><span class="body-col"><span class="title">No CSRF protection</span><span class="ev">No csrf middleware, with a year-long session cookie in play (#64).</span></span><span class="sev s-high">High</span></li>
+<li><span class="num">62</span><span class="body-col"><span class="title">No response compression</span><span class="ev">No compression middleware — every HTML and JSON body ships uncompressed.</span></span><span class="sev s-high">High</span></li>
+<li><span class="num">63</span><span class="body-col"><span class="title">No trusted-proxy configuration</span><span class="ev">Without trust proxy, req.ip is the load balancer, so IP-keyed rate limits collapse to one bucket.</span></span><span class="sev s-crit">Critical</span></li>
+<li><span class="num">64</span><span class="body-col"><span class="title">Session cookie lives one year</span><span class="ev">server/_core/oauth.ts:57 sets maxAge ONE_YEAR_MS with no refresh or rotation.</span></span><span class="sev s-high">High</span></li>
+<li><span class="num">65</span><span class="body-col"><span class="title">No session revocation</span><span class="ev">JWTs verified by signature only; a leaked token stays valid for its full year.</span></span><span class="sev s-high">High</span></li>
+<li><span class="num">66</span><span class="body-col"><span class="title">No account lockout</span><span class="ev">Repeated failed authentication is throttled only by the per-instance limiter.</span></span><span class="sev s-high">High</span></li>
+<li><span class="num">67</span><span class="body-col"><span class="title">Disposable-email blocklist is 16 domains</span><span class="ev">rateLimit.ts calls it "a speed bump, not a wall" — accurate. Thousands of domains exist.</span></span><span class="sev s-med">Medium</span></li>
+<li><span class="num">68</span><span class="body-col"><span class="title">No bot challenge on signup</span><span class="ev">Nothing but the limiter stands between a script and the founding pool.</span></span><span class="sev s-high">High</span></li>
+<li><span class="num">69</span><span class="body-col"><span class="title">No dependency vulnerability scanning</span><span class="ev">No audit step exists — there is no CI at all (#96).</span></span><span class="sev s-high">High</span></li>
+<li><span class="num">70</span><span class="body-col"><span class="title">No secret scanning</span><span class="ev">Nothing blocks a committed key.</span></span><span class="sev s-med">Medium</span></li>
+<li><span class="num">71</span><span class="body-col"><span class="title">No upload size limits</span><span class="ev">Audio and video uploads have no enforced ceiling.</span></span><span class="sev s-high">High</span></li>
+<li><span class="num">72</span><span class="body-col"><span class="title">No content scanning on uploads</span><span class="ev">User media is stored and re-served without inspection.</span></span><span class="sev s-med">Medium</span></li>
+<li><span class="num">73</span><span class="body-col"><span class="title">Retention policy covers audio only</span><span class="ev">72-hour audio deletion exists; transcripts, video and analytics have no defined lifetime.</span></span><span class="sev s-med">Medium</span></li>
+</ol>
+
+<h2>Payments and billing integrity <span class="rng">74–79</span></h2>
+<p class="sect-note">Signature verification is present and correct. Everything downstream of it is missing.</p>
+<ol class="items">
+<li><span class="num">74</span><span class="body-col"><span class="title">Stripe webhook has no idempotency store</span><span class="ev">server/stripe/index.ts verifies via constructEvent and logs event.id, but never records it. Stripe retries on any non-2xx — a retried event processes twice.</span></span><span class="sev s-crit">Critical</span></li>
+<li><span class="num">75</span><span class="body-col"><span class="title">No dead-letter path for failed webhooks</span><span class="ev">An event that throws is lost once Stripe stops retrying.</span></span><span class="sev s-high">High</span></li>
+<li><span class="num">76</span><span class="body-col"><span class="title">No reconciliation against Stripe</span><span class="ev">Nothing detects a paid customer whose access never provisioned.</span></span><span class="sev s-crit">Critical</span></li>
+<li><span class="num">77</span><span class="body-col"><span class="title">No failed-payment recovery</span><span class="ev">No dunning sequence or retry on declined renewals.</span></span><span class="sev s-high">High</span></li>
+<li><span class="num">78</span><span class="body-col"><span class="title">No self-serve refund or cancellation</span><span class="ev">Every billing exception becomes manual support work.</span></span><span class="sev s-med">Medium</span></li>
+<li><span class="num">79</span><span class="body-col"><span class="title">No revenue alerting</span><span class="ev">A checkout broken by a deploy could run unnoticed for a day.</span></span><span class="sev s-high">High</span></li>
+</ol>
+
+<h2>Email and messaging <span class="rng">80–85</span></h2>
+<ol class="items">
+<li><span class="num">80</span><span class="body-col"><span class="title">Email provider may be unconfigured</span><span class="ev">platform/config.ts exports RESEND_API_KEY and emailProvider; nothing in the handoff confirms it is set in production.</span></span><span class="sev s-crit">Critical</span></li>
+<li><span class="num">81</span><span class="body-col"><span class="title">No SPF, DKIM or DMARC verification</span><span class="ev">Undocumented. Transactional mail at volume lands in spam without them.</span></span><span class="sev s-crit">Critical</span></li>
+<li><span class="num">82</span><span class="body-col"><span class="title">No bounce or complaint handling</span><span class="ev">No webhook consuming delivery events; repeated sends to dead addresses damage domain reputation.</span></span><span class="sev s-high">High</span></li>
+<li><span class="num">83</span><span class="body-col"><span class="title">No unsubscribe or preference center</span><span class="ev">Nine scheduled jobs send nudges, digests and reminders with no per-user opt-out surface.</span></span><span class="sev s-high">High</span></li>
+<li><span class="num">84</span><span class="body-col"><span class="title">No outbound send rate limiting</span><span class="ev">A digest job across thousands of users bursts straight into provider limits.</span></span><span class="sev s-high">High</span></li>
+<li><span class="num">85</span><span class="body-col"><span class="title">Inbound SMS signature verification unconfirmed</span><span class="ev">server/twilioInbound.ts accepts webhooks; Twilio signature validation is not evident in the handler.</span></span><span class="sev s-high">High</span></li>
+</ol>
+
+<h2>Frontend performance <span class="rng">86–91</span></h2>
+<p class="sect-note">Measured from the production build after the vendor-chunk split landed.</p>
+<ol class="items">
+<li><span class="num">86</span><span class="body-col"><span class="title">Main bundle is 1,479 kB</span><span class="ev">455 kB gzipped, down from 594 kB after chunking — still far above a 200 kB budget.</span></span><span class="sev s-high">High</span></li>
+<li><span class="num">87</span><span class="body-col"><span class="title">Research Library chunk is 1,097 kB</span><span class="ev">332 kB gzipped for one route, on top of the corpus fetch.</span></span><span class="sev s-high">High</span></li>
+<li><span class="num">88</span><span class="body-col"><span class="title">No image optimization pipeline</span><span class="ev">No responsive srcset or modern formats; the founder photo is served as a raw JPEG.</span></span><span class="sev s-med">Medium</span></li>
+<li><span class="num">89</span><span class="body-col"><span class="title">No font preloading</span><span class="ev">Web fonts block first paint without preload hints.</span></span><span class="sev s-low">Low</span></li>
+<li><span class="num">90</span><span class="body-col"><span class="title">No Core Web Vitals measurement</span><span class="ev">LCP, INP and CLS are unmeasured in the field.</span></span><span class="sev s-med">Medium</span></li>
+<li><span class="num">91</span><span class="body-col"><span class="title">No route prefetching</span><span class="ev">90 lazy imports in App.tsx, none prefetched on intent — every navigation waits on a chunk.</span></span><span class="sev s-med">Medium</span></li>
+</ol>
+
+<h2>Discovery and reach <span class="rng">92–95</span></h2>
+<ol class="items">
+<li><span class="num">92</span><span class="body-col"><span class="title">No robots.txt</span><span class="ev">client/public holds only __manus__ and og-cover.svg. Crawl directives are absent.</span></span><span class="sev s-high">High</span></li>
+<li><span class="num">93</span><span class="body-col"><span class="title">No structured data</span><span class="ev">No JSON-LD on the assessment, archetype or research pages — no rich results.</span></span><span class="sev s-med">Medium</span></li>
+<li><span class="num">94</span><span class="body-col"><span class="title">One shared OG image</span><span class="ev">A single og-cover.svg for every route; shared links all preview identically.</span></span><span class="sev s-med">Medium</span></li>
+<li><span class="num">95</span><span class="body-col"><span class="title">www and apex redirect loop still open</span><span class="ev">Recorded as unresolved in docs/evidence/canonical_base_decision.md and never closed.</span></span><span class="sev s-crit">Critical</span></li>
+</ol>
+
+<h2>Delivery pipeline <span class="rng">96–100</span></h2>
+<p class="sect-note">The single largest multiplier on this list. Without it, every fix above ships on hope.</p>
+<ol class="items">
+<li><span class="num">96</span><span class="body-col"><span class="title">No CI pipeline</span><span class="ev">.github/workflows does not exist. Nothing runs typecheck, tests or build before a deploy.</span></span><span class="sev s-crit">Critical</span></li>
+<li><span class="num">97</span><span class="body-col"><span class="title">Five tests cannot pass in CI as written</span><span class="ev">server/landing.test.ts and one sibling need a live server on :3000 — ECONNREFUSED on both the base and this branch. They need a harness or a skip guard.</span></span><span class="sev s-high">High</span></li>
+<li><span class="num">98</span><span class="body-col"><span class="title">No staging environment</span><span class="ev">No pre-production target where migrations and provider changes can be rehearsed.</span></span><span class="sev s-high">High</span></li>
+<li><span class="num">99</span><span class="body-col"><span class="title">No load testing</span><span class="ev">Nothing establishes where the app actually breaks — every capacity number here is inferred from code, not measured.</span></span><span class="sev s-high">High</span></li>
+<li><span class="num">100</span><span class="body-col"><span class="title">No post-deploy smoke test or rollback</span><span class="ev">No automated check that a release is healthy, and no one-command way back.</span></span><span class="sev s-high">High</span></li>
+</ol>
+
+<footer>
+<p><strong>On the two findings that are not gaps but unknowns.</strong> Items 80 and 81 are marked critical because production provider configuration is documented nowhere in the repository. The same gap means the live LLM setup is unverified — if <code>BUILT_IN_FORGE_API_KEY</code> is unset, assessments have been scored by the mock. Confirming the deployed environment resolves three items on this list at once.</p>
+<p>Counts and file references were taken from the <code>canonical-consolidation</code> branch on 2026-09-08. Nothing here was drawn from a generic checklist; where an item says something is absent, that is a search across <code>server/</code>, <code>client/src/</code> and <code>package.json</code> returning nothing.</p>
+</footer>
+</div>
