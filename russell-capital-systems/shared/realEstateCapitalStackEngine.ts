@@ -215,3 +215,32 @@ export function describeStack(cs: CapitalStack): string {
 
 export const CAPITAL_STACK_DISCLOSURE =
   'This is a façade over cycleEngine, thresholds, sequenceOrderings, sequencePlanner and sequenceArchetypes. It computes nothing of its own beyond which mechanisms are open, which gates bind, and which named shape the household most resembles; every other figure is produced by the module that owns it. Refusals carry the clause that causes them. Nothing here prices a product or ranks a strategy — the provider records and the genome do those.';
+
+/* ═══ The deal model ═══════════════════════════════════════════════════════
+ *
+ * This façade answers "what can THIS household do" — which mechanisms are
+ * open, which gates bind, which named shape it resembles, and the best legal
+ * sequence. It reasons about eligibility and order.
+ *
+ * `realEstateDealModel` answers a different question: given one specific deal
+ * with its sources and uses, what does the money actually do? Monthly debt
+ * amortization rolled to annual rows, coverage and leverage per year,
+ * disposition at a forward-NOI exit, and an IRR-lookback promote waterfall
+ * across the combined common equity pool.
+ *
+ * Planning versus underwriting. A household needs the first to decide what to
+ * attempt and the second to know whether the attempt pencils, so both are
+ * reachable here rather than through five imports and an ordering convention.
+ */
+export {
+  analyzeCapitalStack as analyzeDeal, pmt, npv,
+  debtConstant, goingInCapRate, weightedAverageDebtCost, STANDARD_WATERFALL,
+} from './realEstateDealModel';
+export type {
+  CapitalStackInput as DealInput, CapitalStackResult as DealResult,
+  DebtLayer, DebtPeriodRow, ExitSummary, PeriodRow, SourcesAndUses,
+  StackReturns, WaterfallSplit, WaterfallTier,
+} from './realEstateCapitalTypes';
+
+export const DEAL_MODEL_DISCLOSURE =
+  'The deal model underwrites one specific transaction; this façade plans across a household. Debt amortizes monthly because annual-only amortization understates interest and overstates coverage, and DSCR is computed on NOI net of the capital reserve because that is the lender definition.';

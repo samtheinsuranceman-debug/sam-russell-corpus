@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { ROUTE_COUNT, diffRoutes } from "../shared/routeManifest";
 import { readFileSync, existsSync } from "node:fs";
 import { resolve } from "node:path";
 import { appRouter } from "./routers";
@@ -35,7 +36,14 @@ describe("managed primary-port safeguards", () => {
     const auditedRoutes = new Set(auditedRecords.map((record: { route: string }) => record.route));
     expect(auditedRoutes.size).toBeGreaterThanOrEqual(231);
     for (const route of auditedRoutes) expect(currentRoutes.has(String(route)), String(route)).toBe(true);
-    expect(currentRoutes.size).toBe(330); // 232 + the original platform routes + /for and /for/:slug + /portal/interior // master: +1 /portal/voice (Voice Studio), +1 /portal/whisperer, +3 role dashboards, +1 /portal/chain // branch: +39 calculators and tools restored in the catalogue pass (page files that existed on disk but were never routed), +1 /portal/qbi-optimizer, +2 /portal/mortgage-ledger and /portal/liquidity-routes // +1: /portal/how-a-figure-is-made, the provenance page // +2: /portal/alt-credit and /portal/alt-credit/:slug, the alternative-lines-of-credit tab // +1: /portal/genome-strategies, the genome strategy-fit formulary // +1: /portal/household-genome, the two-spouse pairing protocol // +1: /portal/infinite-banking, the cycle engine // +4: /portal/mechanisms plus the three per-mechanism views (:slug, :slug/providers, :slug/sequences) // +2: /portal/sequence-planner and /portal/thresholds // +1: /portal/recin, the real-estate intelligence workspace (base consolidation harvest) // +8: sister inventions SI-028..035 (The Field already on the trunk), from the 2026-09-14 archive // +1: /portal/integration-scorecard (master)
+    // The manifest replaces a hard-coded count: it merges cleanly between
+    // parallel branches and names the exact paths that differ, in both
+    // directions, instead of reporting a number that moved.
+    const d = diffRoutes(Array.from(currentRoutes).map(String));
+    expect(d.missing, "declared in the manifest but not registered").toEqual([]);
+    expect(d.unexpected, "registered but missing from shared/routeManifest.ts").toEqual([]);
+    expect(d.duplicates, "the same path registered more than once").toEqual([]);
+    expect(currentRoutes.size).toBe(ROUTE_COUNT);
   });
 
   it("keeps managed analytics and runtime public assets", () => {
