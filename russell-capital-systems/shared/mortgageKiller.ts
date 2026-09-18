@@ -43,6 +43,48 @@ export interface MortgageKillerInput {
   interestReinvestRate?: number;
   interestReinvestYears?: number;
   clientAge?: number;
+
+  // ── Evidence-driven paths (optional). When absent the engine falls back to its flat
+  // constants, so every existing caller and test is unchanged. The server builds these
+  // from zip_series / market_data_points and passes them in; the engine stays pure. ──
+  /** Which appreciation the projection uses. Default "flat". */
+  appreciationMode?: "flat" | "zip-history" | "zip-history-real";
+  /** Annual home-appreciation rate for projection years 1..N (decimal, e.g. 0.042). Used when appreciationMode !== "flat". Shorter than 30 → last value carries forward. */
+  appreciationPath?: number[];
+  /** Monetary-inflation overlay: annual CPI (or M2-implied) inflation for years 1..N. When appreciationMode is "zip-history-real" the path is deflated by this so the answer is in today's dollars. */
+  inflationPath?: number[];
+  /** Annual property tax as a share of home value for years 1..N (e.g. 0.0112). Carried into the cascading projection as a carrying cost when present. */
+  propertyTaxRatePath?: number[];
+  /** Annual HELOC rate for years 1..N (decimal). When present it replaces the single helocRate year by year. */
+  helocRatePath?: number[];
+}
+
+/** Rate for projection year `y` (1-based) from a path, carrying the last value forward; `fallback` when no path. */
+export function rateForYear(path: number[] | undefined, y: number, fallback: number): number {
+  if (!path || path.length === 0) return fallback;
+  const i = Math.min(Math.max(y - 1, 0), path.length - 1);
+  const v = path[i];
+  return typeof v === "number" && Number.isFinite(v) ? v : fallback;
+}
+
+/** Cumulative growth factor after `y` years along a path (∏(1+r)), or (1+flat)^y when no path. */
+export function growthFactor(path: number[] | undefined, y: number, flat: number): number {
+  if (!path || path.length === 0) return Math.pow(1 + flat, y);
+  let f = 1;
+  for (let k = 1; k <= y; k++) f *= 1 + rateForYear(path, k, flat);
+  return f;
+}
+
+/** Build the effective appreciation path from the input's mode: flat → undefined; zip-history → the path; zip-history-real → path deflated by inflationPath. */
+export function effectiveAppreciationPath(input: Pick<MortgageKillerInput, "appreciationMode" | "appreciationPath" | "inflationPath">): number[] | undefined {
+  const mode = input.appreciationMode ?? "flat";
+  if (mode === "flat" || !input.appreciationPath || input.appreciationPath.length === 0) return undefined;
+  if (mode === "zip-history") return input.appreciationPath;
+  // real: (1+nominal)/(1+inflation) − 1, year by year
+  return input.appreciationPath.map((r, i) => {
+    const infl = rateForYear(input.inflationPath, i + 1, 0);
+    return (1 + r) / (1 + infl) - 1;
+  });
 }
 
 export interface AmortizationRow {
@@ -105,6 +147,8 @@ export interface CascadingProjectionYear {
   mortgageMonthlyPayment: number;
   homeAppreciation: number;
   netWorth: number;
+  /** Property tax for the year when a propertyTaxRatePath was supplied; 0 otherwise. Reduces cash flow and net-worth build. */
+  propertyTax: number;
 }
 
 export interface InterestSavingsRow {
@@ -314,14 +358,17 @@ function buildHelocSchedule(
   annualIulPremium: number,
   premiumYears: number,
   mortgageBalanceByYear: number[],
-  freedMortgagePayment: number
+  freedMortgagePayment: number,
+  appreciationPath?: number[],
+  helocRatePath?: number[]
 ): HELOCYear[] {
   const rows: HELOCYear[] = [];
   let helocBalance = 0;
   let cumulativeHelocInterest = 0;
 
   for (let y = 1; y <= 30; y++) {
-    const homeValue = initialHomeValue * Math.pow(1 + HOME_APPRECIATION_RATE, y);
+    const homeValue = initialHomeValue * growthFactor(appreciationPath, y, HOME_APPRECIATION_RATE);
+    const helocRateY = rateForYear(helocRatePath, y, helocRate);
     const mortgageBal = y <= mortgageBalanceByYear.length ? mortgageBalanceByYear[y - 1] : 0;
     const maxHelocCapacity = homeValue * helocLtvPct;
     const availableEquity = Math.max(0, maxHelocCapacity - mortgageBal - helocBalance);
@@ -339,7 +386,7 @@ function buildHelocSchedule(
     }
 
     helocBalance += draw;
-    const interestPaid = helocBalance * helocRate;
+    const interestPaid = helocBalance * helocRateY;
     cumulativeHelocInterest += interestPaid;
 
     let repayment = 0;
@@ -479,13 +526,17 @@ function buildCascadingProjection(
   monthlyMortgagePayment: number,
   iulPolicy: IULPolicyYear[],
   helocSchedule: HELOCYear[],
-  mortgageBalanceByYear: number[]
+  mortgageBalanceByYear: number[],
+  appreciationPath?: number[],
+  propertyTaxRatePath?: number[]
 ): CascadingProjectionYear[] {
   const projection: CascadingProjectionYear[] = [];
+  let cumulativePropertyTax = 0;
 
   for (let y = 1; y <= 30; y++) {
-    const homeValue = initialHomeValue * Math.pow(1 + HOME_APPRECIATION_RATE, y);
-    const prevHomeValue = y === 1 ? initialHomeValue : initialHomeValue * Math.pow(1 + HOME_APPRECIATION_RATE, y - 1);
+    const homeValue = initialHomeValue * growthFactor(appreciationPath, y, HOME_APPRECIATION_RATE);
+    const prevHomeValue = y === 1 ? initialHomeValue : initialHomeValue * growthFactor(appreciationPath, y - 1, HOME_APPRECIATION_RATE);
+    const propertyTax = propertyTaxRatePath ? homeValue * rateForYear(propertyTaxRatePath, y, 0) : 0;
     const homeAppreciation = homeValue - prevHomeValue;
     const mortgageBalance = y <= mortgageBalanceByYear.length ? mortgageBalanceByYear[y - 1] : 0;
     const helocRow = helocSchedule.find(h => h.year === y);
@@ -510,7 +561,8 @@ function buildCascadingProjection(
       }
     }
 
-    const netWorth = homeEquity + (iulRow?.netCashValue ?? 0);
+    cumulativePropertyTax += propertyTax;
+    const netWorth = (homeEquity + (iulRow?.netCashValue ?? 0)) - cumulativePropertyTax;
 
     projection.push({
       year: y,
@@ -532,6 +584,7 @@ function buildCascadingProjection(
       mortgageMonthlyPayment: mortgageBalance > 0 ? monthlyMortgagePayment : 0,
       homeAppreciation: Math.round(homeAppreciation),
       netWorth: Math.round(netWorth),
+      propertyTax: Math.round(propertyTax),
     });
   }
 
@@ -622,15 +675,20 @@ export function runMortgageKillerAnalysis(input: MortgageKillerInput): MortgageK
     annualIulPremium, 30, iulCreditRate, effectivePremiumYears, policyLoanPct, policyLoanDragRate, clientAge, mortgagePaidOffYear
   );
 
+  // Evidence paths (undefined → the flat constants; see MortgageKillerInput)
+  const appreciationPath = effectiveAppreciationPath(input);
+
   // 5. HELOC schedule (70% LTV draws to fund IUL premiums)
   const helocSchedule = buildHelocSchedule(
-    homeMarketValue, mortgageBalance, helocLtvPct, helocRate, annualIulPremium, effectivePremiumYears, mortgageBalanceByYear, monthlyMortgagePayment
+    homeMarketValue, mortgageBalance, helocLtvPct, helocRate, annualIulPremium, effectivePremiumYears, mortgageBalanceByYear, monthlyMortgagePayment,
+    appreciationPath, input.helocRatePath
   );
 
   // 6. Cascading 30-year projection
   const cascadingProjection = buildCascadingProjection(
     homeMarketValue, mortgageBalance, mortgageRate, monthlyMortgagePayment,
-    iulPolicy, helocSchedule, mortgageBalanceByYear
+    iulPolicy, helocSchedule, mortgageBalanceByYear,
+    appreciationPath, input.propertyTaxRatePath
   );
 
   const accelTotalInterest = accelSchedule.length > 0 ? accelSchedule[accelSchedule.length - 1].cumulativeInterest : 0;

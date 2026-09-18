@@ -6,6 +6,8 @@
  * estate plans, and wealth distribution.
  */
 
+import { ruleForState, divisionSentence, RULES_VERSION } from "./divorceStateRules";
+
 export interface DivorceInput {
   totalMaritalAssets: number;
   totalMaritalDebt: number;
@@ -23,6 +25,10 @@ export interface DivorceInput {
 
 export interface DivorceScenario {
   name: string;
+  /** True only when the split is the regime's statutory starting point (community property → 50/50). Never true for a negotiated ratio. */
+  statutory: boolean;
+  /** Where the ratio comes from, in one sentence — the statute, or the fact that no statute produces it. */
+  basis: string;
   spouse1Share: number;
   spouse2Share: number;
   childSupport: number;
@@ -35,6 +41,12 @@ export interface DivorceScenario {
 
 export interface DivorceResult {
   scenarios: DivorceScenario[];
+  /** The state's division sentence from the rules table — regime, presumption, and what is NOT promised. */
+  stateBasis: string;
+  /** Version of shared/divorceStateRules.ts the result was computed against. */
+  rulesVersion: string;
+  /** What a reader must not conclude from these figures. Carried onto every result so no view can drop it. */
+  neverPrinted: readonly string[];
   totalMaritalEstate: number;
   equitableSplit: number;
   insuranceRecommendations: string[];
@@ -53,9 +65,14 @@ export function modelDivorceImpact(input: DivorceInput): DivorceResult {
   const netEstate = input.totalMaritalAssets - input.totalMaritalDebt;
   const equitableSplit = netEstate / 2;
 
-  // Community property vs equitable distribution
-  const communityPropertyStates = ["AZ", "CA", "ID", "LA", "NV", "NM", "TX", "WA", "WI"];
-  const isCommunityProperty = communityPropertyStates.includes(input.state);
+  // Community property vs equitable distribution — from the rules table, never a list typed here.
+  const stateCode = String(input.state ?? "").trim().toUpperCase();
+  const rule = ruleForState(stateCode);
+  const isCommunityProperty = rule?.regime === "community";
+  const stateBasis = rule
+    ? divisionSentence(stateCode)
+    : `No rule is on file for "${input.state}". Treated as equitable distribution with no presumed ratio; nothing below is statutory.`;
+  const NOT_STATUTORY = "No state statute produces this ratio; it is a negotiated or illustrative division.";
 
   // Child support estimate (income shares model)
   const combinedIncome = input.spouse1Income + input.spouse2Income;
@@ -70,7 +87,11 @@ export function modelDivorceImpact(input: DivorceInput): DivorceResult {
   // Scenarios
   const scenarios: DivorceScenario[] = [
     {
-      name: isCommunityProperty ? "50/50 Community Property Split" : "Equitable Distribution (50/50)",
+      name: isCommunityProperty ? "50/50 Community Property Split" : "Equitable Distribution (50/50) — ILLUSTRATIVE ONLY",
+      statutory: isCommunityProperty,
+      basis: isCommunityProperty
+        ? `${rule!.name} is a community-property state: marital property divides equally by doctrine.`
+        : `${rule ? rule.name : "This state"} divides property equitably with no statutory ratio; the even split is illustrative, not presumed. ${NOT_STATUTORY}`,
       spouse1Share: equitableSplit,
       spouse2Share: equitableSplit,
       childSupport,
@@ -82,6 +103,8 @@ export function modelDivorceImpact(input: DivorceInput): DivorceResult {
     },
     {
       name: "Negotiated Settlement (60/40)",
+      statutory: false,
+      basis: NOT_STATUTORY,
       spouse1Share: Math.round(netEstate * 0.6),
       spouse2Share: Math.round(netEstate * 0.4),
       childSupport,
@@ -93,6 +116,8 @@ export function modelDivorceImpact(input: DivorceInput): DivorceResult {
     },
     {
       name: "Mediated Settlement",
+      statutory: false,
+      basis: NOT_STATUTORY,
       spouse1Share: Math.round(netEstate * 0.55),
       spouse2Share: Math.round(netEstate * 0.45),
       childSupport: Math.round(childSupport * 0.9),
@@ -132,6 +157,9 @@ export function modelDivorceImpact(input: DivorceInput): DivorceResult {
 
   return {
     scenarios,
+    stateBasis,
+    rulesVersion: RULES_VERSION.version,
+    neverPrinted: RULES_VERSION.neverPrinted,
     totalMaritalEstate: Math.round(netEstate),
     equitableSplit: Math.round(equitableSplit),
     insuranceRecommendations: insuranceRecs,
