@@ -80,6 +80,8 @@ const Mechanisms = lazy(() => import("./pages/portal/Mechanisms"));
 const MechanismDetail = lazy(() => import("./pages/portal/MechanismDetail"));
 const MechanismProviders = lazy(() => import("./pages/portal/MechanismDetail").then((m) => ({ default: m.MechanismProviders })));
 const MechanismSequences = lazy(() => import("./pages/portal/MechanismDetail").then((m) => ({ default: m.MechanismSequences })));
+const SequencePlanner = lazy(() => import("./pages/portal/SequencePlanner"));
+const Thresholds = lazy(() => import("./pages/portal/Thresholds"));
 const ComboRecommender = lazy(() => import("./pages/portal/ComboRecommender"));
 const ClientReportGenerator = lazy(() => import("./pages/portal/ClientReportGenerator"));
 const ExitRating = lazy(() => import("./components/ExitRating"));
@@ -751,6 +753,8 @@ function Router() {
       <Route path="/portal/mechanism/:slug/providers" component={gated(MechanismProviders, "/portal/mechanisms")} />
       <Route path="/portal/mechanism/:slug/sequences" component={gated(MechanismSequences, "/portal/mechanisms")} />
       <Route path="/portal/mechanism/:slug" component={gated(MechanismDetail, "/portal/mechanisms")} />
+      <Route path="/portal/sequence-planner" component={gated(SequencePlanner, "/portal/sequence-planner")} />
+      <Route path="/portal/thresholds" component={gated(Thresholds, "/portal/thresholds")} />
       <Route path="/portal/client-report-generator" component={gated(ClientReportGenerator, "/portal/client-report-generator")} />
 
       {/* Fallback */}

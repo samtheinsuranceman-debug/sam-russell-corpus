@@ -360,6 +360,14 @@ export const CALCULATORS: readonly CalculatorEntry[] = [
     blurb: "Six steps from agreeing terms to the balloon, with the due-on-sale exposure stated where it actually arises.",
     engine: "shared/mechanismDossiers.ts",
     keywords: ["seller financing", "wrap", "wraparound", "owner financing", "due on sale", "note", "hypothecation", "installment sale", "servicing"] },
+  { path: "/portal/sequence-planner", name: "The Sequence Planner", category: "real-estate", featured: true,
+    blurb: "Your portfolio, your goal, every legal sequence up to twenty-four stages — ranked, with capital in and out, the obligation created, the months, and what to watch at each stage. Covenants enforced per property, so thirty houses is thousands of legal plans, counted on the screen.",
+    engine: "shared/sequencePlanner.ts",
+    keywords: ["sequence", "planner", "portfolio", "30 houses", "pay off mortgages", "expand", "double", "blanket loan", "portfolio loan", "sell", "refinance", "stages", "plan", "which order", "what next"] },
+  { path: "/portal/thresholds", name: "The Thresholds", category: "real-estate",
+    blurb: "Every gate a mechanism has to clear, the standard number, every documented way it is lower, and the ones that are a statute or somebody else's contract. Each figure links the page it was read from.",
+    engine: "shared/thresholds.ts",
+    keywords: ["seasoning", "delayed financing", "ltv", "dscr", "coverage", "due on sale", "garn st germain", "seven pay", "mec", "blanket", "partial release", "ten property limit", "loophole", "exception"] },
 
   // ---------------- Markets & Outside Forces ----------------
   { path: "/portal/outside-forces", name: "Outside Forces", category: "markets", featured: true,
