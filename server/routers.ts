@@ -32,6 +32,7 @@ import { forgivenessRouter } from "./forgivenessRouter";
 import { taxScheduleRouter } from "./taxScheduleRouter";
 import { unaskedRouter } from "./unaskedRouter";
 import { siteHealthRouter } from "./siteHealthRouter";
+import { integrationRouter } from "./integrationRouter";
 import { isStrongPassword, PASSWORD_RULE } from "@shared/passwordPolicy";
 import { recordDocumentProvenance } from "./provenance";
 import { systemRouter } from "./_core/systemRouter";
@@ -357,6 +358,7 @@ export const appRouter = router({
   career: careerRouter,
   rental: enterpriseRouter,
   inheritance: inheritanceRouter,
+  integration: integrationRouter,
   iulLinks: iulLinksRouter,
   policyLab: policyLabRouter,
   ltc: ltcRouter,
