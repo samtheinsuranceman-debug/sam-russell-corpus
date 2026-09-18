@@ -1,0 +1,5986 @@
+{
+ "generated": "static-analysis",
+ "count": 309,
+ "pages": [
+  {
+   "route": "/portal/mortgage-killer",
+   "title": "MortgageKiller",
+   "hub": "debt",
+   "hubPath": "/portal/mortgage-killer",
+   "value": 9.2,
+   "surface": "PROMOTE \u2014 hub / top nav",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "ibbotsonModel",
+     "monteCarloEngine",
+     "taxBracketEngine",
+     "timeMachineEngine"
+    ],
+    "persists": true,
+    "charts": 28,
+    "exportsPdf": true
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/multi-gen-wealth",
+   "title": "MultiGenWealthTransfer",
+   "hub": "estate",
+   "hubPath": "/portal/estate-command",
+   "value": 8.7,
+   "surface": "PROMOTE \u2014 hub / top nav",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "taxBracketEngine"
+    ],
+    "persists": true,
+    "charts": 12,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/roth-conversion",
+   "title": "RothConversionSTR",
+   "hub": "tax",
+   "hubPath": "/portal/tax-command",
+   "value": 8.5,
+   "surface": "PROMOTE \u2014 hub / top nav",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "api",
+     "iulCarriers",
+     "monteCarloEngine",
+     "policyMechanics",
+     "taxBracketEngine"
+    ],
+    "persists": true,
+    "charts": 22,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/iul-historical",
+   "title": "IULHistoricalPerformance",
+   "hub": "policy",
+   "hubPath": "/portal/time-machine-calculator",
+   "value": 8.4,
+   "surface": "EMBED \u2014 named tab",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "ibbotsonModel",
+     "taxBracketEngine",
+     "timeMachineEngine"
+    ],
+    "persists": true,
+    "charts": 15,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/charitable-giving",
+   "title": "CharitableGivingOptimizer",
+   "hub": "tax",
+   "hubPath": "/portal/tax-command",
+   "value": 8.4,
+   "surface": "EMBED \u2014 named tab",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "taxBracketEngine"
+    ],
+    "persists": true,
+    "charts": 14,
+    "exportsPdf": true
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/beneficiary-optimization",
+   "title": "BeneficiaryOptimization",
+   "hub": "estate",
+   "hubPath": "/portal/estate-command",
+   "value": 8.0,
+   "surface": "EMBED \u2014 named tab",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "taxBracketEngine"
+    ],
+    "persists": true,
+    "charts": 15,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/batch-slides",
+   "title": "BatchSlides",
+   "hub": "practice",
+   "hubPath": "/portal/practice-command",
+   "value": 8.0,
+   "surface": "EMBED \u2014 named tab",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "slideThemes"
+    ],
+    "persists": true,
+    "charts": 19,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/illustration-compare",
+   "title": "IllustrationCompare",
+   "hub": "policy",
+   "hubPath": "/portal/time-machine-calculator",
+   "value": 8.0,
+   "surface": "EMBED \u2014 named tab",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "taxBracketEngine"
+    ],
+    "persists": true,
+    "charts": 14,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/medicare-irmaa",
+   "title": "MedicareIRMAA",
+   "hub": "tax",
+   "hubPath": "/portal/tax-command",
+   "value": 8.0,
+   "surface": "EMBED \u2014 named tab",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "taxBracketEngine"
+    ],
+    "persists": true,
+    "charts": 17,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/tax-brackets",
+   "title": "TaxBracketVisualizer",
+   "hub": "tax",
+   "hubPath": "/portal/tax-command",
+   "value": 8.0,
+   "surface": "EMBED \u2014 named tab",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "taxBracketEngine"
+    ],
+    "persists": true,
+    "charts": 11,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/tax-loss-harvesting",
+   "title": "TaxLossHarvestingScanner",
+   "hub": "tax",
+   "hubPath": "/portal/tax-command",
+   "value": 8.0,
+   "surface": "EMBED \u2014 named tab",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "taxBracketEngine"
+    ],
+    "persists": true,
+    "charts": 17,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/predictive-analytics",
+   "title": "PredictiveAnalytics",
+   "hub": "scenario",
+   "hubPath": "/portal/scenario-lab",
+   "value": 8.0,
+   "surface": "EMBED \u2014 named tab",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "taxBracketEngine"
+    ],
+    "persists": true,
+    "charts": 12,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/income-gap",
+   "title": "IncomeGapAnalyzer",
+   "hub": "retire",
+   "hubPath": "/portal/ecological-drivers",
+   "value": 8.0,
+   "surface": "EMBED \u2014 named tab",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "taxBracketEngine"
+    ],
+    "persists": true,
+    "charts": 10,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/scenario-play",
+   "title": "MultiScenarioPlayZone",
+   "hub": "scenario",
+   "hubPath": "/portal/scenario-lab",
+   "value": 7.9,
+   "surface": "EMBED \u2014 named tab",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "taxBracketEngine"
+    ],
+    "persists": true,
+    "charts": 12,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/market-stress-test",
+   "title": "MarketScenarioStressTest",
+   "hub": "invest",
+   "hubPath": "/portal/portfolio-command",
+   "value": 7.9,
+   "surface": "EMBED \u2014 named tab",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "taxBracketEngine"
+    ],
+    "persists": true,
+    "charts": 16,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/portfolio-drift",
+   "title": "PortfolioDriftMonitor",
+   "hub": "invest",
+   "hubPath": "/portal/portfolio-command",
+   "value": 7.9,
+   "surface": "EMBED \u2014 named tab",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "taxBracketEngine"
+    ],
+    "persists": true,
+    "charts": 21,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/clients/:id",
+   "title": "ClientDetail",
+   "hub": "debt",
+   "hubPath": "/portal/mortgage-killer",
+   "value": 7.8,
+   "surface": "EMBED \u2014 named tab",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "api"
+    ],
+    "persists": true,
+    "charts": 4,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/fee-transparency",
+   "title": "FeeTransparencyDashboard",
+   "hub": "invest",
+   "hubPath": "/portal/portfolio-command",
+   "value": 7.7,
+   "surface": "EMBED \u2014 named tab",
+   "capabilities": {
+    "computes": true,
+    "engines": [],
+    "persists": true,
+    "charts": 22,
+    "exportsPdf": true
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/tax-opportunities",
+   "title": "TaxOpportunityDetector",
+   "hub": "tax",
+   "hubPath": "/portal/tax-command",
+   "value": 7.7,
+   "surface": "EMBED \u2014 named tab",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "taxBracketEngine"
+    ],
+    "persists": true,
+    "charts": 12,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/client-report-generator",
+   "title": "ClientReportGenerator",
+   "hub": "debt",
+   "hubPath": "/portal/mortgage-killer",
+   "value": 7.7,
+   "surface": "EMBED \u2014 named tab",
+   "capabilities": {
+    "computes": true,
+    "engines": [],
+    "persists": true,
+    "charts": 18,
+    "exportsPdf": true
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/bulk-generation",
+   "title": "BulkGeneration",
+   "hub": "practice",
+   "hubPath": "/portal/practice-command",
+   "value": 7.7,
+   "surface": "EMBED \u2014 named tab",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "api",
+     "taxBracketEngine"
+    ],
+    "persists": true,
+    "charts": 4,
+    "exportsPdf": true
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/ibbotson-charts",
+   "title": "IbbotsonCharts",
+   "hub": "invest",
+   "hubPath": "/portal/portfolio-command",
+   "value": 7.6,
+   "surface": "EMBED \u2014 named tab",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "taxBracketEngine"
+    ],
+    "persists": true,
+    "charts": 16,
+    "exportsPdf": true
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck",
+    "literal-chart-data"
+   ]
+  },
+  {
+   "route": "/portal/succession-planning",
+   "title": "SuccessionPlanningWizard",
+   "hub": "estate",
+   "hubPath": "/portal/estate-command",
+   "value": 7.6,
+   "surface": "EMBED \u2014 named tab",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "taxBracketEngine"
+    ],
+    "persists": true,
+    "charts": 8,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/annuity-memory",
+   "title": "AnnuityMemory",
+   "hub": "insure",
+   "hubPath": "/portal/carrier-command",
+   "value": 7.6,
+   "surface": "EMBED \u2014 named tab",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "annuityData"
+    ],
+    "persists": true,
+    "charts": 11,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/website-usage",
+   "title": "WebsiteUsage",
+   "hub": "report",
+   "hubPath": "/portal/reports",
+   "value": 7.5,
+   "surface": "EMBED \u2014 named tab",
+   "capabilities": {
+    "computes": true,
+    "engines": [],
+    "persists": true,
+    "charts": 14,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/policy-review",
+   "title": "PolicyReview",
+   "hub": "policy",
+   "hubPath": "/portal/time-machine-calculator",
+   "value": 7.5,
+   "surface": "EMBED \u2014 named tab",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "taxBracketEngine"
+    ],
+    "persists": true,
+    "charts": 13,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/advisor-income-calculator",
+   "title": "AdvisorIncomeCalculator",
+   "hub": "practice",
+   "hubPath": "/portal/practice-command",
+   "value": 7.5,
+   "surface": "EMBED \u2014 named tab",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "taxBracketEngine"
+    ],
+    "persists": true,
+    "charts": 16,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/advisor-directory",
+   "title": "AdvisorDirectory",
+   "hub": "practice",
+   "hubPath": "/portal/practice-command",
+   "value": 7.5,
+   "surface": "EMBED \u2014 named tab",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "advisorySummaryData"
+    ],
+    "persists": true,
+    "charts": 12,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/policy-loans",
+   "title": "PolicyLoans",
+   "hub": "debt",
+   "hubPath": "/portal/mortgage-killer",
+   "value": 7.5,
+   "surface": "EMBED \u2014 named tab",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "ibbotsonModel",
+     "taxBracketEngine"
+    ],
+    "persists": true,
+    "charts": 12,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/clients",
+   "title": "Clients",
+   "hub": "debt",
+   "hubPath": "/portal/mortgage-killer",
+   "value": 7.4,
+   "surface": "EMBED \u2014 named tab",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "excelExport"
+    ],
+    "persists": true,
+    "charts": 7,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/ai-policy-review",
+   "title": "AIPolicyReviewGap",
+   "hub": "policy",
+   "hubPath": "/portal/time-machine-calculator",
+   "value": 7.3,
+   "surface": "EMBED \u2014 named tab",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "taxBracketEngine"
+    ],
+    "persists": true,
+    "charts": 13,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/iul-vs-roth",
+   "title": "IULvsRoth",
+   "hub": "tax",
+   "hubPath": "/portal/tax-command",
+   "value": 7.3,
+   "surface": "EMBED \u2014 named tab",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "ibbotsonModel",
+     "taxBracketEngine"
+    ],
+    "persists": true,
+    "charts": 10,
+    "exportsPdf": true
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck",
+    "literal-chart-data"
+   ]
+  },
+  {
+   "route": "/portal/chain",
+   "title": "ChainBuilder",
+   "hub": "misc",
+   "hubPath": "/portal/library",
+   "value": 7.3,
+   "surface": "EMBED \u2014 named tab",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "chainEngine",
+     "chainStore",
+     "macroEngine",
+     "ultraEngine"
+    ],
+    "persists": true,
+    "charts": 0,
+    "exportsPdf": true
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/household-wealth",
+   "title": "HouseholdWealth",
+   "hub": "client",
+   "hubPath": "/portal/clients",
+   "value": 7.2,
+   "surface": "EMBED \u2014 named tab",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "householdWealth",
+     "taxBracketEngine"
+    ],
+    "persists": true,
+    "charts": 19,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/premium-financing",
+   "title": "PremiumFinancing",
+   "hub": "policy",
+   "hubPath": "/portal/time-machine-calculator",
+   "value": 7.2,
+   "surface": "EMBED \u2014 named tab",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "ibbotsonModel",
+     "monteCarloEngine",
+     "taxBracketEngine"
+    ],
+    "persists": true,
+    "charts": 12,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/index-strategies",
+   "title": "IndexStrategyComparison",
+   "hub": "invest",
+   "hubPath": "/portal/portfolio-command",
+   "value": 7.2,
+   "surface": "EMBED \u2014 named tab",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "taxBracketEngine"
+    ],
+    "persists": true,
+    "charts": 12,
+    "exportsPdf": true
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck",
+    "literal-chart-data"
+   ]
+  },
+  {
+   "route": "/portal/financial-vitals",
+   "title": "FinancialVitalsScorecard",
+   "hub": "report",
+   "hubPath": "/portal/reports",
+   "value": 7.1,
+   "surface": "EMBED \u2014 named tab",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 15,
+    "exportsPdf": true
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/athene-pe-plus15",
+   "title": "AthenePEPlus15",
+   "hub": "insure",
+   "hubPath": "/portal/carrier-command",
+   "value": 7.1,
+   "surface": "EMBED \u2014 named tab",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "taxBracketEngine"
+    ],
+    "persists": true,
+    "charts": 12,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/presentation-builder",
+   "title": "PresentationBuilder",
+   "hub": "practice",
+   "hubPath": "/portal/practice-command",
+   "value": 7.1,
+   "surface": "EMBED \u2014 named tab",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 12,
+    "exportsPdf": true
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/compliance",
+   "title": "ComplianceExport",
+   "hub": "compliance",
+   "hubPath": "/portal/compliance-center",
+   "value": 7.1,
+   "surface": "EMBED \u2014 named tab",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 15,
+    "exportsPdf": true
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/income-annuity-top10",
+   "title": "IncomeAnnuityTop10",
+   "hub": "insure",
+   "hubPath": "/portal/carrier-command",
+   "value": 7.1,
+   "surface": "EMBED \u2014 named tab",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "annuityData",
+     "taxBracketEngine"
+    ],
+    "persists": true,
+    "charts": 13,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/ai-slides",
+   "title": "AISlideGenerator",
+   "hub": "practice",
+   "hubPath": "/portal/practice-command",
+   "value": 7.1,
+   "surface": "EMBED \u2014 named tab",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "slideThemes"
+    ],
+    "persists": true,
+    "charts": 6,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/strategy",
+   "title": "StrategyLab",
+   "hub": "scenario",
+   "hubPath": "/portal/scenario-lab",
+   "value": 7.1,
+   "surface": "EMBED \u2014 named tab",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "taxBracketEngine"
+    ],
+    "persists": true,
+    "charts": 10,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/team-management",
+   "title": "TeamManagement",
+   "hub": "practice",
+   "hubPath": "/portal/practice-command",
+   "value": 7.0,
+   "surface": "EMBED \u2014 named tab",
+   "capabilities": {
+    "computes": true,
+    "engines": [],
+    "persists": true,
+    "charts": 17,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/rebalance",
+   "title": "RebalanceAlerts",
+   "hub": "invest",
+   "hubPath": "/portal/portfolio-command",
+   "value": 7.0,
+   "surface": "EMBED \u2014 named tab",
+   "capabilities": {
+    "computes": true,
+    "engines": [],
+    "persists": true,
+    "charts": 22,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/batch-illustration",
+   "title": "BatchIllustration",
+   "hub": "policy",
+   "hubPath": "/portal/time-machine-calculator",
+   "value": 7.0,
+   "surface": "EMBED \u2014 named tab",
+   "capabilities": {
+    "computes": true,
+    "engines": [],
+    "persists": true,
+    "charts": 12,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/lead-generator",
+   "title": "LeadGenerator",
+   "hub": "client",
+   "hubPath": "/portal/clients",
+   "value": 7.0,
+   "surface": "EMBED \u2014 named tab",
+   "capabilities": {
+    "computes": true,
+    "engines": [],
+    "persists": true,
+    "charts": 12,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/retirement-guardrails",
+   "title": "RetirementGuardrails",
+   "hub": "retire",
+   "hubPath": "/portal/ecological-drivers",
+   "value": 7.0,
+   "surface": "EMBED \u2014 named tab",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "taxBracketEngine"
+    ],
+    "persists": true,
+    "charts": 15,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck",
+    "literal-chart-data"
+   ]
+  },
+  {
+   "route": "/portal/scenarios",
+   "title": "ScenarioAdjustments",
+   "hub": "scenario",
+   "hubPath": "/portal/scenario-lab",
+   "value": 7.0,
+   "surface": "EMBED \u2014 named tab",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "taxBracketEngine"
+    ],
+    "persists": true,
+    "charts": 11,
+    "exportsPdf": true
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck",
+    "fabricated-constant"
+   ]
+  },
+  {
+   "route": "/portal/quotes",
+   "title": "CarrierQuotes",
+   "hub": "insure",
+   "hubPath": "/portal/carrier-command",
+   "value": 7.0,
+   "surface": "EMBED \u2014 named tab",
+   "capabilities": {
+    "computes": true,
+    "engines": [],
+    "persists": true,
+    "charts": 12,
+    "exportsPdf": true
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/crypto-corner",
+   "title": "CryptoCurrencyCorner",
+   "hub": "invest",
+   "hubPath": "/portal/portfolio-command",
+   "value": 7.0,
+   "surface": "EMBED \u2014 named tab",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "taxBracketEngine"
+    ],
+    "persists": true,
+    "charts": 20,
+    "exportsPdf": true
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/owner-oversight",
+   "title": "OwnerOversight",
+   "hub": "business",
+   "hubPath": "/portal/business-command",
+   "value": 6.9,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": true,
+    "engines": [],
+    "persists": true,
+    "charts": 14,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/estate-flow",
+   "title": "EstateFlowChart",
+   "hub": "estate",
+   "hubPath": "/portal/estate-command",
+   "value": 6.9,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "taxBracketEngine"
+    ],
+    "persists": true,
+    "charts": 15,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck",
+    "literal-chart-data"
+   ]
+  },
+  {
+   "route": "/portal/tax-return-upload",
+   "title": "TaxReturnUpload",
+   "hub": "tax",
+   "hubPath": "/portal/tax-command",
+   "value": 6.9,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "taxBracketEngine"
+    ],
+    "persists": true,
+    "charts": 18,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck",
+    "literal-chart-data"
+   ]
+  },
+  {
+   "route": "/portal/income-timeline",
+   "title": "IncomeTimeline",
+   "hub": "retire",
+   "hubPath": "/portal/ecological-drivers",
+   "value": 6.9,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "taxBracketEngine"
+    ],
+    "persists": true,
+    "charts": 12,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/rental-enterprise",
+   "title": "RentalEnterprise",
+   "hub": "re",
+   "hubPath": "/portal/real-estate-mogul",
+   "value": 6.9,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "mutualIulCarriers"
+    ],
+    "persists": true,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/compliance-audit-trail",
+   "title": "ComplianceAuditTrail",
+   "hub": "compliance",
+   "hubPath": "/portal/compliance-center",
+   "value": 6.8,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": true,
+    "engines": [],
+    "persists": true,
+    "charts": 13,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/athene-guaranteed-income",
+   "title": "AtheneGuaranteedIncome",
+   "hub": "insure",
+   "hubPath": "/portal/carrier-command",
+   "value": 6.8,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "taxBracketEngine"
+    ],
+    "persists": true,
+    "charts": 5,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/retirement-projection",
+   "title": "RetirementIncomeProjection",
+   "hub": "retire",
+   "hubPath": "/portal/ecological-drivers",
+   "value": 6.7,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "policyMechanics",
+     "taxBracketEngine"
+    ],
+    "persists": true,
+    "charts": 13,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck",
+    "fabricated-constant"
+   ]
+  },
+  {
+   "route": "/portal/meeting-agenda",
+   "title": "MeetingAgenda",
+   "hub": "client",
+   "hubPath": "/portal/clients",
+   "value": 6.7,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 12,
+    "exportsPdf": true
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/advanced-reporting",
+   "title": "AdvancedReporting",
+   "hub": "report",
+   "hubPath": "/portal/reports",
+   "value": 6.7,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 11,
+    "exportsPdf": true
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/lifetime-income",
+   "title": "LifetimeGuaranteedIncome",
+   "hub": "insure",
+   "hubPath": "/portal/carrier-command",
+   "value": 6.7,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "annuityData",
+     "taxBracketEngine"
+    ],
+    "persists": true,
+    "charts": 5,
+    "exportsPdf": true
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/growth-annuities",
+   "title": "GrowthAnnuities",
+   "hub": "insure",
+   "hubPath": "/portal/carrier-command",
+   "value": 6.7,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "annuityData",
+     "taxBracketEngine"
+    ],
+    "persists": true,
+    "charts": 6,
+    "exportsPdf": true
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/sales-story",
+   "title": "SalesStoryBuilder",
+   "hub": "practice",
+   "hubPath": "/portal/practice-command",
+   "value": 6.6,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": true,
+    "engines": [],
+    "persists": true,
+    "charts": 12,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/integrations",
+   "title": "Integrations",
+   "hub": "ops",
+   "hubPath": "/portal/admin",
+   "value": 6.6,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": true,
+    "engines": [],
+    "persists": true,
+    "charts": 9,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/business-owner",
+   "title": "BusinessOwnerPlanning",
+   "hub": "business",
+   "hubPath": "/portal/business-command",
+   "value": 6.6,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "taxBracketEngine"
+    ],
+    "persists": true,
+    "charts": 13,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck",
+    "literal-chart-data"
+   ]
+  },
+  {
+   "route": "/portal/smart-rebalancing",
+   "title": "SmartRebalancingAlerts",
+   "hub": "invest",
+   "hubPath": "/portal/portfolio-command",
+   "value": 6.6,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": true,
+    "engines": [],
+    "persists": true,
+    "charts": 12,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/fia-top10",
+   "title": "FIATop10",
+   "hub": "insure",
+   "hubPath": "/portal/carrier-command",
+   "value": 6.6,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "annuityData",
+     "taxBracketEngine"
+    ],
+    "persists": true,
+    "charts": 15,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck",
+    "literal-chart-data"
+   ]
+  },
+  {
+   "route": "/portal/saved-scenarios",
+   "title": "SavedScenariosHub",
+   "hub": "scenario",
+   "hubPath": "/portal/scenario-lab",
+   "value": 6.5,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "taxBracketEngine"
+    ],
+    "persists": true,
+    "charts": 12,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck",
+    "literal-chart-data"
+   ]
+  },
+  {
+   "route": "/portal/ai-recommender",
+   "title": "AiStrategyRecommender",
+   "hub": "ai",
+   "hubPath": "/portal/ai-brain-hub",
+   "value": 6.5,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "taxBracketEngine"
+    ],
+    "persists": true,
+    "charts": 14,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck",
+    "fabricated-constant"
+   ]
+  },
+  {
+   "route": "/portal/retirement-projection",
+   "title": "TaxAdvantagedGrowth",
+   "hub": "tax",
+   "hubPath": "/portal/tax-command",
+   "value": 6.5,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "ibbotsonModel",
+     "taxBracketEngine"
+    ],
+    "persists": true,
+    "charts": 16,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck",
+    "literal-chart-data"
+   ]
+  },
+  {
+   "route": "/portal/tax-waterfall",
+   "title": "TaxWaterfall",
+   "hub": "tax",
+   "hubPath": "/portal/tax-command",
+   "value": 6.5,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "taxBracketEngine"
+    ],
+    "persists": true,
+    "charts": 14,
+    "exportsPdf": true
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/carrier-settings",
+   "title": "CarrierSettings",
+   "hub": "insure",
+   "hubPath": "/portal/carrier-command",
+   "value": 6.4,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 14,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/quick-quote",
+   "title": "QuickQuote",
+   "hub": "insure",
+   "hubPath": "/portal/carrier-command",
+   "value": 6.4,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "taxBracketEngine"
+    ],
+    "persists": true,
+    "charts": 17,
+    "exportsPdf": false
+   },
+   "trustworthy": false,
+   "integrityFlags": [
+    "ts-nocheck",
+    "frozen-chart"
+   ]
+  },
+  {
+   "route": "/portal/reverse-heloc",
+   "title": "ReverseHeloc",
+   "hub": "debt",
+   "hubPath": "/portal/mortgage-killer",
+   "value": 6.4,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "reverseHeloc",
+     "taxBracketEngine"
+    ],
+    "persists": true,
+    "charts": 9,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/controls",
+   "title": "Controls",
+   "hub": "misc",
+   "hubPath": "/portal/library",
+   "value": 6.4,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "consent"
+    ],
+    "persists": true,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/data-query",
+   "title": "NaturalLanguageQuery",
+   "hub": "ai",
+   "hubPath": "/portal/ai-brain-hub",
+   "value": 6.3,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 11,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/branding",
+   "title": "WorkspaceBranding",
+   "hub": "practice",
+   "hubPath": "/portal/practice-command",
+   "value": 6.3,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 20,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/document-templates",
+   "title": "DocumentTemplates",
+   "hub": "practice",
+   "hubPath": "/portal/practice-command",
+   "value": 6.2,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 10,
+    "exportsPdf": true
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/admin",
+   "title": "EnterpriseAdmin",
+   "hub": "ops",
+   "hubPath": "/portal/admin",
+   "value": 6.2,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": true,
+    "engines": [],
+    "persists": true,
+    "charts": 11,
+    "exportsPdf": false
+   },
+   "trustworthy": false,
+   "integrityFlags": [
+    "ts-nocheck",
+    "frozen-chart"
+   ]
+  },
+  {
+   "route": "/portal/annuity-accumulation-db",
+   "title": "AnnuityAccumulationDB",
+   "hub": "insure",
+   "hubPath": "/portal/carrier-command",
+   "value": 6.1,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "annuityData",
+     "taxBracketEngine"
+    ],
+    "persists": true,
+    "charts": 6,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/goals-planning",
+   "title": "GoalsBasedPlanning",
+   "hub": "discover",
+   "hubPath": "/portal/onboarding",
+   "value": 6.1,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "taxBracketEngine"
+    ],
+    "persists": true,
+    "charts": 14,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck",
+    "literal-chart-data"
+   ]
+  },
+  {
+   "route": "/portal/client-health",
+   "title": "ClientHealthDashboard",
+   "hub": "debt",
+   "hubPath": "/portal/mortgage-killer",
+   "value": 6.0,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": true,
+    "engines": [],
+    "persists": true,
+    "charts": 17,
+    "exportsPdf": false
+   },
+   "trustworthy": false,
+   "integrityFlags": [
+    "ts-nocheck",
+    "frozen-chart"
+   ]
+  },
+  {
+   "route": "/portal/referral-tracker",
+   "title": "ReferralTracker",
+   "hub": "client",
+   "hubPath": "/portal/clients",
+   "value": 6.0,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 14,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/estate-tax",
+   "title": "EstateTax",
+   "hub": "tax",
+   "hubPath": "/portal/tax-command",
+   "value": 6.0,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "taxBracketEngine"
+    ],
+    "persists": true,
+    "charts": 31,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/engagement-score",
+   "title": "ClientEngagementScore",
+   "hub": "engage",
+   "hubPath": "/portal/engagement",
+   "value": 6.0,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": true,
+    "engines": [],
+    "persists": true,
+    "charts": 16,
+    "exportsPdf": false
+   },
+   "trustworthy": false,
+   "integrityFlags": [
+    "ts-nocheck",
+    "frozen-chart"
+   ]
+  },
+  {
+   "route": "/portal/ai",
+   "title": "AiAssist",
+   "hub": "ai",
+   "hubPath": "/portal/ai-brain-hub",
+   "value": 6.0,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 16,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/whisperer",
+   "title": "Whisperer",
+   "hub": "ai",
+   "hubPath": "/portal/ai-brain-hub",
+   "value": 6.0,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "whispererEngine"
+    ],
+    "persists": true,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/audit-timeline",
+   "title": "AuditTimeline",
+   "hub": "compliance",
+   "hubPath": "/portal/compliance-center",
+   "value": 5.9,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": true,
+    "engines": [],
+    "persists": true,
+    "charts": 13,
+    "exportsPdf": false
+   },
+   "trustworthy": false,
+   "integrityFlags": [
+    "ts-nocheck",
+    "frozen-chart"
+   ]
+  },
+  {
+   "route": "/portal/index-backtester",
+   "title": "IndexBacktester",
+   "hub": "misc",
+   "hubPath": "/portal/library",
+   "value": 5.9,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "taxBracketEngine"
+    ],
+    "persists": true,
+    "charts": 15,
+    "exportsPdf": true
+   },
+   "trustworthy": false,
+   "integrityFlags": [
+    "ts-nocheck",
+    "frozen-chart",
+    "literal-chart-data"
+   ]
+  },
+  {
+   "route": "/portal/client-self-service",
+   "title": "ClientSelfServicePortal",
+   "hub": "debt",
+   "hubPath": "/portal/mortgage-killer",
+   "value": 5.9,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 10,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/inflation",
+   "title": "InflationAnalysis",
+   "hub": "invest",
+   "hubPath": "/portal/portfolio-command",
+   "value": 5.9,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "taxBracketEngine"
+    ],
+    "persists": true,
+    "charts": 16,
+    "exportsPdf": true
+   },
+   "trustworthy": false,
+   "integrityFlags": [
+    "ts-nocheck",
+    "frozen-chart"
+   ]
+  },
+  {
+   "route": "/portal/advisor-training",
+   "title": "AdvisorTraining",
+   "hub": "practice",
+   "hubPath": "/portal/practice-command",
+   "value": 5.9,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 15,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/client-scorecard",
+   "title": "ClientScorecard",
+   "hub": "debt",
+   "hubPath": "/portal/mortgage-killer",
+   "value": 5.9,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 10,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/pipeline",
+   "title": "Pipeline",
+   "hub": "client",
+   "hubPath": "/portal/clients",
+   "value": 5.8,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 8,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/real-estate-mogul",
+   "title": "RealEstateMogul",
+   "hub": "re",
+   "hubPath": "/portal/real-estate-mogul",
+   "value": 5.7,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "ibbotsonModel",
+     "taxBracketEngine"
+    ],
+    "persists": true,
+    "charts": 18,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck",
+    "fabricated-constant",
+    "literal-chart-data"
+   ]
+  },
+  {
+   "route": "/portal/house-recycling",
+   "title": "HouseRecyclingStrategy",
+   "hub": "debt",
+   "hubPath": "/portal/mortgage-killer",
+   "value": 5.7,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "taxBracketEngine"
+    ],
+    "persists": true,
+    "charts": 8,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/client-onboarding-auto",
+   "title": "ClientOnboardingAutomation",
+   "hub": "debt",
+   "hubPath": "/portal/mortgage-killer",
+   "value": 5.7,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 17,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/hidden-material",
+   "title": "HiddenMaterial",
+   "hub": "compliance",
+   "hubPath": "/portal/compliance-center",
+   "value": 5.7,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 18,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/axonic-sp500",
+   "title": "AxonicSP500",
+   "hub": "insure",
+   "hubPath": "/portal/carrier-command",
+   "value": 5.7,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "taxBracketEngine"
+    ],
+    "persists": true,
+    "charts": 12,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck",
+    "literal-chart-data"
+   ]
+  },
+  {
+   "route": "/portal/client-comparison",
+   "title": "ClientComparison",
+   "hub": "debt",
+   "hubPath": "/portal/mortgage-killer",
+   "value": 5.6,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 18,
+    "exportsPdf": true
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck",
+    "fabricated-constant"
+   ]
+  },
+  {
+   "route": "/portal/team",
+   "title": "Team",
+   "hub": "practice",
+   "hubPath": "/portal/practice-command",
+   "value": 5.6,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 14,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/advisory-summary",
+   "title": "AdvisorySummary",
+   "hub": "practice",
+   "hubPath": "/portal/practice-command",
+   "value": 5.6,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "advisorySummaryData"
+    ],
+    "persists": true,
+    "charts": 13,
+    "exportsPdf": false
+   },
+   "trustworthy": false,
+   "integrityFlags": [
+    "ts-nocheck",
+    "frozen-chart"
+   ]
+  },
+  {
+   "route": "/portal/leads",
+   "title": "LeadInbox",
+   "hub": "client",
+   "hubPath": "/portal/clients",
+   "value": 5.6,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "leadTypes"
+    ],
+    "persists": true,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/policy-review-checklist",
+   "title": "PolicyReviewChecklist",
+   "hub": "policy",
+   "hubPath": "/portal/time-machine-calculator",
+   "value": 5.5,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 20,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/stale-digest",
+   "title": "StaleDigest",
+   "hub": "compliance",
+   "hubPath": "/portal/compliance-center",
+   "value": 5.5,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": true,
+    "engines": [],
+    "persists": true,
+    "charts": 15,
+    "exportsPdf": false
+   },
+   "trustworthy": false,
+   "integrityFlags": [
+    "ts-nocheck",
+    "frozen-chart"
+   ]
+  },
+  {
+   "route": "/portal/command-center",
+   "title": "OwnerWarRoom",
+   "hub": "report",
+   "hubPath": "/portal/reports",
+   "value": 5.5,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": true,
+    "engines": [],
+    "persists": true,
+    "charts": 14,
+    "exportsPdf": false
+   },
+   "trustworthy": false,
+   "integrityFlags": [
+    "ts-nocheck",
+    "frozen-chart"
+   ]
+  },
+  {
+   "route": "/portal/market-data",
+   "title": "MarketDataDashboard",
+   "hub": "invest",
+   "hubPath": "/portal/portfolio-command",
+   "value": 5.5,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 13,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/financial-assessment",
+   "title": "FinancialAssessment",
+   "hub": "misc",
+   "hubPath": "/portal/library",
+   "value": 5.5,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "clientFactFinder"
+    ],
+    "persists": true,
+    "charts": 0,
+    "exportsPdf": true
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/short-term-rentals",
+   "title": "ShortTermRentals",
+   "hub": "re",
+   "hubPath": "/portal/real-estate-mogul",
+   "value": 5.5,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "strEngine",
+     "strSources",
+     "zipEngine"
+    ],
+    "persists": true,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/seminar-generator",
+   "title": "SeminarGenerator",
+   "hub": "practice",
+   "hubPath": "/portal/practice-command",
+   "value": 5.4,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 14,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck",
+    "literal-chart-data"
+   ]
+  },
+  {
+   "route": "/portal/advisor-chat",
+   "title": "AdvisorChat",
+   "hub": "practice",
+   "hubPath": "/portal/practice-command",
+   "value": 5.4,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 14,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck",
+    "literal-chart-data"
+   ]
+  },
+  {
+   "route": "/portal/client-onboarding",
+   "title": "ClientOnboardingWizard",
+   "hub": "debt",
+   "hubPath": "/portal/mortgage-killer",
+   "value": 5.4,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": true,
+    "engines": [],
+    "persists": true,
+    "charts": 17,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck",
+    "literal-chart-data"
+   ]
+  },
+  {
+   "route": "/portal/meetings",
+   "title": "Meetings",
+   "hub": "client",
+   "hubPath": "/portal/clients",
+   "value": 5.4,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 5,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/carrier-comparison",
+   "title": "CarrierComparison",
+   "hub": "insure",
+   "hubPath": "/portal/carrier-command",
+   "value": 5.4,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "taxBracketEngine"
+    ],
+    "persists": true,
+    "charts": 16,
+    "exportsPdf": false
+   },
+   "trustworthy": false,
+   "integrityFlags": [
+    "ts-nocheck",
+    "frozen-chart"
+   ]
+  },
+  {
+   "route": "/portal/recommendations",
+   "title": "Recommendations",
+   "hub": "ai",
+   "hubPath": "/portal/ai-brain-hub",
+   "value": 5.3,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "taxBracketEngine"
+    ],
+    "persists": false,
+    "charts": 20,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/time-machine-method",
+   "title": "TimeMachineMethod",
+   "hub": "policy",
+   "hubPath": "/portal/time-machine-calculator",
+   "value": 5.3,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "taxBracketEngine",
+     "timeMachineEngine"
+    ],
+    "persists": false,
+    "charts": 11,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/income-for-life",
+   "title": "IncomeForLife",
+   "hub": "retire",
+   "hubPath": "/portal/ecological-drivers",
+   "value": 5.3,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 0,
+    "exportsPdf": true
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/commission-calculator",
+   "title": "CommissionCalculator",
+   "hub": "practice",
+   "hubPath": "/portal/practice-command",
+   "value": 5.2,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 12,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck",
+    "fabricated-constant"
+   ]
+  },
+  {
+   "route": "/portal/time-machine-ag49",
+   "title": "TimeMachineAG49",
+   "hub": "policy",
+   "hubPath": "/portal/time-machine-calculator",
+   "value": 5.2,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "taxBracketEngine"
+    ],
+    "persists": false,
+    "charts": 7,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/competitive",
+   "title": "CompetitiveAnalysis",
+   "hub": "practice",
+   "hubPath": "/portal/practice-command",
+   "value": 5.2,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "taxBracketEngine"
+    ],
+    "persists": true,
+    "charts": 13,
+    "exportsPdf": false
+   },
+   "trustworthy": false,
+   "integrityFlags": [
+    "ts-nocheck",
+    "frozen-chart"
+   ]
+  },
+  {
+   "route": "/portal/time-machine-calculator",
+   "title": "TimeMachineCalculator",
+   "hub": "policy",
+   "hubPath": "/portal/time-machine-calculator",
+   "value": 5.1,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "taxBracketEngine",
+     "timeMachineEngine"
+    ],
+    "persists": false,
+    "charts": 12,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/client-portal-config",
+   "title": "ClientPortal",
+   "hub": "debt",
+   "hubPath": "/portal/mortgage-killer",
+   "value": 5.1,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 10,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/slack",
+   "title": "SlackIntegration",
+   "hub": "ops",
+   "hubPath": "/portal/admin",
+   "value": 5.1,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 6,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/onboarding-v2",
+   "title": "OnboardingWizardV2",
+   "hub": "discover",
+   "hubPath": "/portal/onboarding",
+   "value": 5.1,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 13,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/hot-income",
+   "title": "HotIncome",
+   "hub": "retire",
+   "hubPath": "/portal/ecological-drivers",
+   "value": 5.0,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "taxBracketEngine"
+    ],
+    "persists": false,
+    "charts": 7,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/compliance-monitoring",
+   "title": "ComplianceMonitoringDashboard",
+   "hub": "compliance",
+   "hubPath": "/portal/compliance-center",
+   "value": 5.0,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": true,
+    "engines": [],
+    "persists": true,
+    "charts": 12,
+    "exportsPdf": false
+   },
+   "trustworthy": false,
+   "integrityFlags": [
+    "ts-nocheck",
+    "frozen-chart"
+   ]
+  },
+  {
+   "route": "/portal/compliance-reports",
+   "title": "ComplianceReportGenerator",
+   "hub": "compliance",
+   "hubPath": "/portal/compliance-center",
+   "value": 5.0,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 12,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck",
+    "literal-chart-data"
+   ]
+  },
+  {
+   "route": "/portal/leaderboard",
+   "title": "Leaderboard",
+   "hub": "client",
+   "hubPath": "/portal/clients",
+   "value": 5.0,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 6,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/pricing",
+   "title": "Pricing",
+   "hub": "public",
+   "hubPath": "/",
+   "value": 5.0,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/ultra-calculator",
+   "title": "UltraCalculatorPage",
+   "hub": "public",
+   "hubPath": "/",
+   "value": 5.0,
+   "surface": "EMBED \u2014 accordion section",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "ultraEngine"
+    ],
+    "persists": true,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/referral-tracking",
+   "title": "ReferralTracking",
+   "hub": "client",
+   "hubPath": "/portal/clients",
+   "value": 4.9,
+   "surface": "EMBED \u2014 reference card",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 24,
+    "exportsPdf": false
+   },
+   "trustworthy": false,
+   "integrityFlags": [
+    "ts-nocheck",
+    "frozen-chart"
+   ]
+  },
+  {
+   "route": "/portal/document-vault",
+   "title": "DocumentVault",
+   "hub": "practice",
+   "hubPath": "/portal/practice-command",
+   "value": 4.9,
+   "surface": "EMBED \u2014 reference card",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 15,
+    "exportsPdf": false
+   },
+   "trustworthy": false,
+   "integrityFlags": [
+    "ts-nocheck",
+    "frozen-chart"
+   ]
+  },
+  {
+   "route": "/portal/client-portfolio",
+   "title": "ClientPortfolioDashboard",
+   "hub": "debt",
+   "hubPath": "/portal/mortgage-killer",
+   "value": 4.9,
+   "surface": "EMBED \u2014 reference card",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "mygaWaterfall"
+    ],
+    "persists": false,
+    "charts": 17,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/collaborative-planning",
+   "title": "CollaborativePlanning",
+   "hub": "client",
+   "hubPath": "/portal/clients",
+   "value": 4.9,
+   "surface": "EMBED \u2014 reference card",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 14,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/dashboard",
+   "title": "Dashboard",
+   "hub": "report",
+   "hubPath": "/portal/reports",
+   "value": 4.9,
+   "surface": "EMBED \u2014 reference card",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 10,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/compliance-audit",
+   "title": "ComplianceAuditCenter",
+   "hub": "compliance",
+   "hubPath": "/portal/compliance-center",
+   "value": 4.8,
+   "surface": "EMBED \u2014 reference card",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 21,
+    "exportsPdf": false
+   },
+   "trustworthy": false,
+   "integrityFlags": [
+    "ts-nocheck",
+    "frozen-chart"
+   ]
+  },
+  {
+   "route": "/portal/my-slides",
+   "title": "MySlides",
+   "hub": "practice",
+   "hubPath": "/portal/practice-command",
+   "value": 4.8,
+   "surface": "EMBED \u2014 reference card",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 12,
+    "exportsPdf": false
+   },
+   "trustworthy": false,
+   "integrityFlags": [
+    "ts-nocheck",
+    "frozen-chart"
+   ]
+  },
+  {
+   "route": "/portal/existing-annuities",
+   "title": "ExistingAnnuities",
+   "hub": "insure",
+   "hubPath": "/portal/carrier-command",
+   "value": 4.8,
+   "surface": "EMBED \u2014 reference card",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "annuityData",
+     "taxBracketEngine"
+    ],
+    "persists": true,
+    "charts": 4,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck",
+    "literal-chart-data"
+   ]
+  },
+  {
+   "route": "/portal/client-snapshot",
+   "title": "ClientSnapshotMap",
+   "hub": "debt",
+   "hubPath": "/portal/mortgage-killer",
+   "value": 4.8,
+   "surface": "EMBED \u2014 reference card",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "taxBracketEngine"
+    ],
+    "persists": true,
+    "charts": 5,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck",
+    "literal-chart-data"
+   ]
+  },
+  {
+   "route": "/portal/social-security",
+   "title": "SocialSecurityOptimizer",
+   "hub": "retire",
+   "hubPath": "/portal/ecological-drivers",
+   "value": 4.7,
+   "surface": "EMBED \u2014 reference card",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "taxBracketEngine"
+    ],
+    "persists": false,
+    "charts": 14,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck",
+    "fabricated-constant"
+   ]
+  },
+  {
+   "route": "/portal/monitoring-agreement",
+   "title": "SupervisorMonitoringAgreement",
+   "hub": "compliance",
+   "hubPath": "/portal/compliance-center",
+   "value": 4.7,
+   "surface": "EMBED \u2014 reference card",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 13,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/war-room",
+   "title": "WarRoom",
+   "hub": "report",
+   "hubPath": "/portal/reports",
+   "value": 4.7,
+   "surface": "EMBED \u2014 reference card",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 1,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/knowledge",
+   "title": "Knowledge",
+   "hub": "ai",
+   "hubPath": "/portal/ai-brain-hub",
+   "value": 4.7,
+   "surface": "EMBED \u2014 reference card",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 5,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/ai-advisor",
+   "title": "AIFinancialAdvisor",
+   "hub": "practice",
+   "hubPath": "/portal/practice-command",
+   "value": 4.7,
+   "surface": "EMBED \u2014 reference card",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "clientFactFinder"
+    ],
+    "persists": true,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/myga-fixed-rate",
+   "title": "MYGAFixedRate",
+   "hub": "insure",
+   "hubPath": "/portal/carrier-command",
+   "value": 4.6,
+   "surface": "EMBED \u2014 reference card",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "annuityData",
+     "mygaWaterfall",
+     "taxBracketEngine"
+    ],
+    "persists": false,
+    "charts": 23,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck",
+    "literal-chart-data"
+   ]
+  },
+  {
+   "route": "/portal/withdrawal-sequencing",
+   "title": "WithdrawalSequencing",
+   "hub": "retire",
+   "hubPath": "/portal/ecological-drivers",
+   "value": 4.6,
+   "surface": "EMBED \u2014 reference card",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "taxBracketEngine"
+    ],
+    "persists": true,
+    "charts": 10,
+    "exportsPdf": false
+   },
+   "trustworthy": false,
+   "integrityFlags": [
+    "ts-nocheck",
+    "frozen-chart",
+    "fabricated-constant"
+   ]
+  },
+  {
+   "route": "/onboarding",
+   "title": "Onboarding",
+   "hub": "discover",
+   "hubPath": "/portal/onboarding",
+   "value": 4.6,
+   "surface": "EMBED \u2014 reference card",
+   "capabilities": {
+    "computes": true,
+    "engines": [],
+    "persists": true,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/client-files",
+   "title": "ClientFiles",
+   "hub": "debt",
+   "hubPath": "/portal/mortgage-killer",
+   "value": 4.6,
+   "surface": "EMBED \u2014 reference card",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 17,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/scenario-side-by-side",
+   "title": "ScenarioSideBySide",
+   "hub": "scenario",
+   "hubPath": "/portal/scenario-lab",
+   "value": 4.6,
+   "surface": "EMBED \u2014 reference card",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "taxBracketEngine"
+    ],
+    "persists": true,
+    "charts": 15,
+    "exportsPdf": false
+   },
+   "trustworthy": false,
+   "integrityFlags": [
+    "ts-nocheck",
+    "frozen-chart",
+    "literal-chart-data"
+   ]
+  },
+  {
+   "route": "/portal/zip-engine",
+   "title": "ZipEngine",
+   "hub": "misc",
+   "hubPath": "/portal/library",
+   "value": 4.6,
+   "surface": "EMBED \u2014 reference card",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "zipEngine"
+    ],
+    "persists": true,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/ecological-drivers",
+   "title": "EcologicalDrivers",
+   "hub": "retire",
+   "hubPath": "/portal/ecological-drivers",
+   "value": 4.5,
+   "surface": "EMBED \u2014 reference card",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 27,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck",
+    "literal-chart-data"
+   ]
+  },
+  {
+   "route": "/portal/webhooks",
+   "title": "Webhooks",
+   "hub": "practice",
+   "hubPath": "/portal/practice-command",
+   "value": 4.5,
+   "surface": "EMBED \u2014 reference card",
+   "capabilities": {
+    "computes": true,
+    "engines": [],
+    "persists": true,
+    "charts": 12,
+    "exportsPdf": false
+   },
+   "trustworthy": false,
+   "integrityFlags": [
+    "ts-nocheck",
+    "frozen-chart",
+    "literal-chart-data"
+   ]
+  },
+  {
+   "route": "/portal/mortgage-killer-v3",
+   "title": "MortgageKillerV3",
+   "hub": "debt",
+   "hubPath": "/portal/mortgage-killer",
+   "value": 4.5,
+   "surface": "MERGE into canonical version",
+   "capabilities": {
+    "computes": true,
+    "engines": [],
+    "persists": false,
+    "charts": 24,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/welcome",
+   "title": "OnboardingWizard",
+   "hub": "discover",
+   "hubPath": "/portal/onboarding",
+   "value": 4.5,
+   "surface": "MERGE into canonical version",
+   "capabilities": {
+    "computes": true,
+    "engines": [],
+    "persists": true,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/nerve-center",
+   "title": "NerveCenter",
+   "hub": "misc",
+   "hubPath": "/portal/library",
+   "value": 4.5,
+   "surface": "EMBED \u2014 reference card",
+   "capabilities": {
+    "computes": true,
+    "engines": [],
+    "persists": true,
+    "charts": 1,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/policy-cost-lab",
+   "title": "PolicyCostLab",
+   "hub": "policy",
+   "hubPath": "/portal/time-machine-calculator",
+   "value": 4.5,
+   "surface": "EMBED \u2014 reference card",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/will-writer",
+   "title": "WillWriter",
+   "hub": "estate",
+   "hubPath": "/portal/estate-command",
+   "value": 4.4,
+   "surface": "EMBED \u2014 reference card",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/household-genome",
+   "title": "HouseholdGenome",
+   "hub": "client",
+   "hubPath": "/portal/clients",
+   "value": 4.4,
+   "surface": "EMBED \u2014 reference card",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "genomeStrategyFit",
+     "householdGenome",
+     "wealthGenomeFactors"
+    ],
+    "persists": false,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/for/:slug",
+   "title": "SpecialtyPage",
+   "hub": "public",
+   "hubPath": "/",
+   "value": 4.4,
+   "surface": "EMBED \u2014 reference card",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "careerEngine"
+    ],
+    "persists": true,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/divorce-calculator",
+   "title": "DivorceCalculator",
+   "hub": "risk",
+   "hubPath": "/portal/risk-command",
+   "value": 4.3,
+   "surface": "EMBED \u2014 reference card",
+   "capabilities": {
+    "computes": true,
+    "engines": [],
+    "persists": false,
+    "charts": 10,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "literal-chart-data"
+   ]
+  },
+  {
+   "route": "/portal/video-proposals",
+   "title": "VideoProposalGenerator",
+   "hub": "report",
+   "hubPath": "/portal/reports",
+   "value": 4.3,
+   "surface": "EMBED \u2014 reference card",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 1,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/email-campaigns",
+   "title": "EmailCampaignManager",
+   "hub": "practice",
+   "hubPath": "/portal/practice-command",
+   "value": 4.3,
+   "surface": "EMBED \u2014 reference card",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 5,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/advisor",
+   "title": "RoleDashboard",
+   "hub": "report",
+   "hubPath": "/portal/reports",
+   "value": 4.3,
+   "surface": "EMBED \u2014 reference card",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "aiIntakeScript"
+    ],
+    "persists": true,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/hubspot",
+   "title": "HubSpotSync",
+   "hub": "ops",
+   "hubPath": "/portal/admin",
+   "value": 4.2,
+   "surface": "EMBED \u2014 reference card",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 12,
+    "exportsPdf": false
+   },
+   "trustworthy": false,
+   "integrityFlags": [
+    "ts-nocheck",
+    "frozen-chart"
+   ]
+  },
+  {
+   "route": "/portal/commission-tracker",
+   "title": "CommissionTracker",
+   "hub": "practice",
+   "hubPath": "/portal/practice-command",
+   "value": 4.2,
+   "surface": "EMBED \u2014 reference card",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 22,
+    "exportsPdf": false
+   },
+   "trustworthy": false,
+   "integrityFlags": [
+    "ts-nocheck",
+    "frozen-chart"
+   ]
+  },
+  {
+   "route": "/portal/compliance-alerts",
+   "title": "ComplianceAlerts",
+   "hub": "compliance",
+   "hubPath": "/portal/compliance-center",
+   "value": 4.2,
+   "surface": "EMBED \u2014 reference card",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 15,
+    "exportsPdf": false
+   },
+   "trustworthy": false,
+   "integrityFlags": [
+    "ts-nocheck",
+    "frozen-chart"
+   ]
+  },
+  {
+   "route": "/portal/fia-collateral",
+   "title": "FIACollateralStrategy",
+   "hub": "insure",
+   "hubPath": "/portal/carrier-command",
+   "value": 4.2,
+   "surface": "EMBED \u2014 reference card",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "fiaCollateralEngine",
+     "taxBracketEngine"
+    ],
+    "persists": false,
+    "charts": 8,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/forgiveness",
+   "title": "Forgiveness",
+   "hub": "misc",
+   "hubPath": "/portal/library",
+   "value": 4.2,
+   "surface": "EMBED \u2014 reference card",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/tax-schedule",
+   "title": "TaxSchedule",
+   "hub": "tax",
+   "hubPath": "/portal/tax-command",
+   "value": 4.2,
+   "surface": "EMBED \u2014 reference card",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/mortgage-ledger",
+   "title": "MortgageLedger",
+   "hub": "debt",
+   "hubPath": "/portal/mortgage-killer",
+   "value": 4.1,
+   "surface": "EMBED \u2014 reference card",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "mortgageLedger"
+    ],
+    "persists": true,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/client-intake",
+   "title": "ClientIntakeInterview",
+   "hub": "debt",
+   "hubPath": "/portal/mortgage-killer",
+   "value": 4.0,
+   "surface": "EMBED \u2014 reference card",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 18,
+    "exportsPdf": false
+   },
+   "trustworthy": false,
+   "integrityFlags": [
+    "ts-nocheck",
+    "frozen-chart"
+   ]
+  },
+  {
+   "route": "/portal/estate-document-gen",
+   "title": "EstateDocumentGenerator",
+   "hub": "estate",
+   "hubPath": "/portal/estate-command",
+   "value": 4.0,
+   "surface": "EMBED \u2014 reference card",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 20,
+    "exportsPdf": false
+   },
+   "trustworthy": false,
+   "integrityFlags": [
+    "ts-nocheck",
+    "frozen-chart"
+   ]
+  },
+  {
+   "route": "/portal/workflow-automations",
+   "title": "WorkflowAutomations",
+   "hub": "practice",
+   "hubPath": "/portal/practice-command",
+   "value": 4.0,
+   "surface": "EMBED \u2014 reference card",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 17,
+    "exportsPdf": false
+   },
+   "trustworthy": false,
+   "integrityFlags": [
+    "ts-nocheck",
+    "frozen-chart"
+   ]
+  },
+  {
+   "route": "/video/:token",
+   "title": "VideoViewer",
+   "hub": "public",
+   "hubPath": "/",
+   "value": 4.0,
+   "surface": "EMBED \u2014 reference card",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/shared/:token",
+   "title": "SharedProjection",
+   "hub": "public",
+   "hubPath": "/",
+   "value": 4.0,
+   "surface": "EMBED \u2014 reference card",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 2,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/erosion",
+   "title": "Erosion",
+   "hub": "misc",
+   "hubPath": "/portal/library",
+   "value": 4.0,
+   "surface": "EMBED \u2014 reference card",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/sequence-planner",
+   "title": "SequencePlanner",
+   "hub": "retire",
+   "hubPath": "/portal/ecological-drivers",
+   "value": 4.0,
+   "surface": "EMBED \u2014 reference card",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "sequenceArchetypes",
+     "sequencePlanner",
+     "thresholds"
+    ],
+    "persists": false,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/voice-plan",
+   "title": "VoicePlanBuilder",
+   "hub": "ai",
+   "hubPath": "/portal/ai-brain-hub",
+   "value": 3.9,
+   "surface": "EMBED \u2014 reference card",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 17,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck",
+    "literal-chart-data"
+   ]
+  },
+  {
+   "route": "/portal/str-strategy",
+   "title": "STRStrategy",
+   "hub": "re",
+   "hubPath": "/portal/real-estate-mogul",
+   "value": 3.9,
+   "surface": "EMBED \u2014 reference card",
+   "capabilities": {
+    "computes": true,
+    "engines": [],
+    "persists": false,
+    "charts": 11,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/retirement-projection",
+   "title": "ClientPortalView",
+   "hub": "debt",
+   "hubPath": "/portal/mortgage-killer",
+   "value": 3.9,
+   "surface": "EMBED \u2014 reference card",
+   "capabilities": {
+    "computes": true,
+    "engines": [],
+    "persists": true,
+    "charts": 2,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/match-and-deploy",
+   "title": "MatchAndDeployPage",
+   "hub": "public",
+   "hubPath": "/",
+   "value": 3.9,
+   "surface": "EMBED \u2014 reference card",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": false,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/plan-ledger",
+   "title": "PlanLedger",
+   "hub": "misc",
+   "hubPath": "/portal/library",
+   "value": 3.9,
+   "surface": "EMBED \u2014 reference card",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "clientFactFinder",
+     "planLedger"
+    ],
+    "persists": true,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/mechanism/:slug",
+   "title": "MechanismDetail",
+   "hub": "retire",
+   "hubPath": "/portal/ecological-drivers",
+   "value": 3.7,
+   "surface": "EMBED \u2014 reference card",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "cycleEngine",
+     "mechanismDossiers",
+     "sequenceOrderings"
+    ],
+    "persists": false,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/arena",
+   "title": "Arena",
+   "hub": "misc",
+   "hubPath": "/portal/library",
+   "value": 3.6,
+   "surface": "EMBED \u2014 reference card",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/infinite-banking",
+   "title": "InfiniteBanking",
+   "hub": "misc",
+   "hubPath": "/portal/library",
+   "value": 3.6,
+   "surface": "EMBED \u2014 reference card",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "cycleEngine",
+     "cycleScenarios"
+    ],
+    "persists": false,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/long-term-care",
+   "title": "LongTermCare",
+   "hub": "insure",
+   "hubPath": "/portal/carrier-command",
+   "value": 3.6,
+   "surface": "EMBED \u2014 reference card",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/risk-tolerance",
+   "title": "RiskToleranceScoring",
+   "hub": "misc",
+   "hubPath": "/portal/library",
+   "value": 3.5,
+   "surface": "EMBED \u2014 reference card",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 6,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/client-intake-recommender",
+   "title": "ClientIntakeRecommender",
+   "hub": "ai",
+   "hubPath": "/portal/ai-brain-hub",
+   "value": 3.5,
+   "surface": "EMBED \u2014 reference card",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": false,
+    "charts": 4,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/affiliate-links",
+   "title": "AffiliateLinkManager",
+   "hub": "practice",
+   "hubPath": "/portal/practice-command",
+   "value": 3.5,
+   "surface": "EMBED \u2014 reference card",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 7,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/planning-cases",
+   "title": "PlanningCases",
+   "hub": "misc",
+   "hubPath": "/portal/library",
+   "value": 3.5,
+   "surface": "EMBED \u2014 reference card",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/qbi-optimizer",
+   "title": "QbiOptimizer",
+   "hub": "tax",
+   "hubPath": "/portal/tax-command",
+   "value": 3.5,
+   "surface": "EMBED \u2014 reference card",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "qbiDeduction",
+     "retirementLimits"
+    ],
+    "persists": false,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/recin",
+   "title": "RECINWorkspace",
+   "hub": "practice",
+   "hubPath": "/portal/practice-command",
+   "value": 3.4,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 1,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/trial",
+   "title": "TrialLogin",
+   "hub": "public",
+   "hubPath": "/",
+   "value": 3.4,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "api",
+     "branding"
+    ],
+    "persists": false,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/education",
+   "title": "EducationHub",
+   "hub": "education",
+   "hubPath": "/portal/education",
+   "value": 3.2,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 16,
+    "exportsPdf": false
+   },
+   "trustworthy": false,
+   "integrityFlags": [
+    "ts-nocheck",
+    "frozen-chart"
+   ]
+  },
+  {
+   "route": "/portal",
+   "title": "InfiniteScroll",
+   "hub": "misc",
+   "hubPath": "/portal/library",
+   "value": 3.2,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/couples",
+   "title": "CouplesMode",
+   "hub": "misc",
+   "hubPath": "/portal/library",
+   "value": 3.2,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/genome-strategies",
+   "title": "GenomeStrategies",
+   "hub": "discover",
+   "hubPath": "/portal/onboarding",
+   "value": 3.2,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "genomeStrategyFit",
+     "wealthGenomeFactors"
+    ],
+    "persists": false,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/patent-showcase",
+   "title": "PatentShowcase",
+   "hub": "misc",
+   "hubPath": "/portal/library",
+   "value": 3.2,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "patentCatalog",
+     "patentStatus"
+    ],
+    "persists": false,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/register",
+   "title": "Register",
+   "hub": "public",
+   "hubPath": "/",
+   "value": 3.2,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "passwordPolicy"
+    ],
+    "persists": true,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/reset-password",
+   "title": "ResetPassword",
+   "hub": "public",
+   "hubPath": "/",
+   "value": 3.2,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "passwordPolicy"
+    ],
+    "persists": true,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/forgot-password",
+   "title": "ForgotPassword",
+   "hub": "public",
+   "hubPath": "/",
+   "value": 3.2,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/mechanisms",
+   "title": "Mechanisms",
+   "hub": "misc",
+   "hubPath": "/portal/library",
+   "value": 3.2,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "cycleEngine",
+     "mechanismDossiers",
+     "sequenceOrderings"
+    ],
+    "persists": false,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/agency-tutorial",
+   "title": "AgencyTutorial",
+   "hub": "education",
+   "hubPath": "/portal/education",
+   "value": 3.1,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/voice",
+   "title": "VoiceStudio",
+   "hub": "misc",
+   "hubPath": "/portal/library",
+   "value": 3.1,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/inheritance",
+   "title": "Inheritance",
+   "hub": "estate",
+   "hubPath": "/portal/estate-command",
+   "value": 3.0,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/agent-tutorial",
+   "title": "IndividualAgentTutorial",
+   "hub": "practice",
+   "hubPath": "/portal/practice-command",
+   "value": 2.8,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 4,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck",
+    "literal-chart-data"
+   ]
+  },
+  {
+   "route": "/portal/morning-ritual",
+   "title": "MorningRitual",
+   "hub": "misc",
+   "hubPath": "/portal/library",
+   "value": 2.8,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/daily-briefing",
+   "title": "DailyBriefing",
+   "hub": "misc",
+   "hubPath": "/portal/library",
+   "value": 2.8,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/rewards",
+   "title": "RewardsVault",
+   "hub": "engage",
+   "hubPath": "/portal/engagement",
+   "value": 2.8,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/iul-engine",
+   "title": "IulEngine",
+   "hub": "policy",
+   "hubPath": "/portal/time-machine-calculator",
+   "value": 2.8,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/login",
+   "title": "Login",
+   "hub": "public",
+   "hubPath": "/",
+   "value": 2.7,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "aiIntakeScript",
+     "api",
+     "loginDisclaimers"
+    ],
+    "persists": false,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/calculators",
+   "title": "MassiveCalculatorsPage",
+   "hub": "public",
+   "hubPath": "/",
+   "value": 2.7,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "calculatorCatalog"
+    ],
+    "persists": false,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/liquidity-routes",
+   "title": "LiquidityRoutes",
+   "hub": "misc",
+   "hubPath": "/portal/library",
+   "value": 2.7,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "liquidityRoutes"
+    ],
+    "persists": false,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/how-a-figure-is-made",
+   "title": "HowAFigureIsMade",
+   "hub": "education",
+   "hubPath": "/portal/education",
+   "value": 2.7,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "provenance"
+    ],
+    "persists": false,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/career-path",
+   "title": "CareerPathPage",
+   "hub": "public",
+   "hubPath": "/",
+   "value": 2.7,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": false,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/certifications",
+   "title": "CertificationsPage",
+   "hub": "public",
+   "hubPath": "/",
+   "value": 2.7,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": false,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/auto-closer",
+   "title": "AutoCloserPage",
+   "hub": "public",
+   "hubPath": "/",
+   "value": 2.7,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": false,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/deal-room",
+   "title": "DealRoomPage",
+   "hub": "public",
+   "hubPath": "/",
+   "value": 2.7,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": false,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/secondary-information",
+   "title": "SecondaryInformation",
+   "hub": "misc",
+   "hubPath": "/portal/library",
+   "value": 2.7,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "secondaryCatalog"
+    ],
+    "persists": false,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/risk-score",
+   "title": "RiskScorePage",
+   "hub": "public",
+   "hubPath": "/",
+   "value": 2.7,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": false,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/thresholds",
+   "title": "Thresholds",
+   "hub": "misc",
+   "hubPath": "/portal/library",
+   "value": 2.7,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "cycleEngine",
+     "thresholds"
+    ],
+    "persists": false,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/oil-gas",
+   "title": "OilGasPage",
+   "hub": "public",
+   "hubPath": "/",
+   "value": 2.7,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": false,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/index-backtester-pro",
+   "title": "IndexBacktesterPage",
+   "hub": "public",
+   "hubPath": "/",
+   "value": 2.7,
+   "surface": "MERGE into canonical version",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": false,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/sphere",
+   "title": "Sphere",
+   "hub": "misc",
+   "hubPath": "/portal/library",
+   "value": 2.7,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "sphere"
+    ],
+    "persists": false,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/404",
+   "title": "NotFound",
+   "hub": "public",
+   "hubPath": "/",
+   "value": 2.7,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": false,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/executive",
+   "title": "ExecutiveEntrance",
+   "hub": "public",
+   "hubPath": "/",
+   "value": 2.7,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": false,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/trusts",
+   "title": "TrustsPage",
+   "hub": "estate",
+   "hubPath": "/portal/estate-command",
+   "value": 2.6,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": false,
+    "charts": 4,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/comparison",
+   "title": "ComparisonDashboard",
+   "hub": "scenario",
+   "hubPath": "/portal/scenario-lab",
+   "value": 2.6,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": false,
+    "charts": 8,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/strategy-compare",
+   "title": "StrategyCompareTool",
+   "hub": "scenario",
+   "hubPath": "/portal/scenario-lab",
+   "value": 2.6,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": false,
+    "charts": 7,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/tax-combos/:id",
+   "title": "ComboDetail",
+   "hub": "tax",
+   "hubPath": "/portal/tax-command",
+   "value": 2.5,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": true,
+    "engines": [],
+    "persists": false,
+    "charts": 19,
+    "exportsPdf": false
+   },
+   "trustworthy": false,
+   "integrityFlags": [
+    "frozen-chart"
+   ]
+  },
+  {
+   "route": "/portal/secret-secrets/:id",
+   "title": "SecretDetail",
+   "hub": "education",
+   "hubPath": "/portal/education",
+   "value": 2.5,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": true,
+    "engines": [],
+    "persists": false,
+    "charts": 16,
+    "exportsPdf": false
+   },
+   "trustworthy": false,
+   "integrityFlags": [
+    "frozen-chart"
+   ]
+  },
+  {
+   "route": "/portal/russell-number",
+   "title": "RussellNumber",
+   "hub": "misc",
+   "hubPath": "/portal/library",
+   "value": 2.5,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": true,
+    "engines": [],
+    "persists": true,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/invite",
+   "title": "AcceptInvite",
+   "hub": "public",
+   "hubPath": "/",
+   "value": 2.5,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/for",
+   "title": "SpecialtyIndexPage",
+   "hub": "public",
+   "hubPath": "/",
+   "value": 2.5,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "careerEngine"
+    ],
+    "persists": true,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/the-strategy-table",
+   "title": "TheStrategyTable",
+   "hub": "misc",
+   "hubPath": "/portal/library",
+   "value": 2.2,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": true,
+    "engines": [
+     "policyMechanics"
+    ],
+    "persists": false,
+    "charts": 2,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck",
+    "fabricated-constant"
+   ]
+  },
+  {
+   "route": "/portal/str-tax-eliminator",
+   "title": "STRTaxEliminatorPage",
+   "hub": "re",
+   "hubPath": "/portal/real-estate-mogul",
+   "value": 2.2,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": false,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/strategy-combos",
+   "title": "ComboRecommender",
+   "hub": "ai",
+   "hubPath": "/portal/ai-brain-hub",
+   "value": 2.2,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/mortgage-killer-v2",
+   "title": "MortgageKillerV2Page",
+   "hub": "debt",
+   "hubPath": "/portal/mortgage-killer",
+   "value": 2.2,
+   "surface": "MERGE into canonical version",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": false,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/site-health",
+   "title": "SiteHealth",
+   "hub": "misc",
+   "hubPath": "/portal/library",
+   "value": 2.2,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/carrier-rates",
+   "title": "CarrierRatings",
+   "hub": "insure",
+   "hubPath": "/portal/carrier-command",
+   "value": 2.2,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/pet",
+   "title": "PetSystem",
+   "hub": "engage",
+   "hubPath": "/portal/engagement",
+   "value": 2.0,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/daily-discovery",
+   "title": "DailyDiscovery",
+   "hub": "discover",
+   "hubPath": "/portal/onboarding",
+   "value": 2.0,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/my-world",
+   "title": "MyWorld",
+   "hub": "misc",
+   "hubPath": "/portal/library",
+   "value": 2.0,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/interop-engine",
+   "title": "InteropEnginePage",
+   "hub": "public",
+   "hubPath": "/",
+   "value": 2.0,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": false,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/explore",
+   "title": "ExplorePage",
+   "hub": "public",
+   "hubPath": "/",
+   "value": 2.0,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": false,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/command",
+   "title": "CommandPage",
+   "hub": "public",
+   "hubPath": "/",
+   "value": 2.0,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": false,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/compete",
+   "title": "CompetePage",
+   "hub": "public",
+   "hubPath": "/",
+   "value": 2.0,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": false,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/earn",
+   "title": "EarnPage",
+   "hub": "public",
+   "hubPath": "/",
+   "value": 2.0,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": false,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/privacy",
+   "title": "Legal",
+   "hub": "public",
+   "hubPath": "/",
+   "value": 2.0,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": false,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/the-experience",
+   "title": "TheExperiencePage",
+   "hub": "public",
+   "hubPath": "/",
+   "value": 2.0,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": false,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/forgot-password",
+   "title": "ManagedAuthLegacy",
+   "hub": "public",
+   "hubPath": "/",
+   "value": 2.0,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": false,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/transcend",
+   "title": "TranscendPage",
+   "hub": "public",
+   "hubPath": "/",
+   "value": 2.0,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": false,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/support-desk",
+   "title": "SupportPage",
+   "hub": "public",
+   "hubPath": "/",
+   "value": 2.0,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": false,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/legal-payment-folder",
+   "title": "LegalPaymentFolder",
+   "hub": "public",
+   "hubPath": "/",
+   "value": 2.0,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": false,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/avatar-twins",
+   "title": "AvatarTwins",
+   "hub": "engage",
+   "hubPath": "/portal/engagement",
+   "value": 1.9,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/wrapped",
+   "title": "RussellWrapped",
+   "hub": "misc",
+   "hubPath": "/portal/library",
+   "value": 1.9,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/connections",
+   "title": "Connections",
+   "hub": "misc",
+   "hubPath": "/portal/library",
+   "value": 1.9,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/system-health",
+   "title": "SystemHealth",
+   "hub": "ops",
+   "hubPath": "/portal/admin",
+   "value": 1.9,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/time-machine",
+   "title": "TimeMachine",
+   "hub": "policy",
+   "hubPath": "/portal/time-machine-calculator",
+   "value": 1.8,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/shared-slides/:token",
+   "title": "SharedSlidesViewer",
+   "hub": "practice",
+   "hubPath": "/portal/practice-command",
+   "value": 1.8,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/story-generator",
+   "title": "ClientStoryGenerator",
+   "hub": "practice",
+   "hubPath": "/portal/practice-command",
+   "value": 1.8,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/the-map",
+   "title": "TheMap",
+   "hub": "misc",
+   "hubPath": "/portal/library",
+   "value": 1.8,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": false,
+    "charts": 4,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/outside-forces",
+   "title": "OutsideForces",
+   "hub": "misc",
+   "hubPath": "/portal/library",
+   "value": 1.7,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/black-mirror",
+   "title": "BlackMirror",
+   "hub": "misc",
+   "hubPath": "/portal/library",
+   "value": 1.6,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": false,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/social",
+   "title": "SocialNarcotic",
+   "hub": "misc",
+   "hubPath": "/portal/library",
+   "value": 1.6,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": false,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/endgame",
+   "title": "Endgame",
+   "hub": "misc",
+   "hubPath": "/portal/library",
+   "value": 1.6,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": false,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/the-legacy",
+   "title": "TheLegacy",
+   "hub": "estate",
+   "hubPath": "/portal/estate-command",
+   "value": 1.5,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": false,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/ai-brain-hub",
+   "title": "AIBrainHubPage",
+   "hub": "ai",
+   "hubPath": "/portal/ai-brain-hub",
+   "value": 1.5,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": false,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/toilet",
+   "title": "ToiletDashboard",
+   "hub": "report",
+   "hubPath": "/portal/reports",
+   "value": 1.5,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/time-lapse",
+   "title": "TimeLapse",
+   "hub": "policy",
+   "hubPath": "/portal/time-machine-calculator",
+   "value": 1.4,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/war-story-generator",
+   "title": "WarStoryGenerator",
+   "hub": "practice",
+   "hubPath": "/portal/practice-command",
+   "value": 1.4,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/interior",
+   "title": "Interior",
+   "hub": "misc",
+   "hubPath": "/portal/library",
+   "value": 1.4,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": false,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/wealth-genome",
+   "title": "WealthGenomePage",
+   "hub": "discover",
+   "hubPath": "/portal/onboarding",
+   "value": 1.4,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/my-journey",
+   "title": "MyJourney",
+   "hub": "misc",
+   "hubPath": "/portal/library",
+   "value": 1.4,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/alt-credit/:slug",
+   "title": "AltCreditDetail",
+   "hub": "misc",
+   "hubPath": "/portal/library",
+   "value": 1.2,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": false,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/physicians-edge",
+   "title": "PhysiciansEdge",
+   "hub": "misc",
+   "hubPath": "/portal/library",
+   "value": 1.2,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": false,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/revenue-guarantee",
+   "title": "RevenueGuarantee",
+   "hub": "misc",
+   "hubPath": "/portal/library",
+   "value": 1.2,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": false,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/alt-credit",
+   "title": "AltCreditHub",
+   "hub": "misc",
+   "hubPath": "/portal/library",
+   "value": 1.1,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": false,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/the-arrival",
+   "title": "TheArrival",
+   "hub": "misc",
+   "hubPath": "/portal/library",
+   "value": 1.1,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": false,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/tax-combos",
+   "title": "TaxFreeWealthCombos",
+   "hub": "tax",
+   "hubPath": "/portal/tax-command",
+   "value": 1.1,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": false,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/income-annuity",
+   "title": "IncomeAnnuityPage",
+   "hub": "insure",
+   "hubPath": "/portal/carrier-command",
+   "value": 1.1,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": false,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/secret-secrets",
+   "title": "SecretSecrets",
+   "hub": "education",
+   "hubPath": "/portal/education",
+   "value": 1.1,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": false,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/annuity-explorer",
+   "title": "AnnuityExplorerPage",
+   "hub": "insure",
+   "hubPath": "/portal/carrier-command",
+   "value": 1.1,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": false,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/referral-engine",
+   "title": "ReferralEnginePage",
+   "hub": "client",
+   "hubPath": "/portal/clients",
+   "value": 1.1,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": false,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/market-pulse",
+   "title": "MarketPulsePage",
+   "hub": "invest",
+   "hubPath": "/portal/portfolio-command",
+   "value": 1.1,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": false,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/estate-planning",
+   "title": "EstatePlanningPage",
+   "hub": "estate",
+   "hubPath": "/portal/estate-command",
+   "value": 1.1,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": false,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/myga-waterfall",
+   "title": "MygaWaterfallPage",
+   "hub": "insure",
+   "hubPath": "/portal/carrier-command",
+   "value": 1.1,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": false,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/crypto-cycle",
+   "title": "CryptoCyclePage",
+   "hub": "invest",
+   "hubPath": "/portal/portfolio-command",
+   "value": 1.1,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": false,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/meeting-prep",
+   "title": "MeetingPrepPage",
+   "hub": "client",
+   "hubPath": "/portal/clients",
+   "value": 1.1,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": false,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/training",
+   "title": "TrainingPage",
+   "hub": "practice",
+   "hubPath": "/portal/practice-command",
+   "value": 1.1,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": false,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/settings-classic",
+   "title": "SettingsPage",
+   "hub": "ops",
+   "hubPath": "/portal/admin",
+   "value": 1.1,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": false,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/co-pilot",
+   "title": "LiveCoPilot",
+   "hub": "misc",
+   "hubPath": "/portal/library",
+   "value": 1.0,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": true,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/video-library",
+   "title": "VideoLibrary",
+   "hub": "misc",
+   "hubPath": "/portal/library",
+   "value": 0.7,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": false,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/divorce-ilit",
+   "title": "DivorceILITStrategyPage",
+   "hub": "risk",
+   "hubPath": "/portal/risk-command",
+   "value": 0.7,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": false,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/compliance-vault",
+   "title": "ComplianceVaultPage",
+   "hub": "practice",
+   "hubPath": "/portal/practice-command",
+   "value": 0.7,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": false,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/the-brotherhood",
+   "title": "TheBrotherhood",
+   "hub": "tax",
+   "hubPath": "/portal/tax-command",
+   "value": 0.7,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": false,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/retirement-opportunities",
+   "title": "RetirementOpportunitiesPage",
+   "hub": "retire",
+   "hubPath": "/portal/ecological-drivers",
+   "value": 0.7,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": false,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/trusts",
+   "title": "TrustsPage",
+   "hub": "estate",
+   "hubPath": "/portal/estate-command",
+   "value": 0.7,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": false,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/fact-finder",
+   "title": "FactFinderPage",
+   "hub": "discover",
+   "hubPath": "/portal/onboarding",
+   "value": 0.7,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": false,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/iul-projection",
+   "title": "IulProjectionPage",
+   "hub": "policy",
+   "hubPath": "/portal/time-machine-calculator",
+   "value": 0.7,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": false,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/real-estate",
+   "title": "RealEstatePage",
+   "hub": "re",
+   "hubPath": "/portal/real-estate-mogul",
+   "value": 0.7,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": false,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/ai-meeting-notes",
+   "title": "AIMeetingNotes",
+   "hub": "client",
+   "hubPath": "/portal/clients",
+   "value": 0.7,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": false,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/administrator",
+   "title": "AdministratorPortal",
+   "hub": "ops",
+   "hubPath": "/portal/admin",
+   "value": 0.7,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": false,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/billing",
+   "title": "Billing",
+   "hub": "ops",
+   "hubPath": "/portal/admin",
+   "value": 0.7,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": false,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": []
+  },
+  {
+   "route": "/portal/divorce-recovery",
+   "title": "DivorceCalculatorPage",
+   "hub": "risk",
+   "hubPath": "/portal/risk-command",
+   "value": 0.5,
+   "surface": "MERGE into canonical version",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": false,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "fabricated-constant"
+   ]
+  },
+  {
+   "route": "/portal/the-mirror",
+   "title": "TheMirror",
+   "hub": "misc",
+   "hubPath": "/portal/library",
+   "value": 0.5,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": false,
+    "charts": 3,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck",
+    "literal-chart-data"
+   ]
+  },
+  {
+   "route": "/portal/the-field",
+   "title": "TheField",
+   "hub": "misc",
+   "hubPath": "/portal/library",
+   "value": 0.5,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": false,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "ts-nocheck"
+   ]
+  },
+  {
+   "route": "/portal/whisper-coach",
+   "title": "WhisperCoachPage",
+   "hub": "ai",
+   "hubPath": "/portal/ai-brain-hub",
+   "value": 0.5,
+   "surface": "UPGRADE or fold into library",
+   "capabilities": {
+    "computes": false,
+    "engines": [],
+    "persists": false,
+    "charts": 0,
+    "exportsPdf": false
+   },
+   "trustworthy": true,
+   "integrityFlags": [
+    "fabricated-constant"
+   ]
+  }
+ ]
+}
