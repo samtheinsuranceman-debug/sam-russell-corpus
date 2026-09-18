@@ -1,11 +1,17 @@
 #!/usr/bin/env python3
 """Per-page integrity scan: does this page's math actually work?"""
+import os as _os
+ROOT = _os.environ.get("RCS_ROOT") or _os.path.abspath(_os.path.join(_os.path.dirname(__file__), "..", ".."))
+CACHE = _os.path.join(ROOT, "scripts", "audit", ".cache")   # intermediates, gitignored
+OUTDIR = _os.path.join(ROOT, "docs", "audit")                # finals, committed
+NAME = _os.environ.get("RCS_AUDIT_NAME", "PAGE_AUDIT")
+A = ROOT
+B = _os.environ.get("RCS_COMPARE_ROOT") or ROOT
+_os.makedirs(CACHE, exist_ok=True); _os.makedirs(OUTDIR, exist_ok=True)
 import json, os, re
 
-import os as _os
-A = _os.environ.get("RCS_ROOT") or _os.path.abspath(_os.path.join(_os.path.dirname(__file__), "..", ".."))
 PAGES = os.path.join(A, "client/src/pages")
-SCRATCH = os.path.dirname(os.path.abspath(__file__))
+SCRATCH = CACHE
 
 JS_GLOBALS = set("""Math Date JSON Number String Boolean Array Object window document
 console localStorage sessionStorage navigator location fetch URL URLSearchParams

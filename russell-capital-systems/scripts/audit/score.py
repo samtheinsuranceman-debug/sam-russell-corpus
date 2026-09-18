@@ -1,8 +1,16 @@
 #!/usr/bin/env python3
 """Score, categorise and assign a disposition to every page in the 688 build."""
+import os as _os
+ROOT = _os.environ.get("RCS_ROOT") or _os.path.abspath(_os.path.join(_os.path.dirname(__file__), "..", ".."))
+CACHE = _os.path.join(ROOT, "scripts", "audit", ".cache")   # intermediates, gitignored
+OUTDIR = _os.path.join(ROOT, "docs", "audit")                # finals, committed
+NAME = _os.environ.get("RCS_AUDIT_NAME", "PAGE_AUDIT")
+A = ROOT
+B = _os.environ.get("RCS_COMPARE_ROOT") or ROOT
+_os.makedirs(CACHE, exist_ok=True); _os.makedirs(OUTDIR, exist_ok=True)
 import json, re, csv, collections, os
 
-SCRATCH = os.path.dirname(os.path.abspath(__file__))
+SCRATCH = CACHE
 rows = json.load(open(os.path.join(SCRATCH, "pages.json")))
 INTEG = json.load(open(os.path.join(SCRATCH, "integrity.json")))
 

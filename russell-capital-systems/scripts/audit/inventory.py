@@ -1,10 +1,16 @@
 #!/usr/bin/env python3
 """Build a machine-readable inventory of every page in the 688-page build."""
+import os as _os
+ROOT = _os.environ.get("RCS_ROOT") or _os.path.abspath(_os.path.join(_os.path.dirname(__file__), "..", ".."))
+CACHE = _os.path.join(ROOT, "scripts", "audit", ".cache")   # intermediates, gitignored
+OUTDIR = _os.path.join(ROOT, "docs", "audit")                # finals, committed
+NAME = _os.environ.get("RCS_AUDIT_NAME", "PAGE_AUDIT")
+A = ROOT
+B = _os.environ.get("RCS_COMPARE_ROOT") or ROOT
+_os.makedirs(CACHE, exist_ok=True); _os.makedirs(OUTDIR, exist_ok=True)
 import json, os, re, subprocess, sys
 
-import os as _os
-A = _os.environ.get("RCS_ROOT") or _os.path.abspath(_os.path.join(_os.path.dirname(__file__), "..", ".."))
-B = _os.environ.get("RCS_COMPARE_ROOT") or A
+B = _os.environ.get("RCS_COMPARE_ROOT") or ROOT
 PAGES = os.path.join(A, "client/src/pages")
 
 app = open(os.path.join(A, "client/src/App.tsx"), encoding="utf8").read()
@@ -152,7 +158,7 @@ for root, _, files in os.walk(PAGES):
             "in_live": rel in live_pages,
         })
 
-out = "/tmp/claude-0/-home-user-russell-capital/7e97bd17-51e6-57bd-a1da-a358d31480a5/scratchpad/pages.json"
+out = _os.path.join(CACHE, "pages.json")
 json.dump(rows, open(out, "w"), indent=1)
 print(f"pages: {len(rows)}")
 print(f"routed: {sum(1 for r in rows if r['routed'])}   unrouted: {sum(1 for r in rows if not r['routed'])}")

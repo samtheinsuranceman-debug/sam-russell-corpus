@@ -1,14 +1,22 @@
 #!/usr/bin/env python3
 """Render the 688-page audit into a markdown report + an AI-brain page registry."""
+import os as _os
+ROOT = _os.environ.get("RCS_ROOT") or _os.path.abspath(_os.path.join(_os.path.dirname(__file__), "..", ".."))
+CACHE = _os.path.join(ROOT, "scripts", "audit", ".cache")   # intermediates, gitignored
+OUTDIR = _os.path.join(ROOT, "docs", "audit")                # finals, committed
+NAME = _os.environ.get("RCS_AUDIT_NAME", "PAGE_AUDIT")
+A = ROOT
+B = _os.environ.get("RCS_COMPARE_ROOT") or ROOT
+_os.makedirs(CACHE, exist_ok=True); _os.makedirs(OUTDIR, exist_ok=True)
 import json, os, collections, csv, shutil
 
-SCRATCH = os.path.dirname(os.path.abspath(__file__))
-REPO = A
-OUT = os.path.join(REPO, "docs", "audit")
+SCRATCH = CACHE
+REPO = ROOT
+OUT = OUTDIR
 os.makedirs(OUT, exist_ok=True)
 
 scored = json.load(open(os.path.join(SCRATCH, "scored.json")))
-shutil.copy(os.path.join(SCRATCH, "audit.csv"), os.path.join(OUT, "PAGE_AUDIT_688.csv"))
+shutil.copy(os.path.join(SCRATCH, "audit.csv"), os.path.join(OUT, f"{NAME}.csv"))
 
 HUB_ORDER = ["debt","policy","re","retire","tax","estate","business","insure","invest",
              "scenario","risk","discover","ai","client","practice","compliance","report",
@@ -128,7 +136,7 @@ for k in HUB_ORDER:
         tgt = f" → `{r['target']}`" if r["disposition"].startswith(("EMBED","MERGE")) else ""
         w(f"| {r['value']} | {r['built']} | {r['effectiveness']} | {r['component']} | {url} | {r['disposition']}{tgt} | {note} |")
 
-open(os.path.join(OUT, "PAGE_AUDIT_688.md"), "w").write("\n".join(L))
+open(os.path.join(OUT, f"{NAME}.md"), "w").write("\n".join(L))
 
 # ── AI-brain page registry ──────────────────────────────────────────────────
 registry = []
@@ -157,7 +165,7 @@ registry.sort(key=lambda x: -x["value"])
 json.dump({"generated": "static-analysis", "count": len(registry), "pages": registry},
           open(os.path.join(OUT, "pageRegistry.json"), "w"), indent=1)
 
-print(f"wrote {OUT}/PAGE_AUDIT_688.md  ({len(L)} lines)")
-print(f"wrote {OUT}/PAGE_AUDIT_688.csv")
+print(f"wrote {OUT}/{NAME}.md  ({len(L)} lines)")
+print(f"wrote {OUT}/{NAME}.csv")
 print(f"wrote {OUT}/pageRegistry.json  ({len(registry)} routed pages)")
 print(f"  of which trustworthy today: {sum(1 for x in registry if x['trustworthy'])}")
