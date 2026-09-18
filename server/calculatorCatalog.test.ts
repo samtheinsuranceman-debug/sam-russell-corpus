@@ -16,14 +16,31 @@ import {
 const root = join(import.meta.dirname, "..");
 const app = readFileSync(join(root, "client/src/App.tsx"), "utf8");
 
-/** Every path the router actually serves. */
-const routed = new Set(
-  (app.match(/path="\/[A-Za-z0-9/_:-]*"/g) ?? []).map((m) => m.slice(6, -1)),
-);
+/** Every path pattern the router declares, including parameterised ones. */
+const routePatterns = (app.match(/path="\/[A-Za-z0-9/_:-]*"/g) ?? []).map((m) => m.slice(6, -1));
+const routed = new Set(routePatterns);
+
+/**
+ * A catalogue path is routed when the router declares it literally, OR when a
+ * parameterised pattern matches it segment for segment (`/portal/mechanism/:slug`
+ * genuinely serves `/portal/mechanism/policy-loan`).
+ *
+ * The segment count must match exactly, so this admits the paths wouter really
+ * serves and nothing else — a catalogue entry one segment too deep still fails,
+ * which is what this test exists to catch.
+ */
+function patternFor(path: string): string | undefined {
+  if (routed.has(path)) return path;
+  const parts = path.split("/");
+  return routePatterns.find((pattern) => {
+    const pp = pattern.split("/");
+    return pp.length === parts.length && pp.every((seg, i) => seg.startsWith(":") || seg === parts[i]);
+  });
+}
 
 describe("no dead links — the whole point of the registry", () => {
   it("routes every single catalogue entry", () => {
-    const dead = CALCULATORS.filter((c) => !routed.has(c.path));
+    const dead = CALCULATORS.filter((c) => !patternFor(c.path));
     expect(dead.map((d) => `${d.name} → ${d.path}`), "catalogue entries with no route").toEqual([]);
   });
 
@@ -32,7 +49,8 @@ describe("no dead links — the whole point of the registry", () => {
     // check that component's file is on disk. A route pointing at a deleted
     // page compiles fine and fails at run time; this catches it.
     for (const c of CALCULATORS) {
-      const routeLine = app.split("\n").find((l) => l.includes(`path="${c.path}"`));
+      const pattern = patternFor(c.path);
+      const routeLine = app.split("\n").find((l) => l.includes(`path="${pattern}"`));
       expect(routeLine, `no route line for ${c.path}`).toBeTruthy();
       const comp = routeLine!.match(/component=\{(?:gated\()?([A-Za-z0-9_]+)/)?.[1];
       expect(comp, `could not read the component for ${c.path}`).toBeTruthy();
@@ -65,8 +83,13 @@ describe("no dead links — the whole point of the registry", () => {
 
   it("serves each catalogue path exactly once — a duplicate route silently shadows the second page", () => {
     for (const c of CALCULATORS) {
-      const hits = app.split("\n").filter((l) => l.includes(`path="${c.path}"`)).length;
-      expect(hits, `${c.path} is declared ${hits} times`).toBe(1);
+      // Count declarations of the PATTERN that serves this path. Two routes
+      // declaring the same pattern still shadow each other, which is what this
+      // catches; a parameterised pattern serving several catalogue paths is
+      // not a duplicate.
+      const pattern = patternFor(c.path)!;
+      const hits = app.split("\n").filter((l) => l.includes(`path="${pattern}"`)).length;
+      expect(hits, `${c.path} is served by ${pattern}, declared ${hits} times`).toBe(1);
     }
   });
 });

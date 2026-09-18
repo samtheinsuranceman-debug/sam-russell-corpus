@@ -76,6 +76,10 @@ const AltCreditDetail = lazy(() => import("./pages/portal/AltCreditDetail"));
 const GenomeStrategies = lazy(() => import("./pages/portal/GenomeStrategies"));
 const HouseholdGenome = lazy(() => import("./pages/portal/HouseholdGenome"));
 const InfiniteBanking = lazy(() => import("./pages/portal/InfiniteBanking"));
+const Mechanisms = lazy(() => import("./pages/portal/Mechanisms"));
+const MechanismDetail = lazy(() => import("./pages/portal/MechanismDetail"));
+const MechanismProviders = lazy(() => import("./pages/portal/MechanismDetail").then((m) => ({ default: m.MechanismProviders })));
+const MechanismSequences = lazy(() => import("./pages/portal/MechanismDetail").then((m) => ({ default: m.MechanismSequences })));
 const ComboRecommender = lazy(() => import("./pages/portal/ComboRecommender"));
 const ClientReportGenerator = lazy(() => import("./pages/portal/ClientReportGenerator"));
 const ExitRating = lazy(() => import("./components/ExitRating"));
@@ -743,6 +747,10 @@ function Router() {
       <Route path="/portal/genome-strategies" component={gated(GenomeStrategies, "/portal/genome-strategies")} />
       <Route path="/portal/household-genome" component={gated(HouseholdGenome, "/portal/household-genome")} />
       <Route path="/portal/infinite-banking" component={gated(InfiniteBanking, "/portal/infinite-banking")} />
+      <Route path="/portal/mechanisms" component={gated(Mechanisms, "/portal/mechanisms")} />
+      <Route path="/portal/mechanism/:slug/providers" component={gated(MechanismProviders, "/portal/mechanisms")} />
+      <Route path="/portal/mechanism/:slug/sequences" component={gated(MechanismSequences, "/portal/mechanisms")} />
+      <Route path="/portal/mechanism/:slug" component={gated(MechanismDetail, "/portal/mechanisms")} />
       <Route path="/portal/client-report-generator" component={gated(ClientReportGenerator, "/portal/client-report-generator")} />
 
       {/* Fallback */}
