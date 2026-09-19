@@ -19,6 +19,12 @@
  *   Balanced Indexed 8 (PRISM)    printed 105%   operative 1.71x   UNDERSTATES
  *   Indexed Loan Account          printed 105%   operative 1.47x   UNDERSTATES
  *
+ * CORRECTED since first written: Balanced Indexed 6 (PRISM 1-year) is the
+ * counter-example. Its printed 105% reproduces its printed crediting rate on
+ * all four segments exactly, so the field is NOT meaningless everywhere. It is
+ * confirmed on one account and contradicted on three, which means it cannot be
+ * assumed - a weaker and more accurate claim than the one above.
+ *
  * So `participationPrintedPct` in this file means "the number on the page" and
  * nothing more. `observed` is what the account was caught doing. They are
  * different fields because they are different claims.
@@ -137,19 +143,22 @@ export const SECURIAN_ACCOUNTS: readonly SecurianAccount[] = [
     houseName: '1-Year Risk-Controlled (P Formation, uncapped)',
     index: 'S&P PRISM',
     termYears: 1,
-    participationPrintedPct: null,
+    participationPrintedPct: 105,
     capPrinted: 'Unlimited',
-    floorPct: null,
+    floorPct: 0,
     accountChargeAnnualPct: null,
-    observed: null,
-    evidence: 'sighting',
+    observed: {
+      multiplier: 1.3125,
+      deductionPointsPerSegment: null,
+      segmentsObserved: 3,
+      note: 'SOLVED, and it corrects the file. The printed 105% IS operative here - it reproduces the printed crediting rate on all four segments exactly. But the dollar credit is that times a further 1.25: three credited segments reconcile at 1.05 x 1.25 = 1.3125 to under half a cent. The crediting rate the page shows understates the money it pays by exactly 25%.',
+    },
+    evidence: 'solved',
     source:
-      'Named in the BGA3 portal account list as "S&P PRISM, 1 Year Uncapped"; cap confirmed Unlimited on the BGA II Current Growth Caps page.',
+      'Four portal Index credit details modals; see shared/prismAccountSolve.ts. Cap sentinel printed as 10000000000.00%.',
     unknown: [
-      'Participation rate. Never seen.',
-      'Any spread or deduction. Never seen.',
-      'Floor. Never seen, though every Balanced account observed carries 0%.',
-      'Whether it behaves like Account 8, which tracks the same index on the same term.',
+      'What the 1.25 is called. No carrier document in hand names a credit multiplier, so 1.25 is fitted, not a contract term.',
+      'Whether Account 8, which tracks the same index on the same term, shares the 1.25. Its single observed segment reads 1.71x, and 1.71 / 1.05 = 1.6286 is not a round multiplier.',
     ],
   },
   {
