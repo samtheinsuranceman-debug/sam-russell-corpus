@@ -120,6 +120,22 @@ export interface IndexAccountShape {
   readonly accountBenefitAnnual?: number;
 
   /**
+   * Annual loan charge on a LOANED indexed account, as a decimal.
+   *
+   * A loaned indexed account is the participating-loan mechanism as a named
+   * account rather than a loan election: the borrowed value stays in the index
+   * and keeps earning, and the carrier charges for it. Both Pacific and
+   * Minnesota offer one, and it is the account the whole mortgage-acceleration
+   * case actually runs on.
+   *
+   * It compounds against the credit rather than subtracting from it, because
+   * the two run concurrently: net = (1 + credited) / (1 + charge)^years − 1.
+   * Subtracting instead overstates the result, and by more the longer the
+   * segment.
+   */
+  readonly loanChargeAnnual?: number;
+
+  /**
    * The AG 49-A maximum illustrated rate for THIS account, as the carrier
    * published it. Decimal. Never computed here. Null where the carrier's figure
    * has not been read — such an account may be described but not illustrated.
@@ -137,6 +153,24 @@ export interface IndexAccountShape {
    * stated outright. Present means: confirm before illustrating.
    */
   readonly inferred?: string;
+}
+
+/**
+ * Values a carrier's system uses to mean "no cap".
+ *
+ * Securian's advisor portal prints a growth cap of 9999999900.00% on an
+ * uncapped account. Read literally it is a cap of ninety-nine million percent,
+ * which never binds and so computes correctly by accident — and then prints
+ * "9999999900.00% cap" on a comparison row in front of a client. A sentinel is
+ * a missing value wearing a number, and the fix is to recognise it as missing.
+ */
+export const UNCAPPED_SENTINELS = [9999999900, 999999999, 99999999] as const;
+
+/** A cap as the carrier's system gave it, or null where it is a sentinel. */
+export function normaliseCap(capPercent: number | null): number | null {
+  if (capPercent === null || !Number.isFinite(capPercent)) return null;
+  if (capPercent >= 1000) return null; // No real growth cap is 1000%.
+  return capPercent / 100;
 }
 
 const IUC4009 =
@@ -533,6 +567,17 @@ export function creditFor(shape: IndexAccountShape, indexReturn: number): Credit
     );
   }
 
+  if (shape.loanChargeAnnual) {
+    const accrued = Math.pow(1 + shape.loanChargeAnnual, shape.segmentYears) - 1;
+    const before = credited;
+    credited = (1 + credited) / (1 + accrued) - 1;
+    parts.push(
+      `then net of a ${(shape.loanChargeAnnual * 100).toFixed(2)}% loan charge a year, compounding to ` +
+        `${(accrued * 100).toFixed(2)}% across the segment: ${(before * 100).toFixed(2)}% credited against that charge ` +
+        `leaves ${(credited * 100).toFixed(2)}% net`
+    );
+  }
+
   const ann = annualise(credited, shape.segmentYears);
   if (shape.segmentYears > 1) parts.push(`${(ann * 100).toFixed(2)}% a year`);
 
@@ -572,6 +617,8 @@ export const SHAPES_VERSION = {
     'A credited value for an uncapped account whose spread or spread basis is not on file.',
     'A credited value computed from a total-return index series. Index crediting uses price return.',
     'A carrier backtest described as a maximum illustrated rate, an expected return, or a projection. It is what an account would have done under current assumptions applied retroactively, on a product that did not exist for most of the window.',
+    'A sentinel growth cap. 9999999900.00% is a carrier system saying "no cap"; printing it as a cap is printing a missing value as a number.',
+    'A loaned indexed account\'s credited rate without its loan charge beside it. The credit and the charge run concurrently and the net is the only figure that means anything.',
     'That a participation rate above 100% means the account outperforms. Above 100% participation on a volatility-controlled index is a lower-volatility index geared up, not a higher return; and 200% participation with a 0.80% charge can finish below 100% participation with a cap.',
   ],
 } as const;
