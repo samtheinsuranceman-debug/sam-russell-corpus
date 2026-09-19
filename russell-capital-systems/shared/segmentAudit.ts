@@ -759,3 +759,41 @@ export const SUPERSEDED_BY_STATEMENT = {
   stillOpen: 'the size of the in-segment deduction on Balanced Indexed Account 2',
   unreconciled: 'account 6 (ledger) versus account 7 (statement); possibly two different policies',
 } as const;
+
+/**
+ * Second statement, second policy, second product generation.
+ * See shared/securianBGA2Statement.ts.
+ *
+ * A Balanced Growth Accumulator II annual review for 08/28/2025-08/28/2026
+ * solves Balanced Indexed Account 2 outright on six matured segments:
+ *
+ *     creditingRate = 0.84 x indexGrowth - 5.25 points per 2-year segment
+ *
+ * Least squares returns slope 0.840000, intercept -5.250003, maximum residual
+ * 0.00000 points. All six dollar credits reconcile to the cent.
+ *
+ * Two things this settles for the audit above.
+ *
+ *   The FORM is confirmed. That regression reached
+ *   `credited = growth x participation - constant` from twelve portal modals
+ *   with no visibility into the method. A carrier statement that shows its
+ *   method reaches the same shape independently. The 4.0939 constant was the
+ *   right kind of object.
+ *
+ *   The printed participation is confirmed useless in BOTH directions. The
+ *   first statement printed 105% on an account crediting at 1.47x. This one
+ *   prints 110% on an account crediting at 0.84x. One understates, one
+ *   overstates, same field, same carrier. An unrecorded bonus could explain the
+ *   first; an unrecorded charge could explain the second; nothing explains both.
+ *
+ * What it does NOT settle: the coefficients do not transfer. 0.84 and 5.25
+ * belong to Balanced Growth Accumulator II. The 4.0939 above belongs to
+ * Balanced Growth Accumulator 3. Different products, and the account-set
+ * question (6 versus 7) is still open on the ledger above.
+ */
+export const SECOND_STATEMENT = {
+  source: 'shared/securianBGA2Statement.ts',
+  confirms: ['the functional form of the audited rule', 'PRINTED_PARTICIPATION_IS_A_CONSTANT'],
+  newDirection: 'overstating — the first statement understated',
+  doesNotTransfer: 'the coefficients, the segment term, or the participation groups',
+} as const;
