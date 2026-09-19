@@ -1,6 +1,6 @@
 -- Russell Capital Systems — complete database schema
 -- Generated from drizzle/schema.ts by scripts/export_schema_sql.sh; do not hand-edit.
--- Tables: 155
+-- Tables: 157
 -- Import: mysql -u USER -p DBNAME < database/rcs-schema.sql   (or phpMyAdmin → Import)
 -- The database itself must already exist (create it in cPanel → MySQL Databases).
 
@@ -769,6 +769,29 @@ CREATE TABLE `encouragement_emails` (
 	`status` enum('pending','sent','failed') NOT NULL DEFAULT 'pending',
 	`createdAt` timestamp NOT NULL DEFAULT (now()),
 	CONSTRAINT `encouragement_emails_id` PRIMARY KEY(`id`)
+);
+CREATE TABLE `engine_chain_runs` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`chainId` int NOT NULL,
+	`userId` int NOT NULL,
+	`status` enum('running','completed','failed') NOT NULL DEFAULT 'running',
+	`stepResults` json,
+	`totalTimeMs` int NOT NULL DEFAULT 0,
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	CONSTRAINT `engine_chain_runs_id` PRIMARY KEY(`id`)
+);
+CREATE TABLE `engine_chains` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`userId` int NOT NULL,
+	`name` varchar(200) NOT NULL,
+	`description` text,
+	`steps` json NOT NULL,
+	`isTemplate` boolean NOT NULL DEFAULT false,
+	`runCount` int NOT NULL DEFAULT 0,
+	`lastRunAt` timestamp,
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	`updatedAt` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,
+	CONSTRAINT `engine_chains_id` PRIMARY KEY(`id`)
 );
 CREATE TABLE `error_logs` (
 	`id` int AUTO_INCREMENT NOT NULL,
