@@ -169,8 +169,9 @@ describe('the segment, once the owner supplied 24 months', () => {
     expect(a.candidates[0].segmentYears).toBe(2);
     expect(a.candidates[0].compoundingChargePct).toBeCloseTo(7.79, 1);
     expect(a.candidates[0].simpleChargePct).toBeCloseTo(10.28, 1);
-    // And the implied annual index growth becomes checkable: ~20.5% a year,
-    // which is a strong but not impossible two-year run for the S&P 500.
+    // And the implied annual index growth becomes checkable: ~20.5% a year.
+    // NOT asserted to be the S&P 500 — the modal named no index, and this
+    // policy holds at least two. That assumption was made once and withdrawn.
     expect(a.candidates[0].impliedAnnualIndexGrowthPct).toBeCloseTo(20.52, 1);
   });
 
@@ -280,6 +281,13 @@ describe('the Balanced Indexed Account 2 ledger', () => {
     expect(
       BGA3_BALANCED_2_OBSERVED_PCT.find((r) => r.segment === d.controlSegment)!.creditedPct
     ).toBeCloseTo(d.controlCreditedPct, 2);
+  });
+
+  it('records what the deduction depends on, since neither condition is settled', () => {
+    const c = LOAN_CHARGE_DEDUCTION.conditionalOn;
+    expect(c.length).toBe(2);
+    expect(c.join(' ')).toMatch(/never named an account or an index/);
+    expect(c.join(' ')).toMatch(/110%; the subject modal printed 105/);
   });
 
   it('still calls the charge a deduction, not a reading', () => {
