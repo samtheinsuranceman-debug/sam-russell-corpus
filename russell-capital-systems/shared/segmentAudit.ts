@@ -595,3 +595,122 @@ export const NINE_SEGMENT_SOLUTION = {
   whyItCannotBePinned:
     'One equation, two unknowns, and the portal has just been shown to misreport one of them. The subject segment\'s true participation rate has to come from somewhere other than this screen.',
 } as const;
+
+/* ═══ Twelve segments, and the field that lies ═════════════════════════════ */
+
+export const BGA_BALANCED_2_TWELVE: readonly { segment: string; growthPct: number; creditedPct: number }[] = [
+  { segment: 'Jan', growthPct: 43.99, creditedPct: 42.10 },
+  { segment: 'Feb', growthPct: 42.55, creditedPct: 36.11 },
+  { segment: 'Mar', growthPct: 39.42, creditedPct: 33.15 },
+  { segment: 'Apr', growthPct: 43.56, creditedPct: 37.07 },
+  { segment: 'May', growthPct: 44.60, creditedPct: 42.73 },
+  { segment: 'Jun', growthPct: 42.91, creditedPct: 40.96 },
+  { segment: 'Jul', growthPct: 45.57, creditedPct: 43.76 },
+  { segment: 'Aug', growthPct: 54.72, creditedPct: 53.36 },
+  { segment: 'Sep', growthPct: 48.79, creditedPct: 49.69 },
+  { segment: 'Oct', growthPct: 48.04, creditedPct: 48.87 },
+  { segment: 'Nov', growthPct: 51.92, creditedPct: 53.15 },
+  { segment: 'Dec', growthPct: 45.65, creditedPct: 46.24 },
+];
+
+/**
+ * The account is solved, and the portal's participation field is a constant.
+ *
+ * ## Twelve segments, three participation rates, one spread
+ *
+ * Holding the spread at 4.0939 points, every one of the twelve 2019–2021
+ * segments of Balanced Indexed Account 2 solves to one of three rates, and each
+ * group is internally tight to about two hundredths of a point:
+ *
+ *   94.49%   Feb, Mar, Apr                    range 0.020
+ *  105.00%   Jan, May, Jun, Jul, Aug          range 0.026
+ *  110.25%   Sep, Oct, Nov, Dec               range 0.025
+ *
+ * Twelve equations, four parameters, and the residuals sit inside display
+ * rounding. The formula is settled: credited = growth × participation − 4.0939
+ * points per segment, with participation redeclared over time. The owner's
+ * "110%" is the rate the last four months of the year were struck at.
+ *
+ * ## The 105.00% is a static display value, and the PRISM account proves it
+ *
+ * Balanced Indexed Account 8 — S&P PRISM, 1-Year — credited 17.11% on 10.03%
+ * index growth over its Dec 2020 – Dec 2021 segment. That is 1.71 times the
+ * index. Its modal also prints a participation rate of 105.00%.
+ *
+ * At 105% participation, less any positive spread, the most that segment could
+ * credit is 10.53%. It credited 17.11%. So on that account the 105.00% is not
+ * the participation rate, and it cannot be — no rounding, no model, no argument
+ * about which formula applies. A participation rate near 171% would explain the
+ * credit, which is ordinary for a risk-controlled index like PRISM.
+ *
+ * The same 105.00% appears on Balanced Account 2 segments that were struck at
+ * 94.49%, at 105.00% and at 110.25%. One value, four different true rates, two
+ * different accounts. It is a constant the page prints, not a fact it reports.
+ *
+ * ## What that does to the subject segment
+ *
+ * The 26.96% segment's own modal prints 105.00%, and that number now carries no
+ * information at all. Solving it on this account's formula:
+ *
+ *   implied participation, if nothing else is charged = 68.6%
+ *
+ * which is far below every rate this account has ever been observed using. A
+ * segment cannot credit that little on this formula unless something is taken
+ * out of it. That is the strongest evidence yet for an additional charge, and
+ * it no longer depends on any control group.
+ *
+ * What it still cannot do is size the charge, because the size depends on the
+ * participation that applied:
+ *
+ *   at  94.49% → 11.71 points over the segment → 4.51% a year
+ *   at 105.00% → 16.46 points                  → 6.29% a year
+ *   at 110.25% → 18.84 points                  → 7.16% a year
+ *
+ * The published 4.75% indexed loan charge is near the bottom of that range and
+ * would require the subject segment to have been struck at the lowest
+ * participation rate this account has used. Possible, and not shown.
+ *
+ * ## Three accounts on this policy, not one
+ *
+ * Balanced Indexed Account 2 — S&P 500, 2-year
+ * Balanced Indexed Account 6 — S&P PRISM, 1 Year Uncapped
+ * Balanced Indexed Account 8 — S&P PRISM, 1-Year Segment Term
+ *
+ * Only Account 2 is solved. The two PRISM accounts have their own participation
+ * rates and their own indices, and nothing here applies to them.
+ */
+export const TWELVE_SEGMENT_SOLUTION = {
+  spreadPointsPerSegment: 4.0939,
+  participationGroups: [
+    { ratePct: 94.49, segments: ['Feb', 'Mar', 'Apr'], rangePoints: 0.020 },
+    { ratePct: 105.0, segments: ['Jan', 'May', 'Jun', 'Jul', 'Aug'], rangePoints: 0.026 },
+    { ratePct: 110.25, segments: ['Sep', 'Oct', 'Nov', 'Dec'], rangePoints: 0.025 },
+  ],
+  /** The proof that the displayed participation rate is a constant. */
+  prismDisproof: {
+    account: 'Balanced Indexed Account 8 — S&P PRISM 1-Year',
+    segment: 'Dec 2020 – Dec 2021',
+    growthPct: 10.03,
+    creditedPct: 17.11,
+    multipleOfIndex: 1.71,
+    modalPrintsParticipationPct: 105.0,
+    maximumPossibleAt105Pct: 10.53,
+    impliedParticipationPct: 171,
+    conclusion:
+      'A segment cannot credit 17.11% on 10.03% growth at 105% participation. The displayed rate is a constant the page prints, not a fact it reports — the same 105.00% appears on segments struck at 94.49%, 105.00% and 110.25%.',
+  },
+  subjectImpliedParticipationIfNoCharge: 68.6,
+  subjectChargeByParticipation: [
+    { participationPct: 94.49, pointsOverSegment: 11.71, annualPct: 4.51 },
+    { participationPct: 105.0, pointsOverSegment: 16.46, annualPct: 6.29 },
+    { participationPct: 110.25, pointsOverSegment: 18.84, annualPct: 7.16 },
+  ],
+  whatIsNowEstablished:
+    'That something is charged against the subject segment. Its implied participation without a charge is 68.6%, below every rate this account has been observed using, and that conclusion no longer rests on a control group.',
+  whatIsStillOpen:
+    'The size of the charge, because it depends on the participation rate that segment was struck at — and the portal field that would say is a constant. The published 4.75% indexed loan charge would require the lowest rate this account has used.',
+  otherAccountsOnThisPolicy: [
+    'Balanced Indexed Account 6 — S&P PRISM, 1 Year Uncapped',
+    'Balanced Indexed Account 8 — S&P PRISM, 1-Year Segment Term',
+  ],
+} as const;
