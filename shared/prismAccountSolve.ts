@@ -1,80 +1,76 @@
 /**
- * S&P PRISM index accounts — solved from nine portal segment modals.
+ * S&P PRISM index accounts — solved from fourteen portal segment modals.
  *
- * The most informative document set in the audit, because it corrects two
- * things the rest of the session had concluded and then exposes a structure
- * that explains three accounts at once.
+ * The largest single-account evidence set in the audit, and the one that
+ * corrected the most. Three findings, one of which overturns a claim this file
+ * made two commits ago.
  *
- * ## Correction 1: the printed participation rate IS operative here
+ * ## 1. The printed participation rate IS operative here
  *
  * Every earlier account contradicted its printed participation. These do not.
- * On all nine segments the printed rate reproduces the printed Segment
- * crediting rate exactly — 105% on eight of them, 100% on the ninth:
+ * On all fourteen segments the printed rate reproduces the printed Segment
+ * crediting rate exactly — 105% on eight, 100% on six:
  *
  *     1.86538% x 1.05 = 1.95865%   printed 1.96%
- *     2.97910% x 1.05 = 3.12805%   printed 3.13%
- *     4.13375% x 1.00 = 4.13375%   printed 4.13%
+ *     8.10530% x 1.00 = 8.10530%   printed 8.11%
  *    -0.45382%         floored     printed 0.00%
  *
- * So "the participation field is a constant that means nothing" was too strong.
- * Here it means exactly what it says. The accurate claim is narrower: the
- * printed participation cannot be ASSUMED operative. It is now confirmed on
- * two accounts and contradicted on three.
+ * "The participation field is a constant that means nothing" was too strong.
+ * Here it means what it says. The accurate claim is that it cannot be ASSUMED
+ * operative: confirmed on these accounts, contradicted on three others.
  *
- * ## Correction 2: but the crediting rate column understates the money
+ * ## 2. But the money carries a further multiplier the page never shows
  *
- * The dollar credit is not the accumulation value times the printed crediting
- * rate. It is that times a further multiplier, and seven credited segments
- * reconcile to under half a cent:
+ * Twelve credited segments reconcile to under half a cent on three exact
+ * (participation, multiplier) pairs:
  *
- *     $3,684.27 x 1.86538% x 1.05 x 1.25 =  $90.20   printed  $90.20
- *     $3,652.17 x 2.02190% x 1.05 x 1.25 =  $96.92   printed  $96.92
- *     $3,611.43 x 2.49200% x 1.05 x 1.25 = $118.12   printed $118.12
- *     $4,568.71 x 1.19190% x 1.05 x 1.25 =  $71.47   printed  $71.47
- *       $751.26 x 2.97910% x 1.05 x 1.25 =  $29.37   printed  $29.37
- *     $3,713.02 x 0.04219% x 1.05 x 1.25 =   $2.06   printed   $2.06
- *     $7,994.42 x 4.13375% x 1.00 x 1.60 = $528.75   printed $528.75
+ *     105% x 1.25 = 1.3125     six segments
+ *     100% x 1.60 = 1.6000     four segments
+ *     100% x 1.40 = 1.4000     two segments
  *
- * A client reconciling their own statement would find the rate column and the
- * dollars disagree — by 25% on the 105% account, by 60% on the 100% one — with
- * nothing on the page explaining why.
+ * The crediting rate column understates the dollars by 25%, 60% and 40%
+ * respectively. Nothing on the modal explains the gap.
  *
- * ## The structure this exposes
+ * ## 3. CORRECTION: the multiplier is per-vintage, not per-account
  *
- * Participation and multiplier travel together as a tier, and the multipliers
- * are clean. The Indexed Loan Account's 1.47x, which never decomposed, now
- * lands in the same scheme:
+ * Two commits ago this file claimed a per-ACCOUNT multiplier — 1.25 for PRISM,
+ * 1.40 for the Indexed Loan Account — and called it "the first structure that
+ * explains two accounts at once". That is wrong.
  *
- *     105% x 1.25 = 1.3125   PRISM, six credited segments
- *     105% x 1.40 = 1.47     Indexed Loan Account, two segments
- *     100% x 1.60 = 1.60     PRISM, one segment
+ * Segments M and N share an account and a printed participation with J, K and
+ * L, and carry a different multiplier: 1.40 against 1.60. Segment N's own
+ * footer names it — "Account 6 - S&P", "Jun 2023 - Jun 2024".
  *
- * Nine credited segments, three accounts, three round multipliers. Note what
- * the third row does to the headline: the 100% account pays MORE per unit of
- * index growth than the 105% one. A participation rate on its own tells you
- * nothing about what an account pays, and that is now demonstrated rather than
- * argued.
+ * So the multiplier moves WITHIN an account across segment vintages, exactly as
+ * the participation rate did on Balanced Indexed Account 2 in the BGA3 audit,
+ * where twelve segments solved to three declared groups inside one year. It is
+ * a declared rate the carrier resets, not a fixed property of an account.
  *
- * It remains a hypothesis. No carrier document in hand names a multiplier, so
- * 1.25, 1.40 and 1.60 are fitted numbers that reproduce the money exactly and
- * that nobody declared. They may not be illustrated.
+ * For the engine: a multiplier read off one segment may not be applied to that
+ * account's other segments, and may certainly not be projected forward.
+ *
+ * ## What this does to participation as a comparison tool
+ *
+ * It destroys it. The 100% account pays 1.60 per unit of index growth where the
+ * 105% account pays 1.3125 — about 22% more on a LOWER headline rate — and the
+ * same 100% account pays 1.40 on other segments. The printed participation
+ * spans five points; the unprinted multiplier spans twenty-eight percent. The
+ * page shows the less important half of the calculation.
  *
  * ## What PRISM actually did, which is the part worth selling
  *
- * Segment D runs Sep 2021 to Sep 2022 and the index rose 2.98%. Over the same
- * window the S&P 500 fell roughly 13%. That is a volatility-controlled index
- * doing precisely what it is built to do, in the worst equity year of the
- * decade, and the segment credited 3.13% and paid $29.37.
+ * Segment D runs Sep 2021 to Sep 2022 and the index rose 2.98%, in a window
+ * when the S&P 500 fell roughly 13%. That is a volatility-controlled index
+ * doing what it is built to do in the worst equity year of the decade.
  *
- * Segment H starts exactly where D ends, at 5,604.38 — consecutive one-year
- * segments of the same account, which confirms these modals are one rolling
- * annual account rather than an assortment.
+ * D ends where H starts, at 5,604.38, and H ends where L starts, at 5,671.18 —
+ * three consecutive one-year segments of one rolling account. Since H is a 105%
+ * vintage and L a 100% one, that chain is also direct evidence that both
+ * participation and multiplier are redeclared between vintages.
  *
- * The honest PRISM story is that drawdown year, not a participation rate: not
- * "we get 171% of the index" but "in a year the market lost 13%, this account
- * credited positive". It also sets the expectation correctly for the other
- * direction — a damped index gives up upside in strong years, which is the
- * trade being made.
+ * The other half of the trade is in the same data and must be sold with it: Jun
+ * 2023 to Jun 2024 the index gained 1.31% while equities ran hard. A damped
+ * index protects in a drawdown and lags badly in a rally.
  */
 
 export interface PrismSegment {
@@ -88,16 +84,10 @@ export interface PrismSegment {
   readonly segmentAccumulationValueBeforeCredit: number;
   readonly participationRatePrintedPct: number;
   readonly indexCredit: number;
-  /** Where the portal named the account and window. */
+  /** Where the portal named the account or window. */
   readonly window?: string;
 }
 
-/**
- * The four modals. Only the fourth carried a legible account and date footer
- * ("...unt 6 - S&P", "Sep 2021 - Sep 2022"); the other three are the same
- * account and layout and are grouped with it on that basis, which is an
- * inference and is recorded as one.
- */
 export const PRISM_SEGMENTS: readonly PrismSegment[] = [
   { label: 'A', startingIndexValue: 5481.46, endingIndexValue: 5583.71, indexGrowthRatePctPrinted: 1.87, segmentCreditingRatePctPrinted: 1.96, segmentAccumulationValueBeforeCredit: 3684.27, participationRatePrintedPct: 105, indexCredit: 90.2 },
   { label: 'B', startingIndexValue: 5569.6, endingIndexValue: 5571.95, indexGrowthRatePctPrinted: 0.04, segmentCreditingRatePctPrinted: 0.04, segmentAccumulationValueBeforeCredit: 3713.02, participationRatePrintedPct: 105, indexCredit: 2.06 },
@@ -108,87 +98,44 @@ export const PRISM_SEGMENTS: readonly PrismSegment[] = [
   { label: 'G', startingIndexValue: 5497.6, endingIndexValue: 5634.6, indexGrowthRatePctPrinted: 2.49, segmentCreditingRatePctPrinted: 2.62, segmentAccumulationValueBeforeCredit: 3611.43, participationRatePrintedPct: 105, indexCredit: 118.12 },
   { label: 'H', startingIndexValue: 5604.38, endingIndexValue: 5671.18, indexGrowthRatePctPrinted: 1.19, segmentCreditingRatePctPrinted: 1.25, segmentAccumulationValueBeforeCredit: 4568.71, participationRatePrintedPct: 105, indexCredit: 71.47 },
   { label: 'I', startingIndexValue: 5574.13, endingIndexValue: 5804.55, indexGrowthRatePctPrinted: 4.13, segmentCreditingRatePctPrinted: 4.13, segmentAccumulationValueBeforeCredit: 7994.42, participationRatePrintedPct: 100, indexCredit: 528.75, window: 'Aug 2023 - Aug 2024' },
+  { label: 'J', startingIndexValue: 5456.12, endingIndexValue: 5833.4, indexGrowthRatePctPrinted: 6.91, segmentCreditingRatePctPrinted: 6.91, segmentAccumulationValueBeforeCredit: 8009.94, participationRatePrintedPct: 100, indexCredit: 886.19 },
+  { label: 'K', startingIndexValue: 5409.32, endingIndexValue: 5847.76, indexGrowthRatePctPrinted: 8.11, segmentCreditingRatePctPrinted: 8.11, segmentAccumulationValueBeforeCredit: 8096.07, participationRatePrintedPct: 100, indexCredit: 1049.93 },
+  { label: 'L', startingIndexValue: 5671.18, endingIndexValue: 5956.62, indexGrowthRatePctPrinted: 5.03, segmentCreditingRatePctPrinted: 5.03, segmentAccumulationValueBeforeCredit: 5272.61, participationRatePrintedPct: 100, indexCredit: 424.61 },
+  { label: 'M', startingIndexValue: 5615.79, endingIndexValue: 5888.24, indexGrowthRatePctPrinted: 4.85, segmentCreditingRatePctPrinted: 4.85, segmentAccumulationValueBeforeCredit: 4916.9, participationRatePrintedPct: 100, indexCredit: 333.96 },
+  { label: 'N', startingIndexValue: 5734.28, endingIndexValue: 5809.28, indexGrowthRatePctPrinted: 1.31, segmentCreditingRatePctPrinted: 1.31, segmentAccumulationValueBeforeCredit: 6355.47, participationRatePrintedPct: 100, indexCredit: 116.37, window: 'Jun 2023 - Jun 2024, Account 6 - S&P' },
 ];
 
 /**
- * The multiplier tiers. Participation and multiplier travel together: the
- * 105% account carries 1.25, the 100% account carries 1.60. Both reconcile
- * exactly, and the 100% account pays MORE per unit of index growth despite the
- * lower headline participation - which is the clearest possible demonstration
- * that a participation rate alone tells you nothing about an account.
+ * The three observed (participation, multiplier) pairs. These are VINTAGES, not
+ * accounts: the two 100% rows are the same account on different segment
+ * vintages, carrying different multipliers.
  */
-export const MULTIPLIER_TIERS = [
-  { participationPrintedPct: 105, multiplier: 1.25, effectiveFactor: 1.3125, segmentsCredited: 6 },
-  { participationPrintedPct: 100, multiplier: 1.6, effectiveFactor: 1.6, segmentsCredited: 1 },
+export const OBSERVED_VINTAGES = [
+  { participationPrintedPct: 105, multiplier: 1.25, effectiveFactor: 1.3125, segments: ['A', 'B', 'D', 'E', 'G', 'H'] },
+  { participationPrintedPct: 100, multiplier: 1.6, effectiveFactor: 1.6, segments: ['I', 'J', 'K', 'L'] },
+  { participationPrintedPct: 100, multiplier: 1.4, effectiveFactor: 1.4, segments: ['M', 'N'] },
 ] as const;
 
-export function tierFor(participationPrintedPct: number) {
-  const hit = MULTIPLIER_TIERS.filter((t) => t.participationPrintedPct === participationPrintedPct);
+export function vintageForSegment(label: string) {
+  const hit = OBSERVED_VINTAGES.filter((v) => (v.segments as readonly string[]).indexOf(label) !== -1);
   return hit.length ? hit[0] : null;
 }
 
-/**
- * Segment D ends at 5,604.38 and segment H starts at 5,604.38. Consecutive
- * one-year segments of the same account, which is independent confirmation
- * that these modals are one account on a rolling annual term rather than an
- * assortment.
- */
-export const CONSECUTIVE_SEGMENT_PROOF = {
-  first: 'D',
-  second: 'H',
-  sharedIndexValue: 5604.38,
-  meaning: 'one account, rolling one-year segments',
-} as const;
-
-/**
- * Segment F does not fit, and is recorded rather than dropped.
- *
- * It shows positive index growth of 0.70%, a printed crediting rate of 0.74%
- * (which is exactly 105% of the growth, so the rate arithmetic is normal), an
- * accumulation value of $2,967.73 - and an index credit of $0.00.
- *
- * Its index values are also in a different range entirely: 4,473.75 to
- * 4,505.10, where every other segment sits between 5,442 and 5,805.
- *
- * Two readings fit and nothing on the modal separates them. Either the segment
- * had not reached its end date when the page was captured, so the crediting
- * rate is a running figure and no credit has been posted - which is exactly the
- * behaviour the annual statements showed for unmatured segments - or the money
- * left the segment before it matured. The same ambiguity applies to segment C,
- * which could be the 0% floor holding or could equally be unmatured.
- */
-export const UNEXPLAINED_SEGMENT = {
-  label: 'F',
-  growthPct: 0.7008,
-  printedCreditingRatePct: 0.74,
-  accumulationValue: 2967.73,
-  creditPaid: 0.0,
-  wouldHavePaidAtTier: 27.3,
-  indexRangeAnomaly: 'index values 4,473-4,505 against 5,442-5,805 on every other segment',
-  readings: [
-    'the segment had not matured when the page was captured, so the rate is running and no credit is posted',
-    'value left the segment before its end date',
-  ],
-  resolved: false,
-} as const;
-
 export const PRISM_SOLVE = {
-  account: 'Balanced Indexed Account 6',
+  account: 'Balanced Indexed Account 6, and a 105% sibling on the same index',
   index: 'S&P PRISM',
   segmentYears: 1,
-  /** Confirmed operative: reproduces the printed crediting rate on all four. */
-  participationOperative: 1.05,
-  /** Applied to dollars on top of the printed crediting rate. */
-  /** The 105% tier. A second tier at 100% carries 1.60 - see MULTIPLIER_TIERS. */
-  creditMultiplier: 1.25,
-  /** The factor that turns index growth into the dollar credit. */
-  effectiveFactor: 1.3125,
+  segmentsObserved: 14,
+  segmentsCredited: 12,
+  /** Confirmed operative: reproduces the printed crediting rate on all fourteen. */
+  participationOperativeValues: [1.0, 1.05],
+  /** Never printed anywhere. All land on a twentieth. */
+  multipliersObserved: [1.25, 1.4, 1.6],
+  effectiveFactorRange: [1.3125, 1.6],
   floorPct: 0,
-  /** The portal's uncapped sentinel on these modals. */
   growthCapSentinelPrinted: 10000000000.0,
-  segmentsObserved: 9,
-  segmentsCredited: 7,
   largestResidualDollars: 0.005,
+  multiplierIsPerVintage: true,
 } as const;
 
 /** Index growth, as the portal computes it: plain point-to-point. */
@@ -197,68 +144,115 @@ export function prismGrowthPct(startingIndexValue: number, endingIndexValue: num
 }
 
 /** The crediting rate the portal PRINTS: growth x participation, floored. */
-export function prismPrintedCreditingPct(
-  growthPct: number,
-  participationPrintedPct: number = 105,
-): number {
+export function prismPrintedCreditingPct(growthPct: number, participationPrintedPct: number): number {
   return Math.max(growthPct * (participationPrintedPct / 100), PRISM_SOLVE.floorPct);
 }
 
-/** The dollar credit the account actually PAYS. */
+/**
+ * The dollar credit an account actually PAYS.
+ *
+ * The multiplier must be supplied, because it cannot be looked up from the
+ * participation rate: 100% has been observed with both 1.40 and 1.60. A caller
+ * that does not know the vintage's multiplier does not know the credit, and the
+ * signature says so rather than guessing a default.
+ */
 export function prismCredit(
   growthPct: number,
   segmentAccumulationValue: number,
-  participationPrintedPct: number = 105,
+  participationPrintedPct: number,
+  multiplier: number,
 ): number {
-  const tier = tierFor(participationPrintedPct);
-  if (!tier) return NaN;
-  const factor = Math.max(growthPct, 0) * tier.effectiveFactor;
+  const factor = Math.max(growthPct, 0) * (participationPrintedPct / 100) * multiplier;
   return Math.round(segmentAccumulationValue * (factor / 100) * 100) / 100;
 }
 
-/**
- * How far the printed crediting rate understates the money, as a percentage.
- * Constant at 25% wherever the floor does not bind.
- */
-export function printedRateUnderstatementPct(growthPct: number): number {
-  if (growthPct <= 0) return 0;
-  return (PRISM_SOLVE.creditMultiplier - 1) * 100;
+/** How far the printed crediting rate understates the money, for a vintage. */
+export function printedRateUnderstatementPct(multiplier: number): number {
+  return (multiplier - 1) * 100;
 }
 
-/* ------------------------------------------------------------------ *
- * The multiplier hypothesis
- * ------------------------------------------------------------------ */
-
-export const MULTIPLIER_HYPOTHESIS = {
-  claim: 'Securian applies a flat 105% participation across these accounts and differentiates them with a per-account credit multiplier applied to the dollar credit.',
-  fits: [
-    { account: 'PRISM 1-year, 105% tier', participation: 1.05, multiplier: 1.25, effective: 1.3125, segments: 6 },
-    { account: 'PRISM 1-year, 100% tier', participation: 1.0, multiplier: 1.6, effective: 1.6, segments: 1 },
-    { account: 'Indexed Loan Account', participation: 1.05, multiplier: 1.4, effective: 1.47, segments: 2 },
-  ],
-  doesNotFit: [
-    'Balanced Indexed Account 8 (PRISM 1-year), read earlier at 1.71x index growth on a single segment. 1.71 / 1.05 = 1.6286, which is not a round multiplier. Either that reading is wrong, or Account 8 works differently, or the multiplier is not always round. One segment from a lower-quality source cannot decide which.',
-    'Balanced Indexed Account 2 on BGA II, where the printed 110% overstates and the observed slope is 0.84. A multiplier above 1 cannot produce a factor below the printed participation, so that account is a different mechanism entirely.',
-  ],
-  status: 'hypothesis',
-  wouldBeSettledBy:
-    'Any carrier document naming a credit multiplier or index credit enhancement per account. Nine credited segments across three accounts, with three clean multipliers - 1.25, 1.40, 1.60 - is strong. A product factsheet would make it a fact.',
-} as const;
+/**
+ * Three consecutive one-year segments of one rolling account: D ends where H
+ * starts, H ends where L starts. Independent proof these modals are one account
+ * — and since H is a 105% vintage and L a 100% one, direct evidence that both
+ * participation and multiplier are redeclared between vintages.
+ */
+export const CONSECUTIVE_CHAIN = [
+  { from: 'D', to: 'H', sharedIndexValue: 5604.38 },
+  { from: 'H', to: 'L', sharedIndexValue: 5671.18 },
+] as const;
 
 /**
- * The claim about PRISM that is both true and worth making, stated so it does
- * not turn into the claim that is neither.
+ * Segment F, recorded rather than dropped. Positive growth of 0.70%, a normal
+ * printed crediting rate of 0.74%, $2,967.73 in the segment, and $0.00
+ * credited. Its index values also sit in a different range entirely:
+ * 4,473-4,505 against 5,409-5,957 on every other segment.
+ *
+ * Two readings fit and the modal does not separate them. Either the segment had
+ * not reached its end date when the page was captured, so the rate is a running
+ * figure and no credit has posted — the behaviour the annual statements showed
+ * for unmatured segments — or value left the segment before it matured. Segment
+ * C carries the same ambiguity: the 0% floor holding, or simply unmatured.
  */
+export const UNEXPLAINED_SEGMENT = {
+  label: 'F',
+  growthPct: 0.7008,
+  printedCreditingRatePct: 0.74,
+  accumulationValue: 2967.73,
+  creditPaid: 0.0,
+  indexRangeAnomaly: 'index values 4,473-4,505 against 5,409-5,957 on every other segment',
+  readings: [
+    'the segment had not matured when the page was captured, so the rate is running and no credit is posted',
+    'value left the segment before its end date',
+  ],
+  resolved: false,
+} as const;
+
+/* ------------------------------------------------------------------ *
+ * The multiplier finding
+ * ------------------------------------------------------------------ */
+
+export const MULTIPLIER_FINDING = {
+  claim: 'Securian applies an undisclosed credit multiplier on top of the printed participation rate, and redeclares it by segment vintage.',
+  evidence: [
+    'Twelve credited segments across three vintages reconcile to under half a cent: 105% x 1.25, 100% x 1.60, 100% x 1.40.',
+    'The Indexed Loan Account, solved separately at 1.47x against a printed 105%, decomposes as 105% x 1.40 — the same 1.40 that appears on PRISM segments M and N.',
+    'All three multipliers land on a twentieth, which a fitted artefact has no reason to do.',
+  ],
+  supersedes:
+    'The earlier per-ACCOUNT multiplier hypothesis. Segments M and N share an account and a printed participation with J, K and L and carry a different multiplier, so the multiplier belongs to the vintage.',
+  doesNotFit: [
+    'Balanced Indexed Account 8, read earlier at 1.71x on a single segment. Neither 1.71 / 1.05 = 1.6286 nor 1.71 / 1.00 = 1.71 is one of the observed multipliers. That reading came from a lower-quality source and one segment; it is more likely wrong than the pattern is.',
+    'Balanced Indexed Account 2 on BGA II, where the printed 110% overstates and the observed slope is 0.84. A multiplier above 1 cannot produce a factor below the printed participation, so that account is a different mechanism.',
+  ],
+  status: 'strong hypothesis',
+  wouldBeSettledBy:
+    'Any carrier document naming a credit multiplier, index credit enhancement or bonus by account and vintage. Twelve segments landing on three round numbers is close to proof of the arithmetic; only a document makes it a term.',
+} as const;
+
+/** What this does to comparing accounts on their participation rate. */
+export const PARTICIPATION_IS_NOT_A_RANKING = {
+  printedRange: [100, 105],
+  printedSpreadPoints: 5,
+  multiplierRange: [1.25, 1.6],
+  multiplierSpreadPct: 28,
+  demonstration:
+    'The 100% account pays 1.60 per unit of index growth where the 105% account pays 1.3125 — about 22% more on a lower headline rate. The same 100% account pays 1.40 on other segments.',
+  consequence:
+    'Ranking accounts by printed participation gets the order wrong. The printed number spans five points; the unprinted multiplier spans twenty-eight percent. The page shows the less important half of the calculation.',
+} as const;
+
 export const PRISM_POSITIONING = {
   supportable:
     'Over the Sep 2021 - Sep 2022 segment this account credited 3.13% and paid a positive index credit, in a window when the S&P 500 fell by roughly 13%.',
   whyItWorks:
     'S&P PRISM is volatility-controlled. It is designed to move less than an equity index in both directions, which is what produced a positive year in a badly negative equity year.',
   theTradeToDisclose:
-    'The same damping gives up upside in strong equity years. An account that protects in 2022 will not keep pace in 2023. Selling the first without the second is how the product gets blamed later.',
+    'The same damping gives up upside in strong equity years, and this data shows it: Jun 2023 to Jun 2024 the index gained 1.31% while equities ran hard. An account that protects in 2022 will lag badly in a rally. Selling the first without the second is how the product gets blamed later.',
   doNotSay: [
     'A participation rate comparison against an S&P 500 account. Different indices with different volatility are not comparable on participation.',
-    'That the account returns 131.25% of the market. It returns 131.25% of a damped index, which is a different and usually smaller number.',
+    'That the account returns 160% of the market. It returns 160% of a damped index, which is a different and usually smaller number.',
+    'Any multiplier as a rate. 1.25, 1.40 and 1.60 are fitted, undeclared, and redeclared by vintage.',
   ],
 } as const;
 

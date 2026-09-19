@@ -1,23 +1,26 @@
 import { describe, expect, it } from 'vitest';
 import {
-  MULTIPLIER_HYPOTHESIS,
+  CONSECUTIVE_CHAIN,
+  MULTIPLIER_FINDING,
+  OBSERVED_VINTAGES,
+  PARTICIPATION_IS_NOT_A_RANKING,
   PRISM_POSITIONING,
-  PRISM_SEGMENTS,
   PRISM_SOLVE,
+  PRISM_SEGMENTS,
+  UNEXPLAINED_SEGMENT,
   prismCredit,
   prismGrowthPct,
-  tierFor,
-  CONSECUTIVE_SEGMENT_PROOF,
-  UNEXPLAINED_SEGMENT,
   prismPrintedCreditingPct,
   printedRateUnderstatementPct,
+  vintageForSegment,
 } from '../shared/prismAccountSolve';
 import { OPERATIVE_MULTIPLIER } from '../shared/securianAnnualPolicyReview';
 
 const credited = PRISM_SEGMENTS.filter((s) => s.indexCredit > 0);
 
-describe('the printed participation rate is operative on this account', () => {
+describe('the printed participation rate is operative on these accounts', () => {
   it('reproduces every printed growth rate from the index values', () => {
+    expect(PRISM_SEGMENTS.length).toBe(14);
     for (const s of PRISM_SEGMENTS) {
       expect(
         prismGrowthPct(s.startingIndexValue, s.endingIndexValue),
@@ -36,20 +39,6 @@ describe('the printed participation rate is operative on this account', () => {
     }
   });
 
-  it('carries two printed participation tiers, not one', () => {
-    const rates: number[] = [];
-    for (const s of PRISM_SEGMENTS) {
-      if (rates.indexOf(s.participationRatePrintedPct) === -1) rates.push(s.participationRatePrintedPct);
-    }
-    expect(rates.sort().join(',')).toBe('100,105');
-  });
-
-  it('is the first account in the audit where the printed rate holds', () => {
-    // Elsewhere 105% printed against an operative 1.47. Here it is real.
-    expect(PRISM_SOLVE.participationOperative).toBe(1.05);
-    expect(OPERATIVE_MULTIPLIER).not.toBeCloseTo(PRISM_SOLVE.participationOperative, 2);
-  });
-
   it('floors a negative segment rather than debiting it', () => {
     const negative = PRISM_SEGMENTS.filter(
       (s) => prismGrowthPct(s.startingIndexValue, s.endingIndexValue) < 0,
@@ -62,40 +51,38 @@ describe('the printed participation rate is operative on this account', () => {
   });
 });
 
-describe('but the dollar credit is 25% more than that rate implies', () => {
-  it('reproduces every dollar credit at its tier factor, to under half a cent', () => {
-    expect(credited.length).toBe(7);
+describe('twelve credited segments reconcile on three vintages', () => {
+  it('reproduces every dollar credit to under half a cent', () => {
+    expect(credited.length).toBe(12);
     for (const s of credited) {
+      const v = vintageForSegment(s.label);
+      expect(v, `${s.label} has no vintage`).not.toBeNull();
       const growth = prismGrowthPct(s.startingIndexValue, s.endingIndexValue);
       expect(
-        prismCredit(growth, s.segmentAccumulationValueBeforeCredit, s.participationRatePrintedPct),
+        prismCredit(growth, s.segmentAccumulationValueBeforeCredit, v!.participationPrintedPct, v!.multiplier),
         `${s.label}: printed $${s.indexCredit}`,
       ).toBeCloseTo(s.indexCredit, 2);
     }
   });
 
-  it('the 100% tier pays MORE per unit of growth than the 105% tier', () => {
-    const lo = tierFor(100)!;
-    const hi = tierFor(105)!;
-    expect(lo.effectiveFactor).toBeGreaterThan(hi.effectiveFactor);
-    // A participation rate alone tells you nothing about what an account pays.
-    expect(lo.participationPrintedPct).toBeLessThan(hi.participationPrintedPct);
+  it('every vintage names the participation its segments actually print', () => {
+    for (const v of OBSERVED_VINTAGES) {
+      for (const label of v.segments) {
+        const seg = PRISM_SEGMENTS.filter((s) => s.label === label)[0];
+        expect(seg.participationRatePrintedPct, label).toBe(v.participationPrintedPct);
+      }
+    }
   });
 
-  it('records the segment that does not fit rather than dropping it', () => {
-    expect(UNEXPLAINED_SEGMENT.label).toBe('F');
-    expect(UNEXPLAINED_SEGMENT.resolved).toBe(false);
-    expect(UNEXPLAINED_SEGMENT.readings.length).toBe(2);
-    const f = PRISM_SEGMENTS.filter((s) => s.label === 'F')[0];
-    expect(prismGrowthPct(f.startingIndexValue, f.endingIndexValue)).toBeGreaterThan(0);
-    expect(f.indexCredit).toBe(0);
-  });
-
-  it('two segments are consecutive, proving one rolling account', () => {
-    const d = PRISM_SEGMENTS.filter((s) => s.label === CONSECUTIVE_SEGMENT_PROOF.first)[0];
-    const h = PRISM_SEGMENTS.filter((s) => s.label === CONSECUTIVE_SEGMENT_PROOF.second)[0];
-    expect(d.endingIndexValue).toBe(h.startingIndexValue);
-    expect(d.endingIndexValue).toBe(CONSECUTIVE_SEGMENT_PROOF.sharedIndexValue);
+  it('accounts for every credited segment exactly once', () => {
+    const assigned: string[] = [];
+    for (const v of OBSERVED_VINTAGES) {
+      for (const label of v.segments) {
+        expect(assigned.indexOf(label), `${label} assigned twice`).toBe(-1);
+        assigned.push(label);
+      }
+    }
+    expect(assigned.length).toBe(credited.length);
   });
 
   it('the printed crediting rate alone does NOT reproduce the dollars', () => {
@@ -105,66 +92,115 @@ describe('but the dollar credit is 25% more than that rate implies', () => {
     }
   });
 
-  it('the shortfall on the 105% tier is a constant 25%', () => {
-    expect(printedRateUnderstatementPct(1)).toBe(25);
-    expect(printedRateUnderstatementPct(-1)).toBe(0);
-  });
-
-  it('the effective factor is the product of the two', () => {
-    expect(PRISM_SOLVE.participationOperative * PRISM_SOLVE.creditMultiplier).toBeCloseTo(
-      PRISM_SOLVE.effectiveFactor,
-      10,
-    );
-    expect(PRISM_SOLVE.effectiveFactor).toBe(1.3125);
+  it('the understatement is 25%, 40% and 60% by vintage', () => {
+    const gaps = OBSERVED_VINTAGES.map((v) => Math.round(printedRateUnderstatementPct(v.multiplier)));
+    expect(gaps.slice().sort((a, b) => a - b)).toEqual([25, 40, 60]);
   });
 
   it('is not a fit to one number: wide ranges of value and growth', () => {
     const values = credited.map((s) => s.segmentAccumulationValueBeforeCredit);
-    expect(Math.max.apply(null, values) / Math.min.apply(null, values)).toBeGreaterThan(4);
+    expect(Math.max.apply(null, values) / Math.min.apply(null, values)).toBeGreaterThan(10);
     const growths = credited.map((s) => prismGrowthPct(s.startingIndexValue, s.endingIndexValue));
-    expect(Math.max.apply(null, growths) / Math.min.apply(null, growths)).toBeGreaterThan(50);
+    expect(Math.max.apply(null, growths) / Math.min.apply(null, growths)).toBeGreaterThan(100);
   });
 });
 
-describe('the multiplier hypothesis is labelled a hypothesis', () => {
-  it('explains the indexed loan account with the same 105% and a different multiplier', () => {
-    const loan = MULTIPLIER_HYPOTHESIS.fits.filter((f) => f.account.indexOf('Loan') !== -1)[0];
-    expect(loan.participation * loan.multiplier).toBeCloseTo(OPERATIVE_MULTIPLIER, 10);
-    expect(loan.multiplier).toBe(1.4);
+describe('the multiplier is per-vintage, which supersedes the per-account claim', () => {
+  it('the same printed participation carries two different multipliers', () => {
+    const at100 = OBSERVED_VINTAGES.filter((v) => v.participationPrintedPct === 100);
+    expect(at100.length).toBe(2);
+    expect(at100[0].multiplier).not.toBe(at100[1].multiplier);
+    expect(PRISM_SOLVE.multiplierIsPerVintage).toBe(true);
   });
 
-  it('records what it does not explain rather than omitting it', () => {
-    expect(MULTIPLIER_HYPOTHESIS.status).toBe('hypothesis');
-    expect(MULTIPLIER_HYPOTHESIS.doesNotFit.length).toBeGreaterThanOrEqual(2);
-    expect(MULTIPLIER_HYPOTHESIS.doesNotFit.join(' ')).toMatch(/1\.6286/);
+  it('so a multiplier cannot be derived from a participation rate', () => {
+    // prismCredit demands the multiplier explicitly; this is why.
+    const m14 = prismCredit(5, 1000, 100, 1.4);
+    const m16 = prismCredit(5, 1000, 100, 1.6);
+    expect(m14).not.toBeCloseTo(m16, 2);
   });
 
-  it('rests on nine segments across three accounts, with round multipliers', () => {
-    const total = MULTIPLIER_HYPOTHESIS.fits.reduce((t, f) => t + f.segments, 0);
-    expect(total).toBe(9);
-    expect(MULTIPLIER_HYPOTHESIS.fits.length).toBe(3);
-    for (const f of MULTIPLIER_HYPOTHESIS.fits) {
-      // 1.25, 1.40, 1.60 - all land on a twentieth.
-      expect(Math.round(f.multiplier * 20) / 20).toBeCloseTo(f.multiplier, 10);
-      expect(f.participation * f.multiplier).toBeCloseTo(f.effective, 10);
+  it('records that it supersedes the earlier hypothesis rather than quietly replacing it', () => {
+    expect(MULTIPLIER_FINDING.supersedes).toMatch(/per-ACCOUNT multiplier hypothesis/);
+    expect(MULTIPLIER_FINDING.status).toBe('strong hypothesis');
+  });
+
+  it('the indexed loan account decomposes with a multiplier seen elsewhere', () => {
+    // 1.47 = 1.05 x 1.40, and 1.40 appears on PRISM segments M and N.
+    expect(1.05 * 1.4).toBeCloseTo(OPERATIVE_MULTIPLIER, 10);
+    const has14 = OBSERVED_VINTAGES.filter((v) => v.multiplier === 1.4);
+    expect(has14.length).toBe(1);
+  });
+
+  it('every multiplier lands on a twentieth', () => {
+    for (const m of PRISM_SOLVE.multipliersObserved) {
+      expect(Math.round(m * 20) / 20).toBeCloseTo(m, 10);
     }
   });
+
+  it('records what it does not explain', () => {
+    expect(MULTIPLIER_FINDING.doesNotFit.length).toBeGreaterThanOrEqual(2);
+    expect(MULTIPLIER_FINDING.doesNotFit.join(' ')).toMatch(/1\.6286/);
+  });
 });
 
-describe('the PRISM story is the drawdown year, not the participation rate', () => {
-  it('names the window that carries it', () => {
+describe('the consecutive chain proves one rolling account across vintages', () => {
+  it('each link shares an index value end-to-start', () => {
+    for (const link of CONSECUTIVE_CHAIN) {
+      const a = PRISM_SEGMENTS.filter((s) => s.label === link.from)[0];
+      const b = PRISM_SEGMENTS.filter((s) => s.label === link.to)[0];
+      expect(a.endingIndexValue, `${link.from} -> ${link.to}`).toBe(b.startingIndexValue);
+      expect(a.endingIndexValue).toBe(link.sharedIndexValue);
+    }
+  });
+
+  it('the chain crosses a vintage boundary, so both rates were redeclared', () => {
+    const h = PRISM_SEGMENTS.filter((s) => s.label === 'H')[0];
+    const l = PRISM_SEGMENTS.filter((s) => s.label === 'L')[0];
+    expect(h.participationRatePrintedPct).not.toBe(l.participationRatePrintedPct);
+    expect(vintageForSegment('H')!.multiplier).not.toBe(vintageForSegment('L')!.multiplier);
+  });
+});
+
+describe('participation is not a ranking', () => {
+  it('the lower printed rate pays more per unit of growth', () => {
+    const at100 = OBSERVED_VINTAGES.filter((v) => v.participationPrintedPct === 100 && v.multiplier === 1.6)[0];
+    const at105 = OBSERVED_VINTAGES.filter((v) => v.participationPrintedPct === 105)[0];
+    expect(at100.participationPrintedPct).toBeLessThan(at105.participationPrintedPct);
+    expect(at100.effectiveFactor).toBeGreaterThan(at105.effectiveFactor);
+    expect(at100.effectiveFactor / at105.effectiveFactor).toBeGreaterThan(1.2);
+  });
+
+  it('the unprinted half of the calculation moves more than the printed half', () => {
+    expect(PARTICIPATION_IS_NOT_A_RANKING.multiplierSpreadPct).toBeGreaterThan(
+      PARTICIPATION_IS_NOT_A_RANKING.printedSpreadPoints,
+    );
+    expect(PARTICIPATION_IS_NOT_A_RANKING.consequence).toMatch(/gets the order wrong/i);
+  });
+});
+
+describe('the unfitted segment and the PRISM story', () => {
+  it('records segment F rather than dropping it', () => {
+    expect(UNEXPLAINED_SEGMENT.label).toBe('F');
+    expect(UNEXPLAINED_SEGMENT.resolved).toBe(false);
+    expect(UNEXPLAINED_SEGMENT.readings.length).toBe(2);
+    expect(vintageForSegment('F')).toBeNull();
+  });
+
+  it('names the drawdown window that carries the story', () => {
     const sep = PRISM_SEGMENTS.filter((s) => s.window === 'Sep 2021 - Sep 2022');
     expect(sep.length).toBe(1);
     expect(sep[0].indexCredit).toBeGreaterThan(0);
     expect(PRISM_POSITIONING.supportable).toMatch(/Sep 2021/);
   });
 
-  it('discloses the other side of the trade in the same breath', () => {
-    expect(PRISM_POSITIONING.theTradeToDisclose).toMatch(/gives up upside/i);
+  it('discloses the lag year from the same data, in the same object', () => {
+    expect(PRISM_POSITIONING.theTradeToDisclose).toMatch(/Jun 2023 to Jun 2024/);
+    expect(PRISM_POSITIONING.theTradeToDisclose).toMatch(/1\.31%/);
   });
 
-  it('bans the participation comparison and the 131.25%-of-the-market claim', () => {
+  it('bans quoting any multiplier as a rate', () => {
+    expect(PRISM_POSITIONING.doNotSay.join(' ')).toMatch(/redeclared by vintage/i);
     expect(PRISM_POSITIONING.doNotSay.join(' ')).toMatch(/not comparable on participation/i);
-    expect(PRISM_POSITIONING.doNotSay.join(' ')).toMatch(/131\.25% of a damped index/i);
   });
 });
