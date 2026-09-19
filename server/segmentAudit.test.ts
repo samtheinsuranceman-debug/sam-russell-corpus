@@ -155,3 +155,71 @@ describe('a loaned indexed account', () => {
     expect(r.ok && r.working).not.toMatch(/loan charge/);
   });
 });
+
+describe('the segment, once the owner supplied 24 months', () => {
+  /** Same segment, with the length the screen did not carry. */
+  const known = { ...securian, segmentYears: 2 };
+
+  it('collapses to a single reconciliation instead of eight', () => {
+    const a = auditSegment(known);
+    expect(a.candidates.length).toBe(1);
+    expect(a.candidates[0].segmentYears).toBe(2);
+    expect(a.candidates[0].compoundingChargePct).toBeCloseTo(7.79, 1);
+    expect(a.candidates[0].simpleChargePct).toBeCloseTo(10.28, 1);
+    // And the implied annual index growth becomes checkable: ~20.5% a year,
+    // which is a strong but not impossible two-year run for the S&P 500.
+    expect(a.candidates[0].impliedAnnualIndexGrowthPct).toBeCloseTo(20.52, 1);
+  });
+
+  it('stops asking for the segment length once it has it', () => {
+    expect(auditSegment(known).missing.join(' ')).not.toMatch(/segment length/i);
+    expect(auditSegment(securian).missing.join(' ')).toMatch(/segment length/i);
+  });
+
+  it('rules out the half-the-money reading arithmetically', () => {
+    // The theory: the credit applies to only half the allocated money, so the
+    // credited rate is half the participated rate. If that were so, doubling
+    // the credit would land at or below full participation. It lands above, so
+    // the credit is MORE than half the participated amount and cannot be a
+    // halving of it. This is the one part of the owner's reading that the
+    // numbers settle on their own.
+    const a = auditSegment(known);
+    const doubled = a.actualCreditedPct * 2;
+    const atFullParticipation = a.computedGrowthPct * 1.1; // 110%
+    expect(doubled).toBeGreaterThan(atFullParticipation);
+    expect(doubled).toBeCloseTo(53.92, 1);
+    expect(atFullParticipation).toBeCloseTo(49.78, 1);
+  });
+
+  it('does not close on 110% participation less a 2.50% spread either', () => {
+    // The owner's stated product spec, tested directly: 110% of the index less
+    // a 2.50% spread is 47.28% over the segment, against 26.96% credited. The
+    // spec and the segment disagree by 20.32 points, so one of them is
+    // describing something the other is not — which is why more documents are
+    // the answer and not more arithmetic.
+    const perSpec = auditSegment({ ...known, participationPct: 110, spreadPct: 2.5 });
+    expect(perSpec.expectedCreditedPct).toBeCloseTo(47.28, 1);
+    expect(perSpec.reconciles).toBe(false);
+    expect(perSpec.gapPct).toBeCloseTo(20.32, 1);
+    // Closing it would need a 7.71% annual charge, which is not the 4.75%
+    // indexed loan charge on the carrier's loan page.
+    expect(perSpec.candidates[0].compoundingChargePct).toBeCloseTo(7.71, 1);
+    expect(perSpec.candidates[0].compoundingChargePct).toBeGreaterThan(4.75);
+  });
+
+  it('keeps the participation discrepancy visible rather than picking a side', () => {
+    // The screen printed 105.00%; the owner states the account is 110%. Both
+    // audits are kept because the difference is a real question: on several
+    // products 110% current sits above a 105% guaranteed minimum, so a portal
+    // printing 105 on an ALREADY CREDITED segment may mean the segment credited
+    // at the guaranteed floor. That is worth a phone call, not a silent pick.
+    const atScreen = auditSegment(known);
+    const atSpec = auditSegment({ ...known, participationPct: 110 });
+    expect(atScreen.expectedCreditedPct).toBeCloseTo(47.52, 1);
+    expect(atSpec.expectedCreditedPct).toBeCloseTo(49.78, 1);
+    expect(atSpec.expectedCreditedPct).toBeGreaterThan(atScreen.expectedCreditedPct);
+    // Neither reconciles, so the participation rate is not the gap's cause.
+    expect(atScreen.reconciles).toBe(false);
+    expect(atSpec.reconciles).toBe(false);
+  });
+});

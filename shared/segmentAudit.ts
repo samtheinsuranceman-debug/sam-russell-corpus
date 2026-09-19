@@ -130,7 +130,12 @@ export function auditSegment(seg: ObservedSegment, maxYears = 8): SegmentAudit {
   const candidates: Reconciliation[] = [];
   if (!reconciles && gap > 0) {
     const ratio = (1 + expected / 100) / (1 + seg.creditedRatePct / 100);
-    for (let n = 1; n <= maxYears; n++) {
+    // A KNOWN segment length collapses the list to one row. That is the whole
+    // value of supplying it: the ambiguity was never in the arithmetic, it was
+    // in the one fact the screen did not carry.
+    const lo = seg.segmentYears ?? 1;
+    const hi = seg.segmentYears ?? maxYears;
+    for (let n = lo; n <= hi; n++) {
       candidates.push({
         segmentYears: n,
         compoundingChargePct: (Math.pow(ratio, 1 / n) - 1) * 100,
