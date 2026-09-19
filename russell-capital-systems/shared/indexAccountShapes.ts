@@ -213,7 +213,7 @@ export interface IndexAccountShape {
  * "9999999900.00% cap" on a comparison row in front of a client. A sentinel is
  * a missing value wearing a number, and the fix is to recognise it as missing.
  */
-export const UNCAPPED_SENTINELS = [9999999900, 999999999, 99999999] as const;
+export const UNCAPPED_SENTINELS = [10000000000, 9999999900, 999999999, 99999999] as const;
 
 /** A cap as the carrier's system gave it, or null where it is a sentinel. */
 export function normaliseCap(capPercent: number | null): number | null {
