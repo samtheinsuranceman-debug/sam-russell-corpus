@@ -13,6 +13,8 @@
 
 import { describe, it, expect } from 'vitest';
 import {
+  BGA_BALANCED_2_NINE,
+  NINE_SEGMENT_SOLUTION,
   BGA_BALANCED_2_MODALS,
   FOUR_MODAL_FINDINGS,
   BGA3_BALANCED_2_OBSERVED_PCT,
@@ -366,5 +368,70 @@ describe('the four modals', () => {
     for (const balance of ['1026.9', '1026.67', '432.28', '370.76']) {
       expect(serialised, balance).not.toContain(balance);
     }
+  });
+});
+
+describe('nine segments solve the account', () => {
+  const SP = NINE_SEGMENT_SOLUTION.spreadPointsPerSegment;
+  const sub = (m: (typeof BGA_BALANCED_2_NINE)[number]) => m.statedGrowthPct * 1.05 - m.creditedPct;
+  const mul = (m: (typeof BGA_BALANCED_2_NINE)[number]) =>
+    ((1 + (m.statedGrowthPct * 1.05) / 100) / (1 + m.creditedPct / 100) - 1) * 100;
+  const five = BGA_BALANCED_2_NINE.filter((m) =>
+    ['Jan', 'May', 'Jun', 'Jul', 'Aug'].some((k) => m.segment.startsWith(k)));
+
+  it('is internally sound on all nine', () => {
+    for (const m of BGA_BALANCED_2_NINE) {
+      expect((m.endIndexValue / m.startIndexValue - 1) * 100, m.segment).toBeCloseTo(m.statedGrowthPct, 1);
+    }
+    expect(BGA_BALANCED_2_NINE.length).toBe(9);
+  });
+
+  it('proves the spread is subtracted, not divided — by a factor of twenty', () => {
+    const a = five.map(sub);
+    const b = five.map(mul);
+    const bandA = Math.max(...a) - Math.min(...a);
+    const bandB = Math.max(...b) - Math.min(...b);
+    expect(bandA).toBeLessThan(0.02);
+    expect(bandB).toBeGreaterThan(0.2);
+    expect(bandB / bandA).toBeGreaterThan(15);
+    expect(a.reduce((x, y) => x + y, 0) / a.length).toBeCloseTo(SP, 2);
+  });
+
+  it('recovers three participation rates where the portal shows one', () => {
+    const solved = (m: (typeof BGA_BALANCED_2_NINE)[number]) => ((m.creditedPct + SP) / m.statedGrowthPct) * 100;
+    for (const m of BGA_BALANCED_2_NINE) {
+      const p = solved(m);
+      const grp = NINE_SEGMENT_SOLUTION.participationGroups.find((g) =>
+        g.segments.some((k) => m.segment.startsWith(k)))!;
+      expect(p, `${m.segment} should solve to ${grp.ratePct}`).toBeCloseTo(grp.ratePct, 1);
+      // And every modal printed 105.00% regardless.
+      expect(m.statedParticipationPct).toBe(105);
+    }
+    expect(NINE_SEGMENT_SOLUTION.portalIsWrongOnSegments).toBe(4);
+  });
+
+  it('catches September crediting above its own index growth', () => {
+    const sep = BGA_BALANCED_2_NINE.find((m) => m.segment.startsWith('Sep'))!;
+    expect(sep.creditedPct).toBeGreaterThan(sep.statedGrowthPct);
+    // Which 105% participation less a positive spread cannot do.
+    expect(sep.statedGrowthPct * 1.05 - SP).toBeLessThan(sep.creditedPct);
+    expect(NINE_SEGMENT_SOLUTION.plainestProof).toMatch(/more than the index moved/);
+  });
+
+  it('withdraws the four-modal residual finding explicitly', () => {
+    expect(NINE_SEGMENT_SOLUTION.withdraws).toMatch(/FOUR_MODAL_FINDINGS/);
+    expect(NINE_SEGMENT_SOLUTION.withdraws).toMatch(/wrong by a factor of twenty/);
+    expect(NINE_SEGMENT_SOLUTION.withdraws).toMatch(/artifact of both/);
+    // The superseded block is kept so the withdrawal is auditable, not erased.
+    expect(FOUR_MODAL_FINDINGS.residualAnnualPct).toBe(4.56);
+  });
+
+  it('leaves the loan charge a range, not a number, and says why', () => {
+    const [lo, hi] = NINE_SEGMENT_SOLUTION.subjectResidualRangeAnnualPct;
+    expect(lo).toBeLessThan(4.75);
+    expect(hi).toBeGreaterThan(4.75);
+    // 4.75% is inside the range — which is not the same as being the answer.
+    expect(hi - lo).toBeGreaterThan(2);
+    expect(NINE_SEGMENT_SOLUTION.whyItCannotBePinned).toMatch(/One equation, two unknowns/);
   });
 });

@@ -493,3 +493,105 @@ export const FOUR_MODAL_FINDINGS = {
   openQuestion:
     'Why January behaves differently from February, March and April. Twenty-five times their mutual spread is not rounding. Segments are struck monthly on rates declared at creation, so the modal may be printing the current participation rate rather than the one that segment was struck on — which would mean the 105.00% on the subject segment is also not necessarily its own rate.',
 } as const;
+
+/* ═══ Nine segments solve the account ══════════════════════════════════════
+ * And in doing so they withdraw the finding that stood before them. */
+
+export const BGA_BALANCED_2_NINE: readonly ModalSegment[] = [
+  { segment: 'Jan 2019 – Jan 2021', startIndexValue: 2635.96, endIndexValue: 3795.54, statedGrowthPct: 43.99, statedParticipationPct: 105, creditedPct: 42.10 },
+  { segment: 'Feb 2019 – Feb 2021', startIndexValue: 2745.73, endIndexValue: 3913.97, statedGrowthPct: 42.55, statedParticipationPct: 105, creditedPct: 36.11 },
+  { segment: 'Mar 2019 – Mar 2021', startIndexValue: 2808.48, endIndexValue: 3915.46, statedGrowthPct: 39.42, statedParticipationPct: 105, creditedPct: 33.15 },
+  { segment: 'Apr 2019 – Apr 2021', startIndexValue: 2905.03, endIndexValue: 4170.42, statedGrowthPct: 43.56, statedParticipationPct: 105, creditedPct: 37.07 },
+  { segment: 'May 2019 – May 2021', startIndexValue: 2876.32, endIndexValue: 4159.12, statedGrowthPct: 44.60, statedParticipationPct: 105, creditedPct: 42.73 },
+  { segment: 'Jun 2019 – Jun 2021', startIndexValue: 2954.18, endIndexValue: 4221.86, statedGrowthPct: 42.91, statedParticipationPct: 105, creditedPct: 40.96 },
+  { segment: 'Jul 2019 – Jul 2021', startIndexValue: 2995.11, endIndexValue: 4360.03, statedGrowthPct: 45.57, statedParticipationPct: 105, creditedPct: 43.76 },
+  { segment: 'Aug 2019 – Aug 2021', startIndexValue: 2847.60, endIndexValue: 4405.80, statedGrowthPct: 54.72, statedParticipationPct: 105, creditedPct: 53.36 },
+  { segment: 'Sep 2019 – Sep 2021', startIndexValue: 3006.79, endIndexValue: 4473.75, statedGrowthPct: 48.79, statedParticipationPct: 105, creditedPct: 49.69 },
+];
+
+/**
+ * The account's real crediting formula, solved.
+ *
+ * ## The spread is subtracted, not divided
+ *
+ * Two models were tested against all nine segments. Taking the five that agree
+ * with each other:
+ *
+ *   subtractive   credited = growth × participation − spread
+ *                 spread lands in a 0.0115-point band around 4.0939
+ *   multiplicative (1 + growth × participation) / (1 + fee) − 1
+ *                 fee lands in a 0.2346-point band around 2.8341
+ *
+ * The subtractive model is twenty times tighter, on inputs displayed to two
+ * decimal places. It is the formula. The multiplicative one is not close.
+ *
+ * ## The participation rate is not 105%, and it is not constant
+ *
+ * Hold the spread at 4.0939 and solve each segment for the participation it
+ * must have used:
+ *
+ *   Jan 105.010   May 104.986   Jun 104.996   Jul 105.012   Aug 104.996
+ *   Feb  94.486   Mar  94.480   Apr  94.499
+ *   Sep 110.235
+ *
+ * Three rates, each internally tight to a fortieth of a point: 105.00%, 94.49%,
+ * 110.24%. Segments are struck monthly and the rate is declared at creation, so
+ * three rates across nine consecutive months is ordinary product behaviour.
+ *
+ * What is not ordinary is that all nine modals print 105.00%. The portal shows
+ * one participation rate on every segment, and for four of the nine it is not
+ * the rate that segment was actually credited at. September is the plainest
+ * proof: it credited 49.69% on 48.79% growth — MORE than the index moved, which
+ * 105% participation less any positive spread cannot produce, and 110.24% less
+ * 4.09 points can.
+ *
+ * ## What this withdraws
+ *
+ * FOUR_MODAL_FINDINGS concluded, from four segments, that the subject segment's
+ * residual priced at 4.56% a year against a published 4.75% indexed loan
+ * charge, and called the agreement striking. That result was computed under the
+ * multiplicative model, which these nine segments show is the wrong one, and
+ * from a "consistent trio" — February, March, April — that turns out to be the
+ * group with the ODD participation rate rather than the representative one. The
+ * agreement was an artifact of both errors. It is withdrawn.
+ *
+ * ## And what it does to the subject segment
+ *
+ * Under the correct model the subject segment gives one equation with two
+ * unknowns, and the portal has just been shown to misreport one of them.
+ *
+ *   at 105.00% participation → an extra 16.46 points over the segment
+ *   at  94.49% participation → an extra 11.71 points
+ *   at 110.24% participation → an extra 18.72 points
+ *
+ * Roughly 6.3%, 4.5% and 7.1% a year compounding. The published indexed loan
+ * charge of 4.75% sits inside that range, but so does a great deal else, and
+ * which one applies depends entirely on a participation rate this portal cannot
+ * be trusted to report.
+ *
+ * So the honest position is weaker than it was an hour ago and better founded:
+ * the formula is now known exactly, the portal's participation field is known
+ * to be unreliable, and the loan charge cannot be isolated until that segment's
+ * true participation rate is read from something other than this screen.
+ */
+export const NINE_SEGMENT_SOLUTION = {
+  formula: 'credited = indexGrowth × participation − spread',
+  spreadPointsPerSegment: 4.0939,
+  spreadBandPoints: 0.0115,
+  multiplicativeBandPoints: 0.2346,
+  subtractiveIsTighterBy: 20,
+  participationGroups: [
+    { ratePct: 105.0, segments: ['Jan', 'May', 'Jun', 'Jul', 'Aug'] },
+    { ratePct: 94.49, segments: ['Feb', 'Mar', 'Apr'] },
+    { ratePct: 110.24, segments: ['Sep'] },
+  ],
+  portalPrintsOnEverySegment: 105.0,
+  portalIsWrongOnSegments: 4,
+  plainestProof:
+    'September credited 49.69% on 48.79% growth — more than the index moved. 105% participation less any positive spread cannot do that; 110.24% less 4.09 points can.',
+  withdraws:
+    'FOUR_MODAL_FINDINGS. Its 4.56% residual used the multiplicative model, which is wrong by a factor of twenty, and treated February–April as the representative group when they are the ones with the unusual participation rate. The agreement with 4.75% was an artifact of both.',
+  subjectResidualRangeAnnualPct: [4.5, 7.1],
+  whyItCannotBePinned:
+    'One equation, two unknowns, and the portal has just been shown to misreport one of them. The subject segment\'s true participation rate has to come from somewhere other than this screen.',
+} as const;
