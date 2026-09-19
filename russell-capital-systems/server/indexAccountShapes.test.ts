@@ -15,10 +15,11 @@ import {
   shapeById,
   shapesFor,
   shapesNeedingConfirmation,
+  shapesWithoutMaximum,
 } from '../shared/indexAccountShapes';
-import { AG49_PRODUCTS, productFor } from '../shared/ag49Products';
-import { compareAccountShapes, compareLoanTypes } from '../shared/iulIllustrationGate';
-import { MAX_ILLUSTRATED_LOAN_ARBITRAGE_PP } from '../shared/ag49Validator';
+import { AG49_PRODUCTS, PRODUCTS_AWAITING_MAXIMUM, awaitingMaximum, productFor } from '../shared/ag49Products';
+import { compareAccountShapes, compareLoanTypes, gatedIllustration } from '../shared/iulIllustrationGate';
+import { MANDATED_NOTICE, MAX_ILLUSTRATED_LOAN_ARBITRAGE_PP } from '../shared/ag49Validator';
 
 describe('index account shapes', () => {
   it('every shape belongs to a verified product, so nothing can be illustrated off-registry', () => {
@@ -29,8 +30,9 @@ describe('index account shapes', () => {
 
   it('no shape claims a maximum illustrated rate above its product\'s', () => {
     // A product's figure is the highest across its accounts, so an account may
-    // be lower but never higher.
+    // be lower, or absent, but never higher.
     for (const s of INDEX_ACCOUNT_SHAPES) {
+      if (s.maxIllustratedRate === null) continue;
       const p = productFor(s.productId)!;
       expect(s.maxIllustratedRate, s.id).toBeLessThanOrEqual(p.maxIllustratedRate + 1e-12);
     }
@@ -56,14 +58,23 @@ describe('index account shapes', () => {
     expect(under.ok && under.segmentCredited).toBe(0);
   });
 
-  it('refuses to compute a capped account whose cap is not on file', () => {
-    // The Pacific Life row records participation, floor and both rates, but the
-    // account line does not give a cap. Recorded null rather than guessed.
+  it('now knows the Pacific 1-Year cap, which the illustration alone did not give', () => {
+    // This row carried cap: null until the account-choices document was read —
+    // the illustration's account line gives floor, illustrated rate, maximum
+    // and allocation, but no cap. IUC4009 supplies it: 10% current, 2%
+    // guaranteed minimum. The account is no longer describable-only.
     const p = shapeById('pacific-horizon-ecv-1yr')!;
-    expect(p.cap).toBeNull();
-    const r = creditFor(p, 0.1);
+    expect(p.cap).toBe(0.1);
+    expect(p.capGuaranteedMin).toBe(0.02);
+    const r = creditFor(p, 0.2);
+    expect(r.ok && r.segmentCredited).toBeCloseTo(0.1, 10);
+  });
+
+  it('refuses an uncapped account whose spread basis is not on file', () => {
+    const b = shapeById('mn-bga3-balanced-2')!;
+    const r = creditFor({ ...b, spread: null, spreadBasis: null }, 0.1);
     expect(r.ok).toBe(false);
-    expect(!r.ok && r.reason).toMatch(/no cap is on file/);
+    expect(!r.ok && r.reason).toMatch(/spread/);
   });
 
   it('credits an uncapped account as participation less the spread, floored', () => {
@@ -96,7 +107,7 @@ describe('index account shapes', () => {
     // DESCRIBED as what the structure does on a 20% movement — it cannot be
     // projected forward in an illustration. The account's breadth is real; the
     // ceiling on illustrating it is unchanged.
-    expect(r.annualised).toBeGreaterThan(b.maxIllustratedRate);
+    expect(r.annualised).toBeGreaterThan(b.maxIllustratedRate!);
   });
 
   it('distinguishes a per-year spread from a per-segment one, because the gap is 250 basis points', () => {
@@ -175,10 +186,11 @@ describe('the account comparison surface', () => {
     for (const r of compareAccountShapes('mn-life-bga3', 0.1)) {
       expect(r.working.length, r.label).toBeGreaterThan(30);
     }
-    // An uncomputable row comes back with null figures and the reason, not zeros.
+    // Every Pacific row now computes; what varies is whether it may be
+    // illustrated, which is carried separately from whether it can be priced.
     const pac = compareAccountShapes('pacific-horizon-ecv', 0.1);
-    expect(pac[0].segmentCreditedPct).toBeNull();
-    expect(pac[0].working).toMatch(/no cap is on file/);
+    expect(pac.length).toBe(8);
+    for (const r of pac) expect(r.segmentCreditedPct, r.label).not.toBeNull();
   });
 
   it('returns nothing for a product with no verified accounts', () => {
@@ -264,5 +276,127 @@ describe('the product registry after widening', () => {
 
   it('the two products do not share a maximum, which is the whole point of the table', () => {
     expect(AG49_PRODUCTS[0].maxIllustratedRate).not.toBe(AG49_PRODUCTS[1].maxIllustratedRate);
+  });
+});
+
+describe('the Pacific Life profile, built from the Drive documents', () => {
+  it('carries all eight Pacific Horizon ECV indexed accounts', () => {
+    const ids = shapesFor('pacific-horizon-ecv').map((s) => s.label);
+    expect(ids.length).toBe(8);
+    for (const want of ['1-Year Indexed Account', '2-Year Indexed Account', 'High Par 5-Year Indexed Account',
+      '1-Year Invesco QQQ Indexed Account', '1-Year High Cap Indexed Account',
+      '1-Year High Par Volatility Control Indexed Account', '1-Year Volatility Control Indexed Account',
+      '1-Year No Cap Dynamic Par Indexed Account']) {
+      expect(ids, want).toContain(want);
+    }
+  });
+
+  it('reads the 2-Year cap across the segment, not per year', () => {
+    // "24% current growth cap over 2 years". Read as an annual cap it would be
+    // 24% a year; correctly it is 24% across the segment, about 11.4% a year.
+    const two = shapeById('pacific-horizon-ecv-2yr')!;
+    expect(two.cap).toBe(0.24);
+    expect(two.capBasis).toBe('per-segment');
+    const r = creditFor(two, 0.6); // a 60% two-year run, well past the cap
+    expect(r.ok && r.segmentCredited).toBeCloseTo(0.24, 10);
+    expect(r.ok && r.annualised).toBeCloseTo(Math.pow(1.24, 0.5) - 1, 12);
+    expect(r.ok && r.annualised).toBeLessThan(0.12);
+    expect(SHAPES_VERSION.neverPrinted.join(' ')).toMatch(/24% ACROSS the segment/);
+  });
+
+  it('charges the High Cap account for its higher cap', () => {
+    // 12% cap instead of 10%, bought with 0.80% a year. An account comparison
+    // that ignores the charge flatters it by exactly that much.
+    const high = shapeById('pacific-horizon-ecv-1yr-high-cap')!;
+    const plain = shapeById('pacific-horizon-ecv-1yr')!;
+    expect(high.accountChargeAnnual).toBe(0.008);
+    const bigYear = 0.3;
+    const h = creditFor(high, bigYear);
+    const p = creditFor(plain, bigYear);
+    // Capped at 12% then charged 0.80% → 11.20%, against a plain 10%.
+    expect(h.ok && h.segmentCredited).toBeCloseTo(0.112, 10);
+    expect(p.ok && p.segmentCredited).toBeCloseTo(0.1, 10);
+    // In a flat year the charge makes it WORSE than the plain account.
+    const flat = creditFor(high, 0);
+    expect(flat.ok && flat.segmentCredited).toBeCloseTo(-0.008, 10);
+    expect(h.ok && h.working).toMatch(/bought, not given/);
+  });
+
+  it('adds the volatility control account benefit', () => {
+    const vc = shapeById('pacific-horizon-ecv-1yr-vc')!;
+    expect(vc.accountBenefitAnnual).toBe(0.004);
+    expect(vc.participation).toBe(1.8);
+    // 5% index × 180% = 9%, plus the 0.40% benefit.
+    const r = creditFor(vc, 0.05);
+    expect(r.ok && r.segmentCredited).toBeCloseTo(0.094, 10);
+  });
+
+  it('treats the dynamic par rate as an assumption, never a term', () => {
+    const dyn = shapeById('pacific-horizon-ecv-1yr-no-cap-dynamic-par')!;
+    expect(dyn.participationDeclared).toBe(true);
+    expect(dyn.participation).toBe(0.5);
+    expect(dyn.participationGuaranteedMin).toBe(0.05);
+    // The working must say so, because this is the figure most likely to be
+    // quoted as though it were fixed.
+    const r = creditFor(dyn, 0.1);
+    expect(r.ok && r.working).toMatch(/assumed — the carrier redeclares it/);
+    // At the guaranteed floor of 5% participation the same year credits a tenth.
+    const guaranteed = creditFor({ ...dyn, participation: 0.05 }, 0.1);
+    expect(guaranteed.ok && guaranteed.segmentCredited).toBeCloseTo(0.005, 10);
+  });
+
+  it('keeps the carrier backtests, and never lets one pass as a maximum', () => {
+    const one = shapeById('pacific-horizon-ecv-1yr')!;
+    expect(one.backtest!.average).toBe(0.064);
+    expect(one.backtest!.window).toMatch(/1988-2023/);
+    // The backtest average (6.40%) is ABOVE the maximum illustrated rate
+    // (6.35%) — which is exactly why the two must never be conflated.
+    expect(one.backtest!.average).toBeGreaterThan(one.maxIllustratedRate!);
+    expect(SHAPES_VERSION.neverPrinted.join(' ')).toMatch(/backtest described as a maximum illustrated rate/i);
+  });
+
+  it('only the benchmark account has a maximum; the other seven may be described, not illustrated', () => {
+    const withMax = shapesFor('pacific-horizon-ecv').filter((s) => s.maxIllustratedRate !== null);
+    expect(withMax.map((s) => s.id)).toEqual(['pacific-horizon-ecv-1yr']);
+    expect(shapesWithoutMaximum().length).toBeGreaterThanOrEqual(7);
+  });
+
+  it('refuses to illustrate an account with no maximum rather than lending it the product figure', () => {
+    // The product's 6.35% is derived from the 1-Year account alone. Lending it
+    // to the High Par 5-Year account would be lending it the best case.
+    const g = gatedIllustration(
+      { carrier: 'Pacific Life', productName: 'Pacific Horizon ECV', insuredAge: 45, gender: 'male',
+        healthClass: 'preferred', annualPremium: 25000, deathBenefit: 1000000,
+        indexStrategy: 'S&P 500', capRate: 10.5, floorRate: 0, participationRate: 100,
+        spreadFee: 0, hasMultiplier: false },
+      { productId: 'pacific-horizon-ecv', historicalYearsShown: 25, indexAgeYears: 70,
+        noticeText: MANDATED_NOTICE, noticeAtTopOfData: true,
+        accountShapeId: 'pacific-horizon-ecv-high-par-5yr' }
+    );
+    expect(g.showable).toBe(false);
+    expect(g.refusal).toMatch(/no AG 49-A maximum illustrated rate on file/i);
+    expect(g.refusal).toMatch(/may not stand in for it/);
+  });
+
+  it('names the three products still awaiting a maximum, and what each needs', () => {
+    expect(PRODUCTS_AWAITING_MAXIMUM.length).toBe(3);
+    for (const q of PRODUCTS_AWAITING_MAXIMUM) {
+      expect(q.accounts.length, q.id).toBeGreaterThan(5);
+      expect(q.needs.length, q.id).toBeGreaterThan(40);
+      expect(q.source, q.id).toMatch(/IUF3969/);
+      // None of them may be illustrated: no row in the verified table.
+      expect(productFor(q.id), `${q.id} must not be in AG49_PRODUCTS`).toBeNull();
+    }
+    expect(awaitingMaximum('pacific-trident-iul')!.note).toMatch(/NO premium load/);
+    expect(awaitingMaximum('no-such')).toBeNull();
+  });
+
+  it('records the carrier lookback that produced the maximum, mean and all', () => {
+    const p = productFor('pacific-horizon-ecv')!;
+    // 4.36 low / 6.35 mean / 7.79 high, and the mean IS the maximum.
+    expect(p.note).toMatch(/4\.36%/);
+    expect(p.note).toMatch(/7\.79%/);
+    expect(p.note).toMatch(/middle of that range, not the top/);
+    expect(p.maxIllustratedRate).toBe(0.0635);
   });
 });
