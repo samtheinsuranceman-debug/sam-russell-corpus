@@ -150,15 +150,17 @@ export const SECURIAN_ACCOUNTS: readonly SecurianAccount[] = [
     observed: {
       multiplier: 1.3125,
       deductionPointsPerSegment: null,
-      segmentsObserved: 3,
-      note: 'SOLVED, and it corrects the file. The printed 105% IS operative here - it reproduces the printed crediting rate on all four segments exactly. But the dollar credit is that times a further 1.25: three credited segments reconcile at 1.05 x 1.25 = 1.3125 to under half a cent. The crediting rate the page shows understates the money it pays by exactly 25%.',
+      segmentsObserved: 6,
+      note: 'SOLVED on nine modals, and it corrects the file. The printed participation IS operative here - it reproduces the printed crediting rate on all nine segments, at 105% on eight and 100% on one. But the dollar credit is that times a further multiplier: 1.25 on the 105% tier (six credited segments) and 1.60 on the 100% tier (one), every one reconciling to under half a cent. The crediting rate the page shows understates the money it pays by 25% and 60% respectively. Segments D and H are consecutive - D ends where H starts - confirming one rolling annual account.',
     },
     evidence: 'solved',
     source:
       'Four portal Index credit details modals; see shared/prismAccountSolve.ts. Cap sentinel printed as 10000000000.00%.',
     unknown: [
       'What the 1.25 is called. No carrier document in hand names a credit multiplier, so 1.25 is fitted, not a contract term.',
-      'Whether Account 8, which tracks the same index on the same term, shares the 1.25. Its single observed segment reads 1.71x, and 1.71 / 1.05 = 1.6286 is not a round multiplier.',
+      'Whether Account 8, which tracks the same index on the same term, shares a tier. Its single observed segment reads 1.71x, and neither 1.71 / 1.05 = 1.6286 nor 1.71 / 1.00 is a round multiplier.',
+      'Which account the 100% / 1.60 tier belongs to. It is not the capped Index A account - that one is capped at 8.50% and this modal prints the uncapped sentinel.',
+      'Why segment F paid nothing on positive growth. Either it had not matured or value left it early; the modal does not say.',
     ],
   },
   {
