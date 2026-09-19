@@ -13,6 +13,8 @@
 
 import { describe, it, expect } from 'vitest';
 import {
+  BGA_BALANCED_2_MODALS,
+  FOUR_MODAL_FINDINGS,
   BGA3_BALANCED_2_OBSERVED_PCT,
   LOAN_CHARGE_DEDUCTION,
   SEGMENT_AUDIT_VERSION,
@@ -300,6 +302,68 @@ describe('the Balanced Indexed Account 2 ledger', () => {
   it('no policy balances are kept, only rates', () => {
     const serialised = JSON.stringify(BGA3_BALANCED_2_OBSERVED_PCT);
     for (const balance of ['1026.9', '1184.59', '881.45', '1574.6', '1732.29']) {
+      expect(serialised, balance).not.toContain(balance);
+    }
+  });
+});
+
+describe('the four modals', () => {
+  it('is internally sound on every one: growth is end over start', () => {
+    for (const m of BGA_BALANCED_2_MODALS) {
+      const computed = (m.endIndexValue / m.startIndexValue - 1) * 100;
+      expect(computed, m.segment).toBeCloseTo(m.statedGrowthPct, 1);
+    }
+  });
+
+  it('shows that the stated 105% participation reproduces none of the four credits', () => {
+    for (const m of BGA_BALANCED_2_MODALS) {
+      const participated = m.statedGrowthPct * 1.05;
+      expect(participated, m.segment).toBeGreaterThan(m.creditedPct + 2);
+    }
+    expect(FOUR_MODAL_FINDINGS.statedParticipationReproducesNoCredit).toBe(true);
+  });
+
+  it('finds February, March and April agree to a thirteenth of a point', () => {
+    const fee = (m: (typeof BGA_BALANCED_2_MODALS)[number]) =>
+      ((1 + (m.statedGrowthPct * 1.05) / 100) / (1 + m.creditedPct / 100) - 1) * 100;
+    const trio = BGA_BALANCED_2_MODALS.filter((m) => !m.segment.startsWith('Jan')).map(fee);
+    expect(Math.max(...trio) - Math.min(...trio)).toBeLessThan(0.2);
+    for (const f of trio) expect(f).toBeCloseTo(6.27, 0);
+  });
+
+  it('isolates January as the outlier, at 25x the others own spread', () => {
+    const jan = BGA_BALANCED_2_MODALS.find((m) => m.segment.startsWith('Jan'))!;
+    const janFee = ((1 + (jan.statedGrowthPct * 1.05) / 100) / (1 + jan.creditedPct / 100) - 1) * 100;
+    expect(janFee).toBeCloseTo(2.88, 1);
+    expect(Math.abs(janFee - 6.27)).toBeGreaterThan(3);
+    // Recorded as an open question, not explained away.
+    expect(FOUR_MODAL_FINDINGS.openQuestion).toMatch(/Why January behaves differently/);
+    expect(FOUR_MODAL_FINDINGS.openQuestion).toMatch(/not necessarily its own rate/);
+  });
+
+  it('lands the residual on the published indexed loan charge without fitting to it', () => {
+    // The fee came from three segments that have nothing to do with the subject
+    // one. Run the subject through it and the leftover is 4.56% a year against
+    // a published 4.75% indexed loan charge.
+    const f = FOUR_MODAL_FINDINGS;
+    const predicted = (1 + (45.2532 * 1.05) / 100) / (1 + 6.27 / 100) - 1;
+    expect(predicted * 100).toBeCloseTo(f.subjectPredictedCreditedPct, 0);
+    const residualAnnual = Math.sqrt((1 + predicted) / 1.2696) - 1;
+    expect(residualAnnual * 100).toBeCloseTo(f.residualAnnualPct, 1);
+    expect(Math.abs(f.residualAnnualPct - f.publishedIndexedLoanChargePct)).toBeCloseTo(f.agreementPct, 1);
+    expect(f.agreementPct).toBeLessThan(0.25);
+  });
+
+  it('still refuses to call it settled', () => {
+    // A residual computed on top of a residual can land on 4.75% by accident.
+    expect(FOUR_MODAL_FINDINGS.stillNotSettled).toMatch(/residual computed on top of a residual/);
+    expect(FOUR_MODAL_FINDINGS.stillNotSettled).toMatch(/policy statement is what ends it/);
+  });
+
+  it('keeps index values but no policy balances', () => {
+    const serialised = JSON.stringify(BGA_BALANCED_2_MODALS);
+    expect(serialised).toContain('2635.96');
+    for (const balance of ['1026.9', '1026.67', '432.28', '370.76']) {
       expect(serialised, balance).not.toContain(balance);
     }
   });

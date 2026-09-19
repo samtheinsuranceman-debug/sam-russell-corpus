@@ -388,3 +388,108 @@ export const LOAN_CHARGE_DEDUCTION = {
     'That the participation rates can be reconciled. The ledger account is 110%; the subject modal printed 105.00%. On one account in one system those should agree, and they do not.',
   ],
 } as const;
+
+/* ═══ The four modals ══════════════════════════════════════════════════════
+ * Balanced Indexed Account 2 — S&P 500 — 2 Year, segment year 2021, read off
+ * the Securian advisor portal on 19 September 2026.
+ *
+ * Index values are public market data and are kept. Policy balances are not. */
+
+export interface ModalSegment {
+  readonly segment: string;
+  readonly startIndexValue: number;
+  readonly endIndexValue: number;
+  readonly statedGrowthPct: number;
+  readonly statedParticipationPct: number;
+  readonly creditedPct: number;
+}
+
+export const BGA_BALANCED_2_MODALS: readonly ModalSegment[] = [
+  { segment: 'Jan 2019 – Jan 2021', startIndexValue: 2635.96, endIndexValue: 3795.54, statedGrowthPct: 43.99, statedParticipationPct: 105, creditedPct: 42.10 },
+  { segment: 'Feb 2019 – Feb 2021', startIndexValue: 2745.73, endIndexValue: 3913.97, statedGrowthPct: 42.55, statedParticipationPct: 105, creditedPct: 36.11 },
+  { segment: 'Mar 2019 – Mar 2021', startIndexValue: 2808.48, endIndexValue: 3915.46, statedGrowthPct: 39.42, statedParticipationPct: 105, creditedPct: 33.15 },
+  { segment: 'Apr 2019 – Apr 2021', startIndexValue: 2905.03, endIndexValue: 4170.42, statedGrowthPct: 43.56, statedParticipationPct: 105, creditedPct: 37.07 },
+];
+
+/**
+ * What the four modals settle, and the one thing they open up.
+ *
+ * ## Settled
+ *
+ * The account is named: Balanced Indexed Account 2 — S&P 500 — 2 Year. The
+ * subject segment shares its participation rate and its sentinel cap, so the
+ * account-identity condition the deduction was hanging on is met in substance.
+ *
+ * Every modal is internally sound. Each stated growth rate is exactly its own
+ * end/start − 1, and each index credit is exactly its crediting rate times its
+ * segment value. Four for four.
+ *
+ * ## The stated participation rate does not reproduce a single credit
+ *
+ * All four print 105.00%. None of the four credits is 105% of its growth:
+ *
+ *   Jan  43.99% × 105% = 46.19%   credited 42.10%   short 4.09 pp
+ *   Feb  42.55% × 105% = 44.68%   credited 36.11%   short 8.57 pp
+ *   Mar  39.42% × 105% = 41.39%   credited 33.15%   short 8.24 pp
+ *   Apr  43.56% × 105% = 45.74%   credited 37.07%   short 8.67 pp
+ *
+ * A shortfall is expected — there is a spread on this account. What is not
+ * expected is that the shortfall is not constant.
+ *
+ * ## Three segments agree with each other to a thirteenth of a point
+ *
+ * Taken as a multiplicative segment fee at the stated 105%, February, March and
+ * April imply 6.29%, 6.19% and 6.32% — a spread of 0.13 points across three
+ * independent segments, which is about as tight as four-significant-figure
+ * inputs allow. Roughly 3.1% a year.
+ *
+ * January implies 2.88%, which sits 3.39 points away — twenty-five times the
+ * others' own spread. January is doing something the other three are not, and
+ * nothing on its modal says what. Segments are created monthly and declared
+ * rates are set at creation, so the most ordinary explanation is that January's
+ * segment was struck on a different participation rate and the modal is
+ * printing today's rather than that segment's. That is a question for the
+ * carrier, not an answer from here.
+ *
+ * ## And this is what it does to the 26.96% segment
+ *
+ * Run the subject segment through the account's OWN observed behaviour rather
+ * than through any brochure: 45.25% growth at 105%, less the 6.27% segment fee
+ * the three consistent modals imply, predicts 38.81% credited.
+ *
+ * It credited 26.96%. Still short by 11.85 points, and over 24 months that
+ * residual prices at 4.56% a year compounding.
+ *
+ * The carrier's published indexed loan charge is 4.75%.
+ *
+ * Those agree to within a fifth of a point, on a figure derived from three
+ * unrelated segments and never fitted to it. That is what the owner said it was
+ * in the first message, and it is now the reading the evidence actually
+ * supports rather than one of eight candidates.
+ *
+ * It is still not a reading off a statement. The 6.27% fee is itself a residual
+ * — the stated participation reproduces nothing, so that number absorbs
+ * whatever else the true formula contains — and a residual computed on top of a
+ * residual can land on 4.75% by coincidence. What ends the argument is the loan
+ * charge printed on the policy's own statement. Everything else is now
+ * consistent with it.
+ */
+export const FOUR_MODAL_FINDINGS = {
+  accountIdentified: 'Balanced Indexed Account 2 — S&P 500 — 2 Year',
+  allFourInternallySound: true,
+  statedParticipationPct: 105,
+  statedParticipationReproducesNoCredit: true,
+  consistentTrioFeePct: [6.29, 6.19, 6.32],
+  consistentTrioSpreadPct: 0.13,
+  januaryFeePct: 2.88,
+  januaryDeviationPct: 3.39,
+  subjectPredictedCreditedPct: 38.81,
+  subjectActualCreditedPct: 26.96,
+  residualAnnualPct: 4.56,
+  publishedIndexedLoanChargePct: 4.75,
+  agreementPct: 0.19,
+  stillNotSettled:
+    'The 6.27% segment fee is itself a residual, because the stated 105% participation reproduces none of the four credits. A residual computed on top of a residual can land on 4.75% by coincidence. The loan charge printed on the policy statement is what ends it.',
+  openQuestion:
+    'Why January behaves differently from February, March and April. Twenty-five times their mutual spread is not rounding. Segments are struck monthly on rates declared at creation, so the modal may be printing the current participation rate rather than the one that segment was struck on — which would mean the 105.00% on the subject segment is also not necessarily its own rate.',
+} as const;
