@@ -6,6 +6,9 @@ import {
   PRISM_SOLVE,
   prismCredit,
   prismGrowthPct,
+  tierFor,
+  CONSECUTIVE_SEGMENT_PROOF,
+  UNEXPLAINED_SEGMENT,
   prismPrintedCreditingPct,
   printedRateUnderstatementPct,
 } from '../shared/prismAccountSolve';
@@ -23,15 +26,22 @@ describe('the printed participation rate is operative on this account', () => {
     }
   });
 
-  it('reproduces every printed crediting rate at exactly 105%', () => {
+  it('reproduces every printed crediting rate from its own printed participation', () => {
     for (const s of PRISM_SEGMENTS) {
       const growth = prismGrowthPct(s.startingIndexValue, s.endingIndexValue);
       expect(
-        prismPrintedCreditingPct(growth),
+        prismPrintedCreditingPct(growth, s.participationRatePrintedPct),
         `${s.label}: printed ${s.segmentCreditingRatePctPrinted}%`,
       ).toBeCloseTo(s.segmentCreditingRatePctPrinted, 1);
-      expect(s.participationRatePrintedPct).toBe(105);
     }
+  });
+
+  it('carries two printed participation tiers, not one', () => {
+    const rates: number[] = [];
+    for (const s of PRISM_SEGMENTS) {
+      if (rates.indexOf(s.participationRatePrintedPct) === -1) rates.push(s.participationRatePrintedPct);
+    }
+    expect(rates.sort().join(',')).toBe('100,105');
   });
 
   it('is the first account in the audit where the printed rate holds', () => {
@@ -53,15 +63,39 @@ describe('the printed participation rate is operative on this account', () => {
 });
 
 describe('but the dollar credit is 25% more than that rate implies', () => {
-  it('reproduces every dollar credit at 1.05 x 1.25, to under half a cent', () => {
-    expect(credited.length).toBe(3);
+  it('reproduces every dollar credit at its tier factor, to under half a cent', () => {
+    expect(credited.length).toBe(7);
     for (const s of credited) {
       const growth = prismGrowthPct(s.startingIndexValue, s.endingIndexValue);
       expect(
-        prismCredit(growth, s.segmentAccumulationValueBeforeCredit),
+        prismCredit(growth, s.segmentAccumulationValueBeforeCredit, s.participationRatePrintedPct),
         `${s.label}: printed $${s.indexCredit}`,
       ).toBeCloseTo(s.indexCredit, 2);
     }
+  });
+
+  it('the 100% tier pays MORE per unit of growth than the 105% tier', () => {
+    const lo = tierFor(100)!;
+    const hi = tierFor(105)!;
+    expect(lo.effectiveFactor).toBeGreaterThan(hi.effectiveFactor);
+    // A participation rate alone tells you nothing about what an account pays.
+    expect(lo.participationPrintedPct).toBeLessThan(hi.participationPrintedPct);
+  });
+
+  it('records the segment that does not fit rather than dropping it', () => {
+    expect(UNEXPLAINED_SEGMENT.label).toBe('F');
+    expect(UNEXPLAINED_SEGMENT.resolved).toBe(false);
+    expect(UNEXPLAINED_SEGMENT.readings.length).toBe(2);
+    const f = PRISM_SEGMENTS.filter((s) => s.label === 'F')[0];
+    expect(prismGrowthPct(f.startingIndexValue, f.endingIndexValue)).toBeGreaterThan(0);
+    expect(f.indexCredit).toBe(0);
+  });
+
+  it('two segments are consecutive, proving one rolling account', () => {
+    const d = PRISM_SEGMENTS.filter((s) => s.label === CONSECUTIVE_SEGMENT_PROOF.first)[0];
+    const h = PRISM_SEGMENTS.filter((s) => s.label === CONSECUTIVE_SEGMENT_PROOF.second)[0];
+    expect(d.endingIndexValue).toBe(h.startingIndexValue);
+    expect(d.endingIndexValue).toBe(CONSECUTIVE_SEGMENT_PROOF.sharedIndexValue);
   });
 
   it('the printed crediting rate alone does NOT reproduce the dollars', () => {
@@ -71,11 +105,8 @@ describe('but the dollar credit is 25% more than that rate implies', () => {
     }
   });
 
-  it('the shortfall is a constant 25% wherever the floor does not bind', () => {
-    for (const s of credited) {
-      const growth = prismGrowthPct(s.startingIndexValue, s.endingIndexValue);
-      expect(printedRateUnderstatementPct(growth)).toBe(25);
-    }
+  it('the shortfall on the 105% tier is a constant 25%', () => {
+    expect(printedRateUnderstatementPct(1)).toBe(25);
     expect(printedRateUnderstatementPct(-1)).toBe(0);
   });
 
@@ -87,7 +118,7 @@ describe('but the dollar credit is 25% more than that rate implies', () => {
     expect(PRISM_SOLVE.effectiveFactor).toBe(1.3125);
   });
 
-  it('is not a fit to one number: three segments across two orders of magnitude', () => {
+  it('is not a fit to one number: wide ranges of value and growth', () => {
     const values = credited.map((s) => s.segmentAccumulationValueBeforeCredit);
     expect(Math.max.apply(null, values) / Math.min.apply(null, values)).toBeGreaterThan(4);
     const growths = credited.map((s) => prismGrowthPct(s.startingIndexValue, s.endingIndexValue));
@@ -108,9 +139,15 @@ describe('the multiplier hypothesis is labelled a hypothesis', () => {
     expect(MULTIPLIER_HYPOTHESIS.doesNotFit.join(' ')).toMatch(/1\.6286/);
   });
 
-  it('rests on five segments across two accounts', () => {
+  it('rests on nine segments across three accounts, with round multipliers', () => {
     const total = MULTIPLIER_HYPOTHESIS.fits.reduce((t, f) => t + f.segments, 0);
-    expect(total).toBe(5);
+    expect(total).toBe(9);
+    expect(MULTIPLIER_HYPOTHESIS.fits.length).toBe(3);
+    for (const f of MULTIPLIER_HYPOTHESIS.fits) {
+      // 1.25, 1.40, 1.60 - all land on a twentieth.
+      expect(Math.round(f.multiplier * 20) / 20).toBeCloseTo(f.multiplier, 10);
+      expect(f.participation * f.multiplier).toBeCloseTo(f.effective, 10);
+    }
   });
 });
 
