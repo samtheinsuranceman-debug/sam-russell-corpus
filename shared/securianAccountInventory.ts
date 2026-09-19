@@ -126,7 +126,7 @@ export const SECURIAN_ACCOUNTS: readonly SecurianAccount[] = [
     observed: {
       multiplier: null,
       deductionPointsPerSegment: 4.0939,
-      segmentsObserved: 12,
+      segmentsObserved: 16,
       note: 'Same functional form as the BGA II account, different coefficients. The multiplier is not a constant here: twelve segments solve to three declared participation groups - 94.49% (Feb-Apr), 105.00% (Jan, May-Aug), 110.25% (Sep-Dec) - each internally tight to about two hundredths of a point, against a fixed 4.0939 point deduction.',
     },
     evidence: 'solved',
@@ -142,7 +142,7 @@ export const SECURIAN_ACCOUNTS: readonly SecurianAccount[] = [
     product: 'BGA3',
     houseName: '1-Year Risk-Controlled (P Formation, uncapped)',
     index: 'S&P PRISM',
-    termYears: 1,
+    termYears: null,
     participationPrintedPct: 105,
     capPrinted: 'Unlimited',
     floorPct: 0,
@@ -150,8 +150,8 @@ export const SECURIAN_ACCOUNTS: readonly SecurianAccount[] = [
     observed: {
       multiplier: null,
       deductionPointsPerSegment: null,
-      segmentsObserved: 12,
-      note: 'SOLVED on fourteen modals, and it corrects the file twice. The printed participation IS operative - it reproduces the printed crediting rate on all fourteen segments, at 105% on eight and 100% on six. But the dollars carry an unprinted multiplier on top, and that multiplier is PER VINTAGE, not per account: twelve credited segments reconcile to under half a cent on 105% x 1.25, 100% x 1.60 and 100% x 1.40. The same account at the same printed 100% pays 1.60 on some segments and 1.40 on others, so `multiplier` is null here - there is no single one. Segments D, H and L chain end-to-start, proving one rolling account across a vintage boundary.',
+      segmentsObserved: 16,
+      note: 'SOLVED on eighteen modals, and it corrects the file twice. The printed participation IS operative - it reproduces the printed crediting rate on all fourteen segments, at 105% on eight and 100% on six. But the dollars carry an unprinted multiplier on top, and that multiplier is PER VINTAGE, not per account: sixteen credited segments reconcile to under half a cent on 105% x 1.25, 100% x 1.60 and 100% x 1.40, and four modals added after the pattern was fixed produced no fourth multiplier. The same account at the same printed 100% pays 1.60 on some segments and 1.40 on others, so `multiplier` is null here - there is no single one. Segments D, H and L chain end-to-start, proving one rolling account across a vintage boundary.',
     },
     evidence: 'solved',
     source:
@@ -161,6 +161,7 @@ export const SECURIAN_ACCOUNTS: readonly SecurianAccount[] = [
       'Whether Account 8, which tracks the same index on the same term, shares a tier. Its single observed segment reads 1.71x, and neither 1.71 / 1.05 = 1.6286 nor 1.71 / 1.00 is a round multiplier.',
       'Which account the 100% / 1.60 tier belongs to. It is not the capped Index A account - that one is capped at 8.50% and this modal prints the uncapped sentinel.',
       'Why segment F paid nothing on positive growth. Either it had not matured or value left it early; the modal does not say.',
+      'The segment term. Window footers read one-year on three segments and two-year on three others, and the footer is the least legible part of every capture. Nothing here may be annualised until the date column is read. See SEGMENT_TERM_UNCERTAINTY in shared/prismAccountSolve.ts.',
     ],
   },
   {

@@ -1,5 +1,5 @@
 /**
- * S&P PRISM index accounts — solved from fourteen portal segment modals.
+ * S&P PRISM index accounts — solved from eighteen portal segment modals.
  *
  * The largest single-account evidence set in the audit, and the one that
  * corrected the most. Three findings, one of which overturns a claim this file
@@ -8,8 +8,8 @@
  * ## 1. The printed participation rate IS operative here
  *
  * Every earlier account contradicted its printed participation. These do not.
- * On all fourteen segments the printed rate reproduces the printed Segment
- * crediting rate exactly — 105% on eight, 100% on six:
+ * On all eighteen segments the printed rate reproduces the printed Segment
+ * crediting rate exactly — 105% on nine, 100% on nine:
  *
  *     1.86538% x 1.05 = 1.95865%   printed 1.96%
  *     8.10530% x 1.00 = 8.10530%   printed 8.11%
@@ -21,11 +21,12 @@
  *
  * ## 2. But the money carries a further multiplier the page never shows
  *
- * Twelve credited segments reconcile to under half a cent on three exact
- * (participation, multiplier) pairs:
+ * Sixteen credited segments reconcile to under half a cent on three exact
+ * (participation, multiplier) pairs — and four further modals added no fourth
+ * multiplier, which is what a real declared schedule should look like:
  *
- *     105% x 1.25 = 1.3125     six segments
- *     100% x 1.60 = 1.6000     four segments
+ *     105% x 1.25 = 1.3125     seven segments
+ *     100% x 1.60 = 1.6000     seven segments
  *     100% x 1.40 = 1.4000     two segments
  *
  * The crediting rate column understates the dollars by 25%, 60% and 40%
@@ -63,14 +64,23 @@
  * when the S&P 500 fell roughly 13%. That is a volatility-controlled index
  * doing what it is built to do in the worst equity year of the decade.
  *
- * D ends where H starts, at 5,604.38, and H ends where L starts, at 5,671.18 —
- * three consecutive one-year segments of one rolling account. Since H is a 105%
- * vintage and L a 100% one, that chain is also direct evidence that both
- * participation and multiplier are redeclared between vintages.
+ * D ends where H starts (5,604.38), H ends where L starts (5,671.18), and O
+ * ends where P starts (5,706.28) — consecutive segments of one rolling account.
+ * Since H is a 105% vintage and L a 100% one, and O a 105% and P a 100%, that
+ * chain is direct evidence that both participation and multiplier are
+ * redeclared between vintages.
  *
- * The other half of the trade is in the same data and must be sold with it: Jun
- * 2023 to Jun 2024 the index gained 1.31% while equities ran hard. A damped
+ * The other half of the trade is in the same data and must be sold with it:
+ * segment N gained 1.31% over its window while equities ran hard. A damped
  * index protects in a drawdown and lags badly in a rally.
+ *
+ * ## What is NOT known: the segment term
+ *
+ * Earlier versions of this file recorded these accounts as one-year. The window
+ * footers on P, Q and R read "Sep 2023 - Sep 2025", a two-year term, while D, I
+ * and N read as one-year windows. See SEGMENT_TERM_UNCERTAINTY. Every finding
+ * above is a segment-level fact and survives either way; nothing here may be
+ * annualised until the term is read from the statement's own date column.
  */
 
 export interface PrismSegment {
@@ -102,6 +112,10 @@ export const PRISM_SEGMENTS: readonly PrismSegment[] = [
   { label: 'K', startingIndexValue: 5409.32, endingIndexValue: 5847.76, indexGrowthRatePctPrinted: 8.11, segmentCreditingRatePctPrinted: 8.11, segmentAccumulationValueBeforeCredit: 8096.07, participationRatePrintedPct: 100, indexCredit: 1049.93 },
   { label: 'L', startingIndexValue: 5671.18, endingIndexValue: 5956.62, indexGrowthRatePctPrinted: 5.03, segmentCreditingRatePctPrinted: 5.03, segmentAccumulationValueBeforeCredit: 5272.61, participationRatePrintedPct: 100, indexCredit: 424.61 },
   { label: 'M', startingIndexValue: 5615.79, endingIndexValue: 5888.24, indexGrowthRatePctPrinted: 4.85, segmentCreditingRatePctPrinted: 4.85, segmentAccumulationValueBeforeCredit: 4916.9, participationRatePrintedPct: 100, indexCredit: 333.96 },
+  { label: 'O', startingIndexValue: 5565.71, endingIndexValue: 5706.28, indexGrowthRatePctPrinted: 2.53, segmentCreditingRatePctPrinted: 2.65, segmentAccumulationValueBeforeCredit: 7134.4, participationRatePrintedPct: 105, indexCredit: 236.5 },
+  { label: 'P', startingIndexValue: 5706.28, endingIndexValue: 5923.22, indexGrowthRatePctPrinted: 3.8, segmentCreditingRatePctPrinted: 3.8, segmentAccumulationValueBeforeCredit: 6459.79, participationRatePrintedPct: 100, indexCredit: 392.94, window: 'Sep 2023 - Sep 2025' },
+  { label: 'Q', startingIndexValue: 5666.68, endingIndexValue: 5872.85, indexGrowthRatePctPrinted: 3.64, segmentCreditingRatePctPrinted: 3.64, segmentAccumulationValueBeforeCredit: 7821.42, participationRatePrintedPct: 100, indexCredit: 455.3, window: 'Sep 2023 - Sep 2025' },
+  { label: 'R', startingIndexValue: 5577.29, endingIndexValue: 5797.9, indexGrowthRatePctPrinted: 3.96, segmentCreditingRatePctPrinted: 3.96, segmentAccumulationValueBeforeCredit: 7885.92, participationRatePrintedPct: 100, indexCredit: 499.08, window: 'Sep 2023 - Sep 2025' },
   { label: 'N', startingIndexValue: 5734.28, endingIndexValue: 5809.28, indexGrowthRatePctPrinted: 1.31, segmentCreditingRatePctPrinted: 1.31, segmentAccumulationValueBeforeCredit: 6355.47, participationRatePrintedPct: 100, indexCredit: 116.37, window: 'Jun 2023 - Jun 2024, Account 6 - S&P' },
 ];
 
@@ -111,8 +125,8 @@ export const PRISM_SEGMENTS: readonly PrismSegment[] = [
  * vintages, carrying different multipliers.
  */
 export const OBSERVED_VINTAGES = [
-  { participationPrintedPct: 105, multiplier: 1.25, effectiveFactor: 1.3125, segments: ['A', 'B', 'D', 'E', 'G', 'H'] },
-  { participationPrintedPct: 100, multiplier: 1.6, effectiveFactor: 1.6, segments: ['I', 'J', 'K', 'L'] },
+  { participationPrintedPct: 105, multiplier: 1.25, effectiveFactor: 1.3125, segments: ['A', 'B', 'D', 'E', 'G', 'H', 'O'] },
+  { participationPrintedPct: 100, multiplier: 1.6, effectiveFactor: 1.6, segments: ['I', 'J', 'K', 'L', 'P', 'Q', 'R'] },
   { participationPrintedPct: 100, multiplier: 1.4, effectiveFactor: 1.4, segments: ['M', 'N'] },
 ] as const;
 
@@ -124,9 +138,10 @@ export function vintageForSegment(label: string) {
 export const PRISM_SOLVE = {
   account: 'Balanced Indexed Account 6, and a 105% sibling on the same index',
   index: 'S&P PRISM',
-  segmentYears: 1,
-  segmentsObserved: 14,
-  segmentsCredited: 12,
+  /** NOT known. See SEGMENT_TERM_UNCERTAINTY. */
+  segmentYears: null,
+  segmentsObserved: 18,
+  segmentsCredited: 16,
   /** Confirmed operative: reproduces the printed crediting rate on all fourteen. */
   participationOperativeValues: [1.0, 1.05],
   /** Never printed anywhere. All land on a twentieth. */
@@ -172,15 +187,43 @@ export function printedRateUnderstatementPct(multiplier: number): number {
 }
 
 /**
- * Three consecutive one-year segments of one rolling account: D ends where H
- * starts, H ends where L starts. Independent proof these modals are one account
+ * Consecutive segments of one rolling account: D ends where H starts, H ends
+ * where L starts, and O ends where P starts. Independent proof these modals are one account
  * — and since H is a 105% vintage and L a 100% one, direct evidence that both
  * participation and multiplier are redeclared between vintages.
  */
 export const CONSECUTIVE_CHAIN = [
   { from: 'D', to: 'H', sharedIndexValue: 5604.38 },
   { from: 'H', to: 'L', sharedIndexValue: 5671.18 },
+  { from: 'O', to: 'P', sharedIndexValue: 5706.28 },
 ] as const;
+
+/**
+ * The segment term is NOT known, and this file no longer claims it is.
+ *
+ * Earlier versions recorded these accounts as one-year. The window footers on
+ * segments P, Q and R read "Sep 2023 - Sep 2025" — a two-year term. Footers on
+ * D, I and N read as one-year windows. The footer strip is the least legible
+ * part of every capture and the final digit is the least legible character in
+ * it, so the disagreement may be a misreading on either side rather than a real
+ * mix of terms.
+ *
+ * It matters, and not slightly. Every multiplier and participation finding in
+ * this file is a SEGMENT-level fact and holds regardless — the arithmetic
+ * reconciles to the cent either way. But an annualised rate does not: 3.80%
+ * credited at 1.60 is 6.08% over the segment, which is 6.08% a year on a
+ * one-year term and 2.99% a year on a two-year one. Anything that annualises
+ * these numbers without the term is guessing by a factor of two.
+ */
+export const SEGMENT_TERM_UNCERTAINTY = {
+  resolved: false,
+  readAsOneYear: ['D', 'I', 'N'],
+  readAsTwoYear: ['P', 'Q', 'R'],
+  whyUnreliable: 'the window footer is the least legible part of every capture, and the final digit of the end year is the least legible character in it',
+  whatIsUnaffected: 'every segment-level finding: the printed participation, the multiplier, and each dollar credit, all of which reconcile without reference to the term',
+  whatIsBlocked: 'any annualised rate, any comparison against an annual index return, and any projection',
+  wouldBeSettledBy: 'the segment start and end dates column from the Accumulation Value Detail page, which prints them in full',
+} as const;
 
 /**
  * Segment F, recorded rather than dropped. Positive growth of 0.70%, a normal
@@ -215,7 +258,7 @@ export const UNEXPLAINED_SEGMENT = {
 export const MULTIPLIER_FINDING = {
   claim: 'Securian applies an undisclosed credit multiplier on top of the printed participation rate, and redeclares it by segment vintage.',
   evidence: [
-    'Twelve credited segments across three vintages reconcile to under half a cent: 105% x 1.25, 100% x 1.60, 100% x 1.40.',
+    'Sixteen credited segments across three vintages reconcile to under half a cent: 105% x 1.25, 100% x 1.60, 100% x 1.40. Four modals added after the pattern was fixed produced no fourth multiplier.',
     'The Indexed Loan Account, solved separately at 1.47x against a printed 105%, decomposes as 105% x 1.40 — the same 1.40 that appears on PRISM segments M and N.',
     'All three multipliers land on a twentieth, which a fitted artefact has no reason to do.',
   ],
@@ -227,7 +270,7 @@ export const MULTIPLIER_FINDING = {
   ],
   status: 'strong hypothesis',
   wouldBeSettledBy:
-    'Any carrier document naming a credit multiplier, index credit enhancement or bonus by account and vintage. Twelve segments landing on three round numbers is close to proof of the arithmetic; only a document makes it a term.',
+    'Any carrier document naming a credit multiplier, index credit enhancement or bonus by account and vintage. Sixteen segments landing on three round numbers, with later modals adding none, is close to proof of the arithmetic; only a document makes it a term.',
 } as const;
 
 /** What this does to comparing accounts on their participation rate. */

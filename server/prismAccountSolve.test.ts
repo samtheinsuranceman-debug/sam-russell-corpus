@@ -13,6 +13,7 @@ import {
   prismPrintedCreditingPct,
   printedRateUnderstatementPct,
   vintageForSegment,
+  SEGMENT_TERM_UNCERTAINTY,
 } from '../shared/prismAccountSolve';
 import { OPERATIVE_MULTIPLIER } from '../shared/securianAnnualPolicyReview';
 
@@ -20,7 +21,7 @@ const credited = PRISM_SEGMENTS.filter((s) => s.indexCredit > 0);
 
 describe('the printed participation rate is operative on these accounts', () => {
   it('reproduces every printed growth rate from the index values', () => {
-    expect(PRISM_SEGMENTS.length).toBe(14);
+    expect(PRISM_SEGMENTS.length).toBe(18);
     for (const s of PRISM_SEGMENTS) {
       expect(
         prismGrowthPct(s.startingIndexValue, s.endingIndexValue),
@@ -51,9 +52,9 @@ describe('the printed participation rate is operative on these accounts', () => 
   });
 });
 
-describe('twelve credited segments reconcile on three vintages', () => {
+describe('sixteen credited segments reconcile on three vintages', () => {
   it('reproduces every dollar credit to under half a cent', () => {
-    expect(credited.length).toBe(12);
+    expect(credited.length).toBe(16);
     for (const s of credited) {
       const v = vintageForSegment(s.label);
       expect(v, `${s.label} has no vintage`).not.toBeNull();
@@ -179,6 +180,33 @@ describe('participation is not a ranking', () => {
   });
 });
 
+describe('the segment term is not claimed', () => {
+  it('records the term as unresolved rather than asserting one year', () => {
+    expect(SEGMENT_TERM_UNCERTAINTY.resolved).toBe(false);
+    expect(PRISM_SOLVE.segmentYears).toBeNull();
+  });
+
+  it('names the segments that read each way', () => {
+    for (const label of SEGMENT_TERM_UNCERTAINTY.readAsOneYear.concat(
+      SEGMENT_TERM_UNCERTAINTY.readAsTwoYear as readonly string[] as string[],
+    )) {
+      expect(PRISM_SEGMENTS.filter((s) => s.label === label).length, label).toBe(1);
+    }
+  });
+
+  it('says what the uncertainty blocks and what it does not', () => {
+    expect(SEGMENT_TERM_UNCERTAINTY.whatIsUnaffected).toMatch(/reconcile without reference to the term/);
+    expect(SEGMENT_TERM_UNCERTAINTY.whatIsBlocked).toMatch(/annualised/);
+  });
+
+  it('a two-year reading halves the annual rate, which is why it matters', () => {
+    const overSegment = 6.08;
+    const oneYear = overSegment;
+    const twoYear = (Math.pow(1 + overSegment / 100, 1 / 2) - 1) * 100;
+    expect(oneYear / twoYear).toBeGreaterThan(1.9);
+  });
+});
+
 describe('the unfitted segment and the PRISM story', () => {
   it('records segment F rather than dropping it', () => {
     expect(UNEXPLAINED_SEGMENT.label).toBe('F');
@@ -194,9 +222,9 @@ describe('the unfitted segment and the PRISM story', () => {
     expect(PRISM_POSITIONING.supportable).toMatch(/Sep 2021/);
   });
 
-  it('discloses the lag year from the same data, in the same object', () => {
-    expect(PRISM_POSITIONING.theTradeToDisclose).toMatch(/Jun 2023 to Jun 2024/);
+  it('discloses the lag window from the same data, in the same object', () => {
     expect(PRISM_POSITIONING.theTradeToDisclose).toMatch(/1\.31%/);
+    expect(PRISM_POSITIONING.theTradeToDisclose).toMatch(/lag/i);
   });
 
   it('bans quoting any multiplier as a rate', () => {
