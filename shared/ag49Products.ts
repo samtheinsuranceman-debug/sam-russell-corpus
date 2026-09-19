@@ -57,8 +57,10 @@ export interface Ag49Product {
 /**
  * Verified products only.
  *
- * One row today. That is not an oversight — it is the only product for which a
- * carrier figure has actually been read. The rest arrive with Q-03.
+ * Two rows. Both were read off a carrier document held in this corpus. The list
+ * grows only that way — each addition widens what may be illustrated at all,
+ * which is where flexibility in this product legitimately comes from, and none
+ * of it comes from memory or a secondary summary. The rest arrive with Q-03.
  */
 export const AG49_PRODUCTS: readonly Ag49Product[] = [
   {
@@ -72,6 +74,20 @@ export const AG49_PRODUCTS: readonly Ag49Product[] = [
     effectiveDate: "2026",
     readOn: "2026-09-18",
     note: "Read off the illustration's own account table, where the illustrated rate and the maximum illustrated rate are both 6.35% at 100% allocation. Mirrors shared/pacificHorizonEcv.ts.",
+  },
+  {
+    id: "mn-life-bga3",
+    carrier: "Minnesota Life",
+    product: "Balanced Growth Accumulator III",
+    maxIllustratedRate: 0.0662,
+    illustratedRate: 0.0662,
+    allocation: 1.0,
+    disclosureUrl:
+      "Minnesota Life Balanced Growth Accumulator III illustration, Case ID 29335303, prepared 15 September 2026 — account table and AG 49 statement",
+    effectiveDate: "2026",
+    readOn: "2026-09-19",
+    note:
+      "The second verified product, and the one that makes the uncapped account shapes worth modelling: seven accounts on one page — one capped 1-year point-to-point at 100% participation / 10.50% cap / 0% floor, and six uncapped multi-year accounts with participation of 100%-115% and segment spreads of 1.00%-2.50%. Per-account maxima run 6.57%-6.62%; recorded here is the product's highest, 6.62%, computed by the carrier on the S&P 500 excluding dividends. Per-account index parameters are in shared/indexAccountShapes.ts. The carrier also publishes a 25-year rolling range for the 100%/10.50%/0% structure since 1949 — 4.16% low, 8.21% high. That is a carrier-published historical figure rather than a projection, which is precisely why it is the strongest number on the page.",
   },
 ];
 
