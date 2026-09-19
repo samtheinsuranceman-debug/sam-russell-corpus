@@ -714,3 +714,48 @@ export const TWELVE_SEGMENT_SOLUTION = {
     'Balanced Indexed Account 8 — S&P PRISM, 1-Year Segment Term',
   ],
 } as const;
+
+/* ------------------------------------------------------------------ *
+ * Superseding evidence: the annual policy review
+ * ------------------------------------------------------------------ */
+
+/**
+ * Everything above this line was solved from portal modals — outcomes without
+ * a shown method. A carrier-issued 21-page Annual Policy Review for
+ * 11/27/2023-11/27/2024 has since been read, and it shows the method.
+ * See shared/securianAnnualPolicyReview.ts.
+ *
+ * What the statement settles:
+ *
+ *   1. The central claim of PRISM_CONTRADICTION is confirmed by a second and
+ *      better source. The statement prints "Part. Rate 105%" on every row while
+ *      the operative factor on the Indexed Loan Account is 1.47 — proven twice
+ *      over, by two printed crediting rates and two posted dollar credits that
+ *      reconcile to the cent. The printed participation field is a constant on
+ *      the carrier's own document, not merely on the web portal.
+ *
+ *   2. The loan rate is read, not inferred: 4.00% rising to 4.25% effective
+ *      10/01/2024. None of subjectChargeByParticipation's three candidates
+ *      (4.51 / 6.29 / 7.16) is that rate — correctly, since a policy loan
+ *      interest rate and an in-segment deduction are different quantities.
+ *      whatIsStillOpen above remains open; it is not answered by this.
+ *
+ * What it does NOT settle, and must not be quietly assumed:
+ *
+ *   The two document sets may not describe the same policy. The twelve-segment
+ *   ledger above lists Balanced Indexed Accounts 2, 6 and 8. The statement
+ *   lists 2, 7 and 8 plus an Indexed Loan Account. "6" and "7" are one
+ *   character apart at the resolution these were read at, and the 1.47 factor
+ *   is observed only on the Indexed Loan Account — an uncapped account, where
+ *   Account 8 on the same page is capped N/A. Do not carry the 1.47 across to
+ *   the Balanced accounts, and do not carry BGA3_BALANCED_2_OBSERVED_PCT back
+ *   the other way, until the account sets are reconciled against a single
+ *   named policy.
+ */
+export const SUPERSEDED_BY_STATEMENT = {
+  source: 'shared/securianAnnualPolicyReview.ts',
+  confirms: 'PRINTED_PARTICIPATION_IS_A_CONSTANT',
+  confirmedIndependentlyBy: ['printed segment crediting rates', 'posted dollar credits'],
+  stillOpen: 'the size of the in-segment deduction on Balanced Indexed Account 2',
+  unreconciled: 'account 6 (ledger) versus account 7 (statement); possibly two different policies',
+} as const;
