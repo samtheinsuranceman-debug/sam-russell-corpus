@@ -13,6 +13,8 @@
 
 import { describe, it, expect } from 'vitest';
 import {
+  BGA_BALANCED_2_TWELVE,
+  TWELVE_SEGMENT_SOLUTION,
   BGA_BALANCED_2_NINE,
   NINE_SEGMENT_SOLUTION,
   BGA_BALANCED_2_MODALS,
@@ -433,5 +435,72 @@ describe('nine segments solve the account', () => {
     // 4.75% is inside the range — which is not the same as being the answer.
     expect(hi - lo).toBeGreaterThan(2);
     expect(NINE_SEGMENT_SOLUTION.whyItCannotBePinned).toMatch(/One equation, two unknowns/);
+  });
+});
+
+describe('twelve segments and the field that lies', () => {
+  const SP = TWELVE_SEGMENT_SOLUTION.spreadPointsPerSegment;
+  const solve = (g: number, c: number) => ((c + SP) / g) * 100;
+
+  it('solves every one of the twelve into one of three declared rates', () => {
+    expect(BGA_BALANCED_2_TWELVE.length).toBe(12);
+    for (const m of BGA_BALANCED_2_TWELVE) {
+      const grp = TWELVE_SEGMENT_SOLUTION.participationGroups.find((g) =>
+        g.segments.includes(m.segment))!;
+      expect(solve(m.growthPct, m.creditedPct), m.segment).toBeCloseTo(grp.ratePct, 1);
+    }
+  });
+
+  it('keeps every group tight to about two hundredths of a point', () => {
+    for (const grp of TWELVE_SEGMENT_SOLUTION.participationGroups) {
+      const vals = BGA_BALANCED_2_TWELVE
+        .filter((m) => grp.segments.includes(m.segment))
+        .map((m) => solve(m.growthPct, m.creditedPct));
+      expect(Math.max(...vals) - Math.min(...vals), `${grp.ratePct}%`).toBeLessThan(0.03);
+    }
+    // Twelve equations, four parameters, residuals inside display rounding.
+    const total = TWELVE_SEGMENT_SOLUTION.participationGroups
+      .reduce((n, g) => n + g.segments.length, 0);
+    expect(total).toBe(12);
+  });
+
+  it('proves with the PRISM account that 105.00% is a printed constant', () => {
+    // No model needed. 17.11% credited on 10.03% growth is 1.71x the index.
+    // 105% participation less any positive spread cannot exceed 10.53%.
+    const d = TWELVE_SEGMENT_SOLUTION.prismDisproof;
+    expect(d.creditedPct).toBeGreaterThan(d.growthPct * 1.05);
+    expect(d.maximumPossibleAt105Pct).toBeCloseTo(d.growthPct * 1.05, 1);
+    expect(d.modalPrintsParticipationPct).toBe(105);
+    expect(d.multipleOfIndex).toBeCloseTo(d.creditedPct / d.growthPct, 1);
+    expect(d.conclusion).toMatch(/constant the page prints, not a fact it reports/);
+  });
+
+  it('shows one displayed value standing for four different true rates', () => {
+    const distinct = new Set(TWELVE_SEGMENT_SOLUTION.participationGroups.map((g) => g.ratePct));
+    expect(distinct.size).toBe(3);
+    // Plus the PRISM account's ~171%, on the same printed 105.00%.
+    expect(TWELVE_SEGMENT_SOLUTION.prismDisproof.impliedParticipationPct).toBeGreaterThan(150);
+  });
+
+  it('establishes that something IS charged against the subject segment', () => {
+    // Its implied participation with no charge is below every rate this
+    // account has ever used — and that no longer rests on a control group.
+    const implied = TWELVE_SEGMENT_SOLUTION.subjectImpliedParticipationIfNoCharge;
+    const lowest = Math.min(...TWELVE_SEGMENT_SOLUTION.participationGroups.map((g) => g.ratePct));
+    expect(implied).toBeLessThan(lowest - 20);
+    expect(TWELVE_SEGMENT_SOLUTION.whatIsNowEstablished).toMatch(/no longer rests on a control group/);
+  });
+
+  it('still refuses to size the charge, and says exactly why', () => {
+    const byPar = TWELVE_SEGMENT_SOLUTION.subjectChargeByParticipation;
+    expect(byPar.length).toBe(3);
+    // Monotone: a higher participation means a bigger implied charge.
+    for (let i = 1; i < byPar.length; i++) {
+      expect(byPar[i].annualPct).toBeGreaterThan(byPar[i - 1].annualPct);
+    }
+    // 4.75% sits near the bottom, requiring the lowest rate the account uses.
+    expect(byPar[0].annualPct).toBeLessThan(4.75);
+    expect(byPar[byPar.length - 1].annualPct).toBeGreaterThan(4.75);
+    expect(TWELVE_SEGMENT_SOLUTION.whatIsStillOpen).toMatch(/portal field that would say is a constant/);
   });
 });
