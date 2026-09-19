@@ -148,10 +148,10 @@ export const SECURIAN_ACCOUNTS: readonly SecurianAccount[] = [
     floorPct: 0,
     accountChargeAnnualPct: null,
     observed: {
-      multiplier: 1.3125,
+      multiplier: null,
       deductionPointsPerSegment: null,
-      segmentsObserved: 6,
-      note: 'SOLVED on nine modals, and it corrects the file. The printed participation IS operative here - it reproduces the printed crediting rate on all nine segments, at 105% on eight and 100% on one. But the dollar credit is that times a further multiplier: 1.25 on the 105% tier (six credited segments) and 1.60 on the 100% tier (one), every one reconciling to under half a cent. The crediting rate the page shows understates the money it pays by 25% and 60% respectively. Segments D and H are consecutive - D ends where H starts - confirming one rolling annual account.',
+      segmentsObserved: 12,
+      note: 'SOLVED on fourteen modals, and it corrects the file twice. The printed participation IS operative - it reproduces the printed crediting rate on all fourteen segments, at 105% on eight and 100% on six. But the dollars carry an unprinted multiplier on top, and that multiplier is PER VINTAGE, not per account: twelve credited segments reconcile to under half a cent on 105% x 1.25, 100% x 1.60 and 100% x 1.40. The same account at the same printed 100% pays 1.60 on some segments and 1.40 on others, so `multiplier` is null here - there is no single one. Segments D, H and L chain end-to-start, proving one rolling account across a vintage boundary.',
     },
     evidence: 'solved',
     source:
