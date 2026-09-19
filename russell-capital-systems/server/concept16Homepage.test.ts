@@ -12,7 +12,13 @@ const builder = readFileSync(resolve("live/build_live_homepage.py"), "utf8");
 describe("The homepage: clean pictures, one slogan, fifteen stacked claims, the lead card last", () => {
   it("shows the neon sign as the hero with its words as the only headline", () => {
     expect(landing).toContain("/rcs-neon-a.webp");
-    expect(landing).toContain("/rcs-neon-a-tall.webp");
+    // The phone shows the same frame the desktop does, not a portrait crop of
+    // the sign on its own: rcs-neon-a-tall.webp keeps the sign and throws the
+    // city away, which left the phone a glowing sign on black. The whole frame
+    // is shown instead, and the city from its right-hand column is carried on
+    // down the screen underneath it.
+    expect(landing).not.toContain("/rcs-neon-a-tall.webp");
+    expect(landing).toContain("/rcs-city-purple.webp");
     expect(landing).toContain("Financial &amp; Tax Relief and Recovery");
     expect(landing).toContain("For Physicians, Psychiatrists, &amp; Surgeons");
     expect(landing).not.toMatch(/blur-\[/);
@@ -148,7 +154,7 @@ describe("The homepage: clean pictures, one slogan, fifteen stacked claims, the 
   it("mirrors the same words and structure on the static homepage template", () => {
     expect(builder).toContain("__MANIFESTO_JSON__");
     expect(template).toContain("__MANIFESTO_JSON__");
-    for (const key of ["__IMG_NEON_A__", "__IMG_NEON_A_TALL__", "__IMG_NEON_B__", "__IMG_NEON_B_TALL__", "__IMG_HORIZON__", "__IMG_SKYWAY__", "__IMG_EXPRESSWAY__"]) {
+    for (const key of ["__IMG_NEON_A__", "__IMG_CITY_PURPLE__", "__IMG_NEON_B__", "__IMG_NEON_B_TALL__", "__IMG_HORIZON__", "__IMG_SKYWAY__", "__IMG_EXPRESSWAY__"]) {
       expect(template, key).toContain(key);
       expect(builder, key).toContain(key);
     }

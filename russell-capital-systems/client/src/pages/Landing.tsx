@@ -113,6 +113,7 @@ function FounderVoice() {
 export default function Landing() {
   const { isAuthenticated } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
+  const signInRef = useRef<HTMLDivElement | null>(null);
 
   // The document itself wears a city while the homepage is up, so overscroll and fast scrolling on a
   // phone show a skyline instead of the browser's black; restored when the visitor leaves the page.
@@ -131,6 +132,81 @@ export default function Landing() {
     { href: isAuthenticated ? "/portal/dashboard" : "/login", label: isAuthenticated ? "Enter" : "Sign in" },
   ];
 
+  // ── The login row on a phone ───────────────────────────────────────────
+  // Three small tabs. Drag across them and the one under the finger opens to
+  // half the screen and says its full name; the other two fall back to a dot.
+  // Crossing into a neighbour hands over; travelling a quarter of the held
+  // tab's width, or 34px downward, lets go; sliding back re-engages.
+  //
+  // Hit-testing measures each tab AT REST and holds that geometry for the whole
+  // gesture — the open tab is drawn far wider than its slot, so re-measuring
+  // mid-drag would drop the finger out of the thing it is holding.
+  useEffect(() => {
+    const row = signInRef.current;
+    if (!row || !window.matchMedia("(max-width: 767px)").matches) return;
+    if (!window.matchMedia("(pointer: coarse)").matches) return;
+
+    const tabs = Array.from(row.children) as HTMLElement[];
+    let anchorIdx: number | null = null;
+    let ax = 0, ay = 0, released = false;
+    let rest: { l: number; r: number }[] | null = null;
+
+    const open = (i: number | null) => {
+      tabs.forEach((t, k) => t.classList.toggle("rc-open", k === i));
+      if (i === null) row.removeAttribute("data-open");
+      else row.setAttribute("data-open", "");
+    };
+    const measure = () => {
+      if (row.querySelector(".rc-open")) open(null);
+      rest = tabs.map((t) => {
+        const r = t.getBoundingClientRect();
+        return { l: r.left, r: r.right };
+      });
+    };
+    const hit = (x: number) => {
+      if (!rest) return null;
+      for (let i = 0; i < rest.length; i++) if (x >= rest[i].l && x <= rest[i].r) return i;
+      return null;
+    };
+    const travel = () => window.innerWidth * 0.5 * 0.25;
+
+    const down = (e: PointerEvent) => {
+      measure();
+      const i = hit(e.clientX);
+      anchorIdx = i; ax = e.clientX; ay = e.clientY; released = false;
+      open(i);
+      if (i !== null) { try { row.setPointerCapture(e.pointerId); } catch { /* not captureable */ } }
+    };
+    const move = (e: PointerEvent) => {
+      if (anchorIdx === null && !e.buttons) return;
+      if (!rest) measure();
+      const i = hit(e.clientX);
+      if (i !== anchorIdx) { anchorIdx = i; ax = e.clientX; ay = e.clientY; released = false; open(i); return; }
+      if (i === null) { open(null); return; }
+      const dx = Math.abs(e.clientX - ax);
+      const dy = e.clientY - ay;
+      if (dx > travel() || dy > 34) { if (!released) { released = true; open(null); } }
+      else if (released) { released = false; open(i); }
+    };
+    const release = () => { anchorIdx = null; released = false; rest = null; open(null); };
+    const invalidate = () => { rest = null; };
+
+    row.addEventListener("pointerdown", down);
+    row.addEventListener("pointermove", move);
+    row.addEventListener("pointerup", release);
+    row.addEventListener("pointercancel", release);
+    row.addEventListener("pointerleave", release);
+    window.addEventListener("resize", invalidate);
+    return () => {
+      row.removeEventListener("pointerdown", down);
+      row.removeEventListener("pointermove", move);
+      row.removeEventListener("pointerup", release);
+      row.removeEventListener("pointercancel", release);
+      row.removeEventListener("pointerleave", release);
+      window.removeEventListener("resize", invalidate);
+    };
+  }, [isAuthenticated]);
+
   return (
     <div id="main-content" tabIndex={-1} className="rc-homepage rc-homepage-type-scale relative min-h-screen bg-transparent text-[#c8d8ec] outline-none">
       {/* ── NAV ── */}
@@ -148,10 +224,10 @@ export default function Landing() {
               {isAuthenticated ? (
                 <ManagedPortalAction href="/portal/dashboard" className="rc-btn whitespace-nowrap border border-emerald-300/35 bg-emerald-300/10 text-sm text-white hover:bg-emerald-300/20"><Lock size={14} /> Dashboard</ManagedPortalAction>
               ) : (
-                <div className="flex items-center gap-1.5" role="group" aria-label="Sign in">
-                  <ManagedPortalAction href="/portal/physician" className="rc-btn whitespace-nowrap border border-emerald-300/35 bg-emerald-300/10 text-sm text-white hover:bg-emerald-300/20"><Lock size={14} /> <span className="hidden sm:inline">Physician </span>Login</ManagedPortalAction>
-                  <ManagedPortalAction href="/portal/client" className="rc-btn hidden whitespace-nowrap border border-sky-300/35 bg-sky-300/10 text-sm text-white hover:bg-sky-300/20 md:inline-flex"><Lock size={14} /> Client Login</ManagedPortalAction>
-                  <ManagedPortalAction href="/portal/advisor" className="rc-btn hidden whitespace-nowrap border border-amber-300/35 bg-amber-300/10 text-sm text-white hover:bg-amber-300/20 md:inline-flex"><Lock size={14} /> Advisor Login</ManagedPortalAction>
+                <div ref={signInRef} className="flex items-center gap-1.5" role="group" aria-label="Sign in">
+                  <ManagedPortalAction href="/portal/physician" className="rc-btn whitespace-nowrap border border-emerald-300/35 bg-emerald-300/10 text-sm text-white hover:bg-emerald-300/20"><Lock size={14} /> <span className="rc-short">Physician</span><span className="rc-long">Physician Login</span></ManagedPortalAction>
+                  <ManagedPortalAction href="/portal/client" className="rc-btn hidden whitespace-nowrap border border-sky-300/35 bg-sky-300/10 text-sm text-white hover:bg-sky-300/20 md:inline-flex"><Lock size={14} /> <span className="rc-short">Client</span><span className="rc-long">Client Login</span></ManagedPortalAction>
+                  <ManagedPortalAction href="/portal/advisor" className="rc-btn hidden whitespace-nowrap border border-amber-300/35 bg-amber-300/10 text-sm text-white hover:bg-amber-300/20 md:inline-flex"><Lock size={14} /> <span className="rc-short">Advisor</span><span className="rc-long">Advisor Login</span></ManagedPortalAction>
                 </div>
               )}
               <button type="button" className="rounded-lg border border-white/15 p-2 text-white xl:hidden" aria-label={menuOpen ? "Close navigation menu" : "Open navigation menu"} aria-expanded={menuOpen} onClick={() => setMenuOpen((open) => !open)}>{menuOpen ? <X size={20} /> : <Menu size={20} />}</button>
@@ -172,11 +248,24 @@ export default function Landing() {
         </div>
       </nav>
 
-      {/* ── 1 · THE SIGN. Its words are the headline; nothing else on the picture. ── */}
-      <header id="top" className={PAGE} aria-label="Financial and Tax Relief and Recovery for Physicians, Psychiatrists, and Surgeons" style={{ backgroundImage: "url(/rcs-neon-a.webp)", backgroundSize: "cover", backgroundPosition: "center" }}>
+      {/* ── 1 · THE SIGN. Its words are the headline; nothing else on the picture. ──
+          Desktop shows the whole 1920x1080 frame: the sign across the left, the
+          purple city down the right. Mobile used to swap in rcs-neon-a-tall.webp,
+          a zoomed portrait crop that keeps the sign and throws the city away, so
+          the phone got a glowing sign on black and nothing else.
+
+          Mobile now shows the same frame the desktop does — the sign smaller, the
+          purple city kept — and carries that city on down the rest of the screen
+          so the space below the sign is not empty. ── */}
+      <header id="top" className={`${PAGE} max-md:block`} aria-label="Financial and Tax Relief and Recovery for Physicians, Psychiatrists, and Surgeons" style={{ backgroundImage: "url(/rcs-neon-a.webp)", backgroundSize: "cover", backgroundPosition: "center" }}>
+        {/* the purple city, underneath, on phones only */}
+        <div aria-hidden="true" className="rc-city-band md:hidden">
+          <img src="/rcs-city-purple.webp" alt="" className="rc-city rc-city-far" width={1220} height={710} />
+          <img src="/rcs-city-purple.webp" alt="" className="rc-city rc-city-near" width={1220} height={710} />
+          <span className="rc-city-floor" />
+        </div>
         <picture>
-          <source media="(max-width: 767px)" srcSet="/rcs-neon-a-tall.webp" width={1080} height={2160} />
-          <img src="/rcs-neon-a.webp" alt="Neon sign reading Financial & Tax Relief and Recovery for Physicians, Psychiatrists, & Surgeons, over a glowing green city skyline" width={1920} height={1080} className={`${PIC} max-md:object-[center_12%] lg:object-[25%_center] xl:object-center`} fetchPriority="high" decoding="async" />
+          <img src="/rcs-neon-a.webp" alt="Neon sign reading Financial & Tax Relief and Recovery for Physicians, Psychiatrists, & Surgeons, over a glowing green city skyline" width={1920} height={1080} className={`${PIC} rc-sign-pic lg:object-[25%_center] xl:object-center`} fetchPriority="high" decoding="async" />
         </picture>
         <h1 className="sr-only">Financial &amp; Tax Relief and Recovery For Physicians, Psychiatrists, &amp; Surgeons</h1>
         <div aria-hidden="true" className="absolute inset-x-0 bottom-6 z-10 flex justify-center text-[10px] font-bold uppercase tracking-[.3em] text-emerald-300/70">Scroll</div>

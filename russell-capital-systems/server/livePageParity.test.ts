@@ -60,7 +60,12 @@ describe("live page ↔ React homepage parity", () => {
 
   it("uses the same pictures on both, crisp, never blurred", () => {
     const pairs: Array<[string, string]> = [
-      ["__IMG_NEON_A__", "/rcs-neon-a.webp"], ["__IMG_NEON_A_TALL__", "/rcs-neon-a-tall.webp"],
+      ["__IMG_NEON_A__", "/rcs-neon-a.webp"],
+      // The first sign's mobile art: the whole frame plus the city band cut from
+      // its own right-hand column, on both renderings. It replaced
+      // rcs-neon-a-tall.webp, a portrait crop that kept the sign and dropped the
+      // city, leaving the phone a glowing sign on black.
+      ["__IMG_CITY_PURPLE__", "/rcs-city-purple.webp"],
       ["__IMG_HORIZON__", "/rcs-city-horizon.webp"], ["__IMG_SKYWAY__", "/rcs-city-skyway.webp"], ["__IMG_FLAGSHIP__", "/rcs-city-flagship.webp"],
       ["__IMG_EXPRESSWAY__", "/rcs-city-expressway.webp"], ["__IMG_GLASS__", "/rcs-city-glass.webp"],
       ["__IMG_NEON_B__", "/rcs-neon-b.webp"], ["__IMG_NEON_B_TALL__", "/rcs-neon-b-tall.webp"],

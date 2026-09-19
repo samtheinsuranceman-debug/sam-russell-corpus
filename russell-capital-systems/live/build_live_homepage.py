@@ -20,6 +20,7 @@ IMAGES = {
     "__IMG_NEON_A__": "rcs-neon-a.webp",
     "__IMG_NEON_B__": "rcs-neon-b.webp",
     "__IMG_NEON_A_TALL__": "rcs-neon-a-tall.webp",
+    "__IMG_CITY_PURPLE__": "rcs-city-purple.webp",
     "__IMG_NEON_B_TALL__": "rcs-neon-b-tall.webp",
     "__IMG_EMERALD__": "rcs-city-emerald.webp",
     "__IMG_BRIDGE__": "rcs-city-bridge.webp",

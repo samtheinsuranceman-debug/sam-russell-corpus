@@ -304,6 +304,36 @@
   .fine-l{margin-top:2.5rem;max-width:52rem;font-size:.7rem;line-height:1.55;color:rgba(255,255,255,.5)}
   .scroll-hint{display:flex}
   @media(max-width:767px){.page.clean .pic{object-position:center}}
+
+/* ── The hero on a phone ─────────────────────────────────────────────────
+   Same arrangement as the React homepage: the whole 1920x1080 frame at the
+   phone's width (219px tall), and the city from its own right-hand column
+   carried on down the screen in two passes, far and near. ── */
+@media (max-width: 767px) {
+  .hero .sign-pic {
+    position: absolute; inset-inline: 0; top: 54px; bottom: auto;
+    height: auto; max-height: none; object-fit: contain;
+  }
+  .hero .sign-city {
+    position: absolute; inset-inline: 0; top: 243px; bottom: 0; z-index: 0; overflow: hidden;
+  }
+  .hero .sign-city img {
+    position: absolute; max-width: none; left: 50%; transform: translateX(-50%);
+    display: block; height: auto;
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 30%, #000 100%);
+            mask-image: linear-gradient(to bottom, transparent 0, #000 30%, #000 100%);
+  }
+  .hero .sign-city-far {
+    top: 0; width: 124%; opacity: .6; filter: blur(1.4px) brightness(.78);
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 30%, #000 58%, transparent 100%);
+            mask-image: linear-gradient(to bottom, transparent 0, #000 30%, #000 58%, transparent 100%);
+  }
+  .hero .sign-city-near { bottom: 0; width: 172%; }
+  .hero .sign-city-floor {
+    position: absolute; inset: 0; pointer-events: none;
+    background: linear-gradient(to bottom, transparent 54%, rgba(5,3,14,.45) 84%, rgba(5,3,14,.92) 100%);
+  }
+}
 </style>
 </head>
 <body>
@@ -325,7 +355,15 @@
 
 <!-- ───────── 1 · THE SIGN. Its words are the headline; nothing else on the picture. ───────── -->
 <header id="top" class="page hero clean" aria-label="Financial and Tax Relief and Recovery for Physicians, Psychiatrists, and Surgeons">
-  <picture><source media="(max-width:767px)" srcset="__IMG_NEON_A_TALL__"><img class="pic" src="__IMG_NEON_A__" alt="Neon sign reading Financial &amp; Tax Relief and Recovery for Physicians, Psychiatrists, &amp; Surgeons, over a glowing green city skyline"></picture>
+  <!-- Phones get the same frame the desktop gets — the sign across the left, the
+       city down the right — shown whole rather than cropped to a portrait of the
+       sign alone, with that city carried on down the screen below it. -->
+  <div class="sign-city" aria-hidden="true">
+    <img class="sign-city-far" src="__IMG_CITY_PURPLE__" alt="" width="1220" height="710">
+    <img class="sign-city-near" src="__IMG_CITY_PURPLE__" alt="" width="1220" height="710">
+    <span class="sign-city-floor"></span>
+  </div>
+  <picture><img class="pic sign-pic" src="__IMG_NEON_A__" alt="Neon sign reading Financial &amp; Tax Relief and Recovery for Physicians, Psychiatrists, &amp; Surgeons, over a glowing green city skyline"></picture>
   <h1 class="sr">Financial &amp; Tax Relief and Recovery for Physicians, Psychiatrists, &amp; Surgeons</h1>
   <div class="scroll-hint" aria-hidden="true">Scroll<span></span></div>
 </header>

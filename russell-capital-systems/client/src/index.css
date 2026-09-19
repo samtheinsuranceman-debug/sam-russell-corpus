@@ -1893,3 +1893,191 @@ html[data-quiet] .rc-integral { display: none; }
 .rc-site-video-pair:empty { display: none; }
 @media (min-width: 900px) { .rc-site-video-pair { grid-template-columns: 1fr 1fr; } }
 .rc-site-video-pair .rc-room-video { margin: 0; max-width: none; }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   THE PUBLIC HOMEPAGE ON A PHONE
+   These rules come last on purpose: several blocks above are written for the
+   portal and reach the public nav and hero by accident. Everything here is
+   scoped to .rc-homepage so nothing else moves.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* The login tabs carry two labels: a short one for the phone row and the full
+   name for everywhere else (and for the phone when a tab is held open). Only
+   one is ever shown. */
+.rc-homepage .rc-long { display: none; }
+@media (min-width: 768px) {
+  .rc-homepage .rc-short { display: none; }
+  .rc-homepage .rc-long { display: inline; }
+}
+
+/* ─── 1 · The nav row ────────────────────────────────────────────────────
+   At 390px the three login controls computed to 51x138, 68x162 and 73x138 —
+   tall, narrow, one character per line. Four rules above cause it:
+     · .rc-btn's display sits after Tailwind's .hidden, equal specificity, so
+       the md-only buttons never hide and all three render;
+     · button,.rc-btn,[role="button"] { white-space: normal !important } beats
+       .whitespace-nowrap;
+     · the same block adds word-break: break-word, so text breaks mid-word;
+     · button,a,[role="button"] { min-width: 44px } forces each one wide.
+   The public nav wants the opposite of all four: three small tabs on one line,
+   which grow only when a finger is on them. */
+/* Unconditional, not inside a max-width:767px block: the rules being undone
+   here run to max-width:768px, so a 768px-wide tablet fell in the one-pixel
+   gap between them and wrapped its login buttons to 97px tall. */
+.rc-homepage .rc-concept16-nav .rc-btn,
+.rc-homepage .rc-concept16-nav button,
+.rc-homepage .rc-concept16-nav a {
+  white-space: nowrap !important;
+  word-break: normal;
+  overflow-wrap: normal;
+  min-width: 0;
+  min-height: 0;
+}
+
+@media (max-width: 767px) {
+  .rc-homepage .rc-concept16-nav .container { padding-top: .6rem; }
+  .rc-homepage .rc-concept16-nav > .container > div:first-child {
+    min-height: 0;
+    padding-inline: .55rem;
+    gap: .4rem;
+    border-radius: 13px;
+  }
+  /* the sign-in group: three tabs sharing the row, small until touched */
+  .rc-homepage .rc-concept16-nav [role="group"] {
+    flex: 1 1 auto;
+    min-width: 0;
+    gap: 4px;
+    touch-action: none;
+  }
+  /* The row is justify-between, so the button cluster sat at its natural width
+     and left ~100px of empty bar between it and the logo. Let it claim that
+     space and the three tabs get 83px each instead of 52 — enough for the word
+     "Physician" to fit rather than clip. */
+  .rc-homepage .rc-concept16-nav [role="group"]:not(:only-child),
+  .rc-homepage .rc-concept16-nav > .container > div:first-child > div:last-child {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+  .rc-homepage .rc-concept16-nav > .container > div:first-child > div:last-child {
+    justify-content: flex-end;
+  }
+  .rc-homepage .rc-concept16-nav [role="group"] > .rc-btn {
+    display: flex !important;          /* beats .hidden, deliberately: all three show */
+    flex: 1 1 0;
+    min-width: 0;
+    height: 28px;
+    padding: 0 4px;
+    border-radius: 8px;
+    font-size: 10px !important;
+    font-weight: 600;
+    letter-spacing: .01em;
+    overflow: hidden;
+    transition: flex-grow .24s cubic-bezier(.22, 1, .36, 1), width .24s cubic-bezier(.22, 1, .36, 1),
+                height .24s, font-size .24s, opacity .24s, box-shadow .24s, transform .24s;
+  }
+  .rc-homepage .rc-concept16-nav [role="group"] > .rc-btn > svg { display: none; }
+  .rc-homepage .rc-concept16-nav [role="group"] > .rc-btn > span { min-width: 0; overflow: hidden; text-overflow: clip; }
+
+  /* The header carries the same picture as a background-image for the desktop
+     bleed. At 390px `cover` scales it to ~1500px wide, so what shows through is
+     two letters of the sign the size of a fist. The <img> is the picture here. */
+  .rc-homepage header#top { background-image: none !important; background-color: #05030e; }
+
+  /* held: the tab under the finger takes half the screen and says its full name */
+  .rc-homepage .rc-concept16-nav [role="group"][data-open] > .rc-btn:not(.rc-open) {
+    flex-grow: .26;
+    opacity: .55;
+    padding: 0;
+    font-size: 0 !important;
+  }
+  /* collapsed, a tab shows a lit dot rather than a sliced word */
+  .rc-homepage .rc-concept16-nav [role="group"][data-open] > .rc-btn:not(.rc-open)::before {
+    content: "";
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: currentColor;
+    box-shadow: 0 0 9px currentColor;
+  }
+  .rc-homepage .rc-concept16-nav [role="group"] > .rc-btn.rc-open {
+    flex: none;
+    width: 50vw;
+    height: 40px;
+    border-radius: 12px;
+    font-size: 15px !important;
+    font-weight: 800;
+    color: #f2fff9;
+    transform: translateY(-1px);
+    box-shadow: 0 0 26px rgba(52, 211, 153, .45), 0 8px 20px rgba(0, 0, 0, .55),
+                inset 0 1px 0 rgba(255, 255, 255, .24);
+    text-shadow: 0 0 12px rgba(52, 211, 153, .9);
+  }
+  .rc-homepage .rc-concept16-nav [role="group"] > .rc-btn.rc-open .rc-short { display: none; }
+  .rc-homepage .rc-concept16-nav [role="group"] > .rc-btn .rc-long { display: none; }
+  .rc-homepage .rc-concept16-nav [role="group"] > .rc-btn.rc-open .rc-long { display: inline; }
+}
+
+/* ─── 2 · The hero ───────────────────────────────────────────────────────
+   Desktop shows the whole 1920x1080 frame — the sign across the left, the
+   city down the right. The phone used to swap in a zoomed portrait
+   crop that kept the sign and threw the city away. It now shows the same
+   frame, contained rather than cropped, so the sign is smaller and the city
+   survives; the band below carries that city on down the screen. */
+/* 390 / (1920/1080) = 219: the whole desktop frame at the phone's width */
+.rc-homepage { --rc-sign-h: 219px; }
+
+@media (max-width: 767px) {
+  /* height:auto, not a fixed box with object-contain — a fixed box letterboxes
+     the 16:9 frame and puts a black bar under the nav. The frame is shown whole
+     at its own aspect: 390 wide is 219 tall, and that is the shrunk sign. */
+  .rc-homepage .rc-sign-pic {
+    top: 54px;
+    bottom: auto;
+    height: auto;
+    max-height: none;
+    object-fit: contain;
+  }
+
+  .rc-city-band {
+    position: absolute;
+    inset-inline: 0;
+    top: calc(54px + var(--rc-sign-h) - 30px);
+    bottom: 0;
+    z-index: 0;
+    overflow: hidden;
+  }
+  /* One strip in the gap is a pasted rectangle with a hard top edge. Two passes
+     of the same band at different scales is a skyline with depth, and each
+     carries its own mask so the edge dissolves wherever it sits. */
+  .rc-city {
+    position: absolute;
+    /* preflight sets img { max-width: 100% }, which silently clamped the 112%
+       and 152% below and left both layers the same size with a gap between */
+    max-width: none;
+    left: 50%;
+    transform: translateX(-50%);
+    display: block;
+    height: auto;
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 30%, #000 100%);
+            mask-image: linear-gradient(to bottom, transparent 0, #000 30%, #000 100%);
+  }
+  .rc-city-far {
+    top: 0;
+    width: 124%;
+    opacity: .6;
+    filter: blur(1.4px) brightness(.78);
+    /* fade the foot as well as the head, or its bottom edge cuts a hairline
+       straight across the screen where the near layer's mask begins */
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 30%, #000 58%, transparent 100%);
+            mask-image: linear-gradient(to bottom, transparent 0, #000 30%, #000 58%, transparent 100%);
+  }
+  /* wide enough that the two layers overlap by ~70px rather than meeting edge
+     to edge, and bigger than the far layer so the depth cue runs the right way */
+  .rc-city-near { bottom: 0; width: 172%; }
+  .rc-city-floor {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(to bottom, transparent 54%, rgba(5, 3, 14, .45) 84%, rgba(5, 3, 14, .92) 100%);
+  }
+}
