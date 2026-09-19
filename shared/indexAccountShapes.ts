@@ -74,6 +74,48 @@ export interface CarrierBacktest {
   readonly note?: string;
 }
 
+/**
+ * Whether a participation rate on file was ever checked against a credit the
+ * carrier actually paid.
+ *
+ * This field exists because of a specific discovery, and the discovery is worth
+ * stating rather than assuming. A Securian Annual Policy Review printed
+ * "Part. Rate 105%" on every row of its crediting table while the factor that
+ * actually produced the printed crediting rates — and the dollar credits posted
+ * in the transaction ledger, to the cent — was 1.47. Not approximately. The
+ * participation column was a constant the document prints, not a number that
+ * drives anything. The same constant had already appeared in the web portal, so
+ * this is not a portal defect; it is how the carrier reports.
+ *
+ * The consequence for every other account in this file: a participation rate
+ * read off a page is evidence that the page says it. It is not evidence that
+ * the account credits by it. Those are different claims, and until tonight
+ * nothing here distinguished them.
+ *
+ * Three states, and the middle one is where nearly everything sits:
+ *
+ *   reconciled          — an observed credit was reproduced from this
+ *                         participation rate. The rate drives the arithmetic.
+ *   contradicted        — an observed credit could NOT be reproduced from it.
+ *                         The rate is printed, not operative. Record what the
+ *                         observed factor was, and do not illustrate either
+ *                         number: the printed one is wrong and the observed one
+ *                         is fitted, not declared.
+ *   (field absent)      — never checked. Honest and common. Not a defect, but
+ *                         not a licence to describe the rate as what the
+ *                         account pays.
+ */
+export interface ParticipationReconciliation {
+  readonly status: 'reconciled' | 'contradicted';
+  /** The factor that actually reproduced the observed credits, as a decimal. */
+  readonly observedFactor: number;
+  /** How many independent credited segments the check rests on. */
+  readonly segments: number;
+  /** Where the observations came from. */
+  readonly source: string;
+  readonly note?: string;
+}
+
 export interface IndexAccountShape {
   /** Stable id, referenced by illustrations and by the rules registry. */
   readonly id: string;
@@ -94,6 +136,13 @@ export interface IndexAccountShape {
    * `participation` field is then the illustration's assumption, not a term.
    */
   readonly participationDeclared?: boolean;
+  /**
+   * Whether the participation rate on file has ever been checked against a
+   * credit the carrier actually paid. Absent means never — which after the
+   * Securian finding is a recorded fact, not an unexamined default. See
+   * `ParticipationReconciliation`.
+   */
+  readonly participationReconciliation?: ParticipationReconciliation;
 
   /** Floor as a decimal. 0 = a 0% floor. Guaranteed on every account here. */
   readonly floor: number;
@@ -521,6 +570,18 @@ export function creditFor(shape: IndexAccountShape, indexReturn: number): Credit
       `${(participated * 100).toFixed(2)}%`,
   ];
 
+  // The participation rate is the one input here that a carrier has been caught
+  // printing without using. Say which kind of number it is, every time.
+  const provenance = participationProvenance(shape);
+  if (provenance === 'contradicted') {
+    parts.push(
+      `— but that participation rate is printed, not operative on this account: ` +
+        `${shape.participationReconciliation!.observedFactor}× reproduces the credits it actually paid`,
+    );
+  } else if (provenance === 'unverified' || provenance === 'declared-unverified') {
+    parts.push('participation published but never reconciled against a paid credit');
+  }
+
   let credited: number;
 
   if (shape.method === 'point-to-point-capped') {
@@ -606,6 +667,69 @@ export function shapesNeedingConfirmation(): readonly IndexAccountShape[] {
   return INDEX_ACCOUNT_SHAPES.filter((s) => Boolean(s.inferred));
 }
 
+export type ParticipationProvenance =
+  /** An observed credit was reproduced from the rate on file. */
+  | 'reconciled'
+  /** An observed credit could not be reproduced from it. Printed, not operative. */
+  | 'contradicted'
+  /** Never checked against a paid credit, and the carrier redeclares it anyway. */
+  | 'declared-unverified'
+  /** Never checked against a paid credit. */
+  | 'unverified';
+
+/**
+ * How much weight the participation rate on file can carry.
+ *
+ * Note what this deliberately does NOT do: it never returns 'reconciled'
+ * because a rate came from a contract form, a rate sheet, or an illustration.
+ * Those establish that the carrier published the number. Reconciliation is a
+ * different and stronger claim — that a credit the carrier paid can be
+ * reproduced from it — and only observed credits can support it.
+ */
+export function participationProvenance(shape: IndexAccountShape): ParticipationProvenance {
+  if (shape.participationReconciliation) return shape.participationReconciliation.status;
+  return shape.participationDeclared ? 'declared-unverified' : 'unverified';
+}
+
+/**
+ * Every account whose participation rate has never been checked against a paid
+ * credit. Expected to be nearly all of them, and that is the point: the list is
+ * a standing statement of what the file does not know, not a defect report.
+ */
+export function shapesWithUnreconciledParticipation(): readonly IndexAccountShape[] {
+  return INDEX_ACCOUNT_SHAPES.filter((s) => !s.participationReconciliation);
+}
+
+/** Accounts where an observed credit contradicted the participation rate on file. */
+export function shapesWithContradictedParticipation(): readonly IndexAccountShape[] {
+  return INDEX_ACCOUNT_SHAPES.filter(
+    (s) => s.participationReconciliation?.status === 'contradicted',
+  );
+}
+
+/**
+ * One line a reviewer can read to know what the participation rate is worth on
+ * this account. Internal; never shown to a client.
+ */
+export function participationCaveat(shape: IndexAccountShape): string {
+  const pct = `${(shape.participation * 100).toFixed(0)}%`;
+  switch (participationProvenance(shape)) {
+    case 'reconciled':
+      return `${pct} reproduces ${shape.participationReconciliation!.segments} observed credit(s) from ${shape.participationReconciliation!.source}.`;
+    case 'contradicted':
+      return (
+        `${pct} is printed but does NOT produce the credits this account paid; ` +
+        `${shape.participationReconciliation!.observedFactor}× does, across ` +
+        `${shape.participationReconciliation!.segments} segment(s) (${shape.participationReconciliation!.source}). ` +
+        `Illustrate neither: the printed rate is wrong and the observed factor is fitted, not declared.`
+      );
+    case 'declared-unverified':
+      return `${pct} is the illustration's assumption on an account the carrier redeclares, and it has never been checked against a credit this account paid.`;
+    default:
+      return `${pct} is what the carrier publishes. It has never been checked against a credit this account paid.`;
+  }
+}
+
 export const SHAPES_VERSION = {
   version: '2026.09.2',
   compiledOn: '2026-09-19',
@@ -618,6 +742,8 @@ export const SHAPES_VERSION = {
     'A credited value computed from a total-return index series. Index crediting uses price return.',
     'A carrier backtest described as a maximum illustrated rate, an expected return, or a projection. It is what an account would have done under current assumptions applied retroactively, on a product that did not exist for most of the window.',
     'A sentinel growth cap. 9999999900.00% is a carrier system saying "no cap"; printing it as a cap is printing a missing value as a number.',
+    'A participation rate described as what an account pays, when it has only ever been read off a page. Securian prints 105% on segments it credits at 1.47× — on the annual statement, not just the portal. A published participation rate is evidence the carrier published it, nothing more, until a paid credit has been reproduced from it. See participationProvenance().',
+    'A participation factor fitted to observed credits, quoted as a rate. The 1.47× that reproduces the Securian credits exactly is still a number nobody declared; it explains a statement, it does not license an illustration.',
     'A loaned indexed account\'s credited rate without its loan charge beside it. The credit and the charge run concurrently and the net is the only figure that means anything.',
     'That a participation rate above 100% means the account outperforms. Above 100% participation on a volatility-controlled index is a lower-volatility index geared up, not a higher return; and 200% participation with a 0.80% charge can finish below 100% participation with a cap.',
   ],
