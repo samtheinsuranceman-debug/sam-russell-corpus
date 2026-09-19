@@ -9,12 +9,16 @@
 import { describe, it, expect } from 'vitest';
 import {
   INDEX_ACCOUNT_SHAPES,
+  type IndexAccountShape,
   SHAPES_VERSION,
   annualise,
   creditFor,
+  participationCaveat,
+  participationProvenance,
   shapeById,
   shapesFor,
   shapesNeedingConfirmation,
+  shapesWithUnreconciledParticipation,
   shapesWithoutMaximum,
 } from '../shared/indexAccountShapes';
 import { AG49_PRODUCTS, PRODUCTS_AWAITING_MAXIMUM, awaitingMaximum, productFor } from '../shared/ag49Products';
@@ -398,5 +402,78 @@ describe('the Pacific Life profile, built from the Drive documents', () => {
     expect(p.note).toMatch(/7\.79%/);
     expect(p.note).toMatch(/middle of that range, not the top/);
     expect(p.maxIllustratedRate).toBe(0.0635);
+  });
+});
+
+describe('participation provenance: what a rate read off a page is worth', () => {
+  it('reports every account as unreconciled, because none has a paid credit on file', () => {
+    // Not a defect list. It is the file stating plainly what it has not checked.
+    const unreconciled = shapesWithUnreconciledParticipation();
+    expect(unreconciled.length).toBe(INDEX_ACCOUNT_SHAPES.length);
+    expect(unreconciled.length).toBeGreaterThan(0);
+  });
+
+  it('never calls a rate reconciled just because it came from a contract form', () => {
+    // Every Pacific account here is sourced to IUC4009 or a carrier illustration.
+    // That establishes publication, not operation, and the two must not merge.
+    for (const shape of INDEX_ACCOUNT_SHAPES) {
+      expect(shape.source.length, shape.id).toBeGreaterThan(0);
+      expect(participationProvenance(shape), shape.id).not.toBe('reconciled');
+    }
+  });
+
+  it('separates a redeclared rate from a merely unchecked one', () => {
+    const declared = INDEX_ACCOUNT_SHAPES.filter((s) => s.participationDeclared);
+    expect(declared.length).toBeGreaterThan(0);
+    for (const s of declared) {
+      expect(participationProvenance(s), s.id).toBe('declared-unverified');
+    }
+    for (const s of INDEX_ACCOUNT_SHAPES.filter((x) => !x.participationDeclared)) {
+      expect(participationProvenance(s), s.id).toBe('unverified');
+    }
+  });
+
+  it('every caveat says the rate has not been checked against a paid credit', () => {
+    for (const shape of INDEX_ACCOUNT_SHAPES) {
+      const caveat = participationCaveat(shape);
+      expect(caveat, shape.id).toMatch(/never been checked against a credit this account paid/);
+      expect(caveat, shape.id).toContain(`${(shape.participation * 100).toFixed(0)}%`);
+    }
+  });
+
+  it('the working shown for a credit admits the participation rate is unverified', () => {
+    const shape = INDEX_ACCOUNT_SHAPES[0];
+    const r = creditFor(shape, 0.08);
+    expect(r.ok).toBe(true);
+    expect(r.ok && r.working).toMatch(/never reconciled against a paid credit/);
+  });
+
+  it('a contradicted rate is flagged in the working and neither number is illustrable', () => {
+    // Modelled on the Securian Indexed Loan Account: prints 105%, credits at 1.47x.
+    const contradicted: IndexAccountShape = {
+      ...INDEX_ACCOUNT_SHAPES[0],
+      id: 'test-contradicted',
+      participation: 1.05,
+      participationReconciliation: {
+        status: 'contradicted',
+        observedFactor: 1.47,
+        segments: 2,
+        source: 'Annual Policy Review 11/27/2023-11/27/2024',
+      },
+    };
+    expect(participationProvenance(contradicted)).toBe('contradicted');
+
+    const r = creditFor(contradicted, 0.08);
+    expect(r.ok && r.working).toMatch(/printed, not operative/);
+    expect(r.ok && r.working).toMatch(/1\.47/);
+
+    const caveat = participationCaveat(contradicted);
+    expect(caveat).toMatch(/Illustrate neither/);
+  });
+
+  it('bans quoting either number, the printed rate or the fitted factor', () => {
+    const banned = SHAPES_VERSION.neverPrinted.join(' ');
+    expect(banned).toMatch(/participation rate described as what an account pays/i);
+    expect(banned).toMatch(/fitted to observed credits, quoted as a rate/i);
   });
 });
