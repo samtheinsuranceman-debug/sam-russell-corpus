@@ -13,7 +13,10 @@
 
 import { describe, it, expect } from 'vitest';
 import {
+  BGA3_BALANCED_2_OBSERVED_PCT,
+  LOAN_CHARGE_DEDUCTION,
   SEGMENT_AUDIT_VERSION,
+  auditLedger,
   auditSegment,
   creditAppliedCorrectly,
   type ObservedSegment,
@@ -221,5 +224,75 @@ describe('the segment, once the owner supplied 24 months', () => {
     // Neither reconciles, so the participation rate is not the gap's cause.
     expect(atScreen.reconciles).toBe(false);
     expect(atSpec.reconciles).toBe(false);
+  });
+});
+
+describe('the Balanced Indexed Account 2 ledger', () => {
+  it('adds up on every row, which is what makes it usable as evidence', () => {
+    // Value before credit plus the credit must be the end value. A table that
+    // does not add up cannot be reasoned from however interesting it looks.
+    const a = auditLedger([
+      { label: 'Jan 2019 – Jan 2021', valueBeforeCredit: 1026.9, indexCredit: 432.28, endValue: 1459.18 },
+      { label: 'Aug 2019 – Aug 2021', valueBeforeCredit: 1026.73, indexCredit: 547.87, endValue: 1574.6 },
+      { label: 'Dec 2019 – Dec 2021', valueBeforeCredit: 1184.59, indexCredit: 547.7, endValue: 1732.29 },
+    ]);
+    expect(a.identityFailures).toEqual([]);
+    expect(a.creditedRatesPct[0]).toBeCloseTo(42.10, 1);
+    expect(a.creditedRatesPct[2]).toBeCloseTo(46.24, 1);
+    expect(a.summary).toMatch(/all adding up/);
+  });
+
+  it('refuses a ledger that does not add up', () => {
+    const a = auditLedger([
+      { label: 'bad row', valueBeforeCredit: 1000, indexCredit: 100, endValue: 1234 },
+    ]);
+    expect(a.identityFailures.length).toBe(1);
+    expect(a.summary).toMatch(/cannot be reasoned from/);
+  });
+
+  it('holds twelve segments, every one consistent with 110% less a 2.50% spread', () => {
+    expect(BGA3_BALANCED_2_OBSERVED_PCT.length).toBe(12);
+    for (const row of BGA3_BALANCED_2_OBSERVED_PCT) {
+      // Invert the formula to the index movement it implies, and require that
+      // movement to be an ordinary two-year window rather than an extreme one.
+      const impliedIndexPct = (row.creditedPct + 2.5) / 1.1;
+      expect(impliedIndexPct, row.segment).toBeGreaterThan(25);
+      expect(impliedIndexPct, row.segment).toBeLessThan(60);
+    }
+    const rates = BGA3_BALANCED_2_OBSERVED_PCT.map((r) => r.creditedPct);
+    expect(Math.min(...rates)).toBeCloseTo(33.15, 1);
+    expect(Math.max(...rates)).toBeCloseTo(53.36, 1);
+  });
+
+  it('isolates the charge by control group rather than by assumption', () => {
+    // The strongest thing the ledger does. One control segment implies an index
+    // movement within a point of the subject segment, and credits 19 points
+    // more. Eleven others run through the same formula and land where it
+    // predicts. So the shortfall is not the formula, the participation rate or
+    // the spread — it is something charged against that one segment.
+    const d = LOAN_CHARGE_DEDUCTION;
+    expect(d.differenceInIndexPct).toBeLessThan(1);
+    expect(d.differenceInCreditedPct).toBeGreaterThan(19);
+    expect(d.segmentMonths).toBe(24);
+    expect(d.impliedAnnualChargePct).toBeCloseTo(7.7, 1);
+    // The control really is in the ledger.
+    expect(BGA3_BALANCED_2_OBSERVED_PCT.map((r) => r.segment)).toContain(d.controlSegment);
+    expect(
+      BGA3_BALANCED_2_OBSERVED_PCT.find((r) => r.segment === d.controlSegment)!.creditedPct
+    ).toBeCloseTo(d.controlCreditedPct, 2);
+  });
+
+  it('still calls the charge a deduction, not a reading', () => {
+    // The discipline that has held through this whole file: a figure inferred
+    // from a residual is inferred, however good the inference.
+    expect(LOAN_CHARGE_DEDUCTION.stillNeeded).toMatch(/policy statement prints it/);
+    expect(LOAN_CHARGE_DEDUCTION.stillNeeded).toMatch(/still inferred/);
+  });
+
+  it('no policy balances are kept, only rates', () => {
+    const serialised = JSON.stringify(BGA3_BALANCED_2_OBSERVED_PCT);
+    for (const balance of ['1026.9', '1184.59', '881.45', '1574.6', '1732.29']) {
+      expect(serialised, balance).not.toContain(balance);
+    }
   });
 });

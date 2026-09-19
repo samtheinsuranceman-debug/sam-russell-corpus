@@ -230,3 +230,133 @@ export const SEGMENT_AUDIT_VERSION = {
     'An audited segment promoted into the shape registry without a person deciding it is representative of the product rather than of one policy.',
   ],
 } as const;
+
+/* ═══ Ledgers ══════════════════════════════════════════════════════════════
+ * One segment is an anecdote. A column of them on a single named account is a
+ * dataset, and it can falsify a formula rather than merely fail to confirm it. */
+
+export interface LedgerRow {
+  readonly label: string;
+  readonly valueBeforeCredit: number;
+  readonly indexCredit: number;
+  readonly endValue: number;
+}
+
+export interface LedgerAudit {
+  /** Rows where end value is not value-before-credit plus the credit. */
+  readonly identityFailures: readonly string[];
+  /** Credited rate per row, as a percentage, in the order supplied. */
+  readonly creditedRatesPct: readonly number[];
+  readonly minPct: number;
+  readonly maxPct: number;
+  readonly meanPct: number;
+  readonly summary: string;
+}
+
+/**
+ * Check a column of credited segments off a carrier's system.
+ *
+ * The identity is the point: a carrier's end value must be the value before
+ * crediting plus the credit. It held on all twelve rows of the Balanced Indexed
+ * Account 2 ledger, which is what made those rows usable as evidence — a table
+ * that does not add up cannot be reasoned from, however interesting it looks.
+ *
+ * Takes dollars and returns rates. The dollars are somebody's policy; the rates
+ * are what the product did.
+ */
+export function auditLedger(rows: readonly LedgerRow[]): LedgerAudit {
+  const failures: string[] = [];
+  const rates: number[] = [];
+
+  for (let i = 0; i < rows.length; i++) {
+    const r = rows[i];
+    if (Math.abs(r.valueBeforeCredit + r.indexCredit - r.endValue) > 0.005) {
+      failures.push(
+        `${r.label}: ${r.valueBeforeCredit} + ${r.indexCredit} is not ${r.endValue}`
+      );
+    }
+    rates.push(r.valueBeforeCredit > 0 ? (r.indexCredit / r.valueBeforeCredit) * 100 : NaN);
+  }
+
+  const clean = rates.filter((x) => Number.isFinite(x));
+  const min = clean.length ? Math.min(...clean) : NaN;
+  const max = clean.length ? Math.max(...clean) : NaN;
+  const mean = clean.length ? clean.reduce((a, b) => a + b, 0) / clean.length : NaN;
+
+  return {
+    identityFailures: failures,
+    creditedRatesPct: rates,
+    minPct: min,
+    maxPct: max,
+    meanPct: mean,
+    summary: failures.length
+      ? `${failures.length} of ${rows.length} rows do not add up; the ledger cannot be reasoned from until they do.`
+      : `${rows.length} rows, all adding up. Credited ${min.toFixed(2)}% to ${max.toFixed(2)}%, mean ${mean.toFixed(2)}%.`,
+  };
+}
+
+/**
+ * Credited rates observed on Minnesota Life Balanced Indexed Account 2
+ * (S&P 500, 2-year segment term), read off the Securian advisor portal's
+ * index-details ledger on 19 September 2026.
+ *
+ * Rates only. The policy's balances are not product evidence and are not kept.
+ *
+ * Twelve rolling 2-year segments maturing through 2021. Every row's end value
+ * equalled its value before crediting plus its credit, so the column is
+ * internally sound.
+ */
+export const BGA3_BALANCED_2_OBSERVED_PCT: readonly { segment: string; creditedPct: number }[] = [
+  { segment: 'Jan 2019 – Jan 2021', creditedPct: 42.10 },
+  { segment: 'Feb 2019 – Feb 2021', creditedPct: 36.11 },
+  { segment: 'Mar 2019 – Mar 2021', creditedPct: 33.15 },
+  { segment: 'Apr 2019 – Apr 2021', creditedPct: 37.07 },
+  { segment: 'May 2019 – May 2021', creditedPct: 42.73 },
+  { segment: 'Jun 2019 – Jun 2021', creditedPct: 40.96 },
+  { segment: 'Jul 2019 – Jul 2021', creditedPct: 43.75 },
+  { segment: 'Aug 2019 – Aug 2021', creditedPct: 53.36 },
+  { segment: 'Sep 2019 – Sep 2021', creditedPct: 49.69 },
+  { segment: 'Oct 2019 – Oct 2021', creditedPct: 48.87 },
+  { segment: 'Nov 2019 – Nov 2021', creditedPct: 53.15 },
+  { segment: 'Dec 2019 – Dec 2021', creditedPct: 46.24 },
+];
+
+/**
+ * What the ledger settles about the 26.96% segment.
+ *
+ * The first screenshot showed a segment crediting 26.96% on 45.25% index
+ * growth, and the gap could not be explained without knowing the segment
+ * length. The ledger supplies something better than a length: a control group.
+ *
+ * Twelve segments on this same named account credited 33.15% to 53.36% over two
+ * years. Under 110% participation less a 2.50% segment spread, each implies an
+ * index movement of 32% to 51% — entirely ordinary for rolling two-year windows
+ * maturing in 2021, and consistent across all twelve.
+ *
+ * The Dec 2019 – Dec 2021 segment is the one that settles it. It credited
+ * 46.24%, which under that formula implies an index movement of 44.30% — within
+ * a point of the 45.25% on the 26.96% segment. Near-identical index movement,
+ * same product, same account family: 46.24% against 26.96%.
+ *
+ * So the 20-point shortfall is not the formula, not the participation rate and
+ * not the spread, because eleven other segments run through the same formula
+ * and land where it predicts. Something is charged against that one segment
+ * that is not charged against these — which is what the owner said it was from
+ * the start, and at 24 months it prices at roughly 7.7% a year compounding.
+ *
+ * It remains a deduction rather than a reading. What would make it a reading is
+ * the loan charge printed on the policy's own statement.
+ */
+export const LOAN_CHARGE_DEDUCTION = {
+  controlSegment: 'Dec 2019 – Dec 2021',
+  controlCreditedPct: 46.24,
+  controlImpliedIndexPct: 44.30,
+  subjectCreditedPct: 26.96,
+  subjectIndexPct: 45.2532,
+  differenceInCreditedPct: 19.28,
+  differenceInIndexPct: 0.95,
+  impliedAnnualChargePct: 7.7,
+  segmentMonths: 24,
+  stillNeeded:
+    'The loan charge as the policy statement prints it. The deduction is strong — eleven control segments agree with the formula and this one does not — but a charge inferred from a residual is still inferred.',
+} as const;
