@@ -344,8 +344,31 @@ export const BGA3_BALANCED_2_OBSERVED_PCT: readonly { segment: string; creditedP
  * that is not charged against these — which is what the owner said it was from
  * the start, and at 24 months it prices at roughly 7.7% a year compounding.
  *
- * It remains a deduction rather than a reading. What would make it a reading is
- * the loan charge printed on the policy's own statement.
+ * ## Two things that could void this, both unresolved
+ *
+ * The comparison only means anything if the subject segment is the same account
+ * as the controls, and two signals say it may not be.
+ *
+ * The modal never named its index. Every level-based inference about it — that
+ * 4,780.94 looks like where the S&P 500 closed 2021 — assumed the S&P 500, and
+ * that assumption was never checked. This same policy holds at least two
+ * indices: S&P 500 on Balanced Indexed Account 2, and S&P PRISM on Balanced
+ * Indexed Account 8. If the subject segment is a PRISM segment then 4,780.94 is
+ * a PRISM level, no S&P reasoning about it holds, and the controls are a
+ * different account measured against a different index.
+ *
+ * And the participation rates disagree. The ledger account is 110%; the modal
+ * printed 105.00%. On the same account in the same system those should match.
+ *
+ * So the deduction is conditional: IF the subject segment is Balanced Indexed
+ * Account 2, the controls isolate a charge of roughly 7.7% a year at 24 months.
+ * If it is a different account, they isolate nothing and the gap is simply that
+ * account's own parameters, which are not on file.
+ *
+ * It remains a deduction rather than a reading either way. What would make it a
+ * reading is the loan charge printed on the policy's own statement, and what
+ * would make it applicable at all is the subject segment's account name — which
+ * the index-details ledger prints in its first column.
  */
 export const LOAN_CHARGE_DEDUCTION = {
   controlSegment: 'Dec 2019 – Dec 2021',
@@ -359,4 +382,9 @@ export const LOAN_CHARGE_DEDUCTION = {
   segmentMonths: 24,
   stillNeeded:
     'The loan charge as the policy statement prints it. The deduction is strong — eleven control segments agree with the formula and this one does not — but a charge inferred from a residual is still inferred.',
+  /** Conditions the whole deduction depends on, neither of them settled. */
+  conditionalOn: [
+    'That the subject segment is Balanced Indexed Account 2. Its modal never named an account or an index, and this policy holds at least two indices. The ledger prints the account name in its first column, which settles it in one look.',
+    'That the participation rates can be reconciled. The ledger account is 110%; the subject modal printed 105.00%. On one account in one system those should agree, and they do not.',
+  ],
 } as const;
