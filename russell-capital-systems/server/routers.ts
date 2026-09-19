@@ -112,6 +112,7 @@ import { storagePut } from "./storage";
 import { experienceRouter, willWriterRouter, petRouter, morningRitualRouter, withdrawalRouter, revenueGuaranteeRouter, warStoryAIRouter, questProgressRouter, rivalryRouter, revenueAttributionRouter, dealScoringRouter, monthlyReportRouter, errorLogRouter } from "./experienceRouter";
 import { planningCasesRouter } from "./planningCasesRouter";
 import { chainRouter } from "./chainRouter";
+import { engineChainingRouter } from "./engineChainingRouter";
 import { intakeRouter } from "./intakeRouter";
 import { whispererRouter } from "./whisperer";
 import { voiceRouter } from "./voiceRouter";
@@ -336,6 +337,7 @@ export const appRouter = router({
   system: systemRouter,
   planningCases: planningCasesRouter,
   chain: chainRouter,
+  engineChain: engineChainingRouter,
   intake: intakeRouter,
   whisperer: whispererRouter,
   voice: voiceRouter,
