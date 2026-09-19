@@ -5,11 +5,22 @@
  * brochure. Every engine and page path is resolved against the filesystem; a
  * module that is renamed or deleted fails the build rather than leaving a
  * marketing site advertising a tool that 404s.
+ *
+ * That check runs one way. It asks whether every engine the catalogue NAMES
+ * exists, and it never asked the converse — whether an engine that exists is
+ * named. Thirty-five modules in shared/ declare a claim number in their own
+ * header; the catalogue cited none of them, and four rows carried notes saying
+ * work does not exist while the file doing that work sat in the same directory.
+ * Every assertion below the fold passed throughout, because none of them looked
+ * in that direction. The final describe block closes it: an engine that declares
+ * a claim is either cited by a row or recorded in engineClaimRegistry.ts with
+ * the reason it is not, and silence fails.
  */
 
 import { describe, it, expect } from 'vitest';
-import { existsSync, readFileSync } from 'fs';
+import { existsSync, readFileSync, readdirSync } from 'fs';
 import { resolve } from 'path';
+import { ENGINE_REGISTRY } from '../shared/engineClaimRegistry';
 import {
   CLAIMS,
   builtClaims,
@@ -193,5 +204,96 @@ describe('the 57 claims', () => {
     for (const ref of ['SI-001', 'SI-021', 'SI-023', 'SI-026']) {
       expect((claimByRef(ref)!.note ?? '').length).toBeGreaterThan(60);
     }
+  });
+});
+
+/**
+ * The converse direction. Everything above asks whether what the catalogue
+ * names exists; nothing above asks whether what exists is named.
+ */
+describe('no engine declares a claim and goes unaccounted for', () => {
+  /** Every shared module that names a claim number in its own header. */
+  const declaring = readdirSync(resolve(root, 'shared'))
+    .filter((f) => f.endsWith('.ts') && !f.endsWith('.test.ts'))
+    .map((f) => {
+      const header = readFileSync(resolve(root, 'shared', f), 'utf-8').slice(0, 4000);
+      const m = /SISTER INVENTION ((?:SI|PAT)-\d{3})/.exec(header);
+      return m ? { file: `shared/${f}`, declares: m[1] } : null;
+    })
+    .filter((x): x is { file: string; declares: string } => x !== null);
+
+  const citedByCatalog = new Set(CLAIMS.map((c) => c.engine).filter(Boolean) as string[]);
+  const inRegistry = new Set(ENGINE_REGISTRY.map((e) => e.file));
+
+  it('finds the declaring engines at all, so an empty scan cannot pass vacuously', () => {
+    expect(declaring.length).toBeGreaterThanOrEqual(30);
+  });
+
+  it('accounts for every declaring engine — cited by a row, or registered with a reason', () => {
+    const unaccounted = declaring
+      .filter((e) => !citedByCatalog.has(e.file) && !inRegistry.has(e.file))
+      .map((e) => `${e.file} (declares ${e.declares}) — cite it in patentCatalog.ts or add it to ENGINE_REGISTRY`);
+    expect(unaccounted).toEqual([]);
+  });
+
+  it('registers nothing that is already cited, so the two lists cannot both own a module', () => {
+    const both = ENGINE_REGISTRY.filter((e) => citedByCatalog.has(e.file)).map((e) => e.file);
+    expect(both).toEqual([]);
+  });
+
+  it('every registered path resolves, on the same terms the catalogue is held to', () => {
+    const missing = ENGINE_REGISTRY.filter((e) => !existsSync(resolve(root, e.file))).map((e) => e.file);
+    expect(missing).toEqual([]);
+  });
+
+  it('every registry entry says why, not just that', () => {
+    const thin = ENGINE_REGISTRY.filter((e) => e.note.length < 80).map((e) => e.file);
+    expect(thin).toEqual([]);
+  });
+
+  it('a second implementation names the module the row points at instead', () => {
+    const vague = ENGINE_REGISTRY.filter(
+      (e) => e.disposition === 'second-implementation' && !e.rowNames
+    ).map((e) => e.file);
+    expect(vague).toEqual([]);
+    for (const e of ENGINE_REGISTRY) {
+      if (e.rowNames) expect(existsSync(resolve(root, e.rowNames)), e.rowNames).toBe(true);
+    }
+  });
+
+  it('a registered engine declares the number the registry says it declares', () => {
+    const lying = ENGINE_REGISTRY.filter((e) => {
+      const header = readFileSync(resolve(root, e.file), 'utf-8').slice(0, 4000);
+      return !header.includes(`SISTER INVENTION ${e.declares}`);
+    }).map((e) => `${e.file} does not declare ${e.declares}`);
+    expect(lying).toEqual([]);
+  });
+
+  it('an unfinished row that names an engine accounts for that engine in its note', () => {
+    // The specific failure this block exists to catch: a note written before the
+    // engine landed and left in place after it did, so the row simultaneously
+    // cites a module and denies the work is done.
+    //
+    // The first attempt at this test scanned the note for "does not" and failed
+    // SI-042, whose note is correct — estateTaxEngine.ts really has no GRAT,
+    // IDGT or § 7520 anywhere, so the freeze-technique selector really is
+    // missing. That is the lesson: a partial note MUST say what is absent, so
+    // matching on absence-language can only ever produce false positives.
+    //
+    // What is checkable is narrower and actually true. If a row is unfinished
+    // and names an engine, the note has to engage with that engine — name the
+    // file, or say in words that it exists. A note that cites a module and then
+    // describes the territory as empty without mentioning it is the stale case,
+    // and it cannot satisfy this.
+    const unreconciled = CLAIMS.filter((c) => c.engine && c.status !== 'built')
+      .filter((c) => {
+        const note = c.note ?? '';
+        const basename = c.engine!.split('/').pop()!.replace(/\.ts$/, '');
+        const namesTheModule = note.includes(basename);
+        const assertsItExists = /\bexists?\b|\bit does\b|was located|was recorded as|remains the/i.test(note);
+        return !(namesTheModule || assertsItExists);
+      })
+      .map((c) => `${c.ref} is ${c.status} and names ${c.engine}, but its note never accounts for that module`);
+    expect(unreconciled).toEqual([]);
   });
 });
