@@ -184,7 +184,27 @@ export function gatedIllustration(input: AG49Input, facts: ExhibitFacts): GatedI
       summary: `Nothing showable: ${reason}`,
     };
   }
-  const bindingMax = shape ? Math.min(publishedMax, shape.maxIllustratedRate) : publishedMax;
+  // An account with no carrier maximum on file may be described but not
+  // illustrated. Falling back to the product's figure would be the exact
+  // substitution ag49Products exists to prevent: a product maximum is the
+  // highest across its accounts, so lending it to an account that has none is
+  // lending it the best case on the page.
+  if (shape && shape.maxIllustratedRate === null) {
+    const reason =
+      `${shape.label} has no AG 49-A maximum illustrated rate on file. Its parameters are known, so it can be ` +
+      `described and compared, but it cannot be illustrated until the carrier's maximum for that account is read ` +
+      `from an illustration. The product's maximum is the highest across its accounts and may not stand in for it.`;
+    return {
+      showable: false,
+      cap,
+      scenarios: [],
+      generatorChecklist: generated.complianceChecklist,
+      generatorWarnings: generated.regulatoryWarnings,
+      refusal: reason,
+      summary: `Nothing showable: ${reason}`,
+    };
+  }
+  const bindingMax = shape ? Math.min(publishedMax, shape.maxIllustratedRate!) : publishedMax;
   const publishedMaxPct = bindingMax * 100;
 
   const scenarios: GatedScenario[] = generated.scenarios.map((s) => {
@@ -286,8 +306,14 @@ export interface AccountComparisonRow {
   readonly segmentCreditedPct: number | null;
   /** The same, per year, so unlike segment lengths can be read together. */
   readonly annualisedPct: number | null;
-  /** This account's own published maximum illustrated rate, as a percentage. */
-  readonly maxIllustratedPct: number;
+  /**
+   * This account's own published maximum illustrated rate, as a percentage, or
+   * null where the carrier's figure has not been read. Null means describable
+   * but not illustrable.
+   */
+  readonly maxIllustratedPct: number | null;
+  /** The carrier's own backtest for this account, where it publishes one. */
+  readonly backtest?: { bestPct: number; worstPct: number; averagePct: number; window: string };
   readonly working: string;
   /** Present when the row could not be computed, or needs confirming first. */
   readonly caveat?: string;
@@ -314,12 +340,26 @@ export function compareAccountShapes(productId: string, indexReturn: number): re
   for (let i = 0; i < shapes.length; i++) {
     const s: IndexAccountShape = shapes[i];
     const credit = creditFor(s, indexReturn);
+    const extras: string[] = [];
+    if (s.accountChargeAnnual) extras.push(`${(s.accountChargeAnnual * 100).toFixed(2)}%/yr account charge`);
+    if (s.accountBenefitAnnual) extras.push(`${(s.accountBenefitAnnual * 100).toFixed(2)}%/yr account benefit`);
     const structure =
-      s.cap !== null
-        ? `${(s.participation * 100).toFixed(0)}% participation, ${(s.cap * 100).toFixed(2)}% cap, ${(s.floor * 100).toFixed(0)}% floor, ${s.segmentYears}-year`
-        : `${(s.participation * 100).toFixed(0)}% participation, uncapped, ${s.spread === null ? 'spread not on file' : `${(s.spread * 100).toFixed(2)}% spread ${s.spreadBasis}`}, ${(s.floor * 100).toFixed(0)}% floor, ${s.segmentYears}-year`;
+      (s.cap !== null
+        ? `${(s.participation * 100).toFixed(0)}% participation, ${(s.cap * 100).toFixed(2)}% cap ${s.capBasis === 'per-year' ? 'per year' : 'per segment'}, ${(s.floor * 100).toFixed(0)}% floor, ${s.segmentYears}-year`
+        : `${(s.participation * 100).toFixed(0)}% participation, uncapped, ${s.spread === null ? 'no spread' : `${(s.spread * 100).toFixed(2)}% spread ${s.spreadBasis}`}, ${(s.floor * 100).toFixed(0)}% floor, ${s.segmentYears}-year`) +
+      (extras.length ? `, ${extras.join(', ')}` : '');
 
     const caveats: string[] = [];
+    if (s.maxIllustratedRate === null) {
+      caveats.push(
+        'No AG 49-A maximum on file for this account, so it may be described and compared but not illustrated. Read the carrier\'s maximum for it from an illustration before using it in one.'
+      );
+    }
+    if (s.participationDeclared) {
+      caveats.push(
+        `The ${(s.participation * 100).toFixed(0)}% participation rate is an assumption, not a term — the carrier redeclares it${s.participationGuaranteedMin !== undefined ? ` and guarantees only ${(s.participationGuaranteedMin * 100).toFixed(0)}%` : ''}.`
+      );
+    }
     if (s.inferred) caveats.push(`Confirm before illustrating — ${s.inferred}`);
     if (s.segmentYears > 1) {
       caveats.push(
@@ -334,7 +374,15 @@ export function compareAccountShapes(productId: string, indexReturn: number): re
       structure,
       segmentCreditedPct: credit.ok ? credit.segmentCredited * 100 : null,
       annualisedPct: credit.ok ? credit.annualised * 100 : null,
-      maxIllustratedPct: s.maxIllustratedRate * 100,
+      maxIllustratedPct: s.maxIllustratedRate === null ? null : s.maxIllustratedRate * 100,
+      backtest: s.backtest
+        ? {
+            bestPct: s.backtest.best * 100,
+            worstPct: s.backtest.worst * 100,
+            averagePct: s.backtest.average * 100,
+            window: s.backtest.window,
+          }
+        : undefined,
       working: credit.ok ? credit.working : credit.reason,
       caveat: caveats.length ? caveats.join(' ') : undefined,
     });
