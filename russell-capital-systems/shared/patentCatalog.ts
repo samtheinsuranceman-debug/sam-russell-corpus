@@ -1,5 +1,12 @@
 /**
- * The 57 — every claimed invention mapped to the code that implements it.
+ * The 68 — every claimed invention mapped to the code that implements it.
+ *
+ * It was the 57 for as long as the sheet was the only place claims came from.
+ * Eleven more were found the other way round: by scanning shared/ for engines
+ * that declare a claim in their own header and asking which ones this file had
+ * never heard of. Those eleven are at the bottom under "Built, unclaimed", they
+ * total 3,165 lines, and not one of them has a drafted application. The count
+ * went up because the inventory got honest, not because anything new was built.
  *
  * ## Why a registry rather than 57 new files
  *
@@ -65,7 +72,8 @@ export const CLAIMS: readonly ClaimEntry[] = [
   { ref: 'PAT-005', applicationDraft: 'docs/patents/applications/PAT-005_Tax_Free_Retirement_Income_Waterfall_Engine.pdf', title: 'Tax-Free Retirement Income Waterfall Engine', status: 'built',
     engine: 'shared/incomeForLife.ts', page: 'client/src/pages/portal/TaxWaterfall.tsx' },
   { ref: 'PAT-006', applicationDraft: 'docs/patents/applications/PAT-006_Divorce_Asset_Protection_Calculator_with_IUL_Shielding.pdf', title: 'Divorce Asset Protection Calculator with IUL Shielding', status: 'built',
-    page: 'client/src/pages/portal/DivorceCalculator.tsx' },
+    engine: 'shared/divorceFinancialEngine.ts', page: 'client/src/pages/portal/DivorceCalculator.tsx',
+    note: 'The engine is named here rather than left to the page, because it is one of the few in this directory whose figures are statutory: it reads divorceStateRules, which carries a statute citation per jurisdiction and a neverPrinted list reused by reference so the two cannot drift. It declares SI-012 in its own header, which is the churn claim on this sheet — a collision recorded in engineClaimRegistry.ts and not resolved by naming it here.' },
   { ref: 'PAT-007', applicationDraft: 'docs/patents/applications/PAT-007_Ecological_Drivers_Retirement_Risk_Assessment_Framework.pdf', title: 'Ecological Drivers Retirement Risk Assessment Framework', status: 'built',
     engine: 'shared/erosion.ts', page: 'client/src/pages/portal/EcologicalDrivers.tsx' },
   { ref: 'PAT-008', applicationDraft: 'docs/patents/applications/PAT-008_Behavioral_Lock_In_Prevention_System.pdf', title: 'Behavioral Lock-In Prevention System', status: 'built',
@@ -112,7 +120,8 @@ export const CLAIMS: readonly ClaimEntry[] = [
     page: 'client/src/pages/portal/RewardsVault.tsx',
     note: 'Rewards surface exists; the literacy curriculum does not.' },
   { ref: 'SI-012', applicationDraft: 'docs/patents/applications/SI-012_Predictive_Client_Churn_Prevention_System.pdf', title: 'Predictive Client Churn Prevention System', status: 'built',
-    page: 'client/src/pages/portal/ClientEngagementScore.tsx' },
+    engine: 'shared/clientRetentionEngine.ts', page: 'client/src/pages/portal/ClientEngagementScore.tsx',
+    note: 'clientRetentionEngine declares SI-022 in its header — the audit-trail claim here — while divorceFinancialEngine declares SI-012, this row. The two have swapped numbers relative to this sheet, which is why the collision looks like an offset in one of the two numbering schemes rather than two isolated mistakes. Both engines are named on the rows their subjects belong to; neither is renumbered.' },
   { ref: 'SI-013', applicationDraft: 'docs/patents/applications/SI-013_Automated_Life_Event_Detection_and_Response_Engine.pdf', title: 'Automated Life Event Detection & Response Engine', status: 'dropped',
     note: 'Portfolio review: life-event detection with playbooks marked taken or crowded.' },
   { ref: 'SI-014', applicationDraft: 'docs/patents/applications/SI-014_Client_Family_Tree_Financial_Mapping.pdf', title: 'Client Family Tree Financial Mapping', status: 'built',
@@ -184,6 +193,75 @@ export const CLAIMS: readonly ClaimEntry[] = [
   { ref: 'SI-042', applicationDraft: 'docs/patents/applications/SI-042_Integrated_Estate_Freeze_and_IUL_Wealth_Replacement.pdf', title: 'Integrated Estate Freeze & IUL Wealth Replacement System', status: 'partial',
     engine: 'shared/estateTaxEngine.ts', page: 'client/src/pages/portal/EstateTax.tsx',
     note: 'Estate tax engine and trust pages exist; the freeze-technique selector does not. Application drafted 29 April 2026 covering GRAT/IDGT optimisation and IRC §7520 rate monitoring, which is the missing selector — the spec describes more than the code does.' },
+
+  /* ── Built, unclaimed ───────────────────────────────────────────────────
+   * Eleven engines in shared/ implement inventions this sheet did not list.
+   * They were found by asking the question the original test never asked —
+   * which engines exist and go unnamed — and they total 3,165 lines.
+   *
+   * NONE of them carries an applicationDraft, and that is the point of adding
+   * them rather than a defect in them. missingApplicationDraft() is the filing
+   * queue, and the reason this sheet exists is that a claim with code and no
+   * spec is an asset nobody can file. While these engines had no row they were
+   * not in the queue, not in claimCounts(), and not in any number the portfolio
+   * reports — they were invisible to the process meant to protect them. A row
+   * with no draft is exactly what a drafting queue should look like.
+   *
+   * Every one is `partial`, and on the same ground rather than eleven different
+   * ones: a provenance sweep across all eleven found zero source references.
+   * Most take their rates as parameters and so invent nothing themselves — the
+   * exposure sits with whatever calls them — and none has a page, so nothing
+   * shows their output to a household yet. Each becomes `built` when a surface
+   * calls it with sourced inputs, not before.
+   *
+   * These are numbered SI-043 onward. That is a new number on this sheet only.
+   * It does not reconcile the separate numbering the engines carry in their own
+   * headers, which collides with this sheet on fourteen refs and is recorded in
+   * engineClaimRegistry.ts. Nothing there is renumbered here. */
+
+  { ref: 'SI-043', title: 'IUL Policy Loan Optimization with Variable Rate Hedging, Wash Loan Arbitrage Detection and Multi-Policy Coordination', status: 'partial',
+    engine: 'shared/iulLoanOptimizationEngine.ts',
+    note: 'iulLoanOptimizationEngine.ts, the most valuable of the unclaimed set, and the one the sheet could least afford to be missing. 496 lines, eight exports, and it is the only module that models variable against fixed against wash loans instead of reducing the choice to one blended rate — which is the mechanism at the centre of every mortgage-acceleration case this platform argues. detectWashArbitrage prices the structures where borrowing is effectively costless; analyzeRateHedge works the spread across a rate cycle rather than assuming a static charge; coordinateLoans and findCrossPolicyMoves distribute a draw across policies. Partial because nothing sources the rate inputs and no page calls it. Note also that its header claims to extend "SI-024 (policyLoanOptimizer)" while this sheet\'s SI-024 is multi-currency and multiCurrencyWealthEngine also declares SI-024 — three uses of one number, which is the sharpest single piece of evidence that two sheets were maintained in parallel.' },
+
+  { ref: 'SI-044', title: 'Physician Loan Refinancing Optimizer with IUL Collateral Integration and Forgiveness Arbitrage', status: 'partial',
+    engine: 'shared/physicianLoanRefiEngine.ts',
+    note: 'physicianLoanRefiEngine.ts, 468 lines. Distinct from SI-028, which optimises forgiveness — this optimises the decision between pursuing forgiveness and refinancing, carrying an explicit probability that PSLF survives to the borrower\'s forgiveness date. It must never be merged into SI-028: refinancing federal loans permanently forfeits PSLF eligibility, so the two strategies are opposed and recommending both is malpractice. The engine already knows this — its scope note says so and it carries a forfeited[] field enumerating what is given up — so the guard exists in code and needs to exist in the UI too.' },
+
+  { ref: 'SI-045', title: 'Indexed Annuity and IUL Hybrid Income Floor Construction', status: 'partial',
+    engine: 'shared/hybridIncomeFloorEngine.ts',
+    note: 'hybridIncomeFloorEngine.ts, 550 lines, four exports: layerGuaranteedIncome, optimizeUpsideCapture, sequenceDistributions, buildHybridIncomeFloor. Builds a floor from annuity guarantees and takes upside through indexed crediting, then sequences draws across the two. This is the sequence-risk argument made structural rather than rhetorical, which is what a household near retirement is actually buying. Partial on provenance and no page.' },
+
+  { ref: 'SI-046', title: 'Key Person Insurance Valuation for Medical and Advisory Practices', status: 'partial',
+    engine: 'shared/keyPersonValuationEngine.ts',
+    note: 'keyPersonValuationEngine.ts, 448 lines. Attributes practice revenue to an individual, prices replacement cost, and models continuity impact. Adjacent to SI-036, physician buy-in/buy-out, which is partial with no engine at all — these two probably want to share a valuation core rather than each grow one.' },
+
+  { ref: 'SI-047', title: 'Social Security Bridge Strategy with IUL Income Substitution', status: 'partial',
+    engine: 'shared/socialSecurityBridgeEngine.ts',
+    note: 'socialSecurityBridgeEngine.ts, 189 lines. Funds the gap between retirement and a delayed claim so the benefit can grow to its higher level. A genuine and defensible invention, and it collides with SI-009 — Opportunity Zone — which this sheet records as none and the portfolio review kept only as a dependent claim. The stronger claim was sitting behind the weaker one\'s number.' },
+
+  { ref: 'SI-048', title: 'Inflation-Adjusted Retirement Income Gap Analysis', status: 'partial',
+    engine: 'shared/retirementGapEngine.ts',
+    note: 'retirementGapEngine.ts, 169 lines. Closest to PAT-005, the income waterfall, but not the same question: the waterfall sequences which account to draw from, this sizes the shortfall in real terms first. Check for overlap with PAT-005 before drafting, because a dependent claim may be the honest shape here.' },
+
+  { ref: 'SI-049', title: 'Carrier Financial Strength Monitoring with Downgrade Alerting', status: 'partial',
+    engine: 'shared/carrierStrengthMonitorEngine.ts',
+    note: 'carrierStrengthMonitorEngine.ts, 168 lines. The one engine in this set whose provenance gap is inside it rather than at its caller: getDefaultCarrierProfiles ships in-repo carrier profiles with no rating agency, document or date. That is also the cheapest gap in the whole sheet to close, because the agencies publish and the figures are citable — which makes this the best first candidate for promotion to built.' },
+
+  { ref: 'SI-050', title: 'Captive Insurance and IUL Integration for Business Owners', status: 'partial',
+    engine: 'shared/captiveInsuranceEngine.ts',
+    note: 'captiveInsuranceEngine.ts, 125 lines, and the one row in this set that should not be surfaced on provenance grounds alone. Micro-captives appear on IRS listed-transaction guidance, which carries reportable-transaction obligations and a history of enforcement. This needs a compliance read and a decision about whether the platform wants the exposure at all, before anything about it reaches a page — and that is true whatever number it ends up carrying.' },
+
+  { ref: 'SI-051', title: 'Automated Compliance Document Package Generation', status: 'partial',
+    engine: 'shared/complianceDocGeneratorEngine.ts',
+    note: 'complianceDocGeneratorEngine.ts, 178 lines, harvested from the 688 build. Generates a document package for a transaction. Distinct from SI-016, which pre-checks compliance — a checker and a generator are different claims, and putting a generator behind a checker (as iulIllustrationGate does for illustrations) is the pattern this should follow.' },
+
+  { ref: 'SI-052', title: 'Automated Client Onboarding Workflow Generation', status: 'partial',
+    engine: 'shared/clientOnboardingEngine.ts',
+    note: 'clientOnboardingEngine.ts, 176 lines, harvested from the 688 build. It had no claim anywhere on either sheet — the only harvested engine in that position — so before this row it could not have been counted as patent coverage by anyone, correctly. Whether workflow generation is patentable subject matter at all is a question for counsel; the row exists so the question can be asked rather than missed.' },
+
+  { ref: 'SI-053', title: 'Automated Prospect Qualification Scoring', status: 'partial',
+    engine: 'shared/prospectQualificationEngine.ts',
+    note: 'prospectQualificationEngine.ts, 198 lines. A practice-management tool rather than a household-facing one, which makes it the lowest priority in this set for drafting and the lowest risk to leave unbuilt. Recorded for completeness: an engine that exists and is nowhere on the sheet is the condition this whole block was added to end.' },
 ];
 
 /** Only these are offered to partner sites. */

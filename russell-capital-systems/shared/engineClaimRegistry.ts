@@ -69,7 +69,7 @@ export const ENGINE_REGISTRY: readonly EngineRegistryEntry[] = [
   { file: 'shared/iulComplianceEngine.ts', declares: 'SI-001',
     subject: 'Dynamic IUL Illustration Compliance Engine',
     disposition: 'second-implementation', rowNames: 'shared/ag49Validator.ts',
-    note: 'Both do AG 49-A work. ag49Validator.ts is the gate the illustration path already calls and it refuses rather than clamps; this engine generates a compliant illustration. They are plausibly complementary — generator and validator — rather than rivals, and the likely resolution is that this one calls that one. Worth settling before either is wired to a new surface, because two modules that both claim to know the maximum illustrated rate is exactly how a wrong rate reaches a client.' },
+    note: 'RESOLVED — iulIllustrationGate.ts now composes the two, and neither is deleted. This engine keeps the broad modelling surface (carrier, product, health class, index strategy, cap, floor, participation, spread, multipliers) and ag49Validator keeps sole authority over what may be shown. Two defects made the composition necessary rather than optional: this engine derives its own maximum illustrated rate from cap, participation and spread, when AG 49-A makes that the carrier illustration actuary\'s product-specific figure, so it can exceed the carrier\'s published maximum while believing itself compliant; and it emits a persuasionOptimizations array, which the gate drops before anything can reach a client. Call gatedIllustration, never generateCompliantIllustration directly.' },
 
   { file: 'shared/multiGenTransferEngine.ts', declares: 'SI-032',
     subject: 'Multi-Generational Wealth Transfer Simulation Engine',
@@ -89,7 +89,7 @@ export const ENGINE_REGISTRY: readonly EngineRegistryEntry[] = [
   { file: 'shared/policyReplacementAnalyzer.ts', declares: 'SI-003',
     subject: 'Automated Policy Review & Replacement Analyzer',
     disposition: 'second-implementation', rowNames: 'shared/replacementScoring.ts',
-    note: 'Replacement is the most heavily regulated recommendation in the category. Two scorers that could disagree on whether a replacement is suitable is a compliance exposure, not just duplication.' },
+    note: 'Recorded here as a duplicate on a first pass, and that was wrong — reading both shows they cover different products. replacementScoring.ts scores ANNUITY contracts: surrender economics, bonus uplift, income improvement, state guaranty headroom, and a breakeven timeline in months. This one takes an ExistingPolicy typed whole_life | universal_life | variable_ul | iul | term and analyses a 1035 exchange. Annuity replacement and life replacement are separate regulatory regimes with separate suitability tests, and neither module can answer the other\'s question. They are complementary and both are wanted. What SI-003 needs is not a winner but a second engine field, or a split into two rows; the claim as titled covers policy review, which is this one.' },
 
   { file: 'shared/premiumFinancingArbitrage.ts', declares: 'SI-004',
     subject: 'Premium Financing Arbitrage Calculator',
@@ -126,75 +126,23 @@ export const ENGINE_REGISTRY: readonly EngineRegistryEntry[] = [
     disposition: 'ref-collision',
     note: 'Catalog SI-015 is the Voice-Activated Financial Dashboard. This is the third transfer engine — see multiGenTransferEngine above.' },
 
-  { file: 'shared/divorceFinancialEngine.ts', declares: 'SI-012',
-    subject: 'Divorce Financial Impact Modeling',
-    disposition: 'ref-collision',
-    note: 'Catalog SI-012 is Predictive Client Churn. The divorce claim is PAT-006, whose row cites a page and not this engine, even though this engine is the one wired to divorceStateRules with statute citations and a neverPrinted list. PAT-006 is the row that should name it; confirm the intended number before moving it.' },
 
-  { file: 'shared/clientRetentionEngine.ts', declares: 'SI-022',
-    subject: 'Predictive Client Retention Engine',
-    disposition: 'ref-collision',
-    note: 'Catalog SI-022 is the Blockchain-Verified Audit Trail. Retention is catalog SI-012, whose row cites a page only — so this engine and divorceFinancialEngine have swapped numbers relative to the catalog. That pattern suggests an offset rather than two isolated mistakes, and is the strongest evidence that one whole sheet was renumbered at some point.' },
 
   { file: 'shared/behavioralBiasEngine.ts', declares: 'SI-007',
     subject: 'Behavioral Finance Bias Detection Engine',
     disposition: 'ref-collision',
     note: 'Catalog SI-007 is the Multi-Entity Tax Optimization Router. Bias detection is closest to PAT-008, Behavioral Lock-In Prevention, whose row cites livingRiskProfile.ts.' },
 
-  { file: 'shared/retirementGapEngine.ts', declares: 'SI-027',
-    subject: 'Inflation-Adjusted Retirement Income Gap',
-    disposition: 'ref-collision',
-    note: 'Catalog SI-027 is Client Digital Twin. No row covers an inflation-adjusted income gap directly; PAT-005, the income waterfall, is the nearest.' },
 
-  { file: 'shared/socialSecurityBridgeEngine.ts', declares: 'SI-009',
-    subject: 'Social Security + IUL Bridge Strategy',
-    disposition: 'ref-collision',
-    note: 'Catalog SI-009 is Opportunity Zone + IUL, recorded as none and kept only as a dependent claim. A Social Security bridge is a distinct and more defensible invention than the row it collides with, and has no row of its own.' },
 
-  { file: 'shared/iulLoanOptimizationEngine.ts', declares: 'SI-029',
-    subject: 'IUL Policy Loan Optimization (variable vs fixed vs indexed)',
-    disposition: 'ref-collision',
-    note: 'Catalog SI-029 is Real Estate Syndication K-1 aggregation. This engine is the one that models the three loan types against each other, which is the mechanism at the centre of the mortgage-acceleration case, and it has no row. Of everything in this list it is the most valuable orphan.' },
 
-  { file: 'shared/hybridIncomeFloorEngine.ts', declares: 'SI-030',
-    subject: 'Indexed Annuity with IUL Hybrid Income Floor',
-    disposition: 'ref-collision',
-    note: 'Catalog SI-030 is Spousal Income Splitting. No row covers an annuity/IUL hybrid floor.' },
 
-  { file: 'shared/keyPersonValuationEngine.ts', declares: 'SI-035',
-    subject: 'Key Person Insurance Valuation (medical practices)',
-    disposition: 'ref-collision',
-    note: 'Catalog SI-035 is Risk Tolerance Drift. Key person valuation has no row, and is adjacent to SI-036, physician buy-in/buy-out, which is partial with no engine.' },
 
-  { file: 'shared/captiveInsuranceEngine.ts', declares: 'SI-011',
-    subject: 'Captive Insurance + IUL Integration',
-    disposition: 'ref-collision',
-    note: 'Catalog SI-011 is Gamified Financial Literacy. Captives have no row. Note that micro-captives appear on IRS listed-transaction guidance, so this one needs a compliance read before it is surfaced anywhere, whatever number it ends up with.' },
 
-  { file: 'shared/carrierStrengthMonitorEngine.ts', declares: 'SI-016',
-    subject: 'Carrier Financial Strength Monitoring',
-    disposition: 'ref-collision',
-    note: 'Catalog SI-016 is AI-Powered Compliance Pre-Check. Carrier strength has no row. Ratings are published by named agencies, so this is one of the few orphans that could carry real provenance cheaply.' },
 
-  { file: 'shared/prospectQualificationEngine.ts', declares: 'SI-023',
-    subject: 'Automated Prospect Qualification Engine',
-    disposition: 'ref-collision',
-    note: 'Catalog SI-023 is Real-Time Market Sentiment, which is blocked on data rather than code. Prospect qualification has no row and is a practice-management tool rather than a household-facing one.' },
 
-  { file: 'shared/physicianLoanRefiEngine.ts', declares: 'SI-028',
-    subject: 'Physician Loan Refinancing Optimizer with IUL Capture',
-    disposition: 'ref-collision',
-    note: 'Catalog SI-028 is Physician Student Loan Forgiveness, correctly cited to forgiveness.ts. Refinancing and forgiveness are opposed strategies — refinancing federal loans forfeits PSLF eligibility — so these must not be merged under one number. This needs a row of its own, and arguably a guard that stops the two being recommended together.' },
 
-  { file: 'shared/complianceDocGeneratorEngine.ts', declares: 'SI-021',
-    subject: 'Automated Compliance Document Generator',
-    disposition: 'ref-collision',
-    note: 'Catalog SI-021 is Extreme-Scenario Stress Testing. Harvested from the 688 build in this change. Document generation has no row; the nearest is SI-016, AI-Powered Compliance Pre-Check, which is a checker rather than a generator.' },
 
-  { file: 'shared/clientOnboardingEngine.ts', declares: 'SI-026',
-    subject: 'Automated Client Onboarding Workflow',
-    disposition: 'ref-collision',
-    note: 'Catalog SI-026 is the Regulatory Sandbox. Harvested from the 688 build in this change. Onboarding has no row at all — it is the one harvested engine with no claim anywhere on either sheet, which is worth knowing before anyone counts it as patent coverage.' },
 ];
 
 /** Engines whose claim is implemented twice. Each needs a person's decision. */

@@ -40,17 +40,17 @@ import {
 
 const root = resolve(__dirname, '..');
 
-describe('the 57 claims', () => {
-  it('has exactly 57 entries', () => {
-    expect(CLAIMS.length).toBe(57);
+describe('the 68 claims', () => {
+  it('has exactly 68 entries', () => {
+    expect(CLAIMS.length).toBe(68);
   });
 
-  it('has 15 PAT and 42 SI, with no duplicate refs', () => {
+  it('has 15 PAT and 53 SI, with no duplicate refs', () => {
     const pats = CLAIMS.filter((c) => c.ref.startsWith('PAT-'));
     const sis = CLAIMS.filter((c) => c.ref.startsWith('SI-'));
     expect(pats.length).toBe(15);
-    expect(sis.length).toBe(42);
-    expect(new Set(CLAIMS.map((c) => c.ref)).size).toBe(57);
+    expect(sis.length).toBe(53);
+    expect(new Set(CLAIMS.map((c) => c.ref)).size).toBe(68);
   });
 
   it('every engine path named actually exists in this repo', () => {
@@ -92,9 +92,9 @@ describe('the 57 claims', () => {
     expect(vague).toEqual([]);
   });
 
-  it('reports counts that add to 57', () => {
+  it('reports counts that add to 68', () => {
     const n = claimCounts();
-    expect(n.built + n.partial + n.dropped + n.none).toBe(57);
+    expect(n.built + n.partial + n.dropped + n.none).toBe(68);
     // Sanity: the majority should be built, or the mapping work is not done.
     expect(n.built).toBeGreaterThan(28);
   });
@@ -134,24 +134,51 @@ describe('the 57 claims', () => {
     expect(missing).toEqual([]);
   });
 
-  it('all 57 now have a drafted application, and none is left behind', () => {
+  it('the drafted set is still exactly the 57 from the sheet', () => {
+    // This assertion used to read: all 57 have a draft, and
+    // missingApplicationDraft() is empty. That was true, and it stopped being
+    // true when eleven engines that implement inventions the sheet never listed
+    // were given rows. Weakening it to a smaller number would have thrown away
+    // the fact worth keeping, so it is split instead: the drafted set is
+    // unchanged, and the queue is now non-empty and has a known size.
     expect(withApplicationDraft().length).toBe(57);
-    expect(missingApplicationDraft()).toEqual([]);
+  });
+
+  it('the filing queue is exactly the eleven built-but-unclaimed engines', () => {
+    const queue = missingApplicationDraft();
+    expect(queue.length).toBe(11);
+    // Every one of them is a row added from the engine side, so every one must
+    // name an engine. A queued claim with no spec AND no code would be an idea,
+    // and an idea does not belong on this sheet at all.
+    for (const c of queue) {
+      expect(c.engine, `${c.ref} is queued for drafting but names no engine`).toBeTruthy();
+      expect(existsSync(resolve(root, c.engine!)), c.engine!).toBe(true);
+      expect(c.status, `${c.ref} cannot be built while unsourced`).toBe('partial');
+      expect((c.note ?? '').length, `${c.ref} must say what it is`).toBeGreaterThan(80);
+    }
+    // And they are the tail of the sheet, SI-043 onward — so the original 57
+    // keep their numbers and nothing was renumbered to make room.
+    for (const c of queue) {
+      expect(Number(c.ref.slice(3))).toBeGreaterThanOrEqual(43);
+    }
   });
 
   it('each draft is filed under its own ref, so no two claims share a document', () => {
-    for (const c of CLAIMS) {
+    for (const c of withApplicationDraft()) {
       expect(c.applicationDraft!).toContain(`/${c.ref}_`);
     }
-    expect(new Set(CLAIMS.map((c) => c.applicationDraft)).size).toBe(57);
+    expect(new Set(withApplicationDraft().map((c) => c.applicationDraft)).size).toBe(57);
   });
 
   it('a complete set of drafts is still not a single filing', () => {
-    // The whole portfolio now has specifications. That changes nothing about
+    // The 57 from the sheet all have specifications. That changes nothing about
     // what may be said publicly: patentStatus.ts reads receipts, and there are
     // none. This is the assertion that stops "57 applications" from becoming
-    // "57 patents pending" somewhere downstream.
-    expect(withApplicationDraft().length).toBe(CLAIMS.length);
+    // "57 patents pending" somewhere downstream — and it now also stops "68
+    // claims" from becoming "68 applications", which is the newer and easier
+    // mistake to make: eleven of the sixty-eight have no specification at all.
+    expect(withApplicationDraft().length).toBe(57);
+    expect(withApplicationDraft().length).toBeLessThan(CLAIMS.length);
     expect(mayClaimPatentPending()).toBe(false);
   });
 
