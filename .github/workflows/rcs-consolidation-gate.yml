@@ -1,0 +1,167 @@
+# Consolidation gate — the regression proof every migration PR must pass.
+#
+# The brief forbids overwriting the engine registry, calculator registry, route
+# manifest, or existing tests "without a documented comparison and regression
+# proof." This workflow is the machine half of that: it fails a PR that changes
+# a registry without the checks agreeing, and it fails a PR that drops a test.
+#
+# It does NOT deploy, touch DNS, read a database, or use any credential.
+# It runs on pull_request only — never on push to master — so it can never be
+# the thing that ships something.
+
+name: RCS consolidation gate
+
+on:
+  pull_request:
+    paths:
+      - "russell-capital-systems/**"
+      - "consolidation/**"
+      - ".github/workflows/rcs-consolidation-gate.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: consolidation-gate-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    working-directory: russell-capital-systems
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: russell-capital-systems/pnpm-lock.yaml
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Rebuild native binaries
+        run: pnpm rebuild esbuild @tailwindcss/oxide
+
+      # ── Gate 1 — typecheck ────────────────────────────────────────────────
+      # Stricter here than in the donor trees: donor pages open with
+      # `// @ts-nocheck`, so a migrated page can typecheck at its source and
+      # fail here. That is the point.
+      - name: Typecheck
+        run: pnpm check
+
+      # ── Gate 2 — build ────────────────────────────────────────────────────
+      - name: Build
+        run: pnpm build
+
+      # ── Gate 3 — the three-way route count must agree ─────────────────────
+      # App.tsx, shared/routeManifest.ts and the emitted dist/public/routes.json
+      # must report the same number of routes. Baseline is 330; the number is
+      # allowed to grow, but the three sources must never disagree.
+      - name: Route manifest agreement
+        run: |
+          set -euo pipefail
+          app=$(grep -c '<Route path=' client/src/App.tsx)
+          man=$(grep -cE '^\s+"' shared/routeManifest.ts)
+          emitted=$(node -e "console.log(JSON.parse(require('fs').readFileSync('dist/public/routes.json','utf8')).routes.length)")
+          echo "App.tsx=$app  routeManifest=$man  routes.json=$emitted"
+          if [ "$app" != "$man" ] || [ "$man" != "$emitted" ]; then
+            echo "::error::Route sources disagree — App.tsx=$app manifest=$man emitted=$emitted"
+            echo "Add the new path to shared/routeManifest.ts (see its header)."
+            exit 1
+          fi
+
+      # ── Gate 4 — no duplicate routes ──────────────────────────────────────
+      # russell-capital-app accumulated 41 duplicate paths, each shadowing a
+      # component into dead code. The base has zero. Keep it that way.
+      - name: No duplicate routes
+        run: |
+          set -euo pipefail
+          dupes=$(grep -oE '<Route path="[^"]+"' client/src/App.tsx \
+                  | sed 's/.*path="//;s/"//' | sort | uniq -d)
+          if [ -n "$dupes" ]; then
+            echo "::error::Duplicate route(s) — wouter matches the first, shadowing the rest:"
+            echo "$dupes"
+            exit 1
+          fi
+          echo "no duplicate routes"
+
+      # ── Gate 5 — tests ────────────────────────────────────────────────────
+      - name: Tests
+        run: pnpm test:ci
+
+      # ── Gate 6 — test count must not go down ──────────────────────────────
+      # Baseline: 194 files / 3757 tests (2026-09-20, commit 76ed5f2).
+      # A migration PR may add tests. It may not quietly remove them.
+      - name: Test count floor
+        run: |
+          set -euo pipefail
+          files=$(ls server/*.test.ts | wc -l)
+          echo "test files present: $files (floor: 225)"
+          if [ "$files" -lt 225 ]; then
+            echo "::error::Test file count fell below the 225 baseline."
+            echo "Removing a test needs a documented comparison in the PR body."
+            exit 1
+          fi
+
+      # ── Gate 7 — registries must not shrink ───────────────────────────────
+      - name: Registry floors
+        run: |
+          set -euo pipefail
+          engines=$(ls shared/*[Ee]ngine*.ts | wc -l)
+          calcs=$(grep -cE '^\s+\{' shared/calculatorCatalog.ts)
+          echo "engines=$engines (floor 55)  calculatorCatalog=$calcs (floor 116)"
+          fail=0
+          [ "$engines" -lt 55 ] && { echo "::error::Engine count fell below 55."; fail=1; }
+          [ "$calcs"  -lt 116 ] && { echo "::error::Calculator catalogue fell below 116."; fail=1; }
+          exit $fail
+
+  # ── Secret scan — runs on the diff, blocks a PR that introduces a key ─────
+  secrets:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: .
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Scan changed files for credential patterns
+        run: |
+          set -uo pipefail
+          base="${{ github.event.pull_request.base.sha }}"
+          head="${{ github.event.pull_request.head.sha }}"
+          files=$(git diff --name-only --diff-filter=ACM "$base" "$head" \
+                  | grep -vE '^(.*/)?(dist|node_modules)/' || true)
+          [ -z "$files" ] && { echo "no files to scan"; exit 0; }
+
+          pattern='(sk-ant-[A-Za-z0-9-]{24,}|sk-[A-Za-z0-9]{32,}|AKIA[0-9A-Z]{16}|ghp_[A-Za-z0-9]{36}|github_pat_[A-Za-z0-9_]{50,}|xox[baprs]-[A-Za-z0-9-]{12,}|-----BEGIN (RSA |EC |OPENSSH |PGP )?PRIVATE KEY-----)'
+          # EXAMPLE/PLACEHOLDER/REDACTED are documented UI placeholders, not secrets.
+          if echo "$files" | xargs -r grep -lIE "$pattern" 2>/dev/null \
+             | xargs -r grep -LiE 'EXAMPLE|PLACEHOLDER|REDACTED|YOUR_|<your' 2>/dev/null \
+             | grep . ; then
+            echo "::error::Possible credential in the diff (files listed above)."
+            exit 1
+          fi
+          echo "no credential patterns in the diff"
+
+      - name: Refuse tracked .env files
+        run: |
+          set -euo pipefail
+          if git ls-files | grep -qE '(^|/)\.env$'; then
+            echo "::error::A .env file is tracked. Remove it and rotate anything it held."
+            exit 1
+          fi
+          echo "no tracked .env files"

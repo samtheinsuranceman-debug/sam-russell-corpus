@@ -1,0 +1,1974 @@
+{
+ "generated": "2026-09-20",
+ "canonical": "sam-russell-corpus/russell-capital-systems",
+ "counts": {
+  "canonical_routes": 330,
+  "donor_app_routes": 612,
+  "donor_rc_routes": 620,
+  "canonical_internal_duplicates": 0,
+  "donor_app_internal_duplicates": 41,
+  "donor_rc_internal_duplicates": 0,
+  "donor_rc_not_in_canonical": 391,
+  "donor_app_not_in_canonical": 385,
+  "union_not_in_canonical": 394,
+  "union_all": 724,
+  "collisions_rc_vs_canonical": 229,
+  "collisions_app_vs_canonical": 227
+ },
+ "donor_app_internal_duplicates": [
+  "/portal/529-vs-iul",
+  "/portal/amt-calculator",
+  "/portal/business-valuation",
+  "/portal/buy-sell-funding",
+  "/portal/captive-iul",
+  "/portal/cash-balance-plan",
+  "/portal/clt-engine",
+  "/portal/deferred-compensation",
+  "/portal/estate-flow",
+  "/portal/estate-tax",
+  "/portal/existing-annuities",
+  "/portal/grat-calculator",
+  "/portal/idgt-advanced",
+  "/portal/idr-comparison",
+  "/portal/ilit-calculator",
+  "/portal/illustration-compare",
+  "/portal/key-person-insurance",
+  "/portal/living-benefits",
+  "/portal/medicare-irmaa",
+  "/portal/mortgage-killer",
+  "/portal/multi-gen-wealth",
+  "/portal/opportunity-zone",
+  "/portal/overhead-expense",
+  "/portal/pension-vs-lump-sum",
+  "/portal/policy-review-checklist",
+  "/portal/ppli",
+  "/portal/premium-financing",
+  "/portal/qbi-calculator",
+  "/portal/qprt-calculator",
+  "/portal/retirement-projection",
+  "/portal/reverse-heloc",
+  "/portal/roth-conversion",
+  "/portal/sales-story",
+  "/portal/seminar-generator",
+  "/portal/slat-deep-dive",
+  "/portal/split-dollar",
+  "/portal/ss-bridge",
+  "/portal/succession-planning",
+  "/portal/tax-deferred-exchange",
+  "/portal/tax-loss-harvesting",
+  "/portal/withdrawal-sequencing"
+ ],
+ "gamification": {
+  "/portal/arena": {
+   "canonical": true,
+   "donor_app": false,
+   "donor_rc": true,
+   "component_canonical": "Arena",
+   "component_donor_rc": "Arena"
+  },
+  "/portal/rewards": {
+   "canonical": true,
+   "donor_app": false,
+   "donor_rc": true,
+   "component_canonical": "RewardsVault",
+   "component_donor_rc": "RewardsVault"
+  },
+  "/portal/black-mirror": {
+   "canonical": true,
+   "donor_app": false,
+   "donor_rc": true,
+   "component_canonical": "BlackMirror",
+   "component_donor_rc": "BlackMirror"
+  },
+  "/portal/social": {
+   "canonical": true,
+   "donor_app": false,
+   "donor_rc": true,
+   "component_canonical": "SocialNarcotic",
+   "component_donor_rc": "SocialNarcotic"
+  },
+  "/portal/endgame": {
+   "canonical": true,
+   "donor_app": false,
+   "donor_rc": true,
+   "component_canonical": "Endgame",
+   "component_donor_rc": "Endgame"
+  },
+  "/portal/wealth-reels": {
+   "canonical": true,
+   "donor_app": false,
+   "donor_rc": true,
+   "component_canonical": "InfiniteScroll",
+   "component_donor_rc": "InfiniteScroll"
+  },
+  "/portal/infinite-scroll": {
+   "canonical": true,
+   "donor_app": false,
+   "donor_rc": true,
+   "component_canonical": "InfiniteScroll",
+   "component_donor_rc": "InfiniteScroll"
+  },
+  "/portal/pet": {
+   "canonical": true,
+   "donor_app": false,
+   "donor_rc": true,
+   "component_canonical": "PetSystem",
+   "component_donor_rc": "PetSystem"
+  },
+  "/portal/toilet": {
+   "canonical": true,
+   "donor_app": false,
+   "donor_rc": true,
+   "component_canonical": "ToiletDashboard",
+   "component_donor_rc": "ToiletDashboard"
+  },
+  "/portal/wealth-warrior": {
+   "canonical": false,
+   "donor_app": false,
+   "donor_rc": true,
+   "component_canonical": null,
+   "component_donor_rc": "WealthWarriorChallenges"
+  },
+  "/portal/wealth-odyssey": {
+   "canonical": false,
+   "donor_app": false,
+   "donor_rc": true,
+   "component_canonical": null,
+   "component_donor_rc": "WealthOdyssey"
+  },
+  "/portal/elite-showdown": {
+   "canonical": false,
+   "donor_app": false,
+   "donor_rc": true,
+   "component_canonical": null,
+   "component_donor_rc": "EliteShowdown"
+  },
+  "/portal/holographic-mirage": {
+   "canonical": false,
+   "donor_app": false,
+   "donor_rc": true,
+   "component_canonical": null,
+   "component_donor_rc": "HolographicMirage"
+  },
+  "/portal/predictive-arena": {
+   "canonical": false,
+   "donor_app": false,
+   "donor_rc": true,
+   "component_canonical": null,
+   "component_donor_rc": "PredictiveInsightArena"
+  },
+  "/portal/moat-fortress": {
+   "canonical": false,
+   "donor_app": false,
+   "donor_rc": true,
+   "component_canonical": null,
+   "component_donor_rc": "MoatFortress"
+  },
+  "/portal/pavlovian-engagement": {
+   "canonical": false,
+   "donor_app": false,
+   "donor_rc": true,
+   "component_canonical": null,
+   "component_donor_rc": "GamifiedPavlovianEngagement"
+  },
+  "/portal/entrainment-engine": {
+   "canonical": false,
+   "donor_app": false,
+   "donor_rc": true,
+   "component_canonical": null,
+   "component_donor_rc": "EntrainmentEngine"
+  },
+  "/portal/strategy-comparison": {
+   "canonical": false,
+   "donor_app": false,
+   "donor_rc": true,
+   "component_canonical": null,
+   "component_donor_rc": "StrategyComparisonArena"
+  }
+ },
+ "donor_app_exclusive": [
+  "/portal/lab",
+  "/portal/nav-placeholder",
+  "/portal/reveal-demo"
+ ],
+ "donor_rc_exclusive": [
+  "/portal/elite-showdown",
+  "/portal/entrainment-engine",
+  "/portal/holographic-mirage",
+  "/portal/moat-fortress",
+  "/portal/pavlovian-engagement",
+  "/portal/predictive-arena",
+  "/portal/strategy-comparison",
+  "/portal/wealth-odyssey",
+  "/portal/wealth-warrior"
+ ],
+ "collisions_rc_vs_canonical": [
+  {
+   "route": "/",
+   "canonical_component": "FrontDoor",
+   "donor_rc_component": "Landing",
+   "same_component_name": false
+  },
+  {
+   "route": "/404",
+   "canonical_component": "NotFound",
+   "donor_rc_component": "NotFound",
+   "same_component_name": true
+  },
+  {
+   "route": "/administrator",
+   "canonical_component": "AdministratorPortal",
+   "donor_rc_component": "AdministratorPortal",
+   "same_component_name": true
+  },
+  {
+   "route": "/client-portal/:token",
+   "canonical_component": null,
+   "donor_rc_component": null,
+   "same_component_name": true
+  },
+  {
+   "route": "/executive",
+   "canonical_component": "ExecutiveEntrance",
+   "donor_rc_component": "ExecutiveEntrance",
+   "same_component_name": true
+  },
+  {
+   "route": "/forgot-password",
+   "canonical_component": "ForgotPassword",
+   "donor_rc_component": "ForgotPassword",
+   "same_component_name": true
+  },
+  {
+   "route": "/invite",
+   "canonical_component": "AcceptInvite",
+   "donor_rc_component": "AcceptInvite",
+   "same_component_name": true
+  },
+  {
+   "route": "/login",
+   "canonical_component": "Login",
+   "donor_rc_component": "Login",
+   "same_component_name": true
+  },
+  {
+   "route": "/onboarding",
+   "canonical_component": "Onboarding",
+   "donor_rc_component": "Onboarding",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal",
+   "canonical_component": "InfiniteScroll",
+   "donor_rc_component": "InfiniteScroll",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/admin",
+   "canonical_component": "EnterpriseAdmin",
+   "donor_rc_component": "EnterpriseAdmin",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/advanced-reporting",
+   "canonical_component": "AdvancedReporting",
+   "donor_rc_component": "AdvancedReporting",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/advisor-chat",
+   "canonical_component": "AdvisorChat",
+   "donor_rc_component": "AdvisorChat",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/advisor-directory",
+   "canonical_component": "AdvisorDirectory",
+   "donor_rc_component": "AdvisorDirectory",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/advisor-income-calculator",
+   "canonical_component": "AdvisorIncomeCalculator",
+   "donor_rc_component": "AdvisorIncomeCalculator",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/advisor-training",
+   "canonical_component": "AdvisorTraining",
+   "donor_rc_component": "AdvisorTraining",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/advisory-summary",
+   "canonical_component": "AdvisorySummary",
+   "donor_rc_component": "AdvisorySummary",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/affiliate-links",
+   "canonical_component": "AffiliateLinkManager",
+   "donor_rc_component": "AffiliateLinkManager",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/agency-tutorial",
+   "canonical_component": "AgencyTutorial",
+   "donor_rc_component": "AgencyTutorial",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/agent-tutorial",
+   "canonical_component": "IndividualAgentTutorial",
+   "donor_rc_component": "IndividualAgentTutorial",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/ai",
+   "canonical_component": "AiAssist",
+   "donor_rc_component": "AiAssist",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/ai-assist",
+   "canonical_component": "AiAssist",
+   "donor_rc_component": "AiAssist",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/ai-brain-hub",
+   "canonical_component": "AIBrainHubPage",
+   "donor_rc_component": "AIBrainHubPage",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/ai-meeting-notes",
+   "canonical_component": "AIMeetingNotes",
+   "donor_rc_component": "AIMeetingNotes",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/ai-policy-review",
+   "canonical_component": "AIPolicyReviewGap",
+   "donor_rc_component": "AIPolicyReviewGap",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/ai-recommender",
+   "canonical_component": "AiStrategyRecommender",
+   "donor_rc_component": "AiStrategyRecommender",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/ai-slides",
+   "canonical_component": "AISlideGenerator",
+   "donor_rc_component": "AISlideGenerator",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/annuity-accumulation-db",
+   "canonical_component": "AnnuityAccumulationDB",
+   "donor_rc_component": "AnnuityAccumulationDB",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/annuity-memory",
+   "canonical_component": "AnnuityMemory",
+   "donor_rc_component": "AnnuityMemory",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/arena",
+   "canonical_component": "Arena",
+   "donor_rc_component": "Arena",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/athene-guaranteed-income",
+   "canonical_component": "AtheneGuaranteedIncome",
+   "donor_rc_component": "AtheneGuaranteedIncome",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/athene-pe-plus15",
+   "canonical_component": "AthenePEPlus15",
+   "donor_rc_component": "AthenePEPlus15",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/audit-timeline",
+   "canonical_component": "AuditTimeline",
+   "donor_rc_component": "AuditTimeline",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/avatar-twins",
+   "canonical_component": "AvatarTwins",
+   "donor_rc_component": "AvatarTwins",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/axonic-sp500",
+   "canonical_component": "AxonicSP500",
+   "donor_rc_component": "AxonicSP500",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/batch-illustration",
+   "canonical_component": "BatchIllustration",
+   "donor_rc_component": "BatchIllustration",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/batch-slides",
+   "canonical_component": "BatchSlides",
+   "donor_rc_component": "BatchSlides",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/beneficiary-optimization",
+   "canonical_component": "BeneficiaryOptimization",
+   "donor_rc_component": "BeneficiaryOptimization",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/billing",
+   "canonical_component": "Billing",
+   "donor_rc_component": "Billing",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/black-mirror",
+   "canonical_component": "BlackMirror",
+   "donor_rc_component": "BlackMirror",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/branding",
+   "canonical_component": "WorkspaceBranding",
+   "donor_rc_component": "WorkspaceBranding",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/bulk-generation",
+   "canonical_component": "BulkGeneration",
+   "donor_rc_component": "BulkGeneration",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/business-owner",
+   "canonical_component": "BusinessOwnerPlanning",
+   "donor_rc_component": "BusinessOwnerPlanning",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/carrier-comparison",
+   "canonical_component": "CarrierComparison",
+   "donor_rc_component": "CarrierComparison",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/carrier-rates",
+   "canonical_component": "CarrierRatings",
+   "donor_rc_component": "CarrierRatings",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/carrier-ratings",
+   "canonical_component": "CarrierRatings",
+   "donor_rc_component": "CarrierRatings",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/carrier-settings",
+   "canonical_component": "CarrierSettings",
+   "donor_rc_component": "CarrierSettings",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/charitable-giving",
+   "canonical_component": "CharitableGivingOptimizer",
+   "donor_rc_component": "CharitableGivingOptimizer",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/client-comparison",
+   "canonical_component": "ClientComparison",
+   "donor_rc_component": "ClientComparison",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/client-files",
+   "canonical_component": "ClientFiles",
+   "donor_rc_component": "ClientFiles",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/client-health",
+   "canonical_component": "ClientHealthDashboard",
+   "donor_rc_component": "ClientHealthDashboard",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/client-intake",
+   "canonical_component": "ClientIntakeInterview",
+   "donor_rc_component": "ClientIntakeInterview",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/client-intake-recommender",
+   "canonical_component": "ClientIntakeRecommender",
+   "donor_rc_component": "ClientIntakeRecommender",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/client-onboarding",
+   "canonical_component": "ClientOnboardingWizard",
+   "donor_rc_component": "ClientOnboardingWizard",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/client-onboarding-auto",
+   "canonical_component": "ClientOnboardingAutomation",
+   "donor_rc_component": "ClientOnboardingAutomation",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/client-portal-config",
+   "canonical_component": "ClientPortal",
+   "donor_rc_component": "ClientPortal",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/client-portfolio",
+   "canonical_component": "ClientPortfolioDashboard",
+   "donor_rc_component": "ClientPortfolioDashboard",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/client-scorecard",
+   "canonical_component": "ClientScorecard",
+   "donor_rc_component": "ClientScorecard",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/client-self-service",
+   "canonical_component": "ClientSelfServicePortal",
+   "donor_rc_component": "ClientSelfServicePortal",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/client-snapshot",
+   "canonical_component": "ClientSnapshotMap",
+   "donor_rc_component": "ClientSnapshotMap",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/clients",
+   "canonical_component": "Clients",
+   "donor_rc_component": "Clients",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/clients/:id",
+   "canonical_component": "ClientDetail",
+   "donor_rc_component": "ClientDetail",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/co-pilot",
+   "canonical_component": "LiveCoPilot",
+   "donor_rc_component": "LiveCoPilot",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/collaborative-planning",
+   "canonical_component": "CollaborativePlanning",
+   "donor_rc_component": "CollaborativePlanning",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/combo-recommender",
+   "canonical_component": "ClientIntakeRecommender",
+   "donor_rc_component": "ClientIntakeRecommender",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/command-center",
+   "canonical_component": "OwnerWarRoom",
+   "donor_rc_component": "OwnerWarRoom",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/commission-calculator",
+   "canonical_component": "CommissionCalculator",
+   "donor_rc_component": "CommissionCalculator",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/commission-tracker",
+   "canonical_component": "CommissionTracker",
+   "donor_rc_component": "CommissionTracker",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/comparison",
+   "canonical_component": "ComparisonDashboard",
+   "donor_rc_component": "ComparisonDashboard",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/competitive",
+   "canonical_component": "CompetitiveAnalysis",
+   "donor_rc_component": "CompetitiveAnalysis",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/compliance",
+   "canonical_component": "ComplianceExport",
+   "donor_rc_component": "ComplianceExport",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/compliance-alerts",
+   "canonical_component": "ComplianceAlerts",
+   "donor_rc_component": "ComplianceAlerts",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/compliance-audit",
+   "canonical_component": "ComplianceAuditCenter",
+   "donor_rc_component": "ComplianceAuditCenter",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/compliance-audit-trail",
+   "canonical_component": "ComplianceAuditTrail",
+   "donor_rc_component": "ComplianceAuditTrail",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/compliance-monitoring",
+   "canonical_component": "ComplianceMonitoringDashboard",
+   "donor_rc_component": "ComplianceMonitoringDashboard",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/compliance-reports",
+   "canonical_component": "ComplianceReportGenerator",
+   "donor_rc_component": "ComplianceReportGenerator",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/couples",
+   "canonical_component": "CouplesMode",
+   "donor_rc_component": "CouplesMode",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/crypto-corner",
+   "canonical_component": "CryptoCurrencyCorner",
+   "donor_rc_component": "CryptoCurrencyCorner",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/daily-briefing",
+   "canonical_component": "DailyBriefing",
+   "donor_rc_component": "DailyBriefing",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/daily-discovery",
+   "canonical_component": "DailyDiscovery",
+   "donor_rc_component": "DailyDiscovery",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/dashboard",
+   "canonical_component": "Dashboard",
+   "donor_rc_component": "Dashboard",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/data-query",
+   "canonical_component": "NaturalLanguageQuery",
+   "donor_rc_component": "NaturalLanguageQuery",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/divorce-calculator",
+   "canonical_component": "DivorceCalculator",
+   "donor_rc_component": "DivorceCalculator",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/document-templates",
+   "canonical_component": "DocumentTemplates",
+   "donor_rc_component": "DocumentTemplates",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/document-vault",
+   "canonical_component": "DocumentVault",
+   "donor_rc_component": "DocumentVault",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/ecological-drivers",
+   "canonical_component": "EcologicalDrivers",
+   "donor_rc_component": "EcologicalDrivers",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/education",
+   "canonical_component": "EducationHub",
+   "donor_rc_component": "EducationHub",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/email-campaigns",
+   "canonical_component": "EmailCampaignManager",
+   "donor_rc_component": "EmailCampaignManager",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/endgame",
+   "canonical_component": "Endgame",
+   "donor_rc_component": "Endgame",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/engagement-score",
+   "canonical_component": "ClientEngagementScore",
+   "donor_rc_component": "ClientEngagementScore",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/enterprise",
+   "canonical_component": "EnterpriseAdmin",
+   "donor_rc_component": "EnterpriseAdmin",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/estate-document-gen",
+   "canonical_component": "EstateDocumentGenerator",
+   "donor_rc_component": "EstateDocumentGenerator",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/estate-flow",
+   "canonical_component": "EstateFlowChart",
+   "donor_rc_component": "EstateFlowChart",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/estate-tax",
+   "canonical_component": "EstateTax",
+   "donor_rc_component": "EstateTax",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/existing-annuities",
+   "canonical_component": "ExistingAnnuities",
+   "donor_rc_component": "ExistingAnnuities",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/fee-transparency",
+   "canonical_component": "FeeTransparencyDashboard",
+   "donor_rc_component": "FeeTransparencyDashboard",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/fia-collateral",
+   "canonical_component": "FIACollateralStrategy",
+   "donor_rc_component": "FIACollateralStrategy",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/fia-top10",
+   "canonical_component": "FIATop10",
+   "donor_rc_component": "FIATop10",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/financial-vitals",
+   "canonical_component": "FinancialVitalsScorecard",
+   "donor_rc_component": "FinancialVitalsScorecard",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/goals-planning",
+   "canonical_component": "GoalsBasedPlanning",
+   "donor_rc_component": "GoalsBasedPlanning",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/growth-annuities",
+   "canonical_component": "GrowthAnnuities",
+   "donor_rc_component": "GrowthAnnuities",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/hidden-material",
+   "canonical_component": "HiddenMaterial",
+   "donor_rc_component": "HiddenMaterial",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/hot-income",
+   "canonical_component": "HotIncome",
+   "donor_rc_component": "HotIncome",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/house-recycling",
+   "canonical_component": "HouseRecyclingStrategy",
+   "donor_rc_component": "HouseRecyclingStrategy",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/household-wealth",
+   "canonical_component": "HouseholdWealth",
+   "donor_rc_component": "HouseholdWealth",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/hubspot",
+   "canonical_component": "HubSpotSync",
+   "donor_rc_component": "HubSpotSync",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/ibbotson-charts",
+   "canonical_component": "IbbotsonCharts",
+   "donor_rc_component": "IbbotsonCharts",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/illustration-compare",
+   "canonical_component": "IllustrationCompare",
+   "donor_rc_component": "IllustrationCompare",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/income-annuity-top10",
+   "canonical_component": "IncomeAnnuityTop10",
+   "donor_rc_component": "IncomeAnnuityTop10",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/income-gap",
+   "canonical_component": "IncomeGapAnalyzer",
+   "donor_rc_component": "IncomeGapAnalyzer",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/income-timeline",
+   "canonical_component": "IncomeTimeline",
+   "donor_rc_component": "IncomeTimeline",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/index-backtester",
+   "canonical_component": "IndexBacktester",
+   "donor_rc_component": "IndexBacktester",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/index-strategies",
+   "canonical_component": "IndexStrategyComparison",
+   "donor_rc_component": "IndexStrategyComparison",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/infinite-scroll",
+   "canonical_component": "InfiniteScroll",
+   "donor_rc_component": "InfiniteScroll",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/inflation",
+   "canonical_component": "InflationAnalysis",
+   "donor_rc_component": "InflationAnalysis",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/integrations",
+   "canonical_component": "Integrations",
+   "donor_rc_component": "Integrations",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/iul-historical",
+   "canonical_component": "IULHistoricalPerformance",
+   "donor_rc_component": "IULHistoricalPerformance",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/iul-vs-roth",
+   "canonical_component": "IULvsRoth",
+   "donor_rc_component": "IULvsRoth",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/knowledge",
+   "canonical_component": "Knowledge",
+   "donor_rc_component": "Knowledge",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/lead-generator",
+   "canonical_component": "LeadGenerator",
+   "donor_rc_component": "LeadGenerator",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/leaderboard",
+   "canonical_component": "Leaderboard",
+   "donor_rc_component": "Leaderboard",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/legal-payment-folder",
+   "canonical_component": "LegalPaymentFolder",
+   "donor_rc_component": "LegalPaymentFolder",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/lifetime-income",
+   "canonical_component": "LifetimeGuaranteedIncome",
+   "donor_rc_component": "LifetimeGuaranteedIncome",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/long-term-care",
+   "canonical_component": "LongTermCare",
+   "donor_rc_component": "LongTermCarePlanner",
+   "same_component_name": false
+  },
+  {
+   "route": "/portal/market-data",
+   "canonical_component": "MarketDataDashboard",
+   "donor_rc_component": "MarketDataDashboard",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/market-pulse",
+   "canonical_component": "MarketPulsePage",
+   "donor_rc_component": "MarketPulseSentinel",
+   "same_component_name": false
+  },
+  {
+   "route": "/portal/market-stress-test",
+   "canonical_component": "MarketScenarioStressTest",
+   "donor_rc_component": "MarketScenarioStressTest",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/medicare-irmaa",
+   "canonical_component": "MedicareIRMAA",
+   "donor_rc_component": "MedicareIRMAA",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/meeting-agenda",
+   "canonical_component": "MeetingAgenda",
+   "donor_rc_component": "MeetingAgenda",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/meeting-prep",
+   "canonical_component": "MeetingPrepPage",
+   "donor_rc_component": "AdvisorMeetingPrep",
+   "same_component_name": false
+  },
+  {
+   "route": "/portal/meetings",
+   "canonical_component": "Meetings",
+   "donor_rc_component": "Meetings",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/monitoring-agreement",
+   "canonical_component": "SupervisorMonitoringAgreement",
+   "donor_rc_component": "SupervisorMonitoringAgreement",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/morning-ritual",
+   "canonical_component": "MorningRitual",
+   "donor_rc_component": "MorningRitual",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/mortgage-killer",
+   "canonical_component": "MortgageKiller",
+   "donor_rc_component": "MortgageKiller",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/mortgage-killer-v2",
+   "canonical_component": "MortgageKillerV2Page",
+   "donor_rc_component": "MortgageKillerV2",
+   "same_component_name": false
+  },
+  {
+   "route": "/portal/mortgage-killer-v3",
+   "canonical_component": "MortgageKillerV3",
+   "donor_rc_component": "MortgageKillerV3",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/multi-gen-wealth",
+   "canonical_component": "MultiGenWealthTransfer",
+   "donor_rc_component": "MultiGenWealthTransfer",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/my-slides",
+   "canonical_component": "MySlides",
+   "donor_rc_component": "MySlides",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/my-world",
+   "canonical_component": "MyWorld",
+   "donor_rc_component": "MyWorld",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/myga-fixed-rate",
+   "canonical_component": "MYGAFixedRate",
+   "donor_rc_component": "MYGAFixedRate",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/myga-waterfall",
+   "canonical_component": "MygaWaterfallPage",
+   "donor_rc_component": "MYGAWaterfallComparison",
+   "same_component_name": false
+  },
+  {
+   "route": "/portal/nerve-center",
+   "canonical_component": "NerveCenter",
+   "donor_rc_component": "NerveCenter",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/onboarding",
+   "canonical_component": "Onboarding",
+   "donor_rc_component": "Onboarding",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/onboarding-v2",
+   "canonical_component": "OnboardingWizardV2",
+   "donor_rc_component": "OnboardingWizardV2",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/owner-oversight",
+   "canonical_component": "OwnerOversight",
+   "donor_rc_component": "OwnerOversight",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/patent-showcase",
+   "canonical_component": "PatentShowcase",
+   "donor_rc_component": "PatentShowcase",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/pet",
+   "canonical_component": "PetSystem",
+   "donor_rc_component": "PetSystem",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/physicians-edge",
+   "canonical_component": "PhysiciansEdge",
+   "donor_rc_component": "PhysiciansEdge",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/pipeline",
+   "canonical_component": "Pipeline",
+   "donor_rc_component": "Pipeline",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/policy-loans",
+   "canonical_component": "PolicyLoans",
+   "donor_rc_component": "PolicyLoans",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/policy-review",
+   "canonical_component": "PolicyReview",
+   "donor_rc_component": "PolicyReview",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/policy-review-checklist",
+   "canonical_component": "PolicyReviewChecklist",
+   "donor_rc_component": "PolicyReviewChecklist",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/portfolio-drift",
+   "canonical_component": "PortfolioDriftMonitor",
+   "donor_rc_component": "PortfolioDriftMonitor",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/predictive-analytics",
+   "canonical_component": "PredictiveAnalytics",
+   "donor_rc_component": "PredictiveAnalytics",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/premium-financing",
+   "canonical_component": "PremiumFinancing",
+   "donor_rc_component": "PremiumFinancing",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/presentation-builder",
+   "canonical_component": "PresentationBuilder",
+   "donor_rc_component": "PresentationBuilder",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/quick-quote",
+   "canonical_component": "QuickQuote",
+   "donor_rc_component": "QuickQuote",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/quotes",
+   "canonical_component": "CarrierQuotes",
+   "donor_rc_component": "CarrierQuotes",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/real-estate-mogul",
+   "canonical_component": "RealEstateMogul",
+   "donor_rc_component": "RealEstateMogul",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/rebalance",
+   "canonical_component": "RebalanceAlerts",
+   "donor_rc_component": "RebalanceAlerts",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/recommendations",
+   "canonical_component": "Recommendations",
+   "donor_rc_component": "Recommendations",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/referral-tracker",
+   "canonical_component": "ReferralTracker",
+   "donor_rc_component": "ReferralTracker",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/referral-tracking",
+   "canonical_component": "ReferralTracking",
+   "donor_rc_component": "ReferralTracking",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/retirement-guardrails",
+   "canonical_component": "RetirementGuardrails",
+   "donor_rc_component": "RetirementGuardrails",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/retirement-projection",
+   "canonical_component": "RetirementIncomeProjection",
+   "donor_rc_component": "RetirementIncomeProjection",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/revenue-guarantee",
+   "canonical_component": "RevenueGuarantee",
+   "donor_rc_component": "RevenueGuarantee",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/reverse-heloc",
+   "canonical_component": "ReverseHeloc",
+   "donor_rc_component": "ReverseHeloc",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/rewards",
+   "canonical_component": "RewardsVault",
+   "donor_rc_component": "RewardsVault",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/risk-tolerance",
+   "canonical_component": "RiskToleranceScoring",
+   "donor_rc_component": "RiskToleranceScoring",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/roth-conversion",
+   "canonical_component": "RothConversionSTR",
+   "donor_rc_component": "RothConversionSTR",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/russell-number",
+   "canonical_component": "RussellNumber",
+   "donor_rc_component": "RussellNumber",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/sales-story",
+   "canonical_component": "SalesStoryBuilder",
+   "donor_rc_component": "SalesStoryBuilder",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/saved-scenarios",
+   "canonical_component": "SavedScenariosHub",
+   "donor_rc_component": "SavedScenariosHub",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/scenario-play",
+   "canonical_component": "MultiScenarioPlayZone",
+   "donor_rc_component": "MultiScenarioPlayZone",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/scenario-side-by-side",
+   "canonical_component": "ScenarioSideBySide",
+   "donor_rc_component": "ScenarioSideBySide",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/scenarios",
+   "canonical_component": "ScenarioAdjustments",
+   "donor_rc_component": "ScenarioAdjustments",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/secret-secrets",
+   "canonical_component": "SecretSecrets",
+   "donor_rc_component": "SecretSecrets",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/secret-secrets/:id",
+   "canonical_component": "SecretDetail",
+   "donor_rc_component": "SecretDetail",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/seminar-generator",
+   "canonical_component": "SeminarGenerator",
+   "donor_rc_component": "SeminarGenerator",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/slack",
+   "canonical_component": "SlackIntegration",
+   "donor_rc_component": "SlackIntegration",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/smart-rebalancing",
+   "canonical_component": "SmartRebalancingAlerts",
+   "donor_rc_component": "SmartRebalancingAlerts",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/social",
+   "canonical_component": "SocialNarcotic",
+   "donor_rc_component": "SocialNarcotic",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/social-security",
+   "canonical_component": "SocialSecurityOptimizer",
+   "donor_rc_component": "SocialSecurityOptimizer",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/stale-digest",
+   "canonical_component": "StaleDigest",
+   "donor_rc_component": "StaleDigest",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/story-generator",
+   "canonical_component": "ClientStoryGenerator",
+   "donor_rc_component": "ClientStoryGenerator",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/str-strategy",
+   "canonical_component": "STRStrategy",
+   "donor_rc_component": "STRStrategy",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/strategy",
+   "canonical_component": "StrategyLab",
+   "donor_rc_component": "StrategyLab",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/strategy-compare",
+   "canonical_component": "StrategyCompareTool",
+   "donor_rc_component": "StrategyCompareTool",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/succession-planning",
+   "canonical_component": "SuccessionPlanningWizard",
+   "donor_rc_component": "SuccessionPlanningWizard",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/tax-advantaged-growth",
+   "canonical_component": "TaxAdvantagedGrowth",
+   "donor_rc_component": "TaxAdvantagedGrowth",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/tax-brackets",
+   "canonical_component": "TaxBracketVisualizer",
+   "donor_rc_component": "TaxBracketVisualizer",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/tax-combos",
+   "canonical_component": "TaxFreeWealthCombos",
+   "donor_rc_component": "TaxFreeWealthCombos",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/tax-combos/:id",
+   "canonical_component": "ComboDetail",
+   "donor_rc_component": "ComboDetail",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/tax-loss-harvesting",
+   "canonical_component": "TaxLossHarvestingScanner",
+   "donor_rc_component": "TaxLossHarvestingScanner",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/tax-opportunities",
+   "canonical_component": "TaxOpportunityDetector",
+   "donor_rc_component": "TaxOpportunityDetector",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/tax-return-upload",
+   "canonical_component": "TaxReturnUpload",
+   "donor_rc_component": "TaxReturnUpload",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/tax-waterfall",
+   "canonical_component": "TaxWaterfall",
+   "donor_rc_component": "TaxWaterfall",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/team",
+   "canonical_component": "Team",
+   "donor_rc_component": "Team",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/team-management",
+   "canonical_component": "TeamManagement",
+   "donor_rc_component": "TeamManagement",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/time-lapse",
+   "canonical_component": "TimeLapse",
+   "donor_rc_component": "TimeLapse",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/time-machine",
+   "canonical_component": "TimeMachine",
+   "donor_rc_component": "TimeMachine",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/time-machine-ag49",
+   "canonical_component": "TimeMachineAG49",
+   "donor_rc_component": "TimeMachineAG49",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/time-machine-calculator",
+   "canonical_component": "TimeMachineCalculator",
+   "donor_rc_component": "TimeMachineCalculator",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/time-machine-method",
+   "canonical_component": "TimeMachineMethod",
+   "donor_rc_component": "TimeMachineMethod",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/toilet",
+   "canonical_component": "ToiletDashboard",
+   "donor_rc_component": "ToiletDashboard",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/trusts",
+   "canonical_component": "TrustsPage",
+   "donor_rc_component": "TrustsPage",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/video-library",
+   "canonical_component": "VideoLibrary",
+   "donor_rc_component": "VideoLibrary",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/video-proposals",
+   "canonical_component": "VideoProposalGenerator",
+   "donor_rc_component": "VideoProposalGenerator",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/voice-plan",
+   "canonical_component": "VoicePlanBuilder",
+   "donor_rc_component": "VoicePlanBuilder",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/war-room",
+   "canonical_component": "WarRoom",
+   "donor_rc_component": "WarRoom",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/war-story-generator",
+   "canonical_component": "WarStoryGenerator",
+   "donor_rc_component": "WarStoryGenerator",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/wealth-reels",
+   "canonical_component": "InfiniteScroll",
+   "donor_rc_component": "InfiniteScroll",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/webhooks",
+   "canonical_component": "Webhooks",
+   "donor_rc_component": "Webhooks",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/website-usage",
+   "canonical_component": "WebsiteUsage",
+   "donor_rc_component": "WebsiteUsage",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/welcome",
+   "canonical_component": "OnboardingWizard",
+   "donor_rc_component": "OnboardingWizard",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/will-writer",
+   "canonical_component": "WillWriter",
+   "donor_rc_component": "WillWriter",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/withdrawal-sequencing",
+   "canonical_component": "WithdrawalSequencing",
+   "donor_rc_component": "WithdrawalSequencing",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/workflow-automations",
+   "canonical_component": "WorkflowAutomations",
+   "donor_rc_component": "WorkflowAutomations",
+   "same_component_name": true
+  },
+  {
+   "route": "/portal/wrapped",
+   "canonical_component": "RussellWrapped",
+   "donor_rc_component": "RussellWrapped",
+   "same_component_name": true
+  },
+  {
+   "route": "/pricing",
+   "canonical_component": "Pricing",
+   "donor_rc_component": "Pricing",
+   "same_component_name": true
+  },
+  {
+   "route": "/privacy",
+   "canonical_component": "Privacy",
+   "donor_rc_component": "Privacy",
+   "same_component_name": true
+  },
+  {
+   "route": "/register",
+   "canonical_component": "Register",
+   "donor_rc_component": "Register",
+   "same_component_name": true
+  },
+  {
+   "route": "/reset-password",
+   "canonical_component": "ResetPassword",
+   "donor_rc_component": "ResetPassword",
+   "same_component_name": true
+  },
+  {
+   "route": "/shared-slides/:token",
+   "canonical_component": "SharedSlidesViewer",
+   "donor_rc_component": "SharedSlidesViewer",
+   "same_component_name": true
+  },
+  {
+   "route": "/shared/:token",
+   "canonical_component": "SharedProjection",
+   "donor_rc_component": "SharedProjection",
+   "same_component_name": true
+  },
+  {
+   "route": "/support",
+   "canonical_component": "Support",
+   "donor_rc_component": "Support",
+   "same_component_name": true
+  },
+  {
+   "route": "/terms",
+   "canonical_component": "Terms",
+   "donor_rc_component": "Terms",
+   "same_component_name": true
+  },
+  {
+   "route": "/trial",
+   "canonical_component": "TrialLogin",
+   "donor_rc_component": "TrialLogin",
+   "same_component_name": true
+  },
+  {
+   "route": "/video/:token",
+   "canonical_component": "VideoViewer",
+   "donor_rc_component": "VideoViewer",
+   "same_component_name": true
+  }
+ ],
+ "donor_rc_not_in_canonical": [
+  "/portal/1031-advanced",
+  "/portal/1031-exchange",
+  "/portal/1031-exchange-analyzer",
+  "/portal/199a-optimizer",
+  "/portal/529-advanced",
+  "/portal/529-vs-iul",
+  "/portal/aca-subsidy",
+  "/portal/admin/health",
+  "/portal/ai-strategy-lab",
+  "/portal/alert-command-center",
+  "/portal/alimony-tax-impact",
+  "/portal/alt-allocator",
+  "/portal/alt-investment-dd",
+  "/portal/alternative-investment",
+  "/portal/alternative-investments",
+  "/portal/amt-analyzer",
+  "/portal/amt-calculator",
+  "/portal/amt-planner",
+  "/portal/annual-financial-physical",
+  "/portal/annuity-comparison",
+  "/portal/annuity-fee-detector",
+  "/portal/annuity-income-bridge",
+  "/portal/annuity-waterfall",
+  "/portal/asset-allocation",
+  "/portal/asset-protection",
+  "/portal/audit-defense",
+  "/portal/autopilot",
+  "/portal/backdoor-roth",
+  "/portal/behavioral-bias",
+  "/portal/behavioral-planning",
+  "/portal/beneficiary-ira",
+  "/portal/bond-ladder",
+  "/portal/budget-50-30-20",
+  "/portal/business-entity",
+  "/portal/business-exit",
+  "/portal/business-succession",
+  "/portal/business-valuation",
+  "/portal/buy-sell-agreement",
+  "/portal/buy-sell-funding",
+  "/portal/calc-interop-matrix",
+  "/portal/calculator-hub",
+  "/portal/capital-gains-tax",
+  "/portal/captive-insurance",
+  "/portal/captive-insurance-modeler",
+  "/portal/captive-iul",
+  "/portal/carrier-strength",
+  "/portal/cascading-optimizer",
+  "/portal/cash-balance-plan",
+  "/portal/cash-flow-optimizer",
+  "/portal/ce-credits",
+  "/portal/charitable-giving-dashboard",
+  "/portal/charitable-lead-trust",
+  "/portal/charitable-remainder-unitrust",
+  "/portal/charitable-stock-donation",
+  "/portal/client-presentation",
+  "/portal/client-report-gen",
+  "/portal/client-retention",
+  "/portal/client-retention-ai",
+  "/portal/clt-engine",
+  "/portal/college-aid",
+  "/portal/combo-recommender-v2",
+  "/portal/commission-optimizer",
+  "/portal/compliance-center",
+  "/portal/compliance-doc-gen",
+  "/portal/compound-interest",
+  "/portal/concentrated-stock",
+  "/portal/concierge",
+  "/portal/cost-of-living",
+  "/portal/cost-of-waiting",
+  "/portal/cost-segregation",
+  "/portal/cost-segregation-engine",
+  "/portal/credit-card-payoff",
+  "/portal/cross-border-wealth",
+  "/portal/cross-calc-aggregation",
+  "/portal/cross-feature-intelligence",
+  "/portal/cross-purchase",
+  "/portal/crt-calculator",
+  "/portal/crt-deep-dive",
+  "/portal/crt-engine",
+  "/portal/crt-wealth-replacement",
+  "/portal/crut-deep-dive",
+  "/portal/crypto-tax",
+  "/portal/daf-strategic",
+  "/portal/daf-vs-direct-giving",
+  "/portal/data-bus-dashboard",
+  "/portal/data-completeness",
+  "/portal/data-flow-visualizer",
+  "/portal/dca-vs-lump-sum",
+  "/portal/deal-closer",
+  "/portal/debt-payoff",
+  "/portal/debt-payoff-optimizer",
+  "/portal/debt-recycling",
+  "/portal/deduction-optimizer",
+  "/portal/deep-organism",
+  "/portal/deferred-comp",
+  "/portal/deferred-compensation",
+  "/portal/defined-benefit",
+  "/portal/depreciation-recapture",
+  "/portal/depreciation-tax-shield",
+  "/portal/digital-estate",
+  "/portal/digital-estate-planner",
+  "/portal/direct-indexing",
+  "/portal/disability-gap",
+  "/portal/disability-insurance-needs",
+  "/portal/divorce-financial",
+  "/portal/divorce-impact",
+  "/portal/divorce-settlement-enhanced",
+  "/portal/drip-growth",
+  "/portal/dst-analyzer",
+  "/portal/dynasty-trust",
+  "/portal/dynasty-trust-planner",
+  "/portal/education-529",
+  "/portal/elite-showdown",
+  "/portal/emergency-fund",
+  "/portal/emergency-fund-vs-iul",
+  "/portal/employee-retention",
+  "/portal/employee-stock-options",
+  "/portal/engine-chaining",
+  "/portal/engine-fusion",
+  "/portal/entity-comparison",
+  "/portal/entrainment-engine",
+  "/portal/equity-compensation",
+  "/portal/esop-analyzer",
+  "/portal/esop-buyout",
+  "/portal/esop-calculator",
+  "/portal/estate-freeze-comparison",
+  "/portal/estate-liquidity",
+  "/portal/estate-planning-sim",
+  "/portal/estate-timeline",
+  "/portal/estate-wealth-transfer",
+  "/portal/executive-bonus",
+  "/portal/executive-bridge",
+  "/portal/executive-comp",
+  "/portal/expat-tax",
+  "/portal/family-bank",
+  "/portal/family-constitution",
+  "/portal/family-governance",
+  "/portal/family-limited-partnership",
+  "/portal/family-office",
+  "/portal/family-tree",
+  "/portal/fbar-fatca",
+  "/portal/fee-impact",
+  "/portal/fiduciary-compliance",
+  "/portal/fiduciary-tracker",
+  "/portal/financial-dna",
+  "/portal/financial-freedom-number",
+  "/portal/financial-health-score",
+  "/portal/financial-independence",
+  "/portal/financial-nerve-center",
+  "/portal/financial-plan-checklist",
+  "/portal/fire-calculator",
+  "/portal/flp-planner",
+  "/portal/fluency-academy",
+  "/portal/gain-loss-harvesting",
+  "/portal/generational-wealth",
+  "/portal/generational-wealth-sim",
+  "/portal/grantor-trust",
+  "/portal/grat",
+  "/portal/grat-calculator",
+  "/portal/gst-trust",
+  "/portal/gstt-calculator",
+  "/portal/healthcare-cost",
+  "/portal/heartfire-legacy",
+  "/portal/holographic-mirage",
+  "/portal/home-affordability",
+  "/portal/hsa-maximizer",
+  "/portal/hsa-triple-tax",
+  "/portal/idgt-advanced",
+  "/portal/idgt-modeler",
+  "/portal/idr-comparison",
+  "/portal/ilit-analyzer",
+  "/portal/ilit-calculator",
+  "/portal/ilit-deep-dive",
+  "/portal/impact-scorecard",
+  "/portal/incentive-trust",
+  "/portal/income-floor",
+  "/portal/income-floor-strategy",
+  "/portal/income-protection",
+  "/portal/income-shifting",
+  "/portal/infinity-banking",
+  "/portal/inflation-adjusted-income",
+  "/portal/inflation-protection",
+  "/portal/inflation-returns",
+  "/portal/inherited-roth",
+  "/portal/innovation-dashboard",
+  "/portal/installment-sale",
+  "/portal/installment-sale-strategy",
+  "/portal/insurance-coverage-command",
+  "/portal/insurance-gap",
+  "/portal/international-tax",
+  "/portal/international-trust",
+  "/portal/irc-reference",
+  "/portal/iul-compliance-engine",
+  "/portal/iul-max-funded",
+  "/portal/journey-navigator",
+  "/portal/key-person-insurance",
+  "/portal/lease-vs-buy",
+  "/portal/legacy-vault",
+  "/portal/life-insurance-needs",
+  "/portal/life-settlement",
+  "/portal/lifestyle-inflation",
+  "/portal/like-kind-exchange",
+  "/portal/living-benefits",
+  "/portal/living-risk-profile",
+  "/portal/long-term-care-hybrid",
+  "/portal/longitudinal-risk",
+  "/portal/ltc-cost",
+  "/portal/marginal-tax-rate",
+  "/portal/mastery-nexus",
+  "/portal/medicaid-planning",
+  "/portal/medicare-irmaa-calc",
+  "/portal/medicare-part-d",
+  "/portal/mega-backdoor-roth",
+  "/portal/mesh-health",
+  "/portal/millionaire-calculator",
+  "/portal/moat-fortress",
+  "/portal/multi-carrier-iul",
+  "/portal/multi-currency",
+  "/portal/multi-gen-roth",
+  "/portal/multi-generational-wealth",
+  "/portal/muni-bond-ladder",
+  "/portal/net-worth-tracker",
+  "/portal/nii-surtax",
+  "/portal/nua-calculator",
+  "/portal/nua-planner",
+  "/portal/nua-strategy",
+  "/portal/oil-gas-strategy",
+  "/portal/onboarding-quiz",
+  "/portal/onboarding-workflow",
+  "/portal/opportunity-zone",
+  "/portal/options-profit-loss",
+  "/portal/organism-control",
+  "/portal/organism-dashboard",
+  "/portal/organism-deep-provider",
+  "/portal/organism-health",
+  "/portal/overhead-expense",
+  "/portal/own-occ-disability",
+  "/portal/pavlovian-engagement",
+  "/portal/pe-irr-calculator",
+  "/portal/pe-secondary-market",
+  "/portal/pe-tax",
+  "/portal/peer-benchmarking",
+  "/portal/peer-intel",
+  "/portal/peer-network",
+  "/portal/pension-max",
+  "/portal/pension-max-engine",
+  "/portal/pension-maximization",
+  "/portal/pension-vs-lump-sum",
+  "/portal/persona-hub",
+  "/portal/phantom-stock",
+  "/portal/philanthropy",
+  "/portal/physician-blueprint",
+  "/portal/physician-contract",
+  "/portal/physician-forum",
+  "/portal/physician-mortgage",
+  "/portal/physician-retirement",
+  "/portal/physician-vitals",
+  "/portal/policy-replacement",
+  "/portal/portfolio-risk-return",
+  "/portal/post-mortem-tax",
+  "/portal/ppli",
+  "/portal/ppli-modeler",
+  "/portal/ppva",
+  "/portal/practice-sync",
+  "/portal/practice-valuation",
+  "/portal/predictive-arena",
+  "/portal/premium-financing-arbitrage",
+  "/portal/premium-financing-calc",
+  "/portal/presentation-vault",
+  "/portal/private-credit",
+  "/portal/private-foundation",
+  "/portal/private-placement",
+  "/portal/private-reit",
+  "/portal/projection-theater",
+  "/portal/property-tax-appeal",
+  "/portal/prospect-qualification",
+  "/portal/pslf-calculator",
+  "/portal/qbi-calculator",
+  "/portal/qlac-calculator",
+  "/portal/qprt",
+  "/portal/qprt-advanced",
+  "/portal/qprt-calculator",
+  "/portal/qsbs",
+  "/portal/qsbs-exclusion",
+  "/portal/qualified-opportunity-fund",
+  "/portal/qualified-plan-maximizer",
+  "/portal/re-stacking",
+  "/portal/real-estate-portfolio",
+  "/portal/real-estate-syndication",
+  "/portal/refinance-break-even",
+  "/portal/rental-property-roi",
+  "/portal/report-builder",
+  "/portal/residency-to-attending",
+  "/portal/retirement-advantage",
+  "/portal/retirement-budget",
+  "/portal/retirement-distributions",
+  "/portal/retirement-gap",
+  "/portal/retirement-healthcare",
+  "/portal/retirement-income-proj",
+  "/portal/retirement-readiness",
+  "/portal/reverse-mortgage",
+  "/portal/risk-compliance",
+  "/portal/rmd-calculator",
+  "/portal/roth-conversion-analyzer",
+  "/portal/roth-vs-traditional",
+  "/portal/rsu-tax",
+  "/portal/rsu-tax-planning",
+  "/portal/sabbatical-planner",
+  "/portal/safe-withdrawal-rate",
+  "/portal/savings-rate-impact",
+  "/portal/section-1202",
+  "/portal/section-199a",
+  "/portal/section-2701",
+  "/portal/sector-rotation",
+  "/portal/self-employment-tax",
+  "/portal/sequence-of-returns",
+  "/portal/serp-analyzer",
+  "/portal/severance-calculator",
+  "/portal/short-term-rental",
+  "/portal/slat-deep-dive",
+  "/portal/slat-planner",
+  "/portal/smart-routing",
+  "/portal/social-security-maximizer",
+  "/portal/special-needs",
+  "/portal/special-needs-trust",
+  "/portal/spend-vs-invest",
+  "/portal/spending-guardrails",
+  "/portal/split-dollar",
+  "/portal/split-dollar-life",
+  "/portal/spousal-lifetime-access",
+  "/portal/spousal-ss-coordination",
+  "/portal/ss-bridge",
+  "/portal/ss-bridge-strategy",
+  "/portal/state-tax-arbitrage",
+  "/portal/state-tax-migration",
+  "/portal/state-trust-planning",
+  "/portal/str-tax-strategy",
+  "/portal/strategy-comparison",
+  "/portal/strategy-synergy",
+  "/portal/stress-test",
+  "/portal/stretch-ira",
+  "/portal/structured-notes",
+  "/portal/structured-settlement",
+  "/portal/student-loan-optimizer",
+  "/portal/student-loan-vs-invest",
+  "/portal/succession-engine",
+  "/portal/succession-plan",
+  "/portal/succession-valuation",
+  "/portal/survivor-benefits",
+  "/portal/syndication-deal",
+  "/portal/tax-alpha-scorecard",
+  "/portal/tax-bracket-navigator",
+  "/portal/tax-code-simulator",
+  "/portal/tax-credits",
+  "/portal/tax-deferred-exchange",
+  "/portal/tax-equivalent-yield",
+  "/portal/tax-loss-harvest-calc",
+  "/portal/tax-optimization-command",
+  "/portal/tax-optimizer",
+  "/portal/tax-projection",
+  "/portal/taxable-account",
+  "/portal/taxable-estate",
+  "/portal/tenant-in-common",
+  "/portal/term-vs-whole-vs-iul",
+  "/portal/tool-explorer",
+  "/portal/trust-comparison-matrix",
+  "/portal/trust-decanting",
+  "/portal/trust-funding",
+  "/portal/umbrella-insurance",
+  "/portal/usage-analytics",
+  "/portal/vacation-rental",
+  "/portal/variable-annuity",
+  "/portal/volatility-harvesting",
+  "/portal/w4-optimizer",
+  "/portal/wealth-accumulation",
+  "/portal/wealth-canvas",
+  "/portal/wealth-dashboard",
+  "/portal/wealth-erosion",
+  "/portal/wealth-odyssey",
+  "/portal/wealth-rituals",
+  "/portal/wealth-timeline",
+  "/portal/wealth-transfer-comparison",
+  "/portal/wealth-transfer-scoreboard",
+  "/portal/wealth-transfer-scorecard",
+  "/portal/wealth-transfer-timeline",
+  "/portal/wealth-warrior",
+  "/portal/whole-life-dividend",
+  "/portal/windfall-management",
+  "/portal/withdrawal-rate",
+  "/portal/withdrawal-sequencer",
+  "/portal/zero-based-budget"
+ ]
+}
