@@ -34,6 +34,7 @@ import { FactFinderBadge } from "@/contexts/ClientDataContext";
 import { CastBadge, useRoom } from "@/components/rooms/RoomTheme";
 import { EngineWhyFooter, QuestionWhy } from "@/components/rooms/Reveal";
 import { RoomVideoTile } from "@/components/rooms/RoomVideoTile";
+import { NavTree } from "@/components/NavTree";
 
 /* ═══════════════════════════════════════════════════════════════════
    COLOR-CODED NAVIGATION — Intuitive categories with visual coding
@@ -800,6 +801,7 @@ function SubgroupSection({ subgroup, location, onClose, favoritePaths, onToggleF
 }
 
 const SPHERE_MODE_KEY = "rcs_nav_sphere";
+const TREE_MODE_KEY = "rcs_nav_tree_mode";
 
 /**
  * The Sphere as navigation: twelve meridians (domains of a financial life)
@@ -862,6 +864,10 @@ function SphereNav({ location, onClose }: { location: string; onClose: () => voi
 function Sidebar({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [location] = useLocation();
   const [sphereMode, setSphereModeState] = useState<boolean>(() => { try { return localStorage.getItem(SPHERE_MODE_KEY) === "1"; } catch { return false; } });
+  // Tree view. Additive: NAV_SECTIONS stays the default and is unchanged.
+  // Persisted per browser like sphere mode, and wrapped because localStorage
+  // throws in a private window rather than returning null.
+  const [treeMode, setTreeMode] = useState<boolean>(() => { try { return localStorage.getItem(TREE_MODE_KEY) === "1"; } catch { return false; } });
   const setSphereMode = (v: boolean) => { setSphereModeState(v); try { localStorage.setItem(SPHERE_MODE_KEY, v ? "1" : "0"); } catch { /* private mode */ } };
   const { user, logout, isAuthenticated } = useAuth();
   const statsQuery = trpc.dashboard.stats.useQuery(undefined, { staleTime: 60_000, retry: false });
@@ -965,7 +971,18 @@ function Sidebar({ open, onClose }: { open: boolean; onClose: () => void }) {
             <span>{sphereMode ? "Navigating by the Sphere" : "Navigate by the Sphere"}</span>
             <span className="text-[9px] font-semibold text-amber-300/60">{sphereMode ? "list" : "sphere"}</span>
           </button>
-          {sphereMode ? (
+          <button
+            type="button"
+            onClick={() => { const next = !treeMode; setTreeMode(next); try { localStorage.setItem(TREE_MODE_KEY, next ? "1" : "0"); } catch { /* private window */ } }}
+            className="mx-2 mb-1 flex w-[calc(100%-1rem)] items-center justify-between rounded-lg border border-sky-400/20 bg-sky-400/5 px-2 py-1 text-[10px] font-bold uppercase tracking-[0.1em] text-sky-300 hover:bg-sky-400/10"
+            title="The ten-domain tree. Entries pointing at pages this build does not serve are shown inactive rather than as broken links."
+          >
+            <span>{treeMode ? "Navigating by Tree" : "Navigate by Tree"}</span>
+            <span className="text-[9px] font-semibold text-sky-300/60">{treeMode ? "list" : "tree"}</span>
+          </button>
+          {treeMode ? (
+            <NavTree />
+          ) : sphereMode ? (
             <SphereNav location={location} onClose={onClose} />
           ) : NAV_SECTIONS.map((section) => (
             <CollapsibleSection
