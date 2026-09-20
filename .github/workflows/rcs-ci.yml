@@ -1,0 +1,121 @@
+# Continuous integration for the russell-capital-systems build.
+#
+# Nothing in this repository ran the live build's own install / typecheck /
+# build / test before this workflow. The consolidation depends on that gate
+# existing, so it is added before any application code is migrated.
+#
+# This workflow only reads. It does not deploy — deployment is
+# .github/workflows/deploy-branch.yml, which fires on push to master and is
+# deliberately left untouched.
+name: RCS CI
+
+on:
+  pull_request:
+    paths:
+      - "russell-capital-systems/**"
+      - ".github/workflows/rcs-ci.yml"
+  push:
+    branches: [master]
+    paths:
+      - "russell-capital-systems/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: rcs-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    working-directory: russell-capital-systems
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: false          # the corpus audio is LFS; the build needs none of it
+
+      - uses: pnpm/action-setup@v4
+        with:
+          # No version here on purpose: package.json's "packageManager" field
+          # pins pnpm, and naming it twice is how the two drift apart.
+          run_install: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: russell-capital-systems/pnpm-lock.yaml
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Approve native build scripts
+        # pnpm blocks postinstall by default. esbuild and the Tailwind oxide
+        # binary genuinely need theirs, and the build fails later and less
+        # legibly without them.
+        run: pnpm rebuild @tailwindcss/oxide esbuild @parcel/watcher || true
+
+      - name: Typecheck
+        run: pnpm check
+
+      - name: Build
+        run: pnpm build
+
+      - name: Test
+        # The full suite, not test:ci. Verified 2026-09-20: the 27 files that
+        # test:ci excludes self-skip without a database rather than failing, so
+        # running everything costs nothing and covers 381 more assertions.
+        run: pnpm test
+
+      # The manifest gate itself is already in the test suite:
+      # server/grok-merge.smoke.test.ts calls diffRoutes() and asserts
+      # currentRoutes.size === ROUTE_COUNT, reporting missing, unexpected and
+      # duplicate paths by name. `pnpm test` above therefore already fails on
+      # manifest drift, and re-running scripts/reconcile-route-manifest.mjs here
+      # would be wrong twice over: it targets a different file
+      # (audit/route_manifest.json, 232 entries — not shared/routeManifest.ts),
+      # and it *writes* rather than checks.
+      #
+      # What the suite cannot see is the built artifact, so that is checked here.
+      - name: Route count invariant (source vs built artifact)
+        run: |
+          set -euo pipefail
+          app=$(grep -c '<Route path=' client/src/App.tsx)
+          man=$(grep -cE '^  "/' shared/routeManifest.ts)
+          built=$(node -e "console.log(require('./dist/public/routes.json').routes.length)")
+          echo "App.tsx=$app  ROUTE_MANIFEST=$man  dist/public/routes.json=$built"
+          fail=0
+          [ "$app" = "$built" ] || { echo "::error::App.tsx=$app but built routes.json=$built"; fail=1; }
+          [ "$app" = "$man" ]   || { echo "::error::App.tsx=$app but ROUTE_MANIFEST=$man"; fail=1; }
+          exit $fail
+
+      - name: Audit manifest is reconciled
+        # The reconciler mutates audit/route_manifest.json. Running it and then
+        # demanding a clean tree proves the committed file is already current,
+        # without committing the mutation from CI.
+        run: |
+          node scripts/reconcile-route-manifest.mjs
+          git diff --exit-code -- audit/route_manifest.json \
+            || { echo "::error::audit/route_manifest.json is stale — run scripts/reconcile-route-manifest.mjs and commit"; exit 1; }
+
+  secrets:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          lfs: false
+
+      - name: Secret scan (gitleaks)
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          config-path: .gitleaks.toml

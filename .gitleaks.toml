@@ -1,0 +1,47 @@
+# gitleaks configuration for the Russell Capital corpus.
+#
+# This repository is ~95% prose: transcripts, journals, handoff notes and
+# audit JSON. Those carry a lot of text that looks like a credential and is
+# not one — local dev connection strings quoted in a session transcript,
+# placeholder keys in documentation, test fixtures. An unconfigured scan
+# drowns in them and gets ignored, which is worse than no scan.
+#
+# So: keep the default rules, and allowlist the places where a match is
+# demonstrably documentation rather than a live secret.
+
+[extend]
+useDefault = true
+
+[[rules]]
+id = "railway-token"
+description = "Railway API token"
+regex = '''(?i)railway[_-]?token["'\s:=]+[a-f0-9-]{36}'''
+tags = ["railway"]
+
+[allowlist]
+description = "Documentation, transcripts and test fixtures"
+
+paths = [
+  # Prose corpus — transcripts and journals quote commands verbatim, including
+  # localhost credentials. Those are real quotes of real local sessions, and
+  # preserving transcription authenticity is a repository convention.
+  '''.*/docs/handoff/.*\.md$''',
+  '''.*/transcriptions/.*''',
+  '''.*/buddy_journal/.*''',
+  '''.*/buddy_memory/.*''',
+  '''.*\.pdf$''',
+  # Audit corpora are machine-generated page dumps.
+  '''russell-capital-systems/audit/.*\.json$''',
+  # Tests that deliberately construct credential-shaped fixtures.
+  '''.*\.test\.ts$''',
+]
+
+regexes = [
+  # Localhost-only development credentials. Verified 2026-09-20: the only
+  # connection strings in tracked files point at 127.0.0.1:3307 with the
+  # throwaway user `rcs`/`rcs_local_dev`, quoted inside a handoff transcript.
+  '''mysql://rcs:rcs_local_dev@127\.0\.0\.1:3307/rcs''',
+  '''local-dev-only-secret-[0-9a-f]+''',
+  # Obvious placeholders.
+  '''(?i)(your[-_]?(api[-_]?)?key|example|placeholder|changeme|xxxxx+|<[a-z_]+>)''',
+]

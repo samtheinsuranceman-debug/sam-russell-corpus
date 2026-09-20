@@ -1,0 +1,7 @@
+route	base_component	donor_component
+/	FrontDoor	Landing
+/portal/market-pulse	MarketPulsePage	MarketPulseSentinel
+/portal/meeting-prep	MeetingPrepPage	AdvisorMeetingPrep
+/portal/mortgage-killer-v2	MortgageKillerV2Page	MortgageKillerV2
+/portal/myga-waterfall	MygaWaterfallPage	MYGAWaterfallComparison
+/portal/long-term-care	LongTermCare	LongTermCarePlanner
