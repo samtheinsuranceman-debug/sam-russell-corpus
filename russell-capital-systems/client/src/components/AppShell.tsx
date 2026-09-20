@@ -20,6 +20,7 @@ import { trpc } from "@/lib/trpc";
 import { useTheme } from "@/contexts/ThemeContext";
 import { TAB_SCORES } from "@shared/tabScores";
 import { LATITUDES, MERIDIANS, pointsAt } from "@shared/sphere";
+import { MEDICAL_TREE, type NavNode } from "@/navTree";
 import { useClientData } from "@/contexts/ClientDataContext";
 import { GlobalSearch } from "@/components/GlobalSearch";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
@@ -800,6 +801,122 @@ function SubgroupSection({ subgroup, location, onClose, favoritePaths, onToggleF
 }
 
 const SPHERE_MODE_KEY = "rcs_nav_sphere";
+const TREE_MODE_KEY = "rcs_nav_tree";
+const TREE_OPEN_KEY = "rcs_nav_tree_open";
+
+/* ═══ Tree navigation ═══
+ *
+ * The list navigation is three fixed levels — section, subgroup, item — and
+ * cannot nest further, so subjects with real depth end up flattened into it.
+ * MEDICAL_TREE nests to any depth (five at present) and this renders it.
+ *
+ * A node is one of three things: a folder (has children), a link (has a path),
+ * or a placeholder — a subject the structure names that this build has no route
+ * for. A placeholder renders as dimmed text and is never a link.
+ *
+ * This is a third navigation mode beside the list and the Sphere. It replaces
+ * neither: NAV_SECTIONS still renders exactly as before, and
+ * server/navTree.test.ts asserts that every path in the tree is in
+ * ROUTE_MANIFEST and that nothing NAV_SECTIONS could reach became unreachable.
+ */
+const TREE_INDENT = 10;
+
+/** Open/closed state per folder, remembered across navigations. Best-effort. */
+function useTreeOpen(key: string, hasActive: boolean, fallback: boolean) {
+  const [isOpen, setIsOpen] = useState<boolean>(() => {
+    try {
+      const raw = localStorage.getItem(TREE_OPEN_KEY);
+      const stored = raw ? (JSON.parse(raw) as Record<string, boolean>)[key] : undefined;
+      if (typeof stored === "boolean") return stored;
+    } catch { /* private mode, blocked storage */ }
+    return fallback || hasActive;
+  });
+  useEffect(() => { if (hasActive && !isOpen) setIsOpen(true); }, [hasActive]);
+  const toggle = useCallback(() => {
+    setIsOpen(prev => {
+      try {
+        const raw = localStorage.getItem(TREE_OPEN_KEY);
+        const all = raw ? JSON.parse(raw) : {};
+        all[key] = !prev;
+        localStorage.setItem(TREE_OPEN_KEY, JSON.stringify(all));
+      } catch { /* the menu works without memory, it just forgets */ }
+      return !prev;
+    });
+  }, [key]);
+  return [isOpen, toggle] as const;
+}
+
+function TreeNode({
+  node, location, onClose, depth,
+}: { node: NavNode; location: string; onClose: () => void; depth: number }) {
+  const hasActive = useMemo(() => {
+    const hit = (n: NavNode): boolean =>
+      (n.path ? location === n.path || (n.path !== "/portal" && location.startsWith(n.path)) : false) ||
+      (n.children?.some(hit) ?? false);
+    return hit(node);
+  }, [node, location]);
+
+  const [isOpen, toggleOpen] = useTreeOpen(`${depth}:${node.label}`, hasActive, !!node.defaultOpen);
+  const pad = depth * TREE_INDENT + 10;
+
+  if (node.isPlaceholder) {
+    return (
+      <div
+        className="flex items-center gap-1.5 py-[3px] text-[11px] text-[#41597d]"
+        style={{ paddingLeft: pad }}
+        title="Named in the structure; this build has no page for it yet."
+      >
+        <span className="h-1 w-1 flex-shrink-0 rounded-full bg-[#2b4160]" />
+        <span className="truncate">{node.label}</span>
+      </div>
+    );
+  }
+
+  if (node.path) {
+    const isActive = location === node.path || (node.path !== "/portal" && location.startsWith(node.path));
+    return (
+      <Link
+        href={node.path}
+        onClick={onClose}
+        className={`rc-sidebar-item ${isActive ? "active" : ""}`}
+        style={{ paddingLeft: pad }}
+      >
+        <span className="truncate">{node.label}</span>
+      </Link>
+    );
+  }
+
+  return (
+    <div>
+      <button
+        onClick={toggleOpen}
+        style={{ paddingLeft: pad - 2 }}
+        className={`flex w-full items-center gap-1.5 py-1 pr-2 text-left text-[11px] font-bold uppercase tracking-[0.1em] transition-colors ${
+          hasActive
+            ? "text-[#22c55e]"
+            : `${node.color && COLOR_MAP[node.color as ColorCategory] ? COLOR_MAP[node.color as ColorCategory] : "text-[#7a95b8]"} hover:brightness-125`
+        }`}
+      >
+        <ChevronRight size={10} className={`flex-shrink-0 opacity-60 transition-transform ${isOpen ? "rotate-90" : ""}`} />
+        <span className="flex-1 truncate">{node.label}</span>
+        <span className="text-[9px] font-semibold opacity-40">{node.children?.length ?? 0}</span>
+      </button>
+      {isOpen && node.children && node.children.map((child, i) => (
+        <TreeNode key={`${child.label}-${i}`} node={child} location={location} onClose={onClose} depth={depth + 1} />
+      ))}
+    </div>
+  );
+}
+
+function TreeNav({ location, onClose }: { location: string; onClose: () => void }) {
+  return (
+    <div className="pb-2">
+      {MEDICAL_TREE.map((node, i) => (
+        <TreeNode key={`${node.label}-${i}`} node={node} location={location} onClose={onClose} depth={0} />
+      ))}
+    </div>
+  );
+}
 
 /**
  * The Sphere as navigation: twelve meridians (domains of a financial life)
@@ -863,6 +980,8 @@ function Sidebar({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [location] = useLocation();
   const [sphereMode, setSphereModeState] = useState<boolean>(() => { try { return localStorage.getItem(SPHERE_MODE_KEY) === "1"; } catch { return false; } });
   const setSphereMode = (v: boolean) => { setSphereModeState(v); try { localStorage.setItem(SPHERE_MODE_KEY, v ? "1" : "0"); } catch { /* private mode */ } };
+  const [treeMode, setTreeModeState] = useState<boolean>(() => { try { return localStorage.getItem(TREE_MODE_KEY) === "1"; } catch { return false; } });
+  const setTreeMode = (v: boolean) => { setTreeModeState(v); try { localStorage.setItem(TREE_MODE_KEY, v ? "1" : "0"); } catch { /* private mode */ } };
   const { user, logout, isAuthenticated } = useAuth();
   const statsQuery = trpc.dashboard.stats.useQuery(undefined, { staleTime: 60_000, retry: false });
   const clientCount = statsQuery.data?.clientCount ?? 0;
@@ -965,8 +1084,23 @@ function Sidebar({ open, onClose }: { open: boolean; onClose: () => void }) {
             <span>{sphereMode ? "Navigating by the Sphere" : "Navigate by the Sphere"}</span>
             <span className="text-[9px] font-semibold text-amber-300/60">{sphereMode ? "list" : "sphere"}</span>
           </button>
+          {/* Tree mode is a third option beside the list and the Sphere, not a
+              replacement for either. The list below is untouched. */}
+          {!sphereMode && (
+            <button
+              type="button"
+              onClick={() => setTreeMode(!treeMode)}
+              className="mx-2 mb-1 flex w-[calc(100%-1rem)] items-center justify-between rounded-lg border border-cyan-400/20 bg-cyan-400/5 px-2 py-1 text-[10px] font-bold uppercase tracking-[0.1em] text-cyan-300 hover:bg-cyan-400/10"
+              title="The same pages, grouped as a tree that nests as deep as the subject does."
+            >
+              <span>{treeMode ? "Navigating by tree" : "Navigate by tree"}</span>
+              <span className="text-[9px] font-semibold text-cyan-300/60">{treeMode ? "list" : "tree"}</span>
+            </button>
+          )}
           {sphereMode ? (
             <SphereNav location={location} onClose={onClose} />
+          ) : treeMode ? (
+            <TreeNav location={location} onClose={onClose} />
           ) : NAV_SECTIONS.map((section) => (
             <CollapsibleSection
               key={section.label}
