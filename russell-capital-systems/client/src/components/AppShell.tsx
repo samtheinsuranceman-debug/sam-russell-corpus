@@ -22,6 +22,7 @@ import { TAB_SCORES } from "@shared/tabScores";
 import { LATITUDES, MERIDIANS, pointsAt } from "@shared/sphere";
 import { useClientData } from "@/contexts/ClientDataContext";
 import { GlobalSearch } from "@/components/GlobalSearch";
+import { NavTree, useNavTreePreview } from "@/components/NavTree";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { CommandPalette } from "@/components/CommandPalette";
 import { QuickActionsFAB } from "@/components/QuickActionsFAB";
@@ -862,6 +863,7 @@ function SphereNav({ location, onClose }: { location: string; onClose: () => voi
 function Sidebar({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [location] = useLocation();
   const [sphereMode, setSphereModeState] = useState<boolean>(() => { try { return localStorage.getItem(SPHERE_MODE_KEY) === "1"; } catch { return false; } });
+  const navTreePreview = useNavTreePreview();
   const setSphereMode = (v: boolean) => { setSphereModeState(v); try { localStorage.setItem(SPHERE_MODE_KEY, v ? "1" : "0"); } catch { /* private mode */ } };
   const { user, logout, isAuthenticated } = useAuth();
   const statsQuery = trpc.dashboard.stats.useQuery(undefined, { staleTime: 60_000, retry: false });
@@ -965,7 +967,12 @@ function Sidebar({ open, onClose }: { open: boolean; onClose: () => void }) {
             <span>{sphereMode ? "Navigating by the Sphere" : "Navigate by the Sphere"}</span>
             <span className="text-[9px] font-semibold text-amber-300/60">{sphereMode ? "list" : "sphere"}</span>
           </button>
-          {sphereMode ? (
+          {navTreePreview ? (
+            /* Opt-in preview of the ported recursive tree (`?navtree=1`).
+               Off by default: swapping outright would orphan 90 entries that
+               NAV_SECTIONS reaches today and this tree does not. */
+            <NavTree location={location} onNavigate={onClose} />
+          ) : sphereMode ? (
             <SphereNav location={location} onClose={onClose} />
           ) : NAV_SECTIONS.map((section) => (
             <CollapsibleSection
