@@ -1,11 +1,14 @@
 import hashlib
 import json
 import os
+from datetime import datetime, timezone
 from pathlib import Path
 
-from fastapi import FastAPI, Request
+from fastapi import Depends, FastAPI, HTTPException, Query, Request
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
+from sqlalchemy import select
+from sqlalchemy.orm import Session
 
 app = FastAPI(title="Patent360", version="2.0.0")
 
@@ -29,6 +32,18 @@ ELIGIBLE_RATE_TYPES = {"fixed_rate", "fixed_segment"}
 WEB_ROOT = Path(__file__).resolve().parent.parent / "web"
 WEB_INDEX = WEB_ROOT / "index.html"
 WEB_PRESENT = WEB_INDEX.is_file()
+
+from app import operational_data as _ops  # noqa: E402
+
+
+@app.on_event("startup")
+def startup() -> None:
+    try:
+        _ops.init_operational_data()
+    except HTTPException:
+        # Operational storage is optional at startup; endpoints fail closed when
+        # DATABASE_URL is not configured.
+        pass
 
 
 def _connector_availability() -> dict:
@@ -358,6 +373,191 @@ def auth_me(request: Request):
                  "expires_at": payload["exp"]},
         status_code=200,
     )
+
+
+def _require_authenticated_email(request: Request) -> str:
+    payload = _auth.read_session(request.cookies.get(_auth.SESSION_COOKIE))
+    if not payload or not payload.get("sub"):
+        raise HTTPException(status_code=401, detail="Authentication required")
+    return str(payload["sub"]).strip().lower()
+
+
+def _as_matter_out(matter: _ops.MatterRecord) -> _ops.MatterOut:
+    return _ops.MatterOut.model_validate(matter)
+
+
+def _as_deadline_out(deadline: _ops.DeadlineRecord, matter: _ops.MatterRecord) -> _ops.DeadlineOut:
+    return _ops.DeadlineOut(
+        id=deadline.id,
+        matter_id=deadline.matter_id,
+        docket=matter.docket,
+        title=deadline.title,
+        owner=deadline.owner,
+        due_date=deadline.due_date,
+        is_statutory=deadline.is_statutory,
+        status=deadline.status,
+        classification=_ops.classify_deadline(due_date=deadline.due_date, status=deadline.status),
+        created_at=deadline.created_at,
+        updated_at=deadline.updated_at,
+    )
+
+
+@app.get("/api/matters", response_model=_ops.MatterListResponse)
+def list_matters(request: Request, db: Session = Depends(_ops.get_db)):
+    user_email = _require_authenticated_email(request)
+    matters = db.execute(
+        select(_ops.MatterRecord)
+        .where(_ops.MatterRecord.user_email == user_email)
+        .order_by(_ops.MatterRecord.updated_at.desc(), _ops.MatterRecord.id.desc())
+    ).scalars().all()
+    return _ops.MatterListResponse(items=[_as_matter_out(m) for m in matters])
+
+
+@app.post("/api/matters", response_model=_ops.MatterOut, status_code=201)
+def create_matter(payload: _ops.MatterCreate, request: Request, db: Session = Depends(_ops.get_db)):
+    user_email = _require_authenticated_email(request)
+    now = datetime.now(timezone.utc)
+    matter = _ops.MatterRecord(
+        user_email=user_email,
+        docket=payload.docket,
+        application_number=payload.application_number,
+        title=payload.title,
+        client=payload.client,
+        status=payload.status,
+        attorney=payload.attorney,
+        cpc=payload.cpc,
+        next_step=payload.next_step,
+        created_at=now,
+        updated_at=now,
+    )
+    db.add(matter)
+    db.commit()
+    db.refresh(matter)
+    return _as_matter_out(matter)
+
+
+@app.get("/api/matters/{matter_id}", response_model=_ops.MatterOut)
+def get_matter(matter_id: int, request: Request, db: Session = Depends(_ops.get_db)):
+    user_email = _require_authenticated_email(request)
+    return _as_matter_out(_ops.require_matter_for_user(db, matter_id, user_email))
+
+
+@app.put("/api/matters/{matter_id}", response_model=_ops.MatterOut)
+def update_matter(
+    matter_id: int,
+    payload: _ops.MatterUpdate,
+    request: Request,
+    db: Session = Depends(_ops.get_db),
+):
+    user_email = _require_authenticated_email(request)
+    matter = _ops.require_matter_for_user(db, matter_id, user_email)
+    matter.docket = payload.docket
+    matter.application_number = payload.application_number
+    matter.title = payload.title
+    matter.client = payload.client
+    matter.status = payload.status
+    matter.attorney = payload.attorney
+    matter.cpc = payload.cpc
+    matter.next_step = payload.next_step
+    matter.updated_at = datetime.now(timezone.utc)
+    db.commit()
+    db.refresh(matter)
+    return _as_matter_out(matter)
+
+
+@app.delete("/api/matters/{matter_id}", status_code=204)
+def delete_matter(matter_id: int, request: Request, db: Session = Depends(_ops.get_db)):
+    user_email = _require_authenticated_email(request)
+    matter = _ops.require_matter_for_user(db, matter_id, user_email)
+    db.delete(matter)
+    db.commit()
+
+
+@app.get("/api/deadlines", response_model=_ops.DeadlineListResponse)
+def list_deadlines(
+    request: Request,
+    matter_id: int | None = Query(default=None, gt=0),
+    db: Session = Depends(_ops.get_db),
+):
+    user_email = _require_authenticated_email(request)
+    stmt = (
+        select(_ops.DeadlineRecord, _ops.MatterRecord)
+        .join(_ops.MatterRecord, _ops.DeadlineRecord.matter_id == _ops.MatterRecord.id)
+        .where(_ops.MatterRecord.user_email == user_email)
+    )
+    if matter_id is not None:
+        stmt = stmt.where(_ops.DeadlineRecord.matter_id == matter_id)
+    rows = db.execute(
+        stmt.order_by(_ops.DeadlineRecord.due_date.asc(), _ops.DeadlineRecord.id.asc())
+    ).all()
+    return _ops.DeadlineListResponse(items=[_as_deadline_out(deadline, matter) for deadline, matter in rows])
+
+
+@app.post("/api/deadlines", response_model=_ops.DeadlineOut, status_code=201)
+def create_deadline(payload: _ops.DeadlineCreate, request: Request, db: Session = Depends(_ops.get_db)):
+    user_email = _require_authenticated_email(request)
+    matter = _ops.require_matter_for_user(db, payload.matter_id, user_email)
+    now = datetime.now(timezone.utc)
+    deadline = _ops.DeadlineRecord(
+        matter_id=matter.id,
+        title=payload.title,
+        owner=payload.owner,
+        due_date=payload.due_date,
+        is_statutory=payload.is_statutory,
+        status=payload.status,
+        created_at=now,
+        updated_at=now,
+    )
+    db.add(deadline)
+    db.commit()
+    db.refresh(deadline)
+    return _as_deadline_out(deadline, matter)
+
+
+def _require_deadline_for_user(db: Session, deadline_id: int, user_email: str) -> tuple[_ops.DeadlineRecord, _ops.MatterRecord]:
+    row = db.execute(
+        select(_ops.DeadlineRecord, _ops.MatterRecord)
+        .join(_ops.MatterRecord, _ops.DeadlineRecord.matter_id == _ops.MatterRecord.id)
+        .where(_ops.DeadlineRecord.id == deadline_id, _ops.MatterRecord.user_email == user_email)
+    ).first()
+    if row is None:
+        raise HTTPException(status_code=404, detail="Deadline not found")
+    return row
+
+
+@app.get("/api/deadlines/{deadline_id}", response_model=_ops.DeadlineOut)
+def get_deadline(deadline_id: int, request: Request, db: Session = Depends(_ops.get_db)):
+    user_email = _require_authenticated_email(request)
+    deadline, matter = _require_deadline_for_user(db, deadline_id, user_email)
+    return _as_deadline_out(deadline, matter)
+
+
+@app.put("/api/deadlines/{deadline_id}", response_model=_ops.DeadlineOut)
+def update_deadline(
+    deadline_id: int,
+    payload: _ops.DeadlineUpdate,
+    request: Request,
+    db: Session = Depends(_ops.get_db),
+):
+    user_email = _require_authenticated_email(request)
+    deadline, matter = _require_deadline_for_user(db, deadline_id, user_email)
+    deadline.title = payload.title
+    deadline.owner = payload.owner
+    deadline.due_date = payload.due_date
+    deadline.is_statutory = payload.is_statutory
+    deadline.status = payload.status
+    deadline.updated_at = datetime.now(timezone.utc)
+    db.commit()
+    db.refresh(deadline)
+    return _as_deadline_out(deadline, matter)
+
+
+@app.delete("/api/deadlines/{deadline_id}", status_code=204)
+def delete_deadline(deadline_id: int, request: Request, db: Session = Depends(_ops.get_db)):
+    user_email = _require_authenticated_email(request)
+    deadline, _ = _require_deadline_for_user(db, deadline_id, user_email)
+    db.delete(deadline)
+    db.commit()
 
 
 # ── Practitioner roster ───────────────────────────────────────────────────
