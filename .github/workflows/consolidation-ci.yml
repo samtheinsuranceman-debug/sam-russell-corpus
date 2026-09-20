@@ -61,6 +61,24 @@ jobs:
       - name: Build
         run: pnpm run build
 
+      # The third leg. The step above emits dist/public/routes.json with its own
+      # route list, and that list can diverge from App.tsx and the manifest
+      # without either noticing — a build-time filter or a code-splitting
+      # boundary can drop a route the other two still agree on. That failure is
+      # a production 404 with green CI. Baseline: all three read 330.
+      # See docs/consolidation/ADDENDUM-03-nlp-and-numbering.md §3.
+      - name: Built-route agreement
+        run: |
+          set -euo pipefail
+          app=$(grep -o 'path="[^"]*"' client/src/App.tsx | sort -u | wc -l)
+          manifest=$(sed -n '/ROUTE_MANIFEST/,/^]/p' shared/routeManifest.ts | grep -c '^\s*"')
+          built=$(node -e "console.log(JSON.parse(require('fs').readFileSync('dist/public/routes.json','utf8')).routes.length)")
+          echo "App.tsx=$app  routeManifest.ts=$manifest  dist/public/routes.json=$built"
+          if [ "$app" != "$manifest" ] || [ "$app" != "$built" ]; then
+            echo "::error::Route counts disagree. App.tsx=$app manifest=$manifest built=$built"
+            exit 1
+          fi
+
   secrets:
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -114,3 +132,16 @@ jobs:
           fi
 
           echo "No credential patterns found in application source (placeholders ignored)."
+
+      # Alongside the regex scan above, not instead of it — ADDENDUM-01 §7
+      # proposed this and left the decision open; ADDENDUM-03 §4 is the
+      # comparison the directive requires. The hand-written pattern above stays
+      # because it has already caught a real secret in this codebase; gitleaks
+      # adds maintained rule packs for provider formats a fixed regex misses.
+      # fetch-depth: 0 is set on the checkout above, so a secret added and then
+      # removed later in the same branch is still caught.
+      - name: Secret scan (gitleaks)
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_ENABLE_UPLOAD_ARTIFACT: "false"

@@ -1,0 +1,5609 @@
+{
+ "generated": "foundation-pr",
+ "liveRoutes": 330,
+ "rcRoutes": 664,
+ "appRoutes": 612,
+ "candidateCount": 438,
+ "candidatesInBothDonors": 382,
+ "candidatesRcOnly": 53,
+ "candidatesAppOnly": 3,
+ "collisionCount": 236,
+ "candidates": [
+  {
+   "route": "/portal/1031-advanced",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/Section1031AdvancedExchange",
+   "appComponent": "pages/portal/Section1031AdvancedExchange",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/1031-exchange",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/Exchange1031Calc",
+   "appComponent": "pages/portal/Exchange1031Calc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/1031-exchange-analyzer",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/Exchange1031Analyzer",
+   "appComponent": "pages/portal/Exchange1031Analyzer",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/199a-optimizer",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/Section199ADeductionOptimizer",
+   "appComponent": "pages/portal/Section199ADeductionOptimizer",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/529-advanced",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/Section529AdvancedPlanner",
+   "appComponent": "pages/portal/Section529AdvancedPlanner",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/529-vs-iul",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/Education529VsIULCalc",
+   "appComponent": "pages/hubs/H529EducationHub",
+   "identicalPath": false,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/aca-subsidy",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/ACASubsidyCalc",
+   "appComponent": "pages/portal/ACASubsidyCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/admin/health",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/AdminHealthDashboard",
+   "appComponent": "pages/portal/AdminHealthDashboard",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/ai-strategy-lab",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/AIStrategyLabPro",
+   "appComponent": "pages/portal/AIStrategyLabPro",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/alert-command-center",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/AlertCommandCenter",
+   "appComponent": "pages/portal/AlertCommandCenter",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/alimony-tax-impact",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/AlimonyTaxCalc",
+   "appComponent": "pages/portal/AlimonyTaxCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/alt-allocator",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/AlternativeInvestmentAllocator",
+   "appComponent": "pages/portal/AlternativeInvestmentAllocator",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/alt-investment-dd",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/AlternativeInvestmentDueDiligence",
+   "appComponent": "pages/portal/AlternativeInvestmentDueDiligence",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/alternative-investment",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/AlternativeInvestment",
+   "appComponent": "pages/portal/AlternativeInvestment",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/alternative-investments",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/AlternativeInvestmentDueDiligence",
+   "appComponent": "pages/portal/AlternativeInvestmentDueDiligence",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/amt-analyzer",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/AMTAnalyzer",
+   "appComponent": "pages/portal/AMTAnalyzer",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/amt-calculator",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/AMTCalculator",
+   "appComponent": "pages/hubs/AmtHub",
+   "identicalPath": false,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/amt-planner",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/AlternativeMinimumTaxPlanner",
+   "appComponent": "pages/portal/AlternativeMinimumTaxPlanner",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/annual-financial-physical",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/AnnualFinancialPhysical",
+   "appComponent": "pages/portal/AnnualFinancialPhysical",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/annuity-comparison",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/AnnuityComparisonCalc",
+   "appComponent": "pages/portal/AnnuityComparisonCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/annuity-fee-detector",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/AnnuityHiddenFee",
+   "appComponent": "pages/portal/AnnuityHiddenFee",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/annuity-income-bridge",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/AnnuityIncomeBridge",
+   "appComponent": "pages/portal/AnnuityIncomeBridge",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/annuity-waterfall",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/AnnuityWaterfallEngine",
+   "appComponent": "pages/portal/AnnuityWaterfallEngine",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/asset-allocation",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/AssetAllocationCalc",
+   "appComponent": "pages/portal/AssetAllocationCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/asset-protection",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/AssetProtection",
+   "appComponent": "pages/portal/AssetProtection",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/audit-defense",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/AuditDefensePrep",
+   "appComponent": "pages/portal/AuditDefensePrep",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/autopilot",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/AutoPilotWorkflow",
+   "appComponent": "pages/portal/AutoPilotWorkflow",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/backdoor-roth",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/BackdoorRothCalc",
+   "appComponent": "pages/portal/BackdoorRothCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/behavioral-bias",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/BehavioralBiasDetector",
+   "appComponent": "pages/portal/BehavioralBiasDetector",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/behavioral-planning",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/AIBehavioralFinancialPlanning",
+   "appComponent": "pages/portal/AIBehavioralFinancialPlanning",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/beneficiary-ira",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/BeneficiaryIRAPlanner",
+   "appComponent": "pages/portal/BeneficiaryIRAPlanner",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/bond-ladder",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/BondLadderCalc",
+   "appComponent": "pages/portal/BondLadderCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/budget-50-30-20",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/Budget503020Calc",
+   "appComponent": "pages/portal/Budget503020Calc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/business-entity",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/BusinessEntitySelector",
+   "appComponent": "pages/portal/BusinessEntitySelector",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/business-exit",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/BusinessExitPlanner",
+   "appComponent": "pages/portal/BusinessExitPlanner",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/business-succession",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/BusinessSuccession",
+   "appComponent": "pages/portal/BusinessSuccession",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/business-valuation",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/BusinessValuationCalc",
+   "appComponent": "pages/hubs/BusinessValuationHub",
+   "identicalPath": false,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/buy-sell-agreement",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/BuySellAgreement",
+   "appComponent": "pages/portal/BuySellAgreement",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/buy-sell-funding",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/BuySellFundingCalc",
+   "appComponent": "pages/hubs/BuySellFundingHub",
+   "identicalPath": false,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/calc-interop-matrix",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/CalcInteropMatrix",
+   "appComponent": "pages/portal/CalcInteropMatrix",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/calculator-hub",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/CalculatorHub",
+   "appComponent": "pages/portal/CalculatorHub",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/calibration",
+   "presentIn": "russell-capital",
+   "rcComponent": "pages/portal/CalibrationLayer",
+   "appComponent": null,
+   "identicalPath": null,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/capital-gains-tax",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/CapitalGainsTaxCalc",
+   "appComponent": "pages/portal/CapitalGainsTaxCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/captive-insurance",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/CaptiveInsuranceCalc",
+   "appComponent": "pages/portal/CaptiveInsuranceCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/captive-insurance-modeler",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/CaptiveInsuranceModeler",
+   "appComponent": "pages/portal/CaptiveInsuranceModeler",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/captive-iul",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/CaptiveInsuranceIUL",
+   "appComponent": "pages/hubs/CaptiveInsuranceHub",
+   "identicalPath": false,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/carrier-strength",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/CarrierStrengthMonitor",
+   "appComponent": "pages/portal/CarrierStrengthMonitor",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/cascading-optimizer",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/CascadingMultiStrategyOptimizer",
+   "appComponent": "pages/portal/CascadingMultiStrategyOptimizer",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/cash-balance-plan",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/CashBalancePlanCalc",
+   "appComponent": "pages/hubs/DefinedBenefitCashBalanceHub",
+   "identicalPath": false,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/cash-flow-optimizer",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/CashFlowOptimizer",
+   "appComponent": "pages/portal/CashFlowOptimizer",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/ce-credits",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/CECreditTracker",
+   "appComponent": "pages/portal/CECreditTracker",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/charitable-giving-dashboard",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/CharitableGivingDashboard",
+   "appComponent": "pages/portal/CharitableGivingDashboard",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/charitable-lead-trust",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/CharitableLeadTrust",
+   "appComponent": "pages/portal/CharitableLeadTrust",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/charitable-remainder-unitrust",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/CharitableRemainderUniTrust",
+   "appComponent": "pages/portal/CharitableRemainderUniTrust",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/charitable-stock-donation",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/CharitableStockCalc",
+   "appComponent": "pages/portal/CharitableStockCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/client-presentation",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/ClientPresentationBuilder",
+   "appComponent": "pages/portal/ClientPresentationBuilder",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/client-report-gen",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/ClientReportGenerator",
+   "appComponent": "pages/portal/ClientReportGenerator",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/client-retention",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/ClientRetentionPredictor",
+   "appComponent": "pages/portal/ClientRetentionPredictor",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/client-retention-ai",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/ClientRetentionAssistant",
+   "appComponent": "pages/portal/ClientRetentionAssistant",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/clt-engine",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/CharitableLeadTrustEngine",
+   "appComponent": "pages/hubs/CharitableTrustCrtCltHub",
+   "identicalPath": false,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/college-aid",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/CollegeAidOptimizer",
+   "appComponent": "pages/portal/CollegeAidOptimizer",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/combo-recommender-v2",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/ComboRecommender",
+   "appComponent": "pages/portal/ComboRecommender",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/commission-optimizer",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/CommissionOptimizer",
+   "appComponent": "pages/portal/CommissionOptimizer",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/compliance-center",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/ComplianceCommandCenter",
+   "appComponent": "pages/portal/ComplianceCommandCenter",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/compliance-doc-gen",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/ComplianceDocGenerator",
+   "appComponent": "pages/portal/ComplianceDocGenerator",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/compound-interest",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/CompoundInterestCalc",
+   "appComponent": "pages/portal/CompoundInterestCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/concentrated-stock",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/ConcentratedStock",
+   "appComponent": "pages/portal/ConcentratedStock",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/concierge",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/AIWealthConcierge",
+   "appComponent": "pages/portal/AIWealthConcierge",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/cost-of-living",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/CostOfLivingCalc",
+   "appComponent": "pages/portal/CostOfLivingCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/cost-of-waiting",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/CostOfWaitingCalc",
+   "appComponent": "pages/portal/CostOfWaitingCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/cost-segregation",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/CostSegregationAccelerator",
+   "appComponent": "pages/portal/CostSegregationAccelerator",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/cost-segregation-engine",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/CostSegregationEngine",
+   "appComponent": "pages/portal/CostSegregationEngine",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/credit-card-payoff",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/CreditCardPayoffCalc",
+   "appComponent": "pages/portal/CreditCardPayoffCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/cross-border-wealth",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/CrossBorderWealthPlanner",
+   "appComponent": "pages/portal/CrossBorderWealthPlanner",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/cross-calc-aggregation",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/CrossCalcAggregationHub",
+   "appComponent": "pages/portal/CrossCalcAggregationHub",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/cross-feature-intelligence",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/UnifiedCrossFeatureIntelligence",
+   "appComponent": "pages/portal/UnifiedCrossFeatureIntelligence",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/cross-purchase",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/CrossPurchaseAgreement",
+   "appComponent": "pages/portal/CrossPurchaseAgreement",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/crt-calculator",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/CRTCalculator",
+   "appComponent": "pages/portal/CRTCalculator",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/crt-deep-dive",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/CRTDeepDive",
+   "appComponent": "pages/portal/CRTDeepDive",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/crt-engine",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/CharitableRemainderTrustEngine",
+   "appComponent": "pages/portal/CharitableRemainderTrustEngine",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/crt-wealth-replacement",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/CRTWealthReplacement",
+   "appComponent": "pages/portal/CRTWealthReplacement",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/crut-deep-dive",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/CRUTDeepDive",
+   "appComponent": "pages/portal/CRUTDeepDive",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/crypto-tax",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/CryptoTaxCalc",
+   "appComponent": "pages/portal/CryptoTaxCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/daf-strategic",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/DAFStrategicPlanner",
+   "appComponent": "pages/portal/DAFStrategicPlanner",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/daf-vs-direct-giving",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/DAFvsDirectCalc",
+   "appComponent": "pages/portal/DAFvsDirectCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/data-bus-dashboard",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/UnifiedDataBusDashboard",
+   "appComponent": "pages/portal/UnifiedDataBusDashboard",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/data-completeness",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/DataCompletenessTracker",
+   "appComponent": "pages/portal/DataCompletenessTracker",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/data-flow-visualizer",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/DataFlowVisualizer",
+   "appComponent": "pages/portal/DataFlowVisualizer",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/dca-vs-lump-sum",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/DCAvsLumpSumCalc",
+   "appComponent": "pages/portal/DCAvsLumpSumCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/deal-closer",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/AIDealCloser",
+   "appComponent": "pages/portal/AIDealCloser",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/debt-payoff",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/DebtPayoffStrategy",
+   "appComponent": "pages/portal/DebtPayoffStrategy",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/debt-payoff-optimizer",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/DebtPayoffOptimizerCalc",
+   "appComponent": "pages/portal/DebtPayoffOptimizerCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/debt-recycling",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/DebtRecyclingStrategy",
+   "appComponent": "pages/portal/DebtRecyclingStrategy",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/deduction-optimizer",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/DeductionOptimizerCalc",
+   "appComponent": "pages/portal/DeductionOptimizerCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/deep-organism",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/DeepOrganismDashboard",
+   "appComponent": "pages/portal/DeepOrganismDashboard",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/deferred-comp",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/DeferredCompensationAnalyzer",
+   "appComponent": "pages/portal/DeferredCompensationAnalyzer",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/deferred-compensation",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/DeferredCompCalc",
+   "appComponent": "pages/hubs/DeferredCompHub",
+   "identicalPath": false,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/defined-benefit",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/DefinedBenefitPlanner",
+   "appComponent": "pages/portal/DefinedBenefitPlanner",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/depreciation-recapture",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/RealEstateDepreciationRecapture",
+   "appComponent": "pages/portal/RealEstateDepreciationRecapture",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/depreciation-tax-shield",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/DepreciationTaxShieldCalc",
+   "appComponent": "pages/portal/DepreciationTaxShieldCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/digital-estate",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/DigitalAssetEstatePlanner",
+   "appComponent": "pages/portal/DigitalAssetEstatePlanner",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/digital-estate-planner",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/DigitalEstatePlanner",
+   "appComponent": "pages/portal/DigitalEstatePlanner",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/direct-indexing",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/DirectIndexingOptimizer",
+   "appComponent": "pages/portal/DirectIndexingOptimizer",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/disability-gap",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/DisabilityGapAnalysis",
+   "appComponent": "pages/portal/DisabilityGapAnalysis",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/disability-insurance-needs",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/DisabilityInsuranceCalc",
+   "appComponent": "pages/portal/DisabilityInsuranceCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/divorce-financial",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/DivorceFinancialPlanner",
+   "appComponent": "pages/portal/DivorceFinancialPlanner",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/divorce-impact",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/DivorceFinancialImpact",
+   "appComponent": "pages/portal/DivorceFinancialImpact",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/divorce-settlement-enhanced",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/DivorceSettlementCalc",
+   "appComponent": "pages/portal/DivorceSettlementCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/drip-growth",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/DRIPGrowthCalc",
+   "appComponent": "pages/portal/DRIPGrowthCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/dst-analyzer",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/DSTAnalyzer",
+   "appComponent": "pages/portal/DSTAnalyzer",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/dynasty-trust",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/DynastyTrustArchitect",
+   "appComponent": "pages/portal/DynastyTrustArchitect",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/dynasty-trust-planner",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/DynastyTrustPlanner",
+   "appComponent": "pages/portal/DynastyTrustPlanner",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/education-529",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/Education529Planner",
+   "appComponent": "pages/portal/Education529Planner",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/elite-showdown",
+   "presentIn": "russell-capital",
+   "rcComponent": "pages/portal/EliteShowdown",
+   "appComponent": null,
+   "identicalPath": null,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/emergency-fund",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/EmergencyFundPlanner",
+   "appComponent": "pages/portal/EmergencyFundPlanner",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/emergency-fund-vs-iul",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/EmergencyFundVsIULCalc",
+   "appComponent": "pages/portal/EmergencyFundVsIULCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/employee-retention",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/EmployeeRetentionStrategy",
+   "appComponent": "pages/portal/EmployeeRetentionStrategy",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/employee-stock-options",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/EmployeeStockOptions",
+   "appComponent": "pages/portal/EmployeeStockOptions",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/engine-chaining",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/EngineChainingPipeline",
+   "appComponent": "pages/portal/EngineChainingPipeline",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/engine-fusion",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/EngineFusionLab",
+   "appComponent": "pages/portal/EngineFusionLab",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/entity-comparison",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/EntityComparisonCalc",
+   "appComponent": "pages/portal/EntityComparisonCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/entrainment-engine",
+   "presentIn": "russell-capital",
+   "rcComponent": "pages/portal/EntrainmentEngine",
+   "appComponent": null,
+   "identicalPath": null,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/equity-compensation",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/EquityCompensationHub",
+   "appComponent": "pages/portal/EquityCompensationHub",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/esop-analyzer",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/ESOPAnalyzer",
+   "appComponent": "pages/portal/ESOPAnalyzer",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/esop-buyout",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/ESOPLeveragedBuyoutPlanner",
+   "appComponent": "pages/portal/ESOPLeveragedBuyoutPlanner",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/esop-calculator",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/ESOPCalculator",
+   "appComponent": "pages/portal/ESOPCalculator",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/estate-freeze-comparison",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/EstateFreezeComparison",
+   "appComponent": "pages/portal/EstateFreezeComparison",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/estate-liquidity",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/EstateLiquidityCalc",
+   "appComponent": "pages/portal/EstateLiquidityCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/estate-planning-sim",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/EstatePlanningSimulator",
+   "appComponent": "pages/portal/EstatePlanningSimulator",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/estate-timeline",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/EstatePlanningTimeline",
+   "appComponent": "pages/portal/EstatePlanningTimeline",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/estate-wealth-transfer",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/EstateWealthTransfer",
+   "appComponent": "pages/portal/EstateWealthTransfer",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/executive-bonus",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/ExecutiveBonusPlan",
+   "appComponent": "pages/portal/ExecutiveBonusPlan",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/executive-bridge",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/ExecutiveRetirementBridge",
+   "appComponent": "pages/portal/ExecutiveRetirementBridge",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/executive-comp",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/ExecutiveCompOptimizer",
+   "appComponent": "pages/portal/ExecutiveCompOptimizer",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/expat-tax",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/ExpatTaxPlanner",
+   "appComponent": "pages/portal/ExpatTaxPlanner",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/family-bank",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/FamilyBankStrategy",
+   "appComponent": "pages/portal/FamilyBankStrategy",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/family-constitution",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/FamilyWealthConstitution",
+   "appComponent": "pages/portal/FamilyWealthConstitution",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/family-governance",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/FamilyGovernanceFramework",
+   "appComponent": "pages/portal/FamilyGovernanceFramework",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/family-limited-partnership",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/FamilyLimitedPartnership",
+   "appComponent": "pages/portal/FamilyLimitedPartnership",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/family-office",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/FamilyOfficeSimulator",
+   "appComponent": "pages/portal/FamilyOfficeSimulator",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/family-tree",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/FamilyTreeFinancial",
+   "appComponent": "pages/portal/FamilyTreeFinancial",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/fbar-fatca",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/FBARFATCACompliance",
+   "appComponent": "pages/portal/FBARFATCACompliance",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/fee-impact",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/FeeImpactCalc",
+   "appComponent": "pages/portal/FeeImpactCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/fiduciary-compliance",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/FIDOComplianceTracker",
+   "appComponent": "pages/portal/FIDOComplianceTracker",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/fiduciary-tracker",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/FiduciaryDutyTracker",
+   "appComponent": "pages/portal/FiduciaryDutyTracker",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/financial-dna",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/FinancialDNA",
+   "appComponent": "pages/portal/FinancialDNA",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/financial-freedom-number",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/FinancialFreedomCalc",
+   "appComponent": "pages/portal/FinancialFreedomCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/financial-health-score",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/FinancialHealthScoreCalc",
+   "appComponent": "pages/portal/FinancialHealthScoreCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/financial-independence",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/FinancialIndependenceCalc",
+   "appComponent": "pages/portal/FinancialIndependenceCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/financial-nerve-center",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/FinancialNerveCenter",
+   "appComponent": "pages/portal/FinancialNerveCenter",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/financial-plan-checklist",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/FinancialPlanChecklist",
+   "appComponent": "pages/portal/FinancialPlanChecklist",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/fire-calculator",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/FIRECalculator",
+   "appComponent": "pages/portal/FIRECalculator",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/flp-planner",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/FamilyLimitedPartnershipPlanner",
+   "appComponent": "pages/portal/FamilyLimitedPartnershipPlanner",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/fluency-academy",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/FinancialFluencyAcademy",
+   "appComponent": "pages/portal/FinancialFluencyAcademy",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/gain-loss-harvesting",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/TaxGainLossCalc",
+   "appComponent": "pages/portal/TaxGainLossCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/generational-wealth",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/GenerationalWealthSim",
+   "appComponent": "pages/portal/GenerationalWealthSim",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/generational-wealth-sim",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/GenerationalWealthSimulator",
+   "appComponent": "pages/portal/GenerationalWealthSimulator",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/grantor-trust",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/GrantorTrustStrategy",
+   "appComponent": "pages/portal/GrantorTrustStrategy",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/grat",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/GRATPlanner",
+   "appComponent": "pages/portal/GRATPlanner",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/grat-calculator",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/GRATCalculator",
+   "appComponent": "pages/hubs/GratPlannerHub",
+   "identicalPath": false,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/gst-trust",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/GSTTrustPlanner",
+   "appComponent": "pages/portal/GSTTrustPlanner",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/gstt-calculator",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/GSTTCalculator",
+   "appComponent": "pages/portal/GSTTCalculator",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/healthcare-cost",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/HealthcareCostProjector",
+   "appComponent": "pages/portal/HealthcareCostProjector",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/heartfire-legacy",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/HeartfireLegacy",
+   "appComponent": "pages/portal/HeartfireLegacy",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/holographic-mirage",
+   "presentIn": "russell-capital",
+   "rcComponent": "pages/portal/HolographicMirage",
+   "appComponent": null,
+   "identicalPath": null,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/home-affordability",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/HomeAffordabilityCalc",
+   "appComponent": "pages/portal/HomeAffordabilityCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/hsa-maximizer",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/HSAMaximizer",
+   "appComponent": "pages/portal/HSAMaximizer",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/hsa-triple-tax",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/HSATripleTaxCalc",
+   "appComponent": "pages/portal/HSATripleTaxCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/hub/1031-like-kind-exchange",
+   "presentIn": "russell-capital",
+   "rcComponent": "pages/hubs/H1031LikeKindExchangeHub",
+   "appComponent": null,
+   "identicalPath": null,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/hub/529-education",
+   "presentIn": "russell-capital",
+   "rcComponent": "pages/hubs/H529EducationHub",
+   "appComponent": null,
+   "identicalPath": null,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/hub/amt",
+   "presentIn": "russell-capital",
+   "rcComponent": "pages/hubs/AmtHub",
+   "appComponent": null,
+   "identicalPath": null,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/hub/annuity-comparison-review",
+   "presentIn": "russell-capital",
+   "rcComponent": "pages/hubs/AnnuityComparisonReviewHub",
+   "appComponent": null,
+   "identicalPath": null,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/hub/business-succession",
+   "presentIn": "russell-capital",
+   "rcComponent": "pages/hubs/BusinessSuccessionHub",
+   "appComponent": null,
+   "identicalPath": null,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/hub/business-valuation",
+   "presentIn": "russell-capital",
+   "rcComponent": "pages/hubs/BusinessValuationHub",
+   "appComponent": null,
+   "identicalPath": null,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/hub/buy-sell-funding",
+   "presentIn": "russell-capital",
+   "rcComponent": "pages/hubs/BuySellFundingHub",
+   "appComponent": null,
+   "identicalPath": null,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/hub/captive-insurance",
+   "presentIn": "russell-capital",
+   "rcComponent": "pages/hubs/CaptiveInsuranceHub",
+   "appComponent": null,
+   "identicalPath": null,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/hub/charitable-trust-crt-clt",
+   "presentIn": "russell-capital",
+   "rcComponent": "pages/hubs/CharitableTrustCrtCltHub",
+   "appComponent": null,
+   "identicalPath": null,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/hub/deferred-comp",
+   "presentIn": "russell-capital",
+   "rcComponent": "pages/hubs/DeferredCompHub",
+   "appComponent": null,
+   "identicalPath": null,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/hub/defined-benefit-cash-balance",
+   "presentIn": "russell-capital",
+   "rcComponent": "pages/hubs/DefinedBenefitCashBalanceHub",
+   "appComponent": null,
+   "identicalPath": null,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/hub/disability-protection",
+   "presentIn": "russell-capital",
+   "rcComponent": "pages/hubs/DisabilityProtectionHub",
+   "appComponent": null,
+   "identicalPath": null,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/hub/dynasty-multi-gen-transfer",
+   "presentIn": "russell-capital",
+   "rcComponent": "pages/hubs/DynastyMultiGenTransferHub",
+   "appComponent": null,
+   "identicalPath": null,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/hub/estate-documents",
+   "presentIn": "russell-capital",
+   "rcComponent": "pages/hubs/EstateDocumentsHub",
+   "appComponent": null,
+   "identicalPath": null,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/hub/estate-tax-liquidity",
+   "presentIn": "russell-capital",
+   "rcComponent": "pages/hubs/EstateTaxLiquidityHub",
+   "appComponent": null,
+   "identicalPath": null,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/hub/grat-planner",
+   "presentIn": "russell-capital",
+   "rcComponent": "pages/hubs/GratPlannerHub",
+   "appComponent": null,
+   "identicalPath": null,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/hub/guaranteed-lifetime-income",
+   "presentIn": "russell-capital",
+   "rcComponent": "pages/hubs/GuaranteedLifetimeIncomeHub",
+   "appComponent": null,
+   "identicalPath": null,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/hub/idgt-grantor-trust",
+   "presentIn": "russell-capital",
+   "rcComponent": "pages/hubs/IdgtGrantorTrustHub",
+   "appComponent": null,
+   "identicalPath": null,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/hub/ilit-planner",
+   "presentIn": "russell-capital",
+   "rcComponent": "pages/hubs/IlitPlannerHub",
+   "appComponent": null,
+   "identicalPath": null,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/hub/illustration-quoting",
+   "presentIn": "russell-capital",
+   "rcComponent": "pages/hubs/IllustrationQuotingHub",
+   "appComponent": null,
+   "identicalPath": null,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/hub/key-person-insurance",
+   "presentIn": "russell-capital",
+   "rcComponent": "pages/hubs/KeyPersonInsuranceHub",
+   "appComponent": null,
+   "identicalPath": null,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/hub/ltc-planning",
+   "presentIn": "russell-capital",
+   "rcComponent": "pages/hubs/LtcPlanningHub",
+   "appComponent": null,
+   "identicalPath": null,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/hub/medicare-irmaa",
+   "presentIn": "russell-capital",
+   "rcComponent": "pages/hubs/MedicareIrmaaHub",
+   "appComponent": null,
+   "identicalPath": null,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/hub/mortgage-killer",
+   "presentIn": "russell-capital",
+   "rcComponent": "pages/hubs/MortgageKillerHub",
+   "appComponent": null,
+   "identicalPath": null,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/hub/mortgage-refi-tools",
+   "presentIn": "russell-capital",
+   "rcComponent": "pages/hubs/MortgageRefiToolsHub",
+   "appComponent": null,
+   "identicalPath": null,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/hub/opportunity-zone",
+   "presentIn": "russell-capital",
+   "rcComponent": "pages/hubs/OpportunityZoneHub",
+   "appComponent": null,
+   "identicalPath": null,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/hub/pension-maximization",
+   "presentIn": "russell-capital",
+   "rcComponent": "pages/hubs/PensionMaximizationHub",
+   "appComponent": null,
+   "identicalPath": null,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/hub/policy-review",
+   "presentIn": "russell-capital",
+   "rcComponent": "pages/hubs/PolicyReviewHub",
+   "appComponent": null,
+   "identicalPath": null,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/hub/ppli-private-placement",
+   "presentIn": "russell-capital",
+   "rcComponent": "pages/hubs/PpliPrivatePlacementHub",
+   "appComponent": null,
+   "identicalPath": null,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/hub/premium-financing",
+   "presentIn": "russell-capital",
+   "rcComponent": "pages/hubs/PremiumFinancingHub",
+   "appComponent": null,
+   "identicalPath": null,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/hub/qprt-planner",
+   "presentIn": "russell-capital",
+   "rcComponent": "pages/hubs/QprtPlannerHub",
+   "appComponent": null,
+   "identicalPath": null,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/hub/retirement-income-projector",
+   "presentIn": "russell-capital",
+   "rcComponent": "pages/hubs/RetirementIncomeProjectorHub",
+   "appComponent": null,
+   "identicalPath": null,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/hub/roth-strategy",
+   "presentIn": "russell-capital",
+   "rcComponent": "pages/hubs/RothStrategyHub",
+   "appComponent": null,
+   "identicalPath": null,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/hub/sales-story-builder",
+   "presentIn": "russell-capital",
+   "rcComponent": "pages/hubs/SalesStoryBuilderHub",
+   "appComponent": null,
+   "identicalPath": null,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/hub/section-199-a-qbi",
+   "presentIn": "russell-capital",
+   "rcComponent": "pages/hubs/Section199AQbiHub",
+   "appComponent": null,
+   "identicalPath": null,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/hub/slat-spousal-trust",
+   "presentIn": "russell-capital",
+   "rcComponent": "pages/hubs/SlatSpousalTrustHub",
+   "appComponent": null,
+   "identicalPath": null,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/hub/slides-presentations",
+   "presentIn": "russell-capital",
+   "rcComponent": "pages/hubs/SlidesPresentationsHub",
+   "appComponent": null,
+   "identicalPath": null,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/hub/social-security-optimizer",
+   "presentIn": "russell-capital",
+   "rcComponent": "pages/hubs/SocialSecurityOptimizerHub",
+   "appComponent": null,
+   "identicalPath": null,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/hub/split-dollar",
+   "presentIn": "russell-capital",
+   "rcComponent": "pages/hubs/SplitDollarHub",
+   "appComponent": null,
+   "identicalPath": null,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/hub/student-loan",
+   "presentIn": "russell-capital",
+   "rcComponent": "pages/hubs/StudentLoanHub",
+   "appComponent": null,
+   "identicalPath": null,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/hub/tax-loss-harvesting",
+   "presentIn": "russell-capital",
+   "rcComponent": "pages/hubs/TaxLossHarvestingHub",
+   "appComponent": null,
+   "identicalPath": null,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/idgt-advanced",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/IDGTAdvancedModeler",
+   "appComponent": "pages/hubs/IdgtGrantorTrustHub",
+   "identicalPath": false,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/idgt-modeler",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/IDGTModeler",
+   "appComponent": "pages/portal/IDGTModeler",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/idr-comparison",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/IDRComparisonCalc",
+   "appComponent": "pages/hubs/StudentLoanHub",
+   "identicalPath": false,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/ilit-analyzer",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/ILITAnalyzer",
+   "appComponent": "pages/portal/ILITAnalyzer",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/ilit-calculator",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/ILITCalculator",
+   "appComponent": "pages/hubs/IlitPlannerHub",
+   "identicalPath": false,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/ilit-deep-dive",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/ILITDeepDive",
+   "appComponent": "pages/portal/ILITDeepDive",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/impact-scorecard",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/ImpactScorecard",
+   "appComponent": "pages/portal/ImpactScorecard",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/incentive-trust",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/IncentiveTrustDesigner",
+   "appComponent": "pages/portal/IncentiveTrustDesigner",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/income-floor",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/RetirementIncomeFloorPlanner",
+   "appComponent": "pages/portal/RetirementIncomeFloorPlanner",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/income-floor-strategy",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/RetirementIncomeFloorStrategy",
+   "appComponent": "pages/portal/RetirementIncomeFloorStrategy",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/income-protection",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/IncomeProtectionPlanner",
+   "appComponent": "pages/portal/IncomeProtectionPlanner",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/income-shifting",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/IncomeShiftingCalc",
+   "appComponent": "pages/portal/IncomeShiftingCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/infinity-banking",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/InfinityBankingConcept",
+   "appComponent": "pages/portal/InfinityBankingConcept",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/inflation-adjusted-income",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/InflationAdjustedCalc",
+   "appComponent": "pages/portal/InflationAdjustedCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/inflation-protection",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/InflationProtectionSuite",
+   "appComponent": "pages/portal/InflationProtectionSuite",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/inflation-returns",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/InflationAdjustedReturnCalculator",
+   "appComponent": "pages/portal/InflationAdjustedReturnCalculator",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/inherited-roth",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/InheritedRothPlanner",
+   "appComponent": "pages/portal/InheritedRothPlanner",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/innovation-dashboard",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/InnovationDashboard",
+   "appComponent": "pages/portal/InnovationDashboard",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/installment-sale",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/InstallmentSaleCalc",
+   "appComponent": "pages/portal/InstallmentSaleCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/installment-sale-strategy",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/InstallmentSale",
+   "appComponent": "pages/portal/InstallmentSale",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/insurance-coverage-command",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/InsuranceCoverageCommand",
+   "appComponent": "pages/portal/InsuranceCoverageCommand",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/insurance-gap",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/InsuranceGapAnalyzer",
+   "appComponent": "pages/portal/InsuranceGapAnalyzer",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/international-tax",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/InternationalTax",
+   "appComponent": "pages/portal/InternationalTax",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/international-trust",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/InternationalTrustPlanner",
+   "appComponent": "pages/portal/InternationalTrustPlanner",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/irc-reference",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/ComprehensiveIRCReferenceIndex",
+   "appComponent": "pages/portal/ComprehensiveIRCReferenceIndex",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/iul-compliance-engine",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/IULComplianceEngine",
+   "appComponent": "pages/portal/IULComplianceEngine",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/iul-max-funded",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/IULMaxFundedEngine",
+   "appComponent": "pages/portal/IULMaxFundedEngine",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/journey-navigator",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/ClientJourneyNavigator",
+   "appComponent": "pages/portal/ClientJourneyNavigator",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/key-person-insurance",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/KeyPersonInsuranceCalc",
+   "appComponent": "pages/hubs/KeyPersonInsuranceHub",
+   "identicalPath": false,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/lab",
+   "presentIn": "russell-capital-app",
+   "rcComponent": null,
+   "appComponent": "pages/LabLayer2",
+   "identicalPath": null,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/lease-vs-buy",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/LeaseVsBuyCalc",
+   "appComponent": "pages/portal/LeaseVsBuyCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/legacy-vault",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/LegacyVault",
+   "appComponent": "pages/portal/LegacyVault",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/life-insurance-needs",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/LifeInsuranceNeedsCalc",
+   "appComponent": "pages/portal/LifeInsuranceNeedsCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/life-settlement",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/LifeSettlementAnalyzer",
+   "appComponent": "pages/portal/LifeSettlementAnalyzer",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/lifestyle-inflation",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/LifestyleInflationCalc",
+   "appComponent": "pages/portal/LifestyleInflationCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/like-kind-exchange",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/LikeKindExchangeCalc",
+   "appComponent": "pages/portal/LikeKindExchangeCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/living-benefits",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/LivingBenefitsProbability",
+   "appComponent": "pages/hubs/LtcPlanningHub",
+   "identicalPath": false,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/living-risk-profile",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/LivingRiskProfile",
+   "appComponent": "pages/portal/LivingRiskProfile",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/long-term-care-hybrid",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/LongTermCareHybrid",
+   "appComponent": "pages/portal/LongTermCareHybrid",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/longitudinal-risk",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/LongitudinalRiskOptimizer",
+   "appComponent": "pages/portal/LongitudinalRiskOptimizer",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/ltc-cost",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/LTCCostCalc",
+   "appComponent": "pages/portal/LTCCostCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/marginal-tax-rate",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/MarginalTaxRateCalc",
+   "appComponent": "pages/portal/MarginalTaxRateCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/mastery-nexus",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/MasteryNexus",
+   "appComponent": "pages/portal/MasteryNexus",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/medicaid-planning",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/MedicaidPlanning",
+   "appComponent": "pages/portal/MedicaidPlanning",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/medicare-irmaa-calc",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/MedicareIRMAACalc",
+   "appComponent": "pages/portal/MedicareIRMAACalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/medicare-part-d",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/MedicarePartDPlanner",
+   "appComponent": "pages/portal/MedicarePartDPlanner",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/mega-backdoor-roth",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/MegaBackdoorRothCalc",
+   "appComponent": "pages/portal/MegaBackdoorRothCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/mesh-health",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/MeshHealthMonitor",
+   "appComponent": "pages/portal/MeshHealthMonitor",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/millionaire-calculator",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/MillionaireCalc",
+   "appComponent": "pages/portal/MillionaireCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/moat-fortress",
+   "presentIn": "russell-capital",
+   "rcComponent": "pages/portal/MoatFortress",
+   "appComponent": null,
+   "identicalPath": null,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/multi-carrier-iul",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/MultiCarrierIULOptimizer",
+   "appComponent": "pages/portal/MultiCarrierIULOptimizer",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/multi-currency",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/MultiCurrencyWealth",
+   "appComponent": "pages/portal/MultiCurrencyWealth",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/multi-gen-roth",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/MultiGenerationalRothStrategy",
+   "appComponent": "pages/portal/MultiGenerationalRothStrategy",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/multi-generational-wealth",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/MultiGenerationalWealthEngine",
+   "appComponent": "pages/portal/MultiGenerationalWealthEngine",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/muni-bond-ladder",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/MuniBondLadderCalc",
+   "appComponent": "pages/portal/MuniBondLadderCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/mutual-carriers",
+   "presentIn": "russell-capital",
+   "rcComponent": "pages/portal/MutualCarriers",
+   "appComponent": null,
+   "identicalPath": null,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/nav-placeholder",
+   "presentIn": "russell-capital-app",
+   "rcComponent": null,
+   "appComponent": "pages/portal/NavPlaceholder",
+   "identicalPath": null,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/net-worth-tracker",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/NetWorthTrackerCalc",
+   "appComponent": "pages/portal/NetWorthTrackerCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/nii-surtax",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/NIISurtaxOptimizer",
+   "appComponent": "pages/portal/NIISurtaxOptimizer",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/nua-calculator",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/NUACalculator",
+   "appComponent": "pages/portal/NUACalculator",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/nua-planner",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/NetUnrealizedAppreciationPlanner",
+   "appComponent": "pages/portal/NetUnrealizedAppreciationPlanner",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/nua-strategy",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/NUAStrategy",
+   "appComponent": "pages/portal/NUAStrategy",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/oil-gas-strategy",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/OilGasTaxStrategy",
+   "appComponent": "pages/portal/OilGasTaxStrategy",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/onboarding-quiz",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/OnboardingQuiz",
+   "appComponent": "pages/portal/OnboardingQuiz",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/onboarding-workflow",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/ClientOnboardingWorkflow",
+   "appComponent": "pages/portal/ClientOnboardingWorkflow",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/opportunity-zone",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/OpportunityZoneCalc",
+   "appComponent": "pages/hubs/OpportunityZoneHub",
+   "identicalPath": false,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/options-profit-loss",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/OptionsProfitCalc",
+   "appComponent": "pages/portal/OptionsProfitCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/organism-control",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/OrganismControlCenter",
+   "appComponent": "pages/portal/OrganismControlCenter",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/organism-dashboard",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/OrganismDashboard",
+   "appComponent": "pages/portal/OrganismDashboard",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/organism-deep-provider",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/OrganismDeepProvider",
+   "appComponent": "pages/portal/OrganismDeepProvider",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/organism-health",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/OrganismHealthReport",
+   "appComponent": "pages/portal/OrganismHealthReport",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/overhead-expense",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/OverheadExpenseCalc",
+   "appComponent": "pages/hubs/DisabilityProtectionHub",
+   "identicalPath": false,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/own-occ-disability",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/OwnOccDisabilityCalc",
+   "appComponent": "pages/portal/OwnOccDisabilityCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/pavlovian-engagement",
+   "presentIn": "russell-capital",
+   "rcComponent": "pages/portal/GamifiedPavlovianEngagement",
+   "appComponent": null,
+   "identicalPath": null,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/pe-irr-calculator",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/PrivateEquityIRRCalc",
+   "appComponent": "pages/portal/PrivateEquityIRRCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/pe-secondary-market",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/PrivateEquitySecondaryMarket",
+   "appComponent": "pages/portal/PrivateEquitySecondaryMarket",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/pe-tax",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/PrivateEquityTaxPlanner",
+   "appComponent": "pages/portal/PrivateEquityTaxPlanner",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/peer-benchmarking",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/PeerBenchmarking",
+   "appComponent": "pages/portal/PeerBenchmarking",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/peer-intel",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/PeerBenchmarkingIntel",
+   "appComponent": "pages/portal/PeerBenchmarkingIntel",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/peer-network",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/PeerTrustNetwork",
+   "appComponent": "pages/portal/PeerTrustNetwork",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/pension-max",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/PensionMaxCalc",
+   "appComponent": "pages/portal/PensionMaxCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/pension-max-engine",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/PensionMaximizationEngine",
+   "appComponent": "pages/portal/PensionMaximizationEngine",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/pension-maximization",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/PensionMaximization",
+   "appComponent": "pages/portal/PensionMaximization",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/pension-vs-lump-sum",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/PensionVsLumpSumCalc",
+   "appComponent": "pages/hubs/PensionMaximizationHub",
+   "identicalPath": false,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/persona-hub",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/PersonaHub",
+   "appComponent": "pages/portal/PersonaHub",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/phantom-stock",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/PhantomStockPlanner",
+   "appComponent": "pages/portal/PhantomStockPlanner",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/philanthropy",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/PhilanthropyImpactDashboard",
+   "appComponent": "pages/portal/PhilanthropyImpactDashboard",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/physician-blueprint",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/PhysicianFinancialBlueprint",
+   "appComponent": "pages/portal/PhysicianFinancialBlueprint",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/physician-contract",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/PhysicianContractCalc",
+   "appComponent": "pages/portal/PhysicianContractCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/physician-forum",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/PhysicianForum",
+   "appComponent": "pages/portal/PhysicianForum",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/physician-mortgage",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/PhysicianMortgageAnalyzer",
+   "appComponent": "pages/portal/PhysicianMortgageAnalyzer",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/physician-retirement",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/PhysicianRetirementBlueprint",
+   "appComponent": "pages/portal/PhysicianRetirementBlueprint",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/physician-vitals",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/PhysicianVitalsDashboard",
+   "appComponent": "pages/portal/PhysicianVitalsDashboard",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/plastic-to-cash",
+   "presentIn": "russell-capital",
+   "rcComponent": "pages/portal/PlasticToCash",
+   "appComponent": null,
+   "identicalPath": null,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/policy-replacement",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/PolicyReplacementAnalyzer",
+   "appComponent": "pages/portal/PolicyReplacementAnalyzer",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/portfolio-risk-return",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/PortfolioRiskCalc",
+   "appComponent": "pages/portal/PortfolioRiskCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/post-mortem-tax",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/PostMortemTaxPlanner",
+   "appComponent": "pages/portal/PostMortemTaxPlanner",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/ppli",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/PrivatePlacementLifeInsurance",
+   "appComponent": "pages/hubs/PpliPrivatePlacementHub",
+   "identicalPath": false,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/ppli-modeler",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/PPLIModeler",
+   "appComponent": "pages/portal/PPLIModeler",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/ppva",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/PrivatePlacementAnnuity",
+   "appComponent": "pages/portal/PrivatePlacementAnnuity",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/practice-sync",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/PracticeWealthSync",
+   "appComponent": "pages/portal/PracticeWealthSync",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/practice-valuation",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/PracticeValuation",
+   "appComponent": "pages/portal/PracticeValuation",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/predictive-arena",
+   "presentIn": "russell-capital",
+   "rcComponent": "pages/portal/PredictiveInsightArena",
+   "appComponent": null,
+   "identicalPath": null,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/premium-financing-arbitrage",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/PremiumFinancingArbitrage",
+   "appComponent": "pages/portal/PremiumFinancingArbitrage",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/premium-financing-calc",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/PremiumFinancingCalculator",
+   "appComponent": "pages/portal/PremiumFinancingCalculator",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/presentation-vault",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/PresentationVault",
+   "appComponent": "pages/portal/PresentationVault",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/private-credit",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/PrivateCredit",
+   "appComponent": "pages/portal/PrivateCredit",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/private-foundation",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/PrivateFoundationPlanner",
+   "appComponent": "pages/portal/PrivateFoundationPlanner",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/private-placement",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/PrivatePlacement",
+   "appComponent": "pages/portal/PrivatePlacement",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/private-reit",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/PrivateREITAnalyzer",
+   "appComponent": "pages/portal/PrivateREITAnalyzer",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/projection-theater",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/WealthProjectionTheater",
+   "appComponent": "pages/portal/WealthProjectionTheater",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/property-tax-appeal",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/PropertyTaxAppealCalc",
+   "appComponent": "pages/portal/PropertyTaxAppealCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/prospect-qualification",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/ProspectQualification",
+   "appComponent": "pages/portal/ProspectQualification",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/pslf-calculator",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/PSLFCalculator",
+   "appComponent": "pages/portal/PSLFCalculator",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/qbi-calculator",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/QBICalculator",
+   "appComponent": "pages/hubs/Section199AQbiHub",
+   "identicalPath": false,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/qlac-calculator",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/QLACCalculator",
+   "appComponent": "pages/portal/QLACCalculator",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/qprt",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/QPRTPlanner",
+   "appComponent": "pages/portal/QPRTPlanner",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/qprt-advanced",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/QPRTAdvancedPlanner",
+   "appComponent": "pages/portal/QPRTAdvancedPlanner",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/qprt-calculator",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/QPRTCalculator",
+   "appComponent": "pages/hubs/QprtPlannerHub",
+   "identicalPath": false,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/qsbs",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/QualifiedSmallBusinessStock",
+   "appComponent": "pages/portal/QualifiedSmallBusinessStock",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/qsbs-exclusion",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/QSBSExclusionCalc",
+   "appComponent": "pages/portal/QSBSExclusionCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/qualified-opportunity-fund",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/QualifiedOpportunityFund",
+   "appComponent": "pages/portal/QualifiedOpportunityFund",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/qualified-plan-maximizer",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/QualifiedPlanMaximizer",
+   "appComponent": "pages/portal/QualifiedPlanMaximizer",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/re-stacking",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/RealEstateStackingStrategy",
+   "appComponent": "pages/portal/RealEstateStackingStrategy",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/real-estate-portfolio",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/RealEstatePortfolioManager",
+   "appComponent": "pages/portal/RealEstatePortfolioManager",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/real-estate-syndication",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/RealEstatesyndicationAnalyzer",
+   "appComponent": "pages/portal/RealEstatesyndicationAnalyzer",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/refinance-break-even",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/RefinanceBreakEvenCalc",
+   "appComponent": "pages/portal/RefinanceBreakEvenCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/rental-property-roi",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/RentalPropertyROICalc",
+   "appComponent": "pages/portal/RentalPropertyROICalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/report-builder",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/ClientReportBuilder",
+   "appComponent": "pages/portal/ClientReportBuilder",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/residency-to-attending",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/ResidencyToAttendingCalc",
+   "appComponent": "pages/portal/ResidencyToAttendingCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/retirement-advantage",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/RetirementAdvantage",
+   "appComponent": "pages/portal/RetirementAdvantage",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/retirement-budget",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/RetirementBudgetCalc",
+   "appComponent": "pages/portal/RetirementBudgetCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/retirement-distributions",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/RetirementPlanDistributionPlanner",
+   "appComponent": "pages/portal/RetirementPlanDistributionPlanner",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/retirement-gap",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/RetirementGapInflation",
+   "appComponent": "pages/portal/RetirementGapInflation",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/retirement-healthcare",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/RetirementHealthcareCalc",
+   "appComponent": "pages/portal/RetirementHealthcareCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/retirement-income-proj",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/RetirementIncomeProjector",
+   "appComponent": "pages/portal/RetirementIncomeProjector",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/retirement-readiness",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/RetirementReadinessCenter",
+   "appComponent": "pages/portal/RetirementReadinessCenter",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/reveal-demo",
+   "presentIn": "russell-capital-app",
+   "rcComponent": null,
+   "appComponent": "pages/ResultRevealDemo",
+   "identicalPath": null,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/reverse-mortgage",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/ReverseMortgageCalc",
+   "appComponent": "pages/portal/ReverseMortgageCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/risk-compliance",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/RiskComplianceDashboard",
+   "appComponent": "pages/portal/RiskComplianceDashboard",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/rmd-calculator",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/RMDCalculator",
+   "appComponent": "pages/portal/RMDCalculator",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/roth-conversion-analyzer",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/RothConversionAnalyzer",
+   "appComponent": "pages/portal/RothConversionAnalyzer",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/roth-vs-traditional",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/RothVsTraditionalCalc",
+   "appComponent": "pages/portal/RothVsTraditionalCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/rsu-tax",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/RSUTaxCalc",
+   "appComponent": "pages/portal/RSUTaxCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/rsu-tax-planning",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/RSUTaxPlanning",
+   "appComponent": "pages/portal/RSUTaxPlanning",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/sabbatical-planner",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/SabbaticalPlannerCalc",
+   "appComponent": "pages/portal/SabbaticalPlannerCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/safe-withdrawal-rate",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/SafeWithdrawalCalc",
+   "appComponent": "pages/portal/SafeWithdrawalCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/savings-rate-impact",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/SavingsRateCalc",
+   "appComponent": "pages/portal/SavingsRateCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/section-1202",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/Section1202Planner",
+   "appComponent": "pages/portal/Section1202Planner",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/section-199a",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/Section199AOptimizer",
+   "appComponent": "pages/portal/Section199AOptimizer",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/section-2701",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/Section2701ValuationPlanner",
+   "appComponent": "pages/portal/Section2701ValuationPlanner",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/sector-rotation",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/SectorRotationCalc",
+   "appComponent": "pages/portal/SectorRotationCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/self-employment-tax",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/SelfEmploymentTaxCalc",
+   "appComponent": "pages/portal/SelfEmploymentTaxCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/sequence-of-returns",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/SequenceOfReturnsRisk",
+   "appComponent": "pages/portal/SequenceOfReturnsRisk",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/serp-analyzer",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/SERPAnalyzer",
+   "appComponent": "pages/portal/SERPAnalyzer",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/severance-calculator",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/SeveranceCalc",
+   "appComponent": "pages/portal/SeveranceCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/short-term-rental",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/ShortTermRentalStrategy",
+   "appComponent": "pages/portal/ShortTermRentalStrategy",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/slat-deep-dive",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/SLATDeepDive",
+   "appComponent": "pages/hubs/SlatSpousalTrustHub",
+   "identicalPath": false,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/slat-planner",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/SLATPlanner",
+   "appComponent": "pages/portal/SLATPlanner",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/smart-routing",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/SmartRoutingDashboard",
+   "appComponent": "pages/portal/SmartRoutingDashboard",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/social-security-maximizer",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/SocialSecurityMaximizer",
+   "appComponent": "pages/portal/SocialSecurityMaximizer",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/special-needs",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/SpecialNeedsPlanner",
+   "appComponent": "pages/portal/SpecialNeedsPlanner",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/special-needs-trust",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/SpecialNeedsTrustCalc",
+   "appComponent": "pages/portal/SpecialNeedsTrustCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/spend-vs-invest",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/SpendVsInvestCalc",
+   "appComponent": "pages/portal/SpendVsInvestCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/spending-guardrails",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/RetirementSpendingGuardrails",
+   "appComponent": "pages/portal/RetirementSpendingGuardrails",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/split-dollar",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/SplitDollarLifeInsurance",
+   "appComponent": "pages/hubs/SplitDollarHub",
+   "identicalPath": false,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/split-dollar-life",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/SplitDollarLife",
+   "appComponent": "pages/portal/SplitDollarLife",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/spousal-lifetime-access",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/SpousalLifetimeAccess",
+   "appComponent": "pages/portal/SpousalLifetimeAccess",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/spousal-ss-coordination",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/SpousalSSCalc",
+   "appComponent": "pages/portal/SpousalSSCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/ss-bridge",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/SocialSecurityBridge",
+   "appComponent": "pages/hubs/SocialSecurityOptimizerHub",
+   "identicalPath": false,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/ss-bridge-strategy",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/SocialSecurityBridgeStrategy",
+   "appComponent": "pages/portal/SocialSecurityBridgeStrategy",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/state-tax-arbitrage",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/StateTaxArbitrageCalc",
+   "appComponent": "pages/portal/StateTaxArbitrageCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/state-tax-migration",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/StateTaxMigration",
+   "appComponent": "pages/portal/StateTaxMigration",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/state-trust-planning",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/GraniteStateTrustPlanner",
+   "appComponent": "pages/portal/GraniteStateTrustPlanner",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/str-tax-strategy",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/ShortTermRentalTaxStrategy",
+   "appComponent": "pages/portal/ShortTermRentalTaxStrategy",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/strategy-comparison",
+   "presentIn": "russell-capital",
+   "rcComponent": "pages/portal/StrategyComparisonArena",
+   "appComponent": null,
+   "identicalPath": null,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/strategy-synergy",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/StrategySynergyHub",
+   "appComponent": "pages/portal/StrategySynergyHub",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/stress-test",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/PortfolioStressTest",
+   "appComponent": "pages/portal/PortfolioStressTest",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/stretch-ira",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/StretchIRAStrategy",
+   "appComponent": "pages/portal/StretchIRAStrategy",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/structured-notes",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/StructuredNoteAnalyzer",
+   "appComponent": "pages/portal/StructuredNoteAnalyzer",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/structured-settlement",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/StructuredSettlementPlanner",
+   "appComponent": "pages/portal/StructuredSettlementPlanner",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/student-loan-optimizer",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/StudentLoanOptimizer",
+   "appComponent": "pages/portal/StudentLoanOptimizer",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/student-loan-vs-invest",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/StudentLoanVsInvestCalc",
+   "appComponent": "pages/portal/StudentLoanVsInvestCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/succession-engine",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/SuccessionPlanningEngine",
+   "appComponent": "pages/portal/SuccessionPlanningEngine",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/succession-plan",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/SuccessionPlanCalc",
+   "appComponent": "pages/portal/SuccessionPlanCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/succession-valuation",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/SuccessionValuation",
+   "appComponent": "pages/portal/SuccessionValuation",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/survivor-benefits",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/SurvivorBenefitPlanner",
+   "appComponent": "pages/portal/SurvivorBenefitPlanner",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/syndication-deal",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/SyndicationDealAnalyzer",
+   "appComponent": "pages/portal/SyndicationDealAnalyzer",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/tax-alpha-scorecard",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/TaxAlphaScorecard",
+   "appComponent": "pages/portal/TaxAlphaScorecard",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/tax-bracket-navigator",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/TaxBracketNavigator",
+   "appComponent": "pages/portal/TaxBracketNavigator",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/tax-code-simulator",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/TaxCodeChangeSimulator",
+   "appComponent": "pages/portal/TaxCodeChangeSimulator",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/tax-credits",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/TaxCreditOptimizer",
+   "appComponent": "pages/portal/TaxCreditOptimizer",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/tax-deferred-exchange",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/TaxDeferredExchangeTimeline",
+   "appComponent": "pages/hubs/H1031LikeKindExchangeHub",
+   "identicalPath": false,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/tax-equivalent-yield",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/TaxEquivalentYieldCalc",
+   "appComponent": "pages/portal/TaxEquivalentYieldCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/tax-loss-harvest-calc",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/TaxLossHarvestCalc",
+   "appComponent": "pages/portal/TaxLossHarvestCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/tax-optimization-command",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/TaxOptimizationCommand",
+   "appComponent": "pages/portal/TaxOptimizationCommand",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/tax-optimizer",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/TaxStrategyOptimizer",
+   "appComponent": "pages/portal/TaxStrategyOptimizer",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/tax-projection",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/TaxProjectionEngine",
+   "appComponent": "pages/portal/TaxProjectionEngine",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/taxable-account",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/TaxableAccountOptimizer",
+   "appComponent": "pages/portal/TaxableAccountOptimizer",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/taxable-estate",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/TaxableEstateCalculator",
+   "appComponent": "pages/portal/TaxableEstateCalculator",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/tenant-in-common",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/TenantInCommonAnalyzer",
+   "appComponent": "pages/portal/TenantInCommonAnalyzer",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/term-vs-whole-vs-iul",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/TermVsWholeVsIULCalc",
+   "appComponent": "pages/portal/TermVsWholeVsIULCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/tool-explorer",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/ToolExplorer",
+   "appComponent": "pages/portal/ToolExplorer",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/trust-comparison-matrix",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/TrustComparisonMatrix",
+   "appComponent": "pages/portal/TrustComparisonMatrix",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/trust-decanting",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/TrustDecantingPlanner",
+   "appComponent": "pages/portal/TrustDecantingPlanner",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/trust-funding",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/TrustFundingChecklist",
+   "appComponent": "pages/portal/TrustFundingChecklist",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/umbrella-insurance",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/UmbrellaInsuranceCalc",
+   "appComponent": "pages/portal/UmbrellaInsuranceCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/usage-analytics",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/UsageAnalyticsDashboard",
+   "appComponent": "pages/portal/UsageAnalyticsDashboard",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/vacation-rental",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/VacationRentalCalc",
+   "appComponent": "pages/portal/VacationRentalCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/variable-annuity",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/VariableAnnuityAnalyzer",
+   "appComponent": "pages/portal/VariableAnnuityAnalyzer",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/volatility-harvesting",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/VolatilityHarvestingEngine",
+   "appComponent": "pages/portal/VolatilityHarvestingEngine",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/w4-optimizer",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/W4OptimizerCalc",
+   "appComponent": "pages/portal/W4OptimizerCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/wealth-accumulation",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/WealthAccumulationSimulator",
+   "appComponent": "pages/portal/WealthAccumulationSimulator",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/wealth-canvas",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/DimensionalWealthCanvas",
+   "appComponent": "pages/portal/DimensionalWealthCanvas",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/wealth-dashboard",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/WealthDashboardSummary",
+   "appComponent": "pages/portal/WealthDashboardSummary",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/wealth-erosion",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/WealthErosionTracker",
+   "appComponent": "pages/portal/WealthErosionTracker",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/wealth-odyssey",
+   "presentIn": "russell-capital",
+   "rcComponent": "pages/portal/WealthOdyssey",
+   "appComponent": null,
+   "identicalPath": null,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/wealth-rituals",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/WealthRituals",
+   "appComponent": "pages/portal/WealthRituals",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/wealth-timeline",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/WealthAccumulationTimeline",
+   "appComponent": "pages/portal/WealthAccumulationTimeline",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/wealth-transfer-comparison",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/WealthTransferVehicleComparison",
+   "appComponent": "pages/portal/WealthTransferVehicleComparison",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/wealth-transfer-scoreboard",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/WealthTransferScoreboard",
+   "appComponent": "pages/portal/WealthTransferScoreboard",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/wealth-transfer-scorecard",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/WealthTransferScorecard",
+   "appComponent": "pages/portal/WealthTransferScorecard",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/wealth-transfer-timeline",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/WealthTransferTimeline",
+   "appComponent": "pages/portal/WealthTransferTimeline",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/wealth-warrior",
+   "presentIn": "russell-capital",
+   "rcComponent": "pages/portal/WealthWarriorChallenges",
+   "appComponent": null,
+   "identicalPath": null,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/whole-life-dividend",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/WholeLifeDividendEngine",
+   "appComponent": "pages/portal/WholeLifeDividendEngine",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/windfall-management",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/WindfallCalc",
+   "appComponent": "pages/portal/WindfallCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/withdrawal-rate",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/WithdrawalRateOptimizer",
+   "appComponent": "pages/portal/WithdrawalRateOptimizer",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/withdrawal-sequencer",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/TaxEfficientWithdrawalSequencer",
+   "appComponent": "pages/portal/TaxEfficientWithdrawalSequencer",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  },
+  {
+   "route": "/portal/zero-based-budget",
+   "presentIn": "both",
+   "rcComponent": "pages/portal/ZeroBasedBudgetCalc",
+   "appComponent": "pages/portal/ZeroBasedBudgetCalc",
+   "identicalPath": true,
+   "decision": "UNDECIDED",
+   "phase": null
+  }
+ ],
+ "collisions": [
+  {
+   "route": "/",
+   "liveComponent": "FrontDoor",
+   "rcComponent": "pages/Landing",
+   "appComponent": "pages/Landing",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/404",
+   "liveComponent": "pages/NotFound",
+   "rcComponent": "pages/NotFound",
+   "appComponent": "pages/NotFound",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/administrator",
+   "liveComponent": "pages/AdministratorPortal",
+   "rcComponent": "pages/AdministratorPortal",
+   "appComponent": "pages/AdministratorPortal",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/client-portal/:token",
+   "liveComponent": null,
+   "rcComponent": null,
+   "appComponent": null,
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/executive",
+   "liveComponent": "pages/ExecutiveEntrance",
+   "rcComponent": "pages/ExecutiveEntrance",
+   "appComponent": "pages/ExecutiveEntrance",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/forgot-password",
+   "liveComponent": "pages/ManagedAuthLegacy",
+   "rcComponent": "pages/ForgotPassword",
+   "appComponent": "pages/ForgotPassword",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/invite",
+   "liveComponent": "pages/AcceptInvite",
+   "rcComponent": "pages/AcceptInvite",
+   "appComponent": "pages/AcceptInvite",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/login",
+   "liveComponent": "pages/Login",
+   "rcComponent": "pages/Login",
+   "appComponent": "pages/Login",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/onboarding",
+   "liveComponent": "pages/portal/Onboarding",
+   "rcComponent": "pages/portal/Onboarding",
+   "appComponent": "pages/portal/Onboarding",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal",
+   "liveComponent": "pages/portal/InfiniteScroll",
+   "rcComponent": "pages/portal/InfiniteScroll",
+   "appComponent": "pages/portal/Dashboard",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/admin",
+   "liveComponent": "pages/portal/EnterpriseAdmin",
+   "rcComponent": "pages/portal/EnterpriseAdmin",
+   "appComponent": "pages/portal/EnterpriseAdmin",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/advanced-reporting",
+   "liveComponent": "pages/portal/AdvancedReporting",
+   "rcComponent": "pages/portal/AdvancedReporting",
+   "appComponent": "pages/portal/AdvancedReporting",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/advisor-chat",
+   "liveComponent": "pages/portal/AdvisorChat",
+   "rcComponent": "pages/portal/AdvisorChat",
+   "appComponent": "pages/portal/AdvisorChat",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/advisor-directory",
+   "liveComponent": "pages/portal/AdvisorDirectory",
+   "rcComponent": "pages/portal/AdvisorDirectory",
+   "appComponent": "pages/portal/AdvisorDirectory",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/advisor-income-calculator",
+   "liveComponent": "pages/portal/AdvisorIncomeCalculator",
+   "rcComponent": "pages/portal/AdvisorIncomeCalculator",
+   "appComponent": "pages/portal/AdvisorIncomeCalculator",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/advisor-training",
+   "liveComponent": "pages/portal/AdvisorTraining",
+   "rcComponent": "pages/portal/AdvisorTraining",
+   "appComponent": "pages/portal/AdvisorTraining",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/advisory-summary",
+   "liveComponent": "pages/portal/AdvisorySummary",
+   "rcComponent": "pages/portal/AdvisorySummary",
+   "appComponent": "pages/portal/AdvisorySummary",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/affiliate-links",
+   "liveComponent": "pages/portal/AffiliateLinkManager",
+   "rcComponent": "pages/portal/AffiliateLinkManager",
+   "appComponent": "pages/portal/AffiliateLinkManager",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/agency-tutorial",
+   "liveComponent": "pages/portal/AgencyTutorial",
+   "rcComponent": "pages/portal/AgencyTutorial",
+   "appComponent": "pages/portal/AgencyTutorial",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/agent-tutorial",
+   "liveComponent": "pages/portal/IndividualAgentTutorial",
+   "rcComponent": "pages/portal/IndividualAgentTutorial",
+   "appComponent": "pages/portal/IndividualAgentTutorial",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/ai",
+   "liveComponent": "pages/portal/AiAssist",
+   "rcComponent": "pages/portal/AiAssist",
+   "appComponent": "pages/portal/AiAssist",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/ai-assist",
+   "liveComponent": "pages/portal/AiAssist",
+   "rcComponent": "pages/portal/AiAssist",
+   "appComponent": "pages/portal/AiAssist",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/ai-brain-hub",
+   "liveComponent": "pages/AIBrainHubPage",
+   "rcComponent": "pages/AIBrainHubPage",
+   "appComponent": "pages/AIBrainHubPage",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/ai-meeting-notes",
+   "liveComponent": "pages/portal/AIMeetingNotes",
+   "rcComponent": "pages/portal/AIMeetingNotes",
+   "appComponent": "pages/portal/AIMeetingNotes",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/ai-policy-review",
+   "liveComponent": "pages/portal/AIPolicyReviewGap",
+   "rcComponent": "pages/portal/AIPolicyReviewGap",
+   "appComponent": "pages/portal/AIPolicyReviewGap",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/ai-recommender",
+   "liveComponent": "pages/portal/AiStrategyRecommender",
+   "rcComponent": "pages/portal/AiStrategyRecommender",
+   "appComponent": "pages/portal/AiStrategyRecommender",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/ai-slides",
+   "liveComponent": "pages/portal/AISlideGenerator",
+   "rcComponent": "pages/portal/AISlideGenerator",
+   "appComponent": "pages/portal/AISlideGenerator",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/annuity-accumulation-db",
+   "liveComponent": "pages/portal/AnnuityAccumulationDB",
+   "rcComponent": "pages/portal/AnnuityAccumulationDB",
+   "appComponent": "pages/portal/AnnuityAccumulationDB",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/annuity-memory",
+   "liveComponent": "pages/portal/AnnuityMemory",
+   "rcComponent": "pages/portal/AnnuityMemory",
+   "appComponent": "pages/portal/AnnuityMemory",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/arena",
+   "liveComponent": "pages/portal/Arena",
+   "rcComponent": "pages/portal/Arena",
+   "appComponent": null,
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/athene-guaranteed-income",
+   "liveComponent": "pages/portal/AtheneGuaranteedIncome",
+   "rcComponent": "pages/portal/AtheneGuaranteedIncome",
+   "appComponent": "pages/portal/AtheneGuaranteedIncome",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/athene-pe-plus15",
+   "liveComponent": "pages/portal/AthenePEPlus15",
+   "rcComponent": "pages/portal/AthenePEPlus15",
+   "appComponent": "pages/portal/AthenePEPlus15",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/audit-timeline",
+   "liveComponent": "pages/portal/AuditTimeline",
+   "rcComponent": "pages/portal/AuditTimeline",
+   "appComponent": "pages/portal/AuditTimeline",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/avatar-twins",
+   "liveComponent": "pages/portal/AvatarTwins",
+   "rcComponent": "pages/portal/AvatarTwins",
+   "appComponent": "pages/portal/AvatarTwins",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/axonic-sp500",
+   "liveComponent": "pages/portal/AxonicSP500",
+   "rcComponent": "pages/portal/AxonicSP500",
+   "appComponent": "pages/portal/AxonicSP500",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/batch-illustration",
+   "liveComponent": "pages/portal/BatchIllustration",
+   "rcComponent": "pages/portal/BatchIllustration",
+   "appComponent": "pages/portal/BatchIllustration",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/batch-slides",
+   "liveComponent": "pages/portal/BatchSlides",
+   "rcComponent": "pages/portal/BatchSlides",
+   "appComponent": "pages/portal/BatchSlides",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/beneficiary-optimization",
+   "liveComponent": "pages/portal/BeneficiaryOptimization",
+   "rcComponent": "pages/portal/BeneficiaryOptimization",
+   "appComponent": "pages/portal/BeneficiaryOptimization",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/billing",
+   "liveComponent": "pages/portal/Billing",
+   "rcComponent": "pages/portal/Billing",
+   "appComponent": "pages/portal/Billing",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/black-mirror",
+   "liveComponent": "pages/portal/BlackMirror",
+   "rcComponent": "pages/portal/BlackMirror",
+   "appComponent": null,
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/branding",
+   "liveComponent": "pages/portal/WorkspaceBranding",
+   "rcComponent": "pages/portal/WorkspaceBranding",
+   "appComponent": "pages/portal/WorkspaceBranding",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/bulk-generation",
+   "liveComponent": "pages/portal/BulkGeneration",
+   "rcComponent": "pages/portal/BulkGeneration",
+   "appComponent": "pages/portal/BulkGeneration",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/business-owner",
+   "liveComponent": "pages/portal/BusinessOwnerPlanning",
+   "rcComponent": "pages/portal/BusinessOwnerPlanning",
+   "appComponent": "pages/portal/BusinessOwnerPlanning",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/carrier-comparison",
+   "liveComponent": "pages/portal/CarrierComparison",
+   "rcComponent": "pages/portal/CarrierComparison",
+   "appComponent": "pages/portal/CarrierComparison",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/carrier-rates",
+   "liveComponent": "pages/portal/CarrierRatings",
+   "rcComponent": "pages/portal/CarrierRatings",
+   "appComponent": "pages/portal/CarrierRatings",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/carrier-ratings",
+   "liveComponent": "pages/portal/CarrierRatings",
+   "rcComponent": "pages/portal/CarrierRatings",
+   "appComponent": "pages/portal/CarrierRatings",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/carrier-settings",
+   "liveComponent": "pages/portal/CarrierSettings",
+   "rcComponent": "pages/portal/CarrierSettings",
+   "appComponent": "pages/portal/CarrierSettings",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/charitable-giving",
+   "liveComponent": "pages/portal/CharitableGivingOptimizer",
+   "rcComponent": "pages/portal/CharitableGivingOptimizer",
+   "appComponent": "pages/portal/CharitableGivingOptimizer",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/client-comparison",
+   "liveComponent": "pages/portal/ClientComparison",
+   "rcComponent": "pages/portal/ClientComparison",
+   "appComponent": "pages/portal/ClientComparison",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/client-files",
+   "liveComponent": "pages/portal/ClientFiles",
+   "rcComponent": "pages/portal/ClientFiles",
+   "appComponent": "pages/portal/ClientFiles",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/client-health",
+   "liveComponent": "pages/portal/ClientHealthDashboard",
+   "rcComponent": "pages/portal/ClientHealthDashboard",
+   "appComponent": "pages/portal/ClientHealthDashboard",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/client-intake",
+   "liveComponent": "pages/portal/ClientIntakeInterview",
+   "rcComponent": "pages/portal/ClientIntakeInterview",
+   "appComponent": "pages/portal/ClientIntakeInterview",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/client-intake-recommender",
+   "liveComponent": "pages/portal/ClientIntakeRecommender",
+   "rcComponent": "pages/portal/ClientIntakeRecommender",
+   "appComponent": "pages/portal/ClientIntakeRecommender",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/client-onboarding",
+   "liveComponent": "pages/portal/ClientOnboardingWizard",
+   "rcComponent": "pages/portal/ClientOnboardingWizard",
+   "appComponent": "pages/portal/ClientOnboardingWizard",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/client-onboarding-auto",
+   "liveComponent": "pages/portal/ClientOnboardingAutomation",
+   "rcComponent": "pages/portal/ClientOnboardingAutomation",
+   "appComponent": "pages/portal/ClientOnboardingAutomation",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/client-portal-config",
+   "liveComponent": "pages/portal/ClientPortal",
+   "rcComponent": "pages/portal/ClientPortal",
+   "appComponent": "pages/portal/ClientPortal",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/client-portfolio",
+   "liveComponent": "pages/portal/ClientPortfolioDashboard",
+   "rcComponent": "pages/portal/ClientPortfolioDashboard",
+   "appComponent": "pages/portal/ClientPortfolioDashboard",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/client-scorecard",
+   "liveComponent": "pages/portal/ClientScorecard",
+   "rcComponent": "pages/portal/ClientScorecard",
+   "appComponent": "pages/portal/ClientScorecard",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/client-self-service",
+   "liveComponent": "pages/portal/ClientSelfServicePortal",
+   "rcComponent": "pages/portal/ClientSelfServicePortal",
+   "appComponent": "pages/portal/ClientSelfServicePortal",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/client-snapshot",
+   "liveComponent": "pages/portal/ClientSnapshotMap",
+   "rcComponent": "pages/portal/ClientSnapshotMap",
+   "appComponent": "pages/portal/ClientSnapshotMap",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/clients",
+   "liveComponent": "pages/portal/Clients",
+   "rcComponent": "pages/portal/Clients",
+   "appComponent": "pages/portal/Clients",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/clients/:id",
+   "liveComponent": "pages/portal/ClientDetail",
+   "rcComponent": "pages/portal/ClientDetail",
+   "appComponent": "pages/portal/ClientDetail",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/co-pilot",
+   "liveComponent": "pages/portal/LiveCoPilot",
+   "rcComponent": "pages/portal/LiveCoPilot",
+   "appComponent": "pages/portal/LiveCoPilot",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/collaborative-planning",
+   "liveComponent": "pages/portal/CollaborativePlanning",
+   "rcComponent": "pages/portal/CollaborativePlanning",
+   "appComponent": "pages/portal/CollaborativePlanning",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/combo-recommender",
+   "liveComponent": "pages/portal/ClientIntakeRecommender",
+   "rcComponent": "pages/portal/ClientIntakeRecommender",
+   "appComponent": "pages/portal/ClientIntakeRecommender",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/command-center",
+   "liveComponent": "pages/portal/OwnerWarRoom",
+   "rcComponent": "pages/portal/OwnerWarRoom",
+   "appComponent": "pages/portal/OwnerWarRoom",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/commission-calculator",
+   "liveComponent": "pages/portal/CommissionCalculator",
+   "rcComponent": "pages/portal/CommissionCalculator",
+   "appComponent": "pages/portal/CommissionCalculator",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/commission-tracker",
+   "liveComponent": "pages/portal/CommissionTracker",
+   "rcComponent": "pages/portal/CommissionTracker",
+   "appComponent": "pages/portal/CommissionTracker",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/comparison",
+   "liveComponent": "pages/portal/ComparisonDashboard",
+   "rcComponent": "pages/portal/ComparisonDashboard",
+   "appComponent": "pages/portal/ComparisonDashboard",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/competitive",
+   "liveComponent": "pages/portal/CompetitiveAnalysis",
+   "rcComponent": "pages/portal/CompetitiveAnalysis",
+   "appComponent": "pages/portal/CompetitiveAnalysis",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/compliance",
+   "liveComponent": "pages/portal/ComplianceExport",
+   "rcComponent": "pages/portal/ComplianceExport",
+   "appComponent": "pages/portal/ComplianceExport",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/compliance-alerts",
+   "liveComponent": "pages/portal/ComplianceAlerts",
+   "rcComponent": "pages/portal/ComplianceAlerts",
+   "appComponent": "pages/portal/ComplianceAlerts",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/compliance-audit",
+   "liveComponent": "pages/portal/ComplianceAuditCenter",
+   "rcComponent": "pages/portal/ComplianceAuditCenter",
+   "appComponent": "pages/portal/ComplianceAuditCenter",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/compliance-audit-trail",
+   "liveComponent": "pages/portal/ComplianceAuditTrail",
+   "rcComponent": "pages/portal/ComplianceAuditTrail",
+   "appComponent": "pages/portal/ComplianceAuditTrail",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/compliance-monitoring",
+   "liveComponent": "pages/portal/ComplianceMonitoringDashboard",
+   "rcComponent": "pages/portal/ComplianceMonitoringDashboard",
+   "appComponent": "pages/portal/ComplianceMonitoringDashboard",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/compliance-reports",
+   "liveComponent": "pages/portal/ComplianceReportGenerator",
+   "rcComponent": "pages/portal/ComplianceReportGenerator",
+   "appComponent": "pages/portal/ComplianceReportGenerator",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/couples",
+   "liveComponent": "pages/portal/CouplesMode",
+   "rcComponent": "pages/portal/CouplesMode",
+   "appComponent": "pages/portal/CouplesMode",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/crypto-corner",
+   "liveComponent": "pages/portal/CryptoCurrencyCorner",
+   "rcComponent": "pages/portal/CryptoCurrencyCorner",
+   "appComponent": "pages/portal/CryptoCurrencyCorner",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/daily-briefing",
+   "liveComponent": "pages/portal/DailyBriefing",
+   "rcComponent": "pages/portal/DailyBriefing",
+   "appComponent": "pages/portal/DailyBriefing",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/daily-discovery",
+   "liveComponent": "pages/portal/DailyDiscovery",
+   "rcComponent": "pages/portal/DailyDiscovery",
+   "appComponent": "pages/portal/DailyDiscovery",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/dashboard",
+   "liveComponent": "pages/portal/Dashboard",
+   "rcComponent": "pages/portal/Dashboard",
+   "appComponent": "pages/portal/Dashboard",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/data-query",
+   "liveComponent": "pages/portal/NaturalLanguageQuery",
+   "rcComponent": "pages/portal/NaturalLanguageQuery",
+   "appComponent": "pages/portal/NaturalLanguageQuery",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/divorce-calculator",
+   "liveComponent": "pages/portal/DivorceCalculator",
+   "rcComponent": "pages/portal/DivorceCalculator",
+   "appComponent": "pages/portal/DivorceCalculator",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/document-templates",
+   "liveComponent": "pages/portal/DocumentTemplates",
+   "rcComponent": "pages/portal/DocumentTemplates",
+   "appComponent": "pages/portal/DocumentTemplates",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/document-vault",
+   "liveComponent": "pages/portal/DocumentVault",
+   "rcComponent": "pages/portal/DocumentVault",
+   "appComponent": "pages/portal/DocumentVault",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/ecological-drivers",
+   "liveComponent": "pages/portal/EcologicalDrivers",
+   "rcComponent": "pages/portal/EcologicalDrivers",
+   "appComponent": "pages/portal/EcologicalDrivers",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/education",
+   "liveComponent": "pages/portal/EducationHub",
+   "rcComponent": "pages/portal/EducationHub",
+   "appComponent": "pages/portal/EducationHub",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/email-campaigns",
+   "liveComponent": "pages/portal/EmailCampaignManager",
+   "rcComponent": "pages/portal/EmailCampaignManager",
+   "appComponent": "pages/portal/EmailCampaignManager",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/endgame",
+   "liveComponent": "pages/portal/Endgame",
+   "rcComponent": "pages/portal/Endgame",
+   "appComponent": null,
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/engagement-score",
+   "liveComponent": "pages/portal/ClientEngagementScore",
+   "rcComponent": "pages/portal/ClientEngagementScore",
+   "appComponent": "pages/portal/ClientEngagementScore",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/enterprise",
+   "liveComponent": "pages/portal/EnterpriseAdmin",
+   "rcComponent": "pages/portal/EnterpriseAdmin",
+   "appComponent": "pages/portal/EnterpriseAdmin",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/estate-document-gen",
+   "liveComponent": "pages/portal/EstateDocumentGenerator",
+   "rcComponent": "pages/portal/EstateDocumentGenerator",
+   "appComponent": "pages/portal/EstateDocumentGenerator",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/estate-flow",
+   "liveComponent": "pages/portal/EstateFlowChart",
+   "rcComponent": "pages/portal/EstateFlowChart",
+   "appComponent": "pages/hubs/EstateDocumentsHub",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/estate-tax",
+   "liveComponent": "pages/portal/EstateTax",
+   "rcComponent": "pages/portal/EstateTax",
+   "appComponent": "pages/hubs/EstateTaxLiquidityHub",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/existing-annuities",
+   "liveComponent": "pages/portal/ExistingAnnuities",
+   "rcComponent": "pages/portal/ExistingAnnuities",
+   "appComponent": "pages/hubs/AnnuityComparisonReviewHub",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/fee-transparency",
+   "liveComponent": "pages/portal/FeeTransparencyDashboard",
+   "rcComponent": "pages/portal/FeeTransparencyDashboard",
+   "appComponent": "pages/portal/FeeTransparencyDashboard",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/fia-collateral",
+   "liveComponent": "pages/portal/FIACollateralStrategy",
+   "rcComponent": "pages/portal/FIACollateralStrategy",
+   "appComponent": "pages/portal/FIACollateralStrategy",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/fia-top10",
+   "liveComponent": "pages/portal/FIATop10",
+   "rcComponent": "pages/portal/FIATop10",
+   "appComponent": "pages/portal/FIATop10",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/financial-vitals",
+   "liveComponent": "pages/portal/FinancialVitalsScorecard",
+   "rcComponent": "pages/portal/FinancialVitalsScorecard",
+   "appComponent": "pages/portal/FinancialVitalsScorecard",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/goals-planning",
+   "liveComponent": "pages/portal/GoalsBasedPlanning",
+   "rcComponent": "pages/portal/GoalsBasedPlanning",
+   "appComponent": "pages/portal/GoalsBasedPlanning",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/growth-annuities",
+   "liveComponent": "pages/portal/GrowthAnnuities",
+   "rcComponent": "pages/portal/GrowthAnnuities",
+   "appComponent": "pages/portal/GrowthAnnuities",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/hidden-material",
+   "liveComponent": "pages/portal/HiddenMaterial",
+   "rcComponent": "pages/portal/HiddenMaterial",
+   "appComponent": "pages/portal/HiddenMaterial",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/hot-income",
+   "liveComponent": "pages/portal/HotIncome",
+   "rcComponent": "pages/portal/HotIncome",
+   "appComponent": "pages/portal/HotIncome",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/house-recycling",
+   "liveComponent": "pages/portal/HouseRecyclingStrategy",
+   "rcComponent": "pages/portal/HouseRecyclingStrategy",
+   "appComponent": "pages/portal/HouseRecyclingStrategy",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/household-wealth",
+   "liveComponent": "pages/portal/HouseholdWealth",
+   "rcComponent": "pages/portal/HouseholdWealth",
+   "appComponent": "pages/portal/HouseholdWealth",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/hubspot",
+   "liveComponent": "pages/portal/HubSpotSync",
+   "rcComponent": "pages/portal/HubSpotSync",
+   "appComponent": "pages/portal/HubSpotSync",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/ibbotson-charts",
+   "liveComponent": "pages/portal/IbbotsonCharts",
+   "rcComponent": "pages/portal/IbbotsonCharts",
+   "appComponent": "pages/portal/IbbotsonCharts",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/illustration-compare",
+   "liveComponent": "pages/portal/IllustrationCompare",
+   "rcComponent": "pages/portal/IllustrationCompare",
+   "appComponent": "pages/hubs/IllustrationQuotingHub",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/income-annuity-top10",
+   "liveComponent": "pages/portal/IncomeAnnuityTop10",
+   "rcComponent": "pages/portal/IncomeAnnuityTop10",
+   "appComponent": "pages/portal/IncomeAnnuityTop10",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/income-gap",
+   "liveComponent": "pages/portal/IncomeGapAnalyzer",
+   "rcComponent": "pages/portal/IncomeGapAnalyzer",
+   "appComponent": "pages/portal/IncomeGapAnalyzer",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/income-timeline",
+   "liveComponent": "pages/portal/IncomeTimeline",
+   "rcComponent": "pages/portal/IncomeTimeline",
+   "appComponent": "pages/portal/IncomeTimeline",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/index-backtester",
+   "liveComponent": "pages/portal/IndexBacktester",
+   "rcComponent": "pages/portal/IndexBacktester",
+   "appComponent": "pages/portal/IndexBacktester",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/index-strategies",
+   "liveComponent": "pages/portal/IndexStrategyComparison",
+   "rcComponent": "pages/portal/IndexStrategyComparison",
+   "appComponent": "pages/portal/IndexStrategyComparison",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/infinite-scroll",
+   "liveComponent": "pages/portal/InfiniteScroll",
+   "rcComponent": "pages/portal/InfiniteScroll",
+   "appComponent": null,
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/inflation",
+   "liveComponent": "pages/portal/InflationAnalysis",
+   "rcComponent": "pages/portal/InflationAnalysis",
+   "appComponent": "pages/portal/InflationAnalysis",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/integrations",
+   "liveComponent": "pages/portal/Integrations",
+   "rcComponent": "pages/portal/Integrations",
+   "appComponent": "pages/portal/Integrations",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/iul-historical",
+   "liveComponent": "pages/portal/IULHistoricalPerformance",
+   "rcComponent": "pages/portal/IULHistoricalPerformance",
+   "appComponent": "pages/portal/IULHistoricalPerformance",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/iul-vs-roth",
+   "liveComponent": "pages/portal/IULvsRoth",
+   "rcComponent": "pages/portal/IULvsRoth",
+   "appComponent": "pages/portal/IULvsRoth",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/knowledge",
+   "liveComponent": "pages/portal/Knowledge",
+   "rcComponent": "pages/portal/Knowledge",
+   "appComponent": "pages/portal/Knowledge",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/lead-generator",
+   "liveComponent": "pages/portal/LeadGenerator",
+   "rcComponent": "pages/portal/LeadGenerator",
+   "appComponent": "pages/portal/LeadGenerator",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/leaderboard",
+   "liveComponent": "pages/portal/Leaderboard",
+   "rcComponent": "pages/portal/Leaderboard",
+   "appComponent": "pages/portal/Leaderboard",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/legal-payment-folder",
+   "liveComponent": "pages/portal/LegalPaymentFolder",
+   "rcComponent": "pages/portal/LegalPaymentFolder",
+   "appComponent": "pages/portal/LegalPaymentFolder",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/lifetime-income",
+   "liveComponent": "pages/portal/LifetimeGuaranteedIncome",
+   "rcComponent": "pages/portal/LifetimeGuaranteedIncome",
+   "appComponent": "pages/portal/LifetimeGuaranteedIncome",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/long-term-care",
+   "liveComponent": "pages/portal/LongTermCare",
+   "rcComponent": "pages/portal/LongTermCarePlanner",
+   "appComponent": "pages/portal/LongTermCarePlanner",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/market-data",
+   "liveComponent": "pages/portal/MarketDataDashboard",
+   "rcComponent": "pages/portal/MarketDataDashboard",
+   "appComponent": "pages/portal/MarketDataDashboard",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/market-pulse",
+   "liveComponent": "pages/MarketPulsePage",
+   "rcComponent": "pages/portal/MarketPulseSentinel",
+   "appComponent": "pages/portal/MarketPulseSentinel",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/market-stress-test",
+   "liveComponent": "pages/portal/MarketScenarioStressTest",
+   "rcComponent": "pages/portal/MarketScenarioStressTest",
+   "appComponent": "pages/portal/MarketScenarioStressTest",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/medicare-irmaa",
+   "liveComponent": "pages/portal/MedicareIRMAA",
+   "rcComponent": "pages/portal/MedicareIRMAA",
+   "appComponent": "pages/hubs/MedicareIrmaaHub",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/meeting-agenda",
+   "liveComponent": "pages/portal/MeetingAgenda",
+   "rcComponent": "pages/portal/MeetingAgenda",
+   "appComponent": "pages/portal/MeetingAgenda",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/meeting-prep",
+   "liveComponent": "pages/MeetingPrepPage",
+   "rcComponent": "pages/portal/AdvisorMeetingPrep",
+   "appComponent": "pages/portal/AdvisorMeetingPrep",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/meetings",
+   "liveComponent": "pages/portal/Meetings",
+   "rcComponent": "pages/portal/Meetings",
+   "appComponent": "pages/portal/Meetings",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/monitoring-agreement",
+   "liveComponent": "pages/portal/SupervisorMonitoringAgreement",
+   "rcComponent": "pages/portal/SupervisorMonitoringAgreement",
+   "appComponent": "pages/portal/SupervisorMonitoringAgreement",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/morning-ritual",
+   "liveComponent": "pages/portal/MorningRitual",
+   "rcComponent": "pages/portal/MorningRitual",
+   "appComponent": "pages/portal/MorningRitual",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/mortgage-killer",
+   "liveComponent": "pages/portal/MortgageKiller",
+   "rcComponent": "pages/portal/MortgageKiller",
+   "appComponent": "pages/hubs/MortgageKillerHub",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/mortgage-killer-v2",
+   "liveComponent": "pages/MortgageKillerV2Page",
+   "rcComponent": "pages/portal/MortgageKillerV2",
+   "appComponent": "pages/portal/MortgageKillerV2",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/mortgage-killer-v3",
+   "liveComponent": "pages/portal/MortgageKillerV3",
+   "rcComponent": "pages/portal/MortgageKillerV3",
+   "appComponent": "pages/portal/MortgageKillerV3",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/multi-gen-wealth",
+   "liveComponent": "pages/portal/MultiGenWealthTransfer",
+   "rcComponent": "pages/portal/MultiGenWealthTransfer",
+   "appComponent": "pages/hubs/DynastyMultiGenTransferHub",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/my-slides",
+   "liveComponent": "pages/portal/MySlides",
+   "rcComponent": "pages/portal/MySlides",
+   "appComponent": "pages/portal/MySlides",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/my-world",
+   "liveComponent": "pages/portal/MyWorld",
+   "rcComponent": "pages/portal/MyWorld",
+   "appComponent": "pages/portal/MyWorld",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/myga-fixed-rate",
+   "liveComponent": "pages/portal/MYGAFixedRate",
+   "rcComponent": "pages/portal/MYGAFixedRate",
+   "appComponent": "pages/portal/MYGAFixedRate",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/myga-waterfall",
+   "liveComponent": "pages/MygaWaterfallPage",
+   "rcComponent": "pages/portal/MYGAWaterfallComparison",
+   "appComponent": "pages/portal/MYGAWaterfallComparison",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/nerve-center",
+   "liveComponent": "pages/portal/NerveCenter",
+   "rcComponent": "pages/portal/NerveCenter",
+   "appComponent": "pages/portal/NerveCenter",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/onboarding",
+   "liveComponent": "pages/portal/Onboarding",
+   "rcComponent": "pages/portal/Onboarding",
+   "appComponent": "pages/portal/Onboarding",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/onboarding-v2",
+   "liveComponent": "pages/portal/OnboardingWizardV2",
+   "rcComponent": "pages/portal/OnboardingWizardV2",
+   "appComponent": "pages/portal/OnboardingWizardV2",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/owner-oversight",
+   "liveComponent": "pages/portal/OwnerOversight",
+   "rcComponent": "pages/portal/OwnerOversight",
+   "appComponent": "pages/portal/OwnerOversight",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/patent-showcase",
+   "liveComponent": "pages/portal/PatentShowcase",
+   "rcComponent": "pages/portal/PatentShowcase",
+   "appComponent": "pages/portal/PatentShowcase",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/pet",
+   "liveComponent": "pages/portal/PetSystem",
+   "rcComponent": "pages/portal/PetSystem",
+   "appComponent": null,
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/physicians-edge",
+   "liveComponent": "pages/portal/PhysiciansEdge",
+   "rcComponent": "pages/portal/PhysiciansEdge",
+   "appComponent": "pages/portal/PhysiciansEdge",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/pipeline",
+   "liveComponent": "pages/portal/Pipeline",
+   "rcComponent": "pages/portal/Pipeline",
+   "appComponent": "pages/portal/Pipeline",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/policy-loans",
+   "liveComponent": "pages/portal/PolicyLoans",
+   "rcComponent": "pages/portal/PolicyLoans",
+   "appComponent": "pages/portal/PolicyLoans",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/policy-review",
+   "liveComponent": "pages/portal/PolicyReview",
+   "rcComponent": "pages/portal/PolicyReview",
+   "appComponent": "pages/portal/PolicyReview",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/policy-review-checklist",
+   "liveComponent": "pages/portal/PolicyReviewChecklist",
+   "rcComponent": "pages/portal/PolicyReviewChecklist",
+   "appComponent": "pages/hubs/PolicyReviewHub",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/portfolio-drift",
+   "liveComponent": "pages/portal/PortfolioDriftMonitor",
+   "rcComponent": "pages/portal/PortfolioDriftMonitor",
+   "appComponent": "pages/portal/PortfolioDriftMonitor",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/predictive-analytics",
+   "liveComponent": "pages/portal/PredictiveAnalytics",
+   "rcComponent": "pages/portal/PredictiveAnalytics",
+   "appComponent": "pages/portal/PredictiveAnalytics",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/premium-financing",
+   "liveComponent": "pages/portal/PremiumFinancing",
+   "rcComponent": "pages/portal/PremiumFinancing",
+   "appComponent": "pages/hubs/PremiumFinancingHub",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/presentation-builder",
+   "liveComponent": "pages/portal/PresentationBuilder",
+   "rcComponent": "pages/portal/PresentationBuilder",
+   "appComponent": "pages/portal/PresentationBuilder",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/quick-quote",
+   "liveComponent": "pages/portal/QuickQuote",
+   "rcComponent": "pages/portal/QuickQuote",
+   "appComponent": "pages/portal/QuickQuote",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/quotes",
+   "liveComponent": "pages/portal/CarrierQuotes",
+   "rcComponent": "pages/portal/CarrierQuotes",
+   "appComponent": "pages/portal/CarrierQuotes",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/real-estate-mogul",
+   "liveComponent": "pages/portal/RealEstateMogul",
+   "rcComponent": "pages/portal/RealEstateMogul",
+   "appComponent": "pages/portal/RealEstateMogul",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/rebalance",
+   "liveComponent": "pages/portal/RebalanceAlerts",
+   "rcComponent": "pages/portal/RebalanceAlerts",
+   "appComponent": "pages/portal/RebalanceAlerts",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/recommendations",
+   "liveComponent": "pages/portal/Recommendations",
+   "rcComponent": "pages/portal/Recommendations",
+   "appComponent": "pages/portal/Recommendations",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/referral-tracker",
+   "liveComponent": "pages/portal/ReferralTracker",
+   "rcComponent": "pages/portal/ReferralTracker",
+   "appComponent": "pages/portal/ReferralTracker",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/referral-tracking",
+   "liveComponent": "pages/portal/ReferralTracking",
+   "rcComponent": "pages/portal/ReferralTracking",
+   "appComponent": "pages/portal/ReferralTracking",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/retirement-guardrails",
+   "liveComponent": "pages/portal/RetirementGuardrails",
+   "rcComponent": "pages/portal/RetirementGuardrails",
+   "appComponent": "pages/portal/RetirementGuardrails",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/retirement-projection",
+   "liveComponent": "pages/portal/RetirementIncomeProjection",
+   "rcComponent": "pages/portal/RetirementIncomeProjection",
+   "appComponent": "pages/hubs/RetirementIncomeProjectorHub",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/revenue-guarantee",
+   "liveComponent": "pages/portal/RevenueGuarantee",
+   "rcComponent": "pages/portal/RevenueGuarantee",
+   "appComponent": "pages/portal/RevenueGuarantee",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/reverse-heloc",
+   "liveComponent": "pages/portal/ReverseHeloc",
+   "rcComponent": "pages/portal/ReverseHeloc",
+   "appComponent": "pages/hubs/MortgageRefiToolsHub",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/rewards",
+   "liveComponent": "pages/portal/RewardsVault",
+   "rcComponent": "pages/portal/RewardsVault",
+   "appComponent": null,
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/risk-tolerance",
+   "liveComponent": "pages/portal/RiskToleranceScoring",
+   "rcComponent": "pages/portal/RiskToleranceScoring",
+   "appComponent": "pages/portal/RiskToleranceScoring",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/roth-conversion",
+   "liveComponent": "pages/portal/RothConversionSTR",
+   "rcComponent": "pages/portal/RothConversionSTR",
+   "appComponent": "pages/hubs/RothStrategyHub",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/russell-number",
+   "liveComponent": "pages/portal/RussellNumber",
+   "rcComponent": "pages/portal/RussellNumber",
+   "appComponent": "pages/portal/RussellNumber",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/sales-story",
+   "liveComponent": "pages/portal/SalesStoryBuilder",
+   "rcComponent": "pages/portal/SalesStoryBuilder",
+   "appComponent": "pages/hubs/SalesStoryBuilderHub",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/saved-scenarios",
+   "liveComponent": "pages/portal/SavedScenariosHub",
+   "rcComponent": "pages/portal/SavedScenariosHub",
+   "appComponent": "pages/portal/SavedScenariosHub",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/scenario-play",
+   "liveComponent": "pages/portal/MultiScenarioPlayZone",
+   "rcComponent": "pages/portal/MultiScenarioPlayZone",
+   "appComponent": "pages/portal/MultiScenarioPlayZone",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/scenario-side-by-side",
+   "liveComponent": "pages/portal/ScenarioSideBySide",
+   "rcComponent": "pages/portal/ScenarioSideBySide",
+   "appComponent": "pages/portal/ScenarioSideBySide",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/scenarios",
+   "liveComponent": "pages/portal/ScenarioAdjustments",
+   "rcComponent": "pages/portal/ScenarioAdjustments",
+   "appComponent": "pages/portal/ScenarioAdjustments",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/secret-secrets",
+   "liveComponent": "pages/portal/SecretSecrets",
+   "rcComponent": "pages/portal/SecretSecrets",
+   "appComponent": "pages/portal/SecretSecrets",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/secret-secrets/:id",
+   "liveComponent": "pages/portal/SecretDetail",
+   "rcComponent": "pages/portal/SecretDetail",
+   "appComponent": "pages/portal/SecretDetail",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/seminar-generator",
+   "liveComponent": "pages/portal/SeminarGenerator",
+   "rcComponent": "pages/portal/SeminarGenerator",
+   "appComponent": "pages/hubs/SlidesPresentationsHub",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/slack",
+   "liveComponent": "pages/portal/SlackIntegration",
+   "rcComponent": "pages/portal/SlackIntegration",
+   "appComponent": "pages/portal/SlackIntegration",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/smart-rebalancing",
+   "liveComponent": "pages/portal/SmartRebalancingAlerts",
+   "rcComponent": "pages/portal/SmartRebalancingAlerts",
+   "appComponent": "pages/portal/SmartRebalancingAlerts",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/social",
+   "liveComponent": "pages/portal/SocialNarcotic",
+   "rcComponent": "pages/portal/SocialNarcotic",
+   "appComponent": null,
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/social-security",
+   "liveComponent": "pages/portal/SocialSecurityOptimizer",
+   "rcComponent": "pages/portal/SocialSecurityOptimizer",
+   "appComponent": "pages/portal/SocialSecurityOptimizer",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/stale-digest",
+   "liveComponent": "pages/portal/StaleDigest",
+   "rcComponent": "pages/portal/StaleDigest",
+   "appComponent": "pages/portal/StaleDigest",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/story-generator",
+   "liveComponent": "pages/portal/ClientStoryGenerator",
+   "rcComponent": "pages/portal/ClientStoryGenerator",
+   "appComponent": "pages/portal/ClientStoryGenerator",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/str-strategy",
+   "liveComponent": "pages/portal/STRStrategy",
+   "rcComponent": "pages/portal/STRStrategy",
+   "appComponent": "pages/portal/STRStrategy",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/strategy",
+   "liveComponent": "pages/portal/StrategyLab",
+   "rcComponent": "pages/portal/StrategyLab",
+   "appComponent": "pages/portal/StrategyLab",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/strategy-compare",
+   "liveComponent": "pages/portal/StrategyCompareTool",
+   "rcComponent": "pages/portal/StrategyCompareTool",
+   "appComponent": "pages/portal/StrategyCompareTool",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/succession-planning",
+   "liveComponent": "pages/portal/SuccessionPlanningWizard",
+   "rcComponent": "pages/portal/SuccessionPlanningWizard",
+   "appComponent": "pages/hubs/BusinessSuccessionHub",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/tax-advantaged-growth",
+   "liveComponent": "pages/portal/TaxAdvantagedGrowth",
+   "rcComponent": "pages/portal/TaxAdvantagedGrowth",
+   "appComponent": "pages/portal/TaxAdvantagedGrowth",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/tax-brackets",
+   "liveComponent": "pages/portal/TaxBracketVisualizer",
+   "rcComponent": "pages/portal/TaxBracketVisualizer",
+   "appComponent": "pages/portal/TaxBracketVisualizer",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/tax-combos",
+   "liveComponent": "pages/portal/TaxFreeWealthCombos",
+   "rcComponent": "pages/portal/TaxFreeWealthCombos",
+   "appComponent": "pages/portal/TaxFreeWealthCombos",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/tax-combos/:id",
+   "liveComponent": "pages/portal/ComboDetail",
+   "rcComponent": "pages/portal/ComboDetail",
+   "appComponent": "pages/portal/ComboDetail",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/tax-loss-harvesting",
+   "liveComponent": "pages/portal/TaxLossHarvestingScanner",
+   "rcComponent": "pages/portal/TaxLossHarvestingScanner",
+   "appComponent": "pages/hubs/TaxLossHarvestingHub",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/tax-opportunities",
+   "liveComponent": "pages/portal/TaxOpportunityDetector",
+   "rcComponent": "pages/portal/TaxOpportunityDetector",
+   "appComponent": "pages/portal/TaxOpportunityDetector",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/tax-return-upload",
+   "liveComponent": "pages/portal/TaxReturnUpload",
+   "rcComponent": "pages/portal/TaxReturnUpload",
+   "appComponent": "pages/portal/TaxReturnUpload",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/tax-waterfall",
+   "liveComponent": "pages/portal/TaxWaterfall",
+   "rcComponent": "pages/portal/TaxWaterfall",
+   "appComponent": "pages/portal/TaxWaterfall",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/team",
+   "liveComponent": "pages/portal/Team",
+   "rcComponent": "pages/portal/Team",
+   "appComponent": "pages/portal/Team",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/team-management",
+   "liveComponent": "pages/portal/TeamManagement",
+   "rcComponent": "pages/portal/TeamManagement",
+   "appComponent": "pages/portal/TeamManagement",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/the-arrival",
+   "liveComponent": "pages/portal/TheArrival",
+   "rcComponent": null,
+   "appComponent": "pages/portal/TheArrival",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/the-brotherhood",
+   "liveComponent": "pages/portal/TheBrotherhood",
+   "rcComponent": null,
+   "appComponent": "pages/portal/TheBrotherhood",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/the-field",
+   "liveComponent": "pages/portal/TheField",
+   "rcComponent": null,
+   "appComponent": "pages/portal/TheField",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/the-legacy",
+   "liveComponent": "pages/portal/TheLegacy",
+   "rcComponent": null,
+   "appComponent": "pages/portal/TheLegacy",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/the-map",
+   "liveComponent": "pages/portal/TheMap",
+   "rcComponent": null,
+   "appComponent": "pages/portal/TheMap",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/the-mirror",
+   "liveComponent": "pages/portal/TheMirror",
+   "rcComponent": null,
+   "appComponent": "pages/portal/TheMirror",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/the-strategy-table",
+   "liveComponent": "pages/portal/TheStrategyTable",
+   "rcComponent": null,
+   "appComponent": "pages/portal/TheStrategyTable",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/time-lapse",
+   "liveComponent": "pages/portal/TimeLapse",
+   "rcComponent": "pages/portal/TimeLapse",
+   "appComponent": "pages/portal/TimeLapse",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/time-machine",
+   "liveComponent": "pages/portal/TimeMachine",
+   "rcComponent": "pages/portal/TimeMachine",
+   "appComponent": "pages/portal/TimeMachine",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/time-machine-ag49",
+   "liveComponent": "pages/portal/TimeMachineAG49",
+   "rcComponent": "pages/portal/TimeMachineAG49",
+   "appComponent": "pages/portal/TimeMachineAG49",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/time-machine-calculator",
+   "liveComponent": "pages/portal/TimeMachineCalculator",
+   "rcComponent": "pages/portal/TimeMachineCalculator",
+   "appComponent": "pages/portal/TimeMachineCalculator",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/time-machine-method",
+   "liveComponent": "pages/portal/TimeMachineMethod",
+   "rcComponent": "pages/portal/TimeMachineMethod",
+   "appComponent": "pages/portal/TimeMachineMethod",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/toilet",
+   "liveComponent": "pages/portal/ToiletDashboard",
+   "rcComponent": "pages/portal/ToiletDashboard",
+   "appComponent": null,
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/trusts",
+   "liveComponent": "pages/portal/TrustsPage",
+   "rcComponent": "pages/portal/TrustsPage",
+   "appComponent": "pages/portal/TrustsPage",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/video-library",
+   "liveComponent": "pages/portal/VideoLibrary",
+   "rcComponent": "pages/portal/VideoLibrary",
+   "appComponent": "pages/portal/VideoLibrary",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/video-proposals",
+   "liveComponent": "pages/portal/VideoProposalGenerator",
+   "rcComponent": "pages/portal/VideoProposalGenerator",
+   "appComponent": "pages/portal/VideoProposalGenerator",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/voice-plan",
+   "liveComponent": "pages/portal/VoicePlanBuilder",
+   "rcComponent": "pages/portal/VoicePlanBuilder",
+   "appComponent": "pages/portal/VoicePlanBuilder",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/war-room",
+   "liveComponent": "pages/portal/WarRoom",
+   "rcComponent": "pages/portal/WarRoom",
+   "appComponent": "pages/portal/WarRoom",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/war-story-generator",
+   "liveComponent": "pages/portal/WarStoryGenerator",
+   "rcComponent": "pages/portal/WarStoryGenerator",
+   "appComponent": "pages/portal/WarStoryGenerator",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/wealth-reels",
+   "liveComponent": "pages/portal/InfiniteScroll",
+   "rcComponent": "pages/portal/InfiniteScroll",
+   "appComponent": null,
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/webhooks",
+   "liveComponent": "pages/portal/Webhooks",
+   "rcComponent": "pages/portal/Webhooks",
+   "appComponent": "pages/portal/Webhooks",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/website-usage",
+   "liveComponent": "pages/portal/WebsiteUsage",
+   "rcComponent": "pages/portal/WebsiteUsage",
+   "appComponent": "pages/portal/WebsiteUsage",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/welcome",
+   "liveComponent": "pages/portal/OnboardingWizard",
+   "rcComponent": "pages/portal/OnboardingWizard",
+   "appComponent": "pages/portal/OnboardingWizard",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/will-writer",
+   "liveComponent": "pages/portal/WillWriter",
+   "rcComponent": "pages/portal/WillWriter",
+   "appComponent": "pages/portal/WillWriter",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/withdrawal-sequencing",
+   "liveComponent": "pages/portal/WithdrawalSequencing",
+   "rcComponent": "pages/portal/WithdrawalSequencing",
+   "appComponent": "pages/hubs/GuaranteedLifetimeIncomeHub",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/workflow-automations",
+   "liveComponent": "pages/portal/WorkflowAutomations",
+   "rcComponent": "pages/portal/WorkflowAutomations",
+   "appComponent": "pages/portal/WorkflowAutomations",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/portal/wrapped",
+   "liveComponent": "pages/portal/RussellWrapped",
+   "rcComponent": "pages/portal/RussellWrapped",
+   "appComponent": "pages/portal/RussellWrapped",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/pricing",
+   "liveComponent": "pages/Pricing",
+   "rcComponent": "pages/Pricing",
+   "appComponent": "pages/Pricing",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/privacy",
+   "liveComponent": "pages/Legal",
+   "rcComponent": "pages/Legal",
+   "appComponent": "pages/Legal",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/register",
+   "liveComponent": "pages/ManagedAuthLegacy",
+   "rcComponent": "pages/Register",
+   "appComponent": "pages/Register",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/reset-password",
+   "liveComponent": "pages/ManagedAuthLegacy",
+   "rcComponent": "pages/ResetPassword",
+   "appComponent": "pages/ResetPassword",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/shared-slides/:token",
+   "liveComponent": "pages/SharedSlidesViewer",
+   "rcComponent": "pages/SharedSlidesViewer",
+   "appComponent": "pages/SharedSlidesViewer",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/shared/:token",
+   "liveComponent": "pages/SharedProjection",
+   "rcComponent": "pages/SharedProjection",
+   "appComponent": "pages/SharedProjection",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/support",
+   "liveComponent": "pages/Legal",
+   "rcComponent": "pages/Legal",
+   "appComponent": "pages/Legal",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/terms",
+   "liveComponent": "pages/Legal",
+   "rcComponent": "pages/Legal",
+   "appComponent": "pages/Legal",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/trial",
+   "liveComponent": "pages/ManagedAuthLegacy",
+   "rcComponent": "pages/TrialLogin",
+   "appComponent": "pages/TrialLogin",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  },
+  {
+   "route": "/video/:token",
+   "liveComponent": "pages/VideoViewer",
+   "rcComponent": "pages/VideoViewer",
+   "appComponent": "pages/VideoViewer",
+   "rule": "LIVE WINS unless a documented comparison + regression proof says otherwise"
+  }
+ ]
+}
