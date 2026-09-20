@@ -417,6 +417,7 @@ const NAV_SECTIONS: NavSection[] = [
         color: "amber",
         items: [
           { path: "/portal/alt-credit", label: "Alternative Lines of Credit", icon: Landmark, color: "green" },
+          { path: "/portal/credit-cards", label: "Credit Cards", icon: CircleDollarSign, color: "amber" },
           { path: "/portal/black-mirror", label: "Black Mirror", icon: Ghost, color: "gold" },
           { path: "/portal/crypto-corner", label: "Crypto Corner", icon: ChevronRight, color: "amber" },
           { path: "/portal/crypto-cycle", label: "Crypto Cycle", icon: ChevronRight, color: "amber" },
