@@ -1,0 +1,124 @@
+# Canonical application CI — verification only. This workflow never deploys.
+#
+# Discovered from package.json on 2026-09-20:
+#   install  pnpm install --frozen-lockfile
+#   check    tsc --noEmit
+#   test     vitest run
+#   build    node scripts/build.mjs && esbuild …
+#   lint     ABSENT — no lint script exists, so no lint step is claimed here.
+
+name: Canonical App CI
+
+on:
+  pull_request:
+    paths:
+      - 'russell-capital-systems/**'
+      - '.github/workflows/canonical-app-ci.yml'
+  push:
+    branches: [master]
+    paths:
+      - 'russell-capital-systems/**'
+  workflow_dispatch:
+
+concurrency:
+  group: canonical-app-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    defaults:
+      run:
+        working-directory: russell-capital-systems
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Confirm the required scripts exist
+        run: |
+          set -euo pipefail
+          for s in check test build; do
+            node -e "
+              const s=require('./package.json').scripts||{};
+              if(!s['$s']){console.error('::error::package.json has no \"$s\" script');process.exit(1)}
+            "
+          done
+          echo "check, test and build are all present"
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: russell-capital-systems/pnpm-lock.yaml
+
+      - name: Install (lockfile-respecting)
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck
+        run: pnpm check
+
+      - name: Test
+        run: pnpm test
+
+      - name: Production build
+        run: pnpm build
+
+      - name: Route integrity
+        run: |
+          set -euo pipefail
+          node -e "
+            const fs=require('fs');
+            const emitted=JSON.parse(fs.readFileSync('dist/public/routes.json','utf8')).routes;
+            const src=fs.readFileSync('client/src/App.tsx','utf8');
+            const declared=[...src.matchAll(/<Route\s+path=\"([^\"]+)\"/g)].map(m=>m[1]);
+            const dupes=declared.filter((p,i)=>declared.indexOf(p)!==i);
+            console.log('declared:',declared.length,'emitted:',emitted.length,'duplicates:',dupes.length);
+            let bad=false;
+            if(dupes.length){console.error('::error::duplicate route paths: '+[...new Set(dupes)].join(', '));bad=true}
+            if(emitted.length!==declared.length){console.error('::error::emitter/source disagree');bad=true}
+            const BASELINE=321;
+            if(declared.length<BASELINE){console.error('::error::route count '+declared.length+' is below the recorded baseline '+BASELINE);bad=true}
+            if(bad)process.exit(1);
+            console.log('route integrity OK');
+          "
+
+      - name: Secret scan (changed files only)
+        if: github.event_name == 'pull_request'
+        run: |
+          set -uo pipefail
+          git fetch --no-tags --depth=1 origin "${{ github.base_ref }}"
+          CHANGED=$(git diff --name-only "origin/${{ github.base_ref }}"...HEAD || true)
+          [ -z "$CHANGED" ] && { echo "no changed files"; exit 0; }
+          PATTERN='(sk-[A-Za-z0-9]{20,}|AKIA[0-9A-Z]{16}|ghp_[A-Za-z0-9]{30,}|-----BEGIN [A-Z ]*PRIVATE KEY-----|xox[baprs]-[A-Za-z0-9-]{20,})'
+          FAIL=0
+          for f in $CHANGED; do
+            [ -f "../$f" ] || continue
+            if grep -qIE "$PATTERN" "../$f" 2>/dev/null; then
+              if grep -IE "$PATTERN" "../$f" | grep -qviE 'example|placeholder|your_|dummy'; then
+                echo "::error file=$f::possible secret — value not printed"
+                FAIL=1
+              fi
+            fi
+          done
+          [ "$FAIL" -eq 0 ] && echo "secret scan clean"
+          exit $FAIL
+
+      - name: Summary
+        if: always()
+        run: |
+          {
+            echo "### Canonical App CI"
+            echo "- commit: \`${{ github.sha }}\`"
+            echo "- typecheck, tests, build, route integrity, secret scan"
+            echo "- this workflow does not deploy"
+          } >> "$GITHUB_STEP_SUMMARY"
