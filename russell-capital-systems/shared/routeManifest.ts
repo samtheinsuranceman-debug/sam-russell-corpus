@@ -221,6 +221,7 @@ export const ROUTE_MANIFEST: readonly string[] = [
   "/portal/mortgage-ledger",
   "/portal/multi-gen-transfer",
   "/portal/multi-gen-wealth",
+  "/portal/mutual-carriers",
   "/portal/my-journey",
   "/portal/my-slides",
   "/portal/my-world",

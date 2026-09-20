@@ -72,8 +72,15 @@ export const MUTUAL_IUL_CARRIERS: MutualIulCarrier[] = [
   {
     id: "nationwide",
     name: "Nationwide Life Insurance Company",
-    ownership: v("Mutual: Nationwide Mutual Insurance Company owns Nationwide Financial and its life companies.", "https://www.nationwidefinancial.com/about-us/financial-strength", D),
-    founded: unverified(null, NOT_READ),
+    // CORRECTED 2026-09-20. The previous wording ("Mutual: Nationwide Mutual
+    // owns Nationwide Financial and its life companies") was true but read as
+    // though the life issuer were itself mutual or mutually held. SEC filings
+    // show a stock company under a mutual P&C parent — a third structure,
+    // distinct from both a true mutual and a statutory mutual holding company
+    // such as Pacific Mutual Holding Co or Minnesota Mutual Companies. The
+    // distinction decides who owns the surplus, so it is stated precisely.
+    ownership: v("Stock insurer under a mutual parent: Nationwide Life Insurance Company is an Ohio-domiciled STOCK life insurer, incorporated 1929, wholly owned through Nationwide Financial Services and Nationwide Corporation (~95.2%) by Nationwide Mutual Insurance Company — a policyholder-owned mutual property-and-casualty insurer, not a statutory mutual holding company.", "https://www.sec.gov/Archives/edgar/data/205695/000119312519086622/R8.htm", "2026-09-20", "Read from Nationwide's own SEC filing. Calling the life issuer 'a mutual' on a client-facing page is not accurate."),
+    founded: v(1929, "https://www.sec.gov/Archives/edgar/data/205695/000119312519086622/R8.htm", "2026-09-20", "Nationwide Life incorporated 1929; Nationwide Mutual founded 1926."),
     ratings: [
       { agency: "AM Best", rating: "see carrier page", asOf: "", source: "https://www.nationwide.com/personal/about-us/ratings", verified: false, note: "The ratings page did not answer when read in this pass; the ratings are shown unverified until it does." },
     ],

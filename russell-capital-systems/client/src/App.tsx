@@ -71,6 +71,7 @@ const QbiOptimizer = lazy(() => import("./pages/portal/QbiOptimizer"));
 const MortgageLedger = lazy(() => import("./pages/portal/MortgageLedger"));
 const LiquidityRoutesPage = lazy(() => import("./pages/portal/LiquidityRoutes"));
 const PlasticToCashPage = lazy(() => import("./pages/portal/PlasticToCash"));
+const MutualCarriersPage = lazy(() => import("./pages/portal/MutualCarriers"));
 const HowAFigureIsMade = lazy(() => import("./pages/portal/HowAFigureIsMade"));
 const AltCreditHub = lazy(() => import("./pages/portal/AltCreditHub"));
 const AltCreditDetail = lazy(() => import("./pages/portal/AltCreditDetail"));
@@ -764,6 +765,7 @@ function Router() {
       <Route path="/portal/mortgage-ledger" component={gated(MortgageLedger, "/portal/mortgage-ledger")} />
       <Route path="/portal/liquidity-routes" component={gated(LiquidityRoutesPage, "/portal/liquidity-routes")} />
       <Route path="/portal/plastic-to-cash" component={gated(PlasticToCashPage, "/portal/plastic-to-cash")} />
+      <Route path="/portal/mutual-carriers" component={gated(MutualCarriersPage, "/portal/mutual-carriers")} />
       <Route path="/portal/how-a-figure-is-made" component={gated(HowAFigureIsMade, "/portal/how-a-figure-is-made")} />
       <Route path="/portal/alt-credit" component={gated(AltCreditHub, "/portal/alt-credit")} />
       <Route path="/portal/alt-credit/:slug" component={gated(AltCreditDetail, "/portal/alt-credit")} />
