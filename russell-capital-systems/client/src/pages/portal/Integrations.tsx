@@ -258,7 +258,7 @@ function SlackConfig() {
               <Key className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={16} />
               <Input 
                 type="password"
-                value="xoxb-EXAMPLE-PLACEHOLDER" 
+                value="slack-bot-token-placeholder" 
                 readOnly
                 className="pl-9 bg-[#0a1929] border-[#1a3a5c] text-slate-200 font-mono text-sm" 
               />
