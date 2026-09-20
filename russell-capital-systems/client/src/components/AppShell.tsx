@@ -16,6 +16,7 @@ import { useState, useEffect, useMemo, useCallback } from "react";
 import { useEntrainment } from "@/contexts/EntrainmentEngine";
 import { useDisclaimer } from "@/contexts/DisclaimerContext";
 import { Link, useLocation } from "wouter";
+import { NAV_TREE, flattenNavTree, type NavNode } from "@/navTree";
 import { trpc } from "@/lib/trpc";
 import { useTheme } from "@/contexts/ThemeContext";
 import { TAB_SCORES } from "@shared/tabScores";
@@ -799,6 +800,143 @@ function SubgroupSection({ subgroup, location, onClose, favoritePaths, onToggleF
   );
 }
 
+/**
+ * Recursive renderer for NAV_TREE.
+ *
+ * `CollapsibleSection` and `SubgroupSection` above render exactly two levels —
+ * section, then subgroup — because that is all the old `NAV_SECTIONS` shape
+ * could express. This walks `NavNode.children` to any depth, so nesting is a
+ * data change in navTree.ts rather than a new component here.
+ *
+ * Styling is deliberately identical to the two-level renderer: depth 0 matches
+ * `CollapsibleSection`, depth 1 matches `SubgroupSection`, and deeper levels
+ * step down from there. Leaves reuse `NavItemLink`, so favourites, TAB_SCORES
+ * badges and the client-count badge behave exactly as before.
+ */
+function NavTreeNode({
+  node, depth, location, onClose, clientCount, favoritePaths, onToggleFavorite,
+}: {
+  node: NavNode;
+  depth: number;
+  location: string;
+  onClose: () => void;
+  clientCount: number;
+  favoritePaths?: Set<string>;
+  onToggleFavorite?: (path: string, label: string) => void;
+}) {
+  const descendantPaths = useMemo(() => {
+    const out: string[] = [];
+    const walk = (n: NavNode) => {
+      if (n.path) out.push(n.path);
+      n.children?.forEach(walk);
+    };
+    walk(node);
+    return out;
+  }, [node]);
+
+  const hasActiveChild = descendantPaths.some(
+    (p) => location === p || (p !== "/portal" && location.startsWith(p)),
+  );
+  const [isOpen, setIsOpen] = useState(node.defaultOpen || hasActiveChild);
+
+  useEffect(() => {
+    if (hasActiveChild && !isOpen) setIsOpen(true);
+  }, [hasActiveChild]);
+
+  // ── Leaf: a real destination ──────────────────────────────────────────────
+  if (node.path) {
+    const isActive =
+      location === node.path || (node.path !== "/portal" && location.startsWith(node.path));
+    const badgeCount = node.path === "/portal/clients" ? clientCount : 0;
+    return (
+      <NavItemLink
+        item={{ path: node.path, label: node.label, icon: FileText }}
+        isActive={isActive}
+        onClose={onClose}
+        badgeCount={badgeCount}
+        isFavorited={favoritePaths?.has(node.path)}
+        onToggleFavorite={onToggleFavorite}
+      />
+    );
+  }
+
+  // ── Leaf: a destination with no route yet ─────────────────────────────────
+  // Rendered inert rather than as a link, so it cannot 404.
+  if (node.isPlaceholder) {
+    return (
+      <div className="rc-sidebar-item cursor-default opacity-50" title="No page yet">
+        <FileText size={14} className="text-[#4a6a8e]" />
+        <span style={{ flex: "1 1 0", minWidth: 0, wordBreak: "break-word" }}>{node.label}</span>
+        <span className="inline-flex h-4 flex-shrink-0 items-center justify-center rounded border border-slate-500/25 bg-slate-500/15 px-1 text-[8px] font-bold uppercase tracking-wide text-slate-400">
+          soon
+        </span>
+      </div>
+    );
+  }
+
+  // ── Folder ────────────────────────────────────────────────────────────────
+  const children = node.children ?? [];
+  const kids = children.map((child, i) => (
+    <NavTreeNode
+      key={child.path ?? `${child.label}-${i}`}
+      node={child}
+      depth={depth + 1}
+      location={location}
+      onClose={onClose}
+      clientCount={clientCount}
+      favoritePaths={favoritePaths}
+      onToggleFavorite={onToggleFavorite}
+    />
+  ));
+
+  if (depth === 0) {
+    return (
+      <div>
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className={`w-full flex items-center gap-2 px-3 py-1.5 text-[11px] uppercase tracking-[0.12em] font-extrabold transition-all duration-200 cursor-pointer select-none ${
+            hasActiveChild
+              ? "text-[#22c55e] drop-shadow-[0_0_6px_rgba(34,197,94,0.4)]"
+              : "text-[#7a95b8] hover:brightness-125"
+          }`}
+        >
+          <span className="flex-1 text-left">{node.label}</span>
+          <span className="text-[9px] opacity-40 font-bold">{descendantPaths.length}</span>
+          <ChevronRight
+            size={11}
+            className={`transition-transform duration-200 flex-shrink-0 opacity-60 ${isOpen ? "rotate-90" : ""}`}
+          />
+        </button>
+        {isOpen && <div className="pb-1">{kids}</div>}
+      </div>
+    );
+  }
+
+  const label =
+    depth === 1
+      ? "px-2.5 py-1 text-[10px] tracking-[0.1em] font-bold text-[#5a7a9e] opacity-70 hover:opacity-100"
+      : "px-2 py-0.5 text-[9px] tracking-[0.08em] font-semibold text-[#4a6a8e] opacity-60 hover:opacity-95";
+
+  return (
+    <div className="ml-2">
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className={`w-full flex items-center gap-1.5 uppercase transition-all duration-200 cursor-pointer select-none ${
+          hasActiveChild ? "text-[#22c55e]/80" : label
+        }`}
+      >
+        <ChevronRight
+          size={depth === 1 ? 10 : 9}
+          className={`transition-transform duration-200 flex-shrink-0 opacity-50 ${isOpen ? "rotate-90" : ""}`}
+        />
+        <span className="flex-1 text-left">{node.label}</span>
+        <span className="text-[9px] opacity-40 font-bold">{descendantPaths.length}</span>
+      </button>
+      {isOpen && <div className="ml-1 border-l border-[#12233e]/60 pl-1">{kids}</div>}
+    </div>
+  );
+}
+
 const SPHERE_MODE_KEY = "rcs_nav_sphere";
 
 /**
@@ -887,12 +1025,21 @@ function Sidebar({ open, onClose }: { open: boolean; onClose: () => void }) {
     }
   }, [favoritePaths, addFav, removeFav]);
 
-  // Build a lookup from path -> NavItem for favorites rendering
+  // Build a lookup from path -> NavItem for favorites rendering.
+  //
+  // NAV_SECTIONS is seeded first so favourites keep the icon and colour the
+  // two-level structure gave them, then NAV_TREE fills in anything the tree
+  // reaches that the old structure did not (today: /portal/knowledge, which
+  // NAV_SECTIONS still lists under its unroutable /portal/knowledge-library
+  // path — see navTree.ts).
   const navItemLookup = useMemo(() => {
     const map = new Map<string, NavItem>();
     NAV_SECTIONS.forEach(section => {
       section.items?.forEach(item => map.set(item.path, item));
       section.subgroups?.forEach(sg => sg.items.forEach(item => map.set(item.path, item)));
+    });
+    flattenNavTree().forEach((node, path) => {
+      if (!map.has(path)) map.set(path, { path, label: node.label, icon: FileText });
     });
     return map;
   }, []);
@@ -967,10 +1114,11 @@ function Sidebar({ open, onClose }: { open: boolean; onClose: () => void }) {
           </button>
           {sphereMode ? (
             <SphereNav location={location} onClose={onClose} />
-          ) : NAV_SECTIONS.map((section) => (
-            <CollapsibleSection
-              key={section.label}
-              section={section}
+          ) : NAV_TREE.map((tab) => (
+            <NavTreeNode
+              key={tab.label}
+              node={tab}
+              depth={0}
               location={location}
               onClose={onClose}
               clientCount={clientCount}
