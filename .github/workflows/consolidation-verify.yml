@@ -1,0 +1,104 @@
+# The first CI in this repository to run the build and the test suite on a
+# pull request. Read-only by construction:
+#
+#   * it deploys nothing — no subtree split, no Railway call, no Pages publish;
+#   * it needs no production credential and reads no repository secret;
+#   * it never prints a matched credential, only a 10-character prefix.
+#
+# It runs the FULL test suite rather than `test:ci`. `test:ci` excludes 26 files
+# — the database and schema suites — and the recorded baseline shows the full
+# suite passing with zero failures (docs/CURRENT_STATE_BASELINE.md), so the
+# stricter gate costs nothing and covers exactly what consolidation touches.
+name: Consolidation verify
+
+on:
+  pull_request:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: consolidation-verify-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    working-directory: russell-capital-systems
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: false
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: russell-capital-systems/pnpm-lock.yaml
+
+      # Every required script is checked up front so a missing one fails with a
+      # named error instead of a confusing pnpm exit code further down.
+      - name: Required scripts exist
+        run: |
+          node -e '
+            const s = require("./package.json").scripts || {};
+            const need = ["check", "build", "test"];
+            const missing = need.filter((k) => !s[k]);
+            if (missing.length) {
+              console.error("FAIL: package.json is missing required script(s): " + missing.join(", "));
+              process.exit(1);
+            }
+            for (const k of need) console.log(k.padEnd(6) + " -> " + s[k].slice(0, 80));
+            if (!s.lint) console.log("lint   -> absent (expected; this repository has no lint script)");
+          '
+
+      - name: Install (lockfile-respecting)
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck
+        run: pnpm run check
+
+      - name: Production build
+        run: pnpm run build
+
+      - name: Route integrity
+        run: node scripts/ci/route-integrity.mjs
+
+      - name: Tests (full suite)
+        run: pnpm run test
+
+  secrets:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          lfs: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Scan the diff
+        working-directory: .        # this job works from the repository root
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            BASE="${{ github.event.pull_request.base.sha }}"
+            HEAD="${{ github.event.pull_request.head.sha }}"
+            FILES=$(git diff --name-only --diff-filter=d "$BASE" "$HEAD")
+          else
+            FILES=$(git diff --name-only --diff-filter=d "${{ github.event.before }}" "${{ github.sha }}" 2>/dev/null || true)
+          fi
+          if [ -z "$FILES" ]; then echo "no changed files to scan"; exit 0; fi
+          echo "$FILES" | sed 's/^/  /'
+          node russell-capital-systems/scripts/ci/secret-scan.mjs $FILES
