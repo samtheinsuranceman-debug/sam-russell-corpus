@@ -240,6 +240,7 @@ export const ROUTE_MANIFEST: readonly string[] = [
   "/portal/pipeline",
   "/portal/plan-ledger",
   "/portal/planning-cases",
+  "/portal/plastic-to-cash",
   "/portal/policy-cost-lab",
   "/portal/policy-loans",
   "/portal/policy-review",
