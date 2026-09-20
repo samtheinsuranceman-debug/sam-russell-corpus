@@ -53,18 +53,47 @@ If Railway ever re-creates the domain row, BOTH values change; re-read them with
 
 Do NOT change: apex `A` 185.199.108/109/110/111.153 (GitHub Pages), MX (Google), `pay` CNAME, `_domainconnect` CNAME.
 
-## Blocker
-GoDaddy account is on an identity-verification hold. Web UI edits blocked; API returns
-403 "Authenticated user is not allowed access". GoDaddy support: 480-505-8877.
-Ask: "identity verification pending >48h, unlock DNS edits on russellcapitalsystems.com."
+## Blocker — CORRECTED 20 Sep 2026
+
+The 16–17 Sep entry below conflated two unrelated problems. Both are now understood.
+
+**Resolved: the identity-verification hold.** GoDaddy was called ~16 Sep and the hold has
+been cleared. **Web UI DNS edits work.** Support line, if ever needed again: 480-505-8877.
+
+**Not resolved, and never related to the hold: the API 403.** The Domains API still returns
+`{"code":"ACCESS_DENIED","message":"Authenticated user is not allowed access"}`. This was
+re-tested twice on 20 Sep, after the hold was cleared, and failed both times.
+
+The cause is a GoDaddy **account-eligibility policy**, introduced April–May 2024, not an
+account problem. Per GoDaddy's own API Support team, quoted consistently across many
+independent reports:
+
+> Availability API: Limited to accounts with **50 or more domains**.
+> Management and DNS APIs: Limited to accounts with **10 or more domains** and/or an
+> active **Discount Domain Club – Premier** plan.
+
+No support call fixes this. The options are: hold 10+ domains, buy DDC Premier, ask GoDaddy
+to whitelist the account (they offer review "if you feel you meet these requirements"), or
+move DNS to a provider with an open API — see `CLOUDFLARE_DNS_MIGRATION.md`.
+
+**The gate is registered domains, not API integrations.** Adding 200 or 300 API connections
+to the platform moves this number by zero. See `CLOUDFLARE_DNS_MIGRATION.md` §6, which also
+carries the SPF 10-lookup ceiling that decides how many email senders this domain can
+authorise before mail silently fails.
+
+**Practical effect:** DNS work is *not* blocked. It is blocked *for automation only*. Edit by
+hand in the GoDaddy UI. The two Make scenarios (`rcs_dns_read_zone`, `rcs_dns_apply_records`)
+will keep failing until the account clears the bar or DNS moves.
 
 ## Fallback (no GoDaddy dependency)
 Buy a domain through Vercel (`russellcapitalsystems.net` preferred; `.app` is HSTS-preloaded and
 hard-fails until the cert issues). Add it as a Railway custom domain, create the CNAME + TXT in
 Vercel DNS, wait for `certificateStatus = ISSUED`, then add that origin to `CORS_ORIGINS` (or make it the API origin and rebuild `docs/`).
 
-## End state after GoDaddy unlocks
-Move nameservers to Cloudflare (DNS-only). `www` CNAME + TXT → Railway; apex either stays on the
+## End state (the unlock is not coming — see the corrected Blocker)
+Move nameservers to Cloudflare (DNS-only). Step-by-step procedure, pre-flight checklist and
+rollback: **`CLOUDFLARE_DNS_MIGRATION.md`**. Nothing is currently broken, so this is an
+improvement to schedule, not an incident to fix. `www` CNAME + TXT → Railway; apex either stays on the
 GitHub Pages front door or becomes a flattened CNAME → Railway with its own TXT. Export MX and
 verification TXT records before changing nameservers.
 
