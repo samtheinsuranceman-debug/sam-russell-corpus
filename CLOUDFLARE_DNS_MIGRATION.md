@@ -11,9 +11,13 @@ renewal or transfer is touched.
 
 **Nothing is broken today.** `www` is live on Railway with a valid Let's Encrypt
 certificate, the apex serves from GitHub Pages, and mail works. This migration
-buys you a working DNS API — nothing more. It is a scheduled improvement, not an
-incident response. **Do it on a weekday morning with two hours free, never at
-2 a.m. under pressure.**
+buys you a working DNS API. It is a scheduled improvement, not an incident
+response. **Do it on a weekday morning with two hours free, never at 2 a.m.
+under pressure.**
+
+**If you are planning many API integrations, read §6 first** — it decides
+*when* to schedule this, and it carries the one constraint that silently breaks
+email at scale.
 
 **The one irreversible failure is email.** A missed `MX`, `SPF` or `DKIM` record
 does not throw an error. Mail simply stops arriving, or starts failing DMARC at
@@ -193,21 +197,147 @@ stable for a week; together they let you rebuild the zone by hand from nothing.
 
 ---
 
-## 6. What this actually buys, and what it costs
+---
 
-**Buys:** a free, unrestricted DNS API — so the two Make scenarios work again,
-ACME DNS-01 certificates become possible, and scripted DNS stops being blocked by
-a domain-count policy you cannot influence.
+## 6. Scaling to 200–300 API integrations
 
-**Costs:** one more vendor in the path, and a `.com` registry propagation window.
+Added 20 Sep 2026, after the platform target of 200–300 API connections was
+stated. This section changes the recommendation from "worth doing" to "do it".
 
-**Does not buy:** anything the site needs today. If you do not need scripted DNS,
-the zero-risk alternative is to retire the two Make scenarios and edit DNS by
-hand in the GoDaddy UI, which works now that the identity hold is cleared.
+### 6.1 First, a correction that saves money
+
+**API connections do not count toward GoDaddy's API eligibility.** The gate is
+**10 or more registered domains**, or a Discount Domain Club – Premier plan. Two
+hundred integrations, or two thousand, leave the 403 exactly where it is. Do not
+buy API subscriptions expecting to unlock the GoDaddy Domains API — buy domains,
+buy DDC Premier, or move DNS.
+
+### 6.2 Most integrations need no DNS at all
+
+Before planning for 300 records, triage. The overwhelming majority of API
+integrations authenticate with a key over HTTPS and touch DNS **zero** times —
+carrier feeds, market data, CRM reads, payment APIs, model providers, webhooks
+you receive. Nothing in DNS changes for any of them.
+
+Only four classes need records:
+
+| Class | Records per integration | Example |
+|---|---|---|
+| **Email senders** | SPF include + 1–3 DKIM CNAMEs, sometimes a return-path CNAME | Resend, SendGrid, Postmark, Mailgun, Google Workspace |
+| **Domain verification** | one `TXT`, often removable after verification | Google, Microsoft, Meta, Stripe |
+| **Service on your subdomain** | one `CNAME` | `status.`, `docs.`, `pay.`, a hosted portal |
+| **Certificate authority pinning** | `CAA`, once for the zone | — |
+
+Realistically that is **20–40 records**, not 300. That is the number to plan
+around.
+
+### 6.3 The one that will actually bite you: the SPF 10-lookup limit
+
+This is the sharpest constraint in the entire document, and it is the reason
+"many integrations" is a DNS problem rather than a spreadsheet problem.
+
+**RFC 7208 §4.6.4 caps SPF evaluation at 10 DNS lookups.** Every `include:`,
+`a`, `mx`, `ptr`, `exists` and `redirect=` counts. `ip4:`, `ip6:` and `all` are
+free. Exceed 10 and the receiver **must** return `permerror`.
+
+What `permerror` means in practice:
+
+- SPF is not merely "failed" — it is **structurally invalid**, and every sender
+  it authorises fails, including the ones listed first.
+- **DMARC fails in cascade**, because SPF alignment cannot be evaluated.
+- Gmail, Outlook and Yahoo enforce it strictly. Mail is rejected or filed as spam.
+- **The sending side sees no error.** Only the recipient does. This is the silent
+  failure named at the top of this document, arriving by a second route.
+
+There is a second, less famous cap: **at most 2 void lookups** — mechanisms
+resolving to `NXDOMAIN` or an empty answer. A third one is also `permerror`,
+even with the total under 10. A decommissioned vendor whose SPF domain stops
+resolving can therefore break mail for every other sender on the record.
+
+**Three or four senders is enough to hit the limit.** The cost is recursive:
+`include:` charges you for everything nested inside the vendor's record, at any
+depth. Vendors restructure their records without telling you, so a record that
+cost 8 lookups last quarter can cost 11 today with nothing changed on your side.
+**Never trust a published per-vendor lookup figure, including any in this
+document — resolve and count the live tree.**
+
+### 6.4 The structural answer: one sending subdomain per sender
+
+Flattening `include:` into `ip4:` ranges buys headroom but creates a maintenance
+trap: the flattened list is a snapshot, and it silently becomes wrong the moment
+a vendor renumbers.
+
+The durable fix is that **each subdomain carries its own independent 10-lookup
+budget**:
+
+| Sends from | Provider | Its own SPF |
+|---|---|---|
+| `russellcapitalsystems.com` | Google Workspace — staff mail only | `include:_spf.google.com` |
+| `mail.russellcapitalsystems.com` | transactional (Resend/SendGrid) | that provider only |
+| `news.russellcapitalsystems.com` | marketing | that provider only |
+| `alerts.russellcapitalsystems.com` | platform notifications | that provider only |
+
+This also protects the root domain's sending reputation: a marketing blast that
+draws spam complaints damages `news.`, not the domain your client mail and
+Railway app live on. **Adopt this pattern before the third email sender, not
+after mail starts failing.** Retrofitting means re-verifying every sender.
+
+### 6.5 Why this settles the Cloudflare question
+
+At one or two integrations, hand-editing DNS in the GoDaddy UI is fine and the
+migration is optional. At the stated scale it is not:
+
+- **20–40 records that change** as integrations are added, rotated and retired —
+  each a hand-edit in a web UI, each an opportunity to break mail silently.
+- **SPF and DKIM need to be generated and verified programmatically**, not
+  transcribed. A mistyped DKIM key fails closed and silently.
+- **DNS-01 ACME certificates** for any subdomain you terminate TLS on require a
+  working DNS API.
+- **The GoDaddy gate cannot be argued with.** It is a domain count, and it is not
+  going to move because the platform grew.
+
+Cloudflare's DNS API is free, unrestricted, and does not care how many
+integrations you run. Record-count limits on the free plan are far above the
+20–40 needed here; the practical ceiling is operational discipline, not the
+provider.
+
+**Revised recommendation: do the migration, and do it before the integration
+count climbs.** Every sender added under GoDaddy is one more to re-verify
+afterward. The cheapest moment to move is now, while the record list is still
+short enough to export and diff by hand.
+
+### 6.6 Added to the pre-flight
+
+When §1 is run, also capture and keep:
+
+- the current SPF record **and its fully expanded recursive lookup count**;
+- every DKIM selector currently published, per sender;
+- the `_dmarc` policy;
+- a written inventory of which integrations send mail as this domain — because
+  §6.3 makes that list a hard operational limit, not documentation.
 
 ---
 
-## 7. Out of scope
+## 7. What this actually buys, and what it costs
+
+**Buys:** a free, unrestricted DNS API — the two Make scenarios work again, ACME
+DNS-01 certificates become possible, and scripted DNS stops being blocked by a
+domain-count policy no amount of platform growth will change. At the integration
+scale in §6, it also buys the ability to add a mail sender without hand-typing a
+DKIM key into a web form.
+
+**Costs:** one more vendor in the path, and a `.com` registry propagation window.
+
+**Does not fix anything broken today.** `www`, the apex and mail all work. This
+remains a scheduled improvement — but §6 changes *when* it should be scheduled.
+With one or two integrations, hand-editing in the GoDaddy UI is fine and this
+document is optional. At 200–300, with 20–40 DNS-bearing records and a hard
+10-lookup SPF ceiling, it is not: **move before the sender count climbs**, because
+every email integration added under GoDaddy is one more to re-verify afterward.
+
+---
+
+## 8. Out of scope
 
 Not covered here, each needing its own decision: moving the registrar away from
 GoDaddy; turning on Cloudflare proxying, WAF or caching; changing where the apex

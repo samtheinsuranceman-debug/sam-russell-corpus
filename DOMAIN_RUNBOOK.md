@@ -76,6 +76,11 @@ No support call fixes this. The options are: hold 10+ domains, buy DDC Premier, 
 to whitelist the account (they offer review "if you feel you meet these requirements"), or
 move DNS to a provider with an open API — see `CLOUDFLARE_DNS_MIGRATION.md`.
 
+**The gate is registered domains, not API integrations.** Adding 200 or 300 API connections
+to the platform moves this number by zero. See `CLOUDFLARE_DNS_MIGRATION.md` §6, which also
+carries the SPF 10-lookup ceiling that decides how many email senders this domain can
+authorise before mail silently fails.
+
 **Practical effect:** DNS work is *not* blocked. It is blocked *for automation only*. Edit by
 hand in the GoDaddy UI. The two Make scenarios (`rcs_dns_read_zone`, `rcs_dns_apply_records`)
 will keep failing until the account clears the bar or DNS moves.
