@@ -110,6 +110,7 @@ export const ROUTE_MANIFEST: readonly string[] = [
   "/portal/command",
   "/portal/command-center",
   "/portal/commission-calculator",
+  "/portal/credit-cards",
   "/portal/commission-tracker",
   "/portal/comparison",
   "/portal/compete",
