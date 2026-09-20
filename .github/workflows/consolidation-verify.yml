@@ -1,0 +1,94 @@
+# Read-only gate for consolidation work. Installs, typechecks, builds and runs
+# the FULL vitest suite against russell-capital-systems, and re-counts routes so
+# a migration PR states its own delta. Deploys nothing and touches no database.
+#
+# It deliberately runs the full suite rather than `test:ci`: the excluded files
+# are the database and schema suites, and a consolidation is exactly when those
+# matter. On origin/master they pass (4220 tests, 0 failures).
+name: Consolidation verify
+
+on:
+  pull_request:
+    paths:
+      - "consolidation/**"
+      - "russell-capital-systems/**"
+      - ".github/workflows/consolidation-verify.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: consolidation-verify-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: russell-capital-systems
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: false
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: russell-capital-systems/pnpm-lock.yaml
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck
+        run: pnpm run check
+
+      - name: Build
+        run: pnpm run build
+
+      - name: Route count
+        run: |
+          node -e "
+            const r = require('./dist/public/routes.json');
+            console.log('route patterns emitted:', r.routes.length);
+          "
+
+      - name: Tests (full suite)
+        run: pnpm run test
+
+  secrets:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          lfs: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Secret scan
+        run: |
+          python3 consolidation/tools/secret_scan.py "$PWD" russell-capital-systems > /tmp/scan.json
+          python3 - <<'PY'
+          import json, sys
+          d = json.load(open('/tmp/scan.json'))
+          real = [h for h in d['hits'] if not h['placeholder']]
+          print(f"scanned {d['scanned']} files, {len(d['hits'])} pattern hits, "
+                f"{len(real)} not obviously placeholders")
+          for h in d['hits']:
+              tag = 'placeholder' if h['placeholder'] else 'REVIEW'
+              print(f"  [{tag}] {h['rule']}  {h['file']}:{h['line']}  {h['preview']}")
+          # Every known hit on master is a documented template or a loopback dev
+          # credential (consolidation/05). A NEW rule firing is what should stop
+          # a PR, so fail on the rules that never legitimately appear here.
+          hard = {'aws_access_key_id','github_token','openai_key','anthropic_key',
+                  'stripe_live_key','google_api_key','private_key_block','sendgrid_key'}
+          bad = [h for h in d['hits'] if h['rule'] in hard]
+          if bad:
+              print('\nFAIL: credential-shaped material found')
+              sys.exit(1)
+          PY

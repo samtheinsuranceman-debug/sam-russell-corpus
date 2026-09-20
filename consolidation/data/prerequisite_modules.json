@@ -1,0 +1,128 @@
+[
+ {
+  "module": "@/context/FinancialDataContext",
+  "used_by_pages": 212,
+  "lines": 131,
+  "donor_path": "client/src/context/FinancialDataContext.tsx",
+  "identical_in_russell_capital": true
+ },
+ {
+  "module": "@/components/CalculatorPDFExport",
+  "used_by_pages": 114,
+  "lines": 262,
+  "donor_path": "client/src/components/CalculatorPDFExport.tsx",
+  "identical_in_russell_capital": true
+ },
+ {
+  "module": "@/components/ProjectionChart50yr",
+  "used_by_pages": 105,
+  "lines": 174,
+  "donor_path": "client/src/components/ProjectionChart50yr.tsx",
+  "identical_in_russell_capital": true
+ },
+ {
+  "module": "@/components/CalculatorIntegration",
+  "used_by_pages": 100,
+  "lines": 715,
+  "donor_path": "client/src/components/CalculatorIntegration.tsx",
+  "identical_in_russell_capital": true
+ },
+ {
+  "module": "@/components/StateTaxSelector",
+  "used_by_pages": 90,
+  "lines": 111,
+  "donor_path": "client/src/components/StateTaxSelector.tsx",
+  "identical_in_russell_capital": true
+ },
+ {
+  "module": "@/contexts/UnifiedDataBusContext",
+  "used_by_pages": 54,
+  "lines": 197,
+  "donor_path": "client/src/contexts/UnifiedDataBusContext.tsx",
+  "identical_in_russell_capital": true
+ },
+ {
+  "module": "@/components/ToggleHub",
+  "used_by_pages": 24,
+  "lines": 44,
+  "donor_path": "client/src/components/ToggleHub.tsx",
+  "identical_in_russell_capital": true
+ },
+ {
+  "module": "@/contexts/OrganismContext",
+  "used_by_pages": 11,
+  "lines": 107,
+  "donor_path": "client/src/contexts/OrganismContext.tsx",
+  "identical_in_russell_capital": true
+ },
+ {
+  "module": "@/components/ResultReveal",
+  "used_by_pages": 6,
+  "lines": 135,
+  "donor_path": "client/src/components/ResultReveal.tsx",
+  "identical_in_russell_capital": true
+ },
+ {
+  "module": "@/components/ComboPageWrapper",
+  "used_by_pages": 6,
+  "lines": 104,
+  "donor_path": "client/src/components/ComboPageWrapper.tsx",
+  "identical_in_russell_capital": true
+ },
+ {
+  "module": "@/hooks/useOrganismEyes",
+  "used_by_pages": 2,
+  "lines": 605,
+  "donor_path": "client/src/hooks/useOrganismEyes.ts",
+  "identical_in_russell_capital": true
+ },
+ {
+  "module": "@/hooks/useOrganismNervousSystem",
+  "used_by_pages": 2,
+  "lines": 964,
+  "donor_path": "client/src/hooks/useOrganismNervousSystem.ts",
+  "identical_in_russell_capital": true
+ },
+ {
+  "module": "@/hooks/useOrganismDeepIndex",
+  "used_by_pages": 1,
+  "lines": 338,
+  "donor_path": "client/src/hooks/useOrganismDeepIndex.ts",
+  "identical_in_russell_capital": true
+ },
+ {
+  "module": "@/hooks/useOrganism",
+  "used_by_pages": 1,
+  "lines": 186,
+  "donor_path": "client/src/hooks/useOrganism.ts",
+  "identical_in_russell_capital": true
+ },
+ {
+  "module": "@/components/NeuralMeshInterceptor",
+  "used_by_pages": 1,
+  "lines": 512,
+  "donor_path": "client/src/components/NeuralMeshInterceptor.tsx",
+  "identical_in_russell_capital": true
+ },
+ {
+  "module": "@/data/physicianSpecialtyDefaults",
+  "used_by_pages": 1,
+  "lines": 614,
+  "donor_path": "client/src/data/physicianSpecialtyDefaults.ts",
+  "identical_in_russell_capital": true
+ },
+ {
+  "module": "@/lib/toolSearchIndex",
+  "used_by_pages": 1,
+  "lines": 3530,
+  "donor_path": "client/src/lib/toolSearchIndex.ts",
+  "identical_in_russell_capital": false
+ },
+ {
+  "module": "@/hooks/useOrganismSkeleton",
+  "used_by_pages": 1,
+  "lines": 718,
+  "donor_path": "client/src/hooks/useOrganismSkeleton.ts",
+  "identical_in_russell_capital": true
+ }
+]

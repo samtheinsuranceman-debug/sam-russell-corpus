@@ -1,0 +1,1858 @@
+{
+ "accessControl.ts": {
+  "live": {
+   "sha": "dda713739c15",
+   "lines": 29
+  },
+  "russell-capital": {
+   "sha": "3317c9853afc",
+   "lines": 104
+  },
+  "russell-capital-app": {
+   "sha": "f5ec6c414606",
+   "lines": 107
+  }
+ },
+ "advancedAnalytics.ts": {
+  "live": {
+   "sha": "cbd958305780",
+   "lines": 997
+  },
+  "russell-capital": {
+   "sha": "cbd958305780",
+   "lines": 997
+  },
+  "russell-capital-app": {
+   "sha": "cbd958305780",
+   "lines": 997
+  }
+ },
+ "advisorModes.ts": {
+  "live": {
+   "sha": "7cb8b6db1959",
+   "lines": 69
+  },
+  "russell-capital": {
+   "sha": "7cb8b6db1959",
+   "lines": 69
+  }
+ },
+ "advisorySummaryData.ts": {
+  "live": {
+   "sha": "0d9d65118520",
+   "lines": 1578
+  },
+  "russell-capital": {
+   "sha": "0d9d65118520",
+   "lines": 1578
+  },
+  "russell-capital-app": {
+   "sha": "0d9d65118520",
+   "lines": 1578
+  }
+ },
+ "ag49Products.ts": {
+  "live": {
+   "sha": "76565de5de79",
+   "lines": 143
+  }
+ },
+ "ag49Validator.ts": {
+  "live": {
+   "sha": "d784447cb0f2",
+   "lines": 176
+  },
+  "russell-capital": {
+   "sha": "d784447cb0f2",
+   "lines": 176
+  }
+ },
+ "aiIntakeScript.ts": {
+  "live": {
+   "sha": "1073375ead35",
+   "lines": 460
+  },
+  "russell-capital": {
+   "sha": "1073375ead35",
+   "lines": 460
+  }
+ },
+ "aiMemoryBank.ts": {
+  "live": {
+   "sha": "e28ae1d1b20c",
+   "lines": 408
+  }
+ },
+ "annuityData.ts": {
+  "live": {
+   "sha": "ac347e2cebd0",
+   "lines": 1016
+  },
+  "russell-capital": {
+   "sha": "ac347e2cebd0",
+   "lines": 1016
+  },
+  "russell-capital-app": {
+   "sha": "ac347e2cebd0",
+   "lines": 1016
+  }
+ },
+ "annuityFeeDetectionEngine.ts": {
+  "live": {
+   "sha": "ce8b98748096",
+   "lines": 309
+  },
+  "russell-capital": {
+   "sha": "ce8b98748096",
+   "lines": 309
+  },
+  "russell-capital-app": {
+   "sha": "ce8b98748096",
+   "lines": 309
+  }
+ },
+ "assessmentBridge.ts": {
+  "live": {
+   "sha": "ec5973049a81",
+   "lines": 154
+  },
+  "russell-capital": {
+   "sha": "ec5973049a81",
+   "lines": 154
+  }
+ },
+ "balancedIndexedAccount.ts": {
+  "live": {
+   "sha": "80de92223d7d",
+   "lines": 338
+  },
+  "russell-capital": {
+   "sha": "80de92223d7d",
+   "lines": 338
+  }
+ },
+ "behavioralBiasEngine.ts": {
+  "live": {
+   "sha": "63a2d26f3548",
+   "lines": 187
+  },
+  "russell-capital": {
+   "sha": "63a2d26f3548",
+   "lines": 187
+  },
+  "russell-capital-app": {
+   "sha": "63a2d26f3548",
+   "lines": 187
+  }
+ },
+ "branding.ts": {
+  "live": {
+   "sha": "2b709f2d6333",
+   "lines": 42
+  },
+  "russell-capital": {
+   "sha": "244afd00b65c",
+   "lines": 40
+  },
+  "russell-capital-app": {
+   "sha": "244afd00b65c",
+   "lines": 40
+  }
+ },
+ "calculatorCatalog.ts": {
+  "live": {
+   "sha": "05e0b82eecce",
+   "lines": 495
+  }
+ },
+ "captiveInsuranceEngine.ts": {
+  "live": {
+   "sha": "755d5970037d",
+   "lines": 125
+  },
+  "russell-capital": {
+   "sha": "755d5970037d",
+   "lines": 125
+  },
+  "russell-capital-app": {
+   "sha": "755d5970037d",
+   "lines": 125
+  }
+ },
+ "careerEngine.ts": {
+  "live": {
+   "sha": "2273f6d037a1",
+   "lines": 294
+  },
+  "russell-capital": {
+   "sha": "2273f6d037a1",
+   "lines": 294
+  }
+ },
+ "carrierRatings.ts": {
+  "live": {
+   "sha": "a1e10451f50d",
+   "lines": 208
+  },
+  "russell-capital": {
+   "sha": "a1e10451f50d",
+   "lines": 208
+  },
+  "russell-capital-app": {
+   "sha": "a1e10451f50d",
+   "lines": 208
+  }
+ },
+ "carrierRecommendation.ts": {
+  "live": {
+   "sha": "fc97fb0df2e7",
+   "lines": 169
+  },
+  "russell-capital": {
+   "sha": "fc97fb0df2e7",
+   "lines": 169
+  },
+  "russell-capital-app": {
+   "sha": "fc97fb0df2e7",
+   "lines": 169
+  }
+ },
+ "carrierStrengthMonitorEngine.ts": {
+  "live": {
+   "sha": "6ddcb0bc5cd2",
+   "lines": 168
+  },
+  "russell-capital": {
+   "sha": "6ddcb0bc5cd2",
+   "lines": 168
+  },
+  "russell-capital-app": {
+   "sha": "6ddcb0bc5cd2",
+   "lines": 168
+  }
+ },
+ "ceCreditTrackerEngine.ts": {
+  "live": {
+   "sha": "bbb2a22ae24b",
+   "lines": 170
+  },
+  "russell-capital": {
+   "sha": "bbb2a22ae24b",
+   "lines": 170
+  },
+  "russell-capital-app": {
+   "sha": "bbb2a22ae24b",
+   "lines": 170
+  }
+ },
+ "chainEngine.ts": {
+  "live": {
+   "sha": "69123ed42ec3",
+   "lines": 511
+  },
+  "russell-capital": {
+   "sha": "69123ed42ec3",
+   "lines": 511
+  }
+ },
+ "clientFactFinder.ts": {
+  "live": {
+   "sha": "813339653d28",
+   "lines": 487
+  },
+  "russell-capital": {
+   "sha": "813339653d28",
+   "lines": 487
+  }
+ },
+ "clientRetentionEngine.ts": {
+  "live": {
+   "sha": "017bd13eb280",
+   "lines": 211
+  },
+  "russell-capital": {
+   "sha": "017bd13eb280",
+   "lines": 211
+  },
+  "russell-capital-app": {
+   "sha": "017bd13eb280",
+   "lines": 211
+  }
+ },
+ "commissionOptimizerEngine.ts": {
+  "live": {
+   "sha": "90dca4199853",
+   "lines": 182
+  },
+  "russell-capital": {
+   "sha": "90dca4199853",
+   "lines": 182
+  },
+  "russell-capital-app": {
+   "sha": "90dca4199853",
+   "lines": 182
+  }
+ },
+ "compositeMind.ts": {
+  "live": {
+   "sha": "aa7ec9f37f91",
+   "lines": 251
+  }
+ },
+ "consent.ts": {
+  "live": {
+   "sha": "3f0c53763f91",
+   "lines": 82
+  },
+  "russell-capital": {
+   "sha": "3f0c53763f91",
+   "lines": 82
+  }
+ },
+ "const.ts": {
+  "live": {
+   "sha": "24fb2644a828",
+   "lines": 30
+  },
+  "russell-capital": {
+   "sha": "2f31290423cc",
+   "lines": 36
+  },
+  "russell-capital-app": {
+   "sha": "25399c5ed339",
+   "lines": 14
+  }
+ },
+ "costStructure.ts": {
+  "live": {
+   "sha": "2f1ef91516ae",
+   "lines": 344
+  },
+  "russell-capital": {
+   "sha": "2f1ef91516ae",
+   "lines": 344
+  }
+ },
+ "creditUnionLenders.ts": {
+  "live": {
+   "sha": "6586bcfd44e6",
+   "lines": 525
+  }
+ },
+ "creditingWindows.ts": {
+  "live": {
+   "sha": "303b7d752602",
+   "lines": 111
+  },
+  "russell-capital": {
+   "sha": "303b7d752602",
+   "lines": 111
+  }
+ },
+ "crtWealthReplacementEngine.ts": {
+  "live": {
+   "sha": "1ac728a03295",
+   "lines": 157
+  },
+  "russell-capital": {
+   "sha": "1ac728a03295",
+   "lines": 157
+  },
+  "russell-capital-app": {
+   "sha": "1ac728a03295",
+   "lines": 157
+  }
+ },
+ "cryptoCycleEngine.ts": {
+  "live": {
+   "sha": "e82b94b3478a",
+   "lines": 651
+  },
+  "russell-capital": {
+   "sha": "e82b94b3478a",
+   "lines": 651
+  },
+  "russell-capital-app": {
+   "sha": "e82b94b3478a",
+   "lines": 651
+  }
+ },
+ "cycleEngine.ts": {
+  "live": {
+   "sha": "27b2ab01d826",
+   "lines": 556
+  }
+ },
+ "cycleScenarios.ts": {
+  "live": {
+   "sha": "ce78897b91d1",
+   "lines": 1724
+  }
+ },
+ "disabilityGapAnalyzerEngine.ts": {
+  "live": {
+   "sha": "8eaf9546af1c",
+   "lines": 513
+  }
+ },
+ "disabilityGapEngine.ts": {
+  "live": {
+   "sha": "ab8419852b70",
+   "lines": 151
+  },
+  "russell-capital": {
+   "sha": "ab8419852b70",
+   "lines": 151
+  },
+  "russell-capital-app": {
+   "sha": "ab8419852b70",
+   "lines": 151
+  }
+ },
+ "divorceFinancialEngine.ts": {
+  "live": {
+   "sha": "6c8e7b7dfd0d",
+   "lines": 179
+  },
+  "russell-capital": {
+   "sha": "016365ecd945",
+   "lines": 200
+  },
+  "russell-capital-app": {
+   "sha": "8d27e5d10bea",
+   "lines": 151
+  }
+ },
+ "divorceStateRules.ts": {
+  "live": {
+   "sha": "98978b342cba",
+   "lines": 244
+  },
+  "russell-capital": {
+   "sha": "98978b342cba",
+   "lines": 244
+  }
+ },
+ "erosion.ts": {
+  "live": {
+   "sha": "de02b376be89",
+   "lines": 315
+  },
+  "russell-capital": {
+   "sha": "de02b376be89",
+   "lines": 315
+  }
+ },
+ "estateTaxEngine.ts": {
+  "live": {
+   "sha": "bf6fc13696b3",
+   "lines": 453
+  },
+  "russell-capital": {
+   "sha": "bf6fc13696b3",
+   "lines": 453
+  },
+  "russell-capital-app": {
+   "sha": "bf6fc13696b3",
+   "lines": 453
+  }
+ },
+ "exchangeChainEngine.ts": {
+  "live": {
+   "sha": "0ceea24ce601",
+   "lines": 456
+  }
+ },
+ "factFinder.ts": {
+  "live": {
+   "sha": "128d6abd1205",
+   "lines": 321
+  },
+  "russell-capital": {
+   "sha": "128d6abd1205",
+   "lines": 321
+  }
+ },
+ "fiaCollateralEngine.ts": {
+  "live": {
+   "sha": "7c9cdb83a8e8",
+   "lines": 666
+  },
+  "russell-capital": {
+   "sha": "7c9cdb83a8e8",
+   "lines": 666
+  },
+  "russell-capital-app": {
+   "sha": "7c9cdb83a8e8",
+   "lines": 666
+  }
+ },
+ "firewall.ts": {
+  "live": {
+   "sha": "2b867272726b",
+   "lines": 115
+  },
+  "russell-capital": {
+   "sha": "2b867272726b",
+   "lines": 115
+  }
+ },
+ "forgiveness.ts": {
+  "live": {
+   "sha": "65294f7585b4",
+   "lines": 531
+  },
+  "russell-capital": {
+   "sha": "65294f7585b4",
+   "lines": 531
+  }
+ },
+ "generationalWealthEngine.ts": {
+  "live": {
+   "sha": "08fe70906112",
+   "lines": 213
+  },
+  "russell-capital": {
+   "sha": "08fe70906112",
+   "lines": 213
+  },
+  "russell-capital-app": {
+   "sha": "08fe70906112",
+   "lines": 213
+  }
+ },
+ "genomeStrategies.ts": {
+  "live": {
+   "sha": "f267225887dc",
+   "lines": 824
+  }
+ },
+ "genomeStrategyFit.ts": {
+  "live": {
+   "sha": "c96283f7f2c3",
+   "lines": 353
+  }
+ },
+ "growthAnnuityEngine.ts": {
+  "live": {
+   "sha": "01e89aa26225",
+   "lines": 480
+  },
+  "russell-capital": {
+   "sha": "01e89aa26225",
+   "lines": 480
+  },
+  "russell-capital-app": {
+   "sha": "ed7930b1f54a",
+   "lines": 443
+  }
+ },
+ "helocLenders.ts": {
+  "live": {
+   "sha": "2cad924b323b",
+   "lines": 239
+  },
+  "russell-capital": {
+   "sha": "2cad924b323b",
+   "lines": 239
+  }
+ },
+ "historicalMarketRegimeEngine.ts": {
+  "live": {
+   "sha": "2fc831356546",
+   "lines": 209
+  }
+ },
+ "historicalShocks.ts": {
+  "live": {
+   "sha": "12a3b08c122f",
+   "lines": 176
+  },
+  "russell-capital": {
+   "sha": "12a3b08c122f",
+   "lines": 176
+  }
+ },
+ "householdGenome.ts": {
+  "live": {
+   "sha": "cf0facb096ff",
+   "lines": 635
+  }
+ },
+ "householdWealth.bak.ts": {
+  "live": {
+   "sha": "06a0ab0897f4",
+   "lines": 667
+  },
+  "russell-capital": {
+   "sha": "06a0ab0897f4",
+   "lines": 667
+  },
+  "russell-capital-app": {
+   "sha": "06a0ab0897f4",
+   "lines": 667
+  }
+ },
+ "householdWealth.ts": {
+  "live": {
+   "sha": "4dfde7752adb",
+   "lines": 948
+  },
+  "russell-capital": {
+   "sha": "4dfde7752adb",
+   "lines": 948
+  },
+  "russell-capital-app": {
+   "sha": "4dfde7752adb",
+   "lines": 948
+  }
+ },
+ "hybridIncomeFloorEngine.ts": {
+  "live": {
+   "sha": "dd526c6044ac",
+   "lines": 550
+  }
+ },
+ "ibbotsonModel.ts": {
+  "live": {
+   "sha": "f7168c9b719f",
+   "lines": 414
+  },
+  "russell-capital": {
+   "sha": "f7168c9b719f",
+   "lines": 414
+  },
+  "russell-capital-app": {
+   "sha": "f7168c9b719f",
+   "lines": 414
+  }
+ },
+ "illustrationCalibration.ts": {
+  "live": {
+   "sha": "e13a7eb008c5",
+   "lines": 410
+  },
+  "russell-capital": {
+   "sha": "e13a7eb008c5",
+   "lines": 410
+  }
+ },
+ "incomeForLife.ts": {
+  "live": {
+   "sha": "d99fd869c96c",
+   "lines": 94
+  },
+  "russell-capital": {
+   "sha": "d99fd869c96c",
+   "lines": 94
+  }
+ },
+ "indexCreditingData.ts": {
+  "live": {
+   "sha": "79d72a08b3c3",
+   "lines": 999
+  },
+  "russell-capital": {
+   "sha": "79d72a08b3c3",
+   "lines": 999
+  },
+  "russell-capital-app": {
+   "sha": "065e25320f84",
+   "lines": 685
+  }
+ },
+ "indexSeriesReconciliation.ts": {
+  "live": {
+   "sha": "daff5dc4212d",
+   "lines": 212
+  }
+ },
+ "inheritanceEngine.ts": {
+  "live": {
+   "sha": "798895f523a9",
+   "lines": 190
+  },
+  "russell-capital": {
+   "sha": "798895f523a9",
+   "lines": 190
+  }
+ },
+ "irc7702.ts": {
+  "live": {
+   "sha": "327b906b5db4",
+   "lines": 139
+  },
+  "russell-capital": {
+   "sha": "327b906b5db4",
+   "lines": 139
+  }
+ },
+ "iulCarriers.ts": {
+  "live": {
+   "sha": "e3cbac9af82a",
+   "lines": 219
+  },
+  "russell-capital": {
+   "sha": "e3cbac9af82a",
+   "lines": 219
+  },
+  "russell-capital-app": {
+   "sha": "e3cbac9af82a",
+   "lines": 219
+  }
+ },
+ "iulComplianceEngine.ts": {
+  "live": {
+   "sha": "8cb2c3fd43a9",
+   "lines": 236
+  },
+  "russell-capital": {
+   "sha": "8cb2c3fd43a9",
+   "lines": 236
+  },
+  "russell-capital-app": {
+   "sha": "8cb2c3fd43a9",
+   "lines": 236
+  }
+ },
+ "iulLinks.ts": {
+  "live": {
+   "sha": "e944ad662be6",
+   "lines": 93
+  },
+  "russell-capital": {
+   "sha": "e944ad662be6",
+   "lines": 93
+  }
+ },
+ "iulLoanOptimizationEngine.ts": {
+  "live": {
+   "sha": "0ce986a0284f",
+   "lines": 496
+  }
+ },
+ "journeyCatalog.ts": {
+  "live": {
+   "sha": "9a6a7c63f00f",
+   "lines": 86
+  },
+  "russell-capital": {
+   "sha": "9a6a7c63f00f",
+   "lines": 86
+  }
+ },
+ "journeyEngine.ts": {
+  "live": {
+   "sha": "6335bc71bb00",
+   "lines": 457
+  },
+  "russell-capital": {
+   "sha": "6335bc71bb00",
+   "lines": 457
+  }
+ },
+ "keyPersonValuationEngine.ts": {
+  "live": {
+   "sha": "7d053aff4d9e",
+   "lines": 448
+  }
+ },
+ "leadTypes.ts": {
+  "live": {
+   "sha": "a6b0d0167210",
+   "lines": 71
+  },
+  "russell-capital": {
+   "sha": "a6b0d0167210",
+   "lines": 71
+  }
+ },
+ "lifetimeIncomeEngine.ts": {
+  "live": {
+   "sha": "45ec2b9bb7ff",
+   "lines": 831
+  },
+  "russell-capital": {
+   "sha": "45ec2b9bb7ff",
+   "lines": 831
+  },
+  "russell-capital-app": {
+   "sha": "45ec2b9bb7ff",
+   "lines": 831
+  }
+ },
+ "liquidityRoutes.ts": {
+  "live": {
+   "sha": "f9193c5076bb",
+   "lines": 579
+  }
+ },
+ "livingBenefitsProbabilityEngine.ts": {
+  "live": {
+   "sha": "e156d5f3d969",
+   "lines": 221
+  },
+  "russell-capital": {
+   "sha": "e156d5f3d969",
+   "lines": 221
+  },
+  "russell-capital-app": {
+   "sha": "e156d5f3d969",
+   "lines": 221
+  }
+ },
+ "livingRiskProfile.ts": {
+  "live": {
+   "sha": "fb7fce6a262f",
+   "lines": 489
+  },
+  "russell-capital": {
+   "sha": "fb7fce6a262f",
+   "lines": 489
+  },
+  "russell-capital-app": {
+   "sha": "fb7fce6a262f",
+   "lines": 489
+  }
+ },
+ "loginDisclaimers.ts": {
+  "live": {
+   "sha": "a816a972f68c",
+   "lines": 45
+  },
+  "russell-capital": {
+   "sha": "a816a972f68c",
+   "lines": 45
+  }
+ },
+ "longevityEngine.ts": {
+  "live": {
+   "sha": "2c52b146b9fa",
+   "lines": 94
+  },
+  "russell-capital": {
+   "sha": "2c52b146b9fa",
+   "lines": 94
+  }
+ },
+ "ltcEngine.ts": {
+  "live": {
+   "sha": "8046c43043b6",
+   "lines": 102
+  },
+  "russell-capital": {
+   "sha": "8046c43043b6",
+   "lines": 102
+  }
+ },
+ "macroEngine.ts": {
+  "live": {
+   "sha": "5056fcf2e5d7",
+   "lines": 182
+  },
+  "russell-capital": {
+   "sha": "5056fcf2e5d7",
+   "lines": 182
+  }
+ },
+ "mandates.ts": {
+  "live": {
+   "sha": "819fe1f17bf9",
+   "lines": 82
+  },
+  "russell-capital": {
+   "sha": "819fe1f17bf9",
+   "lines": 82
+  }
+ },
+ "marketRegimeClassifier.ts": {
+  "live": {
+   "sha": "2a6d116bcf06",
+   "lines": 564
+  }
+ },
+ "mechanismDossiers.ts": {
+  "live": {
+   "sha": "0f17018a9d24",
+   "lines": 386
+  }
+ },
+ "modelPortfolios.ts": {
+  "live": {
+   "sha": "77041b586608",
+   "lines": 247
+  },
+  "russell-capital": {
+   "sha": "77041b586608",
+   "lines": 247
+  },
+  "russell-capital-app": {
+   "sha": "77041b586608",
+   "lines": 247
+  }
+ },
+ "monteCarloEngine.ts": {
+  "live": {
+   "sha": "655654ea4b54",
+   "lines": 248
+  },
+  "russell-capital": {
+   "sha": "655654ea4b54",
+   "lines": 248
+  },
+  "russell-capital-app": {
+   "sha": "655654ea4b54",
+   "lines": 248
+  }
+ },
+ "mortgageKiller.ts": {
+  "live": {
+   "sha": "0bfd87d070b3",
+   "lines": 759
+  },
+  "russell-capital": {
+   "sha": "daed5285000e",
+   "lines": 762
+  },
+  "russell-capital-app": {
+   "sha": "c2319f4826eb",
+   "lines": 696
+  }
+ },
+ "mortgageLedger.ts": {
+  "live": {
+   "sha": "8231988a275e",
+   "lines": 524
+  }
+ },
+ "multiCarrierIULOptimizer.ts": {
+  "live": {
+   "sha": "a27490655b47",
+   "lines": 234
+  },
+  "russell-capital": {
+   "sha": "a27490655b47",
+   "lines": 234
+  },
+  "russell-capital-app": {
+   "sha": "a27490655b47",
+   "lines": 234
+  }
+ },
+ "multiGenTransferEngine.ts": {
+  "live": {
+   "sha": "de24188d5ebc",
+   "lines": 563
+  }
+ },
+ "multiPropertyMyga.ts": {
+  "live": {
+   "sha": "104e6d89351e",
+   "lines": 451
+  },
+  "russell-capital": {
+   "sha": "104e6d89351e",
+   "lines": 451
+  },
+  "russell-capital-app": {
+   "sha": "104e6d89351e",
+   "lines": 451
+  }
+ },
+ "mutualIulCarriers.ts": {
+  "live": {
+   "sha": "e0fc0ccb30dc",
+   "lines": 278
+  },
+  "russell-capital": {
+   "sha": "8b361a476859",
+   "lines": 244
+  }
+ },
+ "mygaWaterfall.ts": {
+  "live": {
+   "sha": "67e6def5e80d",
+   "lines": 936
+  },
+  "russell-capital": {
+   "sha": "67e6def5e80d",
+   "lines": 936
+  },
+  "russell-capital-app": {
+   "sha": "67e6def5e80d",
+   "lines": 936
+  }
+ },
+ "nextBestAction.ts": {
+  "live": {
+   "sha": "c761b4e0b901",
+   "lines": 560
+  },
+  "russell-capital": {
+   "sha": "c761b4e0b901",
+   "lines": 560
+  }
+ },
+ "nlpBrain.ts": {
+  "live": {
+   "sha": "6790a36f48f3",
+   "lines": 917
+  }
+ },
+ "pacificHorizonEcv.ts": {
+  "live": {
+   "sha": "08da1e956485",
+   "lines": 446
+  },
+  "russell-capital": {
+   "sha": "08da1e956485",
+   "lines": 446
+  }
+ },
+ "pageRatings.ts": {
+  "live": {
+   "sha": "81758c679cda",
+   "lines": 91
+  }
+ },
+ "passwordPolicy.ts": {
+  "live": {
+   "sha": "d7dd0774486d",
+   "lines": 23
+  },
+  "russell-capital": {
+   "sha": "d7dd0774486d",
+   "lines": 23
+  }
+ },
+ "patentCatalog.ts": {
+  "live": {
+   "sha": "a84aaebd1e5b",
+   "lines": 237
+  },
+  "russell-capital": {
+   "sha": "18d925dd6cfa",
+   "lines": 207
+  }
+ },
+ "patentStatus.ts": {
+  "live": {
+   "sha": "11adf62f560a",
+   "lines": 161
+  },
+  "russell-capital": {
+   "sha": "51f506d7f11b",
+   "lines": 198
+  }
+ },
+ "peerBenchmarkingEngine.ts": {
+  "live": {
+   "sha": "b7a124b0a3e2",
+   "lines": 200
+  },
+  "russell-capital": {
+   "sha": "b7a124b0a3e2",
+   "lines": 200
+  },
+  "russell-capital-app": {
+   "sha": "b7a124b0a3e2",
+   "lines": 200
+  }
+ },
+ "physicianLoanRefiEngine.ts": {
+  "live": {
+   "sha": "0def33d45881",
+   "lines": 468
+  }
+ },
+ "planLedger.ts": {
+  "live": {
+   "sha": "9c4f9cec7244",
+   "lines": 181
+  },
+  "russell-capital": {
+   "sha": "9c4f9cec7244",
+   "lines": 181
+  }
+ },
+ "policyLoanMechanics.ts": {
+  "live": {
+   "sha": "8d0583145a92",
+   "lines": 405
+  },
+  "russell-capital": {
+   "sha": "8afffed63736",
+   "lines": 325
+  }
+ },
+ "policyLoanOptimizer.ts": {
+  "live": {
+   "sha": "8cf65ad1ee4d",
+   "lines": 277
+  },
+  "russell-capital": {
+   "sha": "8cf65ad1ee4d",
+   "lines": 277
+  },
+  "russell-capital-app": {
+   "sha": "756d40b47be3",
+   "lines": 198
+  }
+ },
+ "policyLoanRules.ts": {
+  "live": {
+   "sha": "8afffed63736",
+   "lines": 325
+  }
+ },
+ "policyMechanics.ts": {
+  "live": {
+   "sha": "efdd0f686088",
+   "lines": 372
+  },
+  "russell-capital": {
+   "sha": "efdd0f686088",
+   "lines": 372
+  }
+ },
+ "policyMultiplier.ts": {
+  "live": {
+   "sha": "ec035ec00097",
+   "lines": 203
+  },
+  "russell-capital": {
+   "sha": "ec035ec00097",
+   "lines": 203
+  }
+ },
+ "policyReplacementAnalyzer.ts": {
+  "live": {
+   "sha": "b516a068cf0b",
+   "lines": 231
+  },
+  "russell-capital": {
+   "sha": "b516a068cf0b",
+   "lines": 231
+  },
+  "russell-capital-app": {
+   "sha": "b516a068cf0b",
+   "lines": 231
+  }
+ },
+ "powerHistory.ts": {
+  "live": {
+   "sha": "5d7fb42cb445",
+   "lines": 132
+  },
+  "russell-capital": {
+   "sha": "5d7fb42cb445",
+   "lines": 132
+  }
+ },
+ "practiceAcquisitionEngine.ts": {
+  "live": {
+   "sha": "121b623ce51a",
+   "lines": 604
+  }
+ },
+ "premiumFinancing.ts": {
+  "live": {
+   "sha": "363d0e8e5588",
+   "lines": 140
+  },
+  "russell-capital": {
+   "sha": "363d0e8e5588",
+   "lines": 140
+  },
+  "russell-capital-app": {
+   "sha": "363d0e8e5588",
+   "lines": 140
+  }
+ },
+ "premiumFinancingArbitrage.ts": {
+  "live": {
+   "sha": "8b7e2ad7d3cb",
+   "lines": 188
+  },
+  "russell-capital": {
+   "sha": "8b7e2ad7d3cb",
+   "lines": 188
+  },
+  "russell-capital-app": {
+   "sha": "8b7e2ad7d3cb",
+   "lines": 188
+  }
+ },
+ "prospectQualificationEngine.ts": {
+  "live": {
+   "sha": "51ae6403e0ff",
+   "lines": 198
+  },
+  "russell-capital": {
+   "sha": "51ae6403e0ff",
+   "lines": 198
+  },
+  "russell-capital-app": {
+   "sha": "51ae6403e0ff",
+   "lines": 198
+  }
+ },
+ "provenance.ts": {
+  "live": {
+   "sha": "c7af03d0a858",
+   "lines": 298
+  }
+ },
+ "qbiDeduction.ts": {
+  "live": {
+   "sha": "e921463e0c98",
+   "lines": 314
+  }
+ },
+ "realEstateCapacityEngine.ts": {
+  "live": {
+   "sha": "e5a4484a212b",
+   "lines": 931
+  }
+ },
+ "realEstateCapitalStackEngine.ts": {
+  "live": {
+   "sha": "0e54cb2e2c34",
+   "lines": 246
+  }
+ },
+ "realEstateCapitalTypes.ts": {
+  "live": {
+   "sha": "1d3779e1b6da",
+   "lines": 839
+  }
+ },
+ "realEstateDealModel.ts": {
+  "live": {
+   "sha": "6877eb061b1c",
+   "lines": 533
+  }
+ },
+ "realEstateFindings.ts": {
+  "live": {
+   "sha": "401718f8f270",
+   "lines": 788
+  }
+ },
+ "realEstateMogul.ts": {
+  "live": {
+   "sha": "326ba99c3c3a",
+   "lines": 909
+  },
+  "russell-capital": {
+   "sha": "326ba99c3c3a",
+   "lines": 909
+  }
+ },
+ "realEstateStressEngine.ts": {
+  "live": {
+   "sha": "7dfa7af4010f",
+   "lines": 365
+  }
+ },
+ "realEstateStructuredFinanceEngine.ts": {
+  "live": {
+   "sha": "6f507041253e",
+   "lines": 513
+  }
+ },
+ "regulatorySandbox.ts": {
+  "live": {
+   "sha": "4f1910395807",
+   "lines": 194
+  },
+  "russell-capital": {
+   "sha": "4f1910395807",
+   "lines": 194
+  }
+ },
+ "rentalEnterprise.ts": {
+  "live": {
+   "sha": "f22e048ac21f",
+   "lines": 311
+  },
+  "russell-capital": {
+   "sha": "f22e048ac21f",
+   "lines": 311
+  }
+ },
+ "rentalMarketEngine.ts": {
+  "live": {
+   "sha": "be1c6056b948",
+   "lines": 165
+  }
+ },
+ "replacementScoring.ts": {
+  "live": {
+   "sha": "81c23a24a23c",
+   "lines": 888
+  },
+  "russell-capital": {
+   "sha": "81c23a24a23c",
+   "lines": 888
+  },
+  "russell-capital-app": {
+   "sha": "81c23a24a23c",
+   "lines": 888
+  }
+ },
+ "retirementDNA.ts": {
+  "live": {
+   "sha": "dfb22816eef8",
+   "lines": 489
+  },
+  "russell-capital": {
+   "sha": "dfb22816eef8",
+   "lines": 489
+  },
+  "russell-capital-app": {
+   "sha": "dfb22816eef8",
+   "lines": 489
+  }
+ },
+ "retirementGapEngine.ts": {
+  "live": {
+   "sha": "3807ae97ab12",
+   "lines": 169
+  },
+  "russell-capital": {
+   "sha": "3807ae97ab12",
+   "lines": 169
+  },
+  "russell-capital-app": {
+   "sha": "3807ae97ab12",
+   "lines": 169
+  }
+ },
+ "retirementLimits.ts": {
+  "live": {
+   "sha": "1731065480c1",
+   "lines": 120
+  }
+ },
+ "revealCopy.ts": {
+  "live": {
+   "sha": "b3095da225a7",
+   "lines": 71
+  },
+  "russell-capital": {
+   "sha": "b3095da225a7",
+   "lines": 71
+  }
+ },
+ "reverseHeloc.ts": {
+  "live": {
+   "sha": "928c4a2e12ce",
+   "lines": 736
+  },
+  "russell-capital": {
+   "sha": "928c4a2e12ce",
+   "lines": 736
+  },
+  "russell-capital-app": {
+   "sha": "928c4a2e12ce",
+   "lines": 736
+  }
+ },
+ "roomVideos.ts": {
+  "live": {
+   "sha": "8f9e29a34bc7",
+   "lines": 68
+  },
+  "russell-capital": {
+   "sha": "8f9e29a34bc7",
+   "lines": 68
+  }
+ },
+ "routeManifest.ts": {
+  "live": {
+   "sha": "dabd1f8cf25f",
+   "lines": 380
+  }
+ },
+ "rulesTable.ts": {
+  "live": {
+   "sha": "225219e5b5ce",
+   "lines": 155
+  }
+ },
+ "rulesTableAdapters.ts": {
+  "live": {
+   "sha": "ecf94c47ad7f",
+   "lines": 106
+  }
+ },
+ "scenarioEngine.ts": {
+  "live": {
+   "sha": "04af5706a67a",
+   "lines": 402
+  },
+  "russell-capital": {
+   "sha": "04af5706a67a",
+   "lines": 402
+  }
+ },
+ "seo.ts": {
+  "live": {
+   "sha": "475fa3dc9eaa",
+   "lines": 197
+  },
+  "russell-capital": {
+   "sha": "475fa3dc9eaa",
+   "lines": 197
+  }
+ },
+ "sequenceArchetypes.ts": {
+  "live": {
+   "sha": "52e41a9962fc",
+   "lines": 261
+  }
+ },
+ "sequenceOrderings.ts": {
+  "live": {
+   "sha": "4b0d8231cfa2",
+   "lines": 838
+  }
+ },
+ "sequencePlanner.ts": {
+  "live": {
+   "sha": "ae1e7699a786",
+   "lines": 719
+  }
+ },
+ "sequenceStress.ts": {
+  "live": {
+   "sha": "749cc969a818",
+   "lines": 616
+  },
+  "russell-capital": {
+   "sha": "749cc969a818",
+   "lines": 616
+  }
+ },
+ "shockRegimeBridge.ts": {
+  "live": {
+   "sha": "fda62a999af8",
+   "lines": 215
+  }
+ },
+ "slideThemes.ts": {
+  "live": {
+   "sha": "90e88d0e6b58",
+   "lines": 93
+  },
+  "russell-capital": {
+   "sha": "2de71ef91fcc",
+   "lines": 93
+  },
+  "russell-capital-app": {
+   "sha": "2de71ef91fcc",
+   "lines": 93
+  }
+ },
+ "socialSecurityBridgeEngine.ts": {
+  "live": {
+   "sha": "5ca68dead1a8",
+   "lines": 189
+  },
+  "russell-capital": {
+   "sha": "5ca68dead1a8",
+   "lines": 189
+  },
+  "russell-capital-app": {
+   "sha": "5ca68dead1a8",
+   "lines": 189
+  }
+ },
+ "sp500SeriesAudit.ts": {
+  "live": {
+   "sha": "ecbef26694ae",
+   "lines": 188
+  },
+  "russell-capital": {
+   "sha": "453562ded9cc",
+   "lines": 192
+  }
+ },
+ "sphere.ts": {
+  "live": {
+   "sha": "d0b90cee00e3",
+   "lines": 115
+  },
+  "russell-capital": {
+   "sha": "d0b90cee00e3",
+   "lines": 115
+  }
+ },
+ "stateTaxMigrationEngine.ts": {
+  "live": {
+   "sha": "3fec6def04ea",
+   "lines": 217
+  },
+  "russell-capital": {
+   "sha": "3fec6def04ea",
+   "lines": 217
+  },
+  "russell-capital-app": {
+   "sha": "3fec6def04ea",
+   "lines": 217
+  }
+ },
+ "strEngine.ts": {
+  "live": {
+   "sha": "f6dc5c3f398e",
+   "lines": 140
+  },
+  "russell-capital": {
+   "sha": "f6dc5c3f398e",
+   "lines": 140
+  }
+ },
+ "strSources.ts": {
+  "live": {
+   "sha": "f6c2b8ec8216",
+   "lines": 205
+  },
+  "russell-capital": {
+   "sha": "f6c2b8ec8216",
+   "lines": 205
+  }
+ },
+ "successionValuationEngine.ts": {
+  "live": {
+   "sha": "9ac4b4194d64",
+   "lines": 174
+  },
+  "russell-capital": {
+   "sha": "9ac4b4194d64",
+   "lines": 174
+  },
+  "russell-capital-app": {
+   "sha": "9ac4b4194d64",
+   "lines": 174
+  }
+ },
+ "tabScores.ts": {
+  "live": {
+   "sha": "a236b4d7edd7",
+   "lines": 205
+  },
+  "russell-capital": {
+   "sha": "a236b4d7edd7",
+   "lines": 205
+  },
+  "russell-capital-app": {
+   "sha": "4c80b8e31b89",
+   "lines": 204
+  }
+ },
+ "taxBracketEngine.ts": {
+  "live": {
+   "sha": "151e1d7f5d1b",
+   "lines": 654
+  },
+  "russell-capital": {
+   "sha": "f916d5751084",
+   "lines": 669
+  },
+  "russell-capital-app": {
+   "sha": "f916d5751084",
+   "lines": 669
+  }
+ },
+ "taxCodeChangeSimulator.ts": {
+  "live": {
+   "sha": "e92f22bc642d",
+   "lines": 267
+  },
+  "russell-capital": {
+   "sha": "e92f22bc642d",
+   "lines": 267
+  },
+  "russell-capital-app": {
+   "sha": "e92f22bc642d",
+   "lines": 267
+  }
+ },
+ "taxHistory.ts": {
+  "live": {
+   "sha": "0f10d2edf163",
+   "lines": 118
+  },
+  "russell-capital": {
+   "sha": "0f10d2edf163",
+   "lines": 118
+  }
+ },
+ "taxRules.ts": {
+  "live": {
+   "sha": "ae803786a6fa",
+   "lines": 245
+  },
+  "russell-capital": {
+   "sha": "ae803786a6fa",
+   "lines": 245
+  }
+ },
+ "taxSchedule.ts": {
+  "live": {
+   "sha": "455177ccd586",
+   "lines": 180
+  },
+  "russell-capital": {
+   "sha": "455177ccd586",
+   "lines": 180
+  }
+ },
+ "taxStrategies.ts": {
+  "live": {
+   "sha": "934a487f813c",
+   "lines": 350
+  },
+  "russell-capital": {
+   "sha": "934a487f813c",
+   "lines": 350
+  }
+ },
+ "themes.ts": {
+  "live": {
+   "sha": "4ce9e2c594dd",
+   "lines": 521
+  },
+  "russell-capital": {
+   "sha": "4ce9e2c594dd",
+   "lines": 521
+  }
+ },
+ "thresholds.ts": {
+  "live": {
+   "sha": "4d92704771ab",
+   "lines": 508
+  }
+ },
+ "timeMachine30.ts": {
+  "live": {
+   "sha": "41a95d1866f7",
+   "lines": 666
+  },
+  "russell-capital": {
+   "sha": "41a95d1866f7",
+   "lines": 666
+  }
+ },
+ "timeMachineCompliance.ts": {
+  "live": {
+   "sha": "6bcee4eb36cb",
+   "lines": 947
+  },
+  "russell-capital": {
+   "sha": "6bcee4eb36cb",
+   "lines": 947
+  }
+ },
+ "timeMachineEngine.ts": {
+  "live": {
+   "sha": "ab13f41d5c86",
+   "lines": 505
+  },
+  "russell-capital": {
+   "sha": "ab13f41d5c86",
+   "lines": 505
+  },
+  "russell-capital-app": {
+   "sha": "a75b2fd96542",
+   "lines": 482
+  }
+ },
+ "types.ts": {
+  "live": {
+   "sha": "959aeb30b032",
+   "lines": 7
+  },
+  "russell-capital": {
+   "sha": "959aeb30b032",
+   "lines": 7
+  },
+  "russell-capital-app": {
+   "sha": "959aeb30b032",
+   "lines": 7
+  }
+ },
+ "ultraEngine.ts": {
+  "live": {
+   "sha": "6f3070397210",
+   "lines": 613
+  },
+  "russell-capital": {
+   "sha": "6f3070397210",
+   "lines": 613
+  }
+ },
+ "unaskedQuestions.ts": {
+  "live": {
+   "sha": "d6c3889828ca",
+   "lines": 150
+  },
+  "russell-capital": {
+   "sha": "d6c3889828ca",
+   "lines": 150
+  }
+ },
+ "unpricedParameters.ts": {
+  "live": {
+   "sha": "edfbc5c2ebdd",
+   "lines": 236
+  },
+  "russell-capital": {
+   "sha": "edfbc5c2ebdd",
+   "lines": 236
+  }
+ },
+ "wealthGenome.ts": {
+  "live": {
+   "sha": "2272ccec54b5",
+   "lines": 242
+  },
+  "russell-capital": {
+   "sha": "2272ccec54b5",
+   "lines": 242
+  }
+ },
+ "wealthGenomeDurability.ts": {
+  "live": {
+   "sha": "1fa1b9d22986",
+   "lines": 767
+  }
+ },
+ "wealthGenomeFactors.ts": {
+  "live": {
+   "sha": "2f1afc4975ef",
+   "lines": 699
+  }
+ },
+ "weaponizeEngines.ts": {
+  "live": {
+   "sha": "ae853557b1c9",
+   "lines": 981
+  },
+  "russell-capital": {
+   "sha": "ae853557b1c9",
+   "lines": 981
+  },
+  "russell-capital-app": {
+   "sha": "ae853557b1c9",
+   "lines": 981
+  }
+ },
+ "whispererEngine.ts": {
+  "live": {
+   "sha": "5eba6b8152ad",
+   "lines": 578
+  },
+  "russell-capital": {
+   "sha": "5eba6b8152ad",
+   "lines": 578
+  }
+ },
+ "wholeLifeBanking.ts": {
+  "live": {
+   "sha": "dfda7b3b4720",
+   "lines": 277
+  },
+  "russell-capital": {
+   "sha": "dfda7b3b4720",
+   "lines": 277
+  }
+ },
+ "zipEngine.ts": {
+  "live": {
+   "sha": "173358cc7ee0",
+   "lines": 253
+  },
+  "russell-capital": {
+   "sha": "173358cc7ee0",
+   "lines": 253
+  }
+ },
+ "annualLoanStrategy.ts": {
+  "russell-capital": {
+   "sha": "b4941f5555de",
+   "lines": 392
+  }
+ },
+ "carrierLoanTerms.ts": {
+  "russell-capital": {
+   "sha": "3f6e4191e971",
+   "lines": 224
+  }
+ },
+ "clientOnboardingEngine.ts": {
+  "russell-capital": {
+   "sha": "df56af203975",
+   "lines": 176
+  },
+  "russell-capital-app": {
+   "sha": "df56af203975",
+   "lines": 176
+  }
+ },
+ "complianceDocGeneratorEngine.ts": {
+  "russell-capital": {
+   "sha": "e169b823b535",
+   "lines": 178
+  },
+  "russell-capital-app": {
+   "sha": "e169b823b535",
+   "lines": 178
+  }
+ },
+ "debtConversion.ts": {
+  "russell-capital": {
+   "sha": "c30edc6fc9ea",
+   "lines": 181
+  }
+ },
+ "familyTreeFinancialEngine.ts": {
+  "russell-capital": {
+   "sha": "6f75c22e0f4f",
+   "lines": 221
+  },
+  "russell-capital-app": {
+   "sha": "6f75c22e0f4f",
+   "lines": 221
+  }
+ },
+ "loanSustainability.ts": {
+  "russell-capital": {
+   "sha": "68430826afd7",
+   "lines": 213
+  }
+ },
+ "multiCurrencyWealthEngine.ts": {
+  "russell-capital": {
+   "sha": "e7330e109415",
+   "lines": 159
+  },
+  "russell-capital-app": {
+   "sha": "e7330e109415",
+   "lines": 159
+  }
+ },
+ "multiplierDecision.ts": {
+  "russell-capital": {
+   "sha": "12fe43f5b0cd",
+   "lines": 660
+  }
+ },
+ "policyLabMechanics.ts": {
+  "russell-capital": {
+   "sha": "11e0ad7600c1",
+   "lines": 417
+  }
+ }
+}
