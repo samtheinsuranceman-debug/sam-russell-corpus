@@ -60,6 +60,37 @@ export type Underwriting =
 /** What a line is realistically worth. The second half of the ranking. */
 export type LimitBand = 'micro' | 'small' | 'mid' | 'large' | 'unknown';
 
+/**
+ * For a credit union, whether an outsider can actually get in.
+ *
+ * This is scored, not decorative. A credit union that will happily lend to a
+ * 640 with three EINs is worth nothing if the charter only admits employees of
+ * one hospital system in Oregon — the approval odds and the limit band are both
+ * irrelevant behind a door that will not open. Two rows can therefore carry the
+ * same card and rank differently, which is correct.
+ */
+export type MembershipGate =
+  /** A published, nationwide join path was read — a donation, a $5 share, an association. */
+  | 'open-confirmed'
+  /** The card was confirmed; the join path was not. Could be open, could be a closed SEG charter. */
+  | 'open-unconfirmed'
+  /** Membership is restricted to a group this applicant is not in. */
+  | 'restricted'
+  /** Not a credit union. The gate does not apply. */
+  | 'not-applicable';
+
+/**
+ * Multiplier on approval odds. An unconfirmed gate is a real discount, because
+ * roughly half of the credit unions on any "best business card" list turn out
+ * to be employer- or county-restricted once the eligibility page is read.
+ */
+export const MEMBERSHIP_GATE_WEIGHT: Record<MembershipGate, number> = {
+  'open-confirmed': 1,
+  'open-unconfirmed': 0.6,
+  restricted: 0,
+  'not-applicable': 1,
+};
+
 /** Rough dollar midpoint for each band, used to weight the ranking. */
 export const LIMIT_BAND_WEIGHT: Record<LimitBand, number> = {
   micro: 1, //  under $2k
@@ -92,6 +123,19 @@ export interface CardSource {
    * approval likelihood and limit size only.
    */
   readonly introAprMonths: number | null;
+  /**
+   * For a credit union, whether an outsider can join. Defaults to
+   * `not-applicable` where the field is absent, which is every non-credit-union
+   * row.
+   */
+  readonly membershipGate?: MembershipGate;
+  /**
+   * For a credit union, how a non-affiliated applicant actually becomes
+   * eligible. This is the gate — a credit union with a great business card and
+   * a closed charter is worth nothing to an outside applicant, so the path is
+   * recorded rather than assumed.
+   */
+  readonly membershipPath?: string;
   readonly sourceUrl: string;
   readonly evidence: EvidenceLevel;
   readonly note?: string;
@@ -323,6 +367,8 @@ export const CARD_SOURCES: readonly CardSource[] = [
     minFicoReported: null, requiresDeposit: false, personalGuarantee: true,
     reportsToBusinessBureaus: true, minAnnualRevenueUsd: null, minMonthsInBusiness: null,
     introAprMonths: null,
+    membershipGate: 'open-confirmed',
+    membershipPath: 'Open nationwide via a one-time $5 donation to the Connexus Association.',
     sourceUrl: 'https://bankbonus.com/best/credit-unions-anyone-can-join/',
     evidence: 'named-only',
     note: 'Membership open nationwide via a one-time $5 donation, and one of the few open-membership unions issuing BUSINESS cards. High-value target; terms not pulled.',
@@ -333,6 +379,8 @@ export const CARD_SOURCES: readonly CardSource[] = [
     minFicoReported: null, requiresDeposit: false, personalGuarantee: true,
     reportsToBusinessBureaus: true, minAnnualRevenueUsd: null, minMonthsInBusiness: null,
     introAprMonths: null,
+    membershipGate: 'open-confirmed',
+    membershipPath: 'Open to anyone via free membership of the National Space Society.',
     sourceUrl: 'https://www.nasafcu.com/business-services/financing-solutions/platinum-credit-card',
     evidence: 'named-only',
     note: 'Membership open to anyone via free National Space Society membership. Also offers business lines of credit. High-value target; terms not pulled.',
@@ -343,6 +391,8 @@ export const CARD_SOURCES: readonly CardSource[] = [
     minFicoReported: 670, requiresDeposit: false, personalGuarantee: false,
     reportsToBusinessBureaus: false, minAnnualRevenueUsd: null, minMonthsInBusiness: null,
     introAprMonths: 15,
+    membershipGate: 'open-confirmed',
+    membershipPath: 'Open to anyone via a $5 share account.',
     sourceUrl: 'https://www.cnbc.com/select/best-credit-union-credit-cards/',
     evidence: 'aggregator-reported',
     note: 'Membership open to anyone via a $5 share account. PenFed does not currently offer a business card.',
@@ -353,6 +403,7 @@ export const CARD_SOURCES: readonly CardSource[] = [
     minFicoReported: null, requiresDeposit: false, personalGuarantee: false,
     reportsToBusinessBureaus: false, minAnnualRevenueUsd: null, minMonthsInBusiness: null,
     introAprMonths: 12,
+    membershipGate: 'open-unconfirmed',
     sourceUrl: 'https://www.columbiacu.org/credit-cards/',
     evidence: 'aggregator-reported',
     note: 'Membership eligibility not confirmed as nationwide.',
@@ -363,6 +414,7 @@ export const CARD_SOURCES: readonly CardSource[] = [
     minFicoReported: null, requiresDeposit: false, personalGuarantee: false,
     reportsToBusinessBureaus: false, minAnnualRevenueUsd: null, minMonthsInBusiness: null,
     introAprMonths: 9,
+    membershipGate: 'open-unconfirmed',
     sourceUrl: 'https://flcu.org/cards/credit-cards/',
     evidence: 'aggregator-reported',
     note: 'Notably low go-to APR. Membership eligibility not confirmed as nationwide.',
@@ -373,11 +425,156 @@ export const CARD_SOURCES: readonly CardSource[] = [
     minFicoReported: 580, requiresDeposit: false, personalGuarantee: false,
     reportsToBusinessBureaus: false, minAnnualRevenueUsd: null, minMonthsInBusiness: null,
     introAprMonths: 6,
+    membershipGate: 'open-unconfirmed',
     sourceUrl: 'https://www.creditcards.com/education/credit-union-cards-anyone-can-get/',
     evidence: 'aggregator-reported',
     note: 'Reported to approve applicants with poor credit. Low limits.',
   },
 
+  {
+    id: 'alliant-business', issuer: 'Alliant Credit Union', product: 'Business Services',
+    underwriting: 'personal-guarantee-business', limitBand: 'mid',
+    minFicoReported: null, requiresDeposit: false, personalGuarantee: true,
+    reportsToBusinessBureaus: true, minAnnualRevenueUsd: null, minMonthsInBusiness: null,
+    introAprMonths: null,
+    membershipGate: 'open-confirmed',
+    membershipPath: 'Open to anyone via a $5 donation to the Alliant Credit Union Foundation, which Alliant pays on your behalf.',
+    sourceUrl: 'https://www.alliantcreditunion.org/membership',
+    evidence: 'aggregator-reported',
+    note: 'Membership confirmed open to anyone with no residency or employer test — one of the cleanest charters in the country. Business product line not yet pulled.',
+  },
+  {
+    id: 'affinity-fcu-business', issuer: 'Affinity Federal Credit Union', product: 'Business Services',
+    underwriting: 'personal-guarantee-business', limitBand: 'mid',
+    minFicoReported: null, requiresDeposit: false, personalGuarantee: true,
+    reportsToBusinessBureaus: true, minAnnualRevenueUsd: null, minMonthsInBusiness: null,
+    introAprMonths: null,
+    membershipGate: 'open-confirmed',
+    membershipPath: 'Open via a $5 savings deposit.',
+    sourceUrl: 'https://www.affinityfcu.com/about-us/membership-eligibility',
+    evidence: 'aggregator-reported',
+    note: 'Membership open on a $5 deposit. Business product line not yet pulled.',
+  },
+  {
+    id: 'affinity-plus-business', issuer: 'Affinity Plus Credit Union', product: 'Business Services',
+    underwriting: 'personal-guarantee-business', limitBand: 'mid',
+    minFicoReported: null, requiresDeposit: false, personalGuarantee: true,
+    reportsToBusinessBureaus: true, minAnnualRevenueUsd: null, minMonthsInBusiness: null,
+    introAprMonths: null,
+    membershipGate: 'open-confirmed',
+    membershipPath: 'Open via a one-time $25 payment to the Affinity Plus Foundation.',
+    sourceUrl: 'https://www.crediful.com/credit-unions-anyone-can-join/',
+    evidence: 'aggregator-reported',
+    note: 'Foundation payment opens membership without a location or employer tie. Business product line not yet pulled.',
+  },
+  {
+    id: 'lmcu-business', issuer: 'Lake Michigan Credit Union', product: 'Business Services',
+    underwriting: 'personal-guarantee-business', limitBand: 'mid',
+    minFicoReported: null, requiresDeposit: false, personalGuarantee: true,
+    reportsToBusinessBureaus: true, minAnnualRevenueUsd: null, minMonthsInBusiness: null,
+    introAprMonths: null,
+    membershipGate: 'open-confirmed',
+    membershipPath: 'Open via a $5 donation to the ALS Foundation plus $5 into a Member Savings account.',
+    sourceUrl: 'https://www.crediful.com/credit-unions-anyone-can-join/',
+    evidence: 'aggregator-reported',
+    note: 'Large Michigan credit union with a nationwide join path. Business product line not yet pulled.',
+  },
+  {
+    id: 'firsttech-business', issuer: 'First Tech Federal Credit Union', product: 'Business Deposit & Card',
+    underwriting: 'personal-guarantee-business', limitBand: 'mid',
+    minFicoReported: null, requiresDeposit: false, personalGuarantee: true,
+    reportsToBusinessBureaus: true, minAnnualRevenueUsd: null, minMonthsInBusiness: null,
+    introAprMonths: null,
+    membershipGate: 'open-confirmed',
+    membershipPath: 'Open via membership of the Computer History Museum or the Financial Fitness Association, or via 900+ partner employers.',
+    sourceUrl: 'https://www.crediful.com/credit-unions-anyone-can-join/',
+    evidence: 'aggregator-reported',
+    note: 'Confirmed to offer personal AND business deposit accounts, and cited for fast approval decisions. Merged with Digital Federal Credit Union in January 2026, making it one of the largest open-path charters. Card terms not pulled.',
+  },
+  {
+    id: 'dcu-business', issuer: 'Digital Federal Credit Union (DCU)', product: 'Business Services',
+    underwriting: 'personal-guarantee-business', limitBand: 'mid',
+    minFicoReported: null, requiresDeposit: false, personalGuarantee: true,
+    reportsToBusinessBureaus: true, minAnnualRevenueUsd: null, minMonthsInBusiness: null,
+    introAprMonths: null,
+    membershipGate: 'open-confirmed',
+    membershipPath: 'Open via membership of a participating organisation; merged into First Tech January 2026.',
+    sourceUrl: 'https://www.crediful.com/credit-unions-anyone-can-join/',
+    evidence: 'named-only',
+    note: 'Long-standing open-path charter. Post-merger product line and membership route need confirming.',
+  },
+  {
+    id: 'amplify-business-visa', issuer: 'Amplify Credit Union', product: 'Visa Business Real Rewards Card',
+    underwriting: 'personal-guarantee-business', limitBand: 'mid',
+    minFicoReported: null, requiresDeposit: false, personalGuarantee: true,
+    reportsToBusinessBureaus: true, minAnnualRevenueUsd: null, minMonthsInBusiness: null,
+    introAprMonths: null,
+    membershipGate: 'open-unconfirmed',
+    membershipPath: 'Membership path not yet confirmed as open nationwide.',
+    sourceUrl: 'https://wallethub.com/best-credit-union-credit-cards',
+    evidence: 'aggregator-reported',
+    note: 'Named the best business credit card from a credit union. The CARD is confirmed; the membership gate is not, which is the thing to check first.',
+  },
+  {
+    id: 'cu1-business-visa', issuer: 'Credit Union 1', product: 'Visa Business & Purchasing Cards',
+    underwriting: 'personal-guarantee-business', limitBand: 'mid',
+    minFicoReported: null, requiresDeposit: false, personalGuarantee: true,
+    reportsToBusinessBureaus: true, minAnnualRevenueUsd: null, minMonthsInBusiness: null,
+    introAprMonths: null,
+    membershipGate: 'open-unconfirmed',
+    membershipPath: 'Membership path not yet confirmed as open nationwide.',
+    sourceUrl: 'https://www.creditunion1.org/business/business-credit-cards/',
+    evidence: 'aggregator-reported',
+    note: 'Confirmed to issue both business credit cards AND purchasing cards — a purchasing card is a separate line and a second bite. Membership gate not confirmed.',
+  },
+  {
+    id: 'fscu-business-visa', issuer: 'First Service Credit Union', product: 'Visa Business Credit Card',
+    underwriting: 'personal-guarantee-business', limitBand: 'small',
+    minFicoReported: null, requiresDeposit: false, personalGuarantee: true,
+    reportsToBusinessBureaus: true, minAnnualRevenueUsd: null, minMonthsInBusiness: null,
+    introAprMonths: null,
+    membershipGate: 'open-unconfirmed',
+    membershipPath: 'Membership path not yet confirmed as open nationwide.',
+    sourceUrl: 'https://www.fscu.com/business/lending-and-services/lending/business-credit-cards/',
+    evidence: 'aggregator-reported',
+    note: 'Business Visa confirmed on the issuer page. Membership gate not confirmed.',
+  },
+  {
+    id: 'redwood-business', issuer: 'Redwood Credit Union', product: 'Business Cards & SBA Lending',
+    underwriting: 'personal-guarantee-business', limitBand: 'mid',
+    minFicoReported: null, requiresDeposit: false, personalGuarantee: true,
+    reportsToBusinessBureaus: true, minAnnualRevenueUsd: null, minMonthsInBusiness: null,
+    introAprMonths: null,
+    membershipGate: 'open-unconfirmed',
+    membershipPath: 'Membership path not yet confirmed as open nationwide.',
+    sourceUrl: 'https://www.nerdwallet.com/business/banking/learn/credit-union-business-accounts',
+    evidence: 'aggregator-reported',
+    note: 'Business credit cards plus SBA Preferred Lender status, which means it can expedite SBA funding — a far larger facility than a card. Membership gate not confirmed.',
+  },
+  {
+    id: 'georgias-own-business', issuer: 'Georgia\'s Own Credit Union', product: 'Business Lending',
+    underwriting: 'personal-guarantee-business', limitBand: 'mid',
+    minFicoReported: null, requiresDeposit: false, personalGuarantee: true,
+    reportsToBusinessBureaus: true, minAnnualRevenueUsd: null, minMonthsInBusiness: null,
+    introAprMonths: null,
+    membershipGate: 'open-unconfirmed',
+    membershipPath: 'Membership path not yet confirmed as open nationwide.',
+    sourceUrl: 'https://www.nerdwallet.com/business/banking/learn/credit-union-business-accounts',
+    evidence: 'aggregator-reported',
+    note: 'Over $571.5M in member business loans outstanding and ranked #1 in Georgia for SBA 7(a) production in 2024. A genuinely active business lender rather than a card issuer with a business label.',
+  },
+  {
+    id: 'metro-cu-business', issuer: 'Metro Credit Union', product: 'Business Cards',
+    underwriting: 'personal-guarantee-business', limitBand: 'small',
+    minFicoReported: null, requiresDeposit: false, personalGuarantee: true,
+    reportsToBusinessBureaus: true, minAnnualRevenueUsd: null, minMonthsInBusiness: null,
+    introAprMonths: null,
+    membershipGate: 'open-unconfirmed',
+    membershipPath: 'Membership path not yet confirmed as open nationwide.',
+    sourceUrl: 'https://www.nerdwallet.com/business/credit-cards/learn/secured-business-cards',
+    evidence: 'named-only',
+    note: 'Named as a credit union offering business cards. Part of its business line is SECURED, which is excluded by request, so the unsecured product must be identified before this is usable.',
+  },
   // ─────────────────────────────────────────────────────────────────
   // TIER 6 — PERSONAL FICO. Rebuild only. Limits too small to deploy.
   // ─────────────────────────────────────────────────────────────────
@@ -471,6 +668,10 @@ export function scoreCard(card: CardSource, profile: ApplicantProfile): CardScor
     return { ...base, approvalScore: 0, lendingScore: 0, reasons: [], rankable: false,
       blockedReason: 'Requires a deposit, which was excluded.' };
   }
+  if (card.membershipGate === 'restricted') {
+    return { ...base, approvalScore: 0, lendingScore: 0, reasons: [], rankable: false,
+      blockedReason: `Membership is restricted to a group this applicant is not in. ${card.membershipPath ?? ''}`.trim() };
+  }
   if (card.evidence === 'named-only') {
     return { ...base, approvalScore: 0, lendingScore: 0, reasons: [], rankable: false,
       blockedReason: 'Terms have not been pulled from the issuer. Ranking it would imply a comparison that was never made.' };
@@ -532,6 +733,19 @@ export function scoreCard(card: CardSource, profile: ApplicantProfile): CardScor
     reasons.push('Reports to the business bureaus — builds the EIN file that unlocks larger lines later.');
   }
 
+  // The membership gate is applied LAST, as a multiplier rather than a
+  // subtraction, because it does not make approval less likely — it decides
+  // whether the application can be made at all.
+  const gate = card.membershipGate ?? 'not-applicable';
+  if (gate === 'open-confirmed') {
+    reasons.push(`Membership is confirmed open to anyone. ${card.membershipPath ?? ''}`.trim());
+  } else if (gate === 'open-unconfirmed') {
+    reasons.push(
+      'Discounted: the card is confirmed but the membership charter is not. Read the eligibility page before spending an inquiry — a restricted charter makes the limit irrelevant.',
+    );
+  }
+  score *= MEMBERSHIP_GATE_WEIGHT[gate];
+
   const approvalScore = Math.max(0, Math.min(100, Math.round(score)));
   return {
     ...base,
@@ -560,6 +774,30 @@ export function unrankable(profile: ApplicantProfile): readonly CardScore[] {
 /** Everything applyable today without spending a personal inquiry. */
 export function freeToApplyNow(profile: ApplicantProfile): readonly CardScore[] {
   return rankCards(profile).filter((s) => !s.costsAnInquiry);
+}
+
+/**
+ * The open-charter credit unions that issue BUSINESS credit, ordered with the
+ * confirmed join paths first.
+ *
+ * This is its own list because the pattern is worth more than any single row on
+ * it: a credit union that anyone can join, that underwrites business credit on
+ * relationship rather than on a scorecard, is the one category where a 640
+ * personal score and a 12-year EIN get read by a human. The large issuers all
+ * run the same bureau cutoffs; these do not.
+ */
+export function openMembershipBusinessCards(): readonly CardSource[] {
+  const order: Record<string, number> = { 'open-confirmed': 0, 'open-unconfirmed': 1 };
+  return CARD_SOURCES.filter(
+    (c) =>
+      (c.membershipGate === 'open-confirmed' || c.membershipGate === 'open-unconfirmed') &&
+      c.underwriting === 'personal-guarantee-business',
+  ).sort((a, b) => order[a.membershipGate!] - order[b.membershipGate!]);
+}
+
+/** Of those, the ones whose join path was actually read rather than assumed. */
+export function confirmedOpenCharters(): readonly CardSource[] {
+  return openMembershipBusinessCards().filter((c) => c.membershipGate === 'open-confirmed');
 }
 
 /* ------------------------------------------------------------------ *
@@ -607,7 +845,7 @@ export function sequencingAdvice(profile: ApplicantProfile): SequencingVerdict {
       'Net-30 vendor accounts in parallel — Quill, The CEO Creative, Uline, Grainger. Tiny individually, no FICO check at all, and they are what builds the EIN file that unlocks the large lines.',
       'Fleet and fuel cards alongside — also EIN-based and reporting to D&B and Experian Business.',
       'Wait for the pending line to fund before any personal-credit application.',
-      'Then open-membership credit unions with business cards — Connexus, NASA FCU.',
+      'Then open-membership credit unions with business cards — Connexus, NASA FCU, Alliant, Affinity FCU, Affinity Plus, Lake Michigan, First Tech. Join first, on a $5 donation or share; membership costs no inquiry and can be done tonight even while the personal file is frozen.',
       'Personal fair-credit cards last, and only to rebuild the score. Their limits cannot fund anything.',
     ],
   };
@@ -625,9 +863,9 @@ export const SOURCING_STATUS = {
   gap:
     'One hundred rows were requested. What is recorded is what was actually verified. The remainder are not written as placeholders with invented limits and approval odds, because a credit page carrying fabricated terms is wrong in exactly the direction that costs money.',
   nextPass:
-    'Pull issuer terms for every `named-only` row — the two open-membership credit union BUSINESS cards (Connexus, NASA FCU) are the highest-value of these. Then widen the net-30 vendor tier, which is the largest untapped category for an EIN-first strategy.',
-  excludedByRequest: 'Any card requiring a deposit, and the large national banks.',
-  rankedOn: 'Approval likelihood multiplied by limit band. Interest rate is recorded but carries no weight, by instruction.',
+    'Read the eligibility page for every `open-unconfirmed` credit union — Amplify, Credit Union 1, First Service, Redwood, Georgia’s Own, Metro. Each is a confirmed business-card issuer behind an unread charter, and the charter is the whole question. Then pull issuer terms for the `named-only` rows, and widen the net-30 vendor tier, which is the largest untapped category for an EIN-first strategy.',
+  excludedByRequest: 'Any card requiring a deposit, the large national banks, and military-only charters such as Navy Federal — a good business card behind a door this applicant cannot open is worth nothing.',
+  rankedOn: 'Approval likelihood multiplied by limit band, then discounted by the membership gate where one applies. Interest rate is recorded but carries no weight, by instruction.',
 } as const;
 
 export const NEVER_PRINTED = [
@@ -636,4 +874,5 @@ export const NEVER_PRINTED = [
   'A recommendation to apply for several personal-credit cards in one sitting while an approval is pending.',
   'Any suggestion that a fair-credit card with a $300-$1,500 limit can fund a premium-financing strategy.',
   'A net-30 vendor account described as a credit card. It is trade credit with a supplier, and its value is the trade line it reports, not the spending power.',
+  'A credit union presented as joinable when only its card was verified. Half of them turn out to be employer- or county-restricted once the eligibility page is read, so the gate is marked `open-unconfirmed` until it is.',
 ] as const;
