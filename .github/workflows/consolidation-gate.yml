@@ -1,0 +1,129 @@
+# Consolidation regression gate.
+#
+# Runs on every pull request that touches the app. Asserts the base's verified
+# baseline (docs/consolidation/03-VERIFICATION.md) still holds:
+#
+#   tsc clean · build succeeds · >= 330 routes · route manifest in sync
+#   >= 216 test files and >= 4138 tests passing, 0 failing
+#   no secrets in the diff · no high/critical advisories
+#
+# The floors are the point. A migration may ADD routes and tests; one that
+# silently drops either fails here rather than in production.
+#
+# This workflow deploys nothing and requires no secrets. Production deployment
+# happens only on push to master, via deploy-branch.yml, and only from an
+# explicitly approved consolidation/main -> master promotion.
+name: Consolidation gate
+
+on:
+  pull_request:
+    branches: [consolidation/main, master]
+    paths: ["russell-capital-systems/**"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: consolidation-gate-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # Baseline measured at 76ed5f2 on 2026-09-20. Raise these as the platform
+  # grows; never lower them without a documented comparison in the PR.
+  MIN_ROUTES: 330
+  MIN_TEST_FILES: 216
+  MIN_TESTS: 4138
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: russell-capital-systems
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: russell-capital-systems/pnpm-lock.yaml
+
+      - name: Install
+        run: |
+          pnpm install --frozen-lockfile
+          pnpm rebuild esbuild @tailwindcss/oxide @parcel/watcher
+
+      - name: Typecheck
+        run: pnpm check
+
+      - name: Build
+        run: pnpm build
+
+      - name: Route count floor
+        run: |
+          COUNT=$(node -e "const r=require('./dist/public/routes.json');console.log((Array.isArray(r)?r:r.routes).length)")
+          echo "routes emitted: $COUNT (floor ${MIN_ROUTES})"
+          if [ "$COUNT" -lt "${MIN_ROUTES}" ]; then
+            echo "::error::Route regression — $COUNT emitted, floor is ${MIN_ROUTES}. A migration may add routes, never drop them."
+            exit 1
+          fi
+
+      - name: Route manifest parity
+        run: |
+          node -e "
+            const fs=require('fs');
+            const raw=JSON.parse(fs.readFileSync('dist/public/routes.json','utf8'));
+            const emitted=new Set(Array.isArray(raw)?raw:raw.routes);
+            const src=fs.readFileSync('shared/routeManifest.ts','utf8');
+            const manifest=new Set([...src.matchAll(/^\s*\"([^\"]+)\",?\s*\$/gm)].map(m=>m[1]));
+            const missingFromManifest=[...emitted].filter(r=>!manifest.has(r));
+            const missingFromApp=[...manifest].filter(r=>!emitted.has(r));
+            if(missingFromManifest.length||missingFromApp.length){
+              if(missingFromManifest.length) console.error('::error::Routed but absent from shared/routeManifest.ts:\n  '+missingFromManifest.join('\n  '));
+              if(missingFromApp.length)      console.error('::error::In shared/routeManifest.ts but not routed:\n  '+missingFromApp.join('\n  '));
+              process.exit(1);
+            }
+            console.log('route manifest in sync ('+emitted.size+' routes)');
+          "
+
+      - name: Tests (full suite, not the CI subset)
+        run: pnpm test --reporter=json --outputFile=../vitest-gate.json
+
+      - name: Test floors
+        if: always()
+        run: |
+          node -e "
+            const fs=require('fs');
+            const p='../vitest-gate.json';
+            if(!fs.existsSync(p)){console.error('::error::No vitest output — the suite did not run.');process.exit(1);}
+            const r=JSON.parse(fs.readFileSync(p,'utf8'));
+            const files=(r.testResults||[]).filter(f=>f.status==='passed').length;
+            const passed=r.numPassedTests??0, failed=r.numFailedTests??0;
+            console.log('test files passed: '+files+'  tests passed: '+passed+'  failed: '+failed);
+            let bad=false;
+            if(failed>0){console.error('::error::'+failed+' failing tests. Baseline is 0.');bad=true;}
+            if(files<Number(process.env.MIN_TEST_FILES)){console.error('::error::Test-file regression — '+files+', floor '+process.env.MIN_TEST_FILES);bad=true;}
+            if(passed<Number(process.env.MIN_TESTS)){console.error('::error::Test-count regression — '+passed+', floor '+process.env.MIN_TESTS);bad=true;}
+            process.exit(bad?1:0);
+          "
+
+      - name: Dependency audit
+        run: pnpm audit --audit-level=high
+
+  secrets:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Secret scan
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
