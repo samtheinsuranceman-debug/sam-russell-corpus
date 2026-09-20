@@ -11,6 +11,7 @@ import {
   freeToApplyNow,
   openMembershipBusinessCards,
   rankCards,
+  sharedUnderwriters,
   scoreCard,
   sequencingAdvice,
   unrankable,
@@ -213,11 +214,71 @@ describe('the membership gate is the first question, not a footnote', () => {
     for (const c of list) expect(c.underwriting).toBe('personal-guarantee-business');
   });
 
-  it('names Connexus and NASA FCU among the confirmed charters, with the twelve found beside them', () => {
+  it('keeps Connexus among the confirmed charters, with the twelve found beside it', () => {
     const ids = confirmedOpenCharters().map((c) => c.id);
-    expect(ids.indexOf('connexus-business')).toBeGreaterThan(-1);
-    expect(ids.indexOf('nasafcu-business-platinum')).toBeGreaterThan(-1);
+    expect(ids.indexOf('connexus-business-visa')).toBeGreaterThan(-1);
     expect(ids.length).toBeGreaterThanOrEqual(8);
+  });
+
+  it('blocks NASA FCU: the open route is personal membership, not the business card', () => {
+    // Recorded as an open charter on the strength of the National Space Society
+    // route, which opens PERSONAL membership nationwide. The business card is
+    // limited to MD, VA and DC, so it is unreachable from North Carolina.
+    const nasa = CARD_SOURCES.filter((c) => c.id === 'nasafcu-business-platinum')[0];
+    expect(nasa.membershipGate).toBe('restricted');
+    expect(nasa.membershipPath).toMatch(/Maryland, Virginia or the District of Columbia/);
+    expect(nasa.membershipPath).toMatch(/does not reach the business card/);
+
+    const s = scoreCard(nasa, OWNER);
+    expect(s.rankable).toBe(false);
+    expect(rankCards(OWNER).filter((r) => r.id === nasa.id)).toEqual([]);
+    expect(unrankable(OWNER).filter((r) => r.id === nasa.id).length).toBe(1);
+    expect(confirmedOpenCharters().map((c) => c.id).indexOf(nasa.id)).toBe(-1);
+  });
+
+  it('separates the personal gate from the business gate in what it will not claim', () => {
+    expect(NEVER_PRINTED.join(' ')).toMatch(/open PERSONAL membership route presented as access/i);
+  });
+});
+
+describe('the brand on the front is not always the lender behind it', () => {
+  it('clusters rows that share one creditor', () => {
+    const clusters = sharedUnderwriters();
+    expect(clusters.length).toBeGreaterThan(0);
+    const elan = clusters.filter((c) => /elan/i.test(c.underwriter))[0];
+    expect(elan, 'Elan cluster missing').toBeDefined();
+    expect(elan.ids.length).toBeGreaterThanOrEqual(3);
+    expect(elan.issuers.length).toBeGreaterThanOrEqual(2);
+  });
+
+  it('warns that they are one application, not several', () => {
+    const elan = sharedUnderwriters().filter((c) => /elan/i.test(c.underwriter))[0];
+    expect(elan.warning).toMatch(/ONE application/);
+    expect(elan.warning).toMatch(/still costs a full hard pull/);
+  });
+
+  it('never clusters a row that has no recorded underwriter', () => {
+    const clustered: string[] = [];
+    for (const c of sharedUnderwriters()) for (const id of c.ids) clustered.push(id);
+    for (const id of clustered) {
+      const row = CARD_SOURCES.filter((c) => c.id === id)[0];
+      expect(row.underwrittenBy, `${id} clustered with no underwriter`).toBeDefined();
+    }
+  });
+
+  it('bans selling two Elan cards as two independent shots', () => {
+    expect(NEVER_PRINTED.join(' ')).toMatch(/same agent issuer presented as two independent/i);
+  });
+
+  it('records the 18-cycle Connexus window, without letting it drive the rank', () => {
+    const c = CARD_SOURCES.filter((x) => x.id === 'connexus-business-visa')[0];
+    expect(c.introAprMonths).toBe(18);
+    expect(c.evidence).not.toBe('named-only');
+    // Longest intro window on the page, and still outranked by the EIN tier.
+    const ranked = rankCards(OWNER);
+    const here = ranked.filter((s) => s.id === c.id)[0];
+    expect(here, 'Connexus should now rank').toBeDefined();
+    expect(here.lendingScore).toBeLessThan(ranked[0].lendingScore);
   });
 
   it('excludes a military-only charter rather than listing an unreachable card', () => {
