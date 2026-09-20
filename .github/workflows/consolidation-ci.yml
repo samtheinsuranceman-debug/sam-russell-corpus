@@ -72,13 +72,45 @@ jobs:
       # Application source only. PROVENANCE.md records that nine Slack
       # placeholder patterns were previously neutered for exactly this reason;
       # this keeps that property true rather than trusting it to stay true.
+      # Self-evident placeholders are reported but do not fail the run.
+      #
+      # Without this the gate is red on arrival: it matches
+      # `client/src/pages/portal/Integrations.tsx:261`, the literal
+      # `value="xoxb-EXAMPLE-PLACEHOLDER"` — a UI hint that FOUNDATION.md §5.2
+      # already certified as "not a credential". A gate that fails on the one
+      # string its own documentation clears teaches reviewers to skip it, which
+      # is worse than not having the gate at all.
+      #
+      # Placeholders are still printed, so a real secret can never be hidden by
+      # silently dropping matches. The tradeoff: a credential that literally
+      # contains EXAMPLE/PLACEHOLDER/SAMPLE/DUMMY/REDACTED/YOUR_ is ignored —
+      # e.g. AWS's own documentation key `AKIAIOSFODNN7EXAMPLE`. That is the
+      # intended behaviour; no issued, working credential carries those words.
       - name: Scan application source for credentials
         working-directory: russell-capital-systems
         run: |
-          set -o pipefail
+          set -uo pipefail
           PATTERN='(sk-[A-Za-z0-9]{20,}|AKIA[0-9A-Z]{16}|-----BEGIN [A-Z ]*PRIVATE KEY|xox[baprs]-[A-Za-z0-9-]{10,})'
-          if grep -rInE "$PATTERN" server shared client/src 2>/dev/null; then
+          PLACEHOLDER='EXAMPLE|PLACEHOLDER|REDACTED|SAMPLE|DUMMY|YOUR[-_]|X{6,}'
+
+          hits="$(grep -rInE "$PATTERN" server shared client/src 2>/dev/null || true)"
+          if [ -z "$hits" ]; then
+            echo "No credential patterns found in application source."
+            exit 0
+          fi
+
+          ignored="$(printf '%s\n' "$hits" | grep -Ei  "$PLACEHOLDER" || true)"
+          real="$(   printf '%s\n' "$hits" | grep -Eiv "$PLACEHOLDER" || true)"
+
+          if [ -n "$ignored" ]; then
+            echo "Ignored self-evident placeholders (not credentials):"
+            printf '%s\n' "$ignored"
+          fi
+
+          if [ -n "$real" ]; then
+            printf '%s\n' "$real"
             echo "::error::Possible credential committed to application source. Rotate it, then remove it."
             exit 1
           fi
-          echo "No credential patterns found in application source."
+
+          echo "No credential patterns found in application source (placeholders ignored)."
