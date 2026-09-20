@@ -1,65 +1,48 @@
 # Consolidation Foundation — Repository & Capability Inventory
 
-**Date:** 20 September 2026 · **Canonical base:** `sam-russell-corpus` → `russell-capital-systems/` (the live build)
+**Date:** 20 September 2026
 
-## Scope decision (recorded)
+## Decision (recorded)
 
-- `sam-russell-corpus` is the **sole canonical consolidation base**.
-- `russell-capital-app` is a **donor** for gamification routes and Postgres/Vercel patterns.
-- `russell-capital` is a **donor** for the Sacred Seven, behavioral schema, and selected page/content modules.
-- Every other repository is donor / reference / archive — **not** an automatic merge candidate.
-- No DNS, domain, traffic, hosting, database or credential changes. No wholesale repository merges.
+| | Repository | Role |
+|---|---|---|
+| **Live at the domain** | `russell-capital-domain-redirect` | **DO NOT MERGE THE PLATFORM INTO IT.** Five files, GitHub Pages, `CNAME` = `russellcapitalsystems.com`. Its own README: *"contains no credentials, customer data, tracking code, or application source."* Leave untouched. |
+| **Consolidation base** | **`russell-capital-app`** | The full platform consolidates here. |
+| Donor | `sam-russell-corpus/russell-capital-systems` | 86 base-absent routes, a green test suite, and engine work worth harvesting. |
+| Donor | `russell-capital` | Sacred Seven, behavioural schema, selected modules. Not yet inventoried. |
+| Reference / archive | the remaining twelve | Not automatic merge candidates. |
+
+### Why `russell-capital-app` is the base — evidence verified
+
+| Claim | Verified |
+|---|---|
+| Vercel configuration | `vercel.json` + `api/index.ts` serverless function, 60s maxDuration, SPA rewrites |
+| API folder | present |
+| Consolidation manifest | `CONSOLIDATION_PLAN.json`, **687 scored entries** with Verdict / Layer / Cluster / Hierarchy Role |
+| Recursive navigation | `client/src/navTree.ts`, **1058 lines**, `NavNode { children?: NavNode[] }`, nesting 3+ deep |
+| Shared calculator-data layer | `annuityData.ts`, `indexCreditingData.ts`, `advisorySummaryData.ts`; 23,342 lines across `shared/` |
+
+The recursive `navTree` is the decisive structural advantage: it supports arbitrarily nested,
+collapsible navigation. The donor's flat two-level `NAV_SECTIONS` cannot express that.
+
+### An important note on the redirect repo
+
+Its `README.md` states the redirect target is `https://russellcap.com/`, but `index.html` sends
+visitors to `https://www.russellcapitalsystems.com/` — the same hostname its own `CNAME` claims.
+That is either a stale README or a redirect loop. **Flagged, not touched** — no DNS or domain change
+is in scope.
 
 ---
 
-## The sixteen repositories
+## Size comparison
 
-| Repository | Visibility | Role |
+| | **Base** `russell-capital-app` | **Donor** `russell-capital-systems` |
 |---|---|---|
-| `sam-russell-corpus` | public | **CANONICAL BASE** — hosts the live build |
-| `russell-capital-app` | private | **DONOR** — gamification, Postgres/Vercel patterns |
-| `russell-capital` | private | **DONOR** — Sacred Seven, behavioral schema, selected modules |
-| `Russell-Capital-Solutions-NEW` | public | Reference |
-| `Really-Russell-Capital` | public | Reference |
-| `Russell-Capital-Calibrate-System` | public | Reference |
-| `russell-capital-patents` | private | Reference — patent filings |
-| `russell-capital-reports` | private | Archive |
-| `russell-capital-skills` | private | Reference |
-| `russell-capital-analyses` | private | Archive |
-| `russell-capital-combinations` | private | Archive |
-| `russell-capital-nlp` | private | Reference |
-| `russell-capital-domain-redirect` | private | Infra — do not touch |
-| `russell-biomedical` | private | Unrelated |
-| `sam-russell-catechism-brotherhood` | public | Content |
-| `sam-russell-corpus-backup` | private | Archive |
+| Routes | **612** | 313 |
+| Page components | **722** | 310 |
+| `shared/` modules | 63 | 115 |
+| `server/` modules | 48 | 130 |
+| Navigation | recursive `NavNode` tree | flat sections + one subgroup level |
+| Deploy target | Vercel (`vercel.json`, `api/`) | Express bundle |
 
----
-
-## Size comparison — live base vs the app donor
-
-| | Live (`russell-capital-systems`) | Donor (`russell-capital-app`) |
-|---|---|---|
-| Routes | **313** | **612** |
-| Page components | 310 | 722 |
-| `shared/` modules | 115 | 63 |
-| `server/` modules | 130 | 48 |
-| Stack | React 19 · wouter · tRPC 11 · Drizzle · Express · Vite | same family, Vercel/Postgres target |
-
-**The stacks are compatible.** Both are React 19 + wouter + tRPC 11 + Drizzle, so migration is a
-code-selection problem rather than a rewrite.
-
-> ### Correction to the working assumption
->
-> The brief referred to *"the proposed 391 pages."* The measured figures are different and
-> materially change scope:
->
-> - Live routes: **313**
-> - Donor routes: **612**
-> - **Identical paths in both: 227** — each needs one chosen implementation
-> - Donor-only routes: **385**
-> - Live-only routes: **86**
-> - Union if everything were taken: **698**
->
-> The real work is not importing 391 new pages. It is adjudicating **227 collisions** and then
-> selecting from 385 donor-only candidates.
-
+Both are React 19 · wouter · tRPC 11 · Drizzle. Migration is code selection, not a rewrite.

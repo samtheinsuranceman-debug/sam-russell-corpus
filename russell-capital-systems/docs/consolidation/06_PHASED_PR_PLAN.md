@@ -1,103 +1,79 @@
 # Consolidation Foundation — Phased PR Plan
 
-One bounded capability per pull request. Each PR states source path, target path, test criteria and
-rollback. **No PR proceeds until the one before it is merged and green.**
+**Base: `russell-capital-app`.** One bounded capability per PR. No PR proceeds until the previous one
+is merged and green.
 
-Baseline every PR must match or beat: typecheck 0 errors · build 313+ routes · `test:ci` 2877 passing.
+## Scope, now that the base has flipped
 
----
-
-## PR 0 — This foundation *(current)*
+Measured, not estimated:
 
 | | |
 |---|---|
-| Source | — |
-| Target | `docs/consolidation/*`, `.github/workflows/consolidation-ci.yml` |
-| Changes | Documentation and one CI workflow. **No application code.** |
-| Test criteria | CI workflow runs green on itself |
-| Rollback | Revert the merge commit; nothing else is affected |
+| Base already carries | 612 routes · 722 page components |
+| **Donor-only routes to migrate in** | **86** |
+| Colliding paths (base wins by default) | 227 |
+
+The job is **86 routes plus selected engines**, not a 391-page import. Most of the surface already
+exists in the base.
 
 ---
 
-## PR 1 — Resolve the two dead sidebar links
+## PR 1 — Stabilise the base, then adopt it
 
 | | |
 |---|---|
-| Source | `russell-capital-app/client/src/pages/ToolExplorer.tsx` (donor has a real `/portal/tool-explorer`) |
-| Target | `client/src/pages/` + `App.tsx` + `AppShell.tsx` |
-| Scope | `/portal/knowledge-library` → repoint to the existing orphan `/portal/knowledge`, or remove. `/portal/tool-explorer` → migrate the donor page, or remove the link. |
-| Test criteria | `navigation-organization.test.ts` passes; no sidebar entry 404s; route count ≥ 313 |
-| Rollback | Revert; both links return to their present broken state |
-
-Smallest possible real migration. Proves the pipeline end to end.
+| Repository | `russell-capital-app` |
+| Scope | Make `pnpm test` green without external services. 59 of 113 failures are `Error: DB unavailable`; 14 are `ENOENT`; 6 are network fetches. Gate them on `process.env.DATABASE_URL` and skip cleanly, the way `russell-capital-systems` already does. Port `consolidation-ci.yml`. Run a full secret-scan baseline. Tag `pre-consolidation-base-<date>`. |
+| Changes | Test harness, CI workflow. **No application logic.** |
+| Test criteria | `pnpm check` 0 errors · `pnpm build` exit 0 · `pnpm test` **0 failures** |
+| Rollback | Revert; base returns to its present state |
+| Why first | A regression baseline must be reproducible. Every later PR is measured against this number. |
 
 ---
 
-## PR 2 — Orphan triage application
+## PR 2 — Navigation consolidation
 
 | | |
 |---|---|
-| Source | — (live build only) |
-| Target | `AppShell.tsx` + `client/src/lib/secondaryCatalog.ts` |
-| Scope | Apply the marked-up decisions in `docs/audit/ORPHAN_TRIAGE.md` (124 pages). Every promotion is a **coordinated two-file change**: add to the sidebar *and* remove from the secondary catalogue. |
-| Test criteria | `navigation-organization.test.ts` passes; full `test:ci` green |
-| Rollback | Revert; menu returns to 158 links |
-| Blocked on | Your promote / merge / delete marks |
+| Source | `russell-capital-systems` `AppShell.tsx` `NAV_SECTIONS` + `secondaryCatalog.ts` |
+| Target | `russell-capital-app` `client/src/navTree.ts` |
+| Scope | Fold the donor's 158 sidebar links and its secondary catalogue into the base's recursive `NavNode` tree. This is where collapsible, arbitrarily-nested tiering finally works — the thing the flat donor structure could not express. |
+| Test criteria | Every path in the tree resolves to a route; no duplicates; route count unchanged; suite green |
+| Rollback | Revert; base navigation unchanged |
+| Note | The donor enforces sidebar/catalogue disjointness via `navigation-organization.test.ts`. If the catalogue migrates, that test migrates with it. |
 
 ---
 
-## PR 3 — Gamification schema (donor: `russell-capital-app`)
+## PR 3 — The 86 donor-only routes, in batches
 
 | | |
 |---|---|
-| Source | `server/experienceRouter.ts`, `shared/tabScores.ts`, related Drizzle tables |
-| Target | `server/`, `shared/`, `drizzle/` |
-| Scope | Schema and server router **only**. No pages, no routes. Additive migration; no existing table altered. |
-| Test criteria | New tests for the router; `pnpm db:push` generates a clean additive migration; full suite green |
-| Rollback | Revert; drop the added tables (they are additive, nothing depends on them yet) |
-| Note | The live build already ships a 25-link "The Experience" section with Command/Compete/Earn/Explore/Transcend. **Overlap must be diffed before any code moves** — this may be a merge rather than an import. |
+| Source | `russell-capital-systems/client/src/pages/**` for the 86 paths in `04_ROUTE_COLLISIONS.md` §A |
+| Target | `russell-capital-app/client/src/pages/`, `App.tsx`, `navTree.ts` |
+| Scope | Split into 4–5 PRs by domain (rental/real-estate, career, longevity, compliance, misc). No colliding path is touched. |
+| Test criteria | Route count rises by exactly the batch size; typecheck clean; suite green; each page renders |
+| Rollback | Revert the batch; earlier batches unaffected |
 
 ---
 
-## PR 4 — Gamification routes
+## PR 4+ — Shared-engine adjudication, one module per PR
 
-| | |
-|---|---|
-| Source | donor page components behind the gamification routes |
-| Target | `client/src/pages/`, `App.tsx`, `AppShell.tsx` |
-| Scope | Only routes in `04_ROUTE_COLLISIONS.md` §B (donor-only). Any colliding path is deferred to its own comparison PR. |
-| Test criteria | Route count increases by exactly the number added; typecheck clean; suite green |
-| Rollback | Revert; routes disappear, schema from PR 3 remains harmlessly |
+Modules sharing a filename across both trees each get a PR: post the diff, choose BASE or DONOR
+explicitly, migrate tests either way, prove both pass. Lowest blast radius first — data and
+branding modules, then engines, `accessControl.ts` **last** because it is security-relevant.
 
 ---
 
-## PR 5+ — Shared-engine adjudication, one module per PR
+## PR N — `russell-capital` donor
 
-36 shared modules exist under the same filename in both builds (`02_CAPABILITY_MATRIX.md` §A).
-Each gets its own PR:
-
-1. Post the diff and a short rationale in the PR body.
-2. Choose LIVE or DONOR explicitly.
-3. If DONOR: migrate, keep the live module's tests, add the donor's tests, prove both pass.
-4. If LIVE: record the decision in the matrix and close. No code change.
-
-Suggested order — lowest blast radius first: `branding.ts`, `const.ts`, `carrierRatings.ts`,
-`annuityData.ts`, then the engines (`mortgageKiller.ts`, `policyLoanOptimizer.ts`,
-`monteCarloEngine.ts`, `estateTaxEngine.ts`), then `accessControl.ts` **last** — it is
-security-relevant and must not move casually.
-
----
-
-## PR N — Sacred Seven and behavioral schema (donor: `russell-capital`)
-
-Not yet scoped. `russell-capital` has not been cloned or inventoried; this plan covers
-`russell-capital-app` only. A second inventory pass is required before these PRs can be written.
+Sacred Seven, behavioural schema, selected page/content modules. **Not yet scoped** — that repository
+has not been cloned or inventoried. A second inventory pass is required before these PRs exist.
 
 ---
 
 ## Out of scope until separately approved
 
-- Any production deployment
-- Any DNS or domain change
+- Any deployment, DNS or domain change
 - Any database migration against a live database
-- Any credential or hosting change
+- Any credential, hosting or environment-variable change
+- Anything touching `russell-capital-domain-redirect`

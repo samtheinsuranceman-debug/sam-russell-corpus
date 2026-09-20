@@ -1,33 +1,41 @@
-# Consolidation Foundation — Verification of the Live Build
+# Consolidation Foundation — Verification
 
-**Date:** 20 September 2026 · Commands run in `russell-capital-systems/`
+**Date:** 20 September 2026 · both repositories, same machine, same toolchain
 
-| Check | Command | Result |
+| Check | **Base** `russell-capital-app` | **Donor** `russell-capital-systems` |
 |---|---|---|
-| Toolchain | `node -v` / `pnpm -v` | node v22.22.2 · pnpm 10.34.2 |
-| Install | `node_modules` present, lockfile `pnpm-lock.yaml` | OK |
-| Typecheck | `pnpm check` (`tsc --noEmit`) | **exit 0 · 0 errors** |
-| Build | `pnpm build` | **exit 0** · `dist/index.js` 3.2 MB · **313 route patterns** written to `dist/public/routes.json` |
-| CI tests | `pnpm test:ci` | **exit 0** · 163 files · 2877 passed · 3 skipped |
-| Full tests | `pnpm test` | **exit 0** · 194 files (185 passed, 9 skipped) · 3258 passed · 80 skipped |
+| Install | `pnpm install --frozen-lockfile` — **exit 0** | **exit 0** |
+| Typecheck | `pnpm check` — **exit 0, 0 errors** | **exit 0, 0 errors** |
+| Build | `pnpm build` — **exit 0**, `dist/index.js` 1.6 MB | **exit 0**, 313 routes, 3.2 MB |
+| Tests | `pnpm test` — **exit 1 · 113 failed · 2030 passed · 25 files failing (98)** | **exit 0 · 3258 passed · 194 files** |
 
-## Notes
+## The base's failing suite — cause
 
-- The build's own route emitter reports **313 patterns**, independently confirming the route count
-  used throughout these documents.
-- `test:ci` excludes 25 test files that `test` includes. **Both suites pass**, so the exclusions are
-  not masking failures — they appear to be slower or integration-shaped tests. No action required,
-  but CI should run the full suite where runtime allows.
-- Secret scan over tracked files found **no live credentials**; the only pattern hit is a clearly
-  labelled placeholder in `client/src/pages/portal/Integrations.tsx`.
+| Cause | Count |
+|---|---|
+| `Error: DB unavailable` (needs `DATABASE_URL`) | 59 |
+| `ENOENT` missing file | 14 |
+| `TypeError: fetch failed` (network) | 6 |
+| Assertion and other | ~34 |
 
-## Regression baseline
+**The failures are predominantly environmental, not rotten code.** The base installs, typechecks
+cleanly and builds.
 
-These numbers are the baseline. Any consolidation PR must match or improve them:
+The donor is Postgres-gated in the same way (`server/db.ts` guards on `process.env.DATABASE_URL`)
+yet still passes 3258 tests with no database, because its tests skip or mock when the DB is absent.
+The base's do not.
+
+### Consequence for the plan
+
+A regression baseline has to be reproducible. Until the base's suite is green without external
+services, every migration PR would be measured against a red suite. **That is why suite
+stabilisation is PR 1** — see `06_PHASED_PR_PLAN.md`. It is a bounded, mechanical job: make the
+DB-dependent tests skip cleanly the way the donor's already do.
+
+### Target baseline, to be established by PR 1
 
 ```
-typecheck errors : 0
-build            : success, 313 routes
-test:ci          : 2877 passed / 0 failed
-test (full)      : 3258 passed / 0 failed
+typecheck : 0 errors
+build     : exit 0
+tests     : 0 failures (skips permitted where a service is absent)
 ```

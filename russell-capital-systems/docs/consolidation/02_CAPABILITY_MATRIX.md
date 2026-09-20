@@ -1,153 +1,137 @@
 # Consolidation Foundation — Capability Matrix
 
-One chosen implementation per capability. `LIVE` = keep the canonical base's version.
-`DONOR` = migrate the donor's version. `COMPARE` = undecided, needs a documented diff and
-regression proof before either is chosen.
+Base = `russell-capital-app`. `BASE` keeps the base's implementation. `DONOR` migrates
+`russell-capital-systems`'s version in. `COMPARE` = undecided, needs a documented diff and a
+passing regression run before either is chosen.
 
-Default rule: **anything already in the live build stays LIVE unless a documented comparison
-shows the donor's version is better.** Nothing is marked DONOR in this document without review.
+Default rule: **the base wins unless a documented comparison shows the donor's version is better.**
+Nothing is marked DONOR here without review.
 
 ---
 
-## A. Shared modules present in BOTH builds (36) — all COMPARE
-
-These are the same filename in both trees. Each needs a diff before a choice is recorded.
-
-| Module | Decision | Notes |
-|---|---|---|
-| `shared/_core/errors.ts` | COMPARE | |
-| `shared/accessControl.ts` | COMPARE | |
-| `shared/advancedAnalytics.ts` | COMPARE | |
-| `shared/advisorySummaryData.ts` | COMPARE | |
-| `shared/annuityData.ts` | COMPARE | |
-| `shared/branding.ts` | COMPARE | |
-| `shared/carrierRatings.ts` | COMPARE | |
-| `shared/carrierRecommendation.ts` | COMPARE | |
-| `shared/const.ts` | COMPARE | |
-| `shared/cryptoCycleEngine.ts` | COMPARE | |
-| `shared/estateTaxEngine.ts` | COMPARE | |
-| `shared/fiaCollateralEngine.ts` | COMPARE | |
-| `shared/growthAnnuityEngine.ts` | COMPARE | |
-| `shared/householdWealth.bak.ts` | COMPARE | |
-| `shared/householdWealth.ts` | COMPARE | |
-| `shared/ibbotsonModel.ts` | COMPARE | |
-| `shared/indexCreditingData.ts` | COMPARE | |
-| `shared/iulCarriers.ts` | COMPARE | |
-| `shared/lifetimeIncomeEngine.ts` | COMPARE | |
-| `shared/livingRiskProfile.ts` | COMPARE | |
-| `shared/modelPortfolios.ts` | COMPARE | |
-| `shared/monteCarloEngine.ts` | COMPARE | |
-| `shared/mortgageKiller.ts` | COMPARE | |
-| `shared/multiPropertyMyga.ts` | COMPARE | |
-| `shared/mygaWaterfall.ts` | COMPARE | |
-| `shared/policyLoanOptimizer.ts` | COMPARE | |
-| `shared/premiumFinancing.ts` | COMPARE | |
-| `shared/replacementScoring.ts` | COMPARE | |
-| `shared/retirementDNA.ts` | COMPARE | |
-| `shared/reverseHeloc.ts` | COMPARE | |
-| `shared/slideThemes.ts` | COMPARE | |
-| `shared/tabScores.ts` | COMPARE | |
-| `shared/taxBracketEngine.ts` | COMPARE | |
-| `shared/timeMachineEngine.ts` | COMPARE | |
-| `shared/types.ts` | COMPARE | |
-| `shared/weaponizeEngines.ts` | COMPARE | |
-
-## B. Donor-only shared engines (27) — candidates, default OUT
+## A. Shared modules present in BOTH (36) — all COMPARE
 
 | Module | Decision |
 |---|---|
-| `shared/annuityFeeDetectionEngine.ts` | CANDIDATE |
-| `shared/behavioralBiasEngine.ts` | CANDIDATE |
-| `shared/captiveInsuranceEngine.ts` | CANDIDATE |
-| `shared/carrierStrengthMonitorEngine.ts` | CANDIDATE |
-| `shared/ceCreditTrackerEngine.ts` | CANDIDATE |
-| `shared/clientOnboardingEngine.ts` | CANDIDATE |
-| `shared/clientRetentionEngine.ts` | CANDIDATE |
-| `shared/commissionOptimizerEngine.ts` | CANDIDATE |
-| `shared/complianceDocGeneratorEngine.ts` | CANDIDATE |
-| `shared/crtWealthReplacementEngine.ts` | CANDIDATE |
-| `shared/disabilityGapEngine.ts` | CANDIDATE |
-| `shared/divorceFinancialEngine.ts` | CANDIDATE |
-| `shared/familyTreeFinancialEngine.ts` | CANDIDATE |
-| `shared/generationalWealthEngine.ts` | CANDIDATE |
-| `shared/iulComplianceEngine.ts` | CANDIDATE |
-| `shared/livingBenefitsProbabilityEngine.ts` | CANDIDATE |
-| `shared/multiCarrierIULOptimizer.ts` | CANDIDATE |
-| `shared/multiCurrencyWealthEngine.ts` | CANDIDATE |
-| `shared/peerBenchmarkingEngine.ts` | CANDIDATE |
-| `shared/policyReplacementAnalyzer.ts` | CANDIDATE |
-| `shared/premiumFinancingArbitrage.ts` | CANDIDATE |
-| `shared/prospectQualificationEngine.ts` | CANDIDATE |
-| `shared/retirementGapEngine.ts` | CANDIDATE |
-| `shared/socialSecurityBridgeEngine.ts` | CANDIDATE |
-| `shared/stateTaxMigrationEngine.ts` | CANDIDATE |
-| `shared/successionValuationEngine.ts` | CANDIDATE |
-| `shared/taxCodeChangeSimulator.ts` | CANDIDATE |
+| `shared/_core/errors.ts` | COMPARE |
+| `shared/accessControl.ts` | COMPARE |
+| `shared/advancedAnalytics.ts` | COMPARE |
+| `shared/advisorySummaryData.ts` | COMPARE |
+| `shared/annuityData.ts` | COMPARE |
+| `shared/branding.ts` | COMPARE |
+| `shared/carrierRatings.ts` | COMPARE |
+| `shared/carrierRecommendation.ts` | COMPARE |
+| `shared/const.ts` | COMPARE |
+| `shared/cryptoCycleEngine.ts` | COMPARE |
+| `shared/estateTaxEngine.ts` | COMPARE |
+| `shared/fiaCollateralEngine.ts` | COMPARE |
+| `shared/growthAnnuityEngine.ts` | COMPARE |
+| `shared/householdWealth.bak.ts` | COMPARE |
+| `shared/householdWealth.ts` | COMPARE |
+| `shared/ibbotsonModel.ts` | COMPARE |
+| `shared/indexCreditingData.ts` | COMPARE |
+| `shared/iulCarriers.ts` | COMPARE |
+| `shared/lifetimeIncomeEngine.ts` | COMPARE |
+| `shared/livingRiskProfile.ts` | COMPARE |
+| `shared/modelPortfolios.ts` | COMPARE |
+| `shared/monteCarloEngine.ts` | COMPARE |
+| `shared/mortgageKiller.ts` | COMPARE |
+| `shared/multiPropertyMyga.ts` | COMPARE |
+| `shared/mygaWaterfall.ts` | COMPARE |
+| `shared/policyLoanOptimizer.ts` | COMPARE |
+| `shared/premiumFinancing.ts` | COMPARE |
+| `shared/replacementScoring.ts` | COMPARE |
+| `shared/retirementDNA.ts` | COMPARE |
+| `shared/reverseHeloc.ts` | COMPARE |
+| `shared/slideThemes.ts` | COMPARE |
+| `shared/tabScores.ts` | COMPARE |
+| `shared/taxBracketEngine.ts` | COMPARE |
+| `shared/timeMachineEngine.ts` | COMPARE |
+| `shared/types.ts` | COMPARE |
+| `shared/weaponizeEngines.ts` | COMPARE |
 
-## C. Live-only shared modules (79) — LIVE, no action
+## B. Donor-only shared modules (79) — candidates to migrate in
 
-Not listed individually; they are unaffected by the merge.
-
-## D. Server modules present in BOTH (44) — all COMPARE
+These exist in `russell-capital-systems` and **not** in the base. Each is a candidate.
 
 | Module | Decision |
 |---|---|
-| `server/_core/context.ts` | COMPARE |
-| `server/_core/cookies.ts` | COMPARE |
-| `server/_core/dataApi.ts` | COMPARE |
-| `server/_core/env.ts` | COMPARE |
-| `server/_core/imageGeneration.ts` | COMPARE |
-| `server/_core/index.ts` | COMPARE |
-| `server/_core/llm.ts` | COMPARE |
-| `server/_core/map.ts` | COMPARE |
-| `server/_core/notification.ts` | COMPARE |
-| `server/_core/oauth.ts` | COMPARE |
-| `server/_core/sdk.ts` | COMPARE |
-| `server/_core/storageProxy.ts` | COMPARE |
-| `server/_core/systemRouter.ts` | COMPARE |
-| `server/_core/trpc.ts` | COMPARE |
-| `server/_core/types/manusTypes.ts` | COMPARE |
-| `server/_core/vite.ts` | COMPARE |
-| `server/_core/voiceTranscription.ts` | COMPARE |
-| `server/batchStrategyPdf.ts` | COMPARE |
-| `server/bulkComparisonPdf.ts` | COMPARE |
-| `server/calendarService.ts` | COMPARE |
-| `server/carrierRatingsService.ts` | COMPARE |
-| `server/csvTemplate.ts` | COMPARE |
-| `server/dataFeedService.ts` | COMPARE |
-| `server/db.ts` | COMPARE |
-| `server/email.ts` | COMPARE |
-| `server/emailPinService.ts` | COMPARE |
-| `server/experienceDb.ts` | COMPARE |
-| `server/experienceRouter.ts` | COMPARE |
-| `server/generate1035Pdf.ts` | COMPARE |
-| `server/heygenService.ts` | COMPARE |
-| `server/index.ts` | COMPARE |
-| `server/mortgageKillerPdf.ts` | COMPARE |
-| `server/pdfExportService.ts` | COMPARE |
-| `server/pdfReport.ts` | COMPARE |
-| `server/rothPdfReport.ts` | COMPARE |
-| `server/routers.ts` | COMPARE |
-| `server/slackBot.ts` | COMPARE |
-| `server/storage.ts` | COMPARE |
-| `server/strategyPdfService.ts` | COMPARE |
-| `server/stripeClient.ts` | COMPARE |
-| `server/stripeProducts.ts` | COMPARE |
-| `server/stripeWebhook.ts` | COMPARE |
-| `server/videoScriptGenerator.ts` | COMPARE |
-| `server/webhookDispatch.ts` | COMPARE |
+| `shared/advisorModes.ts` | CANDIDATE |
+| `shared/ag49Validator.ts` | CANDIDATE |
+| `shared/aiIntakeScript.ts` | CANDIDATE |
+| `shared/altCredit/deployment.ts` | CANDIDATE |
+| `shared/altCredit/lenders.ts` | CANDIDATE |
+| `shared/altCredit/presets.ts` | CANDIDATE |
+| `shared/altCredit/routes.ts` | CANDIDATE |
+| `shared/altCredit/simulator.ts` | CANDIDATE |
+| `shared/altCredit/types.ts` | CANDIDATE |
+| `shared/assessmentBridge.ts` | CANDIDATE |
+| `shared/balancedIndexedAccount.ts` | CANDIDATE |
+| `shared/calculatorCatalog.ts` | CANDIDATE |
+| `shared/careerEngine.ts` | CANDIDATE |
+| `shared/chainEngine.ts` | CANDIDATE |
+| `shared/clientFactFinder.ts` | CANDIDATE |
+| `shared/compositeMind.ts` | CANDIDATE |
+| `shared/consent.ts` | CANDIDATE |
+| `shared/costStructure.ts` | CANDIDATE |
+| `shared/creditUnionLenders.ts` | CANDIDATE |
+| `shared/creditingWindows.ts` | CANDIDATE |
+| `shared/erosion.ts` | CANDIDATE |
+| `shared/firewall.ts` | CANDIDATE |
+| `shared/forgiveness.ts` | CANDIDATE |
+| `shared/genomeStrategies.ts` | CANDIDATE |
+| `shared/genomeStrategyFit.ts` | CANDIDATE |
+| `shared/historicalShocks.ts` | CANDIDATE |
+| `shared/householdGenome.ts` | CANDIDATE |
+| `shared/illustrationCalibration.ts` | CANDIDATE |
+| `shared/incomeForLife.ts` | CANDIDATE |
+| `shared/inheritanceEngine.ts` | CANDIDATE |
+| `shared/irc7702.ts` | CANDIDATE |
+| `shared/iulLinks.ts` | CANDIDATE |
+| `shared/journeyCatalog.ts` | CANDIDATE |
+| `shared/journeyEngine.ts` | CANDIDATE |
+| `shared/leadTypes.ts` | CANDIDATE |
+| `shared/liquidityRoutes.ts` | CANDIDATE |
+| `shared/loginDisclaimers.ts` | CANDIDATE |
+| `shared/longevityEngine.ts` | CANDIDATE |
+| `shared/ltcEngine.ts` | CANDIDATE |
+| `shared/macroEngine.ts` | CANDIDATE |
+| `shared/mandates.ts` | CANDIDATE |
+| `shared/mortgageLedger.ts` | CANDIDATE |
+| `shared/mutualIulCarriers.ts` | CANDIDATE |
+| `shared/nlpBrain.ts` | CANDIDATE |
+| `shared/pacificHorizonEcv.ts` | CANDIDATE |
+| `shared/passwordPolicy.ts` | CANDIDATE |
+| `shared/patentCatalog.ts` | CANDIDATE |
+| `shared/patentStatus.ts` | CANDIDATE |
+| `shared/planLedger.ts` | CANDIDATE |
+| `shared/policyLoanMechanics.ts` | CANDIDATE |
+| `shared/policyMechanics.ts` | CANDIDATE |
+| `shared/policyMultiplier.ts` | CANDIDATE |
+| `shared/powerHistory.ts` | CANDIDATE |
+| `shared/provenance.ts` | CANDIDATE |
+| `shared/qbiDeduction.ts` | CANDIDATE |
+| `shared/regulatorySandbox.ts` | CANDIDATE |
+| `shared/rentalEnterprise.ts` | CANDIDATE |
+| `shared/retirementLimits.ts` | CANDIDATE |
+| `shared/revealCopy.ts` | CANDIDATE |
+| `shared/roomVideos.ts` | CANDIDATE |
+| …and 19 more | CANDIDATE |
 
-## E. Registries that must not be replaced without regression proof
+## C. Server modules present in BOTH (44) — all COMPARE
 
-| Registry | Path | Status |
+## D. Donor-only server modules (86) — candidates
+
+## E. Registries — base copies are authoritative
+
+| Registry | Path in base | Status |
 |---|---|---|
-| Route manifest | `client/src/App.tsx` | LIVE — additive changes only |
-| Sidebar registry | `client/src/components/AppShell.tsx` (`NAV_SECTIONS`) | LIVE |
-| Secondary catalogue | `client/src/lib/secondaryCatalog.ts` | LIVE — **enforced disjoint from the sidebar by `server/navigation-organization.test.ts`** |
-| Build route emitter | `scripts/build.mjs` → `dist/public/routes.json` | LIVE |
-| Drizzle schema | `drizzle/` + `shared/` schema modules | LIVE |
+| Navigation tree | `client/src/navTree.ts` | **BASE** — the reason this repo is the base |
+| Route manifest | `client/src/App.tsx` | BASE — additive only |
+| Consolidation manifest | `CONSOLIDATION_PLAN.json` | BASE — 687 scored entries drive selection |
+| Deploy config | `vercel.json`, `api/index.ts` | BASE — do not alter |
+| Drizzle schema | `drizzle/`, `shared/` | BASE — additive migrations only |
 
-> **Live invariant discovered during this pass.** Promoting any orphaned route into the primary
-> sidebar breaks `navigation-organization.test.ts` unless the same path is removed from
-> `secondaryCatalog.ts` in the same change. Five promotions were attempted and reverted for this
-> reason; see the verification log. Any future promotion must be a coordinated two-file change.
+> **Invariant carried over from the donor.** In `russell-capital-systems`, the sidebar and
+> `secondaryCatalog.ts` are enforced disjoint by `navigation-organization.test.ts`. If that
+> catalogue is migrated, the invariant and its test must come with it.
