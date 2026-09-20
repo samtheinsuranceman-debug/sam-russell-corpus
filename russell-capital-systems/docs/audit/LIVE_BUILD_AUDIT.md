@@ -1,10 +1,17 @@
 # RCS Live Build — Structural Audit
 
-**Target:** the build that serves russellcapitalsystems.com (`russell-capital-systems/`)
+**Target:** the build serving russellcapitalsystems.com (`russell-capital-systems/`)
 
-**Date:** 19 September 2026 · **Method:** static analysis of `client/src/App.tsx` (route table) and `client/src/components/AppShell.tsx` (`NAV_SECTIONS`)
+**Date:** 20 September 2026 · **Method:** static parse of `client/src/App.tsx` (route table) and the
+`NAV_SECTIONS` array in `client/src/components/AppShell.tsx`, bounded to the array literal.
 
-This is the reference document. Re-read it before touching any other repo.
+> **Revision note.** The first version of this document reported 321 routes, 316 page files and 163
+> menu links. Those figures were wrong — the parser ran past the end of the `NAV_SECTIONS` array and
+> picked up unrelated `path`/`label` pairs, inflating the menu count and the Rental Properties
+> section. The figures below are re-verified by three independent commands (`find`, `grep -oE`,
+> and a bounded Python parse) and agree.
+
+This is the reference document. Re-read it before importing anything from another repository.
 
 ---
 
@@ -12,24 +19,23 @@ This is the reference document. Re-read it before touching any other repo.
 
 | | Count |
 |---|---|
-| Routes declared in `App.tsx` | **321** |
-| Page components under `client/src/pages/` | **316** |
-| Page components wired to a route | 306 |
-| Left-menu links (`NAV_SECTIONS`) | **163** |
+| Routes declared in `App.tsx` | **313** |
+| Page components under `client/src/pages/` | **310** |
+| Page components wired to a route | 300 |
+| Left-menu links | **158** |
 | Left-menu sections | 12 |
-| Server `.ts` files | 336 |
-| Shared `.ts` files | 127 |
 
 ---
 
 ## 2. The headline finding
 
-> **160 of 321 routed pages do not appear anywhere in the left menu.**
+> **157 of 313 routed pages never appear in the left menu.**
 
-The site has 321 working pages. The menu exposes 163. Roughly **49% of what has been built is unreachable except by typing the URL.**
+Of those 157: 19 are public or auth pages that belong outside the portal menu, 9 are parameterised detail routes reached from a parent page, and **129 are portal
+pages with nowhere to be found from the menu at all.**
 
-This is not a missing-features problem. It is a discoverability problem. Before importing a
-single page from another repo, the existing orphans should be triaged: promote, merge, or delete.
+This is a discoverability problem, not a missing-features problem. Triage the orphans — promote,
+merge, or delete — before importing anything new, or the menu grows while the backlog stays hidden.
 
 ---
 
@@ -38,7 +44,7 @@ single page from another repo, the existing orphans should be triaged: promote, 
 | Section | Links | Subgroups |
 |---|---|---|
 | Home | 11 | — |
-| Rental Properties | 12 | — |
+| Rental Properties | 7 | — |
 | Clients | 7 | — |
 | New Client Welcome List | 20 | — |
 | Planning | 23 | Retirement & Income, Tax & Estate, Strategy & Scenarios |
@@ -50,20 +56,17 @@ single page from another repo, the existing orphans should be triaged: promote, 
 | Secondary Information | 5 | — |
 | Settings | 9 | — |
 
-**Total: 163 links across 12 sections.**
+**158 links across 12 sections.**
 
 Observations:
 
-- **Rental Properties** (12 links) is flat — no subgroups — while Planning, Products and
-  The Experience are already grouped. It is the obvious candidate for collapsing into subgroups.
-- **New Client Welcome List** (20 links) is the second-largest section and reads as a working
-  list rather than a navigation category.
-- **The Experience** (25 links, 5 subgroups) is the largest section in the menu.
-- **Secondary Information** (5 links) has no clear category meaning.
+- **Rental Properties has 7 flat links and no subgroups** — the clearest candidate for tiering.
+- **New Client Welcome List** (20) and **The Experience** (25) are the two largest sections.
+- **Secondary Information** (5) has no clear category meaning.
 
 ---
 
-## 4. Dead links in the menu
+## 4. Dead menu links
 
 These menu entries point at routes that do not exist — they 404 today:
 
@@ -73,8 +76,6 @@ These menu entries point at routes that do not exist — they 404 today:
 ---
 
 ## 5. Page components not wired to any route
-
-10 component files are never referenced by the route table:
 
 - `client/src/pages/ComplianceDisclosure.tsx`
 - `client/src/pages/ComponentShowcase.tsx`
@@ -87,28 +88,13 @@ These menu entries point at routes that do not exist — they 404 today:
 - `client/src/pages/TrustsPage.tsx`
 - `client/src/pages/portal/_genome/GenomeKit.tsx`
 
-*Some of these (ForgotPassword, Register, ResetPassword) have matching routes declared, so they
-may be reached through a different import path — verify each by hand before deleting.*
+*Register, ForgotPassword and ResetPassword have matching routes declared, so they may be reached
+through another import path — check each by hand before deleting.*
 
 ---
 
-## 6. The 160 orphaned routes
+## 6. The 129 orphaned portal pages
 
-Every route below works but is invisible in the menu.
-
-- `/`
-- `/404`
-- `/administrator`
-- `/calculators`
-- `/client-portal/:token`
-- `/executive`
-- `/fact-finder`
-- `/for`
-- `/for/:slug`
-- `/forgot-password`
-- `/invite`
-- `/login`
-- `/onboarding`
 - `/portal/admin`
 - `/portal/advanced-reporting`
 - `/portal/advisor-chat`
@@ -118,7 +104,6 @@ Every route below works but is invisible in the menu.
 - `/portal/agency-tutorial`
 - `/portal/ai`
 - `/portal/ai-brain-hub`
-- `/portal/alt-credit/:slug`
 - `/portal/annuity-explorer`
 - `/portal/annuity-memory`
 - `/portal/athene-guaranteed-income`
@@ -142,7 +127,6 @@ Every route below works but is invisible in the menu.
 - `/portal/client-report-generator`
 - `/portal/client-scorecard`
 - `/portal/client-self-service`
-- `/portal/clients/:id`
 - `/portal/collaborative-planning`
 - `/portal/command`
 - `/portal/commission-calculator`
@@ -184,9 +168,6 @@ Every route below works but is invisible in the menu.
 - `/portal/market-data`
 - `/portal/market-pulse`
 - `/portal/match-and-deploy`
-- `/portal/mechanism/:slug`
-- `/portal/mechanism/:slug/providers`
-- `/portal/mechanism/:slug/sequences`
 - `/portal/medicare-irmaa`
 - `/portal/meeting-agenda`
 - `/portal/meeting-prep`
@@ -219,7 +200,6 @@ Every route below works but is invisible in the menu.
 - `/portal/risk-score`
 - `/portal/saved-scenarios`
 - `/portal/scenario-play`
-- `/portal/secret-secrets/:id`
 - `/portal/seminar-generator`
 - `/portal/settings-classic`
 - `/portal/slack`
@@ -229,7 +209,6 @@ Every route below works but is invisible in the menu.
 - `/portal/succession-planning`
 - `/portal/support-desk`
 - `/portal/tax-brackets`
-- `/portal/tax-combos/:id`
 - `/portal/tax-loss-harvesting`
 - `/portal/tax-opportunities`
 - `/portal/tax-return-upload`
@@ -245,53 +224,54 @@ Every route below works but is invisible in the menu.
 - `/portal/welcome`
 - `/portal/whisper-coach`
 - `/portal/workflow-automations`
+
+### Public and auth routes (correctly outside the portal menu)
+
+- `/`
+- `/404`
+- `/administrator`
+- `/calculators`
+- `/executive`
+- `/fact-finder`
+- `/for`
+- `/forgot-password`
+- `/invite`
+- `/login`
+- `/onboarding`
 - `/pricing`
 - `/privacy`
 - `/register`
 - `/reset-password`
-- `/shared-slides/:token`
-- `/shared/:token`
 - `/support`
 - `/terms`
 - `/trial`
 - `/ultra-calculator`
+
+### Parameterised detail routes
+
+- `/client-portal/:token`
+- `/for/:slug`
+- `/portal/alt-credit/:slug`
+- `/portal/clients/:id`
+- `/portal/secret-secrets/:id`
+- `/portal/tax-combos/:id`
+- `/shared-slides/:token`
+- `/shared/:token`
 - `/video/:token`
 
 ---
 
 ## 7. Repositories in scope
 
-Sixteen repositories are reachable, all with push access:
-
-- sam-russell-corpus (public, live build lives here)
-- russell-capital (private)
-- russell-capital-patents (private)
-- russell-capital-domain-redirect (private)
-- russell-biomedical (private)
-- russell-capital-app (private)
-- Russell-Capital-Solutions-NEW (public)
-- Really-Russell-Capital (public)
-- Russell-Capital-Calibrate-System (public)
-- sam-russell-catechism-brotherhood (public)
-- sam-russell-corpus-backup (private)
-- russell-capital-reports (private)
-- russell-capital-skills (private)
-- russell-capital-analyses (private)
-- russell-capital-combinations (private)
-- russell-capital-nlp (private)
-
-The four that plausibly contain competing page implementations are **russell-capital**,
-**russell-capital-app**, **Russell-Capital-Solutions-NEW** and **Really-Russell-Capital**.
-The rest are content, patents, skills or backups.
+Sixteen reachable, all with push access. The four that plausibly hold competing page
+implementations: **russell-capital**, **russell-capital-app**, **Russell-Capital-Solutions-NEW**,
+**Really-Russell-Capital**. The rest are content, patents, skills, reports or backups.
 
 ---
 
 ## 8. Rule for the merge pass
 
-1. Nothing gets imported until its counterpart here has been read.
-2. Where both builds have the same page, keep the more capable one and delete the other —
-   never both.
-3. Nothing enters the menu until the orphan triage in section 2 is done, or the menu simply
-   grows from 163 links to 200+ while 160 pages stay hidden.
-4. Anything found in another repo that looks genuinely novel gets written up and decided on
-   before it is wired in.
+1. Nothing is imported until its counterpart here has been read.
+2. Where both builds have the same page, keep the stronger one and delete the other — never both.
+3. Nothing enters the menu until the orphan triage above is done.
+4. Anything genuinely novel found elsewhere gets written up and decided on before it is wired in.
