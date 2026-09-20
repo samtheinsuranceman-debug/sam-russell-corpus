@@ -1,0 +1,5277 @@
+{
+ "generated": "foundation-pr",
+ "rule": "Where the live build has an implementation it is canonical. A donor implementation replaces it only after a documented comparison and regression proof.",
+ "dialects": {
+  "live": "mysql",
+  "russell-capital": "mysql",
+  "russell-capital-app": "postgres"
+ },
+ "counts": {
+  "sharedModules": {
+   "live": 174,
+   "rc": 65,
+   "app": 62,
+   "union": 181,
+   "candidatesNotInLive": 7
+  },
+  "engines": {
+   "live": 55,
+   "rc": 32,
+   "app": 32,
+   "candidatesNotInLive": 4
+  },
+  "schemaTables": {
+   "live": 155,
+   "rc": 117,
+   "app": 116,
+   "candidatesNotInLive": 8
+  }
+ },
+ "engines": [
+  {
+   "kind": "shared-module",
+   "name": "annuityFeeDetectionEngine.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "behavioralBiasEngine.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "captiveInsuranceEngine.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "careerEngine.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "carrierStrengthMonitorEngine.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "ceCreditTrackerEngine.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "chainEngine.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "clientOnboardingEngine.ts",
+   "inLive": false,
+   "inRc": true,
+   "inApp": true,
+   "chosen": null,
+   "status": "CANDIDATE \u2014 not in live",
+   "presentIn": [
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "clientRetentionEngine.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "commissionOptimizerEngine.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "complianceDocGeneratorEngine.ts",
+   "inLive": false,
+   "inRc": true,
+   "inApp": true,
+   "chosen": null,
+   "status": "CANDIDATE \u2014 not in live",
+   "presentIn": [
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "crtWealthReplacementEngine.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "cryptoCycleEngine.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "cycleEngine.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "disabilityGapAnalyzerEngine.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "disabilityGapEngine.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "divorceFinancialEngine.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "estateTaxEngine.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "exchangeChainEngine.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "familyTreeFinancialEngine.ts",
+   "inLive": false,
+   "inRc": true,
+   "inApp": true,
+   "chosen": null,
+   "status": "CANDIDATE \u2014 not in live",
+   "presentIn": [
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "fiaCollateralEngine.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "generationalWealthEngine.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "growthAnnuityEngine.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "historicalMarketRegimeEngine.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "hybridIncomeFloorEngine.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "inheritanceEngine.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "iulComplianceEngine.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "iulLoanOptimizationEngine.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "journeyEngine.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "keyPersonValuationEngine.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "lifetimeIncomeEngine.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "livingBenefitsProbabilityEngine.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "longevityEngine.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "ltcEngine.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "macroEngine.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "monteCarloEngine.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "multiCurrencyWealthEngine.ts",
+   "inLive": false,
+   "inRc": true,
+   "inApp": true,
+   "chosen": null,
+   "status": "CANDIDATE \u2014 not in live",
+   "presentIn": [
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "multiGenTransferEngine.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "peerBenchmarkingEngine.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "physicianLoanRefiEngine.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "practiceAcquisitionEngine.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "prospectQualificationEngine.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "realEstateCapacityEngine.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "realEstateCapitalStackEngine.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "realEstateStressEngine.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "realEstateStructuredFinanceEngine.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "rentalMarketEngine.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "retirementGapEngine.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "scenarioEngine.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "socialSecurityBridgeEngine.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "stateTaxMigrationEngine.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "strEngine.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "successionValuationEngine.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "taxBracketEngine.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "timeMachineEngine.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "ultraEngine.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "weaponizeEngines.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "whispererEngine.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "zipEngine.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  }
+ ],
+ "sharedModules": [
+  {
+   "kind": "shared-module",
+   "name": "accessControl.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "advancedAnalytics.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "advisorModes.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "advisorySummaryData.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "ag49Products.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "ag49Validator.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "aiIntakeScript.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "aiMemoryBank.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "annuityData.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "annuityFeeDetectionEngine.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "assessmentBridge.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "balancedIndexedAccount.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "behavioralBiasEngine.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "branding.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "calculatorCatalog.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "captiveInsuranceEngine.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "careerEngine.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "carrierRatings.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "carrierRecommendation.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "carrierStrengthMonitorEngine.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "ceCreditTrackerEngine.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "chainEngine.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "clientFactFinder.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "clientOnboardingEngine.ts",
+   "inLive": false,
+   "inRc": true,
+   "inApp": true,
+   "chosen": null,
+   "status": "CANDIDATE \u2014 not in live",
+   "presentIn": [
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "clientRetentionEngine.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "commissionOptimizerEngine.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "complianceDocGeneratorEngine.ts",
+   "inLive": false,
+   "inRc": true,
+   "inApp": true,
+   "chosen": null,
+   "status": "CANDIDATE \u2014 not in live",
+   "presentIn": [
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "compositeMind.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "consent.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "const.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "costStructure.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "creditUnionLenders.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "creditingWindows.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "crtWealthReplacementEngine.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "cryptoCycleEngine.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "cycleEngine.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "cycleScenarios.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "disabilityGapAnalyzerEngine.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "disabilityGapEngine.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "divorceFinancialEngine.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "divorceStateRules.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "erosion.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "estateTaxEngine.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "exchangeChainEngine.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "factFinder.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "familyTreeFinancialEngine.ts",
+   "inLive": false,
+   "inRc": true,
+   "inApp": true,
+   "chosen": null,
+   "status": "CANDIDATE \u2014 not in live",
+   "presentIn": [
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "fiaCollateralEngine.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "firewall.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "forgiveness.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "generationalWealthEngine.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "genomeStrategies.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "genomeStrategyFit.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "growthAnnuityEngine.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "helocLenders.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "historicalMarketRegimeEngine.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "historicalShocks.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "householdGenome.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "householdWealth.bak.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "householdWealth.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "hybridIncomeFloorEngine.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "ibbotsonModel.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "illustrationCalibration.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "incomeForLife.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "indexCreditingData.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "indexSeriesReconciliation.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "inheritanceEngine.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "irc7702.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "iulCarriers.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "iulComplianceEngine.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "iulLinks.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "iulLoanOptimizationEngine.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "journeyCatalog.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "journeyEngine.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "keyPersonValuationEngine.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "leadTypes.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "lifetimeIncomeEngine.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "liquidityRoutes.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "livingBenefitsProbabilityEngine.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "livingRiskProfile.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "loginDisclaimers.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "longevityEngine.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "ltcEngine.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "macroEngine.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "mandates.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "marketRegimeClassifier.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "mechanismDossiers.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "modelPortfolios.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "monteCarloEngine.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "mortgageKiller.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "mortgageLedger.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "multiCarrierIULOptimizer.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "multiCurrencyWealthEngine.ts",
+   "inLive": false,
+   "inRc": true,
+   "inApp": true,
+   "chosen": null,
+   "status": "CANDIDATE \u2014 not in live",
+   "presentIn": [
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "multiGenTransferEngine.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "multiPropertyMyga.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "mutualCarriers.ts",
+   "inLive": false,
+   "inRc": true,
+   "inApp": false,
+   "chosen": null,
+   "status": "CANDIDATE \u2014 not in live",
+   "presentIn": [
+    "russell-capital"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "mutualIulCarriers.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "mygaWaterfall.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "nextBestAction.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "nlpBrain.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "nlpCalibration.ts",
+   "inLive": false,
+   "inRc": true,
+   "inApp": false,
+   "chosen": null,
+   "status": "CANDIDATE \u2014 not in live",
+   "presentIn": [
+    "russell-capital"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "pacificHorizonEcv.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "pageRatings.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "passwordPolicy.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "patentCatalog.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "patentStatus.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "peerBenchmarkingEngine.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "physicianLoanRefiEngine.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "planLedger.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "plasticToCash.ts",
+   "inLive": false,
+   "inRc": true,
+   "inApp": false,
+   "chosen": null,
+   "status": "CANDIDATE \u2014 not in live",
+   "presentIn": [
+    "russell-capital"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "policyLoanMechanics.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "policyLoanOptimizer.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "policyLoanRules.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "policyMechanics.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "policyMultiplier.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "policyReplacementAnalyzer.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "powerHistory.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "practiceAcquisitionEngine.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "premiumFinancing.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "premiumFinancingArbitrage.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "prospectQualificationEngine.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "provenance.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "qbiDeduction.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "realEstateCapacityEngine.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "realEstateCapitalStackEngine.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "realEstateCapitalTypes.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "realEstateDealModel.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "realEstateFindings.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "realEstateMogul.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "realEstateStressEngine.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "realEstateStructuredFinanceEngine.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "regulatorySandbox.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "rentalEnterprise.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "rentalMarketEngine.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "replacementScoring.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "retirementDNA.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "retirementGapEngine.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "retirementLimits.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "revealCopy.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "reverseHeloc.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "roomVideos.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "routeManifest.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "rulesTable.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "rulesTableAdapters.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "scenarioEngine.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "seo.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "sequenceArchetypes.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "sequenceOrderings.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "sequencePlanner.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "sequenceStress.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "shockRegimeBridge.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "slideThemes.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "socialSecurityBridgeEngine.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "sp500SeriesAudit.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "sphere.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "stateTaxMigrationEngine.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "strEngine.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "strSources.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "successionValuationEngine.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "tabScores.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "taxBracketEngine.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "taxCodeChangeSimulator.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "taxHistory.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "taxRules.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "taxSchedule.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "taxStrategies.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "themes.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "thresholds.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "timeMachine30.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "timeMachineCompliance.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "timeMachineEngine.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "types.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "ultraEngine.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "unaskedQuestions.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "unpricedParameters.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "wealthGenome.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "wealthGenomeDurability.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "wealthGenomeFactors.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "weaponizeEngines.ts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "whispererEngine.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "wholeLifeBanking.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "shared-module",
+   "name": "zipEngine.ts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  }
+ ],
+ "schemaTables": [
+  {
+   "kind": "schema-table",
+   "name": "advisorAccounts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "advisorGoals",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "agencyTeamMembers",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "agencyTeams",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "agentMandates",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "aiMemoryNotes",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "allocationTargets",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "auditLogs",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "automationRuns",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "backupRuns",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "batchSchedules",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "calculationAuditLogs",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "calendarEvents",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "campaignEnrollments",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "careerSeries",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "careerStats",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "carrierOverrides",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "carrierQuoteRequests",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "clientActivityLog",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "clientBadges",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "clientCalibration",
+   "inLive": false,
+   "inRc": true,
+   "inApp": false,
+   "chosen": null,
+   "status": "CANDIDATE \u2014 not in live",
+   "presentIn": [
+    "russell-capital"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "clientCryptoHoldings",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "clientDocuments",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "clientFactFinders",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "clientJourneys",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "clientLifeGoals",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "clientMeetings",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "clientNotes",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "clientPortalSessions",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "clientPortalTokens",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "clientProperties",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "clientRecommendations",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "clientReports",
+   "inLive": false,
+   "inRc": true,
+   "inApp": true,
+   "chosen": null,
+   "status": "CANDIDATE \u2014 not in live",
+   "presentIn": [
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "clientRiskAssessments",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "clientScores",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "clientSessionRatings",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "clientTagAssignments",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "clientTags",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "clients",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "complianceAlerts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "complianceSignatures",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "consentGrants",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "countyHazards",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "dailyRewardClaims",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "dashboardWidgetConfigs",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "dealScores",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "deals",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "documentProvenance",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "emailCampaigns",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "emailOptOuts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "emailTemplates",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "emailVerificationCodes",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "encouragementEmails",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "engineChainRuns",
+   "inLive": false,
+   "inRc": true,
+   "inApp": true,
+   "chosen": null,
+   "status": "CANDIDATE \u2014 not in live",
+   "presentIn": [
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "engineChains",
+   "inLive": false,
+   "inRc": true,
+   "inApp": true,
+   "chosen": null,
+   "status": "CANDIDATE \u2014 not in live",
+   "presentIn": [
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "engineUsageLogs",
+   "inLive": false,
+   "inRc": true,
+   "inApp": true,
+   "chosen": null,
+   "status": "CANDIDATE \u2014 not in live",
+   "presentIn": [
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "errorLogs",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "exitRatings",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "factSuggestions",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "familyGroups",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "familyMembers",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "financialReels",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "followUpEmails",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "forecastClaims",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "forecastHarvests",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "forecastSources",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "hiddenMaterialConfig",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "hiddenMaterialResetCodes",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "householdFactFinders",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "hubspotSyncLog",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "hubspotSyncSettings",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "illustrationUploads",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "inAppNotifications",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "incomeRateSheets",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "knowledgeDocuments",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "leadFollowups",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "leaderboardConsents",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "leaderboardProfiles",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "legalDocuments",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "ltcRateFilings",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "marketDataPoints",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "meetingReminderPrefs",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "memberships",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "moneyMovements",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "morningRituals",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "outboundMessages",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "ownerTrustedIps",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "pageActivityLogs",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "pageAuditRecords",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "pageAuditRuns",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "pagePerformanceMetrics",
+   "inLive": false,
+   "inRc": true,
+   "inApp": true,
+   "chosen": null,
+   "status": "CANDIDATE \u2014 not in live",
+   "presentIn": [
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "paymentDisclosures",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "peerSubmissions",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "planAutomations",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "planEvents",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "planningCaseNotes",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "planningCases",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "powerSnapshots",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "predictionBets",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "predictionQuestions",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "publicLeads",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "rebalanceAlerts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "recinConsents",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "recinFindings",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "recinLoans",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "recinProperties",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "recinScenarioRuns",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "recinSourceLedger",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "recommendationHistory",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "reelInteractions",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "referralLinks",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "referrals",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "rentalSeries",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "reportExports",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "reportSchedules",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "revenueGuaranteeCalcs",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "riskScoreHistory",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "riskSnapshots",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "russellCoinTransactions",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "savedScenarios",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "savedSlideDecks",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "savedStrategies",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "scenarioSnapshots",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "sharedProjections",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "sidebarFavorites",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "skillTreeProgress",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "slackIntegrations",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "slideComments",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "slideShares",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "slideUsage",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "smsOptOuts",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "smsVerificationCodes",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "strategies",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "supervisorMonitoringAgreements",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "toolFavorites",
+   "inLive": false,
+   "inRc": true,
+   "inApp": true,
+   "chosen": null,
+   "status": "CANDIDATE \u2014 not in live",
+   "presentIn": [
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "toolUsage",
+   "inLive": false,
+   "inRc": true,
+   "inApp": true,
+   "chosen": null,
+   "status": "CANDIDATE \u2014 not in live",
+   "presentIn": [
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "trialLogins",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "tutorialProgress",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "userAchievements",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "userLoot",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "userPets",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "userPortalPreferences",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "userQuests",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "userSessions",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "userXpProfiles",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "users",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "vettedAttorneys",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "videoEngagementEvents",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "videoProposalChapters",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "videoProposals",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "warStories",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "webVitals",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "webhookEndpoints",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "whispererReports",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "whispererSessions",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "whispererSettings",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "willDrafts",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "withdrawalTriggers",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "workspaceInvitations",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "workspaceSubscriptions",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "workspaces",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "xpTransactions",
+   "inLive": true,
+   "inRc": true,
+   "inApp": true,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live",
+    "russell-capital",
+    "russell-capital-app"
+   ]
+  },
+  {
+   "kind": "schema-table",
+   "name": "zipSeries",
+   "inLive": true,
+   "inRc": false,
+   "inApp": false,
+   "chosen": "live",
+   "status": "CANONICAL \u2014 live",
+   "presentIn": [
+    "live"
+   ]
+  }
+ ]
+}

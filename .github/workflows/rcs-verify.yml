@@ -1,0 +1,121 @@
+# Pull-request verification gate for russell-capital-systems/.
+#
+# Before this workflow, no CI ran install, typecheck, build or tests against a
+# pull request — `rcs-security-audit.yml` was the only PR-triggered workflow in
+# the repository. Every "this PR is green" claim was therefore a claim rather
+# than a check.
+#
+# This workflow is deliberately read-only. It has `contents: read` and no
+# secrets, so it cannot deploy, cannot write to the repo, and cannot reach the
+# database. The deployment boundary stays where it is: a merge to `master`.
+name: RCS verify
+
+on:
+  pull_request:
+    paths:
+      - "russell-capital-systems/**"
+      - ".github/workflows/rcs-verify.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: rcs-verify-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    working-directory: russell-capital-systems
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: false
+
+      - uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: russell-capital-systems/pnpm-lock.yaml
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck
+        run: pnpm check
+
+      - name: Build
+        run: pnpm build
+
+      # The three-way agreement between App.tsx, the route manifest and the
+      # built routes.json is the single best health signal in this repo. A count
+      # that drifts means a route was registered without being declared, or
+      # declared without being registered — and both are silent failures at
+      # runtime. Baseline at the time of writing: 330.
+      - name: Route three-way agreement
+        run: |
+          set -euo pipefail
+          app=$(grep -o 'path="[^"]*"' client/src/App.tsx | sort -u | wc -l)
+          manifest=$(sed -n '/ROUTE_MANIFEST/,/^]/p' shared/routeManifest.ts | grep -c '^\s*"')
+          built=$(node -e "console.log(JSON.parse(require('fs').readFileSync('dist/public/routes.json','utf8')).routes.length)")
+          echo "App.tsx=$app  routeManifest.ts=$manifest  routes.json=$built"
+          if [ "$app" != "$manifest" ] || [ "$app" != "$built" ]; then
+            echo "::error::Route counts disagree. App.tsx=$app manifest=$manifest built=$built"
+            echo "Add the new path to shared/routeManifest.ts, or remove it from App.tsx."
+            exit 1
+          fi
+
+      - name: Tests
+        run: pnpm test:ci
+
+      # Advisory only — the full suite includes database-dependent files that
+      # self-skip without a DATABASE_URL. It must not fail, but a skip here is
+      # expected and is not a regression.
+      - name: Full test suite (advisory)
+        continue-on-error: true
+        run: pnpm test
+
+      # Fails the PR if a dependency with a known high or critical advisory is
+      # introduced. Mirrors the `security:audit` script developers run locally.
+      - name: Dependency audit
+        run: pnpm audit --audit-level=high
+
+  secrets:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: .
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Gitleaks needs history to scan the commits a PR introduces, not just
+          # the final tree — a secret added and then removed in the same PR is
+          # still a leaked secret.
+          fetch-depth: 0
+          lfs: false
+
+      # PARTS_MANIFEST.json holds 1,073 SHA-256 file hashes from the provenance
+      # verification. gitleaks reads every one as a generic-api-key, so a bare
+      # run is red on arrival on this repository — 33 findings, all hashes.
+      # Verified 2026-09-20; see docs/consolidation/05_CI_SECRETS_ROLLBACK.md.
+      - name: Allow provenance hashes
+        run: |
+          cat > .gitleaksignore <<'IGNORE'
+          russell-capital-systems/PARTS_MANIFEST.json
+          IGNORE
+
+      - name: Secret scan (gitleaks)
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_ENABLE_UPLOAD_ARTIFACT: "false"
