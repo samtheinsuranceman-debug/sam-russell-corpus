@@ -17,6 +17,7 @@ import { useEntrainment } from "@/contexts/EntrainmentEngine";
 import { useDisclaimer } from "@/contexts/DisclaimerContext";
 import { Link, useLocation } from "wouter";
 import { trpc } from "@/lib/trpc";
+import { NavTreeNav } from "@/components/NavTreeNav";
 import { useTheme } from "@/contexts/ThemeContext";
 import { TAB_SCORES } from "@shared/tabScores";
 import { LATITUDES, MERIDIANS, pointsAt } from "@shared/sphere";
@@ -800,6 +801,9 @@ function SubgroupSection({ subgroup, location, onClose, favoritePaths, onToggleF
 }
 
 const SPHERE_MODE_KEY = "rcs_nav_sphere";
+// PR-2b: a third sidebar mode. Additive — NAV_SECTIONS stays the default and
+// stays reachable, because it surfaces 88 paths the tree does not contain.
+const TREE_MODE_KEY = "rcs_nav_tree";
 
 /**
  * The Sphere as navigation: twelve meridians (domains of a financial life)
@@ -863,6 +867,8 @@ function Sidebar({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [location] = useLocation();
   const [sphereMode, setSphereModeState] = useState<boolean>(() => { try { return localStorage.getItem(SPHERE_MODE_KEY) === "1"; } catch { return false; } });
   const setSphereMode = (v: boolean) => { setSphereModeState(v); try { localStorage.setItem(SPHERE_MODE_KEY, v ? "1" : "0"); } catch { /* private mode */ } };
+  const [treeMode, setTreeModeState] = useState<boolean>(() => { try { return localStorage.getItem(TREE_MODE_KEY) === "1"; } catch { return false; } });
+  const setTreeMode = (v: boolean) => { setTreeModeState(v); try { localStorage.setItem(TREE_MODE_KEY, v ? "1" : "0"); } catch { /* private mode */ } };
   const { user, logout, isAuthenticated } = useAuth();
   const statsQuery = trpc.dashboard.stats.useQuery(undefined, { staleTime: 60_000, retry: false });
   const clientCount = statsQuery.data?.clientCount ?? 0;
@@ -958,14 +964,25 @@ function Sidebar({ open, onClose }: { open: boolean; onClose: () => void }) {
 
           <button
             type="button"
-            onClick={() => setSphereMode(!sphereMode)}
+            onClick={() => { setSphereMode(!sphereMode); if (!sphereMode) setTreeMode(false); }}
             className="mx-2 mb-1 mt-1 flex w-[calc(100%-1rem)] items-center justify-between rounded-lg border border-amber-400/20 bg-amber-400/5 px-2 py-1 text-[10px] font-bold uppercase tracking-[0.1em] text-amber-300 hover:bg-amber-400/10"
             title="One shape for the site: twelve domains of a financial life around, four layers in. Every page is a point."
           >
             <span>{sphereMode ? "Navigating by the Sphere" : "Navigate by the Sphere"}</span>
             <span className="text-[9px] font-semibold text-amber-300/60">{sphereMode ? "list" : "sphere"}</span>
           </button>
-          {sphereMode ? (
+          <button
+            type="button"
+            onClick={() => { setTreeMode(!treeMode); if (!treeMode) setSphereMode(false); }}
+            className="mx-2 mb-1 flex w-[calc(100%-1rem)] items-center justify-between rounded-lg border border-cyan-400/20 bg-cyan-400/5 px-2 py-1 text-[10px] font-bold uppercase tracking-[0.1em] text-cyan-300 hover:bg-cyan-400/10"
+            title="The medical tree: ten tabs, nested by how a financial life is examined rather than by tool type."
+          >
+            <span>{treeMode ? "Navigating by the Tree" : "Navigate by the Tree"}</span>
+            <span className="text-[9px] font-semibold text-cyan-300/60">{treeMode ? "list" : "tree"}</span>
+          </button>
+          {treeMode ? (
+            <NavTreeNav location={location} onClose={onClose} />
+          ) : sphereMode ? (
             <SphereNav location={location} onClose={onClose} />
           ) : NAV_SECTIONS.map((section) => (
             <CollapsibleSection
