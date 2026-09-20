@@ -36,6 +36,7 @@ how every later PR must be targeted.
 | 4 | [04_ROUTE_COLLISION_REPORT.md](04_ROUTE_COLLISION_REPORT.md) | The 391 routes, their collisions, and dependencies |
 | 5 | [05_CI_SECRETS_ROLLBACK.md](05_CI_SECRETS_ROLLBACK.md) | CI checks, secret scan results, rollback and tagging |
 | 6 | [06_PHASED_PR_PLAN.md](06_PHASED_PR_PLAN.md) | Per-migration source path, target path, tests, rollback |
+| 7 | [07_BASE_REPO_HEAD_TO_HEAD.md](07_BASE_REPO_HEAD_TO_HEAD.md) | **Open decision** — which repo is the single app repo, both candidates gate-tested |
 
 Generated data (machine-readable, regenerable):
 
