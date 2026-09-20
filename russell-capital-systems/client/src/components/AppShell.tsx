@@ -16,6 +16,7 @@ import { useState, useEffect, useMemo, useCallback } from "react";
 import { useEntrainment } from "@/contexts/EntrainmentEngine";
 import { useDisclaimer } from "@/contexts/DisclaimerContext";
 import { Link, useLocation } from "wouter";
+import NavTree from "@/components/NavTree";
 import { trpc } from "@/lib/trpc";
 import { useTheme } from "@/contexts/ThemeContext";
 import { TAB_SCORES } from "@shared/tabScores";
@@ -800,6 +801,7 @@ function SubgroupSection({ subgroup, location, onClose, favoritePaths, onToggleF
 }
 
 const SPHERE_MODE_KEY = "rcs_nav_sphere";
+const CHART_MODE_KEY = "rcs_nav_chart";
 
 /**
  * The Sphere as navigation: twelve meridians (domains of a financial life)
@@ -862,7 +864,18 @@ function SphereNav({ location, onClose }: { location: string; onClose: () => voi
 function Sidebar({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [location] = useLocation();
   const [sphereMode, setSphereModeState] = useState<boolean>(() => { try { return localStorage.getItem(SPHERE_MODE_KEY) === "1"; } catch { return false; } });
-  const setSphereMode = (v: boolean) => { setSphereModeState(v); try { localStorage.setItem(SPHERE_MODE_KEY, v ? "1" : "0"); } catch { /* private mode */ } };
+  const [chartMode, setChartModeState] = useState<boolean>(() => { try { return localStorage.getItem(CHART_MODE_KEY) === "1"; } catch { return false; } });
+  // The three sidebar views are mutually exclusive: turning one on turns the
+  // other off. The default, with neither key set, stays NAV_SECTIONS.
+  const remember = (key: string, v: boolean) => { try { localStorage.setItem(key, v ? "1" : "0"); } catch { /* private mode */ } };
+  const setSphereMode = (v: boolean) => {
+    setSphereModeState(v); remember(SPHERE_MODE_KEY, v);
+    if (v) { setChartModeState(false); remember(CHART_MODE_KEY, false); }
+  };
+  const setChartMode = (v: boolean) => {
+    setChartModeState(v); remember(CHART_MODE_KEY, v);
+    if (v) { setSphereModeState(false); remember(SPHERE_MODE_KEY, false); }
+  };
   const { user, logout, isAuthenticated } = useAuth();
   const statsQuery = trpc.dashboard.stats.useQuery(undefined, { staleTime: 60_000, retry: false });
   const clientCount = statsQuery.data?.clientCount ?? 0;
@@ -965,7 +978,18 @@ function Sidebar({ open, onClose }: { open: boolean; onClose: () => void }) {
             <span>{sphereMode ? "Navigating by the Sphere" : "Navigate by the Sphere"}</span>
             <span className="text-[9px] font-semibold text-amber-300/60">{sphereMode ? "list" : "sphere"}</span>
           </button>
-          {sphereMode ? (
+          <button
+            type="button"
+            onClick={() => setChartMode(!chartMode)}
+            className="mx-2 mb-1 flex w-[calc(100%-1rem)] items-center justify-between rounded-lg border border-emerald-400/20 bg-emerald-400/5 px-2 py-1 text-[10px] font-bold uppercase tracking-[0.1em] text-emerald-300 hover:bg-emerald-400/10"
+            title="The same site read as a medical chart: ten departments, from intake through longevity. Entries whose page has not been migrated yet are dimmed."
+          >
+            <span>{chartMode ? "Reading the Chart" : "Read as a Chart"}</span>
+            <span className="text-[9px] font-semibold text-emerald-300/60">{chartMode ? "list" : "chart"}</span>
+          </button>
+          {chartMode ? (
+            <NavTree location={location} onClose={onClose} />
+          ) : sphereMode ? (
             <SphereNav location={location} onClose={onClose} />
           ) : NAV_SECTIONS.map((section) => (
             <CollapsibleSection
