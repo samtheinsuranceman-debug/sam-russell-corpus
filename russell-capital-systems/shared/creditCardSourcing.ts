@@ -1,402 +1,565 @@
 /**
- * Credit card sourcing — issuers, approval bands, and where each fact came from.
+ * Credit sourcing — who will actually lend, and how much.
  *
- * ## What this is for
+ * ## What this ranks on
  *
- * Turning available credit into premium capacity. The strategy only works if
- * the cards are real, the approval odds are honest, and the terms are read
- * rather than assumed — so every row here carries its source URL and an
- * evidence level, and the engine refuses to rank a row whose terms were never
- * verified.
+ * Two things only: **will they approve this profile**, and **how big is the
+ * line**. Interest rate is recorded where known but carries ZERO weight in the
+ * ranking, by instruction. A 0% intro window is a nice-to-have; an approval at
+ * a usable limit is the whole point.
  *
- * ## The finding that reshapes the plan at a 640 score
+ * ## The four tiers, ordered by what they actually deliver
  *
- * The strategy as originally framed rests on long 0% intro APR windows — 15 to
- * 21 months of free money to recycle. Research on 2026 offers says those
- * windows are gated at 670+ and mostly 700+. At 640 the realistic unsecured
- * offers are $300-$1,500 starting limits at 29-36% APR with $0-$39 annual fees.
- * That is not a funding engine; it is a credit-building card.
+ *   CASH-FLOW / EIN-ONLY — Ramp, Brex, Rho, Slash, Fundbox. Underwrite on
+ *   business revenue and bank balances. No personal guarantee, no personal
+ *   credit pull, so a 640 FICO is not an input. Largest limits available to
+ *   this profile by a wide margin, and they cost nothing against a pending
+ *   personal approval.
  *
- * So at 640 there are two honest routes and they are very different:
+ *   FLEET / FUEL — WEX, Fuelman, Circle K Pro, AtoB. EIN-based, report to D&B
+ *   and Experian Business. Small limits, but they build the business file that
+ *   unlocks the big lines later, and several skip the personal pull entirely.
  *
- *   PERSONAL, FICO-GATED — small limits, high APR, little or no 0% window.
- *   Useful for rebuilding a score. Not useful for deploying capital.
+ *   NET-30 VENDOR — Quill, Uline, Grainger, Summa, Crown, The CEO Creative.
+ *   The tier almost nobody uses deliberately. EIN only, no personal guarantee,
+ *   no FICO check at all, and they report trade lines to the business bureaus.
+ *   Individually tiny. Collectively they are the mechanism that turns an EIN
+ *   into a borrower — which is the actual constraint at a 640 personal score.
  *
- *   BUSINESS, CASH-FLOW UNDERWRITTEN — EIN-only corporate cards from Ramp,
- *   Brex, Rho and Slash underwrite on business revenue and bank balances, with
- *   no personal guarantee and no personal credit pull. A 640 personal FICO is
- *   not an input. For an operator with three EINs and a twelve-year entity,
- *   this is the route that actually scales, and it is the one the original
- *   framing missed entirely.
+ *   PERSONAL FICO — the tier the original plan assumed. At 640 these are
+ *   $300-$1,500 limits. Useful for rebuilding a score, useless for deploying
+ *   capital, and every application spends an inquiry that the tiers above do
+ *   not require.
  *
- * ## Hard inquiry sequencing
+ * ## Evidence
  *
- * Recorded because it is the difference between more credit and less. Issuers
- * commonly re-pull before funding an approved line. A burst of applications
- * while an approval is pending is a leading cause of that approval being
- * reduced or withdrawn. The engine therefore scores sequencing, not just cards.
+ * Every row carries a source URL and an evidence level. A row whose terms were
+ * never pulled from the issuer is `named-only` and REFUSES to be ranked —
+ * putting it in a ranked list would imply a comparison that was never made.
+ * Researched 2026-09-20.
  */
 
 export type EvidenceLevel =
   /** Terms read from the issuer's own page. */
   | 'issuer-verified'
-  /** Terms reported by a comparison site, not yet checked against the issuer. */
+  /** Terms reported by a comparison or industry site, not yet checked against the issuer. */
   | 'aggregator-reported'
   /** Issuer identified as relevant; terms not yet pulled. */
   | 'named-only';
 
 export type Underwriting =
-  /** Personal FICO drives approval. */
-  | 'personal-fico'
   /** Business revenue and bank balances drive approval; no personal pull. */
   | 'business-cashflow'
-  /** Personal FICO, but with a business entity and a personal guarantee. */
-  | 'personal-guarantee-business';
+  /** EIN-based trade credit. No personal guarantee, no FICO check. */
+  | 'ein-trade-credit'
+  /** Business entity, but a personal guarantee and a personal pull. */
+  | 'personal-guarantee-business'
+  /** Personal FICO drives approval. */
+  | 'personal-fico';
+
+/** What a line is realistically worth. The second half of the ranking. */
+export type LimitBand = 'micro' | 'small' | 'mid' | 'large' | 'unknown';
+
+/** Rough dollar midpoint for each band, used to weight the ranking. */
+export const LIMIT_BAND_WEIGHT: Record<LimitBand, number> = {
+  micro: 1, //  under $2k
+  small: 2, //  $2k - $10k
+  mid: 3, //    $10k - $50k
+  large: 4, //  $50k+
+  unknown: 1.5,
+};
 
 export interface CardSource {
   readonly id: string;
   readonly issuer: string;
   readonly product: string;
   readonly underwriting: Underwriting;
-  /** Lowest FICO the source says is realistically approved. Null when FICO is not an input. */
+  readonly limitBand: LimitBand;
+  /** Lowest FICO the source says is realistically approved. Null where FICO is not an input. */
   readonly minFicoReported: number | null;
-  /** True where the card requires the applicant to fund a deposit. Excluded by request. */
+  /** True where the applicant must fund a deposit. Excluded by request. */
   readonly requiresDeposit: boolean;
-  /** Months of 0% intro APR on purchases, where reported. */
+  /** True where a personal guarantee is required. Costs an inquiry. */
+  readonly personalGuarantee: boolean;
+  /** True where the account reports to business credit bureaus. Builds the file. */
+  readonly reportsToBusinessBureaus: boolean;
+  /** Minimum annual revenue reported, where stated. */
+  readonly minAnnualRevenueUsd: number | null;
+  /** Minimum months in business reported, where stated. */
+  readonly minMonthsInBusiness: number | null;
+  /**
+   * Recorded for completeness and deliberately NOT scored. Ranking is on
+   * approval likelihood and limit size only.
+   */
   readonly introAprMonths: number | null;
-  readonly annualFeeUsd: number | null;
-  /** Where the above came from. */
   readonly sourceUrl: string;
   readonly evidence: EvidenceLevel;
   readonly note?: string;
 }
 
-/**
- * Verified against live search on 2026-09-20. This is what was actually
- * confirmed, not a target count — see SOURCING_STATUS for the gap between this
- * and the hundred rows requested.
- */
 export const CARD_SOURCES: readonly CardSource[] = [
-  // ── EIN-only / cash-flow underwritten. The route that scales at 640. ──
+  // ─────────────────────────────────────────────────────────────────
+  // TIER 1 — CASH-FLOW / EIN-ONLY. Biggest limits, no personal pull.
+  // ─────────────────────────────────────────────────────────────────
   {
-    id: 'ramp-corporate',
-    issuer: 'Ramp',
-    product: 'Ramp Corporate Card',
-    underwriting: 'business-cashflow',
-    minFicoReported: null,
-    requiresDeposit: false,
+    id: 'fundbox-loc', issuer: 'Fundbox', product: 'Business Line of Credit',
+    underwriting: 'business-cashflow', limitBand: 'large',
+    minFicoReported: null, requiresDeposit: false, personalGuarantee: false,
+    reportsToBusinessBureaus: true, minAnnualRevenueUsd: 30000, minMonthsInBusiness: 6,
     introAprMonths: null,
-    annualFeeUsd: 0,
+    sourceUrl: 'https://www.nerdwallet.com/business/loans/reviews/fundbox',
+    evidence: 'aggregator-reported',
+    note: 'Up to $150,000. Reported to not require a personal guarantee under $50,000; above that a PG and UCC lien may apply. Needs $30k annual revenue and 6+ months in business. The largest line reachable on this profile without a personal pull.',
+  },
+  {
+    id: 'ramp-corporate', issuer: 'Ramp', product: 'Ramp Corporate Card',
+    underwriting: 'business-cashflow', limitBand: 'large',
+    minFicoReported: null, requiresDeposit: false, personalGuarantee: false,
+    reportsToBusinessBureaus: true, minAnnualRevenueUsd: null, minMonthsInBusiness: null,
+    introAprMonths: null,
     sourceUrl: 'https://ramp.com/blog/business-credit-cards-no-personal-guarantee',
     evidence: 'aggregator-reported',
-    note: 'No personal credit check and no personal guarantee; applies on EIN. Charge card — balance is typically due in full each cycle, so it does not provide a 0% float window.',
+    note: 'No personal credit check, no personal guarantee, applies on EIN. Charge card — balance due each cycle, so it is capacity rather than float.',
   },
   {
-    id: 'brex-card',
-    issuer: 'Brex',
-    product: 'Brex Card',
-    underwriting: 'business-cashflow',
-    minFicoReported: null,
-    requiresDeposit: false,
+    id: 'brex-card', issuer: 'Brex', product: 'Brex Card',
+    underwriting: 'business-cashflow', limitBand: 'large',
+    minFicoReported: null, requiresDeposit: false, personalGuarantee: false,
+    reportsToBusinessBureaus: true, minAnnualRevenueUsd: null, minMonthsInBusiness: null,
     introAprMonths: null,
-    annualFeeUsd: 0,
     sourceUrl: 'https://www.brex.com/spend-trends/corporate-credit-cards/business-credit-cards-with-no-personal-guarantee',
     evidence: 'aggregator-reported',
-    note: 'Underwrites on company financial health rather than founder FICO. Historically requires meaningful bank balances.',
+    note: 'Underwrites on company financial health, not founder FICO. Historically wants meaningful bank balances, so limit tracks the balance held.',
   },
   {
-    id: 'rho-card',
-    issuer: 'Rho',
-    product: 'Rho Corporate Card',
-    underwriting: 'business-cashflow',
-    minFicoReported: null,
-    requiresDeposit: false,
+    id: 'rho-card', issuer: 'Rho', product: 'Rho Corporate Card',
+    underwriting: 'business-cashflow', limitBand: 'mid',
+    minFicoReported: null, requiresDeposit: false, personalGuarantee: false,
+    reportsToBusinessBureaus: true, minAnnualRevenueUsd: null, minMonthsInBusiness: null,
     introAprMonths: null,
-    annualFeeUsd: 0,
     sourceUrl: 'https://www.rho.co/blog/business-credit-card-with-ein-only',
     evidence: 'aggregator-reported',
     note: 'EIN-only underwriting; formation documents and business financials in place of a personal credit check.',
   },
   {
-    id: 'slash-business',
-    issuer: 'Slash',
-    product: 'Slash Business Card',
-    underwriting: 'business-cashflow',
-    minFicoReported: null,
-    requiresDeposit: false,
+    id: 'slash-business', issuer: 'Slash', product: 'Slash Business Card',
+    underwriting: 'business-cashflow', limitBand: 'mid',
+    minFicoReported: null, requiresDeposit: false, personalGuarantee: false,
+    reportsToBusinessBureaus: true, minAnnualRevenueUsd: null, minMonthsInBusiness: null,
     introAprMonths: null,
-    annualFeeUsd: 0,
     sourceUrl: 'https://www.slash.com/blog/business-credit-cards-no-personal-guarantee',
     evidence: 'aggregator-reported',
     note: 'EIN-only charge card, no personal guarantee.',
   },
-
-  // ── Credit unions. Open membership, lower APRs, real 0% windows. ──
   {
-    id: 'penfed-platinum-rewards',
-    issuer: 'PenFed Credit Union',
-    product: 'Platinum Rewards Visa Signature',
-    underwriting: 'personal-fico',
-    minFicoReported: 670,
-    requiresDeposit: false,
-    introAprMonths: 15,
-    annualFeeUsd: 0,
-    sourceUrl: 'https://www.cnbc.com/select/best-credit-union-credit-cards/',
+    id: 'fundthrough', issuer: 'FundThrough', product: 'Invoice Funding Line',
+    underwriting: 'business-cashflow', limitBand: 'unknown',
+    minFicoReported: null, requiresDeposit: false, personalGuarantee: false,
+    reportsToBusinessBureaus: false, minAnnualRevenueUsd: null, minMonthsInBusiness: null,
+    introAprMonths: null,
+    sourceUrl: 'https://tracxn.com/d/companies/ampla/__lAxxe6osQlw9IonBOGjIDOPuu-QWp7G4PTujw6bWBy0',
+    evidence: 'named-only',
+    note: 'Acquired Ampla in April 2025. Invoice-backed rather than card. Terms not pulled.',
+  },
+
+  // ─────────────────────────────────────────────────────────────────
+  // TIER 2 — FLEET / FUEL. EIN-based, reports to business bureaus.
+  // ─────────────────────────────────────────────────────────────────
+  {
+    id: 'atob-fuel', issuer: 'AtoB', product: 'Fuel Card',
+    underwriting: 'ein-trade-credit', limitBand: 'small',
+    minFicoReported: null, requiresDeposit: false, personalGuarantee: false,
+    reportsToBusinessBureaus: true, minAnnualRevenueUsd: null, minMonthsInBusiness: null,
+    introAprMonths: null,
+    sourceUrl: 'https://atob.com/blog/net-30-gas-cards-no-personal-guarantee',
     evidence: 'aggregator-reported',
-    note: 'Membership open to anyone via a $5 share account. 0% intro for 15 months reported; 17.99% variable after. PenFed does not currently offer a business card.',
+    note: 'Registered businesses may apply on EIN with no personal credit check or personal guarantee; bank statements may be requested to verify revenue.',
   },
   {
-    id: 'connexus-visa',
-    issuer: 'Connexus Credit Union',
-    product: 'Visa Signature / Business cards',
-    underwriting: 'personal-guarantee-business',
-    minFicoReported: null,
-    requiresDeposit: false,
+    id: 'wex-businesspro', issuer: 'WEX', product: 'BusinessPro / FleetPro',
+    underwriting: 'ein-trade-credit', limitBand: 'small',
+    minFicoReported: null, requiresDeposit: false, personalGuarantee: true,
+    reportsToBusinessBureaus: true, minAnnualRevenueUsd: null, minMonthsInBusiness: null,
     introAprMonths: null,
-    annualFeeUsd: null,
+    sourceUrl: 'https://www.creditsuite.com/blog/wex-personal-guarantee/',
+    evidence: 'aggregator-reported',
+    note: 'Allows EIN-based application, but WEX recently moved to requiring a personal guarantee for most applicants. Reports to D&B and Experian Business.',
+  },
+  {
+    id: 'fuelman', issuer: 'Fuelman', product: 'Fleet Card',
+    underwriting: 'ein-trade-credit', limitBand: 'small',
+    minFicoReported: null, requiresDeposit: false, personalGuarantee: false,
+    reportsToBusinessBureaus: true, minAnnualRevenueUsd: null, minMonthsInBusiness: null,
+    introAprMonths: null,
+    sourceUrl: 'https://coastpay.com/blog/fuel-cards-ein-only/',
+    evidence: 'aggregator-reported',
+    note: 'Own network of ~40,000 stations. Listed among EIN-only fuel cards.',
+  },
+  {
+    id: 'circlek-pro', issuer: 'Circle K', product: 'Circle K Pro Fleet Card',
+    underwriting: 'ein-trade-credit', limitBand: 'small',
+    minFicoReported: null, requiresDeposit: false, personalGuarantee: false,
+    reportsToBusinessBureaus: true, minAnnualRevenueUsd: null, minMonthsInBusiness: null,
+    introAprMonths: null,
+    sourceUrl: 'https://www.circlek.com/business',
+    evidence: 'named-only',
+    note: 'Business fleet card. Terms not pulled.',
+  },
+
+  // ─────────────────────────────────────────────────────────────────
+  // TIER 3 — NET-30 VENDOR. EIN only, no PG, no FICO. Builds the file.
+  // ─────────────────────────────────────────────────────────────────
+  {
+    id: 'quill-net30', issuer: 'Quill', product: 'Net 30 Account',
+    underwriting: 'ein-trade-credit', limitBand: 'micro',
+    minFicoReported: null, requiresDeposit: false, personalGuarantee: false,
+    reportsToBusinessBureaus: true, minAnnualRevenueUsd: null, minMonthsInBusiness: null,
+    introAprMonths: null,
+    sourceUrl: 'https://www.nav.com/resource/net-30-accounts/',
+    evidence: 'aggregator-reported',
+    note: 'Widely cited as the easiest starting trade line — approves new businesses on EIN alone, no annual fee, $100 minimum order to qualify for net 30.',
+  },
+  {
+    id: 'ceo-creative-net30', issuer: 'The CEO Creative', product: 'Net 30 Account',
+    underwriting: 'ein-trade-credit', limitBand: 'small',
+    minFicoReported: null, requiresDeposit: false, personalGuarantee: false,
+    reportsToBusinessBureaus: true, minAnnualRevenueUsd: null, minMonthsInBusiness: null,
+    introAprMonths: null,
+    sourceUrl: 'https://theceocreative.com/business-net-30-account/',
+    evidence: 'aggregator-reported',
+    note: 'Up to $5,500 credit, $60 minimum order, decision within one business day. No personal guarantee and no personal credit check.',
+  },
+  {
+    id: 'uline-net30', issuer: 'Uline', product: 'Net 30 Account',
+    underwriting: 'ein-trade-credit', limitBand: 'micro',
+    minFicoReported: null, requiresDeposit: false, personalGuarantee: false,
+    reportsToBusinessBureaus: true, minAnnualRevenueUsd: null, minMonthsInBusiness: null,
+    introAprMonths: null,
+    sourceUrl: 'https://wise.com/us/blog/list-of-net-30-companies',
+    evidence: 'named-only',
+    note: 'Standard tier-1 vendor on every net-30 list. Terms not pulled.',
+  },
+  {
+    id: 'grainger-net30', issuer: 'Grainger', product: 'Net 30 Account',
+    underwriting: 'ein-trade-credit', limitBand: 'micro',
+    minFicoReported: null, requiresDeposit: false, personalGuarantee: false,
+    reportsToBusinessBureaus: true, minAnnualRevenueUsd: null, minMonthsInBusiness: null,
+    introAprMonths: null,
+    sourceUrl: 'https://wise.com/us/blog/list-of-net-30-companies',
+    evidence: 'named-only',
+    note: 'Standard tier-1 vendor. Terms not pulled.',
+  },
+  {
+    id: 'summa-net30', issuer: 'Summa Office Supplies', product: 'Net 30 Account',
+    underwriting: 'ein-trade-credit', limitBand: 'micro',
+    minFicoReported: null, requiresDeposit: false, personalGuarantee: false,
+    reportsToBusinessBureaus: true, minAnnualRevenueUsd: null, minMonthsInBusiness: null,
+    introAprMonths: null,
+    sourceUrl: 'https://einonlycredit.com/net-30-vendors-ein-only',
+    evidence: 'named-only',
+    note: 'Cited as EIN-only with no personal guarantee. Terms not pulled.',
+  },
+  {
+    id: 'crown-net30', issuer: 'Crown Office Supplies', product: 'Net 30 Account',
+    underwriting: 'ein-trade-credit', limitBand: 'micro',
+    minFicoReported: null, requiresDeposit: false, personalGuarantee: false,
+    reportsToBusinessBureaus: true, minAnnualRevenueUsd: null, minMonthsInBusiness: null,
+    introAprMonths: null,
+    sourceUrl: 'https://einonlycredit.com/net-30-vendors-ein-only',
+    evidence: 'named-only',
+    note: 'Cited as EIN-only with no personal guarantee. Terms not pulled.',
+  },
+
+  // ─────────────────────────────────────────────────────────────────
+  // TIER 4 — STORE / RETAIL BUSINESS. Mostly personal guarantee.
+  // ─────────────────────────────────────────────────────────────────
+  {
+    id: 'sams-club-business', issuer: "Sam's Club", product: 'Business Mastercard',
+    underwriting: 'personal-guarantee-business', limitBand: 'small',
+    minFicoReported: null, requiresDeposit: false, personalGuarantee: false,
+    reportsToBusinessBureaus: true, minAnnualRevenueUsd: null, minMonthsInBusiness: null,
+    introAprMonths: null,
+    sourceUrl: 'https://www.stackeasy.ai/blog/business-credit-without-personal-guarantee',
+    evidence: 'aggregator-reported',
+    note: 'Reported not to require a personal guarantee, which is unusual for a retail business card. Worth confirming directly before relying on it.',
+  },
+  {
+    id: 'homedepot-commercial', issuer: 'Home Depot', product: 'Commercial Account',
+    underwriting: 'personal-guarantee-business', limitBand: 'small',
+    minFicoReported: null, requiresDeposit: false, personalGuarantee: true,
+    reportsToBusinessBureaus: true, minAnnualRevenueUsd: null, minMonthsInBusiness: null,
+    introAprMonths: null,
+    sourceUrl: 'https://www.businesscreditworkshop.me/resources/home-depot-business-account/',
+    evidence: 'aggregator-reported',
+    note: 'Tier-2 business credit vendor, but DOES require a personal guarantee — so it spends a personal inquiry.',
+  },
+  {
+    id: 'staples-business', issuer: 'Staples', product: 'Business Account',
+    underwriting: 'personal-guarantee-business', limitBand: 'micro',
+    minFicoReported: null, requiresDeposit: false, personalGuarantee: true,
+    reportsToBusinessBureaus: true, minAnnualRevenueUsd: null, minMonthsInBusiness: null,
+    introAprMonths: null,
+    sourceUrl: 'https://fairfigure.com/blog/tier-2-business-credit-vendors',
+    evidence: 'named-only',
+    note: 'Named as a tier-2 vendor. Terms not pulled.',
+  },
+  {
+    id: 'lowes-business', issuer: "Lowe's", product: 'Business Account',
+    underwriting: 'personal-guarantee-business', limitBand: 'small',
+    minFicoReported: null, requiresDeposit: false, personalGuarantee: true,
+    reportsToBusinessBureaus: true, minAnnualRevenueUsd: null, minMonthsInBusiness: null,
+    introAprMonths: null,
+    sourceUrl: 'https://fairfigure.com/blog/tier-2-business-credit-vendors',
+    evidence: 'named-only',
+    note: 'Named as a tier-2 vendor. Terms not pulled.',
+  },
+
+  // ─────────────────────────────────────────────────────────────────
+  // TIER 5 — CREDIT UNIONS. Open membership, flexible underwriting.
+  // ─────────────────────────────────────────────────────────────────
+  {
+    id: 'connexus-business', issuer: 'Connexus Credit Union', product: 'Business Visa',
+    underwriting: 'personal-guarantee-business', limitBand: 'mid',
+    minFicoReported: null, requiresDeposit: false, personalGuarantee: true,
+    reportsToBusinessBureaus: true, minAnnualRevenueUsd: null, minMonthsInBusiness: null,
+    introAprMonths: null,
     sourceUrl: 'https://bankbonus.com/best/credit-unions-anyone-can-join/',
     evidence: 'named-only',
-    note: 'Membership open nationwide via a one-time $5 donation. Offers both personal AND business cards — one of the few open-membership credit unions that does. Terms not yet pulled.',
+    note: 'Membership open nationwide via a one-time $5 donation, and one of the few open-membership unions issuing BUSINESS cards. High-value target; terms not pulled.',
   },
   {
-    id: 'nasafcu-business-platinum',
-    issuer: 'NASA Federal Credit Union',
-    product: 'Business Platinum Advantage Rewards',
-    underwriting: 'personal-guarantee-business',
-    minFicoReported: null,
-    requiresDeposit: false,
+    id: 'nasafcu-business-platinum', issuer: 'NASA Federal Credit Union', product: 'Business Platinum Advantage Rewards',
+    underwriting: 'personal-guarantee-business', limitBand: 'mid',
+    minFicoReported: null, requiresDeposit: false, personalGuarantee: true,
+    reportsToBusinessBureaus: true, minAnnualRevenueUsd: null, minMonthsInBusiness: null,
     introAprMonths: null,
-    annualFeeUsd: null,
     sourceUrl: 'https://www.nasafcu.com/business-services/financing-solutions/platinum-credit-card',
     evidence: 'named-only',
-    note: 'Membership open to anyone via free National Space Society membership. Also offers business lines of credit. Terms not yet pulled.',
+    note: 'Membership open to anyone via free National Space Society membership. Also offers business lines of credit. High-value target; terms not pulled.',
   },
   {
-    id: 'columbia-cu',
-    issuer: 'Columbia Credit Union',
-    product: 'Credit Cards',
-    underwriting: 'personal-fico',
-    minFicoReported: null,
-    requiresDeposit: false,
+    id: 'penfed-platinum-rewards', issuer: 'PenFed Credit Union', product: 'Platinum Rewards Visa Signature',
+    underwriting: 'personal-fico', limitBand: 'small',
+    minFicoReported: 670, requiresDeposit: false, personalGuarantee: false,
+    reportsToBusinessBureaus: false, minAnnualRevenueUsd: null, minMonthsInBusiness: null,
+    introAprMonths: 15,
+    sourceUrl: 'https://www.cnbc.com/select/best-credit-union-credit-cards/',
+    evidence: 'aggregator-reported',
+    note: 'Membership open to anyone via a $5 share account. PenFed does not currently offer a business card.',
+  },
+  {
+    id: 'columbia-cu', issuer: 'Columbia Credit Union', product: 'Credit Cards',
+    underwriting: 'personal-fico', limitBand: 'small',
+    minFicoReported: null, requiresDeposit: false, personalGuarantee: false,
+    reportsToBusinessBureaus: false, minAnnualRevenueUsd: null, minMonthsInBusiness: null,
     introAprMonths: 12,
-    annualFeeUsd: null,
     sourceUrl: 'https://www.columbiacu.org/credit-cards/',
     evidence: 'aggregator-reported',
-    note: '0% intro for 12 months on purchases and transfers in the first 90 days; 11.24%-23.24% variable after. Membership eligibility not confirmed as nationwide.',
+    note: 'Membership eligibility not confirmed as nationwide.',
   },
   {
-    id: 'florida-cu',
-    issuer: 'Florida Credit Union',
-    product: 'Credit Cards',
-    underwriting: 'personal-fico',
-    minFicoReported: null,
-    requiresDeposit: false,
+    id: 'florida-cu', issuer: 'Florida Credit Union', product: 'Credit Cards',
+    underwriting: 'personal-fico', limitBand: 'small',
+    minFicoReported: null, requiresDeposit: false, personalGuarantee: false,
+    reportsToBusinessBureaus: false, minAnnualRevenueUsd: null, minMonthsInBusiness: null,
     introAprMonths: 9,
-    annualFeeUsd: null,
     sourceUrl: 'https://flcu.org/cards/credit-cards/',
     evidence: 'aggregator-reported',
-    note: '0% intro for 9 billing cycles; 16.40%-17.90% variable after. Notably low go-to APR.',
+    note: 'Notably low go-to APR. Membership eligibility not confirmed as nationwide.',
   },
   {
-    id: 'downey-fcu-classic',
-    issuer: 'Downey Federal Credit Union',
-    product: 'Classic',
-    underwriting: 'personal-fico',
-    minFicoReported: 580,
-    requiresDeposit: false,
+    id: 'downey-fcu-classic', issuer: 'Downey Federal Credit Union', product: 'Classic',
+    underwriting: 'personal-fico', limitBand: 'micro',
+    minFicoReported: 580, requiresDeposit: false, personalGuarantee: false,
+    reportsToBusinessBureaus: false, minAnnualRevenueUsd: null, minMonthsInBusiness: null,
     introAprMonths: 6,
-    annualFeeUsd: 0,
     sourceUrl: 'https://www.creditcards.com/education/credit-union-cards-anyone-can-get/',
     evidence: 'aggregator-reported',
-    note: 'Reported to approve applicants with poor credit, no annual fee, 0% intro for 6 months. Short window but a genuine 0% at a low band.',
+    note: 'Reported to approve applicants with poor credit. Low limits.',
   },
 
-  // ── Fair-credit unsecured. Small limits, high APR. Rebuild, not deploy. ──
+  // ─────────────────────────────────────────────────────────────────
+  // TIER 6 — PERSONAL FICO. Rebuild only. Limits too small to deploy.
+  // ─────────────────────────────────────────────────────────────────
   {
-    id: 'mission-lane-visa',
-    issuer: 'Mission Lane',
-    product: 'Mission Lane Visa',
-    underwriting: 'personal-fico',
-    minFicoReported: 580,
-    requiresDeposit: false,
+    id: 'mission-lane-visa', issuer: 'Mission Lane', product: 'Mission Lane Visa',
+    underwriting: 'personal-fico', limitBand: 'micro',
+    minFicoReported: 580, requiresDeposit: false, personalGuarantee: false,
+    reportsToBusinessBureaus: false, minAnnualRevenueUsd: null, minMonthsInBusiness: null,
     introAprMonths: null,
-    annualFeeUsd: 39,
     sourceUrl: 'https://wallethub.com/d/mission-lane-credit-card-3263c',
     evidence: 'aggregator-reported',
-    note: 'Unsecured, no deposit. Starting limit reported around $300. Annual fee $0-$39 depending on offer. High APR, no intro period.',
+    note: 'Unsecured, no deposit. Starting limit reported around $300.',
   },
   {
-    id: 'avant-card',
-    issuer: 'Avant',
-    product: 'Avant Credit Card',
-    underwriting: 'personal-fico',
-    minFicoReported: 580,
-    requiresDeposit: false,
+    id: 'avant-card', issuer: 'Avant', product: 'Avant Credit Card',
+    underwriting: 'personal-fico', limitBand: 'micro',
+    minFicoReported: 580, requiresDeposit: false, personalGuarantee: false,
+    reportsToBusinessBureaus: false, minAnnualRevenueUsd: null, minMonthsInBusiness: null,
     introAprMonths: null,
-    annualFeeUsd: null,
     sourceUrl: 'https://www.bankrate.com/credit-cards/bad-credit/unsecured-bad-credit/',
     evidence: 'aggregator-reported',
     note: 'Accepts 580+. Unsecured.',
   },
   {
-    id: 'merrick-bank',
-    issuer: 'Merrick Bank',
-    product: 'Double Your Line Mastercard',
-    underwriting: 'personal-fico',
-    minFicoReported: null,
-    requiresDeposit: false,
+    id: 'merrick-bank', issuer: 'Merrick Bank', product: 'Double Your Line Mastercard',
+    underwriting: 'personal-fico', limitBand: 'micro',
+    minFicoReported: null, requiresDeposit: false, personalGuarantee: false,
+    reportsToBusinessBureaus: false, minAnnualRevenueUsd: null, minMonthsInBusiness: null,
     introAprMonths: null,
-    annualFeeUsd: null,
     sourceUrl: 'https://www.bankrate.com/credit-cards/bad-credit/unsecured-bad-credit/',
     evidence: 'named-only',
-    note: 'Named as a bad-credit option. Doubles the limit after on-time payments, which suits a limit-growth strategy. Terms not yet pulled.',
+    note: 'Doubles the limit after on-time payments, which suits a limit-growth strategy. Terms not pulled.',
   },
   {
-    id: 'reflex-platinum',
-    issuer: 'Continental Finance',
-    product: 'Reflex Platinum Mastercard',
-    underwriting: 'personal-fico',
-    minFicoReported: null,
-    requiresDeposit: false,
+    id: 'reflex-platinum', issuer: 'Continental Finance', product: 'Reflex Platinum Mastercard',
+    underwriting: 'personal-fico', limitBand: 'micro',
+    minFicoReported: null, requiresDeposit: false, personalGuarantee: false,
+    reportsToBusinessBureaus: false, minAnnualRevenueUsd: null, minMonthsInBusiness: null,
     introAprMonths: null,
-    annualFeeUsd: null,
     sourceUrl: 'https://moneyzine.com/credit/best-guaranteed-credit-card-approval-no-deposit/',
     evidence: 'named-only',
-    note: 'No-deposit bad-credit card. Continental Finance cards historically carry high fees — terms must be pulled before this is recommended.',
+    note: 'No-deposit bad-credit card. Continental Finance cards historically carry high fees. Terms not pulled.',
   },
 ];
 
 /* ------------------------------------------------------------------ *
- * Applicant profile and scoring
+ * Profile and scoring
  * ------------------------------------------------------------------ */
 
 export interface ApplicantProfile {
   readonly fico: number;
-  /** Number of separate EINs available to apply under. */
   readonly einCount: number;
-  /** Age in years of the oldest business entity. */
   readonly oldestEntityYears: number;
-  /** Hard inquiries in the last 30 days. */
   readonly recentHardInquiries: number;
-  /** True where an approved line has not yet funded. */
   readonly approvalPending: boolean;
-  /** Recent declines, which some issuers weigh. */
   readonly recentDeclines: number;
+  /** Annual business revenue, used against issuer minimums. */
+  readonly annualRevenueUsd: number;
 }
 
 export interface CardScore {
   readonly id: string;
   readonly issuer: string;
   readonly product: string;
-  /** 0-100. Higher is more likely to approve for this profile. */
+  /** 0-100. How likely this issuer is to approve this profile. */
   readonly approvalScore: number;
+  /** approvalScore weighted by limit band. The ranking key. */
+  readonly lendingScore: number;
+  readonly limitBand: LimitBand;
+  /** True where approval costs a personal credit inquiry. */
+  readonly costsAnInquiry: boolean;
   readonly reasons: readonly string[];
-  /** False where the row may not be ranked at all. */
   readonly rankable: boolean;
   readonly blockedReason?: string;
 }
 
 /**
- * Score a card against a profile.
- *
- * Refuses to rank `named-only` rows. A row whose terms were never pulled has no
- * business appearing in a ranked list next to rows that were — the ranking
- * would imply a comparison that was never made.
+ * Score a source on the only two things that matter here: whether they will
+ * approve, and how big the line is. Interest is not read.
  */
 export function scoreCard(card: CardSource, profile: ApplicantProfile): CardScore {
-  const reasons: string[] = [];
-
-  if (card.requiresDeposit) {
-    return {
-      id: card.id,
-      issuer: card.issuer,
-      product: card.product,
-      approvalScore: 0,
-      reasons: [],
-      rankable: false,
-      blockedReason: 'Requires a deposit, which was excluded from consideration.',
-    };
-  }
-  if (card.evidence === 'named-only') {
-    return {
-      id: card.id,
-      issuer: card.issuer,
-      product: card.product,
-      approvalScore: 0,
-      reasons: [],
-      rankable: false,
-      blockedReason: 'Terms have not been pulled from the issuer. Ranking it would imply a comparison that was never made.',
-    };
-  }
-
-  let score = 50;
-
-  if (card.underwriting === 'business-cashflow') {
-    score += 30;
-    reasons.push('Underwrites on business revenue and bank balances — personal FICO is not an input.');
-    if (profile.einCount > 1) {
-      score += 5;
-      reasons.push(`${profile.einCount} EINs available, so more than one application is possible without stacking personal inquiries.`);
-    }
-    if (profile.oldestEntityYears >= 2) {
-      score += 5;
-      reasons.push(`Oldest entity is ${profile.oldestEntityYears} years old, which clears the usual time-in-business threshold.`);
-    }
-  } else if (card.minFicoReported !== null) {
-    const headroom = profile.fico - card.minFicoReported;
-    if (headroom >= 60) {
-      score += 25;
-      reasons.push(`FICO ${profile.fico} is well above the reported ${card.minFicoReported} floor.`);
-    } else if (headroom >= 0) {
-      score += 10;
-      reasons.push(`FICO ${profile.fico} clears the reported ${card.minFicoReported} floor, but without much headroom.`);
-    } else {
-      score -= 35;
-      reasons.push(`FICO ${profile.fico} is below the reported ${card.minFicoReported} floor.`);
-    }
-  } else {
-    reasons.push('No FICO floor reported for this card, so approval odds are unmodelled.');
-  }
-
-  // Inquiry burden applies to anything that pulls personal credit.
-  if (card.underwriting !== 'business-cashflow') {
-    if (profile.recentHardInquiries >= 3) {
-      score -= 20;
-      reasons.push(`${profile.recentHardInquiries} hard inquiries in the last 30 days materially reduces approval odds.`);
-    } else if (profile.recentHardInquiries > 0) {
-      score -= 5 * profile.recentHardInquiries;
-      reasons.push(`${profile.recentHardInquiries} recent hard inquiry(s) counted against.`);
-    }
-    if (profile.recentDeclines > 0) {
-      score -= 5 * profile.recentDeclines;
-      reasons.push(`${profile.recentDeclines} recent decline(s) counted against.`);
-    }
-  }
-
-  if (card.introAprMonths && card.introAprMonths >= 12) {
-    reasons.push(`${card.introAprMonths} months at 0% — long enough to matter for a recycling strategy.`);
-  }
-
-  return {
+  const base = {
     id: card.id,
     issuer: card.issuer,
     product: card.product,
-    approvalScore: Math.max(0, Math.min(100, Math.round(score))),
+    limitBand: card.limitBand,
+    costsAnInquiry: card.underwriting === 'personal-fico' || card.personalGuarantee,
+  };
+
+  if (card.requiresDeposit) {
+    return { ...base, approvalScore: 0, lendingScore: 0, reasons: [], rankable: false,
+      blockedReason: 'Requires a deposit, which was excluded.' };
+  }
+  if (card.evidence === 'named-only') {
+    return { ...base, approvalScore: 0, lendingScore: 0, reasons: [], rankable: false,
+      blockedReason: 'Terms have not been pulled from the issuer. Ranking it would imply a comparison that was never made.' };
+  }
+
+  const reasons: string[] = [];
+  let score = 50;
+
+  if (card.underwriting === 'business-cashflow' || card.underwriting === 'ein-trade-credit') {
+    score += 30;
+    reasons.push('Applies on the EIN — personal FICO is not an input.');
+    if (!card.personalGuarantee) {
+      score += 8;
+      reasons.push('No personal guarantee, so it costs no personal inquiry.');
+    }
+    if (profile.einCount > 1) {
+      score += 4;
+      reasons.push(`${profile.einCount} EINs available — this can be applied for more than once.`);
+    }
+    if (card.minMonthsInBusiness !== null) {
+      const months = profile.oldestEntityYears * 12;
+      if (months >= card.minMonthsInBusiness) {
+        score += 5;
+        reasons.push(`${profile.oldestEntityYears} years in business clears the ${card.minMonthsInBusiness}-month minimum comfortably.`);
+      } else {
+        score -= 25;
+        reasons.push(`Requires ${card.minMonthsInBusiness} months in business.`);
+      }
+    }
+    if (card.minAnnualRevenueUsd !== null) {
+      if (profile.annualRevenueUsd >= card.minAnnualRevenueUsd) {
+        score += 5;
+        reasons.push(`Revenue clears the $${card.minAnnualRevenueUsd.toLocaleString()} minimum.`);
+      } else {
+        score -= 30;
+        reasons.push(`Requires $${card.minAnnualRevenueUsd.toLocaleString()} annual revenue.`);
+      }
+    }
+  } else if (card.minFicoReported !== null) {
+    const headroom = profile.fico - card.minFicoReported;
+    if (headroom >= 60) { score += 25; reasons.push(`FICO ${profile.fico} is well above the reported ${card.minFicoReported} floor.`); }
+    else if (headroom >= 0) { score += 10; reasons.push(`FICO ${profile.fico} clears the reported ${card.minFicoReported} floor without much headroom.`); }
+    else { score -= 35; reasons.push(`FICO ${profile.fico} is below the reported ${card.minFicoReported} floor.`); }
+  } else {
+    reasons.push('No FICO floor reported, so approval odds are unmodelled.');
+  }
+
+  if (base.costsAnInquiry) {
+    if (profile.recentHardInquiries >= 3) {
+      score -= 20;
+      reasons.push(`${profile.recentHardInquiries} hard inquiries in 30 days materially reduces approval odds.`);
+    } else if (profile.recentHardInquiries > 0) {
+      score -= 5 * profile.recentHardInquiries;
+    }
+    if (profile.recentDeclines > 0) score -= 5 * profile.recentDeclines;
+  }
+
+  if (card.reportsToBusinessBureaus) {
+    reasons.push('Reports to the business bureaus — builds the EIN file that unlocks larger lines later.');
+  }
+
+  const approvalScore = Math.max(0, Math.min(100, Math.round(score)));
+  return {
+    ...base,
+    approvalScore,
+    lendingScore: Math.round(approvalScore * LIMIT_BAND_WEIGHT[card.limitBand]),
     reasons,
     rankable: true,
   };
 }
 
-/** Cards ranked for a profile, best first. Unrankable rows are excluded. */
+/**
+ * Ranked by lending potential: approval likelihood multiplied by limit band.
+ * Interest rate is not a term in this ordering.
+ */
 export function rankCards(profile: ApplicantProfile): readonly CardScore[] {
   return CARD_SOURCES.map((c) => scoreCard(c, profile))
     .filter((s) => s.rankable)
-    .sort((a, b) => b.approvalScore - a.approvalScore);
+    .sort((a, b) => b.lendingScore - a.lendingScore || b.approvalScore - a.approvalScore);
 }
 
 /** Rows that cannot be ranked yet, with why. The work queue. */
 export function unrankable(profile: ApplicantProfile): readonly CardScore[] {
   return CARD_SOURCES.map((c) => scoreCard(c, profile)).filter((s) => !s.rankable);
+}
+
+/** Everything applyable today without spending a personal inquiry. */
+export function freeToApplyNow(profile: ApplicantProfile): readonly CardScore[] {
+  return rankCards(profile).filter((s) => !s.costsAnInquiry);
 }
 
 /* ------------------------------------------------------------------ *
@@ -410,13 +573,6 @@ export interface SequencingVerdict {
   readonly recommendedOrder: readonly string[];
 }
 
-/**
- * Whether to apply now, and in what order.
- *
- * The question that matters is not which cards exist but how many personal
- * inquiries to spend and when. This is where a plan gains or loses the most
- * capacity, and it is the part a card list cannot answer.
- */
 export function sequencingAdvice(profile: ApplicantProfile): SequencingVerdict {
   const reasoning: string[] = [];
   let safe = true;
@@ -424,61 +580,60 @@ export function sequencingAdvice(profile: ApplicantProfile): SequencingVerdict {
   if (profile.approvalPending) {
     safe = false;
     reasoning.push(
-      'An approved line has not funded yet. Issuers commonly re-pull before funding, and new inquiries are a leading cause of a pending approval being cut or withdrawn. Nothing that pulls personal credit should be applied for until it funds.',
+      'An approved line has not funded yet. Issuers commonly re-pull before funding, and new inquiries are a leading cause of a pending approval being cut or withdrawn. Nothing that pulls personal credit should go in until it funds.',
     );
   }
   if (profile.recentDeclines > 0) {
     reasoning.push(
-      `${profile.recentDeclines} decline(s) already on file this cycle. A decline is visible to the next issuer through the inquiry it left, without the offsetting signal of an approval.`,
+      `${profile.recentDeclines} decline(s) already on file this cycle, each leaving an inquiry without the offsetting signal of an approval.`,
     );
   }
   if (profile.recentHardInquiries >= 3) {
     safe = false;
     reasoning.push(
-      `${profile.recentHardInquiries} hard inquiries in 30 days is already past the point where most issuers begin auto-declining. Further personal applications now mostly buy declines.`,
+      `${profile.recentHardInquiries} hard inquiries in 30 days is past the point where many issuers begin auto-declining.`,
     );
   }
-
-  const order = [
-    'EIN-only cash-flow cards first (Ramp, Brex, Rho, Slash). No personal pull, no personal guarantee, and a 640 FICO is not an input — so these cost nothing against the pending approval.',
-    'Wait for the pending line to fund before any personal-credit application.',
-    'Then open-membership credit unions (Connexus, NASA FCU), which hold the only real 0% windows reachable near this band and underwrite more flexibly than card-first issuers.',
-    'Personal fair-credit cards last, and only to rebuild the score — their limits are too small to fund anything.',
-  ];
-
-  if (safe) {
-    reasoning.push('No pending approval and inquiry load is low, so a measured round of applications is reasonable.');
-  }
+  if (safe) reasoning.push('No pending approval and a low inquiry load, so a measured personal round is reasonable.');
 
   return {
     safeToApplyNow: safe,
     headline: safe
-      ? 'A measured round is reasonable now.'
-      : 'Applying broadly tonight would reduce total available credit, not increase it.',
+      ? 'A measured personal round is reasonable now.'
+      : 'Apply on the EIN tonight. Personal applications now would reduce total available credit, not increase it.',
     reasoning,
-    recommendedOrder: order,
+    recommendedOrder: [
+      'EIN-only cash-flow lines first — Fundbox, Ramp, Brex, Rho, Slash. No personal pull, no guarantee, biggest limits on this profile, and they cost nothing against a pending approval.',
+      'Net-30 vendor accounts in parallel — Quill, The CEO Creative, Uline, Grainger. Tiny individually, no FICO check at all, and they are what builds the EIN file that unlocks the large lines.',
+      'Fleet and fuel cards alongside — also EIN-based and reporting to D&B and Experian Business.',
+      'Wait for the pending line to fund before any personal-credit application.',
+      'Then open-membership credit unions with business cards — Connexus, NASA FCU.',
+      'Personal fair-credit cards last, and only to rebuild the score. Their limits cannot fund anything.',
+    ],
   };
 }
 
 /* ------------------------------------------------------------------ *
- * Honesty about coverage
+ * Coverage
  * ------------------------------------------------------------------ */
 
 export const SOURCING_STATUS = {
   requested: 100,
   verified: CARD_SOURCES.length,
   researchedOn: '2026-09-20',
-  method: 'live web search across comparison sites and issuer pages',
+  method: 'live web search across comparison sites, industry guides and issuer pages',
   gap:
-    'One hundred rows were requested. Fourteen are recorded because fourteen were actually verified in this pass. The remainder are not written as placeholders with invented APRs, fees and approval odds, because a credit page carrying fabricated terms is worse than a short one — it would be wrong in exactly the direction that costs money.',
+    'One hundred rows were requested. What is recorded is what was actually verified. The remainder are not written as placeholders with invented limits and approval odds, because a credit page carrying fabricated terms is wrong in exactly the direction that costs money.',
   nextPass:
-    'Pull issuer terms for every `named-only` row, then widen to store-card issuers (Comenity, Synchrony), regional credit unions with open membership, and fintech lines (Aven, Fundbox, Ampla). Each addition needs its own source URL before it is rankable.',
+    'Pull issuer terms for every `named-only` row — the two open-membership credit union BUSINESS cards (Connexus, NASA FCU) are the highest-value of these. Then widen the net-30 vendor tier, which is the largest untapped category for an EIN-first strategy.',
   excludedByRequest: 'Any card requiring a deposit, and the large national banks.',
+  rankedOn: 'Approval likelihood multiplied by limit band. Interest rate is recorded but carries no weight, by instruction.',
 } as const;
 
 export const NEVER_PRINTED = [
-  'An approval probability stated as a percentage. The score here ranks relative likelihood from reported floors; it is not a modelled probability and no issuer publishes one.',
-  'An APR, fee or credit limit for a row whose evidence level is `named-only`.',
-  'A recommendation to apply for multiple personal-credit cards in one sitting while an approval is pending.',
+  'An approval probability stated as a percentage. The score ranks relative likelihood from reported floors; no issuer publishes a probability.',
+  'A limit, fee or rate for a row whose evidence level is `named-only`.',
+  'A recommendation to apply for several personal-credit cards in one sitting while an approval is pending.',
   'Any suggestion that a fair-credit card with a $300-$1,500 limit can fund a premium-financing strategy.',
+  'A net-30 vendor account described as a credit card. It is trade credit with a supplier, and its value is the trade line it reports, not the spending power.',
 ] as const;
