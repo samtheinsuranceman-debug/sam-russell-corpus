@@ -11,12 +11,20 @@ import {
   NEVER_PRINTED,
   SOURCING_STATUS,
   freeToApplyNow,
+  openMembershipBusinessCards,
   rankCards,
   sequencingAdvice,
   unrankable,
   type ApplicantProfile,
 } from "@shared/creditCardSourcing";
-import { AlertTriangle, ExternalLink, Info, ShieldCheck, TrendingUp } from "lucide-react";
+import {
+  AlertTriangle,
+  DoorOpen,
+  ExternalLink,
+  Info,
+  ShieldCheck,
+  TrendingUp,
+} from "lucide-react";
 
 const CARD = "rounded-2xl border border-emerald-400/20 bg-white/[0.04]";
 const FIELD =
@@ -52,6 +60,7 @@ export default function CreditCards() {
   const freeNow = useMemo(() => freeToApplyNow(profile), [profile]);
   const pending = useMemo(() => unrankable(profile), [profile]);
   const sequencing = useMemo(() => sequencingAdvice(profile), [profile]);
+  const charters = useMemo(() => openMembershipBusinessCards(), []);
 
   const set = <K extends keyof ApplicantProfile>(k: K, v: ApplicantProfile[K]) =>
     setProfile((p) => ({ ...p, [k]: v }));
@@ -120,6 +129,59 @@ export default function CreditCards() {
                 {s.issuer} · {LIMIT_LABEL[s.limitBand]}
               </span>
             ))}
+          </div>
+        </section>
+
+        {/* ── Open-charter credit unions: the category, not a single card ── */}
+        <section className={`${CARD} p-4`}>
+          <h2 className="mb-1 flex items-center gap-2 font-semibold text-white">
+            <DoorOpen className="h-4 w-4 text-emerald-300" />
+            Credit unions that issue business credit ({charters.length})
+          </h2>
+          <p className="mb-3 text-xs text-slate-500">
+            The one category where a 640 personal score and a 12-year EIN get read by a human
+            instead of a scorecard. Joining costs no inquiry and can be done tonight, even while
+            the personal file is frozen — so join first, apply later.
+          </p>
+          <div className="grid gap-2 sm:grid-cols-2">
+            {charters.map((c) => {
+              const open = c.membershipGate === "open-confirmed";
+              return (
+                <div
+                  key={c.id}
+                  className={`rounded-xl border p-3 ${
+                    open
+                      ? "border-emerald-400/25 bg-emerald-400/[0.06]"
+                      : "border-white/10 bg-black/20"
+                  }`}
+                >
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="text-sm font-semibold text-white">{c.issuer}</div>
+                    <span
+                      className={`shrink-0 rounded px-2 py-0.5 text-[11px] ${
+                        open
+                          ? "bg-emerald-400/15 text-emerald-200"
+                          : "bg-amber-400/15 text-amber-200"
+                      }`}
+                    >
+                      {open ? "anyone can join" : "charter unread"}
+                    </span>
+                  </div>
+                  <div className="text-xs text-slate-400">{c.product}</div>
+                  {c.membershipPath ? (
+                    <p className="mt-1.5 text-xs text-slate-400">{c.membershipPath}</p>
+                  ) : null}
+                  <a
+                    href={c.sourceUrl}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className="mt-2 inline-flex items-center gap-1 text-xs text-emerald-300 hover:underline"
+                  >
+                    {open ? "Join" : "Check eligibility"} <ExternalLink className="h-3 w-3" />
+                  </a>
+                </div>
+              );
+            })}
           </div>
         </section>
 
@@ -234,6 +296,11 @@ export default function CreditCards() {
                       <li key={r}>• {r}</li>
                     ))}
                   </ul>
+                  {src.membershipPath ? (
+                    <p className="mt-2 text-xs text-emerald-200/70">
+                      <span className="font-semibold">How to join:</span> {src.membershipPath}
+                    </p>
+                  ) : null}
                   {src.note ? <p className="mt-2 text-xs text-slate-500">{src.note}</p> : null}
                   <a
                     href={src.sourceUrl}

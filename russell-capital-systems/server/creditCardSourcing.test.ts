@@ -1,11 +1,15 @@
 import { describe, expect, it } from 'vitest';
 import {
   CARD_SOURCES,
+  MEMBERSHIP_GATE_WEIGHT,
   NEVER_PRINTED,
   SOURCING_STATUS,
   type ApplicantProfile,
+  type CardSource,
   LIMIT_BAND_WEIGHT,
+  confirmedOpenCharters,
   freeToApplyNow,
+  openMembershipBusinessCards,
   rankCards,
   scoreCard,
   sequencingAdvice,
@@ -151,6 +155,78 @@ describe('ranking is approval x limit, and nothing else', () => {
     const cash = CARD_SOURCES.filter((c) => c.underwriting === 'business-cashflow')[0];
     expect(scoreCard(fico, heavy).approvalScore).toBeLessThan(scoreCard(fico, OWNER).approvalScore);
     expect(scoreCard(cash, heavy).approvalScore).toBe(scoreCard(cash, OWNER).approvalScore);
+  });
+});
+
+describe('the membership gate is the first question, not a footnote', () => {
+  const unions = CARD_SOURCES.filter((c) => c.membershipGate !== undefined);
+
+  it('records a gate on every credit union row', () => {
+    // Every issuer whose name says credit union must carry a gate, so that a
+    // union cannot be added later with its charter left unexamined.
+    const named = CARD_SOURCES.filter((c) => /credit union|\bfcu\b|\bcu\b/i.test(c.issuer));
+    for (const c of named) {
+      expect(c.membershipGate, `${c.id} is a credit union with no membership gate`).toBeDefined();
+    }
+    expect(unions.length).toBeGreaterThanOrEqual(18);
+  });
+
+  it('gives a confirmed join path on every row claimed to be open', () => {
+    const open = unions.filter((c) => c.membershipGate === 'open-confirmed');
+    expect(open.length).toBeGreaterThanOrEqual(9);
+    for (const c of open) {
+      expect(c.membershipPath, `${c.id} claims an open charter with no path recorded`).toBeDefined();
+      expect(c.membershipPath!.length, c.id).toBeGreaterThan(15);
+    }
+  });
+
+  it('discounts an unread charter rather than assuming it is open', () => {
+    expect(MEMBERSHIP_GATE_WEIGHT['open-unconfirmed']).toBeLessThan(
+      MEMBERSHIP_GATE_WEIGHT['open-confirmed'],
+    );
+    const confirmed = unions.filter((c) => c.membershipGate === 'open-confirmed' && c.evidence !== 'named-only')[0];
+    const twin: CardSource = { ...confirmed, id: 'twin', membershipGate: 'open-unconfirmed' };
+    expect(scoreCard(twin, OWNER).approvalScore).toBeLessThan(scoreCard(confirmed, OWNER).approvalScore);
+    expect(scoreCard(twin, OWNER).reasons.join(' ')).toMatch(/read the eligibility page/i);
+  });
+
+  it('refuses to rank a charter this applicant cannot join at all', () => {
+    const base = unions[0];
+    const closed: CardSource = { ...base, id: 'closed', membershipGate: 'restricted',
+      membershipPath: 'Military service members and their families only.' };
+    const s = scoreCard(closed, OWNER);
+    expect(s.rankable).toBe(false);
+    expect(s.blockedReason).toMatch(/restricted to a group/i);
+  });
+
+  it('leaves every non-credit-union row unaffected', () => {
+    const ramp = CARD_SOURCES.filter((c) => c.id === 'ramp-corporate')[0];
+    expect(ramp.membershipGate).toBeUndefined();
+    expect(scoreCard(ramp, OWNER).rankable).toBe(true);
+  });
+
+  it('shortlists the open-charter business issuers, confirmed ones first', () => {
+    const list = openMembershipBusinessCards();
+    expect(list.length).toBeGreaterThanOrEqual(14);
+    const gates = list.map((c) => c.membershipGate);
+    expect(gates.lastIndexOf('open-confirmed')).toBeLessThan(gates.indexOf('open-unconfirmed'));
+    for (const c of list) expect(c.underwriting).toBe('personal-guarantee-business');
+  });
+
+  it('names Connexus and NASA FCU among the confirmed charters, with the twelve found beside them', () => {
+    const ids = confirmedOpenCharters().map((c) => c.id);
+    expect(ids.indexOf('connexus-business')).toBeGreaterThan(-1);
+    expect(ids.indexOf('nasafcu-business-platinum')).toBeGreaterThan(-1);
+    expect(ids.length).toBeGreaterThanOrEqual(8);
+  });
+
+  it('excludes a military-only charter rather than listing an unreachable card', () => {
+    // Navy Federal issues GO BIZ Rewards, which would otherwise rank well. It
+    // is absent on purpose, and the coverage note says so.
+    for (const c of CARD_SOURCES) {
+      expect(c.issuer.toLowerCase().indexOf('navy federal'), c.id).toBe(-1);
+    }
+    expect(SOURCING_STATUS.excludedByRequest).toMatch(/military-only/i);
   });
 });
 
