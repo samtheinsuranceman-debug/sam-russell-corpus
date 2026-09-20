@@ -161,7 +161,18 @@ Path-scoped so the archive's other ~45 projects do not trigger it.
 
 ### 5.2 Secret scanning
 
-A scan of `server/`, `shared/` and `client/src/` for `sk-` keys, `AKIA` identifiers and private-key headers returned **zero findings** at `76ed5f2`. `PROVENANCE.md` records that nine Slack placeholder patterns were previously neutered for exactly this reason. CI enforces it going forward.
+Four scans run at `76ed5f2`, 20 September 2026. Patterns: `sk-…`, `AKIA…`, `ghp_…`, `AIza…`, `xox[baprs]-…`, and `-----BEGIN … PRIVATE KEY`.
+
+| Scan | Scope | Findings |
+|---|---|---|
+| 1 | Application source — `server/`, `shared/`, `client/src/` | **1 match — not a credential.** `client/src/pages/portal/Integrations.tsx:261`, literal `value="xoxb-EXAMPLE-PLACEHOLDER"` — a UI hint. |
+| 2 | Whole application directory incl. `scripts/`, `docs/`, `drizzle/` | **1 match — not a credential.** `docs/handoff/RCS_Claude_Session_01/transcript.md:58`, `xoxb-1234567…` (15 chars, sequential), in a line that reads "values were placeholders". |
+| 3 | **Entire 6,008-file corpus**, all ~45 projects | **1 match** — the same transcript line. Nothing elsewhere in the archive. |
+| 4 | Committed `.env` / `.env.local` / `.env.production` anywhere | **0 files.** |
+
+**Result: zero real credentials.** Both matches are self-evidently placeholders — one labelled `EXAMPLE-PLACEHOLDER`, one a sequential `1234567` inside prose describing placeholder neutering. `PROVENANCE.md` records that nine Slack placeholder patterns were neutered for exactly this reason; these two are the residue of that work, in a UI hint and a transcript of it.
+
+The CI job in §5.1 enforces this going forward, so the property is maintained rather than merely observed once.
 
 > **Carried over from the donor:** three legacy access codes sit in plaintext in `russell-capital` at `shared/identityVerification.ts:110` and in its git history. `identityVerification.ts` is on the donor-only migration list (§2.1). **It must not be migrated as-is.** Rotate the codes first; moving the file will not remove them from the donor's history.
 
