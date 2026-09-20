@@ -23,6 +23,7 @@ import { LATITUDES, MERIDIANS, pointsAt } from "@shared/sphere";
 import { useClientData } from "@/contexts/ClientDataContext";
 import { GlobalSearch } from "@/components/GlobalSearch";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
+import NavTreeView from "@/components/NavTreeView";
 import { CommandPalette } from "@/components/CommandPalette";
 import { QuickActionsFAB } from "@/components/QuickActionsFAB";
 import { SessionTimeout } from "@/components/SessionTimeout";
@@ -861,6 +862,8 @@ function SphereNav({ location, onClose }: { location: string; onClose: () => voi
 
 function Sidebar({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [location] = useLocation();
+  // PR-2b: additive category tree, collapsed by default.
+  const [treeOpen, setTreeOpen] = useState(false);
   const [sphereMode, setSphereModeState] = useState<boolean>(() => { try { return localStorage.getItem(SPHERE_MODE_KEY) === "1"; } catch { return false; } });
   const setSphereMode = (v: boolean) => { setSphereModeState(v); try { localStorage.setItem(SPHERE_MODE_KEY, v ? "1" : "0"); } catch { /* private mode */ } };
   const { user, logout, isAuthenticated } = useAuth();
@@ -978,6 +981,28 @@ function Sidebar({ open, onClose }: { open: boolean; onClose: () => void }) {
               onToggleFavorite={isAuthenticated ? handleToggleFavorite : undefined}
             />
           ))}
+
+          {/* ── PR-2b: ported category tree. Additive — the sections above are
+               untouched and nothing that was reachable before is hidden. ── */}
+          <div className="mt-2 border-t border-[#12233e] pt-2">
+            <button
+              type="button"
+              onClick={() => setTreeOpen((v) => !v)}
+              aria-expanded={treeOpen}
+              className="flex w-full items-center gap-1 rounded px-2 py-1.5 text-left text-[11px] font-semibold uppercase tracking-wide text-[#7a95b8] transition hover:text-white"
+            >
+              <ChevronRight
+                size={11}
+                className={`flex-shrink-0 opacity-60 transition-transform ${treeOpen ? "rotate-90" : ""}`}
+              />
+              <span className="flex-1">Browse by category</span>
+            </button>
+            {treeOpen && (
+              <div className="mt-1">
+                <NavTreeView onNavigate={onClose} />
+              </div>
+            )}
+          </div>
         </nav>
 
         {/* Disclaimer Mode Toggle */}
