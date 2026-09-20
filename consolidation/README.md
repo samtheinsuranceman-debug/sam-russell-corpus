@@ -1,7 +1,8 @@
 # Consolidation — Foundation
 
 **Base of record:** `russell-capital-systems/` in this repository — the live build serving
-`www.russellcapitalsystems.com`.
+`www.russellcapitalsystems.com`. **A flip to `russell-capital-app` was directed on
+2026-09-20 and is in progress — see §8 for what that has cost and what it is blocked on.**
 **Branch:** `claude/consolidation-foundation`
 **Date:** 2026-09-20
 
@@ -33,6 +34,7 @@ separate explicit approval already required.
 | 5 | [05-ci-secrets-rollback.md](05-ci-secrets-rollback.md) | CI checks, secret scan results, tagging and rollback |
 | 6 | [06-phased-pr-plan.md](06-phased-pr-plan.md) | Per-migration source paths, target paths, tests, rollback |
 | 7 | [07-base-selection-evidence.md](07-base-selection-evidence.md) | Why the base is the base — the `russell-capital-app` proposal, tested |
+| 8 | [08-base-flip-execution.md](08-base-flip-execution.md) | Executing the directed flip to `russell-capital-app`: what was fixed, what blocks |
 
 Raw generated data is in [`data/`](data/).
 
