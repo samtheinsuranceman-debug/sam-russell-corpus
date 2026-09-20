@@ -68,7 +68,17 @@ A PR that breaks the build or fails 4,138 tests merges green today.
 ## 5.3 — ADDED BY THIS PR: `consolidation-gate.yml`
 
 One workflow. Runs on PRs into `consolidation/main` and `master` that touch the
-app. It does not deploy and holds no secrets.
+app, the gate itself, or the consolidation docs. It does not deploy and holds no
+secrets.
+
+**Why the trigger includes the gate and the docs.** A foundation PR that adds
+only documentation and a workflow file matches no `russell-capital-systems/**`
+path, so no check fires and the PR shows zero check runs — which makes *"after
+the foundation PR is green"* meaningless for the one PR where it matters most.
+Including `.github/workflows/consolidation-gate.yml` makes the gate validate
+itself on the PR that introduces it. Including `docs/consolidation/**` means a
+change to the recorded baseline numbers forces a re-measurement rather than
+being taken on trust.
 
 Gates, each asserted against the `03-VERIFICATION.md` baseline:
 

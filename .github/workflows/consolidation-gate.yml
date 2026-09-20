@@ -18,7 +18,16 @@ name: Consolidation gate
 on:
   pull_request:
     branches: [consolidation/main, master]
-    paths: ["russell-capital-systems/**"]
+    paths:
+      # App changes — the normal case.
+      - "russell-capital-systems/**"
+      # The gate itself, so a change to it is validated by running it. Without
+      # this, the foundation PR that introduces the gate has no check of its
+      # own and "after the foundation PR is green" has no signal.
+      - ".github/workflows/consolidation-gate.yml"
+      # Consolidation docs carry the baseline numbers the gate asserts; if they
+      # move, re-measure rather than trust the text.
+      - "docs/consolidation/**"
   workflow_dispatch:
 
 permissions:
