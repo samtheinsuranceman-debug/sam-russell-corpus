@@ -8,6 +8,9 @@ import { AccessProvider } from "@/contexts/AccessContext";
 import superjson from "superjson";
 import App from "./App";
 import { ClientDataProvider } from "./contexts/ClientDataContext";
+import { FinancialDataProvider } from "./contexts/FinancialDataContext";
+import { UnifiedDataBusProvider } from "./contexts/UnifiedDataBusContext";
+import { CalculatorResultsProvider } from "./components/CalculatorIntegration";
 import { StrategyProvider } from "./contexts/StrategyContext";
 import { DisclaimerProvider } from "./contexts/DisclaimerContext";
 import { startLogin } from "./const";
@@ -74,9 +77,22 @@ createRoot(document.getElementById("root")!).render(
       <AccessProvider>
         <DisclaimerProvider>
           <ClientDataProvider>
-            <StrategyProvider>
-              <App />
-            </StrategyProvider>
+            {/* Shared calculator-data layer (PR-3a).
+                FinancialData  — one dataset every tool reads/writes via useSharedField.
+                UnifiedDataBus — features publish results other features can read.
+                CalcResults    — per-calculator results feeding the health score.
+                All three sit INSIDE ClientDataProvider because the auto-fill hook
+                seeds them from the selected client's Fact Finder. Each hook also
+                works outside its provider, so mounting order is not load-bearing. */}
+            <FinancialDataProvider>
+              <UnifiedDataBusProvider>
+                <CalculatorResultsProvider>
+                  <StrategyProvider>
+                    <App />
+                  </StrategyProvider>
+                </CalculatorResultsProvider>
+              </UnifiedDataBusProvider>
+            </FinancialDataProvider>
           </ClientDataProvider>
         </DisclaimerProvider>
       </AccessProvider>
