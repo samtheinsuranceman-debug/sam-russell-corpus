@@ -10,6 +10,7 @@ import {
   CARD_SOURCES,
   NEVER_PRINTED,
   SOURCING_STATUS,
+  freeToApplyNow,
   rankCards,
   sequencingAdvice,
   unrankable,
@@ -23,8 +24,17 @@ const FIELD =
 
 const UNDERWRITING_LABEL: Record<string, string> = {
   "business-cashflow": "EIN / cash flow",
+  "ein-trade-credit": "EIN trade credit",
   "personal-fico": "Personal FICO",
   "personal-guarantee-business": "Business + personal guarantee",
+};
+
+const LIMIT_LABEL: Record<string, string> = {
+  micro: "under $2k",
+  small: "$2k-$10k",
+  mid: "$10k-$50k",
+  large: "$50k+",
+  unknown: "unknown",
 };
 
 export default function CreditCards() {
@@ -35,9 +45,11 @@ export default function CreditCards() {
     recentHardInquiries: 1,
     approvalPending: true,
     recentDeclines: 1,
+    annualRevenueUsd: 250000,
   });
 
   const ranked = useMemo(() => rankCards(profile), [profile]);
+  const freeNow = useMemo(() => freeToApplyNow(profile), [profile]);
   const pending = useMemo(() => unrankable(profile), [profile]);
   const sequencing = useMemo(() => sequencingAdvice(profile), [profile]);
 
@@ -50,8 +62,8 @@ export default function CreditCards() {
         <header>
           <h1 className="text-2xl font-bold text-white">Credit Cards</h1>
           <p className="mt-1 text-sm text-slate-400">
-            Ranked by how likely each issuer is to approve this profile. Every row links to the
-            source its terms came from.
+            Ranked by lending potential — approval likelihood multiplied by limit size. Interest
+            rate is recorded but carries no weight. Every row links to its source.
           </p>
         </header>
 
@@ -87,6 +99,27 @@ export default function CreditCards() {
                 </ol>
               </div>
             </div>
+          </div>
+        </section>
+
+        {/* ── Free to apply right now ── */}
+        <section className={`${CARD} border-l-4 border-l-emerald-400 p-4`}>
+          <h2 className="mb-1 font-semibold text-white">
+            Applyable tonight with no personal pull ({freeNow.length})
+          </h2>
+          <p className="mb-3 text-xs text-slate-500">
+            These underwrite on the EIN. No personal guarantee, no hard inquiry, no effect on a
+            pending approval.
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {freeNow.map((s) => (
+              <span
+                key={s.id}
+                className="rounded-lg border border-emerald-400/25 bg-emerald-400/10 px-2 py-1 text-xs text-emerald-100"
+              >
+                {s.issuer} · {LIMIT_LABEL[s.limitBand]}
+              </span>
+            ))}
           </div>
         </section>
 
@@ -139,6 +172,15 @@ export default function CreditCards() {
                 onChange={(e) => set("recentDeclines", Number(e.target.value))}
               />
             </label>
+            <label className="text-xs text-slate-400">
+              Annual revenue
+              <input
+                type="number"
+                className={`${FIELD} mt-1`}
+                value={profile.annualRevenueUsd}
+                onChange={(e) => set("annualRevenueUsd", Number(e.target.value))}
+              />
+            </label>
             <label className="flex items-end gap-2 pb-2 text-xs text-slate-400">
               <input
                 type="checkbox"
@@ -154,7 +196,7 @@ export default function CreditCards() {
         <section className={`${CARD} p-4`}>
           <h2 className="mb-3 flex items-center gap-2 font-semibold text-white">
             <TrendingUp className="h-4 w-4 text-emerald-300" />
-            Ranked for this profile ({ranked.length})
+            Ranked by lending potential ({ranked.length})
           </h2>
           <div className="space-y-3">
             {ranked.map((s, i) => {
@@ -168,16 +210,23 @@ export default function CreditCards() {
                     </div>
                     <div className="flex items-center gap-2 text-xs">
                       <span className="rounded bg-emerald-400/15 px-2 py-0.5 text-emerald-200">
-                        score {s.approvalScore}
+                        lending {s.lendingScore}
+                      </span>
+                      <span className="rounded bg-white/10 px-2 py-0.5 text-slate-300">
+                        limit: {LIMIT_LABEL[s.limitBand]}
                       </span>
                       <span className="rounded bg-white/10 px-2 py-0.5 text-slate-300">
                         {UNDERWRITING_LABEL[src.underwriting]}
                       </span>
-                      {src.introAprMonths ? (
-                        <span className="rounded bg-blue-400/15 px-2 py-0.5 text-blue-200">
-                          {src.introAprMonths} mo 0%
+                      {s.costsAnInquiry ? (
+                        <span className="rounded bg-amber-400/15 px-2 py-0.5 text-amber-200">
+                          costs an inquiry
                         </span>
-                      ) : null}
+                      ) : (
+                        <span className="rounded bg-emerald-400/15 px-2 py-0.5 text-emerald-200">
+                          no personal pull
+                        </span>
+                      )}
                     </div>
                   </div>
                   <ul className="mt-2 space-y-1 text-xs text-slate-400">
