@@ -22,18 +22,33 @@ describe("organized portal navigation", () => {
     expect(navPaths.length).toBe(navSet.size);
   });
 
-  it("clearly exposes the Secondary Information library", () => {
-    expect(shellSource).toContain('label: "Secondary Information"');
+  it("still reaches the catalog library page itself", () => {
+    // The "Secondary Information" SECTION is gone — the owner could not identify
+    // what it contained, which is a fair verdict on a name like that. The
+    // library PAGE survives as a browsable index and is reachable from Learning.
     expect(navSet.has("/portal/secondary-information")).toBe(true);
-    expect(navSet.has("/portal/tool-explorer")).toBe(true);
-    expect(navSet.has("/portal/knowledge-library")).toBe(true);
   });
 
-  it("keeps the generated secondary catalog routable and disjoint from the primary sidebar", () => {
+  it("no longer points the sidebar at routes that do not exist", () => {
+    // These two were sidebar links into the old library with no matching Route.
+    // They 404'd. Removed in the 2026-09-19 rebuild.
+    expect(routes.has("/portal/tool-explorer")).toBe(false);
+    expect(navSet.has("/portal/tool-explorer")).toBe(false);
+    expect(routes.has("/portal/knowledge-library")).toBe(false);
+    expect(navSet.has("/portal/knowledge-library")).toBe(false);
+  });
+
+  it("keeps the generated secondary catalog routable — and now also in the sidebar", () => {
+    // REVERSED on 2026-09-19. This test used to require every catalog entry to
+    // be ABSENT from the sidebar. That requirement is precisely what left 160 of
+    // 330 routes unreachable: pages were built, routed, tested, and then filed
+    // into an overflow library nobody opened. The owner's instruction was to
+    // surface everything in the menu, so the catalog is now a second way to
+    // browse the same pages rather than the only way to find them.
     expect(SECONDARY_CATALOG.length).toBeGreaterThan(0);
     for (const item of SECONDARY_CATALOG) {
-      expect(routes.has(item.path), item.path).toBe(true);
-      expect(navSet.has(item.path), item.path).toBe(false);
+      expect(routes.has(item.path), `${item.path} is in the catalog but is not a route`).toBe(true);
+      expect(navSet.has(item.path), `${item.path} is in the catalog but missing from the sidebar`).toBe(true);
     }
   });
 

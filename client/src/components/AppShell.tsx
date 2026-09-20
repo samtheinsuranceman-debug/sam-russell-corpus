@@ -116,361 +116,494 @@ const COLOR_BORDER_MAP: Record<ColorCategory, string> = {
 };
 
 const NAV_SECTIONS: NavSection[] = [
-  // ── 1. HOME ──────────────────────────────────────────────────────
   {
     label: "Home",
     icon: LayoutDashboard,
     color: "green",
     defaultOpen: true,
     items: [
-      { path: "/portal", label: "Wealth Reels", icon: Waves, color: "green" },
+      { path: "/portal/command", label: "Command", icon: ChevronRight, color: "green" },
+      { path: "/portal/command-center", label: "Command Center", icon: Activity, color: "slate" },
+      { path: "/portal/daily-briefing", label: "Daily Briefing", icon: ChevronRight, color: "gold" },
       { path: "/portal/dashboard", label: "Dashboard", icon: LayoutDashboard, color: "green" },
-      { path: "/portal/physician", label: "Physician Dashboard", icon: MessageCircle, color: "green" },
-      { path: "/portal/client", label: "Client Dashboard", icon: MessageCircle, color: "green" },
-      { path: "/portal/advisor", label: "Advisor Dashboard", icon: MessageCircle, color: "green" },
-      { path: "/portal/whisperer", label: "AI Whisperer", icon: MessageCircle, color: "green" },
-      { path: "/portal/voice", label: "Voice Studio", icon: MessageCircle, color: "green" },
-      { path: "/portal/chain", label: "Calculator Chain", icon: Link2, color: "green" },
-      { path: "/portal/advisory-summary", label: "Advisory Summary", icon: BarChart3, color: "green" },
-      { path: "/portal/client-health", label: "Client Health", icon: Activity, color: "green" },
-      { path: "/portal/client-portfolio", label: "Client Portfolio", icon: Briefcase, color: "green" },
+      { path: "/portal/explore", label: "Explore", icon: ChevronRight, color: "green" },
+      { path: "/portal/financial-vitals", label: "Financial Vitals", icon: ChevronRight, color: "green" },
+      { path: "/portal/morning-ritual", label: "Morning Ritual", icon: Flame, color: "gold" },
+      { path: "/portal/my-world", label: "My World", icon: Sparkles, color: "gold" },
+      { path: "/portal/nerve-center", label: "Nerve Center", icon: Activity, color: "gold" },
+      { path: "/portal/russell-number", label: "Russell Number", icon: Gauge, color: "gold" },
+      { path: "/portal/site-health", label: "Site Health (SEO & Security)", icon: Activity, color: "purple" },
+      { path: "/portal/system-health", label: "System Health", icon: Activity, color: "purple" },
+      { path: "/portal", label: "Wealth Reels", icon: Waves, color: "green" },
+      { path: "/portal/wealth-reels", label: "Wealth Reels", icon: ChevronRight, color: "green" },
     ],
   },
-  // ── 1b. RENTAL PROPERTIES ────────────────────────────────────────
-  {
-    label: "Rental Properties",
-    icon: Home,
-    color: "green",
-    defaultOpen: true,
-    items: [
-      { path: "/portal/short-term-rentals", label: "Short-Term Rentals", icon: Home, color: "green" },
-      { path: "/portal/rental-enterprise", label: "The Rental Enterprise", icon: Home, color: "green" },
-      { path: "/portal/str-strategy", label: "STR Tax Strategy", icon: Home, color: "green" },
-      { path: "/portal/zip-engine", label: "The Zip Engine", icon: Home, color: "green" },
-      { path: "/portal/house-recycling", label: "House Recycling", icon: Home, color: "green" },
-      { path: "/portal/real-estate-mogul", label: "Real Estate Mogul", icon: Home, color: "green" },
-      { path: "/portal/recin", label: "Real Estate Intelligence", icon: Landmark, color: "green" },
-      { path: "/portal/physician-loan-refi", label: "Physician Loan Refi", icon: Landmark, color: "green" },
-      { path: "/portal/iul-loan-optimizer", label: "IUL Loan Optimizer", icon: Landmark, color: "green" },
-      { path: "/portal/hybrid-income-floor", label: "Hybrid Income Floor", icon: Landmark, color: "green" },
-      { path: "/portal/disability-gap-analyzer", label: "Disability Gap Analyzer", icon: Landmark, color: "green" },
-      { path: "/portal/multi-gen-transfer", label: "Multi-Gen Transfer", icon: Landmark, color: "green" },
-      { path: "/portal/practice-acquisition", label: "Practice Acquisition Diligence", icon: Landmark, color: "green" },
-      { path: "/portal/exchange-chain", label: "Exchange Chain Optimizer", icon: Landmark, color: "green" },
-      { path: "/portal/key-person-valuation", label: "Key Person Valuation", icon: Landmark, color: "green" },
-      { path: "/portal/alt-credit", label: "Alternative Lines of Credit", icon: Landmark, color: "green" },
-      { path: "/portal/infinite-banking", label: "Infinite Banking", icon: Landmark, color: "green" },
-      { path: "/portal/mechanisms", label: "The Five Mechanisms", icon: Landmark, color: "green" },
-      { path: "/portal/sequence-planner", label: "Sequence Planner", icon: Landmark, color: "green" },
-      { path: "/portal/thresholds", label: "Thresholds", icon: Landmark, color: "green" },
-      { path: "/portal/integration-scorecard", label: "Integration Scorecard", icon: Landmark, color: "green" },
-    ],
-  },
-  // ── 2. CLIENTS ───────────────────────────────────────────────────
   {
     label: "Clients",
     icon: Users,
     color: "blue",
-    items: [
-      { path: "/portal/clients", label: "Client Directory", icon: Users, color: "blue" },
-      { path: "/portal/leads", label: "Lead Inbox", icon: Inbox, color: "blue" },
-      { path: "/portal/planning-cases", label: "Planning Cases", icon: ClipboardList, color: "blue" },
-      { path: "/portal/client-onboarding", label: "Onboarding", icon: Sparkles, color: "blue" },
-      { path: "/portal/client-intake", label: "Smart Intake", icon: MessageCircle, color: "blue" },
-      { path: "/portal/ai-meeting-notes", label: "Meeting Notes", icon: Brain, color: "blue" },
-      { path: "/portal/client-snapshot", label: "Snapshot Map", icon: PieChart, color: "blue" },
+    subgroups: [
+      {
+        subLabel: "Directory & Intake",
+        color: "blue",
+        items: [
+          { path: "/portal/business-owner", label: "Business Owner", icon: Briefcase, color: "cyan" },
+          { path: "/portal/client", label: "Client Dashboard", icon: MessageCircle, color: "green" },
+          { path: "/portal/clients", label: "Client Directory", icon: Users, color: "blue" },
+          { path: "/portal/client-files", label: "Client Files", icon: ChevronRight, color: "blue" },
+          { path: "/portal/client-intake-recommender", label: "Client Intake Form", icon: User, color: "cyan" },
+          { path: "/portal/client-onboarding-auto", label: "Client Onboarding Auto", icon: ChevronRight, color: "blue" },
+          { path: "/portal/client-portal-config", label: "Client Portal Config", icon: ChevronRight, color: "blue" },
+          { path: "/portal/client-self-service", label: "Client Self Service", icon: ChevronRight, color: "blue" },
+          { path: "/portal/couples", label: "Couples Mode", icon: Heart, color: "gold" },
+          { path: "/portal/lead-generator", label: "Lead Generator", icon: Zap, color: "rose" },
+          { path: "/portal/leads", label: "Lead Inbox", icon: ChevronRight, color: "blue" },
+          { path: "/portal/client-onboarding", label: "Onboarding", icon: Sparkles, color: "blue" },
+          { path: "/portal/onboarding", label: "Onboarding", icon: ChevronRight, color: "blue" },
+          { path: "/portal/onboarding-v2", label: "Onboarding v2", icon: ChevronRight, color: "blue" },
+          { path: "/portal/pet", label: "Pet Companion", icon: Heart, color: "gold" },
+          { path: "/portal/planning-cases", label: "Planning Cases", icon: ClipboardList, color: "blue" },
+          { path: "/portal/client-intake", label: "Smart Intake", icon: MessageCircle, color: "blue" },
+          { path: "/portal/welcome", label: "Welcome", icon: ChevronRight, color: "blue" },
+        ],
+      },
+      {
+        subLabel: "Health & Scoring",
+        color: "blue",
+        items: [
+          { path: "/portal/comparison", label: "5-Slot Comparison", icon: Layers, color: "purple" },
+          { path: "/portal/client-comparison", label: "Client Comparison", icon: ChevronRight, color: "blue" },
+          { path: "/portal/client-health", label: "Client Health", icon: Activity, color: "green" },
+          { path: "/portal/client-portfolio", label: "Client Portfolio", icon: Briefcase, color: "green" },
+          { path: "/portal/client-scorecard", label: "Client Scorecard", icon: ChevronRight, color: "blue" },
+          { path: "/portal/engagement-score", label: "Engagement Score", icon: ChevronRight, color: "blue" },
+          { path: "/portal/financial-assessment", label: "Financial Assessment", icon: ClipboardList, color: "purple" },
+          { path: "/portal/portfolio-drift", label: "Portfolio Drift", icon: ChevronRight, color: "blue" },
+          { path: "/portal/risk-score", label: "Risk Score", icon: ChevronRight, color: "blue" },
+          { path: "/portal/risk-tolerance", label: "Risk Tolerance", icon: Activity, color: "purple" },
+          { path: "/portal/client-snapshot", label: "Snapshot Map", icon: PieChart, color: "blue" },
+        ],
+      },
+      {
+        subLabel: "Meetings & Notes",
+        color: "blue",
+        items: [
+          { path: "/portal/advisor-chat", label: "Advisor Chat", icon: ChevronRight, color: "blue" },
+          { path: "/portal/connections", label: "Connections", icon: Link2, color: "slate" },
+          { path: "/portal/meeting-agenda", label: "Meeting Agenda", icon: ChevronRight, color: "blue" },
+          { path: "/portal/ai-meeting-notes", label: "Meeting Notes", icon: Brain, color: "blue" },
+          { path: "/portal/meeting-prep", label: "Meeting Prep", icon: ChevronRight, color: "blue" },
+          { path: "/portal/meetings", label: "Meetings", icon: ChevronRight, color: "blue" },
+          { path: "/portal/social", label: "Social Narcotic", icon: Radio, color: "gold" },
+          { path: "/portal/stale-digest", label: "Stale Digest", icon: AlertTriangle, color: "purple" },
+          { path: "/portal/support-desk", label: "Support Desk", icon: ChevronRight, color: "blue" },
+        ],
+      },
+      {
+        subLabel: "Reports & Deliverables",
+        color: "blue",
+        items: [
+          { path: "/portal/ai-slides", label: "AI Slide Generator", icon: Presentation, color: "rose" },
+          { path: "/portal/advanced-reporting", label: "Advanced Reporting", icon: ChevronRight, color: "blue" },
+          { path: "/portal/advisory-summary", label: "Advisory Summary", icon: BarChart3, color: "green" },
+          { path: "/portal/data-query", label: "Ask Your Data", icon: MessageSquare, color: "purple" },
+          { path: "/portal/batch-slides", label: "Batch Slides", icon: ChevronRight, color: "blue" },
+          { path: "/portal/client-report-generator", label: "Client Report Generator", icon: ChevronRight, color: "blue" },
+          { path: "/portal/my-slides", label: "My Slides Library", icon: Layers, color: "rose" },
+          { path: "/portal/predictive-analytics", label: "Predictive Analytics", icon: TrendingUp, color: "purple" },
+          { path: "/portal/presentation-builder", label: "Presentation Builder", icon: FileBarChart, color: "rose" },
+          { path: "/portal/recommendations", label: "Recommendations", icon: ChevronRight, color: "blue" },
+          { path: "/portal/wrapped", label: "Russell Wrapped", icon: Gift, color: "gold" },
+          { path: "/portal/sales-story", label: "Sales Story Builder", icon: Sparkles, color: "rose" },
+          { path: "/portal/story-generator", label: "Story Generator", icon: BookOpen, color: "gold" },
+          { path: "/portal/video-proposals", label: "Video Proposals (AI)", icon: Video, color: "rose" },
+          { path: "/portal/war-story-generator", label: "War Story Gen", icon: Sword, color: "gold" },
+        ],
+      },
     ],
   },
-  // ── 3. NEW CLIENT WELCOME LIST — assessment → AI advisor → genome → the seven journey pages
-  {
-    label: "New Client Welcome List",
-    icon: Compass,
-    color: "purple",
-    defaultOpen: true,
-    items: [
-      { path: "/portal/financial-assessment", label: "Financial Assessment", icon: ClipboardList, color: "purple" },
-      { path: "/portal/ai-advisor", label: "AI Financial Advisor", icon: Sparkles, color: "purple" },
-      { path: "/portal/my-journey", label: "My Secret Journey", icon: Compass, color: "purple" },
-      { path: "/portal/plan-ledger", label: "Plan Ledger", icon: BookOpenCheck, color: "purple" },
-      { path: "/portal/controls", label: "Controls", icon: BookOpenCheck, color: "purple" },
-      { path: "/portal/erosion", label: "Purchasing Power", icon: BookOpenCheck, color: "purple" },
-      { path: "/portal/outside-forces", label: "Outside Forces", icon: Waves, color: "purple" },
-      { path: "/portal/forgiveness", label: "Loan Forgiveness", icon: BookOpenCheck, color: "purple" },
-      { path: "/portal/tax-schedule", label: "Tax Schedule", icon: BookOpenCheck, color: "purple" },
-      { path: "/portal/sphere", label: "The Sphere", icon: BookOpenCheck, color: "purple" },
-      { path: "/portal/wealth-genome", label: "Wealth Genome Analysis", icon: Activity, color: "purple" },
-      { path: "/portal/genome-strategies", label: "What the Genome Says to Do", icon: Activity, color: "purple" },
-      { path: "/portal/household-genome", label: "Genome Pairing Protocol", icon: Activity, color: "purple" },
-      { path: "/portal/the-arrival", label: "1. The Arrival", icon: Sparkles, color: "purple" },
-      { path: "/portal/the-mirror", label: "2. The Mirror", icon: Eye, color: "purple" },
-      { path: "/portal/the-strategy-table", label: "3. Strategy Table", icon: Presentation, color: "purple" },
-      { path: "/portal/the-field", label: "4. The Field", icon: Target, color: "purple" },
-      { path: "/portal/the-map", label: "5. The Map", icon: Compass, color: "purple" },
-      { path: "/portal/the-legacy", label: "6. The Legacy", icon: Landmark, color: "purple" },
-      { path: "/portal/the-brotherhood", label: "7. The Brotherhood", icon: Users, color: "purple" },
-    ],
-  },
-  // ── 3. PLANNING ──────────────────────────────────────────────────
   {
     label: "Planning",
     icon: Target,
-    color: "amber",
+    color: "teal",
     subgroups: [
       {
         subLabel: "Retirement & Income",
-        color: "amber",
-        items: [
-          { path: "/portal/ecological-drivers", label: "Retirement Drivers", icon: Leaf, color: "amber" },
-          { path: "/portal/social-security", label: "Social Security", icon: Shield, color: "amber" },
-          { path: "/portal/income-gap", label: "Income Gap Analyzer", icon: PieChart, color: "amber" },
-          { path: "/portal/withdrawal-sequencing", label: "Withdrawal Sequencing", icon: Layers, color: "amber" },
-          { path: "/portal/lifetime-income", label: "Lifetime Income", icon: Shield, color: "amber" },
-          { path: "/portal/income-timeline", label: "Income Timeline", icon: Clock, color: "amber" },
-          { path: "/portal/advisor-income-calculator", label: "Income Calculator", icon: Calculator, color: "amber" },
-        ],
-      },
-      {
-        subLabel: "Tax & Estate",
-        color: "orange",
-        items: [
-          { path: "/portal/tax-waterfall", label: "Tax Waterfall", icon: TrendingDown, color: "orange" },
-          { path: "/portal/tax-advantaged-growth", label: "Tax-Advantaged Growth", icon: Scale, color: "orange" },
-          { path: "/portal/hot-income", label: "Hot Income (Oil & Gas)", icon: Flame, color: "orange" },
-          { path: "/portal/estate-tax", label: "Estate Tax", icon: Landmark, color: "orange" },
-          { path: "/portal/estate-flow", label: "Estate Flow Chart", icon: Landmark, color: "orange" },
-          { path: "/portal/inheritance", label: "The Inheritance Engine", icon: Landmark, color: "orange" },
-          { path: "/portal/beneficiary-optimization", label: "Beneficiary Optimizer", icon: Users, color: "orange" },
-        ],
-      },
-      {
-        subLabel: "Strategy & Scenarios",
-        color: "purple",
-        items: [
-          { path: "/portal/strategy", label: "Strategy Lab", icon: Brain, color: "purple" },
-          { path: "/portal/roth-conversion", label: "Roth Strategies (6)", icon: Landmark, color: "purple" },
-          { path: "/portal/strategy-compare", label: "Strategy Compare", icon: BarChart3, color: "purple" },
-          { path: "/portal/scenarios", label: "Scenario Builder", icon: SlidersHorizontal, color: "purple" },
-          { path: "/portal/scenario-side-by-side", label: "Side-by-Side Compare", icon: Scale, color: "purple" },
-          { path: "/portal/comparison", label: "5-Slot Comparison", icon: Layers, color: "purple" },
-          { path: "/portal/iul-vs-roth", label: "IUL vs Roth", icon: Scale, color: "purple" },
-          { path: "/portal/risk-tolerance", label: "Risk Tolerance", icon: Activity, color: "purple" },
-          { path: "/portal/market-stress-test", label: "Market Stress Test", icon: Activity, color: "purple" },
-        ],
-      },
-    ],
-  },
-  // ── 4. PRODUCTS ──────────────────────────────────────────────────
-  {
-    label: "Products",
-    icon: Shield,
-    color: "emerald",
-    subgroups: [
-      {
-        subLabel: "IUL & Index",
-        color: "cyan",
-        items: [
-          { path: "/portal/ibbotson-charts", label: "Ibbotson Charts", icon: BarChart3, color: "cyan" },
-          { path: "/portal/iul-historical", label: "IUL Historical", icon: History, color: "cyan" },
-          { path: "/portal/iul-engine", label: "The IUL Engine", icon: History, color: "cyan" },
-          { path: "/portal/long-term-care", label: "Long-Term Care", icon: History, color: "cyan" },
-          { path: "/portal/index-strategies", label: "Index Strategies", icon: Layers, color: "cyan" },
-          { path: "/portal/policy-loans", label: "Policy Loans", icon: Wallet, color: "cyan" },
-          { path: "/portal/policy-cost-lab", label: "Policy Cost Lab", icon: Wallet, color: "cyan" },
-          { path: "/portal/premium-financing", label: "Premium Financing", icon: DollarSign, color: "cyan" },
-          { path: "/portal/index-backtester", label: "Index Backtester", icon: BarChart3, color: "cyan" },
-          { path: "/portal/time-machine-calculator", label: "Time Machine", icon: Clock, color: "cyan" },
-          { path: "/portal/time-machine-ag49", label: "AG 49 Compounding", icon: TrendingUp, color: "cyan" },
-          { path: "/portal/time-machine-method", label: "Dual Illustration", icon: Zap, color: "cyan" },
-        ],
-      },
-      {
-        subLabel: "Annuities",
-        color: "emerald",
-        items: [
-          { path: "/portal/growth-annuities", label: "Growth Annuities", icon: TrendingUp, color: "emerald" },
-          { path: "/portal/myga-fixed-rate", label: "MYGA Waterfall", icon: Lock, color: "emerald" },
-          { path: "/portal/existing-annuities", label: "Existing Annuities", icon: PiggyBank, color: "emerald" },
-          { path: "/portal/income-for-life", label: "Income for Life", icon: PiggyBank, color: "emerald" },
-          { path: "/portal/income-annuity-top10", label: "Top 10 Income", icon: Award, color: "emerald" },
-          { path: "/portal/fia-top10", label: "Top 10 FIA", icon: TrendingUp, color: "emerald" },
-          { path: "/portal/annuity-accumulation-db", label: "Accumulation DB", icon: Database, color: "emerald" },
-          { path: "/portal/carrier-comparison", label: "Carrier Compare", icon: Scale, color: "emerald" },
-          { path: "/portal/illustration-compare", label: "Illustration Compare", icon: BarChart3, color: "emerald" },
-          { path: "/portal/ai-policy-review", label: "Policy Gap Analysis", icon: Search, color: "emerald" },
-        ],
-      },
-      {
-        subLabel: "Real Estate",
         color: "teal",
         items: [
-          { path: "/portal/mortgage-killer", label: "Mortgage Killer", icon: Home, color: "teal" },
-          { path: "/portal/household-wealth", label: "Household Wealth", icon: HomeIcon, color: "teal" },
-          { path: "/portal/reverse-heloc", label: "Reverse HELOC", icon: Landmark, color: "teal" },
+          { path: "/portal/disability-gap-analyzer", label: "Disability Gap Analyzer", icon: Landmark, color: "green" },
+          { path: "/portal/goals-planning", label: "Goals Planning", icon: ChevronRight, color: "teal" },
+          { path: "/portal/hot-income", label: "Hot Income (Oil & Gas)", icon: Flame, color: "orange" },
+          { path: "/portal/hybrid-income-floor", label: "Hybrid Income Floor", icon: Landmark, color: "green" },
+          { path: "/portal/income-gap", label: "Income Gap Analyzer", icon: PieChart, color: "amber" },
+          { path: "/portal/income-timeline", label: "Income Timeline", icon: Clock, color: "amber" },
+          { path: "/portal/income-for-life", label: "Income for Life", icon: PiggyBank, color: "emerald" },
+          { path: "/portal/lifetime-income", label: "Lifetime Income", icon: Shield, color: "amber" },
+          { path: "/portal/forgiveness", label: "Loan Forgiveness", icon: BookOpenCheck, color: "purple" },
+          { path: "/portal/long-term-care", label: "Long-Term Care", icon: History, color: "cyan" },
+          { path: "/portal/retirement-guardrails", label: "Retirement Guardrails", icon: ChevronRight, color: "teal" },
+          { path: "/portal/retirement-opportunities", label: "Retirement Opportunities", icon: ChevronRight, color: "teal" },
+          { path: "/portal/retirement-projection", label: "Retirement Projection", icon: ChevronRight, color: "teal" },
+          { path: "/portal/sequence-planner", label: "Sequence Planner", icon: Landmark, color: "green" },
+          { path: "/portal/social-security", label: "Social Security", icon: Shield, color: "amber" },
+          { path: "/portal/endgame", label: "The Endgame", icon: Gem, color: "gold" },
+          { path: "/portal/withdrawal-sequencing", label: "Withdrawal Sequencing", icon: Layers, color: "amber" },
         ],
       },
       {
-        subLabel: "Specialty",
-        color: "cyan",
+        subLabel: "Tax",
+        color: "teal",
         items: [
-          { path: "/portal/business-owner", label: "Business Owner", icon: Briefcase, color: "cyan" },
-        ],
-      },
-    ],
-  },
-  // ── 5. AI & TOOLS ────────────────────────────────────────────────
-  {
-    label: "AI & Tools",
-    icon: Zap,
-    color: "purple",
-    subgroups: [
-      {
-        subLabel: "AI Assistants",
-        color: "purple",
-        items: [
-          { path: "/portal/ai-assist", label: "Strategy Assist", icon: Zap, color: "purple" },
-          { path: "/portal/ai-recommender", label: "Strategy Recommender", icon: Brain, color: "purple" },
-          { path: "/portal/data-query", label: "Ask Your Data", icon: MessageSquare, color: "purple" },
-          { path: "/portal/predictive-analytics", label: "Predictive Analytics", icon: TrendingUp, color: "purple" },
-          { path: "/portal/stale-digest", label: "Stale Digest", icon: AlertTriangle, color: "purple" },
+          { path: "/portal/secret-secrets", label: "100 Secret Strategies", icon: Lock, color: "purple" },
+          { path: "/portal/tax-combos", label: "100 Tax-Free Combos", icon: Gem, color: "emerald" },
+          { path: "/portal/charitable-giving", label: "Charitable Giving", icon: ChevronRight, color: "teal" },
+          { path: "/portal/iul-vs-roth", label: "IUL vs Roth", icon: Scale, color: "purple" },
+          { path: "/portal/medicare-irmaa", label: "Medicare IRMAA", icon: ChevronRight, color: "teal" },
+          { path: "/portal/qbi-optimizer", label: "QBI Optimizer", icon: ChevronRight, color: "teal" },
+          { path: "/portal/roth-conversion", label: "Roth Strategies (6)", icon: Landmark, color: "purple" },
+          { path: "/portal/tax-brackets", label: "Tax Brackets", icon: ChevronRight, color: "teal" },
+          { path: "/portal/tax-loss-harvesting", label: "Tax Loss Harvesting", icon: ChevronRight, color: "teal" },
+          { path: "/portal/tax-opportunities", label: "Tax Opportunities", icon: ChevronRight, color: "teal" },
+          { path: "/portal/tax-return-upload", label: "Tax Return Upload", icon: ChevronRight, color: "teal" },
+          { path: "/portal/tax-schedule", label: "Tax Schedule", icon: BookOpenCheck, color: "purple" },
+          { path: "/portal/tax-waterfall", label: "Tax Waterfall", icon: TrendingDown, color: "orange" },
+          { path: "/portal/tax-advantaged-growth", label: "Tax-Advantaged Growth", icon: Scale, color: "orange" },
         ],
       },
       {
-        subLabel: "Sales & Content",
-        color: "rose",
+        subLabel: "Estate & Legacy",
+        color: "teal",
         items: [
-          { path: "/portal/sales-story", label: "Sales Story Builder", icon: Sparkles, color: "rose" },
-          { path: "/portal/lead-generator", label: "Lead Generator", icon: Zap, color: "rose" },
-          { path: "/portal/competitive", label: "Competitive Analysis", icon: Swords, color: "rose" },
-          { path: "/portal/presentation-builder", label: "Presentation Builder", icon: FileBarChart, color: "rose" },
-          { path: "/portal/ai-slides", label: "AI Slide Generator", icon: Presentation, color: "rose" },
-          { path: "/portal/my-slides", label: "My Slides Library", icon: Layers, color: "rose" },
-          { path: "/portal/document-templates", label: "Document Templates", icon: ScrollText, color: "rose" },
-          { path: "/portal/video-proposals", label: "Video Proposals (AI)", icon: Video, color: "rose" },
-        ],
-      },
-    ],
-  },
-  // ── 6. COMPLIANCE ────────────────────────────────────────────────
-  {
-    label: "Compliance",
-    icon: ShieldCheck,
-    color: "red",
-    items: [
-      { path: "/portal/compliance", label: "Compliance Center", icon: FileCheck, color: "red" },
-      { path: "/portal/compliance-monitoring", label: "Compliance Monitor", icon: Gauge, color: "red" },
-      { path: "/portal/compliance-alerts", label: "Alerts", icon: ShieldAlert, color: "red" },
-      { path: "/portal/compliance-audit-trail", label: "Audit Trail", icon: ScrollText, color: "red" },
-    ],
-  },
-  // ── 7. THE EXPERIENCE ─────────────────────────────────────────────
-  {
-    label: "The Experience",
-    icon: Sparkles,
-    color: "gold",
-    defaultOpen: true,
-    subgroups: [
-      {
-        subLabel: "Command",
-        color: "gold",
-        items: [
-          { path: "/portal/daily-briefing", label: "Daily Briefing", icon: Sun, color: "gold" },
-          { path: "/portal/nerve-center", label: "Nerve Center", icon: Activity, color: "gold" },
-          { path: "/portal/toilet", label: "Quick Glance", icon: Zap, color: "gold" },
-          { path: "/portal/russell-number", label: "Russell Number", icon: Gauge, color: "gold" },
-          { path: "/portal/daily-discovery", label: "Daily Discovery", icon: Compass, color: "gold" },
-          { path: "/portal/my-world", label: "My World", icon: Sparkles, color: "gold" },
-          { path: "/portal/avatar-twins", label: "Avatar Twins", icon: Image, color: "gold" },
-          { path: "/portal/morning-ritual", label: "Morning Ritual", icon: Flame, color: "gold" },
-          { path: "/portal/infinite-scroll", label: "Wealth Feed", icon: Waves, color: "gold" },
+          { path: "/portal/the-legacy", label: "6. The Legacy", icon: Landmark, color: "purple" },
+          { path: "/portal/beneficiary-optimization", label: "Beneficiary Optimizer", icon: Users, color: "orange" },
+          { path: "/portal/divorce-calculator", label: "Divorce Devastation Engine", icon: Scissors, color: "red" },
+          { path: "/portal/divorce-ilit", label: "Divorce ILIT", icon: ChevronRight, color: "teal" },
+          { path: "/portal/divorce-recovery", label: "Divorce Recovery", icon: ChevronRight, color: "teal" },
+          { path: "/portal/estate-document-gen", label: "Estate Document Gen", icon: ChevronRight, color: "teal" },
+          { path: "/portal/estate-flow", label: "Estate Flow Chart", icon: Landmark, color: "orange" },
+          { path: "/portal/estate-planning", label: "Estate Planning", icon: ChevronRight, color: "teal" },
+          { path: "/portal/estate-tax", label: "Estate Tax", icon: Landmark, color: "orange" },
+          { path: "/portal/key-person-valuation", label: "Key Person Valuation", icon: Landmark, color: "green" },
+          { path: "/portal/multi-gen-wealth", label: "Multi Gen Wealth", icon: ChevronRight, color: "teal" },
+          { path: "/portal/multi-gen-transfer", label: "Multi-Gen Transfer", icon: Landmark, color: "green" },
+          { path: "/portal/practice-acquisition", label: "Practice Acquisition Diligence", icon: Landmark, color: "green" },
+          { path: "/portal/succession-planning", label: "Succession Planning", icon: ChevronRight, color: "teal" },
+          { path: "/portal/inheritance", label: "The Inheritance Engine", icon: Landmark, color: "orange" },
+          { path: "/portal/trusts", label: "Trust Structures", icon: Landmark, color: "orange" },
+          { path: "/portal/will-writer", label: "Will Writer", icon: ScrollText, color: "gold" },
         ],
       },
       {
-        subLabel: "Compete",
-        color: "gold",
+        subLabel: "Scenarios & Modelling",
+        color: "teal",
         items: [
-          { path: "/portal/arena", label: "The Arena", icon: Trophy, color: "gold" },
-          { path: "/portal/war-room", label: "War Room", icon: Target, color: "gold" },
-          { path: "/portal/war-story-generator", label: "War Story Gen", icon: Sword, color: "gold" },
+          { path: "/portal/time-machine-ag49", label: "AG 49 Compounding", icon: TrendingUp, color: "cyan" },
+          { path: "/portal/combo-recommender", label: "AI Combo Recommender", icon: Brain, color: "purple" },
+          { path: "/portal/chain", label: "Calculator Chain", icon: Link2, color: "green" },
+          { path: "/portal/controls", label: "Controls", icon: BookOpenCheck, color: "purple" },
+          { path: "/portal/time-machine-method", label: "Dual Illustration", icon: Zap, color: "cyan" },
+          { path: "/portal/how-a-figure-is-made", label: "How A Figure Is Made", icon: ChevronRight, color: "teal" },
+          { path: "/portal/integration-scorecard", label: "Integration Scorecard", icon: Landmark, color: "green" },
+          { path: "/portal/interop-engine", label: "Interop Engine", icon: ChevronRight, color: "teal" },
+          { path: "/portal/market-stress-test", label: "Market Stress Test", icon: Activity, color: "purple" },
+          { path: "/portal/match-and-deploy", label: "Match And Deploy", icon: ChevronRight, color: "teal" },
+          { path: "/portal/outside-forces", label: "Outside Forces", icon: Waves, color: "purple" },
+          { path: "/portal/plan-ledger", label: "Plan Ledger", icon: BookOpenCheck, color: "purple" },
+          { path: "/portal/erosion", label: "Purchasing Power", icon: BookOpenCheck, color: "purple" },
+          { path: "/portal/recin", label: "Real Estate Intelligence", icon: Landmark, color: "green" },
+          { path: "/portal/rebalance", label: "Rebalance", icon: ChevronRight, color: "teal" },
+          { path: "/portal/saved-scenarios", label: "Saved Scenarios", icon: ChevronRight, color: "teal" },
+          { path: "/portal/scenarios", label: "Scenario Builder", icon: SlidersHorizontal, color: "purple" },
+          { path: "/portal/scenario-play", label: "Scenario Play", icon: ChevronRight, color: "teal" },
+          { path: "/portal/scenario-side-by-side", label: "Side-by-Side Compare", icon: Scale, color: "purple" },
+          { path: "/portal/smart-rebalancing", label: "Smart Rebalancing", icon: ChevronRight, color: "teal" },
+          { path: "/portal/strategy-combos", label: "Strategy Combos", icon: ChevronRight, color: "teal" },
+          { path: "/portal/strategy-compare", label: "Strategy Compare", icon: BarChart3, color: "purple" },
+          { path: "/portal/strategy", label: "Strategy Lab", icon: Brain, color: "purple" },
+          { path: "/portal/mechanisms", label: "The Five Mechanisms", icon: Landmark, color: "green" },
+          { path: "/portal/thresholds", label: "Thresholds", icon: Landmark, color: "green" },
           { path: "/portal/time-machine", label: "Time Machine", icon: Clock, color: "gold" },
+          { path: "/portal/time-machine-calculator", label: "Time Machine", icon: Clock, color: "cyan" },
           { path: "/portal/time-lapse", label: "Time-Lapse", icon: BarChart, color: "gold" },
         ],
       },
       {
-        subLabel: "Earn",
-        color: "gold",
+        subLabel: "Wealth Genome",
+        color: "teal",
         items: [
-          { path: "/portal/rewards", label: "Rewards Vault", icon: Gift, color: "gold" },
+          { path: "/portal/the-arrival", label: "1. The Arrival", icon: Sparkles, color: "purple" },
+          { path: "/portal/the-mirror", label: "2. The Mirror", icon: Eye, color: "purple" },
+          { path: "/portal/the-strategy-table", label: "3. Strategy Table", icon: Presentation, color: "purple" },
+          { path: "/portal/the-field", label: "4. The Field", icon: Target, color: "purple" },
+          { path: "/portal/the-map", label: "5. The Map", icon: Compass, color: "purple" },
+          { path: "/portal/avatar-twins", label: "Avatar Twins", icon: Image, color: "gold" },
+          { path: "/portal/household-genome", label: "Genome Pairing Protocol", icon: Activity, color: "purple" },
+          { path: "/portal/household-wealth", label: "Household Wealth", icon: HomeIcon, color: "teal" },
+          { path: "/portal/my-journey", label: "My Secret Journey", icon: Compass, color: "purple" },
+          { path: "/portal/sphere", label: "The Sphere", icon: BookOpenCheck, color: "purple" },
+          { path: "/portal/wealth-genome", label: "Wealth Genome Analysis", icon: Activity, color: "purple" },
+          { path: "/portal/genome-strategies", label: "What the Genome Says to Do", icon: Activity, color: "purple" },
+        ],
+      },
+    ],
+  },
+  {
+    label: "Products",
+    icon: Briefcase,
+    color: "amber",
+    subgroups: [
+      {
+        subLabel: "Indexed Universal Life",
+        color: "amber",
+        items: [
+          { path: "/portal/batch-illustration", label: "Batch Illustration", icon: ChevronRight, color: "amber" },
+          { path: "/portal/bulk-generation", label: "Bulk Generation", icon: Lock, color: "slate" },
+          { path: "/portal/iul-historical", label: "IUL Historical", icon: History, color: "cyan" },
+          { path: "/portal/iul-loan-optimizer", label: "IUL Loan Optimizer", icon: Landmark, color: "green" },
+          { path: "/portal/iul-projection", label: "IUL Projection", icon: ChevronRight, color: "amber" },
+          { path: "/portal/ibbotson-charts", label: "Ibbotson Charts", icon: BarChart3, color: "cyan" },
+          { path: "/portal/illustration-compare", label: "Illustration Compare", icon: BarChart3, color: "emerald" },
+          { path: "/portal/index-backtester", label: "Index Backtester", icon: BarChart3, color: "cyan" },
+          { path: "/portal/index-backtester-pro", label: "Index Backtester Pro", icon: ChevronRight, color: "amber" },
+          { path: "/portal/index-strategies", label: "Index Strategies", icon: Layers, color: "cyan" },
+          { path: "/portal/infinite-banking", label: "Infinite Banking", icon: Landmark, color: "green" },
+          { path: "/portal/patent-showcase", label: "Patent Portfolio", icon: Shield, color: "slate" },
+          { path: "/portal/policy-cost-lab", label: "Policy Cost Lab", icon: Wallet, color: "cyan" },
+          { path: "/portal/ai-policy-review", label: "Policy Gap Analysis", icon: Search, color: "emerald" },
+          { path: "/portal/policy-loans", label: "Policy Loans", icon: Wallet, color: "cyan" },
+          { path: "/portal/policy-review", label: "Policy Review", icon: ChevronRight, color: "amber" },
+          { path: "/portal/policy-review-checklist", label: "Policy Review Checklist", icon: ChevronRight, color: "amber" },
+          { path: "/portal/premium-financing", label: "Premium Financing", icon: DollarSign, color: "cyan" },
+          { path: "/portal/quick-quote", label: "Quick Quote", icon: ChevronRight, color: "amber" },
+          { path: "/portal/quotes", label: "Quotes", icon: ChevronRight, color: "amber" },
+          { path: "/portal/iul-engine", label: "The IUL Engine", icon: History, color: "cyan" },
+        ],
+      },
+      {
+        subLabel: "Annuities",
+        color: "amber",
+        items: [
+          { path: "/portal/annuity-accumulation-db", label: "Accumulation DB", icon: Database, color: "emerald" },
+          { path: "/portal/annuity-explorer", label: "Annuity Explorer", icon: ChevronRight, color: "amber" },
+          { path: "/portal/annuity-memory", label: "Annuity Memory", icon: ChevronRight, color: "amber" },
+          { path: "/portal/athene-guaranteed-income", label: "Athene Guaranteed Income", icon: ChevronRight, color: "amber" },
+          { path: "/portal/athene-pe-plus15", label: "Athene PE Plus15", icon: ChevronRight, color: "amber" },
+          { path: "/portal/axonic-sp500", label: "Axonic S&P 500", icon: ChevronRight, color: "amber" },
+          { path: "/portal/existing-annuities", label: "Existing Annuities", icon: PiggyBank, color: "emerald" },
+          { path: "/portal/fia-collateral", label: "FIA Collateral", icon: ChevronRight, color: "amber" },
+          { path: "/portal/growth-annuities", label: "Growth Annuities", icon: TrendingUp, color: "emerald" },
+          { path: "/portal/income-annuity", label: "Income Annuity", icon: ChevronRight, color: "amber" },
+          { path: "/portal/myga-fixed-rate", label: "MYGA Waterfall", icon: Lock, color: "emerald" },
+          { path: "/portal/myga-waterfall", label: "MYGA Waterfall", icon: ChevronRight, color: "amber" },
           { path: "/portal/revenue-guarantee", label: "Revenue Guarantee", icon: Shield, color: "gold" },
-          { path: "/portal/pet", label: "Pet Companion", icon: Heart, color: "gold" },
+          { path: "/portal/fia-top10", label: "Top 10 FIA", icon: TrendingUp, color: "emerald" },
+          { path: "/portal/income-annuity-top10", label: "Top 10 Income", icon: Award, color: "emerald" },
         ],
       },
       {
-        subLabel: "Explore",
-        color: "gold",
+        subLabel: "Carriers",
+        color: "amber",
         items: [
+          { path: "/portal/carrier-comparison", label: "Carrier Compare", icon: Scale, color: "emerald" },
+          { path: "/portal/carrier-rates", label: "Carrier Rates", icon: ChevronRight, color: "amber" },
+          { path: "/portal/carrier-ratings", label: "Carrier Ratings", icon: ChevronRight, color: "amber" },
+          { path: "/portal/carrier-settings", label: "Carrier Settings", icon: ChevronRight, color: "amber" },
+          { path: "/portal/compete", label: "Compete", icon: ChevronRight, color: "amber" },
+          { path: "/portal/competitive", label: "Competitive Analysis", icon: Swords, color: "rose" },
+        ],
+      },
+      {
+        subLabel: "Alternatives",
+        color: "amber",
+        items: [
+          { path: "/portal/alt-credit", label: "Alternative Lines of Credit", icon: Landmark, color: "green" },
           { path: "/portal/black-mirror", label: "Black Mirror", icon: Ghost, color: "gold" },
-          { path: "/portal/social", label: "Social Narcotic", icon: Radio, color: "gold" },
+          { path: "/portal/crypto-corner", label: "Crypto Corner", icon: ChevronRight, color: "amber" },
+          { path: "/portal/crypto-cycle", label: "Crypto Cycle", icon: ChevronRight, color: "amber" },
+          { path: "/portal/deal-room", label: "Deal Room", icon: ChevronRight, color: "amber" },
+          { path: "/portal/oil-gas", label: "Oil Gas", icon: ChevronRight, color: "amber" },
+        ],
+      },
+    ],
+  },
+  {
+    label: "Real Estate",
+    icon: Building2,
+    color: "orange",
+    items: [
+      { path: "/portal/exchange-chain", label: "Exchange Chain Optimizer", icon: Landmark, color: "green" },
+      { path: "/portal/house-recycling", label: "House Recycling", icon: Home, color: "green" },
+      { path: "/portal/liquidity-routes", label: "Liquidity Routes", icon: ChevronRight, color: "orange" },
+      { path: "/portal/mortgage-killer", label: "Mortgage Killer", icon: Home, color: "teal" },
+      { path: "/portal/mortgage-killer-v3", label: "Mortgage Killer V3", icon: Home, color: "teal" },
+      { path: "/portal/mortgage-killer-v2", label: "Mortgage Killer v2", icon: ChevronRight, color: "orange" },
+      { path: "/portal/mortgage-ledger", label: "Mortgage Ledger", icon: ChevronRight, color: "orange" },
+      { path: "/portal/physician-loan-refi", label: "Physician Loan Refi", icon: Landmark, color: "green" },
+      { path: "/portal/real-estate", label: "Real Estate", icon: ChevronRight, color: "orange" },
+      { path: "/portal/real-estate-mogul", label: "Real Estate Mogul", icon: Home, color: "green" },
+      { path: "/portal/reverse-heloc", label: "Reverse HELOC", icon: Landmark, color: "teal" },
+      { path: "/portal/str-tax-eliminator", label: "STR Tax Eliminator", icon: ChevronRight, color: "orange" },
+      { path: "/portal/str-strategy", label: "STR Tax Strategy", icon: Home, color: "green" },
+      { path: "/portal/short-term-rentals", label: "Short-Term Rentals", icon: Home, color: "green" },
+      { path: "/portal/rental-enterprise", label: "The Rental Enterprise", icon: Home, color: "green" },
+      { path: "/portal/zip-engine", label: "The Zip Engine", icon: Home, color: "green" },
+    ],
+  },
+  {
+    label: "Sales & Growth",
+    icon: TrendingUp,
+    color: "emerald",
+    subgroups: [
+      {
+        subLabel: "Pipeline",
+        color: "emerald",
+        items: [
+          { path: "/portal/auto-closer", label: "Auto Closer", icon: ChevronRight, color: "emerald" },
+          { path: "/portal/earn", label: "Earn", icon: ChevronRight, color: "emerald" },
+          { path: "/portal/leaderboard", label: "Leaderboard", icon: Trophy, color: "slate" },
+          { path: "/portal/pipeline", label: "Pipeline", icon: ChevronRight, color: "emerald" },
+          { path: "/portal/rewards", label: "Rewards Vault", icon: Gift, color: "gold" },
+          { path: "/portal/arena", label: "The Arena", icon: Trophy, color: "gold" },
+          { path: "/portal/war-room", label: "War Room", icon: Target, color: "gold" },
         ],
       },
       {
-        subLabel: "Transcend",
-        color: "gold",
+        subLabel: "Referrals & Affiliates",
+        color: "emerald",
         items: [
-          { path: "/portal/endgame", label: "The Endgame", icon: Gem, color: "gold" },
-          { path: "/portal/will-writer", label: "Will Writer", icon: ScrollText, color: "gold" },
-          { path: "/portal/couples", label: "Couples Mode", icon: Heart, color: "gold" },
-          { path: "/portal/wrapped", label: "Russell Wrapped", icon: Gift, color: "gold" },
-          { path: "/portal/story-generator", label: "Story Generator", icon: BookOpen, color: "gold" },
-          { path: "/portal/co-pilot", label: "Live Co-Pilot", icon: Brain, color: "gold" },
+          { path: "/portal/affiliate-links", label: "Affiliate Links", icon: ChevronRight, color: "emerald" },
+          { path: "/portal/referral-engine", label: "Referral Engine", icon: ChevronRight, color: "emerald" },
+          { path: "/portal/referral-tracker", label: "Referral Tracker", icon: ChevronRight, color: "emerald" },
+          { path: "/portal/referral-tracking", label: "Referral Tracking", icon: ChevronRight, color: "emerald" },
+        ],
+      },
+      {
+        subLabel: "Commissions",
+        color: "emerald",
+        items: [
+          { path: "/portal/commission-calculator", label: "Commission Calculator", icon: ChevronRight, color: "emerald" },
+          { path: "/portal/commission-tracker", label: "Commission Tracker", icon: ChevronRight, color: "emerald" },
+          { path: "/portal/advisor-income-calculator", label: "Income Calculator", icon: Calculator, color: "amber" },
+        ],
+      },
+      {
+        subLabel: "Marketing",
+        color: "emerald",
+        items: [
+          { path: "/portal/branding", label: "Branding", icon: ChevronRight, color: "emerald" },
+          { path: "/portal/daily-discovery", label: "Daily Discovery", icon: Compass, color: "gold" },
+          { path: "/portal/email-campaigns", label: "Email Campaigns", icon: ChevronRight, color: "emerald" },
+          { path: "/portal/toilet", label: "Quick Glance", icon: Zap, color: "gold" },
+          { path: "/portal/seminar-generator", label: "Seminar Generator", icon: ChevronRight, color: "emerald" },
+          { path: "/portal/video-library", label: "Video Library", icon: Video, color: "slate" },
+          { path: "/portal/infinite-scroll", label: "Wealth Feed", icon: Waves, color: "gold" },
+          { path: "/portal/website-usage", label: "Website Usage", icon: ChevronRight, color: "emerald" },
         ],
       },
     ],
   },
-  // ── 8. TAX SECRETS ────────────────────────────────────────────────
   {
-    label: "Tax Secrets",
-    icon: Crown,
-    color: "purple",
-    defaultOpen: true,
+    label: "Compliance",
+    icon: Shield,
+    color: "red",
     items: [
-      { path: "/portal/secret-secrets", label: "100 Secret Strategies", icon: Lock, color: "purple" },
-      { path: "/portal/tax-combos", label: "100 Tax-Free Combos", icon: Gem, color: "emerald" },
-      { path: "/portal/combo-recommender", label: "AI Combo Recommender", icon: Brain, color: "purple" },
-      { path: "/portal/client-intake-recommender", label: "Client Intake Form", icon: User, color: "cyan" },
-      { path: "/portal/divorce-calculator", label: "Divorce Devastation Engine", icon: Scissors, color: "red" },
-      { path: "/portal/trusts", label: "Trust Structures", icon: Landmark, color: "orange" },
-      { path: "/portal/mortgage-killer-v3", label: "Mortgage Killer V3", icon: Home, color: "teal" },
-      { path: "/portal/physicians-edge", label: "Physician's Edge", icon: HeartPulse, color: "emerald" },
+      { path: "/portal/compliance-alerts", label: "Alerts", icon: ShieldAlert, color: "red" },
+      { path: "/portal/audit-timeline", label: "Audit Timeline", icon: ChevronRight, color: "red" },
+      { path: "/portal/compliance-audit-trail", label: "Audit Trail", icon: ScrollText, color: "red" },
+      { path: "/portal/compliance-audit", label: "Compliance Audit", icon: ChevronRight, color: "red" },
+      { path: "/portal/compliance", label: "Compliance Center", icon: FileCheck, color: "red" },
+      { path: "/portal/compliance-monitoring", label: "Compliance Monitor", icon: Gauge, color: "red" },
+      { path: "/portal/compliance-reports", label: "Compliance Reports", icon: ChevronRight, color: "red" },
+      { path: "/portal/compliance-vault", label: "Compliance Vault", icon: ChevronRight, color: "red" },
+      { path: "/portal/document-templates", label: "Document Templates", icon: ScrollText, color: "rose" },
+      { path: "/portal/document-vault", label: "Document Vault", icon: ChevronRight, color: "red" },
+      { path: "/portal/fee-transparency", label: "Fee Transparency", icon: ChevronRight, color: "red" },
+      { path: "/portal/legal-payment-folder", label: "Legal Payment Folder", icon: ChevronRight, color: "red" },
+      { path: "/portal/monitoring-agreement", label: "Monitoring Agreement", icon: ChevronRight, color: "red" },
     ],
   },
-  // ── SECONDARY INFORMATION ────────────────────────────────────────
   {
-    label: "Secondary Information",
-    icon: Archive,
-    color: "slate",
+    label: "Learning",
+    icon: GraduationCap,
+    color: "indigo",
     items: [
+      { path: "/portal/the-brotherhood", label: "7. The Brotherhood", icon: Users, color: "purple" },
+      { path: "/portal/advisor-training", label: "Advisor Training", icon: ChevronRight, color: "indigo" },
+      { path: "/portal/agency-tutorial", label: "Agency Tutorial", icon: ChevronRight, color: "indigo" },
+      { path: "/portal/career-path", label: "Career Path", icon: ChevronRight, color: "indigo" },
+      { path: "/portal/certifications", label: "Certifications", icon: ChevronRight, color: "indigo" },
+      { path: "/portal/education", label: "Education", icon: ChevronRight, color: "indigo" },
+      { path: "/portal/hidden-material", label: "Hidden Material", icon: ChevronRight, color: "indigo" },
+      { path: "/portal/knowledge", label: "Knowledge", icon: ChevronRight, color: "indigo" },
+      { path: "/portal/agent-tutorial", label: "Platform Training", icon: GraduationCap, color: "slate" },
+      { path: "/portal/ecological-drivers", label: "Retirement Drivers", icon: Leaf, color: "amber" },
       { path: "/portal/secondary-information", label: "Secondary Library", icon: Archive, color: "slate" },
-      { path: "/portal/tool-explorer", label: "Tool Explorer", icon: Compass, color: "slate" },
-      { path: "/portal/knowledge-library", label: "Knowledge Library", icon: BookOpen, color: "slate" },
-      { path: "/portal/video-library", label: "Video Library", icon: Video, color: "slate" },
-      { path: "/portal/patent-showcase", label: "Patent Portfolio", icon: Shield, color: "slate" },
+      { path: "/portal/training", label: "Training", icon: ChevronRight, color: "indigo" },
     ],
   },
-  // ── 9. SETTINGS ──────────────────────────────────────────────────
   {
-    label: "Settings",
+    label: "AI & Tools",
+    icon: Zap,
+    color: "cyan",
+    items: [
+      { path: "/portal/ai", label: "AI", icon: ChevronRight, color: "cyan" },
+      { path: "/portal/ai-brain-hub", label: "AI Brain Hub", icon: ChevronRight, color: "cyan" },
+      { path: "/portal/ai-advisor", label: "AI Financial Advisor", icon: Sparkles, color: "purple" },
+      { path: "/portal/whisperer", label: "AI Whisperer", icon: MessageCircle, color: "green" },
+      { path: "/portal/advisor", label: "Advisor Dashboard", icon: MessageCircle, color: "green" },
+      { path: "/portal/collaborative-planning", label: "Collaborative Planning", icon: ChevronRight, color: "cyan" },
+      { path: "/portal/co-pilot", label: "Live Co-Pilot", icon: Brain, color: "gold" },
+      { path: "/portal/physician", label: "Physician Dashboard", icon: MessageCircle, color: "green" },
+      { path: "/portal/physicians-edge", label: "Physician's Edge", icon: HeartPulse, color: "emerald" },
+      { path: "/portal/ai-assist", label: "Strategy Assist", icon: Zap, color: "purple" },
+      { path: "/portal/ai-recommender", label: "Strategy Recommender", icon: Brain, color: "purple" },
+      { path: "/portal/voice-plan", label: "Voice Plan", icon: ChevronRight, color: "cyan" },
+      { path: "/portal/voice", label: "Voice Studio", icon: MessageCircle, color: "green" },
+      { path: "/portal/whisper-coach", label: "Whisper Coach", icon: ChevronRight, color: "cyan" },
+    ],
+  },
+  {
+    label: "Settings & Admin",
     icon: Settings,
     color: "slate",
-    items: [
-      { path: "/portal/billing", label: "Billing & Plans", icon: CircleDollarSign, color: "slate" },
-      { path: "/portal/agent-tutorial", label: "Platform Training", icon: GraduationCap, color: "slate" },
-      { path: "/portal/connections", label: "Connections", icon: Link2, color: "slate" },
-      { path: "/portal/integrations", label: "Integrations", icon: Link2, color: "slate" },
-      { path: "/portal/bulk-generation", label: "Bulk Generation", icon: Lock, color: "slate" },
-      { path: "/portal/command-center", label: "Command Center", icon: Activity, color: "slate" },
-      { path: "/portal/system-health", label: "System Health", icon: Activity, color: "purple" },
-      { path: "/portal/site-health", label: "Site Health (SEO & Security)", icon: Activity, color: "purple" },
-      { path: "/portal/leaderboard", label: "Leaderboard", icon: Trophy, color: "slate" },
+    subgroups: [
+      {
+        subLabel: "Team",
+        color: "slate",
+        items: [
+          { path: "/portal/admin", label: "Admin", icon: ChevronRight, color: "slate" },
+          { path: "/portal/advisor-directory", label: "Advisor Directory", icon: ChevronRight, color: "slate" },
+          { path: "/portal/enterprise", label: "Enterprise", icon: ChevronRight, color: "slate" },
+          { path: "/portal/interior", label: "Interior", icon: ChevronRight, color: "slate" },
+          { path: "/portal/owner-oversight", label: "Owner Oversight", icon: ChevronRight, color: "slate" },
+          { path: "/portal/team", label: "Team", icon: ChevronRight, color: "slate" },
+          { path: "/portal/team-management", label: "Team Management", icon: ChevronRight, color: "slate" },
+        ],
+      },
+      {
+        subLabel: "Integrations",
+        color: "slate",
+        items: [
+          { path: "/portal/hubspot", label: "Hubspot", icon: ChevronRight, color: "slate" },
+          { path: "/portal/inflation", label: "Inflation", icon: ChevronRight, color: "slate" },
+          { path: "/portal/integrations", label: "Integrations", icon: Link2, color: "slate" },
+          { path: "/portal/market-data", label: "Market Data", icon: ChevronRight, color: "slate" },
+          { path: "/portal/market-pulse", label: "Market Pulse", icon: ChevronRight, color: "slate" },
+          { path: "/portal/slack", label: "Slack", icon: ChevronRight, color: "slate" },
+          { path: "/portal/webhooks", label: "Webhooks", icon: ChevronRight, color: "slate" },
+          { path: "/portal/workflow-automations", label: "Workflow Automations", icon: ChevronRight, color: "slate" },
+        ],
+      },
+      {
+        subLabel: "Account",
+        color: "slate",
+        items: [
+          { path: "/portal/billing", label: "Billing & Plans", icon: CircleDollarSign, color: "slate" },
+          { path: "/portal/settings-classic", label: "Settings Classic", icon: ChevronRight, color: "slate" },
+          { path: "/portal/the-experience", label: "The Experience", icon: ChevronRight, color: "slate" },
+          { path: "/portal/transcend", label: "Transcend", icon: ChevronRight, color: "slate" },
+        ],
+      },
     ],
   },
 ];
@@ -897,6 +1030,47 @@ function Sidebar({ open, onClose }: { open: boolean; onClose: () => void }) {
     return map;
   }, []);
 
+  // ── Menu search ────────────────────────────────────────────────────
+  // 299 links across ten sections is more than anyone scrolls. The filter
+  // matches a section label, a subgroup label or an item label, and keeps a
+  // section only if something inside it survived.
+  const [navQuery, setNavQuery] = useState("");
+  const filteredSections = useMemo(() => {
+    const q = navQuery.trim().toLowerCase();
+    if (!q) return NAV_SECTIONS;
+    const out: NavSection[] = [];
+    for (const section of NAV_SECTIONS) {
+      const sectionHit = section.label.toLowerCase().includes(q);
+      const items = (section.items ?? []).filter(
+        (i) => sectionHit || i.label.toLowerCase().includes(q) || i.path.toLowerCase().includes(q),
+      );
+      const subgroups = (section.subgroups ?? [])
+        .map((sg) => {
+          const subHit = sectionHit || sg.subLabel.toLowerCase().includes(q);
+          return {
+            ...sg,
+            items: sg.items.filter(
+              (i) => subHit || i.label.toLowerCase().includes(q) || i.path.toLowerCase().includes(q),
+            ),
+          };
+        })
+        .filter((sg) => sg.items.length > 0);
+      if (items.length || subgroups.length) {
+        out.push({ ...section, items, subgroups, defaultOpen: true });
+      }
+    }
+    return out;
+  }, [navQuery]);
+
+  const navMatchCount = useMemo(
+    () =>
+      filteredSections.reduce(
+        (n, s) => n + (s.items?.length ?? 0) + (s.subgroups ?? []).reduce((m, sg) => m + sg.items.length, 0),
+        0,
+      ),
+    [filteredSections],
+  );
+
   return (
     <>
       {open && (
@@ -956,6 +1130,32 @@ function Sidebar({ open, onClose }: { open: boolean; onClose: () => void }) {
             </div>
           )}
 
+          <div className="mx-2 mb-2 mt-1 relative">
+            <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-500" />
+            <input
+              type="search"
+              value={navQuery}
+              onChange={(e) => setNavQuery(e.target.value)}
+              placeholder="Search 299 pages..."
+              aria-label="Search the menu"
+              className="w-full rounded-lg border border-white/10 bg-black/30 py-1.5 pl-7 pr-7 text-[11px] text-slate-200 placeholder:text-slate-500 outline-none focus:border-emerald-400/40"
+            />
+            {navQuery && (
+              <button
+                type="button"
+                onClick={() => setNavQuery("")}
+                aria-label="Clear menu search"
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-200"
+              >
+                <X className="h-3.5 w-3.5" />
+              </button>
+            )}
+            {navQuery && (
+              <div className="mt-1 px-1 text-[10px] text-slate-500">
+                {navMatchCount === 0 ? "No pages match" : `${navMatchCount} page${navMatchCount === 1 ? "" : "s"}`}
+              </div>
+            )}
+          </div>
           <button
             type="button"
             onClick={() => setSphereMode(!sphereMode)}
@@ -967,7 +1167,7 @@ function Sidebar({ open, onClose }: { open: boolean; onClose: () => void }) {
           </button>
           {sphereMode ? (
             <SphereNav location={location} onClose={onClose} />
-          ) : NAV_SECTIONS.map((section) => (
+          ) : filteredSections.map((section) => (
             <CollapsibleSection
               key={section.label}
               section={section}
