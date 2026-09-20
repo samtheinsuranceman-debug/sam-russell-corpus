@@ -59,3 +59,76 @@ refused, which is what stops DNS-rebinding attacks.
 Drives the full client handshake — initialize, initialized, discovery, calls,
 error paths, session lifecycle — because a broken handshake shows up as an AI
 client silently seeing zero tools, which is invisible from the outside.
+
+## Operational data (Matters + Deadlines)
+
+Matters and deadlines are persisted server-side and scoped to the authenticated
+session identity (`/api/auth/login` cookie). Every matter/deadline query checks
+ownership on the server: guessing another user's ID returns `404`.
+
+### Required environment
+
+- `DATABASE_URL` (**required for operational data endpoints**)
+  - Local development example (explicit local-only file):
+    - `sqlite:///./patent360-dev.db`
+  - Production example:
+    - `postgresql+psycopg2://...`
+- `SESSION_SECRET` (required for stable session signing across restarts)
+- `PATENT360_USERS` (JSON account document used by existing auth flow)
+
+No fallback database is auto-selected. If `DATABASE_URL` is unset, operational
+data endpoints fail closed with `503`.
+
+### Local setup
+
+```bash
+cd Patent360
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+export DATABASE_URL='sqlite:///./patent360-dev.db'
+export SESSION_SECRET='replace-with-long-random-value'
+export PATENT360_USERS='{\"a.reyes@firm.com\":{\"hash\":\"...\",\"role\":\"attorney\"}}'
+uvicorn app.main:app --reload
+```
+
+Schema bootstrap is automatic at service startup (`CREATE TABLE IF NOT EXISTS`).
+
+### API surface
+
+- Matters:
+  - `GET /api/matters`
+  - `POST /api/matters`
+  - `GET /api/matters/{matter_id}`
+  - `PUT /api/matters/{matter_id}`
+  - `DELETE /api/matters/{matter_id}`
+- Deadlines:
+  - `GET /api/deadlines` (ordered by `due_date` then `id`)
+  - `POST /api/deadlines`
+  - `GET /api/deadlines/{deadline_id}`
+  - `PUT /api/deadlines/{deadline_id}`
+  - `DELETE /api/deadlines/{deadline_id}`
+
+Validation is strict (length limits, allowed statuses, typed dates). Malformed
+payloads and malformed dates are rejected with `422`.
+
+### Deadline classification
+
+Deadlines are classified for docket visibility:
+
+- `completed`: deadline `status == "completed"`
+- `overdue`: open deadline with due date before UTC today
+- `due_soon`: open deadline due in `0..7` days (UTC date basis)
+- `upcoming`: open deadline due in more than 7 days
+
+This classification is an operational tracking aid only; it is not legal advice
+or an automatic docketing guarantee.
+
+### Focused tests
+
+```bash
+python3 tests/test_auth.py
+python3 tests/test_uspto.py
+python3 tests/test_mcp.py
+python3 tests/test_operational_data.py
+```
