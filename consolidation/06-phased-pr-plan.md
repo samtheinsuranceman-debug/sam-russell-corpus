@@ -70,6 +70,38 @@ Add a render smoke test for each new component.
 
 ---
 
+## PR-2b — Recursive navigation *(decided 2026-09-20, §7)*
+
+The one capability `russell-capital-app` has that the base lacks. Ported rather than
+inherited by flipping the base.
+
+| Source (`russell-capital-app`) | Target (`russell-capital-systems`) |
+|---|---|
+| `client/src/navTree.ts` (1058 lines) | same path |
+| renderer changes in `client/src/components/AppShell.tsx` | same path |
+
+`navTree.ts` is a true recursive `NavNode` — `children?: NavNode[]`, arbitrary depth,
+placeholder nodes, `collectPaths`/`flattenNavTree`, and React-free string icon tags the
+renderer maps to lucide components. The base's fixed `Section → Subgroup → Item` cannot nest
+further; this replaces that ceiling.
+
+**Test criteria:** standing gates, plus two specific to this PR —
+1. `collectPaths(MEDICAL_TREE)` must be a **subset of `ROUTE_MANIFEST`**, so every navigation
+   destination resolves to a registered route. A nav entry pointing nowhere fails the build.
+2. Route counts **unchanged at 330** — this PR adds navigation, not routes.
+Plus a nav snapshot test.
+
+**Risk:** medium. It changes the shell every page renders inside. Mitigated by the subset
+assertion and by adding no routes.
+**Rollback:** revert — navigation returns to the three-level structure; no route or page is
+affected.
+
+**Note:** `russell-capital-app`'s `DEPLOY_NOTES.md` documents its MySQL→PostgreSQL port table
+by table. If a Vercel/Postgres hosting path is ever wanted, that is the reference. It is a
+hosting decision and remains out of scope.
+
+---
+
 ## PR-3 — Gamification pages *(blocked on PR-1 Q1)*
 
 **15 pages** absent from the base (§2.5) — 9 from `russell-capital`, 6 present in both donors
@@ -192,6 +224,7 @@ PR-0 foundation  ──►  PR-1 answers  ──►  PR-2 prerequisites  ──�
                                                 └──► PR-3 gamification │
                                                                        ▼
                                           PR-5 page batches (≈20 routes each)
+PR-2b navigation — independent, any time after PR-0
 PR-6, PR-7, PR-8 — independent, any time after PR-0
 PR-9 — independent, no code
 ```

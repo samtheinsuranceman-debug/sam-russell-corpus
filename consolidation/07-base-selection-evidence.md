@@ -3,6 +3,13 @@
 Added 2026-09-20 in response to the proposal that `russell-capital-app` become the
 consolidation base, and that `russell-capital-domain-redirect` is the current live repo.
 
+> **DECIDED 2026-09-20 by the owner, on this evidence:**
+> **1.** `russell-capital-systems` remains the base. `navTree.ts` is ported from
+> `russell-capital-app` as **PR-2b** (§6).
+> **2.** The live-repo reading is accepted as recorded in §7.1 — the apex is a GitHub Pages
+> redirect (inferred), the `www` application is `russell-capital-systems` (verified). The
+> redirect repository is not a consolidation target and needs no further confirmation.
+
 Both claims were tested rather than assumed. One is correct, one is not, and one of the
 supporting arguments for `russell-capital-app` is correct and worth acting on.
 
