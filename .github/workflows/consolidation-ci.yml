@@ -1,0 +1,84 @@
+# Consolidation CI — gates every PR that touches the application.
+#
+# Path-scoped deliberately. sam-russell-corpus holds ~45 top-level projects and
+# 6,008 files; an unscoped workflow would run this suite when somebody commits
+# a PDF to /brotherhood.
+#
+# Runs the FULL test suite, not `test:ci`. The `test:ci` script carries an
+# exclude list of 28 files that all currently pass (verified 2026-09-20,
+# 4,138 passing / 0 failing) — so the exclusions suppress working tests and
+# would go on suppressing them if they broke. Until that script is fixed, CI
+# runs `pnpm test`.
+name: Consolidation CI
+
+on:
+  pull_request:
+    paths:
+      - "russell-capital-systems/**"
+      - ".github/workflows/consolidation-ci.yml"
+  push:
+    branches: [master]
+    paths:
+      - "russell-capital-systems/**"
+
+defaults:
+  run:
+    working-directory: russell-capital-systems
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+          cache-dependency-path: russell-capital-systems/pnpm-lock.yaml
+
+      # --frozen-lockfile, so a PR cannot quietly drift a dependency.
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck
+        run: pnpm run check
+
+      # Every route registered must be in the manifest and vice versa. Both
+      # directions: an unlisted route is an undeclared surface, a listed but
+      # unregistered one is a dead link somebody already points at.
+      - name: Route manifest reconciliation
+        run: node scripts/consolidation/route-collisions.mjs --check
+
+      - name: Tests
+        run: pnpm test
+
+      - name: Build
+        run: pnpm run build
+
+  secrets:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # Application source only. PROVENANCE.md records that nine Slack
+      # placeholder patterns were previously neutered for exactly this reason;
+      # this keeps that property true rather than trusting it to stay true.
+      - name: Scan application source for credentials
+        working-directory: russell-capital-systems
+        run: |
+          set -o pipefail
+          PATTERN='(sk-[A-Za-z0-9]{20,}|AKIA[0-9A-Z]{16}|-----BEGIN [A-Z ]*PRIVATE KEY|xox[baprs]-[A-Za-z0-9-]{10,})'
+          if grep -rInE "$PATTERN" server shared client/src 2>/dev/null; then
+            echo "::error::Possible credential committed to application source. Rotate it, then remove it."
+            exit 1
+          fi
+          echo "No credential patterns found in application source."
