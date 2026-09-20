@@ -55,13 +55,21 @@ safeguard available.
 
 | Workflow | Trigger | Covers |
 |---|---|---|
-| `rcs-security-audit.yml` | PRs touching `russell-capital-systems/**`, weekly Mondays 06:00 UTC | `pnpm audit --audit-level=high` + `tsc --noEmit` |
+| `rcs-security-audit.yml` | PRs touching `russell-capital-systems/**`, weekly Mondays 06:00 UTC | `pnpm audit --audit-level=high`, `tsc --noEmit`, **and `pnpm test:ci`** |
 | `deploy-branch.yml` | push to `master` | subtree split → `deploy/rcs` → Railway deploy |
 | 10 probe workflows | various | domain, chain, intake, whisperer, Dr Buddy probes; site audit; pages |
 
-**The gap: nothing runs `pnpm build` or `pnpm test` on a pull request.** The
-security audit typechecks but never builds and never runs the 225 test files.
-A PR that breaks the build or fails 4,138 tests merges green today.
+**The gap, stated precisely.** `rcs-security-audit.yml` does more than an
+earlier draft of this document credited it with: it audits, typechecks **and
+runs `pnpm test:ci`**. What it does *not* do:
+
+1. **It never runs `pnpm build`.** A PR that breaks the build merges green.
+2. **It runs `test:ci`, not the full suite** — 194 files rather than the 216
+   that pass (§3.2). A regression in any of those 22 files is invisible.
+3. **No route-count or route-manifest assertion.** A migration that drops routes
+   passes.
+
+The gate in §5.3 closes those three, and only those three.
 
 ---
 
