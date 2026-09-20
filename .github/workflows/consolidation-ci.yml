@@ -1,0 +1,136 @@
+# Consolidation CI — the gate every capability PR has to pass.
+#
+# The existing `rcs-security-audit.yml` already runs install, `pnpm audit`,
+# `pnpm check` and `pnpm test:ci` on pull requests touching the app. This adds
+# the three things it does not cover, all of which matter while pages and
+# modules are being migrated in from donor repositories:
+#
+#   1. BUILD. A typecheck is not a build. The Vite/esbuild pipeline, the Tailwind
+#      compile and the route-manifest emit can all fail on a tree that typechecks
+#      cleanly — and a migration that adds 244 lazy-loaded pages is exactly the
+#      kind of change that finds that out.
+#
+#   2. SECRET SCANNING. Donor repositories are being copied from. One of them
+#      documents three burned API keys. Nothing currently stops a key arriving
+#      in a migration commit.
+#
+#   3. REGRESSION FLOOR. The baseline in docs/consolidation/03-VERIFICATION.md is
+#      195 test files and 3,762 tests passing under `test:ci` (master's 194/3,757
+#      plus this workflow's own navigation guard). A run that passes
+#      with materially fewer tests has usually lost a suite rather than fixed
+#      anything, so the count is asserted rather than trusted.
+#
+# This workflow does not deploy and does not touch DNS, databases or secrets.
+name: Consolidation CI
+
+on:
+  pull_request:
+    paths: ["russell-capital-systems/**", ".github/workflows/consolidation-ci.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: consolidation-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  secrets:
+    name: Secret scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          lfs: false
+      # Full history, because a key removed in a later commit is still a leaked
+      # key and still needs rotating.
+      - name: gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  verify:
+    name: Typecheck, build, test
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: russell-capital-systems
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: false
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: russell-capital-systems/pnpm-lock.yaml
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck
+        run: pnpm check
+
+      # New relative to rcs-security-audit.yml.
+      - name: Build
+        run: pnpm build
+
+      - name: Build emitted a routes manifest
+        run: |
+          test -f dist/public/routes.json || { echo "::error::dist/public/routes.json missing — the build did not emit route patterns"; exit 1; }
+          COUNT=$(node -e "console.log(JSON.parse(require('fs').readFileSync('dist/public/routes.json','utf8')).routes.length)")
+          echo "route patterns emitted: $COUNT"
+          # Baseline is 330 (docs/consolidation/03-VERIFICATION.md). Migrations only
+          # add routes, so a drop means something was dropped.
+          test "$COUNT" -ge 330 || { echo "::error::route count fell to $COUNT, below the 330 baseline"; exit 1; }
+
+      - name: Tests
+        run: pnpm test:ci | tee /tmp/test.log
+
+      # Guards against a suite silently disappearing: a green run with 200 fewer
+      # tests is not a green run.
+      - name: Test count did not regress
+        run: |
+          FILES=$(grep -oE 'Test Files +[0-9]+ passed' /tmp/test.log | grep -oE '[0-9]+' | head -1)
+          TESTS=$(grep -oE 'Tests +[0-9]+ passed' /tmp/test.log | grep -oE '[0-9]+' | head -1)
+          echo "files=$FILES tests=$TESTS (baseline 195 / 3762)"
+          test "${FILES:-0}" -ge 195 || { echo "::error::test files fell to $FILES, below the 195 baseline"; exit 1; }
+          test "${TESTS:-0}" -ge 3762 || { echo "::error::tests fell to $TESTS, below the 3762 baseline"; exit 1; }
+
+  registries:
+    name: Registry integrity
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: russell-capital-systems
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: false
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: russell-capital-systems/pnpm-lock.yaml
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      # The registry suites are the contract for every migration PR: a route
+      # added without its manifest entry, or a catalogue row pointing at a route
+      # that does not exist, fails here rather than reaching a client.
+      - name: Route manifest, catalogue and navigation integrity
+        run: |
+          pnpm vitest run \
+            server/navigation-route-integrity.test.ts \
+            server/navigation-organization.test.ts \
+            server/calculatorCatalog.test.ts \
+            server/grok-merge.smoke.test.ts \
+            server/integrationAudit.test.ts

@@ -1,0 +1,3380 @@
+{
+ "donorRoutes": [
+  "/portal/1031-advanced",
+  "/portal/1031-exchange",
+  "/portal/1031-exchange-analyzer",
+  "/portal/199a-optimizer",
+  "/portal/529-advanced",
+  "/portal/529-vs-iul",
+  "/portal/aca-subsidy",
+  "/portal/admin/health",
+  "/portal/ai-strategy-lab",
+  "/portal/alert-command-center",
+  "/portal/alimony-tax-impact",
+  "/portal/alt-allocator",
+  "/portal/alt-investment-dd",
+  "/portal/alternative-investment",
+  "/portal/alternative-investments",
+  "/portal/amt-analyzer",
+  "/portal/amt-calculator",
+  "/portal/amt-planner",
+  "/portal/annual-financial-physical",
+  "/portal/annuity-comparison",
+  "/portal/annuity-fee-detector",
+  "/portal/annuity-income-bridge",
+  "/portal/annuity-waterfall",
+  "/portal/asset-allocation",
+  "/portal/asset-protection",
+  "/portal/audit-defense",
+  "/portal/autopilot",
+  "/portal/backdoor-roth",
+  "/portal/behavioral-bias",
+  "/portal/behavioral-planning",
+  "/portal/beneficiary-ira",
+  "/portal/bond-ladder",
+  "/portal/budget-50-30-20",
+  "/portal/business-entity",
+  "/portal/business-exit",
+  "/portal/business-succession",
+  "/portal/business-valuation",
+  "/portal/buy-sell-agreement",
+  "/portal/buy-sell-funding",
+  "/portal/calc-interop-matrix",
+  "/portal/calculator-hub",
+  "/portal/capital-gains-tax",
+  "/portal/captive-insurance",
+  "/portal/captive-insurance-modeler",
+  "/portal/captive-iul",
+  "/portal/carrier-strength",
+  "/portal/cascading-optimizer",
+  "/portal/cash-balance-plan",
+  "/portal/cash-flow-optimizer",
+  "/portal/ce-credits",
+  "/portal/charitable-giving-dashboard",
+  "/portal/charitable-lead-trust",
+  "/portal/charitable-remainder-unitrust",
+  "/portal/charitable-stock-donation",
+  "/portal/client-presentation",
+  "/portal/client-report-gen",
+  "/portal/client-retention",
+  "/portal/client-retention-ai",
+  "/portal/clt-engine",
+  "/portal/college-aid",
+  "/portal/combo-recommender-v2",
+  "/portal/commission-optimizer",
+  "/portal/compliance-center",
+  "/portal/compliance-doc-gen",
+  "/portal/compound-interest",
+  "/portal/concentrated-stock",
+  "/portal/concierge",
+  "/portal/cost-of-living",
+  "/portal/cost-of-waiting",
+  "/portal/cost-segregation",
+  "/portal/cost-segregation-engine",
+  "/portal/credit-card-payoff",
+  "/portal/cross-border-wealth",
+  "/portal/cross-calc-aggregation",
+  "/portal/cross-feature-intelligence",
+  "/portal/cross-purchase",
+  "/portal/crt-calculator",
+  "/portal/crt-deep-dive",
+  "/portal/crt-engine",
+  "/portal/crt-wealth-replacement",
+  "/portal/crut-deep-dive",
+  "/portal/crypto-tax",
+  "/portal/daf-strategic",
+  "/portal/daf-vs-direct-giving",
+  "/portal/data-bus-dashboard",
+  "/portal/data-completeness",
+  "/portal/data-flow-visualizer",
+  "/portal/dca-vs-lump-sum",
+  "/portal/deal-closer",
+  "/portal/debt-payoff",
+  "/portal/debt-payoff-optimizer",
+  "/portal/debt-recycling",
+  "/portal/deduction-optimizer",
+  "/portal/deep-organism",
+  "/portal/deferred-comp",
+  "/portal/deferred-compensation",
+  "/portal/defined-benefit",
+  "/portal/depreciation-recapture",
+  "/portal/depreciation-tax-shield",
+  "/portal/digital-estate",
+  "/portal/digital-estate-planner",
+  "/portal/direct-indexing",
+  "/portal/disability-gap",
+  "/portal/disability-insurance-needs",
+  "/portal/divorce-financial",
+  "/portal/divorce-impact",
+  "/portal/divorce-settlement-enhanced",
+  "/portal/drip-growth",
+  "/portal/dst-analyzer",
+  "/portal/dynasty-trust",
+  "/portal/dynasty-trust-planner",
+  "/portal/education-529",
+  "/portal/elite-showdown",
+  "/portal/emergency-fund",
+  "/portal/emergency-fund-vs-iul",
+  "/portal/employee-retention",
+  "/portal/employee-stock-options",
+  "/portal/engine-chaining",
+  "/portal/engine-fusion",
+  "/portal/entity-comparison",
+  "/portal/entrainment-engine",
+  "/portal/equity-compensation",
+  "/portal/esop-analyzer",
+  "/portal/esop-buyout",
+  "/portal/esop-calculator",
+  "/portal/estate-freeze-comparison",
+  "/portal/estate-liquidity",
+  "/portal/estate-planning-sim",
+  "/portal/estate-timeline",
+  "/portal/estate-wealth-transfer",
+  "/portal/executive-bonus",
+  "/portal/executive-bridge",
+  "/portal/executive-comp",
+  "/portal/expat-tax",
+  "/portal/family-bank",
+  "/portal/family-constitution",
+  "/portal/family-governance",
+  "/portal/family-limited-partnership",
+  "/portal/family-office",
+  "/portal/family-tree",
+  "/portal/fbar-fatca",
+  "/portal/fee-impact",
+  "/portal/fiduciary-compliance",
+  "/portal/fiduciary-tracker",
+  "/portal/financial-dna",
+  "/portal/financial-freedom-number",
+  "/portal/financial-health-score",
+  "/portal/financial-independence",
+  "/portal/financial-nerve-center",
+  "/portal/financial-plan-checklist",
+  "/portal/fire-calculator",
+  "/portal/flp-planner",
+  "/portal/fluency-academy",
+  "/portal/gain-loss-harvesting",
+  "/portal/generational-wealth",
+  "/portal/generational-wealth-sim",
+  "/portal/grantor-trust",
+  "/portal/grat",
+  "/portal/grat-calculator",
+  "/portal/gst-trust",
+  "/portal/gstt-calculator",
+  "/portal/healthcare-cost",
+  "/portal/heartfire-legacy",
+  "/portal/holographic-mirage",
+  "/portal/home-affordability",
+  "/portal/hsa-maximizer",
+  "/portal/hsa-triple-tax",
+  "/portal/idgt-advanced",
+  "/portal/idgt-modeler",
+  "/portal/idr-comparison",
+  "/portal/ilit-analyzer",
+  "/portal/ilit-calculator",
+  "/portal/ilit-deep-dive",
+  "/portal/impact-scorecard",
+  "/portal/incentive-trust",
+  "/portal/income-floor",
+  "/portal/income-floor-strategy",
+  "/portal/income-protection",
+  "/portal/income-shifting",
+  "/portal/infinity-banking",
+  "/portal/inflation-adjusted-income",
+  "/portal/inflation-protection",
+  "/portal/inflation-returns",
+  "/portal/inherited-roth",
+  "/portal/innovation-dashboard",
+  "/portal/installment-sale",
+  "/portal/installment-sale-strategy",
+  "/portal/insurance-coverage-command",
+  "/portal/insurance-gap",
+  "/portal/international-tax",
+  "/portal/international-trust",
+  "/portal/irc-reference",
+  "/portal/iul-compliance-engine",
+  "/portal/iul-max-funded",
+  "/portal/journey-navigator",
+  "/portal/key-person-insurance",
+  "/portal/lease-vs-buy",
+  "/portal/legacy-vault",
+  "/portal/life-insurance-needs",
+  "/portal/life-settlement",
+  "/portal/lifestyle-inflation",
+  "/portal/like-kind-exchange",
+  "/portal/living-benefits",
+  "/portal/living-risk-profile",
+  "/portal/long-term-care-hybrid",
+  "/portal/longitudinal-risk",
+  "/portal/ltc-cost",
+  "/portal/marginal-tax-rate",
+  "/portal/mastery-nexus",
+  "/portal/medicaid-planning",
+  "/portal/medicare-irmaa-calc",
+  "/portal/medicare-part-d",
+  "/portal/mega-backdoor-roth",
+  "/portal/mesh-health",
+  "/portal/millionaire-calculator",
+  "/portal/moat-fortress",
+  "/portal/multi-carrier-iul",
+  "/portal/multi-currency",
+  "/portal/multi-gen-roth",
+  "/portal/multi-generational-wealth",
+  "/portal/muni-bond-ladder",
+  "/portal/net-worth-tracker",
+  "/portal/nii-surtax",
+  "/portal/nua-calculator",
+  "/portal/nua-planner",
+  "/portal/nua-strategy",
+  "/portal/oil-gas-strategy",
+  "/portal/onboarding-quiz",
+  "/portal/onboarding-workflow",
+  "/portal/opportunity-zone",
+  "/portal/options-profit-loss",
+  "/portal/organism-control",
+  "/portal/organism-dashboard",
+  "/portal/organism-deep-provider",
+  "/portal/organism-health",
+  "/portal/overhead-expense",
+  "/portal/own-occ-disability",
+  "/portal/pavlovian-engagement",
+  "/portal/pe-irr-calculator",
+  "/portal/pe-secondary-market",
+  "/portal/pe-tax",
+  "/portal/peer-benchmarking",
+  "/portal/peer-intel",
+  "/portal/peer-network",
+  "/portal/pension-max",
+  "/portal/pension-max-engine",
+  "/portal/pension-maximization",
+  "/portal/pension-vs-lump-sum",
+  "/portal/persona-hub",
+  "/portal/phantom-stock",
+  "/portal/philanthropy",
+  "/portal/physician-blueprint",
+  "/portal/physician-contract",
+  "/portal/physician-forum",
+  "/portal/physician-mortgage",
+  "/portal/physician-retirement",
+  "/portal/physician-vitals",
+  "/portal/policy-replacement",
+  "/portal/portfolio-risk-return",
+  "/portal/post-mortem-tax",
+  "/portal/ppli",
+  "/portal/ppli-modeler",
+  "/portal/ppva",
+  "/portal/practice-sync",
+  "/portal/practice-valuation",
+  "/portal/predictive-arena",
+  "/portal/premium-financing-arbitrage",
+  "/portal/premium-financing-calc",
+  "/portal/presentation-vault",
+  "/portal/private-credit",
+  "/portal/private-foundation",
+  "/portal/private-placement",
+  "/portal/private-reit",
+  "/portal/projection-theater",
+  "/portal/property-tax-appeal",
+  "/portal/prospect-qualification",
+  "/portal/pslf-calculator",
+  "/portal/qbi-calculator",
+  "/portal/qlac-calculator",
+  "/portal/qprt",
+  "/portal/qprt-advanced",
+  "/portal/qprt-calculator",
+  "/portal/qsbs",
+  "/portal/qsbs-exclusion",
+  "/portal/qualified-opportunity-fund",
+  "/portal/qualified-plan-maximizer",
+  "/portal/re-stacking",
+  "/portal/real-estate-portfolio",
+  "/portal/real-estate-syndication",
+  "/portal/refinance-break-even",
+  "/portal/rental-property-roi",
+  "/portal/report-builder",
+  "/portal/residency-to-attending",
+  "/portal/retirement-advantage",
+  "/portal/retirement-budget",
+  "/portal/retirement-distributions",
+  "/portal/retirement-gap",
+  "/portal/retirement-healthcare",
+  "/portal/retirement-income-proj",
+  "/portal/retirement-readiness",
+  "/portal/reverse-mortgage",
+  "/portal/risk-compliance",
+  "/portal/rmd-calculator",
+  "/portal/roth-conversion-analyzer",
+  "/portal/roth-vs-traditional",
+  "/portal/rsu-tax",
+  "/portal/rsu-tax-planning",
+  "/portal/sabbatical-planner",
+  "/portal/safe-withdrawal-rate",
+  "/portal/savings-rate-impact",
+  "/portal/section-1202",
+  "/portal/section-199a",
+  "/portal/section-2701",
+  "/portal/sector-rotation",
+  "/portal/self-employment-tax",
+  "/portal/sequence-of-returns",
+  "/portal/serp-analyzer",
+  "/portal/severance-calculator",
+  "/portal/short-term-rental",
+  "/portal/slat-deep-dive",
+  "/portal/slat-planner",
+  "/portal/smart-routing",
+  "/portal/social-security-maximizer",
+  "/portal/special-needs",
+  "/portal/special-needs-trust",
+  "/portal/spend-vs-invest",
+  "/portal/spending-guardrails",
+  "/portal/split-dollar",
+  "/portal/split-dollar-life",
+  "/portal/spousal-lifetime-access",
+  "/portal/spousal-ss-coordination",
+  "/portal/ss-bridge",
+  "/portal/ss-bridge-strategy",
+  "/portal/state-tax-arbitrage",
+  "/portal/state-tax-migration",
+  "/portal/state-trust-planning",
+  "/portal/str-tax-strategy",
+  "/portal/strategy-comparison",
+  "/portal/strategy-synergy",
+  "/portal/stress-test",
+  "/portal/stretch-ira",
+  "/portal/structured-notes",
+  "/portal/structured-settlement",
+  "/portal/student-loan-optimizer",
+  "/portal/student-loan-vs-invest",
+  "/portal/succession-engine",
+  "/portal/succession-plan",
+  "/portal/succession-valuation",
+  "/portal/survivor-benefits",
+  "/portal/syndication-deal",
+  "/portal/tax-alpha-scorecard",
+  "/portal/tax-bracket-navigator",
+  "/portal/tax-code-simulator",
+  "/portal/tax-credits",
+  "/portal/tax-deferred-exchange",
+  "/portal/tax-equivalent-yield",
+  "/portal/tax-loss-harvest-calc",
+  "/portal/tax-optimization-command",
+  "/portal/tax-optimizer",
+  "/portal/tax-projection",
+  "/portal/taxable-account",
+  "/portal/taxable-estate",
+  "/portal/tenant-in-common",
+  "/portal/term-vs-whole-vs-iul",
+  "/portal/tool-explorer",
+  "/portal/trust-comparison-matrix",
+  "/portal/trust-decanting",
+  "/portal/trust-funding",
+  "/portal/umbrella-insurance",
+  "/portal/usage-analytics",
+  "/portal/vacation-rental",
+  "/portal/variable-annuity",
+  "/portal/volatility-harvesting",
+  "/portal/w4-optimizer",
+  "/portal/wealth-accumulation",
+  "/portal/wealth-canvas",
+  "/portal/wealth-dashboard",
+  "/portal/wealth-erosion",
+  "/portal/wealth-odyssey",
+  "/portal/wealth-rituals",
+  "/portal/wealth-timeline",
+  "/portal/wealth-transfer-comparison",
+  "/portal/wealth-transfer-scoreboard",
+  "/portal/wealth-transfer-scorecard",
+  "/portal/wealth-transfer-timeline",
+  "/portal/wealth-warrior",
+  "/portal/whole-life-dividend",
+  "/portal/windfall-management",
+  "/portal/withdrawal-rate",
+  "/portal/withdrawal-sequencer",
+  "/portal/zero-based-budget"
+ ],
+ "collisions": [
+  "/portal",
+  "/portal/admin",
+  "/portal/advanced-reporting",
+  "/portal/advisor-chat",
+  "/portal/advisor-directory",
+  "/portal/advisor-income-calculator",
+  "/portal/advisor-training",
+  "/portal/advisory-summary",
+  "/portal/affiliate-links",
+  "/portal/agency-tutorial",
+  "/portal/agent-tutorial",
+  "/portal/ai",
+  "/portal/ai-assist",
+  "/portal/ai-brain-hub",
+  "/portal/ai-meeting-notes",
+  "/portal/ai-policy-review",
+  "/portal/ai-recommender",
+  "/portal/ai-slides",
+  "/portal/annuity-accumulation-db",
+  "/portal/annuity-memory",
+  "/portal/arena",
+  "/portal/athene-guaranteed-income",
+  "/portal/athene-pe-plus15",
+  "/portal/audit-timeline",
+  "/portal/avatar-twins",
+  "/portal/axonic-sp500",
+  "/portal/batch-illustration",
+  "/portal/batch-slides",
+  "/portal/beneficiary-optimization",
+  "/portal/billing",
+  "/portal/black-mirror",
+  "/portal/branding",
+  "/portal/bulk-generation",
+  "/portal/business-owner",
+  "/portal/carrier-comparison",
+  "/portal/carrier-rates",
+  "/portal/carrier-ratings",
+  "/portal/carrier-settings",
+  "/portal/charitable-giving",
+  "/portal/client-comparison",
+  "/portal/client-files",
+  "/portal/client-health",
+  "/portal/client-intake",
+  "/portal/client-intake-recommender",
+  "/portal/client-onboarding",
+  "/portal/client-onboarding-auto",
+  "/portal/client-portal-config",
+  "/portal/client-portfolio",
+  "/portal/client-scorecard",
+  "/portal/client-self-service",
+  "/portal/client-snapshot",
+  "/portal/clients",
+  "/portal/clients/:id",
+  "/portal/co-pilot",
+  "/portal/collaborative-planning",
+  "/portal/combo-recommender",
+  "/portal/command-center",
+  "/portal/commission-calculator",
+  "/portal/commission-tracker",
+  "/portal/comparison",
+  "/portal/competitive",
+  "/portal/compliance",
+  "/portal/compliance-alerts",
+  "/portal/compliance-audit",
+  "/portal/compliance-audit-trail",
+  "/portal/compliance-monitoring",
+  "/portal/compliance-reports",
+  "/portal/couples",
+  "/portal/crypto-corner",
+  "/portal/daily-briefing",
+  "/portal/daily-discovery",
+  "/portal/dashboard",
+  "/portal/data-query",
+  "/portal/divorce-calculator",
+  "/portal/document-templates",
+  "/portal/document-vault",
+  "/portal/ecological-drivers",
+  "/portal/education",
+  "/portal/email-campaigns",
+  "/portal/endgame",
+  "/portal/engagement-score",
+  "/portal/enterprise",
+  "/portal/estate-document-gen",
+  "/portal/estate-flow",
+  "/portal/estate-tax",
+  "/portal/existing-annuities",
+  "/portal/fee-transparency",
+  "/portal/fia-collateral",
+  "/portal/fia-top10",
+  "/portal/financial-vitals",
+  "/portal/goals-planning",
+  "/portal/growth-annuities",
+  "/portal/hidden-material",
+  "/portal/hot-income",
+  "/portal/house-recycling",
+  "/portal/household-wealth",
+  "/portal/hubspot",
+  "/portal/ibbotson-charts",
+  "/portal/illustration-compare",
+  "/portal/income-annuity-top10",
+  "/portal/income-gap",
+  "/portal/income-timeline",
+  "/portal/index-backtester",
+  "/portal/index-strategies",
+  "/portal/infinite-scroll",
+  "/portal/inflation",
+  "/portal/integrations",
+  "/portal/iul-historical",
+  "/portal/iul-vs-roth",
+  "/portal/knowledge",
+  "/portal/lead-generator",
+  "/portal/leaderboard",
+  "/portal/legal-payment-folder",
+  "/portal/lifetime-income",
+  "/portal/long-term-care",
+  "/portal/market-data",
+  "/portal/market-pulse",
+  "/portal/market-stress-test",
+  "/portal/medicare-irmaa",
+  "/portal/meeting-agenda",
+  "/portal/meeting-prep",
+  "/portal/meetings",
+  "/portal/monitoring-agreement",
+  "/portal/morning-ritual",
+  "/portal/mortgage-killer",
+  "/portal/mortgage-killer-v2",
+  "/portal/mortgage-killer-v3",
+  "/portal/multi-gen-wealth",
+  "/portal/my-slides",
+  "/portal/my-world",
+  "/portal/myga-fixed-rate",
+  "/portal/myga-waterfall",
+  "/portal/nerve-center",
+  "/portal/onboarding",
+  "/portal/onboarding-v2",
+  "/portal/owner-oversight",
+  "/portal/patent-showcase",
+  "/portal/pet",
+  "/portal/physicians-edge",
+  "/portal/pipeline",
+  "/portal/policy-loans",
+  "/portal/policy-review",
+  "/portal/policy-review-checklist",
+  "/portal/portfolio-drift",
+  "/portal/predictive-analytics",
+  "/portal/premium-financing",
+  "/portal/presentation-builder",
+  "/portal/quick-quote",
+  "/portal/quotes",
+  "/portal/real-estate-mogul",
+  "/portal/rebalance",
+  "/portal/recommendations",
+  "/portal/referral-tracker",
+  "/portal/referral-tracking",
+  "/portal/retirement-guardrails",
+  "/portal/retirement-projection",
+  "/portal/revenue-guarantee",
+  "/portal/reverse-heloc",
+  "/portal/rewards",
+  "/portal/risk-tolerance",
+  "/portal/roth-conversion",
+  "/portal/russell-number",
+  "/portal/sales-story",
+  "/portal/saved-scenarios",
+  "/portal/scenario-play",
+  "/portal/scenario-side-by-side",
+  "/portal/scenarios",
+  "/portal/secret-secrets",
+  "/portal/secret-secrets/:id",
+  "/portal/seminar-generator",
+  "/portal/slack",
+  "/portal/smart-rebalancing",
+  "/portal/social",
+  "/portal/social-security",
+  "/portal/stale-digest",
+  "/portal/story-generator",
+  "/portal/str-strategy",
+  "/portal/strategy",
+  "/portal/strategy-compare",
+  "/portal/succession-planning",
+  "/portal/tax-advantaged-growth",
+  "/portal/tax-brackets",
+  "/portal/tax-combos",
+  "/portal/tax-combos/:id",
+  "/portal/tax-loss-harvesting",
+  "/portal/tax-opportunities",
+  "/portal/tax-return-upload",
+  "/portal/tax-waterfall",
+  "/portal/team",
+  "/portal/team-management",
+  "/portal/time-lapse",
+  "/portal/time-machine",
+  "/portal/time-machine-ag49",
+  "/portal/time-machine-calculator",
+  "/portal/time-machine-method",
+  "/portal/toilet",
+  "/portal/trusts",
+  "/portal/video-library",
+  "/portal/video-proposals",
+  "/portal/voice-plan",
+  "/portal/war-room",
+  "/portal/war-story-generator",
+  "/portal/wealth-reels",
+  "/portal/webhooks",
+  "/portal/website-usage",
+  "/portal/welcome",
+  "/portal/will-writer",
+  "/portal/withdrawal-sequencing",
+  "/portal/workflow-automations",
+  "/portal/wrapped"
+ ],
+ "pages": [
+  {
+   "route": "/portal/1031-advanced",
+   "file": "Section1031AdvancedExchange.tsx",
+   "loc": 200,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/1031-exchange",
+   "file": "Exchange1031Calc.tsx",
+   "loc": 266,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/1031-exchange-analyzer",
+   "file": "Exchange1031Analyzer.tsx",
+   "loc": 247,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/199a-optimizer",
+   "file": "Section199ADeductionOptimizer.tsx",
+   "loc": 206,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/529-advanced",
+   "file": "Section529AdvancedPlanner.tsx",
+   "loc": 177,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/529-vs-iul",
+   "file": "Education529VsIULCalc.tsx",
+   "loc": 265,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/aca-subsidy",
+   "file": "ACASubsidyCalc.tsx",
+   "loc": 218,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/admin/health",
+   "file": "AdminHealthDashboard.tsx",
+   "loc": 462,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/ai-strategy-lab",
+   "file": "AIStrategyLabPro.tsx",
+   "loc": 411,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/alert-command-center",
+   "file": "AlertCommandCenter.tsx",
+   "loc": 79,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/alimony-tax-impact",
+   "file": "AlimonyTaxCalc.tsx",
+   "loc": 278,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/alt-allocator",
+   "file": "AlternativeInvestmentAllocator.tsx",
+   "loc": 230,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/alt-investment-dd",
+   "file": "AlternativeInvestmentDueDiligence.tsx",
+   "loc": 221,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/alternative-investment",
+   "file": "AlternativeInvestment.tsx",
+   "loc": 241,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/alternative-investments",
+   "file": "AlternativeInvestmentDueDiligence.tsx",
+   "loc": 221,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/amt-analyzer",
+   "file": "AMTAnalyzer.tsx",
+   "loc": 221,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/amt-calculator",
+   "file": "AMTCalculator.tsx",
+   "loc": 239,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/amt-planner",
+   "file": "AlternativeMinimumTaxPlanner.tsx",
+   "loc": 187,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/annual-financial-physical",
+   "file": "AnnualFinancialPhysical.tsx",
+   "loc": 157,
+   "missingComponents": [
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/annuity-comparison",
+   "file": "AnnuityComparisonCalc.tsx",
+   "loc": 266,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/annuity-fee-detector",
+   "file": "AnnuityHiddenFee.tsx",
+   "loc": 229,
+   "missingComponents": [
+    "CalculatorPDFExport",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/annuity-income-bridge",
+   "file": "AnnuityIncomeBridge.tsx",
+   "loc": 172,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/annuity-waterfall",
+   "file": "AnnuityWaterfallEngine.tsx",
+   "loc": 241,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/asset-allocation",
+   "file": "AssetAllocationCalc.tsx",
+   "loc": 241,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/asset-protection",
+   "file": "AssetProtection.tsx",
+   "loc": 185,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/audit-defense",
+   "file": "AuditDefensePrep.tsx",
+   "loc": 194,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/autopilot",
+   "file": "AutoPilotWorkflow.tsx",
+   "loc": 241,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/backdoor-roth",
+   "file": "BackdoorRothCalc.tsx",
+   "loc": 288,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/behavioral-bias",
+   "file": "BehavioralBiasDetector.tsx",
+   "loc": 207,
+   "missingComponents": [
+    "CalculatorPDFExport"
+   ]
+  },
+  {
+   "route": "/portal/behavioral-planning",
+   "file": "AIBehavioralFinancialPlanning.tsx",
+   "loc": 346,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ComboPageWrapper"
+   ]
+  },
+  {
+   "route": "/portal/beneficiary-ira",
+   "file": "BeneficiaryIRAPlanner.tsx",
+   "loc": 178,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/bond-ladder",
+   "file": "BondLadderCalc.tsx",
+   "loc": 239,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/budget-50-30-20",
+   "file": "Budget503020Calc.tsx",
+   "loc": 202,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/business-entity",
+   "file": "BusinessEntitySelector.tsx",
+   "loc": 193,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/business-exit",
+   "file": "BusinessExitPlanner.tsx",
+   "loc": 230,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/business-succession",
+   "file": "BusinessSuccession.tsx",
+   "loc": 215,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/business-valuation",
+   "file": "BusinessValuationCalc.tsx",
+   "loc": 239,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/buy-sell-agreement",
+   "file": "BuySellAgreement.tsx",
+   "loc": 251,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/buy-sell-funding",
+   "file": "BuySellFundingCalc.tsx",
+   "loc": 255,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/calc-interop-matrix",
+   "file": "CalcInteropMatrix.tsx",
+   "loc": 118,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/calculator-hub",
+   "file": "CalculatorHub.tsx",
+   "loc": 446,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/capital-gains-tax",
+   "file": "CapitalGainsTaxCalc.tsx",
+   "loc": 256,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/captive-insurance",
+   "file": "CaptiveInsuranceCalc.tsx",
+   "loc": 231,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/captive-insurance-modeler",
+   "file": "CaptiveInsuranceModeler.tsx",
+   "loc": 205,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/captive-iul",
+   "file": "CaptiveInsuranceIUL.tsx",
+   "loc": 229,
+   "missingComponents": [
+    "CalculatorPDFExport",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/carrier-strength",
+   "file": "CarrierStrengthMonitor.tsx",
+   "loc": 177,
+   "missingComponents": [
+    "CalculatorPDFExport"
+   ]
+  },
+  {
+   "route": "/portal/cascading-optimizer",
+   "file": "CascadingMultiStrategyOptimizer.tsx",
+   "loc": 562,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ComboPageWrapper"
+   ]
+  },
+  {
+   "route": "/portal/cash-balance-plan",
+   "file": "CashBalancePlanCalc.tsx",
+   "loc": 236,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/cash-flow-optimizer",
+   "file": "CashFlowOptimizer.tsx",
+   "loc": 232,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/ce-credits",
+   "file": "CECreditTracker.tsx",
+   "loc": 213,
+   "missingComponents": [
+    "CalculatorPDFExport"
+   ]
+  },
+  {
+   "route": "/portal/charitable-giving-dashboard",
+   "file": "CharitableGivingDashboard.tsx",
+   "loc": 253,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/charitable-lead-trust",
+   "file": "CharitableLeadTrust.tsx",
+   "loc": 230,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/charitable-remainder-unitrust",
+   "file": "CharitableRemainderUniTrust.tsx",
+   "loc": 232,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/charitable-stock-donation",
+   "file": "CharitableStockCalc.tsx",
+   "loc": 258,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/client-presentation",
+   "file": "ClientPresentationBuilder.tsx",
+   "loc": 232,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/client-report-gen",
+   "file": "ClientReportGenerator.tsx",
+   "loc": 1213,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/client-retention",
+   "file": "ClientRetentionPredictor.tsx",
+   "loc": 201,
+   "missingComponents": [
+    "CalculatorPDFExport"
+   ]
+  },
+  {
+   "route": "/portal/client-retention-ai",
+   "file": "ClientRetentionAssistant.tsx",
+   "loc": 293,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/clt-engine",
+   "file": "CharitableLeadTrustEngine.tsx",
+   "loc": 260,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/college-aid",
+   "file": "CollegeAidOptimizer.tsx",
+   "loc": 266,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/combo-recommender-v2",
+   "file": "ComboRecommender.tsx",
+   "loc": 231,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/commission-optimizer",
+   "file": "CommissionOptimizer.tsx",
+   "loc": 207,
+   "missingComponents": [
+    "CalculatorPDFExport"
+   ]
+  },
+  {
+   "route": "/portal/compliance-center",
+   "file": "ComplianceCommandCenter.tsx",
+   "loc": 279,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/compliance-doc-gen",
+   "file": "ComplianceDocGenerator.tsx",
+   "loc": 205,
+   "missingComponents": [
+    "CalculatorPDFExport"
+   ]
+  },
+  {
+   "route": "/portal/compound-interest",
+   "file": "CompoundInterestCalc.tsx",
+   "loc": 244,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/concentrated-stock",
+   "file": "ConcentratedStock.tsx",
+   "loc": 262,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/concierge",
+   "file": "AIWealthConcierge.tsx",
+   "loc": 287,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/cost-of-living",
+   "file": "CostOfLivingCalc.tsx",
+   "loc": 231,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/cost-of-waiting",
+   "file": "CostOfWaitingCalc.tsx",
+   "loc": 236,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/cost-segregation",
+   "file": "CostSegregationAccelerator.tsx",
+   "loc": 195,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/cost-segregation-engine",
+   "file": "CostSegregationEngine.tsx",
+   "loc": 229,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/credit-card-payoff",
+   "file": "CreditCardPayoffCalc.tsx",
+   "loc": 260,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/cross-border-wealth",
+   "file": "CrossBorderWealthPlanner.tsx",
+   "loc": 224,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/cross-calc-aggregation",
+   "file": "CrossCalcAggregationHub.tsx",
+   "loc": 102,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/cross-feature-intelligence",
+   "file": "UnifiedCrossFeatureIntelligence.tsx",
+   "loc": 655,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ComboPageWrapper"
+   ]
+  },
+  {
+   "route": "/portal/cross-purchase",
+   "file": "CrossPurchaseAgreement.tsx",
+   "loc": 202,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/crt-calculator",
+   "file": "CRTCalculator.tsx",
+   "loc": 277,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/crt-deep-dive",
+   "file": "CRTDeepDive.tsx",
+   "loc": 181,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/crt-engine",
+   "file": "CharitableRemainderTrustEngine.tsx",
+   "loc": 224,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/crt-wealth-replacement",
+   "file": "CRTWealthReplacement.tsx",
+   "loc": 230,
+   "missingComponents": [
+    "CalculatorPDFExport",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/crut-deep-dive",
+   "file": "CRUTDeepDive.tsx",
+   "loc": 215,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/crypto-tax",
+   "file": "CryptoTaxCalc.tsx",
+   "loc": 232,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/daf-strategic",
+   "file": "DAFStrategicPlanner.tsx",
+   "loc": 207,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/daf-vs-direct-giving",
+   "file": "DAFvsDirectCalc.tsx",
+   "loc": 240,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/data-bus-dashboard",
+   "file": "UnifiedDataBusDashboard.tsx",
+   "loc": 559,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ComboPageWrapper"
+   ]
+  },
+  {
+   "route": "/portal/data-completeness",
+   "file": "DataCompletenessTracker.tsx",
+   "loc": 138,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/data-flow-visualizer",
+   "file": "DataFlowVisualizer.tsx",
+   "loc": 84,
+   "missingComponents": [
+    "CalculatorIntegration"
+   ]
+  },
+  {
+   "route": "/portal/dca-vs-lump-sum",
+   "file": "DCAvsLumpSumCalc.tsx",
+   "loc": 237,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/deal-closer",
+   "file": "AIDealCloser.tsx",
+   "loc": 471,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/debt-payoff",
+   "file": "DebtPayoffStrategy.tsx",
+   "loc": 241,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/debt-payoff-optimizer",
+   "file": "DebtPayoffOptimizerCalc.tsx",
+   "loc": 268,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/debt-recycling",
+   "file": "DebtRecyclingStrategy.tsx",
+   "loc": 227,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/deduction-optimizer",
+   "file": "DeductionOptimizerCalc.tsx",
+   "loc": 273,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/deep-organism",
+   "file": "DeepOrganismDashboard.tsx",
+   "loc": 187,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/deferred-comp",
+   "file": "DeferredCompensationAnalyzer.tsx",
+   "loc": 152,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/deferred-compensation",
+   "file": "DeferredCompCalc.tsx",
+   "loc": 228,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/defined-benefit",
+   "file": "DefinedBenefitPlanner.tsx",
+   "loc": 228,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/depreciation-recapture",
+   "file": "RealEstateDepreciationRecapture.tsx",
+   "loc": 212,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/depreciation-tax-shield",
+   "file": "DepreciationTaxShieldCalc.tsx",
+   "loc": 266,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/digital-estate",
+   "file": "DigitalAssetEstatePlanner.tsx",
+   "loc": 253,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/digital-estate-planner",
+   "file": "DigitalEstatePlanner.tsx",
+   "loc": 229,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/direct-indexing",
+   "file": "DirectIndexingOptimizer.tsx",
+   "loc": 257,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/disability-gap",
+   "file": "DisabilityGapAnalysis.tsx",
+   "loc": 237,
+   "missingComponents": [
+    "CalculatorPDFExport",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/disability-insurance-needs",
+   "file": "DisabilityInsuranceCalc.tsx",
+   "loc": 282,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/divorce-financial",
+   "file": "DivorceFinancialPlanner.tsx",
+   "loc": 237,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/divorce-impact",
+   "file": "DivorceFinancialImpact.tsx",
+   "loc": 232,
+   "missingComponents": [
+    "CalculatorPDFExport",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/divorce-settlement-enhanced",
+   "file": "DivorceSettlementCalc.tsx",
+   "loc": 229,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/drip-growth",
+   "file": "DRIPGrowthCalc.tsx",
+   "loc": 260,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/dst-analyzer",
+   "file": "DSTAnalyzer.tsx",
+   "loc": 222,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/dynasty-trust",
+   "file": "DynastyTrustArchitect.tsx",
+   "loc": 221,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/dynasty-trust-planner",
+   "file": "DynastyTrustPlanner.tsx",
+   "loc": 243,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/education-529",
+   "file": "Education529Planner.tsx",
+   "loc": 211,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/elite-showdown",
+   "file": "EliteShowdown.tsx",
+   "loc": 260,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/emergency-fund",
+   "file": "EmergencyFundPlanner.tsx",
+   "loc": 254,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/emergency-fund-vs-iul",
+   "file": "EmergencyFundVsIULCalc.tsx",
+   "loc": 278,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/employee-retention",
+   "file": "EmployeeRetentionStrategy.tsx",
+   "loc": 170,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/employee-stock-options",
+   "file": "EmployeeStockOptions.tsx",
+   "loc": 205,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/engine-chaining",
+   "file": "EngineChainingPipeline.tsx",
+   "loc": 279,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/engine-fusion",
+   "file": "EngineFusionLab.tsx",
+   "loc": 339,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/entity-comparison",
+   "file": "EntityComparisonCalc.tsx",
+   "loc": 252,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/entrainment-engine",
+   "file": "EntrainmentEngine.tsx",
+   "loc": 719,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ComboPageWrapper"
+   ]
+  },
+  {
+   "route": "/portal/equity-compensation",
+   "file": "EquityCompensationHub.tsx",
+   "loc": 232,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/esop-analyzer",
+   "file": "ESOPAnalyzer.tsx",
+   "loc": 250,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/esop-buyout",
+   "file": "ESOPLeveragedBuyoutPlanner.tsx",
+   "loc": 163,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/esop-calculator",
+   "file": "ESOPCalculator.tsx",
+   "loc": 195,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/estate-freeze-comparison",
+   "file": "EstateFreezeComparison.tsx",
+   "loc": 171,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/estate-liquidity",
+   "file": "EstateLiquidityCalc.tsx",
+   "loc": 291,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/estate-planning-sim",
+   "file": "EstatePlanningSimulator.tsx",
+   "loc": 213,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/estate-timeline",
+   "file": "EstatePlanningTimeline.tsx",
+   "loc": 233,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/estate-wealth-transfer",
+   "file": "EstateWealthTransfer.tsx",
+   "loc": 149,
+   "missingComponents": [
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/executive-bonus",
+   "file": "ExecutiveBonusPlan.tsx",
+   "loc": 226,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/executive-bridge",
+   "file": "ExecutiveRetirementBridge.tsx",
+   "loc": 225,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/executive-comp",
+   "file": "ExecutiveCompOptimizer.tsx",
+   "loc": 214,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/expat-tax",
+   "file": "ExpatTaxPlanner.tsx",
+   "loc": 232,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/family-bank",
+   "file": "FamilyBankStrategy.tsx",
+   "loc": 195,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/family-constitution",
+   "file": "FamilyWealthConstitution.tsx",
+   "loc": 206,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/family-governance",
+   "file": "FamilyGovernanceFramework.tsx",
+   "loc": 290,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/family-limited-partnership",
+   "file": "FamilyLimitedPartnership.tsx",
+   "loc": 204,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/family-office",
+   "file": "FamilyOfficeSimulator.tsx",
+   "loc": 218,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/family-tree",
+   "file": "FamilyTreeFinancial.tsx",
+   "loc": 234,
+   "missingComponents": [
+    "CalculatorPDFExport",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/fbar-fatca",
+   "file": "FBARFATCACompliance.tsx",
+   "loc": 381,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/fee-impact",
+   "file": "FeeImpactCalc.tsx",
+   "loc": 260,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/fiduciary-compliance",
+   "file": "FIDOComplianceTracker.tsx",
+   "loc": 294,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/fiduciary-tracker",
+   "file": "FiduciaryDutyTracker.tsx",
+   "loc": 212,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/financial-dna",
+   "file": "FinancialDNA.tsx",
+   "loc": 294,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/financial-freedom-number",
+   "file": "FinancialFreedomCalc.tsx",
+   "loc": 318,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/financial-health-score",
+   "file": "FinancialHealthScoreCalc.tsx",
+   "loc": 261,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/financial-independence",
+   "file": "FinancialIndependenceCalc.tsx",
+   "loc": 286,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/financial-nerve-center",
+   "file": "FinancialNerveCenter.tsx",
+   "loc": 176,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/financial-plan-checklist",
+   "file": "FinancialPlanChecklist.tsx",
+   "loc": 244,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/fire-calculator",
+   "file": "FIRECalculator.tsx",
+   "loc": 277,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/flp-planner",
+   "file": "FamilyLimitedPartnershipPlanner.tsx",
+   "loc": 178,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/fluency-academy",
+   "file": "FinancialFluencyAcademy.tsx",
+   "loc": 260,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/gain-loss-harvesting",
+   "file": "TaxGainLossCalc.tsx",
+   "loc": 225,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/generational-wealth",
+   "file": "GenerationalWealthSim.tsx",
+   "loc": 233,
+   "missingComponents": [
+    "CalculatorPDFExport",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/generational-wealth-sim",
+   "file": "GenerationalWealthSimulator.tsx",
+   "loc": 312,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/grantor-trust",
+   "file": "GrantorTrustStrategy.tsx",
+   "loc": 180,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/grat",
+   "file": "GRATPlanner.tsx",
+   "loc": 184,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/grat-calculator",
+   "file": "GRATCalculator.tsx",
+   "loc": 265,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/gst-trust",
+   "file": "GSTTrustPlanner.tsx",
+   "loc": 216,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/gstt-calculator",
+   "file": "GSTTCalculator.tsx",
+   "loc": 201,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/healthcare-cost",
+   "file": "HealthcareCostProjector.tsx",
+   "loc": 244,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/heartfire-legacy",
+   "file": "HeartfireLegacy.tsx",
+   "loc": 258,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/holographic-mirage",
+   "file": "HolographicMirage.tsx",
+   "loc": 247,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/home-affordability",
+   "file": "HomeAffordabilityCalc.tsx",
+   "loc": 267,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/hsa-maximizer",
+   "file": "HSAMaximizer.tsx",
+   "loc": 221,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/hsa-triple-tax",
+   "file": "HSATripleTaxCalc.tsx",
+   "loc": 276,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/idgt-advanced",
+   "file": "IDGTAdvancedModeler.tsx",
+   "loc": 250,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/idgt-modeler",
+   "file": "IDGTModeler.tsx",
+   "loc": 209,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/idr-comparison",
+   "file": "IDRComparisonCalc.tsx",
+   "loc": 259,
+   "missingComponents": [
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/ilit-analyzer",
+   "file": "ILITAnalyzer.tsx",
+   "loc": 218,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/ilit-calculator",
+   "file": "ILITCalculator.tsx",
+   "loc": 298,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/ilit-deep-dive",
+   "file": "ILITDeepDive.tsx",
+   "loc": 194,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/impact-scorecard",
+   "file": "ImpactScorecard.tsx",
+   "loc": 275,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/incentive-trust",
+   "file": "IncentiveTrustDesigner.tsx",
+   "loc": 382,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/income-floor",
+   "file": "RetirementIncomeFloorPlanner.tsx",
+   "loc": 201,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/income-floor-strategy",
+   "file": "RetirementIncomeFloorStrategy.tsx",
+   "loc": 244,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/income-protection",
+   "file": "IncomeProtectionPlanner.tsx",
+   "loc": 253,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/income-shifting",
+   "file": "IncomeShiftingCalc.tsx",
+   "loc": 266,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/infinity-banking",
+   "file": "InfinityBankingConcept.tsx",
+   "loc": 191,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/inflation-adjusted-income",
+   "file": "InflationAdjustedCalc.tsx",
+   "loc": 248,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/inflation-protection",
+   "file": "InflationProtectionSuite.tsx",
+   "loc": 210,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/inflation-returns",
+   "file": "InflationAdjustedReturnCalculator.tsx",
+   "loc": 204,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/inherited-roth",
+   "file": "InheritedRothPlanner.tsx",
+   "loc": 156,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/innovation-dashboard",
+   "file": "InnovationDashboard.tsx",
+   "loc": 272,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/installment-sale",
+   "file": "InstallmentSaleCalc.tsx",
+   "loc": 277,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/installment-sale-strategy",
+   "file": "InstallmentSale.tsx",
+   "loc": 263,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/insurance-coverage-command",
+   "file": "InsuranceCoverageCommand.tsx",
+   "loc": 114,
+   "missingComponents": [
+    "CalculatorIntegration"
+   ]
+  },
+  {
+   "route": "/portal/insurance-gap",
+   "file": "InsuranceGapAnalyzer.tsx",
+   "loc": 273,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/international-tax",
+   "file": "InternationalTax.tsx",
+   "loc": 170,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/international-trust",
+   "file": "InternationalTrustPlanner.tsx",
+   "loc": 167,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/irc-reference",
+   "file": "ComprehensiveIRCReferenceIndex.tsx",
+   "loc": 219,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/iul-compliance-engine",
+   "file": "IULComplianceEngine.tsx",
+   "loc": 205,
+   "missingComponents": [
+    "CalculatorPDFExport"
+   ]
+  },
+  {
+   "route": "/portal/iul-max-funded",
+   "file": "IULMaxFundedEngine.tsx",
+   "loc": 233,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/journey-navigator",
+   "file": "ClientJourneyNavigator.tsx",
+   "loc": 257,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/key-person-insurance",
+   "file": "KeyPersonInsuranceCalc.tsx",
+   "loc": 266,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/lease-vs-buy",
+   "file": "LeaseVsBuyCalc.tsx",
+   "loc": 308,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/legacy-vault",
+   "file": "LegacyVault.tsx",
+   "loc": 264,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/life-insurance-needs",
+   "file": "LifeInsuranceNeedsCalc.tsx",
+   "loc": 301,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/life-settlement",
+   "file": "LifeSettlementAnalyzer.tsx",
+   "loc": 210,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/lifestyle-inflation",
+   "file": "LifestyleInflationCalc.tsx",
+   "loc": 269,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/like-kind-exchange",
+   "file": "LikeKindExchangeCalc.tsx",
+   "loc": 243,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/living-benefits",
+   "file": "LivingBenefitsProbability.tsx",
+   "loc": 240,
+   "missingComponents": [
+    "CalculatorPDFExport",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/living-risk-profile",
+   "file": "LivingRiskProfile.tsx",
+   "loc": 729,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ComboPageWrapper"
+   ]
+  },
+  {
+   "route": "/portal/long-term-care-hybrid",
+   "file": "LongTermCareHybrid.tsx",
+   "loc": 181,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/longitudinal-risk",
+   "file": "LongitudinalRiskOptimizer.tsx",
+   "loc": 546,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ComboPageWrapper"
+   ]
+  },
+  {
+   "route": "/portal/ltc-cost",
+   "file": "LTCCostCalc.tsx",
+   "loc": 261,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/marginal-tax-rate",
+   "file": "MarginalTaxRateCalc.tsx",
+   "loc": 248,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/mastery-nexus",
+   "file": "MasteryNexus.tsx",
+   "loc": 244,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/medicaid-planning",
+   "file": "MedicaidPlanning.tsx",
+   "loc": 221,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/medicare-irmaa-calc",
+   "file": "MedicareIRMAACalc.tsx",
+   "loc": 230,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/medicare-part-d",
+   "file": "MedicarePartDPlanner.tsx",
+   "loc": 217,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/mega-backdoor-roth",
+   "file": "MegaBackdoorRothCalc.tsx",
+   "loc": 265,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/mesh-health",
+   "file": "MeshHealthMonitor.tsx",
+   "loc": 93,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/millionaire-calculator",
+   "file": "MillionaireCalc.tsx",
+   "loc": 295,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/moat-fortress",
+   "file": "MoatFortress.tsx",
+   "loc": 278,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/multi-carrier-iul",
+   "file": "MultiCarrierIULOptimizer.tsx",
+   "loc": 208,
+   "missingComponents": [
+    "CalculatorPDFExport"
+   ]
+  },
+  {
+   "route": "/portal/multi-currency",
+   "file": "MultiCurrencyWealth.tsx",
+   "loc": 233,
+   "missingComponents": [
+    "CalculatorPDFExport",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/multi-gen-roth",
+   "file": "MultiGenerationalRothStrategy.tsx",
+   "loc": 260,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/multi-generational-wealth",
+   "file": "MultiGenerationalWealthEngine.tsx",
+   "loc": 249,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/muni-bond-ladder",
+   "file": "MuniBondLadderCalc.tsx",
+   "loc": 231,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/net-worth-tracker",
+   "file": "NetWorthTrackerCalc.tsx",
+   "loc": 248,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/nii-surtax",
+   "file": "NIISurtaxOptimizer.tsx",
+   "loc": 190,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/nua-calculator",
+   "file": "NUACalculator.tsx",
+   "loc": 231,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/nua-planner",
+   "file": "NetUnrealizedAppreciationPlanner.tsx",
+   "loc": 258,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/nua-strategy",
+   "file": "NUAStrategy.tsx",
+   "loc": 172,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/oil-gas-strategy",
+   "file": "OilGasTaxStrategy.tsx",
+   "loc": 201,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/onboarding-quiz",
+   "file": "OnboardingQuiz.tsx",
+   "loc": 225,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/onboarding-workflow",
+   "file": "ClientOnboardingWorkflow.tsx",
+   "loc": 205,
+   "missingComponents": [
+    "CalculatorPDFExport"
+   ]
+  },
+  {
+   "route": "/portal/opportunity-zone",
+   "file": "OpportunityZoneCalc.tsx",
+   "loc": 244,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/options-profit-loss",
+   "file": "OptionsProfitCalc.tsx",
+   "loc": 246,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/organism-control",
+   "file": "OrganismControlCenter.tsx",
+   "loc": 235,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/organism-dashboard",
+   "file": "OrganismDashboard.tsx",
+   "loc": 486,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "NeuralMeshInterceptor"
+   ]
+  },
+  {
+   "route": "/portal/organism-deep-provider",
+   "file": "OrganismDeepProvider.tsx",
+   "loc": 68,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/organism-health",
+   "file": "OrganismHealthReport.tsx",
+   "loc": 274,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/overhead-expense",
+   "file": "OverheadExpenseCalc.tsx",
+   "loc": 249,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/own-occ-disability",
+   "file": "OwnOccDisabilityCalc.tsx",
+   "loc": 347,
+   "missingComponents": [
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/pavlovian-engagement",
+   "file": "GamifiedPavlovianEngagement.tsx",
+   "loc": 704,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ComboPageWrapper"
+   ]
+  },
+  {
+   "route": "/portal/pe-irr-calculator",
+   "file": "PrivateEquityIRRCalc.tsx",
+   "loc": 254,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/pe-secondary-market",
+   "file": "PrivateEquitySecondaryMarket.tsx",
+   "loc": 200,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/pe-tax",
+   "file": "PrivateEquityTaxPlanner.tsx",
+   "loc": 209,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/peer-benchmarking",
+   "file": "PeerBenchmarking.tsx",
+   "loc": 141,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/peer-intel",
+   "file": "PeerBenchmarkingIntel.tsx",
+   "loc": 196,
+   "missingComponents": [
+    "CalculatorPDFExport"
+   ]
+  },
+  {
+   "route": "/portal/peer-network",
+   "file": "PeerTrustNetwork.tsx",
+   "loc": 287,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/pension-max",
+   "file": "PensionMaxCalc.tsx",
+   "loc": 226,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/pension-max-engine",
+   "file": "PensionMaximizationEngine.tsx",
+   "loc": 191,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/pension-maximization",
+   "file": "PensionMaximization.tsx",
+   "loc": 226,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/pension-vs-lump-sum",
+   "file": "PensionVsLumpSumCalc.tsx",
+   "loc": 271,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/persona-hub",
+   "file": "PersonaHub.tsx",
+   "loc": 272,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/phantom-stock",
+   "file": "PhantomStockPlanner.tsx",
+   "loc": 242,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/philanthropy",
+   "file": "PhilanthropyImpactDashboard.tsx",
+   "loc": 248,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/physician-blueprint",
+   "file": "PhysicianFinancialBlueprint.tsx",
+   "loc": 217,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/physician-contract",
+   "file": "PhysicianContractCalc.tsx",
+   "loc": 277,
+   "missingComponents": [
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/physician-forum",
+   "file": "PhysicianForum.tsx",
+   "loc": 227,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/physician-mortgage",
+   "file": "PhysicianMortgageAnalyzer.tsx",
+   "loc": 229,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/physician-retirement",
+   "file": "PhysicianRetirementBlueprint.tsx",
+   "loc": 196,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/physician-vitals",
+   "file": "PhysicianVitalsDashboard.tsx",
+   "loc": 580,
+   "missingComponents": [
+    "CalculatorIntegration"
+   ]
+  },
+  {
+   "route": "/portal/policy-replacement",
+   "file": "PolicyReplacementAnalyzer.tsx",
+   "loc": 228,
+   "missingComponents": [
+    "CalculatorPDFExport",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/portfolio-risk-return",
+   "file": "PortfolioRiskCalc.tsx",
+   "loc": 291,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/post-mortem-tax",
+   "file": "PostMortemTaxPlanner.tsx",
+   "loc": 236,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/ppli",
+   "file": "PrivatePlacementLifeInsurance.tsx",
+   "loc": 201,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/ppli-modeler",
+   "file": "PPLIModeler.tsx",
+   "loc": 227,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/ppva",
+   "file": "PrivatePlacementAnnuity.tsx",
+   "loc": 220,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/practice-sync",
+   "file": "PracticeWealthSync.tsx",
+   "loc": 259,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/practice-valuation",
+   "file": "PracticeValuation.tsx",
+   "loc": 229,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/predictive-arena",
+   "file": "PredictiveInsightArena.tsx",
+   "loc": 315,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/premium-financing-arbitrage",
+   "file": "PremiumFinancingArbitrage.tsx",
+   "loc": 231,
+   "missingComponents": [
+    "CalculatorPDFExport",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/premium-financing-calc",
+   "file": "PremiumFinancingCalculator.tsx",
+   "loc": 202,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/presentation-vault",
+   "file": "PresentationVault.tsx",
+   "loc": 370,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/private-credit",
+   "file": "PrivateCredit.tsx",
+   "loc": 179,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/private-foundation",
+   "file": "PrivateFoundationPlanner.tsx",
+   "loc": 214,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/private-placement",
+   "file": "PrivatePlacement.tsx",
+   "loc": 207,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/private-reit",
+   "file": "PrivateREITAnalyzer.tsx",
+   "loc": 223,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/projection-theater",
+   "file": "WealthProjectionTheater.tsx",
+   "loc": 314,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/property-tax-appeal",
+   "file": "PropertyTaxAppealCalc.tsx",
+   "loc": 259,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/prospect-qualification",
+   "file": "ProspectQualification.tsx",
+   "loc": 202,
+   "missingComponents": [
+    "CalculatorPDFExport"
+   ]
+  },
+  {
+   "route": "/portal/pslf-calculator",
+   "file": "PSLFCalculator.tsx",
+   "loc": 270,
+   "missingComponents": [
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/qbi-calculator",
+   "file": "QBICalculator.tsx",
+   "loc": 248,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/qlac-calculator",
+   "file": "QLACCalculator.tsx",
+   "loc": 228,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/qprt",
+   "file": "QPRTPlanner.tsx",
+   "loc": 190,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/qprt-advanced",
+   "file": "QPRTAdvancedPlanner.tsx",
+   "loc": 208,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/qprt-calculator",
+   "file": "QPRTCalculator.tsx",
+   "loc": 247,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/qsbs",
+   "file": "QualifiedSmallBusinessStock.tsx",
+   "loc": 247,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/qsbs-exclusion",
+   "file": "QSBSExclusionCalc.tsx",
+   "loc": 205,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/qualified-opportunity-fund",
+   "file": "QualifiedOpportunityFund.tsx",
+   "loc": 160,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/qualified-plan-maximizer",
+   "file": "QualifiedPlanMaximizer.tsx",
+   "loc": 250,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/re-stacking",
+   "file": "RealEstateStackingStrategy.tsx",
+   "loc": 192,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/real-estate-portfolio",
+   "file": "RealEstatePortfolioManager.tsx",
+   "loc": 217,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/real-estate-syndication",
+   "file": "RealEstatesyndicationAnalyzer.tsx",
+   "loc": 212,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/refinance-break-even",
+   "file": "RefinanceBreakEvenCalc.tsx",
+   "loc": 276,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/rental-property-roi",
+   "file": "RentalPropertyROICalc.tsx",
+   "loc": 261,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/report-builder",
+   "file": "ClientReportBuilder.tsx",
+   "loc": 309,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/residency-to-attending",
+   "file": "ResidencyToAttendingCalc.tsx",
+   "loc": 302,
+   "missingComponents": [
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/retirement-advantage",
+   "file": "RetirementAdvantage.tsx",
+   "loc": 625,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/retirement-budget",
+   "file": "RetirementBudgetCalc.tsx",
+   "loc": 270,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/retirement-distributions",
+   "file": "RetirementPlanDistributionPlanner.tsx",
+   "loc": 200,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/retirement-gap",
+   "file": "RetirementGapInflation.tsx",
+   "loc": 235,
+   "missingComponents": [
+    "CalculatorPDFExport",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/retirement-healthcare",
+   "file": "RetirementHealthcareCalc.tsx",
+   "loc": 262,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/retirement-income-proj",
+   "file": "RetirementIncomeProjector.tsx",
+   "loc": 294,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/retirement-readiness",
+   "file": "RetirementReadinessCenter.tsx",
+   "loc": 144,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/reverse-mortgage",
+   "file": "ReverseMortgageCalc.tsx",
+   "loc": 249,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/risk-compliance",
+   "file": "RiskComplianceDashboard.tsx",
+   "loc": 414,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/rmd-calculator",
+   "file": "RMDCalculator.tsx",
+   "loc": 215,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/roth-conversion-analyzer",
+   "file": "RothConversionAnalyzer.tsx",
+   "loc": 278,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/roth-vs-traditional",
+   "file": "RothVsTraditionalCalc.tsx",
+   "loc": 282,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/rsu-tax",
+   "file": "RSUTaxCalc.tsx",
+   "loc": 250,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/rsu-tax-planning",
+   "file": "RSUTaxPlanning.tsx",
+   "loc": 330,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/sabbatical-planner",
+   "file": "SabbaticalPlannerCalc.tsx",
+   "loc": 314,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/safe-withdrawal-rate",
+   "file": "SafeWithdrawalCalc.tsx",
+   "loc": 321,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/savings-rate-impact",
+   "file": "SavingsRateCalc.tsx",
+   "loc": 281,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/section-1202",
+   "file": "Section1202Planner.tsx",
+   "loc": 219,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/section-199a",
+   "file": "Section199AOptimizer.tsx",
+   "loc": 196,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/section-2701",
+   "file": "Section2701ValuationPlanner.tsx",
+   "loc": 170,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/sector-rotation",
+   "file": "SectorRotationCalc.tsx",
+   "loc": 211,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/self-employment-tax",
+   "file": "SelfEmploymentTaxCalc.tsx",
+   "loc": 235,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/sequence-of-returns",
+   "file": "SequenceOfReturnsRisk.tsx",
+   "loc": 313,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/serp-analyzer",
+   "file": "SERPAnalyzer.tsx",
+   "loc": 276,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/severance-calculator",
+   "file": "SeveranceCalc.tsx",
+   "loc": 269,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/short-term-rental",
+   "file": "ShortTermRentalStrategy.tsx",
+   "loc": 213,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/slat-deep-dive",
+   "file": "SLATDeepDive.tsx",
+   "loc": 231,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/slat-planner",
+   "file": "SLATPlanner.tsx",
+   "loc": 199,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/smart-routing",
+   "file": "SmartRoutingDashboard.tsx",
+   "loc": 87,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/social-security-maximizer",
+   "file": "SocialSecurityMaximizer.tsx",
+   "loc": 234,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/special-needs",
+   "file": "SpecialNeedsPlanner.tsx",
+   "loc": 198,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/special-needs-trust",
+   "file": "SpecialNeedsTrustCalc.tsx",
+   "loc": 228,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/spend-vs-invest",
+   "file": "SpendVsInvestCalc.tsx",
+   "loc": 287,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/spending-guardrails",
+   "file": "RetirementSpendingGuardrails.tsx",
+   "loc": 194,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/split-dollar",
+   "file": "SplitDollarLifeInsurance.tsx",
+   "loc": 198,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/split-dollar-life",
+   "file": "SplitDollarLife.tsx",
+   "loc": 176,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/spousal-lifetime-access",
+   "file": "SpousalLifetimeAccess.tsx",
+   "loc": 180,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/spousal-ss-coordination",
+   "file": "SpousalSSCalc.tsx",
+   "loc": 302,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/ss-bridge",
+   "file": "SocialSecurityBridge.tsx",
+   "loc": 236,
+   "missingComponents": [
+    "CalculatorPDFExport",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/ss-bridge-strategy",
+   "file": "SocialSecurityBridgeStrategy.tsx",
+   "loc": 211,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/state-tax-arbitrage",
+   "file": "StateTaxArbitrageCalc.tsx",
+   "loc": 212,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/state-tax-migration",
+   "file": "StateTaxMigration.tsx",
+   "loc": 248,
+   "missingComponents": [
+    "CalculatorPDFExport",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/state-trust-planning",
+   "file": "GraniteStateTrustPlanner.tsx",
+   "loc": 222,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/str-tax-strategy",
+   "file": "ShortTermRentalTaxStrategy.tsx",
+   "loc": 209,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/strategy-comparison",
+   "file": "StrategyComparisonArena.tsx",
+   "loc": 119,
+   "missingComponents": [
+    "CalculatorIntegration"
+   ]
+  },
+  {
+   "route": "/portal/strategy-synergy",
+   "file": "StrategySynergyHub.tsx",
+   "loc": 380,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/stress-test",
+   "file": "PortfolioStressTest.tsx",
+   "loc": 240,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/stretch-ira",
+   "file": "StretchIRAStrategy.tsx",
+   "loc": 269,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/structured-notes",
+   "file": "StructuredNoteAnalyzer.tsx",
+   "loc": 282,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/structured-settlement",
+   "file": "StructuredSettlementPlanner.tsx",
+   "loc": 213,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/student-loan-optimizer",
+   "file": "StudentLoanOptimizer.tsx",
+   "loc": 281,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/student-loan-vs-invest",
+   "file": "StudentLoanVsInvestCalc.tsx",
+   "loc": 291,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/succession-engine",
+   "file": "SuccessionPlanningEngine.tsx",
+   "loc": 221,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/succession-plan",
+   "file": "SuccessionPlanCalc.tsx",
+   "loc": 299,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/succession-valuation",
+   "file": "SuccessionValuation.tsx",
+   "loc": 224,
+   "missingComponents": [
+    "CalculatorPDFExport",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/survivor-benefits",
+   "file": "SurvivorBenefitPlanner.tsx",
+   "loc": 226,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/syndication-deal",
+   "file": "SyndicationDealAnalyzer.tsx",
+   "loc": 199,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/tax-alpha-scorecard",
+   "file": "TaxAlphaScorecard.tsx",
+   "loc": 189,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/tax-bracket-navigator",
+   "file": "TaxBracketNavigator.tsx",
+   "loc": 358,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/tax-code-simulator",
+   "file": "TaxCodeChangeSimulator.tsx",
+   "loc": 205,
+   "missingComponents": [
+    "CalculatorPDFExport"
+   ]
+  },
+  {
+   "route": "/portal/tax-credits",
+   "file": "TaxCreditOptimizer.tsx",
+   "loc": 212,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/tax-deferred-exchange",
+   "file": "TaxDeferredExchangeTimeline.tsx",
+   "loc": 195,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/tax-equivalent-yield",
+   "file": "TaxEquivalentYieldCalc.tsx",
+   "loc": 232,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/tax-loss-harvest-calc",
+   "file": "TaxLossHarvestCalc.tsx",
+   "loc": 244,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/tax-optimization-command",
+   "file": "TaxOptimizationCommand.tsx",
+   "loc": 144,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/tax-optimizer",
+   "file": "TaxStrategyOptimizer.tsx",
+   "loc": 239,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/tax-projection",
+   "file": "TaxProjectionEngine.tsx",
+   "loc": 228,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/taxable-account",
+   "file": "TaxableAccountOptimizer.tsx",
+   "loc": 236,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/taxable-estate",
+   "file": "TaxableEstateCalculator.tsx",
+   "loc": 227,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/tenant-in-common",
+   "file": "TenantInCommonAnalyzer.tsx",
+   "loc": 247,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/term-vs-whole-vs-iul",
+   "file": "TermVsWholeVsIULCalc.tsx",
+   "loc": 267,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/tool-explorer",
+   "file": "ToolExplorer.tsx",
+   "loc": 242,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/trust-comparison-matrix",
+   "file": "TrustComparisonMatrix.tsx",
+   "loc": 406,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/trust-decanting",
+   "file": "TrustDecantingPlanner.tsx",
+   "loc": 202,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/trust-funding",
+   "file": "TrustFundingChecklist.tsx",
+   "loc": 216,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/umbrella-insurance",
+   "file": "UmbrellaInsuranceCalc.tsx",
+   "loc": 247,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/usage-analytics",
+   "file": "UsageAnalyticsDashboard.tsx",
+   "loc": 185,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/vacation-rental",
+   "file": "VacationRentalCalc.tsx",
+   "loc": 213,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/variable-annuity",
+   "file": "VariableAnnuityAnalyzer.tsx",
+   "loc": 183,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/volatility-harvesting",
+   "file": "VolatilityHarvestingEngine.tsx",
+   "loc": 236,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/w4-optimizer",
+   "file": "W4OptimizerCalc.tsx",
+   "loc": 233,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/wealth-accumulation",
+   "file": "WealthAccumulationSimulator.tsx",
+   "loc": 238,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/wealth-canvas",
+   "file": "DimensionalWealthCanvas.tsx",
+   "loc": 340,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/wealth-dashboard",
+   "file": "WealthDashboardSummary.tsx",
+   "loc": 267,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/wealth-erosion",
+   "file": "WealthErosionTracker.tsx",
+   "loc": 164,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/wealth-odyssey",
+   "file": "WealthOdyssey.tsx",
+   "loc": 314,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/wealth-rituals",
+   "file": "WealthRituals.tsx",
+   "loc": 243,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/wealth-timeline",
+   "file": "WealthAccumulationTimeline.tsx",
+   "loc": 172,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/wealth-transfer-comparison",
+   "file": "WealthTransferVehicleComparison.tsx",
+   "loc": 222,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/wealth-transfer-scoreboard",
+   "file": "WealthTransferScoreboard.tsx",
+   "loc": 221,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/wealth-transfer-scorecard",
+   "file": "WealthTransferScorecard.tsx",
+   "loc": 174,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/wealth-transfer-timeline",
+   "file": "WealthTransferTimeline.tsx",
+   "loc": 200,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/wealth-warrior",
+   "file": "WealthWarriorChallenges.tsx",
+   "loc": 257,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/whole-life-dividend",
+   "file": "WholeLifeDividendEngine.tsx",
+   "loc": 226,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/windfall-management",
+   "file": "WindfallCalc.tsx",
+   "loc": 284,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  },
+  {
+   "route": "/portal/withdrawal-rate",
+   "file": "WithdrawalRateOptimizer.tsx",
+   "loc": 236,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/withdrawal-sequencer",
+   "file": "TaxEfficientWithdrawalSequencer.tsx",
+   "loc": 216,
+   "missingComponents": []
+  },
+  {
+   "route": "/portal/zero-based-budget",
+   "file": "ZeroBasedBudgetCalc.tsx",
+   "loc": 253,
+   "missingComponents": [
+    "CalculatorIntegration",
+    "ProjectionChart50yr"
+   ]
+  }
+ ],
+ "missingComponentCounts": {
+  "CalculatorIntegration": 113,
+  "ProjectionChart50yr": 122,
+  "CalculatorPDFExport": 27,
+  "ComboPageWrapper": 8,
+  "NeuralMeshInterceptor": 1
+ }
+}

@@ -1,0 +1,1262 @@
+[
+ {
+  "route": "/portal/carrier-ratings",
+  "donorLoc": 1713,
+  "liveLoc": 94,
+  "delta": 1619
+ },
+ {
+  "route": "/portal/carrier-rates",
+  "donorLoc": 1713,
+  "liveLoc": 94,
+  "delta": 1619
+ },
+ {
+  "route": "/portal/legal-payment-folder",
+  "donorLoc": 1198,
+  "liveLoc": 29,
+  "delta": 1169
+ },
+ {
+  "route": "/portal/ai-meeting-notes",
+  "donorLoc": 1046,
+  "liveLoc": 31,
+  "delta": 1015
+ },
+ {
+  "route": "/portal/billing",
+  "donorLoc": 987,
+  "liveLoc": 25,
+  "delta": 962
+ },
+ {
+  "route": "/portal/ai-brain-hub",
+  "donorLoc": 495,
+  "liveLoc": 178,
+  "delta": 317
+ },
+ {
+  "route": "/portal/myga-waterfall",
+  "donorLoc": 299,
+  "liveLoc": 126,
+  "delta": 173
+ },
+ {
+  "route": "/portal/market-pulse",
+  "donorLoc": 267,
+  "liveLoc": 133,
+  "delta": 134
+ },
+ {
+  "route": "/portal/ai-assist",
+  "donorLoc": 1279,
+  "liveLoc": 1151,
+  "delta": 128
+ },
+ {
+  "route": "/portal/ai",
+  "donorLoc": 1279,
+  "liveLoc": 1151,
+  "delta": 128
+ },
+ {
+  "route": "/portal/meeting-prep",
+  "donorLoc": 195,
+  "liveLoc": 121,
+  "delta": 74
+ },
+ {
+  "route": "/portal/long-term-care",
+  "donorLoc": 208,
+  "liveLoc": 164,
+  "delta": 44
+ },
+ {
+  "route": "/portal/household-wealth",
+  "donorLoc": 1479,
+  "liveLoc": 1450,
+  "delta": 29
+ },
+ {
+  "route": "/portal/mortgage-killer-v2",
+  "donorLoc": 226,
+  "liveLoc": 201,
+  "delta": 25
+ },
+ {
+  "route": "/portal/tax-combos",
+  "donorLoc": 171,
+  "liveLoc": 168,
+  "delta": 3
+ },
+ {
+  "route": "/portal/secret-secrets",
+  "donorLoc": 165,
+  "liveLoc": 162,
+  "delta": 3
+ },
+ {
+  "route": "/portal/war-story-generator",
+  "donorLoc": 266,
+  "liveLoc": 264,
+  "delta": 2
+ },
+ {
+  "route": "/portal/toilet",
+  "donorLoc": 152,
+  "liveLoc": 150,
+  "delta": 2
+ },
+ {
+  "route": "/portal/time-machine",
+  "donorLoc": 297,
+  "liveLoc": 295,
+  "delta": 2
+ },
+ {
+  "route": "/portal/team-management",
+  "donorLoc": 1773,
+  "liveLoc": 1771,
+  "delta": 2
+ },
+ {
+  "route": "/portal/tax-return-upload",
+  "donorLoc": 1276,
+  "liveLoc": 1274,
+  "delta": 2
+ },
+ {
+  "route": "/portal/scenario-play",
+  "donorLoc": 1454,
+  "liveLoc": 1452,
+  "delta": 2
+ },
+ {
+  "route": "/portal/rewards",
+  "donorLoc": 339,
+  "liveLoc": 337,
+  "delta": 2
+ },
+ {
+  "route": "/portal/pet",
+  "donorLoc": 444,
+  "liveLoc": 442,
+  "delta": 2
+ },
+ {
+  "route": "/portal/my-world",
+  "donorLoc": 402,
+  "liveLoc": 400,
+  "delta": 2
+ },
+ {
+  "route": "/portal/knowledge",
+  "donorLoc": 552,
+  "liveLoc": 550,
+  "delta": 2
+ },
+ {
+  "route": "/portal/enterprise",
+  "donorLoc": 1295,
+  "liveLoc": 1293,
+  "delta": 2
+ },
+ {
+  "route": "/portal/email-campaigns",
+  "donorLoc": 539,
+  "liveLoc": 537,
+  "delta": 2
+ },
+ {
+  "route": "/portal/admin",
+  "donorLoc": 1295,
+  "liveLoc": 1293,
+  "delta": 2
+ },
+ {
+  "route": "/portal/video-library",
+  "donorLoc": 234,
+  "liveLoc": 234,
+  "delta": 0
+ },
+ {
+  "route": "/portal/tax-waterfall",
+  "donorLoc": 1160,
+  "liveLoc": 1160,
+  "delta": 0
+ },
+ {
+  "route": "/portal/tax-combos/:id",
+  "donorLoc": 732,
+  "liveLoc": 732,
+  "delta": 0
+ },
+ {
+  "route": "/portal/strategy-compare",
+  "donorLoc": 516,
+  "liveLoc": 516,
+  "delta": 0
+ },
+ {
+  "route": "/portal/strategy",
+  "donorLoc": 500,
+  "liveLoc": 500,
+  "delta": 0
+ },
+ {
+  "route": "/portal/combo-recommender",
+  "donorLoc": 685,
+  "liveLoc": 685,
+  "delta": 0
+ },
+ {
+  "route": "/portal/client-intake-recommender",
+  "donorLoc": 685,
+  "liveLoc": 685,
+  "delta": 0
+ },
+ {
+  "route": "/portal/batch-illustration",
+  "donorLoc": 1422,
+  "liveLoc": 1422,
+  "delta": 0
+ },
+ {
+  "route": "/portal/athene-pe-plus15",
+  "donorLoc": 1348,
+  "liveLoc": 1348,
+  "delta": 0
+ },
+ {
+  "route": "/portal/story-generator",
+  "donorLoc": 232,
+  "liveLoc": 233,
+  "delta": -1
+ },
+ {
+  "route": "/portal/secret-secrets/:id",
+  "donorLoc": 696,
+  "liveLoc": 697,
+  "delta": -1
+ },
+ {
+  "route": "/portal/retirement-guardrails",
+  "donorLoc": 1386,
+  "liveLoc": 1387,
+  "delta": -1
+ },
+ {
+  "route": "/portal/daily-briefing",
+  "donorLoc": 451,
+  "liveLoc": 452,
+  "delta": -1
+ },
+ {
+  "route": "/portal/russell-number",
+  "donorLoc": 205,
+  "liveLoc": 207,
+  "delta": -2
+ },
+ {
+  "route": "/portal/physicians-edge",
+  "donorLoc": 333,
+  "liveLoc": 335,
+  "delta": -2
+ },
+ {
+  "route": "/portal/morning-ritual",
+  "donorLoc": 481,
+  "liveLoc": 483,
+  "delta": -2
+ },
+ {
+  "route": "/portal/meetings",
+  "donorLoc": 677,
+  "liveLoc": 679,
+  "delta": -2
+ },
+ {
+  "route": "/portal/recommendations",
+  "donorLoc": 1452,
+  "liveLoc": 1455,
+  "delta": -3
+ },
+ {
+  "route": "/portal/carrier-comparison",
+  "donorLoc": 651,
+  "liveLoc": 654,
+  "delta": -3
+ },
+ {
+  "route": "/portal/axonic-sp500",
+  "donorLoc": 816,
+  "liveLoc": 819,
+  "delta": -3
+ },
+ {
+  "route": "/portal/ai-slides",
+  "donorLoc": 798,
+  "liveLoc": 801,
+  "delta": -3
+ },
+ {
+  "route": "/portal/wealth-reels",
+  "donorLoc": 517,
+  "liveLoc": 521,
+  "delta": -4
+ },
+ {
+  "route": "/portal/str-strategy",
+  "donorLoc": 951,
+  "liveLoc": 955,
+  "delta": -4
+ },
+ {
+  "route": "/portal/risk-tolerance",
+  "donorLoc": 770,
+  "liveLoc": 774,
+  "delta": -4
+ },
+ {
+  "route": "/portal/infinite-scroll",
+  "donorLoc": 517,
+  "liveLoc": 521,
+  "delta": -4
+ },
+ {
+  "route": "/portal/index-strategies",
+  "donorLoc": 1106,
+  "liveLoc": 1110,
+  "delta": -4
+ },
+ {
+  "route": "/portal/growth-annuities",
+  "donorLoc": 1051,
+  "liveLoc": 1055,
+  "delta": -4
+ },
+ {
+  "route": "/portal/existing-annuities",
+  "donorLoc": 1254,
+  "liveLoc": 1258,
+  "delta": -4
+ },
+ {
+  "route": "/portal/client-portfolio",
+  "donorLoc": 1277,
+  "liveLoc": 1281,
+  "delta": -4
+ },
+ {
+  "route": "/portal",
+  "donorLoc": 517,
+  "liveLoc": 521,
+  "delta": -4
+ },
+ {
+  "route": "/portal/policy-review",
+  "donorLoc": 1616,
+  "liveLoc": 1621,
+  "delta": -5
+ },
+ {
+  "route": "/portal/mortgage-killer-v3",
+  "donorLoc": 1534,
+  "liveLoc": 1539,
+  "delta": -5
+ },
+ {
+  "route": "/portal/leaderboard",
+  "donorLoc": 654,
+  "liveLoc": 659,
+  "delta": -5
+ },
+ {
+  "route": "/portal/beneficiary-optimization",
+  "donorLoc": 1555,
+  "liveLoc": 1560,
+  "delta": -5
+ },
+ {
+  "route": "/portal/annuity-accumulation-db",
+  "donorLoc": 1245,
+  "liveLoc": 1250,
+  "delta": -5
+ },
+ {
+  "route": "/portal/webhooks",
+  "donorLoc": 1703,
+  "liveLoc": 1709,
+  "delta": -6
+ },
+ {
+  "route": "/portal/tax-brackets",
+  "donorLoc": 1354,
+  "liveLoc": 1360,
+  "delta": -6
+ },
+ {
+  "route": "/portal/reverse-heloc",
+  "donorLoc": 1025,
+  "liveLoc": 1031,
+  "delta": -6
+ },
+ {
+  "route": "/portal/fee-transparency",
+  "donorLoc": 1471,
+  "liveLoc": 1477,
+  "delta": -6
+ },
+ {
+  "route": "/portal/client-intake",
+  "donorLoc": 1394,
+  "liveLoc": 1400,
+  "delta": -6
+ },
+ {
+  "route": "/portal/voice-plan",
+  "donorLoc": 1015,
+  "liveLoc": 1022,
+  "delta": -7
+ },
+ {
+  "route": "/portal/quotes",
+  "donorLoc": 1176,
+  "liveLoc": 1183,
+  "delta": -7
+ },
+ {
+  "route": "/portal/dashboard",
+  "donorLoc": 826,
+  "liveLoc": 833,
+  "delta": -7
+ },
+ {
+  "route": "/portal/policy-review-checklist",
+  "donorLoc": 1724,
+  "liveLoc": 1732,
+  "delta": -8
+ },
+ {
+  "route": "/portal/inflation",
+  "donorLoc": 1077,
+  "liveLoc": 1085,
+  "delta": -8
+ },
+ {
+  "route": "/portal/income-gap",
+  "donorLoc": 1220,
+  "liveLoc": 1228,
+  "delta": -8
+ },
+ {
+  "route": "/portal/financial-vitals",
+  "donorLoc": 1344,
+  "liveLoc": 1352,
+  "delta": -8
+ },
+ {
+  "route": "/portal/compliance-audit-trail",
+  "donorLoc": 1153,
+  "liveLoc": 1161,
+  "delta": -8
+ },
+ {
+  "route": "/portal/withdrawal-sequencing",
+  "donorLoc": 1109,
+  "liveLoc": 1118,
+  "delta": -9
+ },
+ {
+  "route": "/portal/time-lapse",
+  "donorLoc": 257,
+  "liveLoc": 266,
+  "delta": -9
+ },
+ {
+  "route": "/portal/revenue-guarantee",
+  "donorLoc": 306,
+  "liveLoc": 315,
+  "delta": -9
+ },
+ {
+  "route": "/portal/wrapped",
+  "donorLoc": 215,
+  "liveLoc": 225,
+  "delta": -10
+ },
+ {
+  "route": "/portal/referral-tracking",
+  "donorLoc": 1820,
+  "liveLoc": 1831,
+  "delta": -11
+ },
+ {
+  "route": "/portal/policy-loans",
+  "donorLoc": 1054,
+  "liveLoc": 1065,
+  "delta": -11
+ },
+ {
+  "route": "/portal/client-health",
+  "donorLoc": 1684,
+  "liveLoc": 1695,
+  "delta": -11
+ },
+ {
+  "route": "/portal/sales-story",
+  "donorLoc": 1450,
+  "liveLoc": 1462,
+  "delta": -12
+ },
+ {
+  "route": "/portal/co-pilot",
+  "donorLoc": 269,
+  "liveLoc": 281,
+  "delta": -12
+ },
+ {
+  "route": "/portal/arena",
+  "donorLoc": 594,
+  "liveLoc": 606,
+  "delta": -12
+ },
+ {
+  "route": "/portal/predictive-analytics",
+  "donorLoc": 1237,
+  "liveLoc": 1250,
+  "delta": -13
+ },
+ {
+  "route": "/portal/iul-historical",
+  "donorLoc": 1187,
+  "liveLoc": 1200,
+  "delta": -13
+ },
+ {
+  "route": "/portal/crypto-corner",
+  "donorLoc": 948,
+  "liveLoc": 961,
+  "delta": -13
+ },
+ {
+  "route": "/portal/comparison",
+  "donorLoc": 683,
+  "liveLoc": 696,
+  "delta": -13
+ },
+ {
+  "route": "/portal/annuity-memory",
+  "donorLoc": 973,
+  "liveLoc": 986,
+  "delta": -13
+ },
+ {
+  "route": "/portal/time-machine-method",
+  "donorLoc": 1292,
+  "liveLoc": 1306,
+  "delta": -14
+ },
+ {
+  "route": "/portal/premium-financing",
+  "donorLoc": 1226,
+  "liveLoc": 1240,
+  "delta": -14
+ },
+ {
+  "route": "/portal/onboarding-v2",
+  "donorLoc": 787,
+  "liveLoc": 801,
+  "delta": -14
+ },
+ {
+  "route": "/portal/time-machine-calculator",
+  "donorLoc": 1143,
+  "liveLoc": 1158,
+  "delta": -15
+ },
+ {
+  "route": "/portal/tax-advantaged-growth",
+  "donorLoc": 1159,
+  "liveLoc": 1174,
+  "delta": -15
+ },
+ {
+  "route": "/portal/scenarios",
+  "donorLoc": 1292,
+  "liveLoc": 1307,
+  "delta": -15
+ },
+ {
+  "route": "/portal/goals-planning",
+  "donorLoc": 903,
+  "liveLoc": 918,
+  "delta": -15
+ },
+ {
+  "route": "/portal/couples",
+  "donorLoc": 464,
+  "liveLoc": 479,
+  "delta": -15
+ },
+ {
+  "route": "/portal/client-scorecard",
+  "donorLoc": 795,
+  "liveLoc": 810,
+  "delta": -15
+ },
+ {
+  "route": "/portal/bulk-generation",
+  "donorLoc": 740,
+  "liveLoc": 755,
+  "delta": -15
+ },
+ {
+  "route": "/portal/avatar-twins",
+  "donorLoc": 581,
+  "liveLoc": 596,
+  "delta": -15
+ },
+ {
+  "route": "/portal/affiliate-links",
+  "donorLoc": 546,
+  "liveLoc": 561,
+  "delta": -15
+ },
+ {
+  "route": "/portal/war-room",
+  "donorLoc": 682,
+  "liveLoc": 698,
+  "delta": -16
+ },
+ {
+  "route": "/portal/iul-vs-roth",
+  "donorLoc": 1144,
+  "liveLoc": 1160,
+  "delta": -16
+ },
+ {
+  "route": "/portal/fia-collateral",
+  "donorLoc": 710,
+  "liveLoc": 726,
+  "delta": -16
+ },
+ {
+  "route": "/portal/trusts",
+  "donorLoc": 865,
+  "liveLoc": 882,
+  "delta": -17
+ },
+ {
+  "route": "/portal/ecological-drivers",
+  "donorLoc": 1700,
+  "liveLoc": 1717,
+  "delta": -17
+ },
+ {
+  "route": "/portal/daily-discovery",
+  "donorLoc": 389,
+  "liveLoc": 406,
+  "delta": -17
+ },
+ {
+  "route": "/portal/competitive",
+  "donorLoc": 1073,
+  "liveLoc": 1090,
+  "delta": -17
+ },
+ {
+  "route": "/portal/advisor-income-calculator",
+  "donorLoc": 1457,
+  "liveLoc": 1474,
+  "delta": -17
+ },
+ {
+  "route": "/portal/succession-planning",
+  "donorLoc": 1054,
+  "liveLoc": 1072,
+  "delta": -18
+ },
+ {
+  "route": "/portal/compliance-reports",
+  "donorLoc": 1108,
+  "liveLoc": 1126,
+  "delta": -18
+ },
+ {
+  "route": "/portal/advisor-training",
+  "donorLoc": 975,
+  "liveLoc": 993,
+  "delta": -18
+ },
+ {
+  "route": "/portal/welcome",
+  "donorLoc": 1078,
+  "liveLoc": 1097,
+  "delta": -19
+ },
+ {
+  "route": "/portal/time-machine-ag49",
+  "donorLoc": 1268,
+  "liveLoc": 1287,
+  "delta": -19
+ },
+ {
+  "route": "/portal/social",
+  "donorLoc": 601,
+  "liveLoc": 620,
+  "delta": -19
+ },
+ {
+  "route": "/portal/smart-rebalancing",
+  "donorLoc": 1079,
+  "liveLoc": 1098,
+  "delta": -19
+ },
+ {
+  "route": "/portal/onboarding",
+  "donorLoc": 1078,
+  "liveLoc": 1097,
+  "delta": -19
+ },
+ {
+  "route": "/portal/estate-flow",
+  "donorLoc": 1631,
+  "liveLoc": 1650,
+  "delta": -19
+ },
+ {
+  "route": "/portal/education",
+  "donorLoc": 897,
+  "liveLoc": 916,
+  "delta": -19
+ },
+ {
+  "route": "/portal/business-owner",
+  "donorLoc": 1126,
+  "liveLoc": 1145,
+  "delta": -19
+ },
+ {
+  "route": "/portal/athene-guaranteed-income",
+  "donorLoc": 873,
+  "liveLoc": 892,
+  "delta": -19
+ },
+ {
+  "route": "/portal/will-writer",
+  "donorLoc": 773,
+  "liveLoc": 793,
+  "delta": -20
+ },
+ {
+  "route": "/portal/nerve-center",
+  "donorLoc": 625,
+  "liveLoc": 646,
+  "delta": -21
+ },
+ {
+  "route": "/portal/income-annuity-top10",
+  "donorLoc": 941,
+  "liveLoc": 962,
+  "delta": -21
+ },
+ {
+  "route": "/portal/house-recycling",
+  "donorLoc": 1377,
+  "liveLoc": 1398,
+  "delta": -21
+ },
+ {
+  "route": "/portal/hot-income",
+  "donorLoc": 1184,
+  "liveLoc": 1205,
+  "delta": -21
+ },
+ {
+  "route": "/portal/document-templates",
+  "donorLoc": 1423,
+  "liveLoc": 1444,
+  "delta": -21
+ },
+ {
+  "route": "/portal/divorce-calculator",
+  "donorLoc": 1104,
+  "liveLoc": 1125,
+  "delta": -21
+ },
+ {
+  "route": "/portal/branding",
+  "donorLoc": 1192,
+  "liveLoc": 1213,
+  "delta": -21
+ },
+ {
+  "route": "/portal/black-mirror",
+  "donorLoc": 682,
+  "liveLoc": 703,
+  "delta": -21
+ },
+ {
+  "route": "/portal/tax-loss-harvesting",
+  "donorLoc": 1300,
+  "liveLoc": 1322,
+  "delta": -22
+ },
+ {
+  "route": "/portal/scenario-side-by-side",
+  "donorLoc": 1033,
+  "liveLoc": 1055,
+  "delta": -22
+ },
+ {
+  "route": "/portal/saved-scenarios",
+  "donorLoc": 1457,
+  "liveLoc": 1479,
+  "delta": -22
+ },
+ {
+  "route": "/portal/multi-gen-wealth",
+  "donorLoc": 1220,
+  "liveLoc": 1242,
+  "delta": -22
+ },
+ {
+  "route": "/portal/fia-top10",
+  "donorLoc": 1011,
+  "liveLoc": 1033,
+  "delta": -22
+ },
+ {
+  "route": "/portal/estate-tax",
+  "donorLoc": 1290,
+  "liveLoc": 1312,
+  "delta": -22
+ },
+ {
+  "route": "/portal/data-query",
+  "donorLoc": 1464,
+  "liveLoc": 1486,
+  "delta": -22
+ },
+ {
+  "route": "/portal/client-self-service",
+  "donorLoc": 1124,
+  "liveLoc": 1146,
+  "delta": -22
+ },
+ {
+  "route": "/portal/client-onboarding-auto",
+  "donorLoc": 1358,
+  "liveLoc": 1380,
+  "delta": -22
+ },
+ {
+  "route": "/portal/client-comparison",
+  "donorLoc": 1260,
+  "liveLoc": 1282,
+  "delta": -22
+ },
+ {
+  "route": "/portal/endgame",
+  "donorLoc": 582,
+  "liveLoc": 605,
+  "delta": -23
+ },
+ {
+  "route": "/portal/compliance-alerts",
+  "donorLoc": 958,
+  "liveLoc": 981,
+  "delta": -23
+ },
+ {
+  "route": "/portal/agent-tutorial",
+  "donorLoc": 964,
+  "liveLoc": 987,
+  "delta": -23
+ },
+ {
+  "route": "/portal/tax-opportunities",
+  "donorLoc": 1306,
+  "liveLoc": 1330,
+  "delta": -24
+ },
+ {
+  "route": "/portal/myga-fixed-rate",
+  "donorLoc": 2784,
+  "liveLoc": 2808,
+  "delta": -24
+ },
+ {
+  "route": "/portal/illustration-compare",
+  "donorLoc": 1423,
+  "liveLoc": 1447,
+  "delta": -24
+ },
+ {
+  "route": "/portal/hubspot",
+  "donorLoc": 1086,
+  "liveLoc": 1110,
+  "delta": -24
+ },
+ {
+  "route": "/portal/client-snapshot",
+  "donorLoc": 1016,
+  "liveLoc": 1040,
+  "delta": -24
+ },
+ {
+  "route": "/portal/client-portal-config",
+  "donorLoc": 1111,
+  "liveLoc": 1135,
+  "delta": -24
+ },
+ {
+  "route": "/portal/income-timeline",
+  "donorLoc": 1061,
+  "liveLoc": 1086,
+  "delta": -25
+ },
+ {
+  "route": "/portal/collaborative-planning",
+  "donorLoc": 1105,
+  "liveLoc": 1130,
+  "delta": -25
+ },
+ {
+  "route": "/portal/advisor-directory",
+  "donorLoc": 1112,
+  "liveLoc": 1137,
+  "delta": -25
+ },
+ {
+  "route": "/portal/portfolio-drift",
+  "donorLoc": 1328,
+  "liveLoc": 1354,
+  "delta": -26
+ },
+ {
+  "route": "/portal/monitoring-agreement",
+  "donorLoc": 1090,
+  "liveLoc": 1116,
+  "delta": -26
+ },
+ {
+  "route": "/portal/commission-tracker",
+  "donorLoc": 1063,
+  "liveLoc": 1089,
+  "delta": -26
+ },
+ {
+  "route": "/portal/agency-tutorial",
+  "donorLoc": 952,
+  "liveLoc": 978,
+  "delta": -26
+ },
+ {
+  "route": "/portal/video-proposals",
+  "donorLoc": 778,
+  "liveLoc": 805,
+  "delta": -27
+ },
+ {
+  "route": "/portal/team",
+  "donorLoc": 1138,
+  "liveLoc": 1165,
+  "delta": -27
+ },
+ {
+  "route": "/portal/stale-digest",
+  "donorLoc": 1572,
+  "liveLoc": 1599,
+  "delta": -27
+ },
+ {
+  "route": "/portal/pipeline",
+  "donorLoc": 1074,
+  "liveLoc": 1101,
+  "delta": -27
+ },
+ {
+  "route": "/portal/market-stress-test",
+  "donorLoc": 1350,
+  "liveLoc": 1377,
+  "delta": -27
+ },
+ {
+  "route": "/portal/document-vault",
+  "donorLoc": 1264,
+  "liveLoc": 1291,
+  "delta": -27
+ },
+ {
+  "route": "/portal/batch-slides",
+  "donorLoc": 1453,
+  "liveLoc": 1480,
+  "delta": -27
+ },
+ {
+  "route": "/portal/real-estate-mogul",
+  "donorLoc": 1690,
+  "liveLoc": 1718,
+  "delta": -28
+ },
+ {
+  "route": "/portal/index-backtester",
+  "donorLoc": 1503,
+  "liveLoc": 1531,
+  "delta": -28
+ },
+ {
+  "route": "/portal/clients",
+  "donorLoc": 587,
+  "liveLoc": 615,
+  "delta": -28
+ },
+ {
+  "route": "/portal/workflow-automations",
+  "donorLoc": 1104,
+  "liveLoc": 1133,
+  "delta": -29
+ },
+ {
+  "route": "/portal/seminar-generator",
+  "donorLoc": 1688,
+  "liveLoc": 1717,
+  "delta": -29
+ },
+ {
+  "route": "/portal/referral-tracker",
+  "donorLoc": 1339,
+  "liveLoc": 1368,
+  "delta": -29
+ },
+ {
+  "route": "/portal/my-slides",
+  "donorLoc": 1313,
+  "liveLoc": 1342,
+  "delta": -29
+ },
+ {
+  "route": "/portal/carrier-settings",
+  "donorLoc": 1597,
+  "liveLoc": 1626,
+  "delta": -29
+ },
+ {
+  "route": "/portal/ai-policy-review",
+  "donorLoc": 1241,
+  "liveLoc": 1270,
+  "delta": -29
+ },
+ {
+  "route": "/portal/advanced-reporting",
+  "donorLoc": 1198,
+  "liveLoc": 1227,
+  "delta": -29
+ },
+ {
+  "route": "/portal/slack",
+  "donorLoc": 1080,
+  "liveLoc": 1110,
+  "delta": -30
+ },
+ {
+  "route": "/portal/quick-quote",
+  "donorLoc": 1234,
+  "liveLoc": 1264,
+  "delta": -30
+ },
+ {
+  "route": "/portal/owner-oversight",
+  "donorLoc": 1814,
+  "liveLoc": 1844,
+  "delta": -30
+ },
+ {
+  "route": "/portal/advisory-summary",
+  "donorLoc": 1084,
+  "liveLoc": 1114,
+  "delta": -30
+ },
+ {
+  "route": "/portal/presentation-builder",
+  "donorLoc": 1308,
+  "liveLoc": 1339,
+  "delta": -31
+ },
+ {
+  "route": "/portal/lead-generator",
+  "donorLoc": 1372,
+  "liveLoc": 1403,
+  "delta": -31
+ },
+ {
+  "route": "/portal/compliance-monitoring",
+  "donorLoc": 1157,
+  "liveLoc": 1188,
+  "delta": -31
+ },
+ {
+  "route": "/portal/client-files",
+  "donorLoc": 1059,
+  "liveLoc": 1090,
+  "delta": -31
+ },
+ {
+  "route": "/portal/ai-recommender",
+  "donorLoc": 1254,
+  "liveLoc": 1285,
+  "delta": -31
+ },
+ {
+  "route": "/portal/compliance-audit",
+  "donorLoc": 1327,
+  "liveLoc": 1359,
+  "delta": -32
+ },
+ {
+  "route": "/portal/clients/:id",
+  "donorLoc": 1501,
+  "liveLoc": 1533,
+  "delta": -32
+ },
+ {
+  "route": "/portal/integrations",
+  "donorLoc": 1358,
+  "liveLoc": 1391,
+  "delta": -33
+ },
+ {
+  "route": "/portal/engagement-score",
+  "donorLoc": 1217,
+  "liveLoc": 1250,
+  "delta": -33
+ },
+ {
+  "route": "/portal/commission-calculator",
+  "donorLoc": 1440,
+  "liveLoc": 1473,
+  "delta": -33
+ },
+ {
+  "route": "/portal/ibbotson-charts",
+  "donorLoc": 1532,
+  "liveLoc": 1566,
+  "delta": -34
+ },
+ {
+  "route": "/portal/estate-document-gen",
+  "donorLoc": 1331,
+  "liveLoc": 1365,
+  "delta": -34
+ },
+ {
+  "route": "/portal/rebalance",
+  "donorLoc": 1605,
+  "liveLoc": 1640,
+  "delta": -35
+ },
+ {
+  "route": "/portal/advisor-chat",
+  "donorLoc": 1328,
+  "liveLoc": 1364,
+  "delta": -36
+ },
+ {
+  "route": "/portal/compliance",
+  "donorLoc": 1253,
+  "liveLoc": 1290,
+  "delta": -37
+ },
+ {
+  "route": "/portal/meeting-agenda",
+  "donorLoc": 1356,
+  "liveLoc": 1396,
+  "delta": -40
+ },
+ {
+  "route": "/portal/website-usage",
+  "donorLoc": 1679,
+  "liveLoc": 1721,
+  "delta": -42
+ },
+ {
+  "route": "/portal/hidden-material",
+  "donorLoc": 1078,
+  "liveLoc": 1120,
+  "delta": -42
+ },
+ {
+  "route": "/portal/command-center",
+  "donorLoc": 1278,
+  "liveLoc": 1320,
+  "delta": -42
+ },
+ {
+  "route": "/portal/medicare-irmaa",
+  "donorLoc": 1365,
+  "liveLoc": 1409,
+  "delta": -44
+ },
+ {
+  "route": "/portal/patent-showcase",
+  "donorLoc": 299,
+  "liveLoc": 345,
+  "delta": -46
+ },
+ {
+  "route": "/portal/audit-timeline",
+  "donorLoc": 1659,
+  "liveLoc": 1706,
+  "delta": -47
+ },
+ {
+  "route": "/portal/roth-conversion",
+  "donorLoc": 2780,
+  "liveLoc": 2842,
+  "delta": -62
+ },
+ {
+  "route": "/portal/retirement-projection",
+  "donorLoc": 1636,
+  "liveLoc": 1699,
+  "delta": -63
+ },
+ {
+  "route": "/portal/market-data",
+  "donorLoc": 1013,
+  "liveLoc": 1099,
+  "delta": -86
+ },
+ {
+  "route": "/portal/mortgage-killer",
+  "donorLoc": 3156,
+  "liveLoc": 3265,
+  "delta": -109
+ },
+ {
+  "route": "/portal/lifetime-income",
+  "donorLoc": 223,
+  "liveLoc": 1069,
+  "delta": -846
+ },
+ {
+  "route": "/portal/charitable-giving",
+  "donorLoc": 196,
+  "liveLoc": 1053,
+  "delta": -857
+ },
+ {
+  "route": "/portal/client-onboarding",
+  "donorLoc": 271,
+  "liveLoc": 1168,
+  "delta": -897
+ },
+ {
+  "route": "/portal/social-security",
+  "donorLoc": 271,
+  "liveLoc": 1514,
+  "delta": -1243
+ }
+]
