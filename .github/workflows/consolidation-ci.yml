@@ -1,0 +1,69 @@
+name: Consolidation CI
+
+on:
+  pull_request:
+    paths:
+      - 'russell-capital-systems/**'
+  workflow_dispatch:
+
+concurrency:
+  group: consolidation-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    defaults:
+      run:
+        working-directory: russell-capital-systems
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: russell-capital-systems/pnpm-lock.yaml
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck
+        run: pnpm check
+
+      - name: Tests
+        run: pnpm test:ci
+
+      - name: Build
+        run: pnpm build
+
+      - name: Route-count regression gate
+        run: |
+          COUNT=$(node -e "console.log(JSON.parse(require('fs').readFileSync('dist/public/routes.json','utf8')).length)")
+          echo "routes emitted: $COUNT"
+          BASELINE=313
+          if [ "$COUNT" -lt "$BASELINE" ]; then
+            echo "::error::Route count $COUNT is below the verified baseline $BASELINE"
+            exit 1
+          fi
+
+      - name: Secret scan (changed files)
+        run: |
+          git fetch --no-tags --depth=1 origin "${{ github.base_ref }}"
+          CHANGED=$(git diff --name-only "origin/${{ github.base_ref }}"...HEAD || true)
+          [ -z "$CHANGED" ] && exit 0
+          PATTERN='(sk-[A-Za-z0-9]{20,}|AKIA[0-9A-Z]{16}|ghp_[A-Za-z0-9]{30,}|-----BEGIN [A-Z ]*PRIVATE KEY-----|xox[baprs]-[A-Za-z0-9-]{20,})'
+          HITS=0
+          for f in $CHANGED; do
+            [ -f "../$f" ] || continue
+            if grep -nIE "$PATTERN" "../$f" | grep -viE 'example|placeholder|your_|dummy' ; then
+              echo "::error file=$f::possible secret"
+              HITS=1
+            fi
+          done
+          exit $HITS

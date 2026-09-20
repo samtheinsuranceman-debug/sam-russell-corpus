@@ -137,6 +137,10 @@ const NAV_SECTIONS: NavSection[] = [
     ],
   },
   // ── 1b. RENTAL PROPERTIES ────────────────────────────────────────
+  // Tiered into subgroups 2026-09-20. The seven links are unchanged — promoting
+  // orphaned routes into this section is deferred to the triage pass, because
+  // server/navigation-organization.test.ts enforces that the primary sidebar and
+  // client/src/lib/secondaryCatalog.ts stay disjoint.
   {
     label: "Rental Properties",
     icon: Home,
@@ -149,7 +153,6 @@ const NAV_SECTIONS: NavSection[] = [
         items: [
           { path: "/portal/short-term-rentals", label: "Short-Term Rentals", icon: Home, color: "green" },
           { path: "/portal/str-strategy", label: "STR Tax Strategy", icon: Receipt, color: "green" },
-          { path: "/portal/str-tax-eliminator", label: "STR Tax Eliminator", icon: TrendingDown, color: "green" },
         ],
       },
       {
@@ -157,7 +160,6 @@ const NAV_SECTIONS: NavSection[] = [
         color: "emerald",
         items: [
           { path: "/portal/rental-enterprise", label: "The Rental Enterprise", icon: Building2, color: "emerald" },
-          { path: "/portal/real-estate", label: "Real Estate Overview", icon: Home, color: "emerald" },
           { path: "/portal/real-estate-mogul", label: "Real Estate Mogul", icon: Crown, color: "emerald" },
           { path: "/portal/zip-engine", label: "The Zip Engine", icon: Compass, color: "emerald" },
         ],
@@ -166,10 +168,7 @@ const NAV_SECTIONS: NavSection[] = [
         subLabel: "Debt & Liquidity",
         color: "teal",
         items: [
-          { path: "/portal/mortgage-killer-v2", label: "Mortgage Killer", icon: TrendingDown, color: "teal" },
-          { path: "/portal/mortgage-ledger", label: "Mortgage Ledger", icon: ClipboardList, color: "teal" },
           { path: "/portal/house-recycling", label: "House Recycling", icon: Recycle, color: "teal" },
-          { path: "/portal/liquidity-routes", label: "Liquidity Routes", icon: ArrowRightLeft, color: "teal" },
           { path: "/portal/alt-credit", label: "Alternative Lines of Credit", icon: Landmark, color: "teal" },
         ],
       },
