@@ -1,0 +1,161 @@
+name: Consolidation CI
+
+# Guards the canonical base (russell-capital-systems) during consolidation.
+#
+# The base is green today: typecheck clean, build clean, 4138 tests passing, zero
+# failing. Every migration PR must leave it that way. This workflow is the gate.
+#
+# It deliberately does NOT deploy, touch DNS, or connect to a database.
+
+on:
+  pull_request:
+    paths:
+      - "russell-capital-systems/**"
+      - ".github/workflows/consolidation-ci.yml"
+  push:
+    branches: [master]
+    paths:
+      - "russell-capital-systems/**"
+  workflow_dispatch:
+
+defaults:
+  run:
+    working-directory: russell-capital-systems
+
+concurrency:
+  group: consolidation-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: typecheck · build · test
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: russell-capital-systems/pnpm-lock.yaml
+
+      - name: Install (frozen lockfile)
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck
+        run: pnpm run check
+
+      - name: Build
+        run: pnpm run build
+
+      - name: Test
+        # The full suite, not test:ci. Verified: the suites test:ci excludes
+        # self-skip without a database rather than failing, so there is no
+        # reason to exclude them here. See docs/consolidation/03.
+        run: pnpm test
+
+  route-manifest:
+    name: route manifest has no drift
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: russell-capital-systems/pnpm-lock.yaml
+      - name: Install (frozen lockfile)
+        run: pnpm install --frozen-lockfile
+
+      - name: Manifest must match App.tsx exactly
+        # A route imported without a manifest entry fails here, by name, in both
+        # directions. This is the invariant that makes 394 page imports reviewable.
+        run: |
+          node --input-type=module -e '
+            import { readFileSync } from "node:fs";
+            const app = readFileSync("client/src/App.tsx", "utf8");
+            const registered = new Set(
+              [...app.matchAll(/<Route\s+[^>]*?path=\{?["'"'"'`]([^"'"'"'`]+)["'"'"'`]/gs)].map(m => m[1])
+            );
+            const manifestSrc = readFileSync("shared/routeManifest.ts", "utf8");
+            const body = manifestSrc.slice(manifestSrc.indexOf("ROUTE_MANIFEST"));
+            const listed = new Set([...body.matchAll(/^\s*"([^"]+)",/gm)].map(m => m[1]));
+
+            const missing = [...registered].filter(p => !listed.has(p)).sort();
+            const extra   = [...listed].filter(p => !registered.has(p)).sort();
+
+            if (missing.length) {
+              console.error("Registered in App.tsx but MISSING from routeManifest.ts:");
+              for (const p of missing) console.error("  " + p);
+            }
+            if (extra.length) {
+              console.error("Listed in routeManifest.ts but NOT registered in App.tsx:");
+              for (const p of extra) console.error("  " + p);
+            }
+            if (missing.length || extra.length) process.exit(1);
+            console.log(`Route manifest OK — ${registered.size} routes, zero drift.`);
+          '
+
+  secret-scan:
+    name: secret scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: .
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        continue-on-error: true
+
+      - name: High-signal credential patterns
+        # Backstop for the donor-specific failure mode that motivated this work:
+        # a working password committed into a module the CLIENT bundle imports.
+        run: |
+          set -uo pipefail
+          status=0
+          scan() {
+            local label="$1" pattern="$2"
+            local hits
+            hits=$(git ls-files -z 'russell-capital-systems/**' \
+              | xargs -0 -r grep -l -E "$pattern" 2>/dev/null \
+              | grep -vE '\.(png|jpg|jpeg|gif|pdf|ico|woff2?|mp4)$' \
+              | grep -vE '(^|/)(audit|docs)/' || true)
+            if [ -n "$hits" ]; then
+              echo "::error::Possible $label credential:"
+              echo "$hits" | sed 's/^/    /'
+              status=1
+            fi
+          }
+          scan "OpenAI"  'sk-[A-Za-z0-9]{20,}'
+          scan "AWS"     'AKIA[0-9A-Z]{16}'
+          scan "Resend"  're_[A-Za-z0-9]{20,}'
+          scan "GitHub"  'ghp_[A-Za-z0-9]{30,}'
+          scan "private key" '-----BEGIN [A-Z ]*PRIVATE KEY-----'
+          exit $status
+
+      - name: No credentials in client-reachable shared modules
+        # shared/ is imported by the browser bundle. Nothing secret may live there.
+        run: |
+          set -uo pipefail
+          if git ls-files 'russell-capital-systems/shared/*.ts' \
+             | xargs -r grep -nE '(PASSWORD|PASSWORDS|SECRET|API_KEY|TOKEN)\s*=\s*\[?\s*"' 2>/dev/null; then
+            echo "::error::Credential-shaped constant in shared/ — that module reaches the browser."
+            exit 1
+          fi
+          echo "shared/ clean."

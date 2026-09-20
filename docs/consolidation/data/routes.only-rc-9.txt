@@ -1,0 +1,9 @@
+/portal/elite-showdown
+/portal/entrainment-engine
+/portal/holographic-mirage
+/portal/moat-fortress
+/portal/pavlovian-engagement
+/portal/predictive-arena
+/portal/strategy-comparison
+/portal/wealth-odyssey
+/portal/wealth-warrior
