@@ -1,0 +1,165 @@
+# Consolidation CI — canonical base: russell-capital-systems/
+#
+# Gates every consolidation PR on the four checks proven green in
+# consolidation/03_BUILD_VERIFICATION.md, plus two guards specific to this
+# consolidation:
+#   - the route manifest may only gain patterns, never lose or re-point one
+#   - no credential may enter the tree
+#
+# This workflow builds and tests only. It never deploys, never touches DNS or
+# hosting, and never connects to a database.
+name: Consolidation CI
+
+on:
+  pull_request:
+    branches: [master]
+  push:
+    branches: ['claude/**']
+  workflow_dispatch:
+
+# Read-only. This workflow cannot write to the repository.
+permissions:
+  contents: read
+
+concurrency:
+  group: consolidation-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    working-directory: russell-capital-systems
+
+jobs:
+  verify:
+    name: Install · Typecheck · Build · Test
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.34.2
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+          cache-dependency-path: russell-capital-systems/pnpm-lock.yaml
+
+      # Lockfile must be honoured exactly. Drift fails here rather than in review.
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck
+        run: pnpm check
+
+      - name: Build
+        run: pnpm build
+
+      # The project's own CI script. It already excludes suites needing a live
+      # database or network. Baseline to hold: 194/194 files, 0 failed.
+      - name: Test
+        run: pnpm test:ci
+
+      - name: Upload route manifest
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: routes-manifest-${{ github.sha }}
+          path: russell-capital-systems/dist/public/routes.json
+          if-no-files-found: error
+
+  route-manifest-guard:
+    name: Route manifest — additions only
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.34.2
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+          cache-dependency-path: russell-capital-systems/pnpm-lock.yaml
+
+      - name: Build base branch manifest
+        run: |
+          git checkout -q ${{ github.event.pull_request.base.sha }}
+          pnpm install --frozen-lockfile
+          pnpm build
+          cp dist/public/routes.json /tmp/routes-base.json
+
+      - name: Build PR manifest
+        run: |
+          git checkout -q ${{ github.sha }}
+          pnpm install --frozen-lockfile
+          pnpm build
+          cp dist/public/routes.json /tmp/routes-pr.json
+
+      # A consolidation PR may ADD route patterns. It may never remove one or
+      # point an existing one somewhere else. That is the whole guard.
+      - name: Assert additions only
+        run: |
+          node -e '
+            const fs = require("fs");
+            const load = p => {
+              const j = JSON.parse(fs.readFileSync(p, "utf8"));
+              const arr = Array.isArray(j) ? j : (j.routes ?? Object.keys(j));
+              return new Set(arr.map(r => typeof r === "string" ? r : (r.path ?? r.pattern ?? JSON.stringify(r))));
+            };
+            const before = load("/tmp/routes-base.json");
+            const after  = load("/tmp/routes-pr.json");
+            const removed = [...before].filter(r => !after.has(r));
+            const added   = [...after].filter(r => !before.has(r));
+            console.log(`route patterns: ${before.size} -> ${after.size}`);
+            console.log(`added: ${added.length}`);
+            added.slice(0, 50).forEach(r => console.log("  + " + r));
+            if (added.length > 50) console.log(`  … and ${added.length - 50} more`);
+            if (removed.length) {
+              console.error(`\nFAIL — ${removed.length} route pattern(s) removed or re-pointed:`);
+              removed.forEach(r => console.error("  - " + r));
+              process.exit(1);
+            }
+            console.log("\nPASS — additions only.");
+          '
+
+  secret-scan:
+    name: Secret scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: .
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Belt and braces: fail if a real .env or key file is ever committed.
+      # .env.example is explicitly allowed.
+      - name: No committed env or key files
+        run: |
+          hits=$(git ls-files \
+            | grep -iE '(^|/)\.env($|\.)|\.pem$|\.p12$|\.pfx$|id_rsa|credentials\.json' \
+            | grep -v '\.env\.example$' || true)
+          if [ -n "$hits" ]; then
+            echo "FAIL — credential-bearing files are tracked:"
+            echo "$hits"
+            exit 1
+          fi
+          echo "PASS — no tracked env or key files."
