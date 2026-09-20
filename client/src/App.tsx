@@ -228,6 +228,7 @@ const AIMeetingNotes = lazy(() => import("./pages/portal/AIMeetingNotes"));
 const ClientPortal = lazy(() => import("./pages/portal/ClientPortal"));
 const DocumentTemplates = lazy(() => import("./pages/portal/DocumentTemplates"));
 const CommissionCalculator = lazy(() => import("./pages/portal/CommissionCalculator"));
+const CreditCards = lazy(() => import("./pages/portal/CreditCards"));
 const CarrierComparison = lazy(() => import("./pages/portal/CarrierComparison"));
 const ReferralTracking = lazy(() => import("./pages/portal/ReferralTracking"));
 const TaxBracketVisualizer = lazy(() => import("./pages/portal/TaxBracketVisualizer"));
@@ -568,6 +569,7 @@ function Router() {
       <Route path="/portal/client-portal-config" component={gated(ClientPortal, "/portal/client-portal-config")} />
       <Route path="/portal/document-templates" component={gated(DocumentTemplates, "/portal/document-templates")} />
       <Route path="/portal/commission-calculator" component={gated(CommissionCalculator, "/portal/commission-calculator")} />
+      <Route path="/portal/credit-cards" component={gated(CreditCards, "/portal/credit-cards")} />
       <Route path="/portal/carrier-comparison" component={gated(CarrierComparison, "/portal/carrier-comparison")} />
       <Route path="/portal/referral-tracking" component={gated(ReferralTracking, "/portal/referral-tracking")} />
       <Route path="/portal/tax-brackets" component={gated(TaxBracketVisualizer, "/portal/tax-brackets")} />
