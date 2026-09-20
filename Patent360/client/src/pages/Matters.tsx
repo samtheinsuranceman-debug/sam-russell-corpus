@@ -4,6 +4,14 @@ import { downloadCsv, notify } from '../lib/actions';
 import { createMatter, deleteMatter, listMatters, updateMatter, type MatterRecord, type MatterStatus } from '../lib/operations';
 
 const TABS = ['All', 'Drafting', 'Filed', 'Office action', 'Granted', 'Closed'];
+const TAB_STATUS: Record<string, MatterStatus[] | 'all'> = {
+  All: 'all',
+  Drafting: ['drafting', 'review'],
+  Filed: ['filed'],
+  'Office action': ['office-action'],
+  Granted: ['granted'],
+  Closed: ['abandoned']
+};
 
 const EMPTY_MATTER: Omit<MatterRecord, 'id' | 'created_at' | 'updated_at'> = {
   docket: '',
@@ -15,21 +23,6 @@ const EMPTY_MATTER: Omit<MatterRecord, 'id' | 'created_at' | 'updated_at'> = {
   cpc: null,
   next_step: null
 };
-
-function daysUntil(dateText: string | null): string {
-  if (!dateText) return '—';
-  const due = new Date(`${dateText}T00:00:00Z`);
-  if (Number.isNaN(due.valueOf())) return '—';
-  const today = new Date();
-  const midnight = Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate());
-  return String(Math.ceil((due.getTime() - midnight) / 86400000));
-}
-
-function firstDateWord(text: string | null): string | null {
-  if (!text) return null;
-  const m = text.match(/\b\d{4}-\d{2}-\d{2}\b/);
-  return m ? m[0] : null;
-}
 
 export function Matters() {
   const [tab, setTab] = useState('All');
@@ -57,10 +50,9 @@ export function Matters() {
   }, []);
 
   const rows = useMemo(() => matters.filter(m => {
-    if (tab === 'All') return true;
-    if (tab === 'Closed') return m.status === 'abandoned';
-    if (tab === 'Drafting') return m.status === 'drafting' || m.status === 'review';
-    return m.status === tab.toLowerCase().replace(' ', '-');
+    const statuses = TAB_STATUS[tab] ?? 'all';
+    if (statuses === 'all') return true;
+    return statuses.includes(m.status);
   }), [matters, tab]);
 
   async function create() {
@@ -130,13 +122,26 @@ export function Matters() {
 
       <div className="card" style={{ marginBottom: 16 }}>
         <div className="label" style={{ marginBottom: 10 }}>New matter</div>
-        <div className="row">
-          <div className="field" style={{ minWidth: 170, marginBottom: 0 }}><input placeholder="Docket" value={draft.docket} onChange={e => setDraft(d => ({ ...d, docket: e.target.value }))} /></div>
-          <div className="field" style={{ minWidth: 240, marginBottom: 0 }}><input placeholder="Title" value={draft.title} onChange={e => setDraft(d => ({ ...d, title: e.target.value }))} /></div>
-          <div className="field" style={{ minWidth: 170, marginBottom: 0 }}><input placeholder="Client" value={draft.client} onChange={e => setDraft(d => ({ ...d, client: e.target.value }))} /></div>
-          <div className="field" style={{ minWidth: 150, marginBottom: 0 }}><input placeholder="Attorney" value={draft.attorney} onChange={e => setDraft(d => ({ ...d, attorney: e.target.value }))} /></div>
+        <form className="row" onSubmit={(e) => { e.preventDefault(); create(); }}>
+          <div className="field" style={{ minWidth: 170, marginBottom: 0 }}>
+            <label htmlFor="matter-docket" className="small muted">Docket</label>
+            <input id="matter-docket" placeholder="Docket" value={draft.docket} onChange={e => setDraft(d => ({ ...d, docket: e.target.value }))} />
+          </div>
+          <div className="field" style={{ minWidth: 240, marginBottom: 0 }}>
+            <label htmlFor="matter-title" className="small muted">Title</label>
+            <input id="matter-title" placeholder="Title" value={draft.title} onChange={e => setDraft(d => ({ ...d, title: e.target.value }))} />
+          </div>
+          <div className="field" style={{ minWidth: 170, marginBottom: 0 }}>
+            <label htmlFor="matter-client" className="small muted">Client</label>
+            <input id="matter-client" placeholder="Client" value={draft.client} onChange={e => setDraft(d => ({ ...d, client: e.target.value }))} />
+          </div>
           <div className="field" style={{ minWidth: 150, marginBottom: 0 }}>
-            <select value={draft.status} onChange={e => setDraft(d => ({ ...d, status: e.target.value as MatterStatus }))}>
+            <label htmlFor="matter-attorney" className="small muted">Attorney</label>
+            <input id="matter-attorney" placeholder="Attorney" value={draft.attorney} onChange={e => setDraft(d => ({ ...d, attorney: e.target.value }))} />
+          </div>
+          <div className="field" style={{ minWidth: 150, marginBottom: 0 }}>
+            <label htmlFor="matter-status" className="small muted">Status</label>
+            <select id="matter-status" value={draft.status} onChange={e => setDraft(d => ({ ...d, status: e.target.value as MatterStatus }))}>
               <option value="drafting">Drafting</option>
               <option value="review">In review</option>
               <option value="filed">Filed</option>
@@ -145,8 +150,8 @@ export function Matters() {
               <option value="abandoned">Abandoned</option>
             </select>
           </div>
-          <Button icon="inbox" onClick={create}>{saving ? 'Saving…' : 'Save matter'}</Button>
-        </div>
+          <Button type="submit" icon="inbox">{saving ? 'Saving…' : 'Save matter'}</Button>
+        </form>
       </div>
 
       <Tabs tabs={TABS} active={tab} onChange={setTab} />
@@ -157,7 +162,7 @@ export function Matters() {
       {!loading && !error && rows.length === 0 && <p className="small muted">No matters yet. Add one above to begin.</p>}
 
       {!loading && !error && rows.length > 0 && (
-        <Table head={['Docket', 'Application', 'Title', 'Client', 'Attorney', 'CPC', 'Status', 'Next step', 'Days', 'Actions']}>
+        <Table head={['Docket', 'Application', 'Title', 'Client', 'Attorney', 'CPC', 'Status', 'Next step', 'Actions']}>
           {rows.map(m => (
             <tr key={m.id}>
               <td className="id">{m.docket}</td>
@@ -168,10 +173,9 @@ export function Matters() {
               <td className="id">{m.cpc ?? '—'}</td>
               <td><StatusPill status={m.status} /></td>
               <td className="muted">{m.next_step ?? '—'}</td>
-              <td className="num">{daysUntil(firstDateWord(m.next_step))}</td>
               <td>
                 <div className="row" style={{ gap: 6 }}>
-                  {m.status !== 'abandoned' && <Button variant="ghost" size="sm" onClick={() => closeMatter(m)}>Close</Button>}
+                  {m.status !== 'abandoned' && <Button variant="ghost" size="sm" onClick={() => closeMatter(m)}>Abandon</Button>}
                   <Button variant="ghost" size="sm" onClick={() => removeMatter(m)}>Delete</Button>
                 </div>
               </td>

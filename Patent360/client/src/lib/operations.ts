@@ -32,7 +32,7 @@ export type DeadlineRecord = {
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const res = await fetch(path, {
-    credentials: 'same-origin',
+    credentials: 'include',
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
@@ -40,6 +40,10 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
     },
     ...init
   });
+
+  if (res.status === 204) {
+    return null as T;
+  }
 
   const body = await res.json().catch(() => null);
   if (!res.ok) {

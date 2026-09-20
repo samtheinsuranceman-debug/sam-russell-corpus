@@ -23,6 +23,10 @@ function daysUntil(dateText: string): number {
   return Math.ceil((due.getTime() - midnight) / 86400000);
 }
 
+function sortDeadlines(rows: DeadlineRecord[]): DeadlineRecord[] {
+  return [...rows].sort((a, b) => toYmd(a.due_date).localeCompare(toYmd(b.due_date)) || a.id - b.id);
+}
+
 export function Deadlines() {
   const [deadlines, setDeadlines] = useState<DeadlineRecord[]>([]);
   const [matters, setMatters] = useState<MatterRecord[]>([]);
@@ -45,9 +49,13 @@ export function Deadlines() {
       const [matterRows, deadlineRows] = await Promise.all([listMatters(), listDeadlines()]);
       setMatters(matterRows);
       setDeadlines(deadlineRows);
-      if (!draft.matter_id && matterRows.length > 0) {
-        setDraft(d => ({ ...d, matter_id: matterRows[0].id }));
-      }
+      setDraft(current => {
+        if (matterRows.length === 0) return { ...current, matter_id: 0 };
+        if (current.matter_id === 0) return { ...current, matter_id: matterRows[0].id };
+        const stillValid = matterRows.some(m => m.id === current.matter_id);
+        if (stillValid) return current;
+        return { ...current, matter_id: matterRows[0].id };
+      });
     } catch (err) {
       setError(String(err));
     } finally {
@@ -61,21 +69,34 @@ export function Deadlines() {
 
   const stats = useMemo(() => {
     const open = deadlines.filter(d => d.status !== 'completed');
+    const openDays = open.map(d => daysUntil(d.due_date));
     return {
-      inside7: open.filter(d => daysUntil(d.due_date) <= 7).length,
-      inside30: open.filter(d => daysUntil(d.due_date) <= 30).length,
+      inside7: openDays.filter(days => days >= 0 && days <= 7).length,
+      inside30: openDays.filter(days => days >= 0 && days <= 30).length,
       statutory: deadlines.filter(d => d.is_statutory).length,
       completed: deadlines.filter(d => d.status === 'completed').length
     };
   }, [deadlines]);
 
   async function create() {
-    if (saving || !draft.matter_id) return;
+    if (saving) return;
+    if (!draft.matter_id) {
+      notify('blocked', 'No matter selected', 'Create a matter first, then assign a deadline to it.');
+      return;
+    }
     setSaving(true);
     try {
       const created = await createDeadline(draft);
-      setDeadlines(curr => [...curr, created].sort((a, b) => a.due_date.localeCompare(b.due_date) || a.id - b.id));
-      setDraft(d => ({ ...d, title: '', owner: '', due_date: '', is_statutory: false, status: 'open' }));
+      setDeadlines(curr => sortDeadlines([...curr, created]));
+      setDraft(d => ({
+        ...d,
+        matter_id: created.matter_id,
+        title: '',
+        owner: '',
+        due_date: '',
+        is_statutory: false,
+        status: 'open'
+      }));
       notify('done', 'Deadline saved', `${created.docket} now has ${created.title}.`);
     } catch (err) {
       notify('blocked', 'Deadline was not saved', String(err));
@@ -93,7 +114,7 @@ export function Deadlines() {
         is_statutory: d.is_statutory,
         status: d.status === 'completed' ? 'open' : 'completed'
       });
-      setDeadlines(curr => curr.map(x => x.id === d.id ? updated : x));
+      setDeadlines(curr => sortDeadlines(curr.map(x => x.id === d.id ? updated : x)));
       notify('done', 'Deadline updated', `${updated.docket} is now ${updated.classification.replace('_', ' ')}.`);
     } catch (err) {
       notify('blocked', 'Deadline update failed', String(err));
@@ -135,19 +156,29 @@ export function Deadlines() {
 
       <div className="card" style={{ marginBottom: 16 }}>
         <div className="label" style={{ marginBottom: 10 }}>New deadline</div>
-        <div className="row">
+        <form className="row" onSubmit={(e) => { e.preventDefault(); create(); }}>
           <div className="field" style={{ minWidth: 160, marginBottom: 0 }}>
-            <select value={draft.matter_id || ''} onChange={e => setDraft(d => ({ ...d, matter_id: Number(e.target.value) }))}>
+            <label htmlFor="deadline-matter" className="small muted">Matter</label>
+            <select id="deadline-matter" value={draft.matter_id || ''} onChange={e => setDraft(d => ({ ...d, matter_id: Number(e.target.value) }))}>
               <option value="" disabled>Select matter</option>
               {matters.map(m => <option key={m.id} value={m.id}>{m.docket}</option>)}
             </select>
           </div>
-          <div className="field" style={{ minWidth: 230, marginBottom: 0 }}><input placeholder="What is due" value={draft.title} onChange={e => setDraft(d => ({ ...d, title: e.target.value }))} /></div>
-          <div className="field" style={{ minWidth: 150, marginBottom: 0 }}><input placeholder="Owner" value={draft.owner} onChange={e => setDraft(d => ({ ...d, owner: e.target.value }))} /></div>
-          <div className="field" style={{ minWidth: 160, marginBottom: 0 }}><input type="date" value={draft.due_date} onChange={e => setDraft(d => ({ ...d, due_date: e.target.value }))} /></div>
+          <div className="field" style={{ minWidth: 230, marginBottom: 0 }}>
+            <label htmlFor="deadline-title" className="small muted">What is due</label>
+            <input id="deadline-title" placeholder="What is due" value={draft.title} onChange={e => setDraft(d => ({ ...d, title: e.target.value }))} />
+          </div>
+          <div className="field" style={{ minWidth: 150, marginBottom: 0 }}>
+            <label htmlFor="deadline-owner" className="small muted">Owner</label>
+            <input id="deadline-owner" placeholder="Owner" value={draft.owner} onChange={e => setDraft(d => ({ ...d, owner: e.target.value }))} />
+          </div>
+          <div className="field" style={{ minWidth: 160, marginBottom: 0 }}>
+            <label htmlFor="deadline-date" className="small muted">Due date</label>
+            <input id="deadline-date" type="date" value={draft.due_date} onChange={e => setDraft(d => ({ ...d, due_date: e.target.value }))} />
+          </div>
           <label className="check"><input type="checkbox" checked={draft.is_statutory} onChange={e => setDraft(d => ({ ...d, is_statutory: e.target.checked }))} /><span>Statutory</span></label>
-          <Button icon="inbox" onClick={create}>{saving ? 'Saving…' : 'Save deadline'}</Button>
-        </div>
+          <Button type="submit" icon="inbox">{saving ? 'Saving…' : matters.length === 0 ? 'Add a matter first' : 'Save deadline'}</Button>
+        </form>
       </div>
 
       <div className="grid-4" style={{ marginBottom: 18 }}>
@@ -172,11 +203,18 @@ export function Deadlines() {
         <Table head={['Due', 'In', 'Docket', 'What is due', 'Owner', 'Kind', 'State', 'Actions']}>
           {deadlines.map(d => {
             const days = daysUntil(d.due_date);
+            const urgencyColor = d.classification === 'completed'
+              ? 'var(--text-muted)'
+              : d.classification === 'overdue'
+                ? 'var(--alert)'
+                : d.classification === 'due_soon'
+                  ? 'var(--warn)'
+                  : 'var(--text-body)';
             return (
               <tr key={d.id}>
                 <td className="id">{toYmd(d.due_date)}</td>
-                <td className="num" style={{ color: days <= 7 ? 'var(--alert)' : days <= 30 ? 'var(--warn)' : 'var(--text-body)' }}>
-                  {days}d
+                <td className="num" style={{ color: urgencyColor }}>
+                  {d.classification === 'completed' ? 'Done' : `${days}d`}
                 </td>
                 <td className="id">{d.docket}</td>
                 <td style={{ color: 'var(--text-head)' }}>{d.title}</td>

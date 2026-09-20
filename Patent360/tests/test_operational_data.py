@@ -7,7 +7,8 @@ Run: python3 tests/test_operational_data.py
 import os
 import sys
 import tempfile
-from datetime import date, timedelta
+import atexit
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
@@ -15,6 +16,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from fastapi.testclient import TestClient  # noqa: E402
 
 from app import auth  # noqa: E402
+from app import operational_data as ops  # noqa: E402
 
 PASS = FAIL = 0
 
@@ -40,6 +42,7 @@ def authed(client: TestClient, email: str, role: str = "attorney"):
 
 with tempfile.NamedTemporaryFile(prefix="patent360-test-", suffix=".db", delete=False) as f:
     db_path = f.name
+atexit.register(lambda: os.path.exists(db_path) and os.unlink(db_path))
 
 os.environ["DATABASE_URL"] = f"sqlite:///{db_path}"
 os.environ[auth.SESSION_SECRET_ENV] = "test-session-secret"
@@ -88,6 +91,18 @@ r = client.post(
 )
 ok("create deadline returns 201", r.status_code == 201, str(r.json()))
 deadline = r.json()
+r = client.post(
+    "/api/deadlines",
+    json={
+        "matter_id": matter["id"],
+        "title": "Respond to office action",
+        "owner": "A. Reyes",
+        "due_date": str(date.today() + timedelta(days=5)),
+        "is_statutory": True,
+        "status": "open",
+    },
+)
+ok("duplicate deadline is rejected", r.status_code == 409, str(r.json()))
 
 r = client.get(f"/api/deadlines/{deadline['id']}")
 ok("creator can read deadline", r.status_code == 200 and r.json()["matter_id"] == matter["id"], str(r.json()))
@@ -155,6 +170,28 @@ r = client.put(
     },
 )
 ok("deadline update succeeds", r.status_code == 200 and r.json()["classification"] == "completed", str(r.json()))
+other = client.post(
+    "/api/deadlines",
+    json={
+        "matter_id": matter["id"],
+        "title": "Another deadline",
+        "owner": "A. Reyes",
+        "due_date": (date.today() + timedelta(days=6)).isoformat(),
+        "is_statutory": False,
+        "status": "open",
+    },
+).json()
+r = client.put(
+    f"/api/deadlines/{other['id']}",
+    json={
+        "title": "Respond to office action",
+        "owner": "A. Reyes",
+        "due_date": deadline["due_date"],
+        "is_statutory": True,
+        "status": "completed",
+    },
+)
+ok("deadline update rejects duplicates", r.status_code == 409, str(r.json()))
 
 r = client.delete(f"/api/deadlines/{deadline['id']}")
 ok("deadline delete returns 204", r.status_code == 204, str(r.status_code))
@@ -231,6 +268,17 @@ r = client.get("/api/deadlines")
 classifications = {d["classification"] for d in r.json()["items"]}
 ok("includes overdue", "overdue" in classifications, str(classifications))
 ok("includes completed", "completed" in classifications, str(classifications))
+
+section("UTC boundary classification logic")
+reference = datetime(2026, 9, 20, 0, 30, tzinfo=timezone.utc)
+ok(
+    "UTC today due date is due_soon",
+    ops.classify_deadline(due_date=date(2026, 9, 20), status="open", now_utc=reference) == "due_soon",
+)
+ok(
+    "UTC prior day is overdue",
+    ops.classify_deadline(due_date=date(2026, 9, 19), status="open", now_utc=reference) == "overdue",
+)
 
 print(f"\n{'─' * 64}")
 print(f"{PASS} checks passed, {FAIL} failed")

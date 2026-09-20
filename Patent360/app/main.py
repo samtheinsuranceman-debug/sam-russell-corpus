@@ -5,9 +5,10 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from fastapi import Depends, FastAPI, HTTPException, Query, Request
-from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
+from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, Response
 from fastapi.staticfiles import StaticFiles
 from sqlalchemy import select
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 app = FastAPI(title="Patent360", version="2.0.0")
@@ -299,8 +300,6 @@ async def evidence_fingerprint(request: Request):
 
 # ── Sign-in ───────────────────────────────────────────────────────────────
 # Real authentication: hashed passwords, signed sessions, server-held roles.
-from fastapi import Response  # noqa: E402
-
 from app import auth as _auth  # noqa: E402
 from app import roster as _roster  # noqa: E402
 
@@ -471,6 +470,7 @@ def delete_matter(matter_id: int, request: Request, db: Session = Depends(_ops.g
     matter = _ops.require_matter_for_user(db, matter_id, user_email)
     db.delete(matter)
     db.commit()
+    return Response(status_code=204)
 
 
 @app.get("/api/deadlines", response_model=_ops.DeadlineListResponse)
@@ -486,6 +486,7 @@ def list_deadlines(
         .where(_ops.MatterRecord.user_email == user_email)
     )
     if matter_id is not None:
+        _ops.require_matter_for_user(db, matter_id, user_email)
         stmt = stmt.where(_ops.DeadlineRecord.matter_id == matter_id)
     rows = db.execute(
         stmt.order_by(_ops.DeadlineRecord.due_date.asc(), _ops.DeadlineRecord.id.asc())
@@ -497,6 +498,16 @@ def list_deadlines(
 def create_deadline(payload: _ops.DeadlineCreate, request: Request, db: Session = Depends(_ops.get_db)):
     user_email = _require_authenticated_email(request)
     matter = _ops.require_matter_for_user(db, payload.matter_id, user_email)
+    if _deadline_duplicate_exists(
+        db,
+        matter_id=matter.id,
+        title=payload.title,
+        owner=payload.owner,
+        due_date=payload.due_date,
+        is_statutory=payload.is_statutory,
+        status=payload.status,
+    ):
+        raise HTTPException(status_code=409, detail="Duplicate deadline already exists")
     now = datetime.now(timezone.utc)
     deadline = _ops.DeadlineRecord(
         matter_id=matter.id,
@@ -509,7 +520,11 @@ def create_deadline(payload: _ops.DeadlineCreate, request: Request, db: Session 
         updated_at=now,
     )
     db.add(deadline)
-    db.commit()
+    try:
+        db.commit()
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(status_code=409, detail="Duplicate deadline already exists")
     db.refresh(deadline)
     return _as_deadline_out(deadline, matter)
 
@@ -523,6 +538,30 @@ def _require_deadline_for_user(db: Session, deadline_id: int, user_email: str) -
     if row is None:
         raise HTTPException(status_code=404, detail="Deadline not found")
     return row
+
+
+def _deadline_duplicate_exists(
+    db: Session,
+    *,
+    matter_id: int,
+    title: str,
+    owner: str,
+    due_date,
+    is_statutory: bool,
+    status: str,
+    exclude_id: int | None = None,
+) -> bool:
+    stmt = select(_ops.DeadlineRecord.id).where(
+        _ops.DeadlineRecord.matter_id == matter_id,
+        _ops.DeadlineRecord.title == title,
+        _ops.DeadlineRecord.owner == owner,
+        _ops.DeadlineRecord.due_date == due_date,
+        _ops.DeadlineRecord.is_statutory == is_statutory,
+        _ops.DeadlineRecord.status == status,
+    )
+    if exclude_id is not None:
+        stmt = stmt.where(_ops.DeadlineRecord.id != exclude_id)
+    return db.execute(stmt).first() is not None
 
 
 @app.get("/api/deadlines/{deadline_id}", response_model=_ops.DeadlineOut)
@@ -541,13 +580,28 @@ def update_deadline(
 ):
     user_email = _require_authenticated_email(request)
     deadline, matter = _require_deadline_for_user(db, deadline_id, user_email)
+    if _deadline_duplicate_exists(
+        db,
+        matter_id=deadline.matter_id,
+        title=payload.title,
+        owner=payload.owner,
+        due_date=payload.due_date,
+        is_statutory=payload.is_statutory,
+        status=payload.status,
+        exclude_id=deadline.id,
+    ):
+        raise HTTPException(status_code=409, detail="Duplicate deadline already exists")
     deadline.title = payload.title
     deadline.owner = payload.owner
     deadline.due_date = payload.due_date
     deadline.is_statutory = payload.is_statutory
     deadline.status = payload.status
     deadline.updated_at = datetime.now(timezone.utc)
-    db.commit()
+    try:
+        db.commit()
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(status_code=409, detail="Duplicate deadline already exists")
     db.refresh(deadline)
     return _as_deadline_out(deadline, matter)
 
@@ -558,6 +612,7 @@ def delete_deadline(deadline_id: int, request: Request, db: Session = Depends(_o
     deadline, _ = _require_deadline_for_user(db, deadline_id, user_email)
     db.delete(deadline)
     db.commit()
+    return Response(status_code=204)
 
 
 # ── Practitioner roster ───────────────────────────────────────────────────

@@ -6,7 +6,7 @@ from typing import Generator, Literal
 
 from fastapi import HTTPException
 from pydantic import BaseModel, ConfigDict, Field, field_validator
-from sqlalchemy import Boolean, Date, DateTime, ForeignKey, Integer, String, create_engine, select
+from sqlalchemy import Boolean, Date, DateTime, ForeignKey, Integer, String, UniqueConstraint, create_engine, select
 from sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column, relationship, sessionmaker
 
 DATABASE_URL_ENV = "DATABASE_URL"
@@ -50,6 +50,17 @@ class MatterRecord(Base):
 
 class DeadlineRecord(Base):
     __tablename__ = "deadlines"
+    __table_args__ = (
+        UniqueConstraint(
+            "matter_id",
+            "title",
+            "owner",
+            "due_date",
+            "is_statutory",
+            "status",
+            name="uq_deadline_identity",
+        ),
+    )
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     matter_id: Mapped[int] = mapped_column(ForeignKey("matters.id", ondelete="CASCADE"), index=True)
@@ -147,7 +158,15 @@ class MatterBase(BaseModel):
     cpc: str | None = Field(default=None, max_length=64)
     next_step: str | None = Field(default=None, max_length=240)
 
-    @field_validator("docket", "application_number", "title", "client", "attorney", "cpc", "next_step")
+    @field_validator("docket", "title", "client", "attorney")
+    @classmethod
+    def _trim_required_text(cls, value: str) -> str:
+        cleaned = value.strip()
+        if not cleaned:
+            raise ValueError("must not be blank")
+        return cleaned
+
+    @field_validator("application_number", "cpc", "next_step")
     @classmethod
     def _trim_strings(cls, value: str | None) -> str | None:
         if value is None:
