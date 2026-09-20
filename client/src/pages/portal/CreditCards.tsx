@@ -14,6 +14,7 @@ import {
   openMembershipBusinessCards,
   rankCards,
   sequencingAdvice,
+  sharedUnderwriters,
   unrankable,
   type ApplicantProfile,
 } from "@shared/creditCardSourcing";
@@ -22,6 +23,7 @@ import {
   DoorOpen,
   ExternalLink,
   Info,
+  Link2,
   ShieldCheck,
   TrendingUp,
 } from "lucide-react";
@@ -61,6 +63,7 @@ export default function CreditCards() {
   const pending = useMemo(() => unrankable(profile), [profile]);
   const sequencing = useMemo(() => sequencingAdvice(profile), [profile]);
   const charters = useMemo(() => openMembershipBusinessCards(), []);
+  const clusters = useMemo(() => sharedUnderwriters(), []);
 
   const set = <K extends keyof ApplicantProfile>(k: K, v: ApplicantProfile[K]) =>
     setProfile((p) => ({ ...p, [k]: v }));
@@ -184,6 +187,33 @@ export default function CreditCards() {
             })}
           </div>
         </section>
+
+        {/* ── Same lender, different logos ── */}
+        {clusters.length > 0 && (
+          <section className={`${CARD} border-l-4 border-l-amber-400 p-4`}>
+            <h2 className="mb-1 flex items-center gap-2 font-semibold text-white">
+              <Link2 className="h-4 w-4 text-amber-300" />
+              Same lender behind different logos
+            </h2>
+            <p className="mb-3 text-xs text-slate-500">
+              Applying to several issuers only spreads the risk if each is a separate decision.
+              Where an agent issuer sits behind all of them, it is one credit department and one
+              scorecard.
+            </p>
+            <ul className="space-y-2">
+              {clusters.map((c) => (
+                <li
+                  key={c.underwriter}
+                  className="rounded-xl border border-amber-400/20 bg-amber-400/[0.06] p-3"
+                >
+                  <div className="text-sm font-semibold text-white">{c.underwriter}</div>
+                  <div className="mt-0.5 text-xs text-slate-400">{c.issuers.join(" · ")}</div>
+                  <p className="mt-1.5 text-xs text-amber-100/80">{c.warning}</p>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
 
         {/* ── Profile ── */}
         <section className={`${CARD} p-4`}>

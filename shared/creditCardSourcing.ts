@@ -136,6 +136,18 @@ export interface CardSource {
    * recorded rather than assumed.
    */
   readonly membershipPath?: string;
+  /**
+   * The creditor that actually underwrites the card, where it is not the brand
+   * on the front.
+   *
+   * This matters more than it looks. Elan Financial Services runs a turnkey
+   * card program for over 1,300 banks and credit unions, so a row of different
+   * credit union logos can be one credit department making one decision. Three
+   * applications there are three hard pulls at the same underwriter, and a
+   * decline at the first is a strong predictor of the next two. Recorded so the
+   * page can say that out loud instead of selling false diversification.
+   */
+  readonly underwrittenBy?: string;
   readonly sourceUrl: string;
   readonly evidence: EvidenceLevel;
   readonly note?: string;
@@ -362,28 +374,42 @@ export const CARD_SOURCES: readonly CardSource[] = [
   // TIER 5 — CREDIT UNIONS. Open membership, flexible underwriting.
   // ─────────────────────────────────────────────────────────────────
   {
-    id: 'connexus-business', issuer: 'Connexus Credit Union', product: 'Business Visa',
+    id: 'connexus-business-visa', issuer: 'Connexus Credit Union', product: 'Visa Business Card',
     underwriting: 'personal-guarantee-business', limitBand: 'mid',
     minFicoReported: null, requiresDeposit: false, personalGuarantee: true,
     reportsToBusinessBureaus: true, minAnnualRevenueUsd: null, minMonthsInBusiness: null,
-    introAprMonths: null,
+    introAprMonths: 18,
     membershipGate: 'open-confirmed',
     membershipPath: 'Open nationwide via a one-time $5 donation to the Connexus Association.',
-    sourceUrl: 'https://bankbonus.com/best/credit-unions-anyone-can-join/',
-    evidence: 'named-only',
-    note: 'Membership open nationwide via a one-time $5 donation, and one of the few open-membership unions issuing BUSINESS cards. High-value target; terms not pulled.',
+    underwrittenBy: 'Elan Financial Services',
+    sourceUrl: 'https://fitsmallbusiness.com/connexus-credit-union-visa-business-card-review/',
+    evidence: 'aggregator-reported',
+    note: '0% on purchases AND balance transfers for 18 billing cycles, then 17.49%-26.49% variable. $0 annual fee. The 18-cycle window is the longest on this page by a wide margin — and a balance transfer window is capacity, not interest, so it is worth saying even though rate carries no weight in the ranking. Issued by Elan, not by Connexus; Connexus pulls TransUnion first. Limit not published.',
+  },
+  {
+    id: 'connexus-business-real-rewards', issuer: 'Connexus Credit Union', product: 'Visa Business Real Rewards Card',
+    underwriting: 'personal-guarantee-business', limitBand: 'mid',
+    minFicoReported: null, requiresDeposit: false, personalGuarantee: true,
+    reportsToBusinessBureaus: true, minAnnualRevenueUsd: null, minMonthsInBusiness: null,
+    introAprMonths: 6,
+    membershipGate: 'open-confirmed',
+    membershipPath: 'Open nationwide via a one-time $5 donation to the Connexus Association.',
+    underwrittenBy: 'Elan Financial Services',
+    sourceUrl: 'https://fitsmallbusiness.com/connexus-credit-union-visa-business-real-rewards-card-review/',
+    evidence: 'aggregator-reported',
+    note: '0% for 6 billing cycles, $0 annual fee, 1.5x points on everything. Carries Elan "Expanded Buying Power" — an adjustable limit that moves with usage and payment history rather than a fixed line, which is the useful property here: it grows without a new application.',
   },
   {
     id: 'nasafcu-business-platinum', issuer: 'NASA Federal Credit Union', product: 'Business Platinum Advantage Rewards',
-    underwriting: 'personal-guarantee-business', limitBand: 'mid',
+    underwriting: 'personal-guarantee-business', limitBand: 'small',
     minFicoReported: null, requiresDeposit: false, personalGuarantee: true,
     reportsToBusinessBureaus: true, minAnnualRevenueUsd: null, minMonthsInBusiness: null,
     introAprMonths: null,
-    membershipGate: 'open-confirmed',
-    membershipPath: 'Open to anyone via free membership of the National Space Society.',
-    sourceUrl: 'https://www.nasafcu.com/business-services/financing-solutions/platinum-credit-card',
-    evidence: 'named-only',
-    note: 'Membership open to anyone via free National Space Society membership. Also offers business lines of credit. High-value target; terms not pulled.',
+    membershipGate: 'restricted',
+    membershipPath: 'The business must be located and operating in Maryland, Virginia or the District of Columbia, and in an approved industry. North Carolina does not qualify. The free National Space Society route opens PERSONAL membership nationwide — it does not reach the business card.',
+    sourceUrl: 'https://www.nasafcu.com/pdf/BusinessCreditCardApp.pdf',
+    evidence: 'aggregator-reported',
+    note: 'CORRECTION. This row was recorded as an open charter on the strength of the National Space Society membership route. Reading the business card application shows that route opens personal membership only: the business product is limited to MD, VA and DC, and to approved industries. It is unreachable from North Carolina and is now blocked rather than ranked. Lines are in $100 increments with a $500 per-card minimum, so the limit band was also overstated.',
   },
   {
     id: 'penfed-platinum-rewards', issuer: 'PenFed Credit Union', product: 'Platinum Rewards Visa Signature',
@@ -511,9 +537,10 @@ export const CARD_SOURCES: readonly CardSource[] = [
     introAprMonths: null,
     membershipGate: 'open-unconfirmed',
     membershipPath: 'Membership path not yet confirmed as open nationwide.',
+    underwrittenBy: 'Elan Financial Services',
     sourceUrl: 'https://wallethub.com/best-credit-union-credit-cards',
     evidence: 'aggregator-reported',
-    note: 'Named the best business credit card from a credit union. The CARD is confirmed; the membership gate is not, which is the thing to check first.',
+    note: 'Named the best business credit card from a credit union. The CARD is confirmed; the membership gate is not, which is the thing to check first. "Visa Business Real Rewards" is Elan\'s white-label product name, so this is the same underwriter as the Connexus cards — a decline at one predicts the others.',
   },
   {
     id: 'cu1-business-visa', issuer: 'Credit Union 1', product: 'Visa Business & Purchasing Cards',
@@ -780,11 +807,15 @@ export function freeToApplyNow(profile: ApplicantProfile): readonly CardScore[] 
  * The open-charter credit unions that issue BUSINESS credit, ordered with the
  * confirmed join paths first.
  *
- * This is its own list because the pattern is worth more than any single row on
- * it: a credit union that anyone can join, that underwrites business credit on
- * relationship rather than on a scorecard, is the one category where a 640
- * personal score and a 12-year EIN get read by a human. The large issuers all
- * run the same bureau cutoffs; these do not.
+ * This is its own list because the join path is cheap and reversible: joining
+ * costs no inquiry and can be done while the personal file is frozen, so the
+ * membership can be seasoned long before an application is made.
+ *
+ * It is NOT a list of lenders who read a file by hand. An earlier version of
+ * this comment claimed that, and it is wrong for any Elan-wrapped card — Elan
+ * runs one credit department behind 1,300-plus institutions, so several of
+ * these logos resolve to a single scorecard. Check `underwrittenBy` before
+ * treating two rows as two independent shots.
  */
 export function openMembershipBusinessCards(): readonly CardSource[] {
   const order: Record<string, number> = { 'open-confirmed': 0, 'open-unconfirmed': 1 };
@@ -798,6 +829,48 @@ export function openMembershipBusinessCards(): readonly CardSource[] {
 /** Of those, the ones whose join path was actually read rather than assumed. */
 export function confirmedOpenCharters(): readonly CardSource[] {
   return openMembershipBusinessCards().filter((c) => c.membershipGate === 'open-confirmed');
+}
+
+export interface UnderwriterCluster {
+  readonly underwriter: string;
+  readonly ids: readonly string[];
+  readonly issuers: readonly string[];
+  readonly warning: string;
+}
+
+/**
+ * Rows that share one creditor behind different brands.
+ *
+ * The whole point of applying to several issuers in one round is that each is
+ * an independent decision. Where an agent issuer like Elan sits behind all of
+ * them, that is not true: it is one credit department, one scorecard, and the
+ * applications are correlated. A page that lists them side by side without
+ * saying so is selling diversification that does not exist.
+ */
+export function sharedUnderwriters(): readonly UnderwriterCluster[] {
+  const byUnderwriter: Record<string, CardSource[]> = {};
+  for (const c of CARD_SOURCES) {
+    if (!c.underwrittenBy) continue;
+    if (!byUnderwriter[c.underwrittenBy]) byUnderwriter[c.underwrittenBy] = [];
+    byUnderwriter[c.underwrittenBy].push(c);
+  }
+  return Object.keys(byUnderwriter)
+    .filter((u) => byUnderwriter[u].length > 1)
+    .map((u) => {
+      const rows = byUnderwriter[u];
+      const issuers: string[] = [];
+      for (const r of rows) if (issuers.indexOf(r.issuer) === -1) issuers.push(r.issuer);
+      return {
+        underwriter: u,
+        ids: rows.map((r) => r.id),
+        issuers,
+        warning:
+          `${rows.length} cards here are underwritten by ${u}, not by the ${issuers.length} ` +
+          `brands on the front. Treat them as ONE application, not ${rows.length} — a decline ` +
+          `at the first is a strong signal for the rest, and each one still costs a full hard pull.`,
+      };
+    })
+    .sort((a, b) => b.ids.length - a.ids.length);
 }
 
 /* ------------------------------------------------------------------ *
@@ -845,7 +918,7 @@ export function sequencingAdvice(profile: ApplicantProfile): SequencingVerdict {
       'Net-30 vendor accounts in parallel — Quill, The CEO Creative, Uline, Grainger. Tiny individually, no FICO check at all, and they are what builds the EIN file that unlocks the large lines.',
       'Fleet and fuel cards alongside — also EIN-based and reporting to D&B and Experian Business.',
       'Wait for the pending line to fund before any personal-credit application.',
-      'Then open-membership credit unions with business cards — Connexus, NASA FCU, Alliant, Affinity FCU, Affinity Plus, Lake Michigan, First Tech. Join first, on a $5 donation or share; membership costs no inquiry and can be done tonight even while the personal file is frozen.',
+      'Then open-membership credit unions with business cards — Connexus, Alliant, Affinity FCU, Affinity Plus, Lake Michigan, First Tech. Join first, on a $5 donation or share; membership costs no inquiry and can be done tonight even while the personal file is frozen. Of the Connexus pair, take the 18-cycle Visa Business Card, not the Real Rewards — both are Elan, so it is one application either way.',
       'Personal fair-credit cards last, and only to rebuild the score. Their limits cannot fund anything.',
     ],
   };
@@ -863,7 +936,7 @@ export const SOURCING_STATUS = {
   gap:
     'One hundred rows were requested. What is recorded is what was actually verified. The remainder are not written as placeholders with invented limits and approval odds, because a credit page carrying fabricated terms is wrong in exactly the direction that costs money.',
   nextPass:
-    'Read the eligibility page for every `open-unconfirmed` credit union — Amplify, Credit Union 1, First Service, Redwood, Georgia’s Own, Metro. Each is a confirmed business-card issuer behind an unread charter, and the charter is the whole question. Then pull issuer terms for the `named-only` rows, and widen the net-30 vendor tier, which is the largest untapped category for an EIN-first strategy.',
+    'Read the eligibility page for every `open-unconfirmed` credit union — Amplify, Credit Union 1, First Service, Redwood, Georgia’s Own, Metro. Each is a confirmed business-card issuer behind an unread charter, and the charter is the whole question: NASA FCU was recorded as an open charter on its personal-membership route and turned out to restrict the BUSINESS card to MD, VA and DC, which is the same mistake waiting in each of these six. Then establish `underwrittenBy` for each — an Elan-wrapped card is not an independent application. Then pull issuer terms for the `named-only` rows, and widen the net-30 vendor tier.',
   excludedByRequest: 'Any card requiring a deposit, the large national banks, and military-only charters such as Navy Federal — a good business card behind a door this applicant cannot open is worth nothing.',
   rankedOn: 'Approval likelihood multiplied by limit band, then discounted by the membership gate where one applies. Interest rate is recorded but carries no weight, by instruction.',
 } as const;
@@ -875,4 +948,6 @@ export const NEVER_PRINTED = [
   'Any suggestion that a fair-credit card with a $300-$1,500 limit can fund a premium-financing strategy.',
   'A net-30 vendor account described as a credit card. It is trade credit with a supplier, and its value is the trade line it reports, not the spending power.',
   'A credit union presented as joinable when only its card was verified. Half of them turn out to be employer- or county-restricted once the eligibility page is read, so the gate is marked `open-unconfirmed` until it is.',
+  'An open PERSONAL membership route presented as access to the business card. NASA FCU admits anyone nationwide through the National Space Society and still limits its business card to Maryland, Virginia and DC. The two gates are separate and are checked separately.',
+  'Two cards from the same agent issuer presented as two independent applications. Elan sits behind 1,300-plus institutions; where `underwrittenBy` matches, it is one credit decision and the page says so.',
 ] as const;
