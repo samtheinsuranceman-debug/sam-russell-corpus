@@ -32,6 +32,7 @@ separate explicit approval already required.
 | 4 | [04-route-collisions-and-dependencies.md](04-route-collisions-and-dependencies.md) | Collision and dependency report for the candidate 391 |
 | 5 | [05-ci-secrets-rollback.md](05-ci-secrets-rollback.md) | CI checks, secret scan results, tagging and rollback |
 | 6 | [06-phased-pr-plan.md](06-phased-pr-plan.md) | Per-migration source paths, target paths, tests, rollback |
+| 7 | [07-base-selection-evidence.md](07-base-selection-evidence.md) | Why the base is the base — the `russell-capital-app` proposal, tested |
 
 Raw generated data is in [`data/`](data/).
 
@@ -66,6 +67,11 @@ Raw generated data is in [`data/`](data/).
 7. **No production secrets found** in the base's tracked files. Two localhost dev credentials
    appear in a handoff transcript. (§5)
 
-8. **No CI runs the build's own tests.** Twelve workflows exist; none installs, typechecks,
+8. **The base choice was re-tested, not assumed** (§7). Under identical conditions
+   `russell-capital-app` fails `--frozen-lockfile` and has **111 failing tests** against the
+   base's **0**. But its `navTree.ts` — a true recursive nav tree — is a real advantage the
+   base lacks, and porting that one file is far cheaper than flipping the base.
+
+9. **No CI runs the build's own tests.** Twelve workflows exist; none installs, typechecks,
    builds or tests `russell-capital-systems`. The gate this consolidation depends on does not
    exist yet, so this PR adds it. (§5)
