@@ -1,6 +1,6 @@
 -- Russell Capital Systems — complete database schema
 -- Generated from drizzle/schema.ts by scripts/export_schema_sql.sh; do not hand-edit.
--- Tables: 157
+-- Tables: 163
 -- Import: mysql -u USER -p DBNAME < database/rcs-schema.sql   (or phpMyAdmin → Import)
 -- The database itself must already exist (create it in cPanel → MySQL Databases).
 
@@ -276,6 +276,30 @@ CREATE TABLE `carrier_quote_requests` (
 	`createdAt` timestamp NOT NULL DEFAULT (now()),
 	`updatedAt` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,
 	CONSTRAINT `carrier_quote_requests_id` PRIMARY KEY(`id`)
+);
+CREATE TABLE `carrier_rate_sheets` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`carrierSlug` varchar(80) NOT NULL,
+	`carrierName` varchar(200) NOT NULL,
+	`productName` varchar(200) NOT NULL,
+	`capRate` decimal(6,5),
+	`participationRate` decimal(6,5),
+	`floorRate` decimal(6,5),
+	`loanRate` decimal(6,5),
+	`loadFee` decimal(6,5),
+	`coiRate` decimal(6,5),
+	`amBestRating` varchar(40),
+	`isMutual` boolean NOT NULL DEFAULT false,
+	`acceptsCreditCard` boolean NOT NULL DEFAULT false,
+	`creditCardMonthlyCap` int,
+	`sourceNote` varchar(500),
+	`asOfDate` varchar(20) NOT NULL,
+	`notes` text,
+	`supersededAt` timestamp,
+	`enteredBy` varchar(320),
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	`updatedAt` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,
+	CONSTRAINT `carrier_rate_sheets_id` PRIMARY KEY(`id`)
 );
 CREATE TABLE `client_activity_log` (
 	`id` int AUTO_INCREMENT NOT NULL,
@@ -644,6 +668,20 @@ CREATE TABLE `county_hazards` (
 	`fetchedAt` timestamp NOT NULL DEFAULT (now()),
 	CONSTRAINT `county_hazards_id` PRIMARY KEY(`id`),
 	CONSTRAINT `county_hazards_once` UNIQUE(`fips`)
+);
+CREATE TABLE `custom_providers` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`slug` varchar(64) NOT NULL,
+	`name` varchar(200) NOT NULL,
+	`baseUrl` varchar(500) NOT NULL,
+	`chatPath` varchar(200) NOT NULL,
+	`wireFormat` varchar(40) NOT NULL DEFAULT 'openai-compatible',
+	`defaultModel` varchar(200) NOT NULL,
+	`note` varchar(500),
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	`updatedAt` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,
+	CONSTRAINT `custom_providers_id` PRIMARY KEY(`id`),
+	CONSTRAINT `custom_providers_slug_unique` UNIQUE(`slug`)
 );
 CREATE TABLE `daily_reward_claims` (
 	`id` int AUTO_INCREMENT NOT NULL,
@@ -1179,6 +1217,29 @@ CREATE TABLE `market_data_points` (
 	CONSTRAINT `market_data_points_id` PRIMARY KEY(`id`),
 	CONSTRAINT `market_data_points_series_unique` UNIQUE(`series`)
 );
+CREATE TABLE `mcp_servers` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`slug` varchar(64) NOT NULL,
+	`label` varchar(200) NOT NULL,
+	`url` varchar(1000) NOT NULL,
+	`encryptedToken` text,
+	`maskedToken` varchar(64),
+	`headersJson` text,
+	`enabled` boolean NOT NULL DEFAULT true,
+	`toolsJson` text,
+	`toolCount` int NOT NULL DEFAULT 0,
+	`autoInvoke` boolean NOT NULL DEFAULT false,
+	`lastTestedAt` timestamp,
+	`lastTestOk` boolean,
+	`lastTestDetail` varchar(500),
+	`lastUsedAt` timestamp,
+	`useCount` int NOT NULL DEFAULT 0,
+	`updatedByEmail` varchar(320),
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	`updatedAt` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,
+	CONSTRAINT `mcp_servers_id` PRIMARY KEY(`id`),
+	CONSTRAINT `mcp_servers_slug_unique` UNIQUE(`slug`)
+);
 CREATE TABLE `meeting_reminder_prefs` (
 	`id` int AUTO_INCREMENT NOT NULL,
 	`workspaceId` int NOT NULL,
@@ -1469,6 +1530,26 @@ CREATE TABLE `prediction_questions` (
 	`resolvedAt` timestamp,
 	`createdAt` timestamp NOT NULL DEFAULT (now()),
 	CONSTRAINT `prediction_questions_id` PRIMARY KEY(`id`)
+);
+CREATE TABLE `provider_credentials` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`providerId` varchar(64) NOT NULL,
+	`encryptedKey` text NOT NULL,
+	`maskedKey` varchar(64) NOT NULL,
+	`modelOverride` varchar(200),
+	`baseUrlOverride` varchar(500),
+	`enabled` boolean NOT NULL DEFAULT true,
+	`priority` int NOT NULL DEFAULT 100,
+	`lastTestedAt` timestamp,
+	`lastTestOk` boolean,
+	`lastTestDetail` varchar(500),
+	`lastUsedAt` timestamp,
+	`useCount` int NOT NULL DEFAULT 0,
+	`updatedByEmail` varchar(320),
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	`updatedAt` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,
+	CONSTRAINT `provider_credentials_id` PRIMARY KEY(`id`),
+	CONSTRAINT `provider_credentials_providerId_unique` UNIQUE(`providerId`)
 );
 CREATE TABLE `public_leads` (
 	`id` int AUTO_INCREMENT NOT NULL,
@@ -2149,6 +2230,28 @@ CREATE TABLE `users` (
 	`loginCount` int NOT NULL DEFAULT 0,
 	CONSTRAINT `users_id` PRIMARY KEY(`id`),
 	CONSTRAINT `users_openId_unique` UNIQUE(`openId`)
+);
+CREATE TABLE `vault_audit_log` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`action` varchar(40) NOT NULL,
+	`providerId` varchar(64),
+	`actorEmail` varchar(320),
+	`detail` varchar(500),
+	`ipAddress` varchar(64),
+	`userAgent` text,
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	CONSTRAINT `vault_audit_log_id` PRIMARY KEY(`id`)
+);
+CREATE TABLE `vault_passphrase` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`passhash` varchar(255) NOT NULL,
+	`ownerEmail` varchar(320) NOT NULL,
+	`failedAttempts` int NOT NULL DEFAULT 0,
+	`lockedUntil` timestamp,
+	`lastUnlockedAt` timestamp,
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	`updatedAt` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,
+	CONSTRAINT `vault_passphrase_id` PRIMARY KEY(`id`)
 );
 CREATE TABLE `vetted_attorneys` (
 	`id` int AUTO_INCREMENT NOT NULL,

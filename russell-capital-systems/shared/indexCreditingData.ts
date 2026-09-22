@@ -997,3 +997,21 @@ export const CARRIERS = [
 export const AVAILABLE_YEARS = Object.keys(RAW_INDEX_RETURNS.SP500).map(Number).sort((a, b) => a - b);
 export const MIN_YEAR = AVAILABLE_YEARS[0]; // 1994
 export const MAX_YEAR = AVAILABLE_YEARS[AVAILABLE_YEARS.length - 1]; // 2025
+
+/** The trunk's index series are sourced; the advisor may cite them. */
+export const INDEX_RETURNS_ARE_VERIFIED = true;
+
+/**
+ * Provenance the advisor cites when it quotes a backtest. Mirrors the header
+ * of this file: ChartRow price-return series, reconciled against the carrier's
+ * own published 30-year figures (shared/sp500SeriesAudit.ts runs the check).
+ */
+export const INDEX_RETURN_SOURCES = {
+  basis: "calendar-year price return, excluding dividends",
+  verifiedOn: "2026-09-14",
+  firstYear: 1994,
+  lastYear: 2025,
+  perIndex: {
+    SP500: "ChartRow 'S&P 500 Returns by Year' (total less dividend), reconciled to the carrier's published 30-year average and cap-year count",
+  },
+} as const;

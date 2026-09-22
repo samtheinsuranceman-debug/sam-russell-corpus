@@ -189,6 +189,8 @@ export interface MortgageKillerResult {
     monthsSaved: number;
     totalInterestSaved: number;
     totalWealthCreated: number;
+    /** The same saved-interest dollars if parked in a MYGA instead — an alternative, never additive. */
+    alternativeMygaDeployment: number;
     mortgageFreeDate: string;
     originalPayoffDate: string;
     annualIulPremium: number;
@@ -746,7 +748,13 @@ export function runMortgageKillerAnalysis(input: MortgageKillerInput): MortgageK
     summary: {
       yearsSaved, monthsSaved,
       totalInterestSaved: interestSavings.totalInterestSaved,
-      totalWealthCreated: interestSavings.compoundedValue20yr + finalPolicyCv + interestSavings.mgaAnnuityValue30yr,
+      // The saved-interest dollars are reinvested ONCE. compoundedValue20yr and
+      // mgaAnnuityValue30yr are two alternative deployments of the same dollars
+      // (reinvest at the client's rate, or park in a MYGA); summing both counted
+      // every saved dollar twice. Wealth created = the reinvested savings plus
+      // the policy's cash value; the MYGA path is reported beside it, not added.
+      totalWealthCreated: interestSavings.compoundedValue20yr + finalPolicyCv,
+      alternativeMygaDeployment: interestSavings.mgaAnnuityValue30yr,
       mortgageFreeDate: mortgageFreeDate.toISOString().slice(0, 10),
       originalPayoffDate: originalPayoffDate.toISOString().slice(0, 10),
       annualIulPremium,

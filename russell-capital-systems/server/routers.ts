@@ -7,6 +7,9 @@ import { getSessionCookieOptions } from "./_core/cookies";
 import { invokeLLM } from "./_core/llm";
 import { invokePortalAI } from "./portalAI";
 import { ultraRouter } from "./ultraAI";
+import { aiStackRouter } from "./aiStackRouter";
+import { thomasGoldmanRouter } from "./thomasGoldmanRouter";
+import { vaultRouter } from "./vaultRouter";
 import { leadsRouter } from "./leadsRouter";
 import { factFinderRouter } from "./factFinderRouter";
 import { librarianRouter } from "./librarianRouter";
@@ -284,7 +287,7 @@ function scoreOpportunity(income: number, iraBalance: number, realEstateEquity: 
 }
 
 // ─── Workspace helper ─────────────────────────────────────────────────────────
-async function getWorkspaceForUser(userId: number) {
+export async function getWorkspaceForUser(userId: number) {
   const ws = await getWorkspaceByOwnerId(userId);
   if (ws) { await ensureMembership(userId, ws.id); return ws; }
   const slug = `workspace-${userId}-${Date.now()}`;
@@ -335,6 +338,12 @@ const mortgageKillerInputSchema = z.object({
 });
 export const appRouter = router({
   system: systemRouter,
+  /** Which AI brains are reachable, reported from the server. */
+  aiStack: aiStackRouter,
+  /** Thomas Goldman — the advisor behind the blue microphone. */
+  thomas: thomasGoldmanRouter,
+  /** Brain Hub: encrypted vault for forty brains + forty MCP servers. Owner only. */
+  vault: vaultRouter,
   planningCases: planningCasesRouter,
   chain: chainRouter,
   engineChain: engineChainingRouter,

@@ -45,6 +45,8 @@ const RiskScorePage = lazy(() => import("./pages/RiskScorePage"));
 const RetirementOpportunitiesPage = lazy(() => import("./pages/RetirementOpportunitiesPage"));
 const InteropEnginePage = lazy(() => import("./pages/InteropEnginePage"));
 const AIBrainHubPage = lazy(() => import("./pages/AIBrainHubPage"));
+const ThomasGoldman = lazy(() => import("./pages/portal/ThomasGoldman"));
+const AIConnector = lazy(() => import("./pages/portal/AIConnector"));
 const MatchAndDeployPage = lazy(() => import("./pages/MatchAndDeployPage"));
 const AutoCloserPage = lazy(() => import("./pages/AutoCloserPage"));
 const DealRoomPage = lazy(() => import("./pages/DealRoomPage"));
@@ -847,6 +849,8 @@ function Router() {
       <Route path="/portal/retirement-opportunities" component={gated(RetirementOpportunitiesPage, "/portal/retirement-opportunities")} />
       <Route path="/portal/interop-engine" component={gated(InteropEnginePage, "/portal/interop-engine")} />
       <Route path="/portal/ai-brain-hub" component={gated(AIBrainHubPage, "/portal/ai-brain-hub")} />
+      <Route path="/portal/thomas-goldman" component={gated(ThomasGoldman, "/portal/thomas-goldman")} />
+      <Route path="/portal/brain-hub" component={gated(AIConnector, "/portal/brain-hub")} />
       <Route path="/portal/match-and-deploy" component={gated(MatchAndDeployPage, "/portal/match-and-deploy")} />
       <Route path="/portal/auto-closer" component={gated(AutoCloserPage, "/portal/auto-closer")} />
       <Route path="/portal/deal-room" component={gated(DealRoomPage, "/portal/deal-room")} />
