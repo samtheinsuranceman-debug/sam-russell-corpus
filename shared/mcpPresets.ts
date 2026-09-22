@@ -1,5 +1,5 @@
 /**
- * MCP presets — the forty connections worth wiring into Thomas Goldman.
+ * MCP presets — the forty connections worth wiring into the AI advisor (named in shared/aiAdvisor.ts).
  * ════════════════════════════════════════════════════════════════════════════
  *
  * A Model Context Protocol server exposes tools the advisor can call
@@ -85,7 +85,7 @@ export const MCP_PRESETS: McpPreset[] = [
   { slug: "make", label: "Make", url: "https://mcp.make.com/mcp", auth: "bearer", role: "Scenarios, including the GoDaddy DNS read/apply for russellcapitalsystems.com.", docsUrl: "https://developers.make.com/mcp-server", category: "ops" },
 
   // ─── Voice and design ───────────────────────────────────────────────────
-  { slug: "elevenlabs", label: "ElevenLabs", url: "https://mcp.elevenlabs.io/mcp", auth: "bearer", role: "Thomas Goldman's spoken voice, and the owner's cloned voice.", docsUrl: "https://elevenlabs.io/docs/mcp", category: "voice" },
+  { slug: "elevenlabs", label: "ElevenLabs", url: "https://mcp.elevenlabs.io/mcp", auth: "bearer", role: "The advisor's spoken voice, and the owner's cloned voice.", docsUrl: "https://elevenlabs.io/docs/mcp", category: "voice" },
   { slug: "heygen", label: "HeyGen HyperFrames", url: "https://mcp.heygen.com/mcp", auth: "oauth", role: "Avatar video renders for the homepage and the mortgage-killer explainers.", docsUrl: "https://docs.heygen.com", category: "voice" },
   { slug: "figma", label: "Figma", url: "https://mcp.figma.com/mcp", auth: "oauth", role: "Design context for the dark-forest-and-gold system.", docsUrl: "https://help.figma.com/hc/en-us/articles/32132100833559", category: "design" },
   { slug: "canva", label: "Canva", url: "https://mcp.canva.com/mcp", auth: "oauth", role: "Client-facing one-pagers from the strategy engines.", docsUrl: "https://www.canva.dev/docs/connect/mcp-server/", category: "design" },

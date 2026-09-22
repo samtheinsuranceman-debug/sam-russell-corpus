@@ -35,6 +35,9 @@ import { forgivenessRouter } from "./forgivenessRouter";
 import { taxScheduleRouter } from "./taxScheduleRouter";
 import { unaskedRouter } from "./unaskedRouter";
 import { siteHealthRouter } from "./siteHealthRouter";
+import { hiveRouter } from "./hiveRouter";
+import { siteMapRouter } from "./siteMapRouter";
+import { forecastRouter } from "./forecastRouter";
 import { integrationRouter } from "./integrationRouter";
 import { isStrongPassword, PASSWORD_RULE } from "@shared/passwordPolicy";
 import { recordDocumentProvenance } from "./provenance";
@@ -340,7 +343,7 @@ export const appRouter = router({
   system: systemRouter,
   /** Which AI brains are reachable, reported from the server. */
   aiStack: aiStackRouter,
-  /** Thomas Goldman — the advisor behind the blue microphone. */
+  /** The AI advisor (ADVISOR_NAME in shared/aiAdvisor.ts) — behind the blue microphone. */
   thomas: thomasGoldmanRouter,
   /** Brain Hub: encrypted vault for forty brains + forty MCP servers. Owner only. */
   vault: vaultRouter,
@@ -378,6 +381,9 @@ export const appRouter = router({
   taxSchedule: taxScheduleRouter,
   unasked: unaskedRouter,
   siteHealth: siteHealthRouter,
+  hive: hiveRouter,
+  siteMap: siteMapRouter,
+  forecast: forecastRouter,
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),
     logout: publicProcedure.mutation(({ ctx }) => {

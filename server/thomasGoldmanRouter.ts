@@ -135,10 +135,18 @@ export const thomasGoldmanRouter = router({
         priorSummary: z.string().max(40_000).optional(),
         clientId: z.number().optional(),
         clientFirstName: z.string().max(80).optional(),
+        /** Typed context from the surface that asked: the pages the visitor opened this session, in order (site-map nudge). */
+        context: z
+          .object({ pagesOpened: z.array(z.string().max(200)).max(60).optional() })
+          .optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
       const { messages, depth, clientId } = input;
+      const pagesOpened = input.context?.pagesOpened?.filter(Boolean) ?? [];
+      const visitContext = pagesOpened.length
+        ? `\n--- THIS VISIT ---\nThe visitor opened these pages from the site map, in this order:\n${pagesOpened.map((p, i) => `${i + 1}. ${p}`).join("\n")}\nTreat what those pages are about as what they came for; do not ask them to repeat it.`
+        : "";
 
       // ── Working memory ──────────────────────────────────────────────────
       // Keep the most recent turns verbatim; fold anything older into the
@@ -224,6 +232,7 @@ export const thomasGoldmanRouter = router({
           ? `\n--- WORKING MEMORY (earlier in this conversation) ---\n${summary}\n--- END WORKING MEMORY ---\nTreat everything above as things the client already told you. Do not ask them again.`
           : "",
         clientContext,
+        visitContext,
       ]
         .filter(Boolean)
         .join("\n\n");
