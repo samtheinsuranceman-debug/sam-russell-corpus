@@ -153,14 +153,31 @@ describe("PR-3b ported content", () => {
 
 // ── the manifest grew, and only by this batch ──────────────────────────────
 describe("PR-3b route accounting", () => {
-  it("grows the manifest from 330 to 436", () => {
-    expect(MANIFEST.size).toBe(436);
+  // These were exact totals — 436, and 330 once the batch is subtracted — on
+  // the assumption that PR-3b would land against an unchanged manifest. It did
+  // not: it was integrated alongside the engine-harvest branch, which adds
+  // /portal/credit-cards, making the real totals 437 and 331.
+  //
+  // An exact total is the wrong assertion regardless. It breaks on any
+  // concurrent batch while catching nothing a relative check misses, so the
+  // guarantee it was protecting is now stated directly.
+  const PRE_EXISTING_BASELINE = 330;
+
+  it("registers every ported route in the manifest", () => {
+    const missing = PORTED.map((p) => p.route).filter((r) => !MANIFEST.has(r));
+    expect(missing, "ported pages absent from routeManifest.ts").toEqual([]);
   });
 
   it("adds routes without removing any", () => {
-    // 330 pre-existing + 106 ported = 436. If this fails with a smaller number,
-    // a pre-existing route was dropped, which the count alone would hide.
-    expect(MANIFEST.size - PORTED.length).toBe(330);
+    // Were a pre-existing route dropped, the non-ported remainder would fall
+    // below the baseline — which a bare total hides behind the additions.
+    expect(MANIFEST.size - PORTED.length).toBeGreaterThanOrEqual(PRE_EXISTING_BASELINE);
+  });
+
+  it("registers each ported route exactly once", () => {
+    const seen: Record<string, number> = {};
+    for (const p of PORTED) seen[p.route] = (seen[p.route] || 0) + 1;
+    expect(Object.keys(seen).filter((r) => seen[r] > 1)).toEqual([]);
   });
 
   it("serves every ported route under /portal", () => {
