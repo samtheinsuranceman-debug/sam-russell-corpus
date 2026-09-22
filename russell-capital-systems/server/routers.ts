@@ -35,6 +35,9 @@ import { forgivenessRouter } from "./forgivenessRouter";
 import { taxScheduleRouter } from "./taxScheduleRouter";
 import { unaskedRouter } from "./unaskedRouter";
 import { siteHealthRouter } from "./siteHealthRouter";
+import { hiveRouter } from "./hiveRouter";
+import { siteMapRouter } from "./siteMapRouter";
+import { forecastRouter } from "./forecastRouter";
 import { integrationRouter } from "./integrationRouter";
 import { isStrongPassword, PASSWORD_RULE } from "@shared/passwordPolicy";
 import { recordDocumentProvenance } from "./provenance";
@@ -378,6 +381,9 @@ export const appRouter = router({
   taxSchedule: taxScheduleRouter,
   unasked: unaskedRouter,
   siteHealth: siteHealthRouter,
+  hive: hiveRouter,
+  siteMap: siteMapRouter,
+  forecast: forecastRouter,
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),
     logout: publicProcedure.mutation(({ ctx }) => {
