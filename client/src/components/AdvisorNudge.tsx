@@ -1,21 +1,25 @@
 // ============================================================
-// ADVISOR NUDGE — after the visitor's second page open in a session,
-// Samuel Goldman speaks: he noticed which page they opened and offers to
-// finalise their confidence, one variable of the decision tree at a time.
-// Audio comes from the server voice (HeyGen/ElevenLabs) when configured,
-// else the browser's speech; text always renders. Fires once per session,
-// never on the map itself, and respects reduced-motion/muted settings.
+// ADVISOR NUDGE — on the visitor's THIRD page open from the map (never
+// before, once per session) the advisor speaks the operator's words
+// (SITE_MAP_NUDGE_TEXT in shared/aiAdvisor.ts). Audio comes from the
+// server voice (ultra.speak: the site's HeyGen/ElevenLabs voice) when
+// configured, else the browser's; the text always renders.
+// "Yes" asks thomas.ask with every page opened this session, in order,
+// as context, and shows the reply here with a way to continue.
+// Never fires on the map itself; respects a muted setting.
 // ============================================================
 import { useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
-import { Volume2, X } from "lucide-react";
+import { ArrowRight, Volume2, X } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { useSiteMap } from "@/contexts/SiteMapContext";
-import { ADVISOR_CANONICAL_ROUTE, ADVISOR_NAME } from "@shared/aiAdvisor";
-import { NUDGE_AFTER_PAGE_OPENS } from "@shared/hiveMind";
+import { ADVISOR_NAME, SITE_MAP_NUDGE_TEXT } from "@shared/aiAdvisor";
+import { nudgeDue } from "@shared/siteMapTree";
 
 const MUTE_KEY = "rcs.nudge.muted.v1";
+/** Where the conversation continues after the first reply. The thomas.* router keeps its id whatever the advisor is called. */
+const ADVISOR_CHAT_ROUTE = "/portal/thomas-goldman";
 
 function speakInBrowser(text: string): void {
   try {
@@ -28,14 +32,26 @@ function speakInBrowser(text: string): void {
   } catch { /* no voice available */ }
 }
 
+/** The pages opened this session, in order, as the advisor's opening context. */
+export function openedPagesQuestion(openedPaths: string[], titles: Record<string, string>): string {
+  const lines = openedPaths.map((p, i) => `${i + 1}. ${titles[p] ?? p} (${p})`);
+  return (
+    `During this visit I opened these pages from the site map, in this order:\n${lines.join("\n")}\n\n` +
+    `I have questions. Tell me what these pages have in common for someone in my position, which one I should start with, and what you need from me to help.`
+  );
+}
+
 export default function AdvisorNudge() {
   const [location, navigate] = useLocation();
   const { isAuthenticated } = useAuth();
   const map = useSiteMap();
   const nudge = trpc.hive.nudge.useMutation();
+  const speak = trpc.ultra.speak.useMutation();
+  const tree = trpc.siteMap.tree.useQuery(undefined, { staleTime: 10 * 60_000, enabled: isAuthenticated });
+  const ask = trpc.thomas.ask.useMutation();
   const [text, setText] = useState<string | null>(null);
+  const [reply, setReply] = useState<string | null>(null);
   const [dismissed, setDismissed] = useState(false);
-  const askedFor = useRef<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const muted = (() => { try { return localStorage.getItem(MUTE_KEY) === "1"; } catch { return false; } })();
@@ -43,40 +59,48 @@ export default function AdvisorNudge() {
   useEffect(() => {
     if (!isAuthenticated || dismissed || text) return;
     if (map.mode === "map" || location === "/portal/map") return;
-    if (map.opens < NUDGE_AFTER_PAGE_OPENS) return;
-    if (askedFor.current === location) return;
-    askedFor.current = location;
-    nudge.mutate(
-      { routePath: location, sessionStartedAt: map.sessionStartedAt, speak: !muted },
+    if (!nudgeDue(map.opens, map.nudgeFired)) return;
+    map.markNudgeFired();
+    setText(SITE_MAP_NUDGE_TEXT);
+    // Tell the hive the advisor spoke (working memory; server-side once-per-session too). Text is ours, so no server audio here.
+    nudge.mutate({ routePath: location, sessionStartedAt: map.sessionStartedAt, speak: false });
+    if (muted) return;
+    speak.mutate(
+      { text: SITE_MAP_NUDGE_TEXT },
       {
-        onSuccess: (res) => {
-          if (!res.fire || !res.text) return;
-          setText(res.text);
-          if (muted) return;
-          if (res.audio) {
+        onSuccess: res => {
+          if (res.ok) {
             try {
-              const el = new Audio(`data:${res.audio.mimeType};base64,${res.audio.audioBase64}`);
+              const el = new Audio(`data:${res.mimeType};base64,${res.audioBase64}`);
               audioRef.current = el;
               void el.play();
               return;
-            } catch { /* fall through to browser voice */ }
+            } catch { /* fall through to the browser voice */ }
           }
-          speakInBrowser(res.text);
+          speakInBrowser(SITE_MAP_NUDGE_TEXT);
         },
+        onError: () => speakInBrowser(SITE_MAP_NUDGE_TEXT),
       },
     );
-  }, [isAuthenticated, dismissed, text, map.mode, map.opens, map.sessionStartedAt, location, nudge, muted]);
+  }, [isAuthenticated, dismissed, text, map, location, nudge, speak, muted]);
 
   if (!text || dismissed) return null;
 
   const stop = () => { try { audioRef.current?.pause(); window.speechSynthesis?.cancel(); } catch { /* ignore */ } };
-  const help = () => { stop(); setDismissed(true); navigate(`${ADVISOR_CANONICAL_ROUTE}?from=${encodeURIComponent(location)}`); };
+  const titles: Record<string, string> = {};
+  for (const t of tree.data?.tabs ?? []) for (const g of t.groups) for (const l of g.leaves) titles[l.path] = l.title;
+  const help = () => {
+    stop();
+    const question = openedPagesQuestion(map.openedPaths.length ? map.openedPaths : [location], titles);
+    ask.mutate({ messages: [{ role: "user", content: question }], depth: "direct" }, { onSuccess: r => setReply(r.reply) });
+  };
   const notNow = () => { stop(); setDismissed(true); };
   const mute = () => { try { localStorage.setItem(MUTE_KEY, "1"); } catch { /* ignore */ } stop(); };
+  const continueChat = () => { stop(); setDismissed(true); navigate(`${ADVISOR_CHAT_ROUTE}?from=${encodeURIComponent(location)}`); };
 
   return (
     <div
-      className="fixed left-3 right-3 sm:left-auto sm:right-5 sm:w-[380px] z-[75] rounded-xl border border-amber-300/40 bg-[#0b1a12]/95 text-emerald-50 shadow-xl backdrop-blur p-3"
+      className="fixed left-3 right-3 sm:left-auto sm:right-5 sm:w-[420px] z-[75] rounded-xl border border-amber-300/40 bg-[#0b1a12]/95 text-emerald-50 shadow-xl backdrop-blur p-3 max-h-[70vh] overflow-y-auto"
       style={{ bottom: "calc(env(safe-area-inset-bottom, 0px) + 5.6rem)" }}
       role="status"
       aria-live="polite"
@@ -90,8 +114,24 @@ export default function AdvisorNudge() {
         </div>
         <button type="button" onClick={notNow} className="ml-auto rounded p-1 hover:bg-white/10" aria-label="Dismiss"><X size={16} /></button>
       </div>
+
+      {reply ? (
+        <div className="mt-3 rounded-lg border border-white/10 bg-black/20 p-2 text-sm leading-snug whitespace-pre-wrap" data-testid="advisor-nudge-reply">
+          {reply}
+        </div>
+      ) : null}
+      {ask.isError ? <p className="mt-2 text-xs text-amber-200/90">{ADVISOR_NAME} could not answer just now: {ask.error.message}</p> : null}
+
       <div className="mt-2 flex flex-wrap gap-2">
-        <button type="button" onClick={help} className="rounded-full bg-amber-300 text-[#07130d] px-3 py-1 text-sm font-semibold hover:bg-amber-200">Yes, help me</button>
+        {reply ? (
+          <button type="button" onClick={continueChat} className="inline-flex items-center gap-1 rounded-full bg-amber-300 text-[#07130d] px-3 py-1 text-sm font-semibold hover:bg-amber-200">
+            Continue with {ADVISOR_NAME} <ArrowRight size={14} />
+          </button>
+        ) : (
+          <button type="button" onClick={help} disabled={ask.isPending} className="rounded-full bg-amber-300 text-[#07130d] px-3 py-1 text-sm font-semibold hover:bg-amber-200 disabled:opacity-60">
+            {ask.isPending ? `${ADVISOR_NAME} is reading the pages you opened…` : "Yes, I have questions"}
+          </button>
+        )}
         <button type="button" onClick={notNow} className="rounded-full border border-white/20 px-3 py-1 text-sm hover:bg-white/10">Not now</button>
         <button type="button" onClick={mute} className="ml-auto text-xs opacity-60 hover:opacity-100">Mute the voice</button>
       </div>

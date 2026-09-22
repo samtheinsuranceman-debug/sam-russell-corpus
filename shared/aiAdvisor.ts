@@ -40,6 +40,14 @@ export function withAdvisorName(text: string): string {
   );
 }
 
+/**
+ * What the advisor says after a visitor's third page open from the site map.
+ * The operator's words, verbatim; spoken with the server voice when one is
+ * configured, else the browser's, and always shown as text.
+ */
+export const SITE_MAP_NUDGE_TEXT =
+  "Do you have any questions you're looking to have answered? How can I help you? This site is about 700 pages, an enormous library. What specifically are you looking for, and what are you hoping to achieve today?";
+
 /** Always rendered somewhere in view whenever the advisor speaks. */
 export const ADVISOR_ROLE = "AI Wealth Advisor";
 export const ADVISOR_DISCLOSURE = `${ADVISOR_NAME} is an AI advisor, not a person. Everything he produces is analysis for you and your licensed advisors to review — it is not personalized financial, tax, or legal advice.`;
