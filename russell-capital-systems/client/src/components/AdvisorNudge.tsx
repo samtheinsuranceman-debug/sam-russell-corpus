@@ -12,7 +12,7 @@ import { Volume2, X } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { useSiteMap } from "@/contexts/SiteMapContext";
-import { ADVISOR_CANONICAL_ROUTE, ADVISOR_NAME } from "@shared/advisorIdentity";
+import { ADVISOR_CANONICAL_ROUTE, ADVISOR_NAME } from "@shared/aiAdvisor";
 import { NUDGE_AFTER_PAGE_OPENS } from "@shared/hiveMind";
 
 const MUTE_KEY = "rcs.nudge.muted.v1";

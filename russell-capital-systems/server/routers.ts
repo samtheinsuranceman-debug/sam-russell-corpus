@@ -343,7 +343,7 @@ export const appRouter = router({
   system: systemRouter,
   /** Which AI brains are reachable, reported from the server. */
   aiStack: aiStackRouter,
-  /** Thomas Goldman — the advisor behind the blue microphone. */
+  /** The AI advisor (ADVISOR_NAME in shared/aiAdvisor.ts) — behind the blue microphone. */
   thomas: thomasGoldmanRouter,
   /** Brain Hub: encrypted vault for forty brains + forty MCP servers. Owner only. */
   vault: vaultRouter,

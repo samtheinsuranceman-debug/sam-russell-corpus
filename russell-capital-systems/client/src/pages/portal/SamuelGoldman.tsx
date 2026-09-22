@@ -9,7 +9,7 @@ import { useLocation } from "wouter";
 import { Mic, Send, Square } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
 import { trpc } from "@/lib/trpc";
-import { ADVISOR_NAME } from "@shared/advisorIdentity";
+import { ADVISOR_NAME } from "@shared/aiAdvisor";
 
 type Depth = "direct" | "deeper" | "integrated";
 

@@ -1,5 +1,5 @@
 /**
- * AI Provider Definitions — the forty brains Thomas Goldman can be wired to.
+ * AI Provider Definitions — the forty brains the AI advisor (named in shared/aiAdvisor.ts) can be wired to.
  * ════════════════════════════════════════════════════════════════════════════
  *
  * What each provider needs in order to be called: its endpoint, its wire

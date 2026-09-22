@@ -1,5 +1,5 @@
 /**
- * Brain Hub — the forty brains and forty MCP presets Thomas Goldman is wired to.
+ * Brain Hub — the forty brains and forty MCP presets the AI advisor is wired to.
  *
  * These tests guard the catalogue's shape and the owner's standing rules. They
  * never touch the network.

@@ -1,5 +1,5 @@
 /**
- * Thomas Goldman — the AI advisor.
+ * The AI advisor page. His name lives in shared/aiAdvisor.ts (ADVISOR_NAME); this file keeps its historical name.
  *
  * Layout follows Sam's brief: the conversation takes roughly half the screen
  * and the AI Stack column sits beside it at about an eighth, so the client can

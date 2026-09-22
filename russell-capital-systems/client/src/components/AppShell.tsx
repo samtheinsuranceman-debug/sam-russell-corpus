@@ -1,4 +1,5 @@
 import HiddenBrainVault from "@/components/HiddenBrainVault";
+import { ADVISOR_NAME } from "@shared/aiAdvisor";
 import { useAuth } from "@/_core/hooks/useAuth";
 import DeeperButtons from "@/components/DeeperButtons";
 import { getLoginUrl } from "@/const";
@@ -653,7 +654,7 @@ const NAV_SECTIONS: NavSection[] = [
         { path: "/portal/charitable-giving-dashboard", label: "Charitable Giving Dashboard", icon: ChevronRight, color: "slate" },
       { path: "/portal/ai", label: "AI", icon: ChevronRight, color: "cyan" },
       { path: "/portal/ai-brain-hub", label: "AI Brain Hub", icon: ChevronRight, color: "cyan" },
-      { path: "/portal/thomas-goldman", label: "Thomas Goldman", icon: Sparkles, color: "gold" },
+      { path: "/portal/thomas-goldman", label: ADVISOR_NAME, icon: Sparkles, color: "gold" },
       { path: "/portal/brain-hub", label: "Brain Hub", icon: ChevronRight, color: "gold" },
       { path: "/portal/ai-advisor", label: "AI Financial Advisor", icon: Sparkles, color: "purple" },
       { path: "/portal/whisperer", label: "AI Whisperer", icon: MessageCircle, color: "green" },
