@@ -1,0 +1,145 @@
+# Verification gate for the canonical Russell Capital Systems application.
+#
+# Runs install, typecheck, production build, the FULL test suite, route
+# integrity and a secret scan against the russell-capital-systems/ subtree.
+#
+# This workflow DOES NOT DEPLOY. Deployment is deploy-branch.yml's job, which
+# runs only on pushes to master touching this subtree. Nothing here pushes a
+# branch, calls a provider API, reads a deployment token, or touches Railway,
+# Pages, DNS or a database.
+#
+# It requires no production credentials and prints no secret values.
+#
+# Commands are the repository's actual scripts. Where a script does not exist
+# the step fails loudly rather than passing silently — see "Verify scripts
+# exist" below. There is deliberately no lint step: this project has no lint
+# script, and inventing one here would report a check that isn't running.
+name: RCS CI
+
+on:
+  pull_request:
+    paths:
+      - "russell-capital-systems/**"
+      - ".github/workflows/rcs-ci.yml"
+  push:
+    branches: [master]
+    paths:
+      - "russell-capital-systems/**"
+      - ".github/workflows/rcs-ci.yml"
+  workflow_dispatch:
+
+# Read-only. The job cannot write to the repository even if a step tried.
+permissions:
+  contents: read
+
+concurrency:
+  group: rcs-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    working-directory: russell-capital-systems
+
+jobs:
+  verify:
+    name: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Full history so the secret scan can diff against the base ref.
+          fetch-depth: 0
+          lfs: false
+
+      # pnpm must be set up BEFORE node, or actions/setup-node's pnpm cache
+      # resolution fails — the package manager has to exist for it to find a
+      # store path.
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.34.2
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: russell-capital-systems/pnpm-lock.yaml
+
+      # Fail clearly on a missing script rather than letting `npm run` exit 0
+      # on a no-op, which would report a check that never ran.
+      - name: Verify scripts exist
+        run: |
+          set -euo pipefail
+          for s in check build test test:ci; do
+            if ! node -e "
+              const s=require('./package.json').scripts||{};
+              process.exit(s['$s']?0:1);
+            "; then
+              echo \"::error::package.json has no '$s' script. CI expects it. \
+          Either add the script or update .github/workflows/rcs-ci.yml — do not \
+          let this check pass silently.\"
+              exit 1
+            fi
+          done
+          echo "All required scripts present: check, build, test, test:ci"
+
+      # --frozen-lockfile makes lockfile drift a failure rather than a silent
+      # resolution. npm install is NOT used: it exits 1 on this tree because
+      # npm's arborist cannot walk the committed pnpm store.
+      - name: Install (lockfile-respecting)
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck
+        run: npm run check
+
+      - name: Production build
+        run: npm run build
+
+      # The FULL suite, not test:ci. test:ci excludes 22 files and 381 tests,
+      # including the schema and subscription-gate suites — exactly the
+      # category a donor import is most likely to break.
+      - name: Test (full suite)
+        run: npm run test
+
+      # Both checks below live in scripts/ci/ as real files rather than inline
+      # `node -e "…"`. A regex embedded in a double-quoted shell string loses
+      # its backslashes, which silently turned the first version of the secret
+      # scanner into a no-op: it reported "clean" on a planted key. Files do not
+      # have that failure mode, and the scanner now self-tests before it runs.
+      - name: Route integrity
+        run: node ../scripts/ci/route-integrity.mjs
+
+      # Diff-scoped, so the gate stays fast and reports what THIS change
+      # introduces. Prints file, line and pattern name — never the value.
+      - name: Secret scan (changed files)
+        working-directory: .
+        run: |
+          set -euo pipefail
+          BASE="${{ github.event.pull_request.base.sha }}"
+          if [ -z "$BASE" ]; then BASE="$(git rev-parse HEAD~1 2>/dev/null || git rev-parse HEAD)"; fi
+          echo "Diffing against $BASE"
+          git diff --name-only --diff-filter=ACMR "$BASE" HEAD > changed-files.txt || true
+          node scripts/ci/secret-scan.mjs changed-files.txt
+
+      - name: Summary
+        if: always()
+        run: |
+          {
+            echo "### RCS CI"
+            echo ""
+            echo "| Check | Result |"
+            echo "|---|---|"
+            echo "| Install (pnpm, frozen lockfile) | ${{ job.status }} |"
+            echo "| Typecheck | see log |"
+            echo "| Production build | see log |"
+            echo "| Full test suite | see log |"
+            echo "| Route integrity | see log |"
+            echo "| Secret scan (diff) | see log |"
+            echo ""
+            echo "Baseline to preserve: **4,138 passing / 0 failing / 330 routes**."
+            echo ""
+            echo "_This workflow does not deploy._"
+          } >> "$GITHUB_STEP_SUMMARY"
