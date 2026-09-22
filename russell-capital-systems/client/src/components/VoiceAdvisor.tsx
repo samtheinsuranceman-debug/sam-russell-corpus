@@ -70,6 +70,8 @@ export default function VoiceAdvisor() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const ask = trpc.ultra.ask.useMutation();
+  // The hive is the one address; ultra.ask stays as the public/unauthenticated fallback.
+  const hive = trpc.hive.ask.useMutation();
   const speak = trpc.ultra.speak.useMutation();
   const emailAnswer = trpc.ultra.emailAnswer.useMutation();
   const providers = trpc.ultra.providers.useQuery(undefined, { staleTime: 5 * 60_000 });
@@ -85,8 +87,16 @@ export default function VoiceAdvisor() {
     if (chosen !== "horizon") setAsked(q);
     try {
       const profile = [readSavedProfileSummary(), extraProfile].filter(Boolean).join("\n");
-      const res = await ask.mutateAsync({ question: q, pagePath: location, profileSummary: profile, mode: chosen });
-      const got: Section[] = res.sections?.length ? res.sections : [{ id: chosen, title: ADVISOR_MODES.find((m) => m.id === chosen)?.label ?? "Answer", text: res.answer, via: res.via }];
+      let got: Section[];
+      try {
+        const depth = chosen === "all" || chosen === "horizon" ? "integrated" : chosen === "surface" ? "direct" : "deeper";
+        const h = await hive.mutateAsync({ question: q, routePath: location, depth });
+        got = [{ id: chosen, title: ADVISOR_MODES.find((m) => m.id === chosen)?.label ?? "Answer", text: h.text, via: `hive:${h.answeredBy.map((a) => a.providerId).join("+") || "none"}` }];
+      } catch {
+        // Not signed in (protected procedure) or the hive is dark: the original per-page advisor still answers.
+        const res = await ask.mutateAsync({ question: q, pagePath: location, profileSummary: profile, mode: chosen });
+        got = res.sections?.length ? res.sections : [{ id: chosen, title: ADVISOR_MODES.find((m) => m.id === chosen)?.label ?? "Answer", text: res.answer, via: res.via }];
+      }
       setSections(got);
       setAnsweredMode(chosen);
       setHorizonOpen(false);

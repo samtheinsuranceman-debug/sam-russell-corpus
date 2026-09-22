@@ -152,6 +152,11 @@ const PROVIDERS: Provider[] = [
   },
 ];
 
+/** The trunk's caller for a provider id, so a vault key (owner panel) can drive the same client as an env key. */
+export function providerById(id: string): Provider | undefined {
+  return PROVIDERS.find((p) => p.id === id);
+}
+
 export function configuredProviders(): Provider[] {
   return PROVIDERS.filter((p) => Boolean(process.env[p.envKey]));
 }

@@ -21,6 +21,13 @@ import { OnboardingTour } from "./components/OnboardingTour";
 import { AchievementUnlockOverlay } from "./components/AchievementUnlockOverlay";
 import { PetEvolutionOverlay } from "./components/PetEvolutionOverlay";
 import VoiceAdvisor from "./components/VoiceAdvisor";
+import { SiteMapProvider } from "./contexts/SiteMapContext";
+import SiteMapOverlay from "./components/SiteMapOverlay";
+import AdvisorNudge from "./components/AdvisorNudge";
+const SiteMapPage = lazy(() => import("./pages/portal/SiteMapPage"));
+const SamuelGoldman = lazy(() => import("./pages/portal/SamuelGoldman"));
+const SourcesPage = lazy(() => import("./pages/portal/Sources"));
+const OwnerPanel = lazy(() => import("./pages/portal/OwnerPanel"));
 
 // Public pages — lazy-loaded to reduce initial bundle
 const Landing = lazy(() => import("./pages/Landing"));
@@ -887,6 +894,11 @@ function Router() {
       <Route path="/portal/thresholds" component={gated(Thresholds, "/portal/thresholds")} />
       <Route path="/portal/integration-scorecard" component={gated(IntegrationScorecard, "/portal/integration-scorecard")} />
       <Route path="/portal/client-report-generator" component={gated(ClientReportGenerator, "/portal/client-report-generator")} />
+      {/* Site map + the hive front door (22 Sep 2026) */}
+      <Route path="/portal/map" component={gated(SiteMapPage, "/portal/map")} />
+      <Route path="/portal/samuel-goldman" component={gated(SamuelGoldman, "/portal/samuel-goldman")} />
+      <Route path="/portal/sources" component={gated(SourcesPage, "/portal/sources")} />
+      <Route path="/portal/owner-panel" component={gated(OwnerPanel, "/portal/owner-panel")} />
       {/* ─── PR-3b: pages ported from russell-capital-app ─── */}
       <Route path="/portal/retirement-advantage" component={gated(RetirementAdvantage, "/portal/retirement-advantage")} />
       <Route path="/portal/admin/health" component={gated(AdminHealthDashboard, "/portal/admin/health")} />
@@ -1029,7 +1041,13 @@ function App() {
             <SeoSync />
             <RoomSync />
             <WebVitalsReporter />
-            <Router />
+            <SiteMapProvider>
+              <Router />
+              {/* The login site map: every page, clickable, visited pages glow green; closes only from its X */}
+              <SiteMapOverlay />
+              {/* Samuel Goldman speaks after the second page open */}
+              <AdvisorNudge />
+            </SiteMapProvider>
             {/* The every-page AI voice advisor — speak on any page, the AI
                 answers in context of that page and the saved profile. */}
             <VoiceAdvisor />

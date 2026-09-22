@@ -204,7 +204,8 @@ export interface MortgageKillerResult {
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 
-const HOME_APPRECIATION_RATE = 0.05;
+/** The flat appreciation assumption the projection uses when no ZIP path is supplied. Exported so the forecast overlay can preserve it. */
+export const HOME_APPRECIATION_RATE = 0.05;
 const MAX_PREMIUM_YEARS = 5;
 const HELOC_LTV_DEFAULT = 0.70;
 const LIFE_LOAN_PCT = 0.80;

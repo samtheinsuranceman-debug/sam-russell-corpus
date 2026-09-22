@@ -1,3 +1,4 @@
+import { currentRules, rulesForYear, saltAllowed, type FilingKey } from "./taxRules";
 /**
  * Advanced Analytics Shared Module
  * Tax Bracket Waterfall, Estate Tax Impact, Income Timeline,
@@ -13,25 +14,25 @@ export interface TaxBracket {
   label: string;
 }
 
-export const FEDERAL_BRACKETS_2024_MFJ: TaxBracket[] = [
-  { min: 0, max: 23200, rate: 0.10, label: "10%" },
-  { min: 23200, max: 94300, rate: 0.12, label: "12%" },
-  { min: 94300, max: 201050, rate: 0.22, label: "22%" },
-  { min: 201050, max: 383900, rate: 0.24, label: "24%" },
-  { min: 383900, max: 487450, rate: 0.32, label: "32%" },
-  { min: 487450, max: 731200, rate: 0.35, label: "35%" },
-  { min: 731200, max: Infinity, rate: 0.37, label: "37%" },
-];
+/**
+ * Brackets in this module's {min,max,rate,label} shape, read from the versioned
+ * rule set for the year (shared/taxRules.ts). This replaced two hand-typed 2024
+ * tables that were still driving the waterfall in tax year 2026.
+ */
+export function federalBracketsFor(filing: FilingKey, taxYear: number = new Date().getFullYear()): TaxBracket[] {
+  const rules = rulesForYear(taxYear);
+  let min = 0;
+  return rules.brackets[filing].map((b) => {
+    const row: TaxBracket = { min, max: b.upTo ?? Infinity, rate: b.rate, label: `${Math.round(b.rate * 100)}%` };
+    min = b.upTo ?? min;
+    return row;
+  });
+}
 
-export const FEDERAL_BRACKETS_2024_SINGLE: TaxBracket[] = [
-  { min: 0, max: 11600, rate: 0.10, label: "10%" },
-  { min: 11600, max: 47150, rate: 0.12, label: "12%" },
-  { min: 47150, max: 100525, rate: 0.22, label: "22%" },
-  { min: 100525, max: 191950, rate: 0.24, label: "24%" },
-  { min: 191950, max: 243725, rate: 0.32, label: "32%" },
-  { min: 243725, max: 609350, rate: 0.35, label: "35%" },
-  { min: 609350, max: Infinity, rate: 0.37, label: "37%" },
-];
+/** @deprecated names kept for existing imports; the values are the CURRENT year's, not 2024's. */
+export const FEDERAL_BRACKETS_2024_MFJ: TaxBracket[] = federalBracketsFor("joint");
+/** @deprecated see above */
+export const FEDERAL_BRACKETS_2024_SINGLE: TaxBracket[] = federalBracketsFor("single");
 
 export interface BracketWaterfallRow {
   bracket: string;
@@ -51,7 +52,7 @@ export function calculateBracketWaterfall(
   conversionAmount: number,
   filingStatus: 'single' | 'married' | 'hoh'
 ): { rows: BracketWaterfallRow[]; optimalConversion: number; marginalRate: number; effectiveRate: number; totalTax: number } {
-  const brackets = filingStatus === 'single' ? FEDERAL_BRACKETS_2024_SINGLE : FEDERAL_BRACKETS_2024_MFJ;
+  const brackets = federalBracketsFor(filingStatus === 'married' ? 'joint' : filingStatus);
   const rows: BracketWaterfallRow[] = [];
   let remainingConversion = conversionAmount;
   let cumulativeConversion = 0;
@@ -135,12 +136,15 @@ export function calculateEstateTax(
   grossEstate: number,
   iulDeathBenefit: number,
   useILIT: boolean,
-  year: number = 2024,
+  year: number = new Date().getFullYear(),
 ): EstateTaxResult {
-  // Federal estate tax exemption
-  const currentExemption = 13610000; // 2024
-  const postSunsetExemption = 7000000; // approximate 2026 reversion
-  const exemption = year >= 2026 ? postSunsetExemption : currentExemption;
+  // Federal estate tax basic exclusion from the versioned rule set for the year.
+  // The TCJA sunset to ~$7M never happened: P.L. 119-21 (OBBBA, July 2025) set the
+  // exclusion at $15,000,000 for 2026, indexed thereafter. The sunset fields below are
+  // kept for the page that renders them and now report no additional exposure.
+  const exemption = rulesForYear(year).estateBasicExclusion;
+  const currentExemption = exemption;
+  const postSunsetExemption = rulesForYear(Math.max(year, 2026)).estateBasicExclusion;
 
   // Without IUL strategy
   const taxableEstate = Math.max(0, grossEstate - exemption);
@@ -388,7 +392,7 @@ export function runCompetitiveAnalysis(
   });
 
   // 3. Max 401(k)
-  const max401k = 23500; // 2024 limit
+  const max401k = currentRules().retirement.deferral401k; // versioned rule set, not a literal
   let val401k = 0;
   for (let y = 1; y <= years; y++) {
     val401k = (val401k + max401k) * (1 + marketRate);
@@ -481,7 +485,7 @@ export function compareIULvsRoth(
   const rows: IULvsRothYear[] = [];
   let iulCV = 0;
   let rothBal = 0;
-  const rothLimit = 7000; // 2024 Roth IRA limit (under 50)
+  const rothLimit = currentRules().retirement.ira; // versioned rule set (under 50)
   const iulPremium = annualContribution;
   const iulDB = iulPremium * 10;
 
@@ -731,13 +735,15 @@ export function calculateComprehensiveTaxWaterfall(input: ComprehensiveTaxInput)
   const adjustedGrossIncome = Math.max(0, grossIncome - agiAdjustments);
 
   // ── Step 3: Standard or Itemized deductions ──
-  const standardDeduction = filingStatus === 'married' ? 29200 :
-    filingStatus === 'hoh' ? 21900 : 14600;
-  // Extra deduction for age 65+
-  const extraStandard = age >= 65 ? (filingStatus === 'married' ? 3100 : 3850) : 0;
+  // From the versioned rule set for the year; these lines carried the 2024 amounts through 2026.
+  const rules = currentRules();
+  const filingKey: FilingKey = filingStatus === 'married' ? 'joint' : filingStatus;
+  const standardDeduction = rules.standardDeduction[filingKey];
+  // Extra deduction for age 65+ (one qualifying person; a joint return with two 65+ spouses gets two)
+  const extraStandard = age >= 65 ? (filingStatus === 'married' ? rules.additionalStandardDeduction.marriedPerSpouse : rules.additionalStandardDeduction.singleOrHoh) : 0;
   const totalStandardDeduction = standardDeduction + extraStandard;
 
-  const saltCapped = Math.min(deductions.saltDeduction, 10000); // SALT cap
+  const saltCapped = saltAllowed(deductions.saltDeduction, adjustedGrossIncome, filingKey, rules); // OBBBA cap with MAGI phase-down, from the rule set
   const agiThreshold = adjustedGrossIncome * 0.075;
   const medicalAllowed = Math.max(0, deductions.medicalExpenses - agiThreshold);
   const totalItemized = deductions.mortgageInterest + saltCapped +
@@ -758,7 +764,7 @@ export function calculateComprehensiveTaxWaterfall(input: ComprehensiveTaxInput)
   const taxableIncomeWithConversion = taxableIncome + rothConversion;
 
   // ── Step 5: Federal Tax Calculation ──
-  const brackets = filingStatus === 'single' ? FEDERAL_BRACKETS_2024_SINGLE : FEDERAL_BRACKETS_2024_MFJ;
+  const brackets = federalBracketsFor(filingKey);
 
   function calcFederalTax(income: number) {
     let tax = 0;
@@ -802,11 +808,14 @@ export function calculateComprehensiveTaxWaterfall(input: ComprehensiveTaxInput)
   });
 
   // ── Step 6: FICA Tax ──
-  const ficaWages = Math.min(income.w2, 168600); // 2024 SS wage base
-  const ssTax = ficaWages * 0.062;
-  const medicareTax = income.w2 * 0.0145;
-  const additionalMedicare = Math.max(0, income.w2 - (filingStatus === 'married' ? 250000 : 200000)) * 0.009;
-  const seTax = income.selfEmployment > 0 ? income.selfEmployment * 0.9235 * 0.153 : 0;
+  // Every figure from the versioned rule set for the year (shared/taxRules.ts), never a literal:
+  // this line carried 168,600 (the 2024 wage base) for two tax years before the rule set had the field.
+  const ss = currentRules().socialSecurity;
+  const ficaWages = Math.min(income.w2, ss.wageBase);
+  const ssTax = ficaWages * ss.oasdiRate;
+  const medicareTax = income.w2 * ss.hiRate;
+  const additionalMedicare = Math.max(0, income.w2 - (filingStatus === 'married' ? ss.additionalMedicareThreshold.joint : ss.additionalMedicareThreshold.single)) * ss.additionalMedicareRate;
+  const seTax = income.selfEmployment > 0 ? income.selfEmployment * 0.9235 * (2 * ss.oasdiRate + 2 * ss.hiRate) : 0;
   const ficaTax = Math.round(ssTax + medicareTax + additionalMedicare + seTax);
 
   // ── Step 7: NIIT (Net Investment Income Tax) ──

@@ -32,6 +32,12 @@ import { forgivenessRouter } from "./forgivenessRouter";
 import { taxScheduleRouter } from "./taxScheduleRouter";
 import { unaskedRouter } from "./unaskedRouter";
 import { siteHealthRouter } from "./siteHealthRouter";
+import { hiveRouter } from "./hiveRouter";
+import { siteMapRouter } from "./siteMapRouter";
+import { forecastRouter } from "./forecastRouter";
+import { sourcesRouter } from "./sourcesRouter";
+import { ownerVaultRouter } from "./ownerVaultRouter";
+import { hiveGroundingMessages } from "./hiveGround";
 import { integrationRouter } from "./integrationRouter";
 import { isStrongPassword, PASSWORD_RULE } from "@shared/passwordPolicy";
 import { recordDocumentProvenance } from "./provenance";
@@ -369,6 +375,11 @@ export const appRouter = router({
   taxSchedule: taxScheduleRouter,
   unasked: unaskedRouter,
   siteHealth: siteHealthRouter,
+  hive: hiveRouter,
+  siteMap: siteMapRouter,
+  forecast: forecastRouter,
+  sources: sourcesRouter,
+  ownerVault: ownerVaultRouter,
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),
     logout: publicProcedure.mutation(({ ctx }) => {
@@ -648,6 +659,7 @@ export const appRouter = router({
         const prompt = `You are a financial advisor assistant. Summarize the following client activity notes for ${input.clientName ?? "the client"} in one concise paragraph (3-5 sentences). Focus on key interactions, outstanding follow-ups, and the overall relationship status. Be factual and professional.\n\nNotes:\n${noteLines}`;
         const response = await invokeLLM({
           messages: [
+            ...(await hiveGroundingMessages(ctx)),
             { role: "system", content: `${CLIENT_FACING_PREAMBLE} Summarize client activity notes concisely and professionally.` },
             { role: "user", content: prompt },
           ],
@@ -1024,6 +1036,7 @@ Do NOT include any disclaimers in the slides themselves — those are added sepa
 
       const response = await invokeLLM({
         messages: [
+          ...(await hiveGroundingMessages(ctx)),
           { role: "system", content: `${CLIENT_FACING_PREAMBLE} You are an expert presentation designer for financial advisors. Create polished, data-driven slide decks.` },
           { role: "user", content: prompt },
         ],
@@ -1134,6 +1147,7 @@ All content must be branded as Russell Capital Systems™.`;
 
       const response = await invokeLLM({
         messages: [
+          ...(await hiveGroundingMessages(ctx)),
           { role: "system", content: `${CLIENT_FACING_PREAMBLE} You are an expert presentation designer for financial advisors. Create polished, data-driven slide decks that impress clients and close deals.` },
           { role: "user", content: fullPrompt },
         ],
@@ -1335,7 +1349,7 @@ All content must be branded as Russell Capital Systems™.`;
       pageContext: z.string(),
       calculatorResults: z.string(),
       clientGoals: z.string(),
-    })).mutation(async ({ input }) => {
+    })).mutation(async ({ ctx, input }) => {
       const goals = JSON.parse(input.clientGoals);
       const prompt = `You are ${BRAND_SYSTEM_IDENTITY}, the Goals Accelerator.
 
@@ -1364,6 +1378,7 @@ Provide a personalized "Your Stated Goals Accelerator" memo:
 Keep it personal, specific with dollar amounts, and actionable. Use their actual numbers. End with a provocative question that makes them want to explore further.`;
       const response = await invokeLLM({
         messages: [
+          ...(await hiveGroundingMessages(ctx)),
           { role: "system", content: `${CLIENT_FACING_PREAMBLE} You are the Goals Accelerator module. Be specific, personal, and use actual dollar amounts from the client's portfolio. Challenge them to think bigger.` },
           { role: "user", content: prompt },
         ],
@@ -1580,6 +1595,7 @@ Keep it personal, specific with dollar amounts, and actionable. Use their actual
           const { invokeLLM } = await import("./_core/llm");
           const response = await invokeLLM({
             messages: [
+              ...(await hiveGroundingMessages(ctx)),
               {
                 role: "system",
                 content: `You are a presentation designer for Russell Capital Systems\u2122. Generate a ${input.slideCount}-slide deck about "${input.topic}" personalized for this client. Return JSON: { "slides": [{ "title": string, "subtitle": string, "bullets": string[], "speakerNotes": string, "layout": "title"|"content"|"metrics"|"comparison"|"summary" }] }`,
@@ -5315,6 +5331,7 @@ Keep it personal, specific with dollar amounts, and actionable. Use their actual
         try {
           const extractionResult = await invokeLLM({
             messages: [
+              ...(await hiveGroundingMessages(ctx)),
               {
                 role: "system",
                 content: `${SYSTEM_PREAMBLE} You are an expert insurance illustration analyst. Extract structured data from this IUL/life insurance illustration PDF. Return a JSON object with these exact fields:
@@ -5894,6 +5911,7 @@ Return a JSON object with:
 
       const result = await invokeLLM({
         messages: [
+          ...(await hiveGroundingMessages(ctx)),
           { role: 'system', content: `${SYSTEM_PREAMBLE} You are an expert insurance advisor meeting planner. Return only valid JSON.` },
           { role: 'user', content: prompt },
         ],
@@ -6335,9 +6353,10 @@ Return a JSON object with:
         fileUrl: z.string().url(),
         fileName: z.string(),
       }))
-      .mutation(async ({ input }) => {
+      .mutation(async ({ ctx, input }) => {
         const response = await invokeLLM({
           messages: [
+            ...(await hiveGroundingMessages(ctx)),
             {
               role: "system",
               content: `${SYSTEM_PREAMBLE} You are a mortgage statement data extractor. Extract the following fields from the uploaded mortgage statement document. Return ONLY valid JSON with these exact keys:
@@ -7695,11 +7714,12 @@ If a field cannot be determined, use 0 for numbers and "Unknown" for strings. Be
       tabsVisited: z.array(z.string()).optional(),
       actionsPerformed: z.array(z.string()).optional(),
       duration: z.number().optional(),
-    })).mutation(async ({ input }) => {
+    })).mutation(async ({ ctx, input }) => {
       const db = await getDb();
       if (!db) throw new Error("Database not available");
       const response = await invokeLLM({
         messages: [
+          ...(await hiveGroundingMessages(ctx)),
           { role: "system", content: `${SYSTEM_PREAMBLE} You are a financial advisor session evaluator. Rate the client session on a scale of 1-10 based on engagement, learning, and progress toward financial goals. Return JSON with: rating (1-10), explanation (2-3 sentences), behaviors (array of 3-5 observed behaviors), actions (array of 2-4 recommended next actions), scoreImpact (number 0.1-1.0 representing potential score improvement), learningApproach (1-2 sentences on recommended learning style).` },
           { role: "user", content: `Session notes: ${input.sessionNotes}\nTabs visited: ${(input.tabsVisited ?? []).join(", ")}\nActions: ${(input.actionsPerformed ?? []).join(", ")}\nDuration: ${input.duration ?? 0} minutes` },
         ],
@@ -7818,6 +7838,7 @@ If a field cannot be determined, use 0 for numbers and "Unknown" for strings. Be
       // Extract data via LLM
       const response = await invokeLLM({
         messages: [
+          ...(await hiveGroundingMessages(ctx)),
           {
             role: "system",
             content: `${SYSTEM_PREAMBLE} You are a tax return data extractor. Extract the following fields from the uploaded tax return document (1040, W-2, 1099, etc.). Return ONLY valid JSON with these exact keys:
@@ -7926,9 +7947,10 @@ If a field cannot be determined, use 0 for numbers and "unknown" for strings. Be
     extractFromUrl: protectedProcedure.input(z.object({
       fileUrl: z.string().url(),
       fileName: z.string(),
-    })).mutation(async ({ input }) => {
+    })).mutation(async ({ ctx, input }) => {
       const response = await invokeLLM({
         messages: [
+          ...(await hiveGroundingMessages(ctx)),
           {
             role: "system",
             content: `${SYSTEM_PREAMBLE} You are a tax return data extractor. Extract key financial data from this tax document. Return ONLY valid JSON with keys: filingStatus, taxYear, grossIncome, adjustedGrossIncome, taxableIncome, totalTaxLiability, effectiveTaxRate, marginalTaxBracket, wagesAndSalaries, interestIncome, dividendIncome, capitalGains, businessIncome, rentalIncome, socialSecurityIncome, retirementDistributions, totalDeductions, stateAndLocalTaxes, mortgageInterest, charitableContributions, dependents, primaryFilerName, spouseName. Use 0 for unknown numbers, "unknown" for unknown strings.`
@@ -9337,6 +9359,7 @@ If a field cannot be determined, use 0 for numbers and "unknown" for strings. Be
 
       const llmMessages = [
         { role: "system" as const, content: systemPrompt },
+        ...(await hiveGroundingMessages(ctx)),
         ...input.messages.slice(-10).map(m => ({ role: m.role as "user" | "assistant", content: m.content })),
       ];
 
@@ -9575,6 +9598,7 @@ If a field cannot be determined, use 0 for numbers and "unknown" for strings. Be
           const { invokeLLM } = await import("./_core/llm");
           const response = await invokeLLM({
             messages: [
+              ...(await hiveGroundingMessages(ctx)),
               {
                 role: "system",
                 content: `You are a financial report generator for Russell Capital Systems. Generate a professional HTML report with inline CSS styling. Use dark theme (bg: #0a0a0f, text: #e2e8f0, accent: #10b981). Include tables, key metrics, and professional formatting. The report should look like a premium financial advisory document.`,
@@ -9690,10 +9714,11 @@ Generate the full HTML report with professional styling. Include a cover page, t
       topComboNames: z.array(z.string()),
       topComboIds: z.array(z.number()),
     }))
-    .mutation(async ({ input }) => {
+    .mutation(async ({ ctx, input }) => {
       try {
         const response = await invokeLLM({
           messages: [
+            ...(await hiveGroundingMessages(ctx)),
             { role: "system", content: "You are an elite financial strategist for Russell Capital Systems. Analyze the client profile and explain why the recommended Tax-Free Wealth Combos are ideal. Be specific about dollar amounts, tax implications, and timeline. Use markdown. Keep it under 500 words." },
             { role: "user", content: `Client: ${input.profession}, Age ${input.age}, ${input.state}, NW $${input.netWorth.toLocaleString()}, Income $${input.annualIncome.toLocaleString()}. Goals: ${input.goals.join(", ")}. Top Combos: ${input.topComboNames.map((n, i) => `${i+1}. ${n}`).join("; ")}. Explain why these combos match this client and recommend execution order.` }
           ],

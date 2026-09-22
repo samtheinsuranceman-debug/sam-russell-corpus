@@ -3035,3 +3035,57 @@ export const engineChainRuns = mysqlTable("engine_chain_runs", {
 }, (t) => ({ byChain: index("engine_chain_runs_chain").on(t.chainId), byUser: index("engine_chain_runs_user").on(t.userId) }));
 export type EngineChainRun = typeof engineChainRuns.$inferSelect;
 export type InsertEngineChainRun = typeof engineChainRuns.$inferInsert;
+
+// ─── Site Map visits + Hive Mind working memory (0082_site_map_and_hive) ─────
+// Added 22 Sep 2026. Keyed by users.id like every other per-person table.
+export type HiveMemoryPayloadJson = Record<string, unknown>;
+
+export const siteMapVisits = mysqlTable("site_map_visits", {
+  id:             int("id").autoincrement().primaryKey(),
+  userId:         int("userId").notNull(),
+  routePath:      varchar("routePath", { length: 200 }).notNull(),
+  visitCount:     int("visitCount").default(1).notNull(),
+  firstVisitedAt: timestamp("firstVisitedAt").defaultNow().notNull(),
+  lastVisitedAt:  timestamp("lastVisitedAt").defaultNow().onUpdateNow().notNull(),
+}, (t) => ({
+  userRoute: uniqueIndex("site_map_visits_user_route").on(t.userId, t.routePath),
+  byUser:    index("site_map_visits_user").on(t.userId),
+}));
+export type SiteMapVisitRow = typeof siteMapVisits.$inferSelect;
+
+export const hiveMemoryEvents = mysqlTable("hive_memory_events", {
+  id:        int("id").autoincrement().primaryKey(),
+  userId:    int("userId").notNull(),
+  kind:      mysqlEnum("kind", ["page_visit", "page_close", "calc_result", "forecast_toggle", "verification", "decision", "question", "nudge", "note"]).notNull(),
+  routePath: varchar("routePath", { length: 200 }),
+  engine:    varchar("engine", { length: 120 }),
+  payload:   json("payload").$type<HiveMemoryPayloadJson>(),
+  source:    varchar("source", { length: 200 }),
+  asOf:      varchar("asOf", { length: 40 }),
+  outcome:   mysqlEnum("outcome", ["pass", "fail", "unverified"]),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+}, (t) => ({
+  byUserTime: index("hive_memory_events_user_time").on(t.userId, t.createdAt),
+}));
+export type HiveMemoryEventRow = typeof hiveMemoryEvents.$inferSelect;
+
+// ─── Owner vault: 40 API-key slots + 40 MCP-URL slots (0083_owner_vault) ─────
+// Secrets are sealed with AES-256-GCM under OWNER_VAULT_KEY before they reach
+// this table (server/ownerVaultCrypto.ts); a dump of the table is not a key dump.
+export const ownerVaultSlots = mysqlTable("owner_vault_slots", {
+  id:         int("id").autoincrement().primaryKey(),
+  kind:       mysqlEnum("kind", ["api", "mcp"]).notNull(),
+  slot:       int("slot").notNull(),
+  providerId: varchar("providerId", { length: 64 }).notNull(),
+  label:      varchar("label", { length: 120 }).notNull(),
+  sealed:     text("sealed").notNull(),
+  model:      varchar("model", { length: 120 }),
+  /** Council domains the owner marked this member strong in; the hive asks them first for that domain. */
+  domains:    json("domains").$type<string[]>(),
+  enabled:    boolean("enabled").default(true).notNull(),
+  updatedBy:  int("updatedBy"),
+  updatedAt:  timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (t) => ({
+  kindSlot: uniqueIndex("owner_vault_slots_kind_slot").on(t.kind, t.slot),
+}));
+export type OwnerVaultSlotRow = typeof ownerVaultSlots.$inferSelect;
