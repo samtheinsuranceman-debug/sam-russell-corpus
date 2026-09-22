@@ -1,0 +1,799 @@
+// ─── Segment audit ──────────────────────────────────────────────────────────
+// Take a real credited segment off a carrier's system and work out whether the
+// numbers agree — and where they do not, say precisely what would reconcile
+// them rather than picking an explanation.
+//
+// ## Why this exists
+//
+// Everything else in this directory is built from brochures and illustrations,
+// which describe what an account is supposed to do. An in-force segment is what
+// it actually did, and it is the only kind of evidence that can falsify the
+// rest. A carrier's advisor portal will show a segment's start and end index
+// values, its participation rate, its cap, and the rate it credited — which is
+// enough to check the arithmetic of the whole account end to end.
+//
+// The case this was written from is worth keeping. A Securian segment showed:
+//
+//   starting index 4,780.94   ending index 6,944.47   growth 45.25%
+//   growth cap 9999999900.00%   participation 105.00%   credited 26.96%
+//
+// Three of those verify immediately. The growth rate is exactly end/start − 1.
+// The index credit divided by the segment value before crediting is exactly the
+// stated crediting rate, so the rate was applied to the right base. And the cap
+// is a sentinel, not a cap.
+//
+// One does not. 45.25% at 105% participation is 47.52%, and the account credited
+// 26.96% — a gap of 20.56 percentage points. No single-year charge explains
+// that; a one-year charge would have to be 16% compounding or 20% simple. The
+// gap only becomes ordinary once the segment is longer than a year: at two
+// years it is 7.79% a year compounding, at four years 3.82%.
+//
+// So the segment length is the missing fact, and it is not on the screen. This
+// module therefore reports every reconciliation that would work and refuses to
+// choose, because choosing would mean inventing the one number nobody supplied
+// — and an invented segment length silently rescales every figure derived from
+// the account afterwards.
+//
+// ## What it will not do
+//
+// It will not write anything into the shape registry. An audit is evidence
+// about one policy's segment; a registry row is a claim about a product. The
+// bridge between them is a person deciding the segment is representative, and
+// that decision is not this module's to make.
+
+/** A credited segment, as a carrier's system reports it. Percentages. */
+export interface ObservedSegment {
+  /** Label for the audit line. Never a policy number — this is not a record system. */
+  readonly label: string;
+  readonly startIndexValue: number;
+  readonly endIndexValue: number;
+  /** The growth rate the carrier printed, if it printed one. */
+  readonly statedGrowthRatePct?: number;
+  /** Participation rate as a percentage. 105 = 105%. */
+  readonly participationPct: number;
+  /** Growth cap as the system gave it, including sentinels. Null for none. */
+  readonly growthCapPct: number | null;
+  /** The crediting rate the carrier applied to the segment. */
+  readonly creditedRatePct: number;
+  /** Known segment length in years, where it is actually known. */
+  readonly segmentYears?: number;
+  /** A spread the account is known to charge, as a percentage. */
+  readonly spreadPct?: number;
+}
+
+export interface Reconciliation {
+  readonly segmentYears: number;
+  /** Annual charge that closes the gap, compounding. Percentage. */
+  readonly compoundingChargePct: number;
+  /** Annual charge that closes it if simply subtracted each year. Percentage. */
+  readonly simpleChargePct: number;
+  /** Implied annualised index growth at this length, for a plausibility read. */
+  readonly impliedAnnualIndexGrowthPct: number;
+}
+
+export interface SegmentAudit {
+  readonly label: string;
+  /** Growth computed from the index values. */
+  readonly computedGrowthPct: number;
+  /** True when the carrier's stated growth matches the computed one. */
+  readonly growthAgrees: boolean | null;
+  /** True when the cap field held a sentinel rather than a cap. */
+  readonly capIsSentinel: boolean;
+  /** The cap after normalisation, as a percentage, or null. */
+  readonly effectiveCapPct: number | null;
+  /** Growth × participation, less any known spread. Percentage. */
+  readonly expectedCreditedPct: number;
+  readonly actualCreditedPct: number;
+  /** expected − actual. Positive means the account credited LESS than expected. */
+  readonly gapPct: number;
+  /** True when expected and actual agree within a tenth of a point. */
+  readonly reconciles: boolean;
+  /**
+   * Every (segment length, charge) pair that would close the gap. Empty when
+   * the segment already reconciles. Deliberately plural.
+   */
+  readonly candidates: readonly Reconciliation[];
+  /** What a person has to supply before this segment can be used for anything. */
+  readonly missing: readonly string[];
+  /** The audit in words. */
+  readonly summary: string;
+}
+
+const SENTINEL_FLOOR = 1000; // No real growth cap reaches 1000%.
+
+/**
+ * Audit one segment.
+ *
+ * `maxYears` bounds the candidate search. Eight is generous — no common indexed
+ * segment runs longer — and the point of returning several is that the caller
+ * sees how sensitive the answer is to a fact they have not supplied.
+ */
+export function auditSegment(seg: ObservedSegment, maxYears = 8): SegmentAudit {
+  const missing: string[] = [];
+
+  const computedGrowth = (seg.endIndexValue / seg.startIndexValue - 1) * 100;
+  const growthAgrees =
+    typeof seg.statedGrowthRatePct === 'number'
+      ? Math.abs(computedGrowth - seg.statedGrowthRatePct) < 0.02
+      : null;
+
+  const capIsSentinel = seg.growthCapPct !== null && seg.growthCapPct >= SENTINEL_FLOOR;
+  const effectiveCapPct = capIsSentinel ? null : seg.growthCapPct;
+
+  let expected = computedGrowth * (seg.participationPct / 100);
+  if (effectiveCapPct !== null) expected = Math.min(expected, effectiveCapPct);
+  if (typeof seg.spreadPct === 'number') expected -= seg.spreadPct;
+
+  const gap = expected - seg.creditedRatePct;
+  const reconciles = Math.abs(gap) < 0.1;
+
+  const candidates: Reconciliation[] = [];
+  if (!reconciles && gap > 0) {
+    const ratio = (1 + expected / 100) / (1 + seg.creditedRatePct / 100);
+    // A KNOWN segment length collapses the list to one row. That is the whole
+    // value of supplying it: the ambiguity was never in the arithmetic, it was
+    // in the one fact the screen did not carry.
+    const lo = seg.segmentYears ?? 1;
+    const hi = seg.segmentYears ?? maxYears;
+    for (let n = lo; n <= hi; n++) {
+      candidates.push({
+        segmentYears: n,
+        compoundingChargePct: (Math.pow(ratio, 1 / n) - 1) * 100,
+        simpleChargePct: gap / n,
+        impliedAnnualIndexGrowthPct: (Math.pow(1 + computedGrowth / 100, 1 / n) - 1) * 100,
+      });
+    }
+  }
+
+  if (seg.segmentYears === undefined) {
+    missing.push(
+      'The segment length. Without it a charge cannot be annualised, and every candidate below is equally consistent with what is on the screen.'
+    );
+  }
+  if (!reconciles && gap > 0) {
+    missing.push(
+      'Which charge the gap is. A loan charge, an account charge and a spread all reduce a credited rate and none of them is visible here; they are not interchangeable, because a spread is per segment and a charge is per year.'
+    );
+  }
+  if (gap < -0.1) {
+    missing.push(
+      'An explanation for crediting ABOVE participation — an account benefit, a bonus or a multiplier. Crediting more than the index times the participation rate is not something an ordinary account does.'
+    );
+  }
+
+  const summary = reconciles
+    ? `${seg.label}: reconciles. ${computedGrowth.toFixed(2)}% index × ${seg.participationPct.toFixed(2)}% participation` +
+      `${typeof seg.spreadPct === 'number' ? ` less a ${seg.spreadPct.toFixed(2)}% spread` : ''} = ` +
+      `${expected.toFixed(2)}%, credited ${seg.creditedRatePct.toFixed(2)}%.`
+    : `${seg.label}: does NOT reconcile. ${computedGrowth.toFixed(2)}% index × ${seg.participationPct.toFixed(2)}% participation = ` +
+      `${expected.toFixed(2)}%, but the account credited ${seg.creditedRatePct.toFixed(2)}% — a gap of ${gap.toFixed(2)} points. ` +
+      (gap > 0
+        ? `That gap is only ordinary once the segment is longer than a year: ${candidates
+            .slice(0, 4)
+            .map((c) => `${c.segmentYears}y → ${c.compoundingChargePct.toFixed(2)}%/yr`)
+            .join(', ')}. The segment length decides which, and it is not on the screen.`
+        : 'The account credited MORE than participation alone allows, which needs a benefit, bonus or multiplier to explain.');
+
+  return {
+    label: seg.label,
+    computedGrowthPct: computedGrowth,
+    growthAgrees,
+    capIsSentinel,
+    effectiveCapPct,
+    expectedCreditedPct: expected,
+    actualCreditedPct: seg.creditedRatePct,
+    gapPct: gap,
+    reconciles,
+    candidates,
+    missing,
+    summary,
+  };
+}
+
+/**
+ * Check that a credited dollar amount matches the stated rate against the
+ * segment value it was applied to.
+ *
+ * Separate from auditSegment because it answers a different question: not
+ * "is the rate right" but "was the right rate applied to the right base". On
+ * the Securian segment this passed exactly, which is what made the crediting
+ * rate itself trustworthy enough to be worth reconciling.
+ */
+export function creditAppliedCorrectly(
+  segmentValueBeforeCredit: number,
+  creditAmount: number,
+  statedRatePct: number,
+  tolerancePct = 0.01
+): { ok: boolean; impliedRatePct: number; detail: string } {
+  if (!(segmentValueBeforeCredit > 0)) {
+    return { ok: false, impliedRatePct: NaN, detail: 'No segment value to divide by.' };
+  }
+  const implied = (creditAmount / segmentValueBeforeCredit) * 100;
+  const ok = Math.abs(implied - statedRatePct) <= tolerancePct;
+  return {
+    ok,
+    impliedRatePct: implied,
+    detail: ok
+      ? `The credit is ${implied.toFixed(4)}% of the segment value before crediting, matching the stated ${statedRatePct.toFixed(2)}%.`
+      : `The credit is ${implied.toFixed(4)}% of the segment value before crediting, against a stated rate of ${statedRatePct.toFixed(2)}%. Either the rate was applied to a different base or one of the two figures is wrong.`,
+  };
+}
+
+export const SEGMENT_AUDIT_VERSION = {
+  version: '2026.09.1',
+  compiledOn: '2026-09-19',
+  neverPrinted: [
+    'A segment length chosen because it made the numbers work. It rescales every figure derived from the account afterwards, and nobody downstream can tell it was picked rather than read.',
+    'A reconciliation presented as the explanation when several fit equally well.',
+    'A sentinel growth cap as though it were a cap.',
+    'A policy number, an insured\'s name, or a policy\'s dollar values. This module audits arithmetic, not policies; the rates are product evidence and the balances are somebody\'s private business.',
+    'An audited segment promoted into the shape registry without a person deciding it is representative of the product rather than of one policy.',
+  ],
+} as const;
+
+/* ═══ Ledgers ══════════════════════════════════════════════════════════════
+ * One segment is an anecdote. A column of them on a single named account is a
+ * dataset, and it can falsify a formula rather than merely fail to confirm it. */
+
+export interface LedgerRow {
+  readonly label: string;
+  readonly valueBeforeCredit: number;
+  readonly indexCredit: number;
+  readonly endValue: number;
+}
+
+export interface LedgerAudit {
+  /** Rows where end value is not value-before-credit plus the credit. */
+  readonly identityFailures: readonly string[];
+  /** Credited rate per row, as a percentage, in the order supplied. */
+  readonly creditedRatesPct: readonly number[];
+  readonly minPct: number;
+  readonly maxPct: number;
+  readonly meanPct: number;
+  readonly summary: string;
+}
+
+/**
+ * Check a column of credited segments off a carrier's system.
+ *
+ * The identity is the point: a carrier's end value must be the value before
+ * crediting plus the credit. It held on all twelve rows of the Balanced Indexed
+ * Account 2 ledger, which is what made those rows usable as evidence — a table
+ * that does not add up cannot be reasoned from, however interesting it looks.
+ *
+ * Takes dollars and returns rates. The dollars are somebody's policy; the rates
+ * are what the product did.
+ */
+export function auditLedger(rows: readonly LedgerRow[]): LedgerAudit {
+  const failures: string[] = [];
+  const rates: number[] = [];
+
+  for (let i = 0; i < rows.length; i++) {
+    const r = rows[i];
+    if (Math.abs(r.valueBeforeCredit + r.indexCredit - r.endValue) > 0.005) {
+      failures.push(
+        `${r.label}: ${r.valueBeforeCredit} + ${r.indexCredit} is not ${r.endValue}`
+      );
+    }
+    rates.push(r.valueBeforeCredit > 0 ? (r.indexCredit / r.valueBeforeCredit) * 100 : NaN);
+  }
+
+  const clean = rates.filter((x) => Number.isFinite(x));
+  const min = clean.length ? Math.min(...clean) : NaN;
+  const max = clean.length ? Math.max(...clean) : NaN;
+  const mean = clean.length ? clean.reduce((a, b) => a + b, 0) / clean.length : NaN;
+
+  return {
+    identityFailures: failures,
+    creditedRatesPct: rates,
+    minPct: min,
+    maxPct: max,
+    meanPct: mean,
+    summary: failures.length
+      ? `${failures.length} of ${rows.length} rows do not add up; the ledger cannot be reasoned from until they do.`
+      : `${rows.length} rows, all adding up. Credited ${min.toFixed(2)}% to ${max.toFixed(2)}%, mean ${mean.toFixed(2)}%.`,
+  };
+}
+
+/**
+ * Credited rates observed on Minnesota Life Balanced Indexed Account 2
+ * (S&P 500, 2-year segment term), read off the Securian advisor portal's
+ * index-details ledger on 19 September 2026.
+ *
+ * Rates only. The policy's balances are not product evidence and are not kept.
+ *
+ * Twelve rolling 2-year segments maturing through 2021. Every row's end value
+ * equalled its value before crediting plus its credit, so the column is
+ * internally sound.
+ */
+export const BGA3_BALANCED_2_OBSERVED_PCT: readonly { segment: string; creditedPct: number }[] = [
+  { segment: 'Jan 2019 – Jan 2021', creditedPct: 42.10 },
+  { segment: 'Feb 2019 – Feb 2021', creditedPct: 36.11 },
+  { segment: 'Mar 2019 – Mar 2021', creditedPct: 33.15 },
+  { segment: 'Apr 2019 – Apr 2021', creditedPct: 37.07 },
+  { segment: 'May 2019 – May 2021', creditedPct: 42.73 },
+  { segment: 'Jun 2019 – Jun 2021', creditedPct: 40.96 },
+  { segment: 'Jul 2019 – Jul 2021', creditedPct: 43.75 },
+  { segment: 'Aug 2019 – Aug 2021', creditedPct: 53.36 },
+  { segment: 'Sep 2019 – Sep 2021', creditedPct: 49.69 },
+  { segment: 'Oct 2019 – Oct 2021', creditedPct: 48.87 },
+  { segment: 'Nov 2019 – Nov 2021', creditedPct: 53.15 },
+  { segment: 'Dec 2019 – Dec 2021', creditedPct: 46.24 },
+];
+
+/**
+ * What the ledger settles about the 26.96% segment.
+ *
+ * The first screenshot showed a segment crediting 26.96% on 45.25% index
+ * growth, and the gap could not be explained without knowing the segment
+ * length. The ledger supplies something better than a length: a control group.
+ *
+ * Twelve segments on this same named account credited 33.15% to 53.36% over two
+ * years. Under 110% participation less a 2.50% segment spread, each implies an
+ * index movement of 32% to 51% — entirely ordinary for rolling two-year windows
+ * maturing in 2021, and consistent across all twelve.
+ *
+ * The Dec 2019 – Dec 2021 segment is the one that settles it. It credited
+ * 46.24%, which under that formula implies an index movement of 44.30% — within
+ * a point of the 45.25% on the 26.96% segment. Near-identical index movement,
+ * same product, same account family: 46.24% against 26.96%.
+ *
+ * So the 20-point shortfall is not the formula, not the participation rate and
+ * not the spread, because eleven other segments run through the same formula
+ * and land where it predicts. Something is charged against that one segment
+ * that is not charged against these — which is what the owner said it was from
+ * the start, and at 24 months it prices at roughly 7.7% a year compounding.
+ *
+ * ## Two things that could void this, both unresolved
+ *
+ * The comparison only means anything if the subject segment is the same account
+ * as the controls, and two signals say it may not be.
+ *
+ * The modal never named its index. Every level-based inference about it — that
+ * 4,780.94 looks like where the S&P 500 closed 2021 — assumed the S&P 500, and
+ * that assumption was never checked. This same policy holds at least two
+ * indices: S&P 500 on Balanced Indexed Account 2, and S&P PRISM on Balanced
+ * Indexed Account 8. If the subject segment is a PRISM segment then 4,780.94 is
+ * a PRISM level, no S&P reasoning about it holds, and the controls are a
+ * different account measured against a different index.
+ *
+ * And the participation rates disagree. The ledger account is 110%; the modal
+ * printed 105.00%. On the same account in the same system those should match.
+ *
+ * So the deduction is conditional: IF the subject segment is Balanced Indexed
+ * Account 2, the controls isolate a charge of roughly 7.7% a year at 24 months.
+ * If it is a different account, they isolate nothing and the gap is simply that
+ * account's own parameters, which are not on file.
+ *
+ * It remains a deduction rather than a reading either way. What would make it a
+ * reading is the loan charge printed on the policy's own statement, and what
+ * would make it applicable at all is the subject segment's account name — which
+ * the index-details ledger prints in its first column.
+ */
+export const LOAN_CHARGE_DEDUCTION = {
+  controlSegment: 'Dec 2019 – Dec 2021',
+  controlCreditedPct: 46.24,
+  controlImpliedIndexPct: 44.30,
+  subjectCreditedPct: 26.96,
+  subjectIndexPct: 45.2532,
+  differenceInCreditedPct: 19.28,
+  differenceInIndexPct: 0.95,
+  impliedAnnualChargePct: 7.7,
+  segmentMonths: 24,
+  stillNeeded:
+    'The loan charge as the policy statement prints it. The deduction is strong — eleven control segments agree with the formula and this one does not — but a charge inferred from a residual is still inferred.',
+  /** Conditions the whole deduction depends on, neither of them settled. */
+  conditionalOn: [
+    'That the subject segment is Balanced Indexed Account 2. Its modal never named an account or an index, and this policy holds at least two indices. The ledger prints the account name in its first column, which settles it in one look.',
+    'That the participation rates can be reconciled. The ledger account is 110%; the subject modal printed 105.00%. On one account in one system those should agree, and they do not.',
+  ],
+} as const;
+
+/* ═══ The four modals ══════════════════════════════════════════════════════
+ * Balanced Indexed Account 2 — S&P 500 — 2 Year, segment year 2021, read off
+ * the Securian advisor portal on 19 September 2026.
+ *
+ * Index values are public market data and are kept. Policy balances are not. */
+
+export interface ModalSegment {
+  readonly segment: string;
+  readonly startIndexValue: number;
+  readonly endIndexValue: number;
+  readonly statedGrowthPct: number;
+  readonly statedParticipationPct: number;
+  readonly creditedPct: number;
+}
+
+export const BGA_BALANCED_2_MODALS: readonly ModalSegment[] = [
+  { segment: 'Jan 2019 – Jan 2021', startIndexValue: 2635.96, endIndexValue: 3795.54, statedGrowthPct: 43.99, statedParticipationPct: 105, creditedPct: 42.10 },
+  { segment: 'Feb 2019 – Feb 2021', startIndexValue: 2745.73, endIndexValue: 3913.97, statedGrowthPct: 42.55, statedParticipationPct: 105, creditedPct: 36.11 },
+  { segment: 'Mar 2019 – Mar 2021', startIndexValue: 2808.48, endIndexValue: 3915.46, statedGrowthPct: 39.42, statedParticipationPct: 105, creditedPct: 33.15 },
+  { segment: 'Apr 2019 – Apr 2021', startIndexValue: 2905.03, endIndexValue: 4170.42, statedGrowthPct: 43.56, statedParticipationPct: 105, creditedPct: 37.07 },
+];
+
+/**
+ * What the four modals settle, and the one thing they open up.
+ *
+ * ## Settled
+ *
+ * The account is named: Balanced Indexed Account 2 — S&P 500 — 2 Year. The
+ * subject segment shares its participation rate and its sentinel cap, so the
+ * account-identity condition the deduction was hanging on is met in substance.
+ *
+ * Every modal is internally sound. Each stated growth rate is exactly its own
+ * end/start − 1, and each index credit is exactly its crediting rate times its
+ * segment value. Four for four.
+ *
+ * ## The stated participation rate does not reproduce a single credit
+ *
+ * All four print 105.00%. None of the four credits is 105% of its growth:
+ *
+ *   Jan  43.99% × 105% = 46.19%   credited 42.10%   short 4.09 pp
+ *   Feb  42.55% × 105% = 44.68%   credited 36.11%   short 8.57 pp
+ *   Mar  39.42% × 105% = 41.39%   credited 33.15%   short 8.24 pp
+ *   Apr  43.56% × 105% = 45.74%   credited 37.07%   short 8.67 pp
+ *
+ * A shortfall is expected — there is a spread on this account. What is not
+ * expected is that the shortfall is not constant.
+ *
+ * ## Three segments agree with each other to a thirteenth of a point
+ *
+ * Taken as a multiplicative segment fee at the stated 105%, February, March and
+ * April imply 6.29%, 6.19% and 6.32% — a spread of 0.13 points across three
+ * independent segments, which is about as tight as four-significant-figure
+ * inputs allow. Roughly 3.1% a year.
+ *
+ * January implies 2.88%, which sits 3.39 points away — twenty-five times the
+ * others' own spread. January is doing something the other three are not, and
+ * nothing on its modal says what. Segments are created monthly and declared
+ * rates are set at creation, so the most ordinary explanation is that January's
+ * segment was struck on a different participation rate and the modal is
+ * printing today's rather than that segment's. That is a question for the
+ * carrier, not an answer from here.
+ *
+ * ## And this is what it does to the 26.96% segment
+ *
+ * Run the subject segment through the account's OWN observed behaviour rather
+ * than through any brochure: 45.25% growth at 105%, less the 6.27% segment fee
+ * the three consistent modals imply, predicts 38.81% credited.
+ *
+ * It credited 26.96%. Still short by 11.85 points, and over 24 months that
+ * residual prices at 4.56% a year compounding.
+ *
+ * The carrier's published indexed loan charge is 4.75%.
+ *
+ * Those agree to within a fifth of a point, on a figure derived from three
+ * unrelated segments and never fitted to it. That is what the owner said it was
+ * in the first message, and it is now the reading the evidence actually
+ * supports rather than one of eight candidates.
+ *
+ * It is still not a reading off a statement. The 6.27% fee is itself a residual
+ * — the stated participation reproduces nothing, so that number absorbs
+ * whatever else the true formula contains — and a residual computed on top of a
+ * residual can land on 4.75% by coincidence. What ends the argument is the loan
+ * charge printed on the policy's own statement. Everything else is now
+ * consistent with it.
+ */
+export const FOUR_MODAL_FINDINGS = {
+  accountIdentified: 'Balanced Indexed Account 2 — S&P 500 — 2 Year',
+  allFourInternallySound: true,
+  statedParticipationPct: 105,
+  statedParticipationReproducesNoCredit: true,
+  consistentTrioFeePct: [6.29, 6.19, 6.32],
+  consistentTrioSpreadPct: 0.13,
+  januaryFeePct: 2.88,
+  januaryDeviationPct: 3.39,
+  subjectPredictedCreditedPct: 38.81,
+  subjectActualCreditedPct: 26.96,
+  residualAnnualPct: 4.56,
+  publishedIndexedLoanChargePct: 4.75,
+  agreementPct: 0.19,
+  stillNotSettled:
+    'The 6.27% segment fee is itself a residual, because the stated 105% participation reproduces none of the four credits. A residual computed on top of a residual can land on 4.75% by coincidence. The loan charge printed on the policy statement is what ends it.',
+  openQuestion:
+    'Why January behaves differently from February, March and April. Twenty-five times their mutual spread is not rounding. Segments are struck monthly on rates declared at creation, so the modal may be printing the current participation rate rather than the one that segment was struck on — which would mean the 105.00% on the subject segment is also not necessarily its own rate.',
+} as const;
+
+/* ═══ Nine segments solve the account ══════════════════════════════════════
+ * And in doing so they withdraw the finding that stood before them. */
+
+export const BGA_BALANCED_2_NINE: readonly ModalSegment[] = [
+  { segment: 'Jan 2019 – Jan 2021', startIndexValue: 2635.96, endIndexValue: 3795.54, statedGrowthPct: 43.99, statedParticipationPct: 105, creditedPct: 42.10 },
+  { segment: 'Feb 2019 – Feb 2021', startIndexValue: 2745.73, endIndexValue: 3913.97, statedGrowthPct: 42.55, statedParticipationPct: 105, creditedPct: 36.11 },
+  { segment: 'Mar 2019 – Mar 2021', startIndexValue: 2808.48, endIndexValue: 3915.46, statedGrowthPct: 39.42, statedParticipationPct: 105, creditedPct: 33.15 },
+  { segment: 'Apr 2019 – Apr 2021', startIndexValue: 2905.03, endIndexValue: 4170.42, statedGrowthPct: 43.56, statedParticipationPct: 105, creditedPct: 37.07 },
+  { segment: 'May 2019 – May 2021', startIndexValue: 2876.32, endIndexValue: 4159.12, statedGrowthPct: 44.60, statedParticipationPct: 105, creditedPct: 42.73 },
+  { segment: 'Jun 2019 – Jun 2021', startIndexValue: 2954.18, endIndexValue: 4221.86, statedGrowthPct: 42.91, statedParticipationPct: 105, creditedPct: 40.96 },
+  { segment: 'Jul 2019 – Jul 2021', startIndexValue: 2995.11, endIndexValue: 4360.03, statedGrowthPct: 45.57, statedParticipationPct: 105, creditedPct: 43.76 },
+  { segment: 'Aug 2019 – Aug 2021', startIndexValue: 2847.60, endIndexValue: 4405.80, statedGrowthPct: 54.72, statedParticipationPct: 105, creditedPct: 53.36 },
+  { segment: 'Sep 2019 – Sep 2021', startIndexValue: 3006.79, endIndexValue: 4473.75, statedGrowthPct: 48.79, statedParticipationPct: 105, creditedPct: 49.69 },
+];
+
+/**
+ * The account's real crediting formula, solved.
+ *
+ * ## The spread is subtracted, not divided
+ *
+ * Two models were tested against all nine segments. Taking the five that agree
+ * with each other:
+ *
+ *   subtractive   credited = growth × participation − spread
+ *                 spread lands in a 0.0115-point band around 4.0939
+ *   multiplicative (1 + growth × participation) / (1 + fee) − 1
+ *                 fee lands in a 0.2346-point band around 2.8341
+ *
+ * The subtractive model is twenty times tighter, on inputs displayed to two
+ * decimal places. It is the formula. The multiplicative one is not close.
+ *
+ * ## The participation rate is not 105%, and it is not constant
+ *
+ * Hold the spread at 4.0939 and solve each segment for the participation it
+ * must have used:
+ *
+ *   Jan 105.010   May 104.986   Jun 104.996   Jul 105.012   Aug 104.996
+ *   Feb  94.486   Mar  94.480   Apr  94.499
+ *   Sep 110.235
+ *
+ * Three rates, each internally tight to a fortieth of a point: 105.00%, 94.49%,
+ * 110.24%. Segments are struck monthly and the rate is declared at creation, so
+ * three rates across nine consecutive months is ordinary product behaviour.
+ *
+ * What is not ordinary is that all nine modals print 105.00%. The portal shows
+ * one participation rate on every segment, and for four of the nine it is not
+ * the rate that segment was actually credited at. September is the plainest
+ * proof: it credited 49.69% on 48.79% growth — MORE than the index moved, which
+ * 105% participation less any positive spread cannot produce, and 110.24% less
+ * 4.09 points can.
+ *
+ * ## What this withdraws
+ *
+ * FOUR_MODAL_FINDINGS concluded, from four segments, that the subject segment's
+ * residual priced at 4.56% a year against a published 4.75% indexed loan
+ * charge, and called the agreement striking. That result was computed under the
+ * multiplicative model, which these nine segments show is the wrong one, and
+ * from a "consistent trio" — February, March, April — that turns out to be the
+ * group with the ODD participation rate rather than the representative one. The
+ * agreement was an artifact of both errors. It is withdrawn.
+ *
+ * ## And what it does to the subject segment
+ *
+ * Under the correct model the subject segment gives one equation with two
+ * unknowns, and the portal has just been shown to misreport one of them.
+ *
+ *   at 105.00% participation → an extra 16.46 points over the segment
+ *   at  94.49% participation → an extra 11.71 points
+ *   at 110.24% participation → an extra 18.72 points
+ *
+ * Roughly 6.3%, 4.5% and 7.1% a year compounding. The published indexed loan
+ * charge of 4.75% sits inside that range, but so does a great deal else, and
+ * which one applies depends entirely on a participation rate this portal cannot
+ * be trusted to report.
+ *
+ * So the honest position is weaker than it was an hour ago and better founded:
+ * the formula is now known exactly, the portal's participation field is known
+ * to be unreliable, and the loan charge cannot be isolated until that segment's
+ * true participation rate is read from something other than this screen.
+ */
+export const NINE_SEGMENT_SOLUTION = {
+  formula: 'credited = indexGrowth × participation − spread',
+  spreadPointsPerSegment: 4.0939,
+  spreadBandPoints: 0.0115,
+  multiplicativeBandPoints: 0.2346,
+  subtractiveIsTighterBy: 20,
+  participationGroups: [
+    { ratePct: 105.0, segments: ['Jan', 'May', 'Jun', 'Jul', 'Aug'] },
+    { ratePct: 94.49, segments: ['Feb', 'Mar', 'Apr'] },
+    { ratePct: 110.24, segments: ['Sep'] },
+  ],
+  portalPrintsOnEverySegment: 105.0,
+  portalIsWrongOnSegments: 4,
+  plainestProof:
+    'September credited 49.69% on 48.79% growth — more than the index moved. 105% participation less any positive spread cannot do that; 110.24% less 4.09 points can.',
+  withdraws:
+    'FOUR_MODAL_FINDINGS. Its 4.56% residual used the multiplicative model, which is wrong by a factor of twenty, and treated February–April as the representative group when they are the ones with the unusual participation rate. The agreement with 4.75% was an artifact of both.',
+  subjectResidualRangeAnnualPct: [4.5, 7.1],
+  whyItCannotBePinned:
+    'One equation, two unknowns, and the portal has just been shown to misreport one of them. The subject segment\'s true participation rate has to come from somewhere other than this screen.',
+} as const;
+
+/* ═══ Twelve segments, and the field that lies ═════════════════════════════ */
+
+export const BGA_BALANCED_2_TWELVE: readonly { segment: string; growthPct: number; creditedPct: number }[] = [
+  { segment: 'Jan', growthPct: 43.99, creditedPct: 42.10 },
+  { segment: 'Feb', growthPct: 42.55, creditedPct: 36.11 },
+  { segment: 'Mar', growthPct: 39.42, creditedPct: 33.15 },
+  { segment: 'Apr', growthPct: 43.56, creditedPct: 37.07 },
+  { segment: 'May', growthPct: 44.60, creditedPct: 42.73 },
+  { segment: 'Jun', growthPct: 42.91, creditedPct: 40.96 },
+  { segment: 'Jul', growthPct: 45.57, creditedPct: 43.76 },
+  { segment: 'Aug', growthPct: 54.72, creditedPct: 53.36 },
+  { segment: 'Sep', growthPct: 48.79, creditedPct: 49.69 },
+  { segment: 'Oct', growthPct: 48.04, creditedPct: 48.87 },
+  { segment: 'Nov', growthPct: 51.92, creditedPct: 53.15 },
+  { segment: 'Dec', growthPct: 45.65, creditedPct: 46.24 },
+];
+
+/**
+ * The account is solved, and the portal's participation field is a constant.
+ *
+ * ## Twelve segments, three participation rates, one spread
+ *
+ * Holding the spread at 4.0939 points, every one of the twelve 2019–2021
+ * segments of Balanced Indexed Account 2 solves to one of three rates, and each
+ * group is internally tight to about two hundredths of a point:
+ *
+ *   94.49%   Feb, Mar, Apr                    range 0.020
+ *  105.00%   Jan, May, Jun, Jul, Aug          range 0.026
+ *  110.25%   Sep, Oct, Nov, Dec               range 0.025
+ *
+ * Twelve equations, four parameters, and the residuals sit inside display
+ * rounding. The formula is settled: credited = growth × participation − 4.0939
+ * points per segment, with participation redeclared over time. The owner's
+ * "110%" is the rate the last four months of the year were struck at.
+ *
+ * ## The 105.00% is a static display value, and the PRISM account proves it
+ *
+ * Balanced Indexed Account 8 — S&P PRISM, 1-Year — credited 17.11% on 10.03%
+ * index growth over its Dec 2020 – Dec 2021 segment. That is 1.71 times the
+ * index. Its modal also prints a participation rate of 105.00%.
+ *
+ * At 105% participation, less any positive spread, the most that segment could
+ * credit is 10.53%. It credited 17.11%. So on that account the 105.00% is not
+ * the participation rate, and it cannot be — no rounding, no model, no argument
+ * about which formula applies. A participation rate near 171% would explain the
+ * credit, which is ordinary for a risk-controlled index like PRISM.
+ *
+ * The same 105.00% appears on Balanced Account 2 segments that were struck at
+ * 94.49%, at 105.00% and at 110.25%. One value, four different true rates, two
+ * different accounts. It is a constant the page prints, not a fact it reports.
+ *
+ * ## What that does to the subject segment
+ *
+ * The 26.96% segment's own modal prints 105.00%, and that number now carries no
+ * information at all. Solving it on this account's formula:
+ *
+ *   implied participation, if nothing else is charged = 68.6%
+ *
+ * which is far below every rate this account has ever been observed using. A
+ * segment cannot credit that little on this formula unless something is taken
+ * out of it. That is the strongest evidence yet for an additional charge, and
+ * it no longer depends on any control group.
+ *
+ * What it still cannot do is size the charge, because the size depends on the
+ * participation that applied:
+ *
+ *   at  94.49% → 11.71 points over the segment → 4.51% a year
+ *   at 105.00% → 16.46 points                  → 6.29% a year
+ *   at 110.25% → 18.84 points                  → 7.16% a year
+ *
+ * The published 4.75% indexed loan charge is near the bottom of that range and
+ * would require the subject segment to have been struck at the lowest
+ * participation rate this account has used. Possible, and not shown.
+ *
+ * ## Three accounts on this policy, not one
+ *
+ * Balanced Indexed Account 2 — S&P 500, 2-year
+ * Balanced Indexed Account 6 — S&P PRISM, 1 Year Uncapped
+ * Balanced Indexed Account 8 — S&P PRISM, 1-Year Segment Term
+ *
+ * Only Account 2 is solved. The two PRISM accounts have their own participation
+ * rates and their own indices, and nothing here applies to them.
+ */
+export const TWELVE_SEGMENT_SOLUTION = {
+  spreadPointsPerSegment: 4.0939,
+  participationGroups: [
+    { ratePct: 94.49, segments: ['Feb', 'Mar', 'Apr'], rangePoints: 0.020 },
+    { ratePct: 105.0, segments: ['Jan', 'May', 'Jun', 'Jul', 'Aug'], rangePoints: 0.026 },
+    { ratePct: 110.25, segments: ['Sep', 'Oct', 'Nov', 'Dec'], rangePoints: 0.025 },
+  ],
+  /** The proof that the displayed participation rate is a constant. */
+  prismDisproof: {
+    account: 'Balanced Indexed Account 8 — S&P PRISM 1-Year',
+    segment: 'Dec 2020 – Dec 2021',
+    growthPct: 10.03,
+    creditedPct: 17.11,
+    multipleOfIndex: 1.71,
+    modalPrintsParticipationPct: 105.0,
+    maximumPossibleAt105Pct: 10.53,
+    impliedParticipationPct: 171,
+    conclusion:
+      'A segment cannot credit 17.11% on 10.03% growth at 105% participation. The displayed rate is a constant the page prints, not a fact it reports — the same 105.00% appears on segments struck at 94.49%, 105.00% and 110.25%.',
+  },
+  subjectImpliedParticipationIfNoCharge: 68.6,
+  subjectChargeByParticipation: [
+    { participationPct: 94.49, pointsOverSegment: 11.71, annualPct: 4.51 },
+    { participationPct: 105.0, pointsOverSegment: 16.46, annualPct: 6.29 },
+    { participationPct: 110.25, pointsOverSegment: 18.84, annualPct: 7.16 },
+  ],
+  whatIsNowEstablished:
+    'That something is charged against the subject segment. Its implied participation without a charge is 68.6%, below every rate this account has been observed using, and that conclusion no longer rests on a control group.',
+  whatIsStillOpen:
+    'The size of the charge, because it depends on the participation rate that segment was struck at — and the portal field that would say is a constant. The published 4.75% indexed loan charge would require the lowest rate this account has used.',
+  otherAccountsOnThisPolicy: [
+    'Balanced Indexed Account 6 — S&P PRISM, 1 Year Uncapped',
+    'Balanced Indexed Account 8 — S&P PRISM, 1-Year Segment Term',
+  ],
+} as const;
+
+/* ------------------------------------------------------------------ *
+ * Superseding evidence: the annual policy review
+ * ------------------------------------------------------------------ */
+
+/**
+ * Everything above this line was solved from portal modals — outcomes without
+ * a shown method. A carrier-issued 21-page Annual Policy Review for
+ * 11/27/2023-11/27/2024 has since been read, and it shows the method.
+ * See shared/securianAnnualPolicyReview.ts.
+ *
+ * What the statement settles:
+ *
+ *   1. The central claim of PRISM_CONTRADICTION is confirmed by a second and
+ *      better source. The statement prints "Part. Rate 105%" on every row while
+ *      the operative factor on the Indexed Loan Account is 1.47 — proven twice
+ *      over, by two printed crediting rates and two posted dollar credits that
+ *      reconcile to the cent. The printed participation field is a constant on
+ *      the carrier's own document, not merely on the web portal.
+ *
+ *   2. The loan rate is read, not inferred: 4.00% rising to 4.25% effective
+ *      10/01/2024. None of subjectChargeByParticipation's three candidates
+ *      (4.51 / 6.29 / 7.16) is that rate — correctly, since a policy loan
+ *      interest rate and an in-segment deduction are different quantities.
+ *      whatIsStillOpen above remains open; it is not answered by this.
+ *
+ * What it does NOT settle, and must not be quietly assumed:
+ *
+ *   The two document sets may not describe the same policy. The twelve-segment
+ *   ledger above lists Balanced Indexed Accounts 2, 6 and 8. The statement
+ *   lists 2, 7 and 8 plus an Indexed Loan Account. "6" and "7" are one
+ *   character apart at the resolution these were read at, and the 1.47 factor
+ *   is observed only on the Indexed Loan Account — an uncapped account, where
+ *   Account 8 on the same page is capped N/A. Do not carry the 1.47 across to
+ *   the Balanced accounts, and do not carry BGA3_BALANCED_2_OBSERVED_PCT back
+ *   the other way, until the account sets are reconciled against a single
+ *   named policy.
+ */
+export const SUPERSEDED_BY_STATEMENT = {
+  source: 'shared/securianAnnualPolicyReview.ts',
+  confirms: 'PRINTED_PARTICIPATION_IS_A_CONSTANT',
+  confirmedIndependentlyBy: ['printed segment crediting rates', 'posted dollar credits'],
+  stillOpen: 'the size of the in-segment deduction on Balanced Indexed Account 2',
+  unreconciled: 'account 6 (ledger) versus account 7 (statement); possibly two different policies',
+} as const;
+
+/**
+ * Second statement, second policy, second product generation.
+ * See shared/securianBGA2Statement.ts.
+ *
+ * A Balanced Growth Accumulator II annual review for 08/28/2025-08/28/2026
+ * solves Balanced Indexed Account 2 outright on six matured segments:
+ *
+ *     creditingRate = 0.84 x indexGrowth - 5.25 points per 2-year segment
+ *
+ * Least squares returns slope 0.840000, intercept -5.250003, maximum residual
+ * 0.00000 points. All six dollar credits reconcile to the cent.
+ *
+ * Two things this settles for the audit above.
+ *
+ *   The FORM is confirmed. That regression reached
+ *   `credited = growth x participation - constant` from twelve portal modals
+ *   with no visibility into the method. A carrier statement that shows its
+ *   method reaches the same shape independently. The 4.0939 constant was the
+ *   right kind of object.
+ *
+ *   The printed participation is confirmed useless in BOTH directions. The
+ *   first statement printed 105% on an account crediting at 1.47x. This one
+ *   prints 110% on an account crediting at 0.84x. One understates, one
+ *   overstates, same field, same carrier. An unrecorded bonus could explain the
+ *   first; an unrecorded charge could explain the second; nothing explains both.
+ *
+ * What it does NOT settle: the coefficients do not transfer. 0.84 and 5.25
+ * belong to Balanced Growth Accumulator II. The 4.0939 above belongs to
+ * Balanced Growth Accumulator 3. Different products, and the account-set
+ * question (6 versus 7) is still open on the ledger above.
+ */
+export const SECOND_STATEMENT = {
+  source: 'shared/securianBGA2Statement.ts',
+  confirms: ['the functional form of the audited rule', 'PRINTED_PARTICIPATION_IS_A_CONSTANT'],
+  newDirection: 'overstating — the first statement understated',
+  doesNotTransfer: 'the coefficients, the segment term, or the participation groups',
+} as const;

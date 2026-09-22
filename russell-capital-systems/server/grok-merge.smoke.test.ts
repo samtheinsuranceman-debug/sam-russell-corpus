@@ -60,9 +60,12 @@ describe("verified Grok delta merge", () => {
   });
 
   it("makes every Grok route discoverable in the active left navigation", () => {
+    // Was asserted via the section name "New Client Welcome List". That section
+    // was retired in the 2026-09-19 nav rebuild because twenty items is not a
+    // welcome list. Discoverability is what the test was ever about, so it is
+    // now asserted directly, against the path.
     const shell = readFileSync(resolve("client/src/components/AppShell.tsx"), "utf8");
-    expect(shell).toContain('label: "New Client Welcome List"');
-    for (const route of addedRoutes) expect(shell).toContain(`path: "${route}"`);
+    for (const route of addedRoutes) expect(shell, route).toContain(`path: "${route}"`);
   });
 
   it("loads every added page module without a missing runtime import", async () => {

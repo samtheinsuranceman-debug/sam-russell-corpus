@@ -2996,3 +2996,42 @@ export const rentalSeries = mysqlTable("rental_series", {
   fetchedAt: timestamp("fetchedAt").defaultNow().notNull(),
 }, (t) => ({ once: uniqueIndex("rental_series_once").on(t.geo, t.series, t.config), bySeries: index("rental_series_series").on(t.series) }));
 export type RentalSeriesRow = typeof rentalSeries.$inferSelect;
+
+// ── ENGINE CHAINS ───────────────────────────────────────────────────────────
+// A saved pipeline of engines where each step's output feeds the next step's
+// input. Carried over with the chaining router; the tables and the router
+// arrived separately in the original build and the router was the half that
+// went missing, which is why the schema is added here alongside it rather
+// than ahead of it.
+export const engineChains = mysqlTable("engine_chains", {
+  id:          int("id").primaryKey().autoincrement(),
+  userId:      int("userId").notNull(),
+  name:        varchar("name", { length: 200 }).notNull(),
+  description: text("description"),
+  /** Array of { engineId, label, inputMappings } — validated by the router, not the column. */
+  steps:       json("steps").notNull(),
+  isTemplate:  boolean("isTemplate").default(false).notNull(),
+  runCount:    int("runCount").default(0).notNull(),
+  lastRunAt:   timestamp("lastRunAt"),
+  createdAt:   timestamp("createdAt").defaultNow().notNull(),
+  updatedAt:   timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (t) => ({ byUser: index("engine_chains_user").on(t.userId) }));
+export type EngineChain = typeof engineChains.$inferSelect;
+export type InsertEngineChain = typeof engineChains.$inferInsert;
+
+// ── ENGINE CHAIN RUNS ───────────────────────────────────────────────────────
+// One execution. Kept because a chain that produced a figure a household acted
+// on needs to be reconstructible afterwards: which engines ran, in what order,
+// and what each returned.
+export const engineChainRuns = mysqlTable("engine_chain_runs", {
+  id:          int("id").primaryKey().autoincrement(),
+  chainId:     int("chainId").notNull(),
+  userId:      int("userId").notNull(),
+  status:      mysqlEnum("status", ["running", "completed", "failed"]).default("running").notNull(),
+  /** Array of { engineId, result, executionTimeMs }. */
+  stepResults: json("stepResults"),
+  totalTimeMs: int("totalTimeMs").default(0).notNull(),
+  createdAt:   timestamp("createdAt").defaultNow().notNull(),
+}, (t) => ({ byChain: index("engine_chain_runs_chain").on(t.chainId), byUser: index("engine_chain_runs_user").on(t.userId) }));
+export type EngineChainRun = typeof engineChainRuns.$inferSelect;
+export type InsertEngineChainRun = typeof engineChainRuns.$inferInsert;

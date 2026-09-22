@@ -1,0 +1,506 @@
+/**
+ * The Securian segment, pinned as a regression.
+ *
+ * This is the first piece of in-force evidence in the corpus — not a brochure
+ * saying what an account should do, but a carrier's own system reporting what
+ * one did. It is kept because it falsifies a naive reading of the crediting
+ * formula, and a module that ever starts "reconciling" it by picking a segment
+ * length has stopped being trustworthy.
+ *
+ * No policy number and no policy dollar values are recorded here. The rates are
+ * product evidence; the balances are somebody's private business.
+ */
+
+import { describe, it, expect } from 'vitest';
+import {
+  BGA_BALANCED_2_TWELVE,
+  TWELVE_SEGMENT_SOLUTION,
+  BGA_BALANCED_2_NINE,
+  NINE_SEGMENT_SOLUTION,
+  BGA_BALANCED_2_MODALS,
+  FOUR_MODAL_FINDINGS,
+  BGA3_BALANCED_2_OBSERVED_PCT,
+  LOAN_CHARGE_DEDUCTION,
+  SEGMENT_AUDIT_VERSION,
+  auditLedger,
+  auditSegment,
+  creditAppliedCorrectly,
+  type ObservedSegment,
+} from '../shared/segmentAudit';
+import { UNCAPPED_SENTINELS, creditFor, normaliseCap, shapeById } from '../shared/indexAccountShapes';
+
+/** The segment as the advisor portal displayed it. */
+const securian: ObservedSegment = {
+  label: 'Securian indexed segment, 105% participation, uncapped',
+  startIndexValue: 4780.94,
+  endIndexValue: 6944.47,
+  statedGrowthRatePct: 45.25,
+  participationPct: 105,
+  growthCapPct: 9999999900,
+  creditedRatePct: 26.96,
+};
+
+describe('the Securian segment', () => {
+  it('confirms the growth rate the carrier printed', () => {
+    const a = auditSegment(securian);
+    expect(a.computedGrowthPct).toBeCloseTo(45.2532, 3);
+    expect(a.growthAgrees).toBe(true);
+  });
+
+  it('recognises 9999999900% as a sentinel, not a cap', () => {
+    const a = auditSegment(securian);
+    expect(a.capIsSentinel).toBe(true);
+    expect(a.effectiveCapPct).toBeNull();
+    // So the cap never enters the expected figure — it is 45.25% × 105% flat.
+    expect(a.expectedCreditedPct).toBeCloseTo(47.5159, 3);
+  });
+
+  it('does not reconcile, and says so rather than finding a way', () => {
+    const a = auditSegment(securian);
+    expect(a.reconciles).toBe(false);
+    expect(a.gapPct).toBeCloseTo(20.5559, 3);
+    expect(a.summary).toMatch(/does NOT reconcile/);
+    expect(a.summary).toMatch(/not on the screen/);
+  });
+
+  it('offers every segment length that would work and picks none', () => {
+    const a = auditSegment(securian);
+    expect(a.candidates.length).toBe(8);
+    const byYear = new Map(a.candidates.map((c) => [c.segmentYears, c]));
+    // One year needs a charge no loan carries, which is the whole point.
+    expect(byYear.get(1)!.compoundingChargePct).toBeGreaterThan(15);
+    // Two years lands at 7.79% a year compounding; four at 3.82%.
+    expect(byYear.get(2)!.compoundingChargePct).toBeCloseTo(7.79, 1);
+    expect(byYear.get(4)!.compoundingChargePct).toBeCloseTo(3.82, 1);
+    // And the candidates differ enough that guessing would matter.
+    expect(byYear.get(2)!.compoundingChargePct - byYear.get(4)!.compoundingChargePct).toBeGreaterThan(3);
+  });
+
+  it('names the segment length as the missing fact', () => {
+    const a = auditSegment(securian);
+    expect(a.missing.join(' ')).toMatch(/segment length/i);
+    expect(a.missing.join(' ')).toMatch(/Which charge the gap is/i);
+    expect(SEGMENT_AUDIT_VERSION.neverPrinted.join(' ')).toMatch(/chosen because it made the numbers work/);
+  });
+
+  it('confirms the credit was applied to the right base', () => {
+    // The check that made the 26.96% worth reconciling at all: the dollar
+    // credit divided by the segment value before crediting reproduces the
+    // stated rate to four decimal places.
+    const c = creditAppliedCorrectly(3823.09, 1030.75, 26.96);
+    expect(c.ok).toBe(true);
+    expect(c.impliedRatePct).toBeCloseTo(26.9612, 3);
+  });
+
+  it('catches a credit applied to the wrong base', () => {
+    const c = creditAppliedCorrectly(3823.09, 1030.75, 22.0);
+    expect(c.ok).toBe(false);
+    expect(c.detail).toMatch(/different base|one of the two figures is wrong/);
+  });
+
+  it('reconciles a segment that actually does', () => {
+    const clean = auditSegment({
+      ...securian,
+      participationPct: 100,
+      creditedRatePct: 45.2532,
+    });
+    expect(clean.reconciles).toBe(true);
+    expect(clean.candidates).toEqual([]);
+    expect(clean.summary).toMatch(/reconciles/);
+  });
+
+  it('flags crediting above participation as needing a bonus, not a charge', () => {
+    const rich = auditSegment({ ...securian, participationPct: 100, creditedRatePct: 60 });
+    expect(rich.gapPct).toBeLessThan(0);
+    expect(rich.candidates).toEqual([]);
+    expect(rich.missing.join(' ')).toMatch(/benefit, a bonus or a multiplier/i);
+  });
+
+  it('honours a real cap when the field is not a sentinel', () => {
+    const capped = auditSegment({ ...securian, growthCapPct: 10, creditedRatePct: 10 });
+    expect(capped.capIsSentinel).toBe(false);
+    expect(capped.expectedCreditedPct).toBe(10);
+    expect(capped.reconciles).toBe(true);
+  });
+});
+
+describe('uncapped sentinels', () => {
+  it('normalises every known sentinel to null', () => {
+    for (const s of UNCAPPED_SENTINELS) expect(normaliseCap(s), String(s)).toBeNull();
+  });
+
+  it('keeps a real cap, converted from percent to decimal', () => {
+    expect(normaliseCap(10.5)).toBeCloseTo(0.105, 10);
+    expect(normaliseCap(24)).toBeCloseTo(0.24, 10);
+    expect(normaliseCap(null)).toBeNull();
+    expect(normaliseCap(NaN)).toBeNull();
+  });
+});
+
+describe('a loaned indexed account', () => {
+  it('nets the loan charge against the credit rather than subtracting it', () => {
+    // The two run concurrently, so the net is a ratio. Subtracting overstates
+    // the result, and by more the longer the segment.
+    const base = shapeById('mn-bga3-indexed-a')!;
+    const loaned = { ...base, segmentYears: 2, cap: null, loanChargeAnnual: 0.0475 };
+    const r = creditFor(loaned, 0.2);
+    expect(r.ok).toBe(true);
+    if (!r.ok) return;
+
+    const accrued = Math.pow(1.0475, 2) - 1;
+    const expected = 1.2 / (1 + accrued) - 1; // 20% credited, charge compounded
+    expect(r.segmentCredited).toBeCloseTo(expected, 10);
+
+    // Subtraction would have given 20% − 9.73% = 10.27%; the ratio gives less.
+    expect(r.segmentCredited).toBeLessThan(0.2 - accrued + 1e-9);
+    expect(r.working).toMatch(/loan charge a year, compounding to/);
+  });
+
+  it('leaves an unloaned account untouched', () => {
+    const base = shapeById('mn-bga3-indexed-a')!;
+    expect(base.loanChargeAnnual).toBeUndefined();
+    const r = creditFor(base, 0.08);
+    expect(r.ok && r.segmentCredited).toBeCloseTo(0.08, 10);
+    expect(r.ok && r.working).not.toMatch(/loan charge/);
+  });
+});
+
+describe('the segment, once the owner supplied 24 months', () => {
+  /** Same segment, with the length the screen did not carry. */
+  const known = { ...securian, segmentYears: 2 };
+
+  it('collapses to a single reconciliation instead of eight', () => {
+    const a = auditSegment(known);
+    expect(a.candidates.length).toBe(1);
+    expect(a.candidates[0].segmentYears).toBe(2);
+    expect(a.candidates[0].compoundingChargePct).toBeCloseTo(7.79, 1);
+    expect(a.candidates[0].simpleChargePct).toBeCloseTo(10.28, 1);
+    // And the implied annual index growth becomes checkable: ~20.5% a year.
+    // NOT asserted to be the S&P 500 — the modal named no index, and this
+    // policy holds at least two. That assumption was made once and withdrawn.
+    expect(a.candidates[0].impliedAnnualIndexGrowthPct).toBeCloseTo(20.52, 1);
+  });
+
+  it('stops asking for the segment length once it has it', () => {
+    expect(auditSegment(known).missing.join(' ')).not.toMatch(/segment length/i);
+    expect(auditSegment(securian).missing.join(' ')).toMatch(/segment length/i);
+  });
+
+  it('rules out the half-the-money reading arithmetically', () => {
+    // The theory: the credit applies to only half the allocated money, so the
+    // credited rate is half the participated rate. If that were so, doubling
+    // the credit would land at or below full participation. It lands above, so
+    // the credit is MORE than half the participated amount and cannot be a
+    // halving of it. This is the one part of the owner's reading that the
+    // numbers settle on their own.
+    const a = auditSegment(known);
+    const doubled = a.actualCreditedPct * 2;
+    const atFullParticipation = a.computedGrowthPct * 1.1; // 110%
+    expect(doubled).toBeGreaterThan(atFullParticipation);
+    expect(doubled).toBeCloseTo(53.92, 1);
+    expect(atFullParticipation).toBeCloseTo(49.78, 1);
+  });
+
+  it('does not close on 110% participation less a 2.50% spread either', () => {
+    // The owner's stated product spec, tested directly: 110% of the index less
+    // a 2.50% spread is 47.28% over the segment, against 26.96% credited. The
+    // spec and the segment disagree by 20.32 points, so one of them is
+    // describing something the other is not — which is why more documents are
+    // the answer and not more arithmetic.
+    const perSpec = auditSegment({ ...known, participationPct: 110, spreadPct: 2.5 });
+    expect(perSpec.expectedCreditedPct).toBeCloseTo(47.28, 1);
+    expect(perSpec.reconciles).toBe(false);
+    expect(perSpec.gapPct).toBeCloseTo(20.32, 1);
+    // Closing it would need a 7.71% annual charge, which is not the 4.75%
+    // indexed loan charge on the carrier's loan page.
+    expect(perSpec.candidates[0].compoundingChargePct).toBeCloseTo(7.71, 1);
+    expect(perSpec.candidates[0].compoundingChargePct).toBeGreaterThan(4.75);
+  });
+
+  it('keeps the participation discrepancy visible rather than picking a side', () => {
+    // The screen printed 105.00%; the owner states the account is 110%. Both
+    // audits are kept because the difference is a real question: on several
+    // products 110% current sits above a 105% guaranteed minimum, so a portal
+    // printing 105 on an ALREADY CREDITED segment may mean the segment credited
+    // at the guaranteed floor. That is worth a phone call, not a silent pick.
+    const atScreen = auditSegment(known);
+    const atSpec = auditSegment({ ...known, participationPct: 110 });
+    expect(atScreen.expectedCreditedPct).toBeCloseTo(47.52, 1);
+    expect(atSpec.expectedCreditedPct).toBeCloseTo(49.78, 1);
+    expect(atSpec.expectedCreditedPct).toBeGreaterThan(atScreen.expectedCreditedPct);
+    // Neither reconciles, so the participation rate is not the gap's cause.
+    expect(atScreen.reconciles).toBe(false);
+    expect(atSpec.reconciles).toBe(false);
+  });
+});
+
+describe('the Balanced Indexed Account 2 ledger', () => {
+  it('adds up on every row, which is what makes it usable as evidence', () => {
+    // Value before credit plus the credit must be the end value. A table that
+    // does not add up cannot be reasoned from however interesting it looks.
+    const a = auditLedger([
+      { label: 'Jan 2019 – Jan 2021', valueBeforeCredit: 1026.9, indexCredit: 432.28, endValue: 1459.18 },
+      { label: 'Aug 2019 – Aug 2021', valueBeforeCredit: 1026.73, indexCredit: 547.87, endValue: 1574.6 },
+      { label: 'Dec 2019 – Dec 2021', valueBeforeCredit: 1184.59, indexCredit: 547.7, endValue: 1732.29 },
+    ]);
+    expect(a.identityFailures).toEqual([]);
+    expect(a.creditedRatesPct[0]).toBeCloseTo(42.10, 1);
+    expect(a.creditedRatesPct[2]).toBeCloseTo(46.24, 1);
+    expect(a.summary).toMatch(/all adding up/);
+  });
+
+  it('refuses a ledger that does not add up', () => {
+    const a = auditLedger([
+      { label: 'bad row', valueBeforeCredit: 1000, indexCredit: 100, endValue: 1234 },
+    ]);
+    expect(a.identityFailures.length).toBe(1);
+    expect(a.summary).toMatch(/cannot be reasoned from/);
+  });
+
+  it('holds twelve segments, every one consistent with 110% less a 2.50% spread', () => {
+    expect(BGA3_BALANCED_2_OBSERVED_PCT.length).toBe(12);
+    for (const row of BGA3_BALANCED_2_OBSERVED_PCT) {
+      // Invert the formula to the index movement it implies, and require that
+      // movement to be an ordinary two-year window rather than an extreme one.
+      const impliedIndexPct = (row.creditedPct + 2.5) / 1.1;
+      expect(impliedIndexPct, row.segment).toBeGreaterThan(25);
+      expect(impliedIndexPct, row.segment).toBeLessThan(60);
+    }
+    const rates = BGA3_BALANCED_2_OBSERVED_PCT.map((r) => r.creditedPct);
+    expect(Math.min(...rates)).toBeCloseTo(33.15, 1);
+    expect(Math.max(...rates)).toBeCloseTo(53.36, 1);
+  });
+
+  it('isolates the charge by control group rather than by assumption', () => {
+    // The strongest thing the ledger does. One control segment implies an index
+    // movement within a point of the subject segment, and credits 19 points
+    // more. Eleven others run through the same formula and land where it
+    // predicts. So the shortfall is not the formula, the participation rate or
+    // the spread — it is something charged against that one segment.
+    const d = LOAN_CHARGE_DEDUCTION;
+    expect(d.differenceInIndexPct).toBeLessThan(1);
+    expect(d.differenceInCreditedPct).toBeGreaterThan(19);
+    expect(d.segmentMonths).toBe(24);
+    expect(d.impliedAnnualChargePct).toBeCloseTo(7.7, 1);
+    // The control really is in the ledger.
+    expect(BGA3_BALANCED_2_OBSERVED_PCT.map((r) => r.segment)).toContain(d.controlSegment);
+    expect(
+      BGA3_BALANCED_2_OBSERVED_PCT.find((r) => r.segment === d.controlSegment)!.creditedPct
+    ).toBeCloseTo(d.controlCreditedPct, 2);
+  });
+
+  it('records what the deduction depends on, since neither condition is settled', () => {
+    const c = LOAN_CHARGE_DEDUCTION.conditionalOn;
+    expect(c.length).toBe(2);
+    expect(c.join(' ')).toMatch(/never named an account or an index/);
+    expect(c.join(' ')).toMatch(/110%; the subject modal printed 105/);
+  });
+
+  it('still calls the charge a deduction, not a reading', () => {
+    // The discipline that has held through this whole file: a figure inferred
+    // from a residual is inferred, however good the inference.
+    expect(LOAN_CHARGE_DEDUCTION.stillNeeded).toMatch(/policy statement prints it/);
+    expect(LOAN_CHARGE_DEDUCTION.stillNeeded).toMatch(/still inferred/);
+  });
+
+  it('no policy balances are kept, only rates', () => {
+    const serialised = JSON.stringify(BGA3_BALANCED_2_OBSERVED_PCT);
+    for (const balance of ['1026.9', '1184.59', '881.45', '1574.6', '1732.29']) {
+      expect(serialised, balance).not.toContain(balance);
+    }
+  });
+});
+
+describe('the four modals', () => {
+  it('is internally sound on every one: growth is end over start', () => {
+    for (const m of BGA_BALANCED_2_MODALS) {
+      const computed = (m.endIndexValue / m.startIndexValue - 1) * 100;
+      expect(computed, m.segment).toBeCloseTo(m.statedGrowthPct, 1);
+    }
+  });
+
+  it('shows that the stated 105% participation reproduces none of the four credits', () => {
+    for (const m of BGA_BALANCED_2_MODALS) {
+      const participated = m.statedGrowthPct * 1.05;
+      expect(participated, m.segment).toBeGreaterThan(m.creditedPct + 2);
+    }
+    expect(FOUR_MODAL_FINDINGS.statedParticipationReproducesNoCredit).toBe(true);
+  });
+
+  it('finds February, March and April agree to a thirteenth of a point', () => {
+    const fee = (m: (typeof BGA_BALANCED_2_MODALS)[number]) =>
+      ((1 + (m.statedGrowthPct * 1.05) / 100) / (1 + m.creditedPct / 100) - 1) * 100;
+    const trio = BGA_BALANCED_2_MODALS.filter((m) => !m.segment.startsWith('Jan')).map(fee);
+    expect(Math.max(...trio) - Math.min(...trio)).toBeLessThan(0.2);
+    for (const f of trio) expect(f).toBeCloseTo(6.27, 0);
+  });
+
+  it('isolates January as the outlier, at 25x the others own spread', () => {
+    const jan = BGA_BALANCED_2_MODALS.find((m) => m.segment.startsWith('Jan'))!;
+    const janFee = ((1 + (jan.statedGrowthPct * 1.05) / 100) / (1 + jan.creditedPct / 100) - 1) * 100;
+    expect(janFee).toBeCloseTo(2.88, 1);
+    expect(Math.abs(janFee - 6.27)).toBeGreaterThan(3);
+    // Recorded as an open question, not explained away.
+    expect(FOUR_MODAL_FINDINGS.openQuestion).toMatch(/Why January behaves differently/);
+    expect(FOUR_MODAL_FINDINGS.openQuestion).toMatch(/not necessarily its own rate/);
+  });
+
+  it('lands the residual on the published indexed loan charge without fitting to it', () => {
+    // The fee came from three segments that have nothing to do with the subject
+    // one. Run the subject through it and the leftover is 4.56% a year against
+    // a published 4.75% indexed loan charge.
+    const f = FOUR_MODAL_FINDINGS;
+    const predicted = (1 + (45.2532 * 1.05) / 100) / (1 + 6.27 / 100) - 1;
+    expect(predicted * 100).toBeCloseTo(f.subjectPredictedCreditedPct, 0);
+    const residualAnnual = Math.sqrt((1 + predicted) / 1.2696) - 1;
+    expect(residualAnnual * 100).toBeCloseTo(f.residualAnnualPct, 1);
+    expect(Math.abs(f.residualAnnualPct - f.publishedIndexedLoanChargePct)).toBeCloseTo(f.agreementPct, 1);
+    expect(f.agreementPct).toBeLessThan(0.25);
+  });
+
+  it('still refuses to call it settled', () => {
+    // A residual computed on top of a residual can land on 4.75% by accident.
+    expect(FOUR_MODAL_FINDINGS.stillNotSettled).toMatch(/residual computed on top of a residual/);
+    expect(FOUR_MODAL_FINDINGS.stillNotSettled).toMatch(/policy statement is what ends it/);
+  });
+
+  it('keeps index values but no policy balances', () => {
+    const serialised = JSON.stringify(BGA_BALANCED_2_MODALS);
+    expect(serialised).toContain('2635.96');
+    for (const balance of ['1026.9', '1026.67', '432.28', '370.76']) {
+      expect(serialised, balance).not.toContain(balance);
+    }
+  });
+});
+
+describe('nine segments solve the account', () => {
+  const SP = NINE_SEGMENT_SOLUTION.spreadPointsPerSegment;
+  const sub = (m: (typeof BGA_BALANCED_2_NINE)[number]) => m.statedGrowthPct * 1.05 - m.creditedPct;
+  const mul = (m: (typeof BGA_BALANCED_2_NINE)[number]) =>
+    ((1 + (m.statedGrowthPct * 1.05) / 100) / (1 + m.creditedPct / 100) - 1) * 100;
+  const five = BGA_BALANCED_2_NINE.filter((m) =>
+    ['Jan', 'May', 'Jun', 'Jul', 'Aug'].some((k) => m.segment.startsWith(k)));
+
+  it('is internally sound on all nine', () => {
+    for (const m of BGA_BALANCED_2_NINE) {
+      expect((m.endIndexValue / m.startIndexValue - 1) * 100, m.segment).toBeCloseTo(m.statedGrowthPct, 1);
+    }
+    expect(BGA_BALANCED_2_NINE.length).toBe(9);
+  });
+
+  it('proves the spread is subtracted, not divided — by a factor of twenty', () => {
+    const a = five.map(sub);
+    const b = five.map(mul);
+    const bandA = Math.max(...a) - Math.min(...a);
+    const bandB = Math.max(...b) - Math.min(...b);
+    expect(bandA).toBeLessThan(0.02);
+    expect(bandB).toBeGreaterThan(0.2);
+    expect(bandB / bandA).toBeGreaterThan(15);
+    expect(a.reduce((x, y) => x + y, 0) / a.length).toBeCloseTo(SP, 2);
+  });
+
+  it('recovers three participation rates where the portal shows one', () => {
+    const solved = (m: (typeof BGA_BALANCED_2_NINE)[number]) => ((m.creditedPct + SP) / m.statedGrowthPct) * 100;
+    for (const m of BGA_BALANCED_2_NINE) {
+      const p = solved(m);
+      const grp = NINE_SEGMENT_SOLUTION.participationGroups.find((g) =>
+        g.segments.some((k) => m.segment.startsWith(k)))!;
+      expect(p, `${m.segment} should solve to ${grp.ratePct}`).toBeCloseTo(grp.ratePct, 1);
+      // And every modal printed 105.00% regardless.
+      expect(m.statedParticipationPct).toBe(105);
+    }
+    expect(NINE_SEGMENT_SOLUTION.portalIsWrongOnSegments).toBe(4);
+  });
+
+  it('catches September crediting above its own index growth', () => {
+    const sep = BGA_BALANCED_2_NINE.find((m) => m.segment.startsWith('Sep'))!;
+    expect(sep.creditedPct).toBeGreaterThan(sep.statedGrowthPct);
+    // Which 105% participation less a positive spread cannot do.
+    expect(sep.statedGrowthPct * 1.05 - SP).toBeLessThan(sep.creditedPct);
+    expect(NINE_SEGMENT_SOLUTION.plainestProof).toMatch(/more than the index moved/);
+  });
+
+  it('withdraws the four-modal residual finding explicitly', () => {
+    expect(NINE_SEGMENT_SOLUTION.withdraws).toMatch(/FOUR_MODAL_FINDINGS/);
+    expect(NINE_SEGMENT_SOLUTION.withdraws).toMatch(/wrong by a factor of twenty/);
+    expect(NINE_SEGMENT_SOLUTION.withdraws).toMatch(/artifact of both/);
+    // The superseded block is kept so the withdrawal is auditable, not erased.
+    expect(FOUR_MODAL_FINDINGS.residualAnnualPct).toBe(4.56);
+  });
+
+  it('leaves the loan charge a range, not a number, and says why', () => {
+    const [lo, hi] = NINE_SEGMENT_SOLUTION.subjectResidualRangeAnnualPct;
+    expect(lo).toBeLessThan(4.75);
+    expect(hi).toBeGreaterThan(4.75);
+    // 4.75% is inside the range — which is not the same as being the answer.
+    expect(hi - lo).toBeGreaterThan(2);
+    expect(NINE_SEGMENT_SOLUTION.whyItCannotBePinned).toMatch(/One equation, two unknowns/);
+  });
+});
+
+describe('twelve segments and the field that lies', () => {
+  const SP = TWELVE_SEGMENT_SOLUTION.spreadPointsPerSegment;
+  const solve = (g: number, c: number) => ((c + SP) / g) * 100;
+
+  it('solves every one of the twelve into one of three declared rates', () => {
+    expect(BGA_BALANCED_2_TWELVE.length).toBe(12);
+    for (const m of BGA_BALANCED_2_TWELVE) {
+      const grp = TWELVE_SEGMENT_SOLUTION.participationGroups.find((g) =>
+        g.segments.includes(m.segment))!;
+      expect(solve(m.growthPct, m.creditedPct), m.segment).toBeCloseTo(grp.ratePct, 1);
+    }
+  });
+
+  it('keeps every group tight to about two hundredths of a point', () => {
+    for (const grp of TWELVE_SEGMENT_SOLUTION.participationGroups) {
+      const vals = BGA_BALANCED_2_TWELVE
+        .filter((m) => grp.segments.includes(m.segment))
+        .map((m) => solve(m.growthPct, m.creditedPct));
+      expect(Math.max(...vals) - Math.min(...vals), `${grp.ratePct}%`).toBeLessThan(0.03);
+    }
+    // Twelve equations, four parameters, residuals inside display rounding.
+    const total = TWELVE_SEGMENT_SOLUTION.participationGroups
+      .reduce((n, g) => n + g.segments.length, 0);
+    expect(total).toBe(12);
+  });
+
+  it('proves with the PRISM account that 105.00% is a printed constant', () => {
+    // No model needed. 17.11% credited on 10.03% growth is 1.71x the index.
+    // 105% participation less any positive spread cannot exceed 10.53%.
+    const d = TWELVE_SEGMENT_SOLUTION.prismDisproof;
+    expect(d.creditedPct).toBeGreaterThan(d.growthPct * 1.05);
+    expect(d.maximumPossibleAt105Pct).toBeCloseTo(d.growthPct * 1.05, 1);
+    expect(d.modalPrintsParticipationPct).toBe(105);
+    expect(d.multipleOfIndex).toBeCloseTo(d.creditedPct / d.growthPct, 1);
+    expect(d.conclusion).toMatch(/constant the page prints, not a fact it reports/);
+  });
+
+  it('shows one displayed value standing for four different true rates', () => {
+    const distinct = new Set(TWELVE_SEGMENT_SOLUTION.participationGroups.map((g) => g.ratePct));
+    expect(distinct.size).toBe(3);
+    // Plus the PRISM account's ~171%, on the same printed 105.00%.
+    expect(TWELVE_SEGMENT_SOLUTION.prismDisproof.impliedParticipationPct).toBeGreaterThan(150);
+  });
+
+  it('establishes that something IS charged against the subject segment', () => {
+    // Its implied participation with no charge is below every rate this
+    // account has ever used — and that no longer rests on a control group.
+    const implied = TWELVE_SEGMENT_SOLUTION.subjectImpliedParticipationIfNoCharge;
+    const lowest = Math.min(...TWELVE_SEGMENT_SOLUTION.participationGroups.map((g) => g.ratePct));
+    expect(implied).toBeLessThan(lowest - 20);
+    expect(TWELVE_SEGMENT_SOLUTION.whatIsNowEstablished).toMatch(/no longer rests on a control group/);
+  });
+
+  it('still refuses to size the charge, and says exactly why', () => {
+    const byPar = TWELVE_SEGMENT_SOLUTION.subjectChargeByParticipation;
+    expect(byPar.length).toBe(3);
+    // Monotone: a higher participation means a bigger implied charge.
+    for (let i = 1; i < byPar.length; i++) {
+      expect(byPar[i].annualPct).toBeGreaterThan(byPar[i - 1].annualPct);
+    }
+    // 4.75% sits near the bottom, requiring the lowest rate the account uses.
+    expect(byPar[0].annualPct).toBeLessThan(4.75);
+    expect(byPar[byPar.length - 1].annualPct).toBeGreaterThan(4.75);
+    expect(TWELVE_SEGMENT_SOLUTION.whatIsStillOpen).toMatch(/portal field that would say is a constant/);
+  });
+});
