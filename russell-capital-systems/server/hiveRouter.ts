@@ -90,17 +90,25 @@ export const hiveRouter = router({
       routePath: z.string().max(200),
       sessionStartedAt: z.string().max(40),
       speak: z.boolean().default(true),
+      /**
+       * The exact words to speak and record. The site map passes the
+       * operator's script (SITE_MAP_NUDGE_TEXT) after its own third-open
+       * gate has fired, so the server trusts that gate and only guards
+       * against speaking twice in one session. Without `text`, the server
+       * applies the open-count gate and composes a page-specific line.
+       */
+      text: z.string().min(1).max(1_200).optional(),
     }))
     .mutation(async ({ ctx, input }) => {
       const events = await recentHiveEvents(ctx.user.id, 100);
       const opens = pageOpensSince(events, input.sessionStartedAt);
       const alreadyNudged = events.some(e => e.kind === "nudge" && e.createdAt >= input.sessionStartedAt);
-      if (opens < NUDGE_AFTER_PAGE_OPENS || alreadyNudged) {
+      if (alreadyNudged || (!input.text && opens < NUDGE_AFTER_PAGE_OPENS)) {
         return { fire: false as const, opens, text: null, audio: null };
       }
       const entry = calculator(input.routePath);
       const title = entry?.name ?? input.routePath.split("/").filter(Boolean).pop()?.replace(/-/g, " ") ?? "this page";
-      const text = nudgeScript(title, entry?.blurb);
+      const text = input.text ?? nudgeScript(title, entry?.blurb);
       let audio: { audioBase64: string; mimeType: string; via: string } | null = null;
       if (input.speak) {
         try {

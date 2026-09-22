@@ -82,8 +82,12 @@ export interface HiveRoster {
   verifiers: string[];
 }
 
-/** How many page opens before the advisor speaks. The operator asked for one or two. */
-export const NUDGE_AFTER_PAGE_OPENS = 2;
+/**
+ * How many page opens before the advisor speaks: the THIRD open, never before,
+ * once per session ("more than two", the operator, 22 Sep 2026). This is the
+ * one definition; `shared/siteMapTree.ts` re-exports it for the client gate.
+ */
+export const NUDGE_AFTER_PAGE_OPENS = 3;
 
 /** Visited entries on the site map turn this colour and stay that way for the user. */
 export const VISITED_NEON_FOREST_GREEN = "#1BFF7A" as const;
