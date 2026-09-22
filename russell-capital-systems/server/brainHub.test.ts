@@ -50,6 +50,11 @@ describe("the forty brains", () => {
       for (const m of p.suggestedModels) expect(isBannedProvider(m)).toBe(false);
     }
     expect(validateCustomEndpoint("https://api.deepseek.com", "/chat/completions").ok).toBe(false);
+    expect(validateCustomEndpoint("https://api.moonshot.ai", "/v1/chat/completions").ok).toBe(false);
+    expect(validateCustomEndpoint("https://dashscope-intl.aliyuncs.com", "/compatible-mode/v1/chat/completions").ok).toBe(false);
+    expect(validateCustomEndpoint("https://api.example.cn", "/v1/chat/completions").ok).toBe(false);
+    expect(validateCustomEndpoint("https://example.cn:443", "/v1/chat/completions").ok).toBe(false);
+    expect(validateCustomEndpoint("https://api.crusoe.ai", "/v1/chat/completions").ok).toBe(true);
   });
 
   it("every non-US provider carries a data-handling caution", () => {

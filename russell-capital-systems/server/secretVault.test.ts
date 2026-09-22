@@ -219,10 +219,15 @@ describe("Provider catalog", () => {
   it("states the country for every provider, including the ones that need it", async () => {
     const { PROVIDERS, getProvider } = await import("../shared/aiProviders");
     for (const p of PROVIDERS) expect(p.country).toBeTruthy();
-    // DeepSeek is hosted in China; that has to be visible before client data
-    // flows to it.
-    expect(getProvider("moonshot")?.country).toBe("China");
-    expect(getProvider("moonshot")?.caution).toMatch(/China/);
+    // Owner's rule: no Chinese AI system, no Chinese host. The catalogue
+    // carries none, and the former entries are refused by the ban.
+    const { isBannedProvider } = await import("../shared/aiProviders");
+    for (const p of PROVIDERS) expect(p.country).not.toMatch(/china/i);
+    for (const gone of ["moonshot", "qwen", "zhipu", "minimax", "qianfan"]) {
+      expect(getProvider(gone)).toBeUndefined();
+      expect(isBannedProvider(gone)).toBe(true);
+    }
+    expect(getProvider("novita")).toBeUndefined();
   });
 });
 
