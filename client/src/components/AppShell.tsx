@@ -1,5 +1,6 @@
 import HiddenBrainVault from "@/components/HiddenBrainVault";
 import { useAuth } from "@/_core/hooks/useAuth";
+import DeeperButtons from "@/components/DeeperButtons";
 import { getLoginUrl } from "@/const";
 import {
   AlertTriangle, BarChart3, Bell, BookOpen, Brain, Building2, Calendar, CheckCheck, ChevronDown, ChevronRight,
@@ -123,6 +124,8 @@ const NAV_SECTIONS: NavSection[] = [
     color: "green",
     defaultOpen: true,
     items: [
+      { path: "/portal/map", label: "Map (how this site is arranged)", icon: ChevronRight, color: "gold" },
+      { path: "/portal/samuel-goldman", label: "Samuel Goldman", icon: ChevronRight, color: "gold" },
       { path: "/portal/command", label: "Command", icon: ChevronRight, color: "green" },
       { path: "/portal/command-center", label: "Command Center", icon: Activity, color: "slate" },
       { path: "/portal/daily-briefing", label: "Daily Briefing", icon: ChevronRight, color: "gold" },
@@ -1663,6 +1666,8 @@ export function AppShell({ children, title: _title, subtitle: _subtitle }: { chi
               <QuestionWhy />
             </div>
           )}
+          {/* Go-deeper buttons: the less-essential pages of this subject, data-driven */}
+          <DeeperButtons />
           {children}
           {/* Every engine carries the reveal footer: the same idea, not a new one */}
           {room.theme === "theme9" && <EngineWhyFooter />}
