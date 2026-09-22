@@ -178,10 +178,13 @@ describe("PDF Report Monte Carlo & Sensitivity", () => {
 // ─── Client Portal Saved Strategies ──────────────────────────────────────────
 describe("Client Portal Saved Strategies", () => {
   it("clientPortal.view procedure should exist in appRouter", async () => {
+    // First import of the whole app router (800+ procedures) takes 5–7 s on a
+    // loaded runner; the 5 s default timeout made this a timing flake, not a
+    // finding. Measured 22 Sep 2026 at 6.5–7.6 s in isolation on two commits.
     const mod = await import("./routers");
     const procNames = Object.keys(mod.appRouter._def.procedures);
     expect(procNames).toContain("clientPortal.view");
-  });
+  }, 30_000);
 
   it("clientPortal.view should return savedStrategies field", async () => {
     // The view procedure returns savedStrategies in its response shape

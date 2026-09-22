@@ -1,5 +1,7 @@
 import HiddenBrainVault from "@/components/HiddenBrainVault";
+import { ADVISOR_NAME } from "@shared/aiAdvisor";
 import { useAuth } from "@/_core/hooks/useAuth";
+import DeeperButtons from "@/components/DeeperButtons";
 import { getLoginUrl } from "@/const";
 import {
   AlertTriangle, BarChart3, Bell, BookOpen, Brain, Building2, Calendar, CheckCheck, ChevronDown, ChevronRight,
@@ -123,6 +125,8 @@ const NAV_SECTIONS: NavSection[] = [
     color: "green",
     defaultOpen: true,
     items: [
+      { path: "/portal/map", label: "Map (how this site is arranged)", icon: ChevronRight, color: "gold" },
+      { path: "/portal/samuel-goldman", label: "Samuel Goldman", icon: ChevronRight, color: "gold" },
       { path: "/portal/command", label: "Command", icon: ChevronRight, color: "green" },
       { path: "/portal/command-center", label: "Command Center", icon: Activity, color: "slate" },
       { path: "/portal/daily-briefing", label: "Daily Briefing", icon: ChevronRight, color: "gold" },
@@ -650,7 +654,7 @@ const NAV_SECTIONS: NavSection[] = [
         { path: "/portal/charitable-giving-dashboard", label: "Charitable Giving Dashboard", icon: ChevronRight, color: "slate" },
       { path: "/portal/ai", label: "AI", icon: ChevronRight, color: "cyan" },
       { path: "/portal/ai-brain-hub", label: "AI Brain Hub", icon: ChevronRight, color: "cyan" },
-      { path: "/portal/thomas-goldman", label: "Thomas Goldman", icon: Sparkles, color: "gold" },
+      { path: "/portal/thomas-goldman", label: ADVISOR_NAME, icon: Sparkles, color: "gold" },
       { path: "/portal/brain-hub", label: "Brain Hub", icon: ChevronRight, color: "gold" },
       { path: "/portal/ai-advisor", label: "AI Financial Advisor", icon: Sparkles, color: "purple" },
       { path: "/portal/whisperer", label: "AI Whisperer", icon: MessageCircle, color: "green" },
@@ -1663,6 +1667,8 @@ export function AppShell({ children, title: _title, subtitle: _subtitle }: { chi
               <QuestionWhy />
             </div>
           )}
+          {/* Go-deeper buttons: the less-essential pages of this subject, data-driven */}
+          <DeeperButtons />
           {children}
           {/* Every engine carries the reveal footer: the same idea, not a new one */}
           {room.theme === "theme9" && <EngineWhyFooter />}
