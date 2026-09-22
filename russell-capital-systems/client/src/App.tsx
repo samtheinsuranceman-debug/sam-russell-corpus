@@ -352,6 +352,7 @@ const LongTermCare = lazy(() => import("./pages/portal/LongTermCare"));
 const IncomeForLife = lazy(() => import("./pages/portal/IncomeForLife"));
 const Forgiveness = lazy(() => import("./pages/portal/Forgiveness"));
 const TaxSchedule = lazy(() => import("./pages/portal/TaxSchedule"));
+const AMTCalculator = lazy(() => import("./pages/portal/AMTCalculator"));
 const Sphere = lazy(() => import("./pages/portal/Sphere"));
 const TheBrotherhood = lazy(() => import("./pages/portal/TheBrotherhood"));
 const SecondaryInformation = lazy(() => import("./pages/portal/SecondaryInformation"));
@@ -571,6 +572,7 @@ function Router() {
       <Route path="/portal/carrier-comparison" component={gated(CarrierComparison, "/portal/carrier-comparison")} />
       <Route path="/portal/referral-tracking" component={gated(ReferralTracking, "/portal/referral-tracking")} />
       <Route path="/portal/tax-brackets" component={gated(TaxBracketVisualizer, "/portal/tax-brackets")} />
+      <Route path="/portal/amt-calculator" component={gated(AMTCalculator, "/portal/amt-calculator")} />
       <Route path="/portal/policy-review-checklist" component={gated(PolicyReviewChecklist, "/portal/policy-review-checklist")} />
       <Route path="/portal/income-gap" component={gated(IncomeGapAnalyzer, "/portal/income-gap")} />
       <Route path="/portal/medicare-irmaa" component={gated(MedicareIRMAA, "/portal/medicare-irmaa")} />

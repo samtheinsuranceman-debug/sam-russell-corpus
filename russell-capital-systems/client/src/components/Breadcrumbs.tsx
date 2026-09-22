@@ -39,6 +39,7 @@ const PATH_LABELS: Record<string, string> = {
   // Planning — Tax & Estate
   "tax-waterfall": "Tax Waterfall",
   "tax-brackets": "Tax Brackets",
+  "amt-calculator": "Alternative Minimum Tax",
   "tax-advantaged-growth": "Tax-Advantaged Growth",
   "estate-tax": "Estate Tax",
   "estate-flow": "Estate Flow Chart",

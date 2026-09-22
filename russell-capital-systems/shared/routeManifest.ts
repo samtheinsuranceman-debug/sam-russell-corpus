@@ -51,6 +51,7 @@ export const ROUTE_MANIFEST: readonly string[] = [
   "/portal/advisory-summary",
   "/portal/affiliate-links",
   "/portal/agency-tutorial",
+  "/portal/amt-calculator",
   "/portal/agent-tutorial",
   "/portal/ai",
   "/portal/ai-advisor",

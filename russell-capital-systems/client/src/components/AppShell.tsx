@@ -438,6 +438,7 @@ const NAV_SECTIONS: NavSection[] = [
       { path: "/portal/combo-recommender", label: "AI Combo Recommender", icon: Brain, color: "purple" },
       { path: "/portal/client-intake-recommender", label: "Client Intake Form", icon: User, color: "cyan" },
       { path: "/portal/divorce-calculator", label: "Divorce Devastation Engine", icon: Scissors, color: "red" },
+      { path: "/portal/amt-calculator", label: "Alternative Minimum Tax", icon: Gem, color: "orange" },
       { path: "/portal/trusts", label: "Trust Structures", icon: Landmark, color: "orange" },
       { path: "/portal/mortgage-killer-v3", label: "Mortgage Killer V3", icon: Home, color: "teal" },
       { path: "/portal/physicians-edge", label: "Physician's Edge", icon: HeartPulse, color: "emerald" },

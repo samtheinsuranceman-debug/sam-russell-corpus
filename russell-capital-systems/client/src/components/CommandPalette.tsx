@@ -42,6 +42,7 @@ const ALL_PAGES: NavItem[] = [
   // Tax & Estate
   { path: "/portal/tax-waterfall", label: "Tax Waterfall", section: "Tax & Estate" },
   { path: "/portal/tax-brackets", label: "Tax Brackets", section: "Tax & Estate" },
+  { path: "/portal/amt-calculator", label: "Alternative Minimum Tax (AMT)", section: "Tax & Estate" },
   { path: "/portal/tax-advantaged-growth", label: "Tax-Advantaged Growth", section: "Tax & Estate" },
   { path: "/portal/tax-opportunities", label: "Tax Opportunities", section: "Tax & Estate" },
   { path: "/portal/tax-loss-harvesting", label: "Tax-Loss Harvesting", section: "Tax & Estate" },
