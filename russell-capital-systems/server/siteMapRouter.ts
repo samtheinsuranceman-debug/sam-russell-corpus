@@ -1,10 +1,10 @@
 // ============================================================
 // SITE MAP ROUTER — mounted as `siteMap`.
-//   siteMap.tree         public   the seven-tab tree derived from the manifest + catalogue
+//   siteMap.tree         public   the seven-tab tree (hubs → pages → deeper pages, any depth) from the manifest + catalogue
 //   siteMap.visits       auth     this user's visited routes (what turns neon green)
 //   siteMap.opened       auth     a page was opened from the map (memory: page_visit)
 //   siteMap.markVisited  auth     the page was closed (← or X): green + memory: page_close
-//   siteMap.deeper       public   the "go deeper" buttons for a route
+//   siteMap.deeper       public   the "go deeper" buttons for a route (its deeper pages in the tree)
 // ============================================================
 import { z } from "zod";
 import { protectedProcedure, publicProcedure, router } from "./_core/trpc";
@@ -43,6 +43,6 @@ export const siteMapRouter = router({
     }),
 
   deeper: publicProcedure
-    .input(z.object({ routePath: pathSchema, limit: z.number().int().min(1).max(12).default(8) }))
+    .input(z.object({ routePath: pathSchema, limit: z.number().int().min(1).max(64).optional() }))
     .query(({ input }) => deeperLinks(input.routePath, input.limit)),
 });
