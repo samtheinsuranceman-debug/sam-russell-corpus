@@ -242,7 +242,18 @@ export function environmentProviderIds(): string[] {
  * the environment rather than the vault, since the hosting platform supplies
  * them and they are not Sam's to rotate.
  */
+/**
+ * The built-in gateway (the Manus Forge) is OFF unless the operator opts in
+ * with RCS_ALLOW_FORGE_GATEWAY=1. Owner's rule of 22 Sep 2026 (board D32):
+ * Manus is China-origin and is not the platform's last resort. With no opt-in
+ * the chain is vault keys, then environment keys, and then it stops.
+ */
+export function forgeGatewayEnabled(): boolean {
+  return process.env.RCS_ALLOW_FORGE_GATEWAY === "1" && Boolean(process.env.BUILT_IN_FORGE_API_KEY?.trim());
+}
+
 function gatewayFallback(): CachedCredential | null {
+  if (!forgeGatewayEnabled()) return null;
   const key = process.env.BUILT_IN_FORGE_API_KEY?.trim();
   const url = process.env.BUILT_IN_FORGE_API_URL?.trim();
   if (!key) return null;
@@ -450,10 +461,11 @@ export async function liveProviderIds(): Promise<string[]> {
 /**
  * The one call every advisor surface should make.
  *
- * Walks the Brain Hub chain (vault keys → Railway environment keys → built-in
- * gateway). If the chain is empty or every brain fails for a non-auth reason,
- * falls back to the platform's original invokeLLM so the advisor still
- * answers. Returns the same shape invokeLLM does, so a call site swaps one
+ * Walks the Brain Hub chain (vault keys → Railway environment keys → the
+ * built-in gateway only when RCS_ALLOW_FORGE_GATEWAY=1). If no brain answers
+ * it throws NoProviderAvailableError with every attempt listed; it no longer
+ * slides into the Manus Forge behind the caller's back (board D32, 22 Sep 2026).
+ * Returns { text, providerId, model, attempted } so a call site swaps one
  * import and nothing else.
  */
 export async function brainComplete(params: {
@@ -462,32 +474,11 @@ export async function brainComplete(params: {
   temperature?: number;
   preferProvider?: string;
 }): Promise<{ text: string; providerId: string; model: string; attempted: Array<{ providerId: string; error: string }> }> {
-  try {
-    const result = await completeChat({
-      messages: params.messages,
-      maxTokens: params.maxTokens,
-      temperature: params.temperature,
-      preferProvider: params.preferProvider,
-    });
-    return { text: result.text, providerId: result.providerId, model: result.model, attempted: result.attempted };
-  } catch (e) {
-    if (e instanceof NoProviderAvailableError && e.attempted.some(a => /reject|auth|401|403/i.test(a.error))) {
-      // A rejected key is a configuration fault; do not paper over it.
-      throw e;
-    }
-    const attempted = e instanceof NoProviderAvailableError ? e.attempted : [];
-    const { invokeLLM } = await import("./_core/llm");
-    const res = await invokeLLM({
-      messages: params.messages.map(m => ({ role: m.role, content: m.content })),
-      maxTokens: params.maxTokens,
-    });
-    const content = res.choices[0]?.message?.content;
-    const text =
-      typeof content === "string"
-        ? content
-        : Array.isArray(content)
-          ? content.map(part => (typeof part === "string" ? part : "text" in part ? part.text : "")).join("")
-          : "";
-    return { text, providerId: "forge", model: "gateway", attempted };
-  }
+  const result = await completeChat({
+    messages: params.messages,
+    maxTokens: params.maxTokens,
+    temperature: params.temperature,
+    preferProvider: params.preferProvider,
+  });
+  return { text: result.text, providerId: result.providerId, model: result.model, attempted: result.attempted };
 }

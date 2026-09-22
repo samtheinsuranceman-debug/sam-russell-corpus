@@ -17,11 +17,10 @@ describe("Ultra AI orchestrator — eleven AI advisors", () => {
       "GROQ_API_KEY", // Groq
       "COHERE_API_KEY", // Cohere
       "TOGETHER_API_KEY", // Together AI
-      "BUILT_IN_FORGE_API_KEY", // Manus (Forge gateway)
     ];
     for (const key of envKeys) expect(src, key).toContain(`envKey: "${key}"`);
     // The provider id union must list exactly these eleven.
-    for (const id of ["claude", "chatgpt", "grok", "gemini", "perplexity", "openrouter", "mistral", "groq", "cohere", "together", "manus"]) {
+    for (const id of ["claude", "chatgpt", "grok", "gemini", "perplexity", "openrouter", "mistral", "groq", "cohere", "together"]) {
       expect(src, id).toContain(`"${id}"`);
     }
   });

@@ -28,7 +28,6 @@ import { compositeWorkingMemoryWithInstruments, compactWorkingMemory } from "@sh
 import { publicProcedure, router } from "./_core/trpc";
 import { probeKeys } from "./keyProbe";
 import { anthropicHeaders } from "./_core/anthropic";
-import { invokeLLM } from "./_core/llm";
 import { MODULE_CATALOG, type ModuleKey } from "@shared/ultraEngine";
 import { ADVISOR_MODES, MODE_IDS, SINGLE_MODES, modeDef, type AdvisorMode } from "@shared/advisorModes";
 import { STR_PROTOCOL, strApiLine as strApiLineFor } from "@shared/strSources";
@@ -38,10 +37,11 @@ import { mailMode, sendMail } from "./_core/mailer";
 import { recordEvent } from "./ledger";
 import { voiceOutConfigured } from "./voiceSettings";
 import { synthesize } from "./speech";
+import { brainComplete } from "./providerRegistry";
 
 // Owner's standing rule (2026-09-06): DeepSeek is not part of this platform and
 // must not be added back as a provider, a panel voice, or an OpenRouter route.
-type ProviderId = "claude" | "chatgpt" | "grok" | "gemini" | "perplexity" | "openrouter" | "mistral" | "groq" | "cohere" | "together" | "manus";
+type ProviderId = "claude" | "chatgpt" | "grok" | "gemini" | "perplexity" | "openrouter" | "mistral" | "groq" | "cohere" | "together";
 
 export type Provider = {
   id: ProviderId;
@@ -111,24 +111,6 @@ const PROVIDERS: Provider[] = [
     call: (k, s, u) => openAiCompatible("https://api.cohere.ai/compatibility/v1", "command-a-03-2025", k, s, u) },
   { id: "together", label: "Together AI", envKey: "TOGETHER_API_KEY",
     call: (k, s, u) => openAiCompatible("https://api.together.xyz/v1", "meta-llama/Llama-3.3-70B-Instruct-Turbo", k, s, u) },
-  {
-    // Manus routes through the built-in Forge gateway (OpenAI-compatible),
-    // keyed by BUILT_IN_FORGE_API_KEY. We reuse invokeLLM so the gateway's
-    // own default model and retry/backoff logic apply — the apiKey argument
-    // is ignored because invokeLLM reads the key from the server env itself.
-    id: "manus", label: "Manus", envKey: "BUILT_IN_FORGE_API_KEY",
-    call: async (_apiKey, system, user) => {
-      const res = await invokeLLM({ messages: [
-        { role: "system", content: system },
-        { role: "user", content: user },
-      ], maxTokens: 1500 });
-      const raw = res.choices[0]?.message?.content;
-      const text = typeof raw === "string" ? raw.trim()
-        : Array.isArray(raw) ? raw.filter((p) => p.type === "text").map((p) => (p as { text: string }).text).join("\n").trim() : "";
-      if (!text) throw new Error("empty response");
-      return text;
-    },
-  },
   {
     id: "gemini", label: "Gemini", envKey: "GEMINI_API_KEY",
     call: async (apiKey, system, user) => {
@@ -219,16 +201,16 @@ export async function leadModel(system: string, user: string): Promise<{ text: s
     try { return { text: await claude.call(key, system, user), via: "claude" }; }
     catch (e) { console.warn("[ultraAI] claude failed:", String(e).slice(0, 120)); }
   }
+  // No Claude key: the Brain Hub chain (vault keys → environment keys) answers.
+  // There is no gateway behind it any more (board D32).
   try {
-    const res = await invokeLLM({ messages: [
+    const res = await brainComplete({ messages: [
       { role: "system", content: system },
       { role: "user", content: user },
     ], maxTokens: 1500 });
-    const raw = res.choices[0]?.message?.content;
-    const text = typeof raw === "string" ? raw.trim()
-      : Array.isArray(raw) ? raw.filter((p) => p.type === "text").map((p) => (p as { text: string }).text).join("\n").trim() : "";
-    if (text) return { text, via: "builtin" };
-  } catch (e) { console.warn("[ultraAI] builtin LLM failed:", String(e).slice(0, 120)); }
+    const text = res.text.trim();
+    if (text) return { text, via: res.providerId };
+  } catch (e) { console.warn("[ultraAI] brain chain failed:", String(e).slice(0, 120)); }
   return null;
 }
 
