@@ -1,19 +1,52 @@
 /**
- * Thomas Goldman — the AI advisor's identity.
+ * Samuel Goldman — the AI advisor's identity.
  *
  * One name, defined once, used by every surface that talks to a client: the
- * concierge, the chat box, the floating widget, voice sessions, PDF footers.
+ * concierge, the chat box, the floating widget, the hive, voice sessions, PDF
+ * footers, the site-map nudge. The operator chose "Samuel Goldman" on
+ * 22 Sep 2026 (board decision D25); "Thomas Goldman" stays as an alias so
+ * existing routes and copy keep resolving. This is the only file in `shared/`
+ * that defines the name; a test enforces that.
  *
  * Naming him matters for more than warmth. A client who knows they are talking
- * to "Thomas Goldman, an AI advisor" holds the conversation to the right
+ * to "Samuel Goldman, an AI advisor" holds the conversation to the right
  * standard. A nameless box invites people to forget what they are talking to.
  * So the name is always paired with what he is — never used to imply a human.
  */
 import { BRAND_NAME_PLAIN } from "./branding";
 
-export const ADVISOR_NAME = "Thomas Goldman";
-export const ADVISOR_FIRST_NAME = "Thomas";
-export const ADVISOR_SHORT_NAME = "Thomas";
+export const ADVISOR_NAME = "Samuel Goldman";
+export const ADVISOR_FIRST_NAME = "Samuel";
+export const ADVISOR_SHORT_NAME = "Samuel";
+
+/** Earlier names, oldest last. Kept so titles and prompts written under them still read correctly. */
+export const ADVISOR_ALIASES = ["Thomas Goldman", "Thomas"] as const;
+
+/** Route slugs that all resolve to the advisor. The first is canonical. */
+export const ADVISOR_ROUTES = [
+  "/portal/samuel-goldman",
+  "/portal/thomas-goldman",
+  "/portal/advisor",
+  "/portal/ask",
+] as const;
+
+export const ADVISOR_CANONICAL_ROUTE = ADVISOR_ROUTES[0];
+
+/** Replace an earlier name in any string (titles, prompts) without touching anything else. */
+export function withAdvisorName(text: string): string {
+  return ADVISOR_ALIASES.reduce(
+    (s, alias) => s.split(alias).join(alias === "Thomas" ? ADVISOR_FIRST_NAME : ADVISOR_NAME),
+    text,
+  );
+}
+
+/**
+ * What the advisor says after a visitor's third page open from the site map.
+ * The operator's words, verbatim; spoken with the server voice when one is
+ * configured, else the browser's, and always shown as text.
+ */
+export const SITE_MAP_NUDGE_TEXT =
+  "Do you have any questions you're looking to have answered? How can I help you? This site is about 700 pages, an enormous library. What specifically are you looking for, and what are you hoping to achieve today?";
 
 /** Always rendered somewhere in view whenever the advisor speaks. */
 export const ADVISOR_ROLE = "AI Wealth Advisor";
@@ -22,7 +55,7 @@ export const ADVISOR_DISCLOSURE = `${ADVISOR_NAME} is an AI advisor, not a perso
 export const ADVISOR_TAGLINE = "Strategy, sequenced.";
 
 /** Initials for the avatar chip. */
-export const ADVISOR_INITIALS = "TG";
+export const ADVISOR_INITIALS = "SG";
 
 /**
  * How long a client may hold the floor in one voice session.
@@ -40,6 +73,21 @@ export const VOICE_CHUNK_MS = 30 * 1000; // 30 seconds
 
 /** Warn the speaker this far before the ceiling, without interrupting. */
 export const VOICE_WARN_BEFORE_MS = 5 * 60 * 1000; // 5 minutes
+
+/**
+ * The nudge the advisor speaks after the visitor has opened a page or two.
+ * `pageTitle` is the catalogue title of the page they opened; `purpose` its one-line purpose.
+ * The words are the operator's (22 Sep 2026): what are you looking for, what are you hoping to achieve.
+ */
+export function nudgeScript(pageTitle: string, purpose?: string): string {
+  const what = purpose ? `${pageTitle}, ${purpose.replace(/\.$/, "")}` : pageTitle;
+  return (
+    `Hi, this is ${ADVISOR_NAME}. I noticed you opened ${what}. ` +
+    `Would you like any assistance with it, or is there a question I can answer so you can finalise ` +
+    `your confidence and understanding? I can walk through every variable or concern in your decision tree ` +
+    `and bring each one to light, one at a time.`
+  );
+}
 
 /**
  * The advisor's system prompt.

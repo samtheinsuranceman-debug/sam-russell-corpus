@@ -70,6 +70,12 @@ export default function VoiceAdvisor() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const ask = trpc.ultra.ask.useMutation();
+  // One AI address (board D24): signed-in visitors reach the advisor through
+  // `thomas.ask`, which walks the Brain Hub chain via brainComplete(). The hive
+  // is informed of the exchange (working memory), never asked. `ultra.ask`
+  // stays as the signed-out, per-page fallback.
+  const advisor = trpc.thomas.ask.useMutation();
+  const inform = trpc.hive.inform.useMutation();
   const speak = trpc.ultra.speak.useMutation();
   const emailAnswer = trpc.ultra.emailAnswer.useMutation();
   const providers = trpc.ultra.providers.useQuery(undefined, { staleTime: 5 * 60_000 });
@@ -85,8 +91,19 @@ export default function VoiceAdvisor() {
     if (chosen !== "horizon") setAsked(q);
     try {
       const profile = [readSavedProfileSummary(), extraProfile].filter(Boolean).join("\n");
-      const res = await ask.mutateAsync({ question: q, pagePath: location, profileSummary: profile, mode: chosen });
-      const got: Section[] = res.sections?.length ? res.sections : [{ id: chosen, title: ADVISOR_MODES.find((m) => m.id === chosen)?.label ?? "Answer", text: res.answer, via: res.via }];
+      let got: Section[];
+      try {
+        const depth = chosen === "all" || chosen === "horizon" ? "integrated" : chosen === "surface" ? "direct" : "deeper";
+        const content = [profile ? `Saved profile:\n${profile}` : "", `The visitor is on ${location}.`, q].filter(Boolean).join("\n\n");
+        const h = await advisor.mutateAsync({ messages: [{ role: "user", content }], depth });
+        got = [{ id: chosen, title: ADVISOR_MODES.find((m) => m.id === chosen)?.label ?? "Answer", text: h.reply, via: h.answeredBy?.providerId ?? "none" }];
+        // Tell the hive what was asked and who answered; a failure here never blocks the answer.
+        inform.mutateAsync({ kind: "question", routePath: location, engine: "voiceAdvisor", payload: { question: q.slice(0, 500), depth, answeredBy: h.answeredBy?.providerId ?? null } }).catch(() => undefined);
+      } catch {
+        // Not signed in (protected procedure) or the advisor is dark: the original per-page advisor still answers.
+        const res = await ask.mutateAsync({ question: q, pagePath: location, profileSummary: profile, mode: chosen });
+        got = res.sections?.length ? res.sections : [{ id: chosen, title: ADVISOR_MODES.find((m) => m.id === chosen)?.label ?? "Answer", text: res.answer, via: res.via }];
+      }
       setSections(got);
       setAnsweredMode(chosen);
       setHorizonOpen(false);
