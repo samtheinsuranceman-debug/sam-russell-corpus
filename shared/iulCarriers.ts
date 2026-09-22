@@ -217,3 +217,6 @@ export const ILLUSTRATION_TOOLS = [
     description: "Industry-standard life insurance illustration software used by many carriers and agencies.",
   },
 ];
+
+/** Surfaced by the advisor: are these carrier figures placeholders rather than dated rate sheets? */
+export const IUL_DATA_IS_SAMPLE = false;
