@@ -1,6 +1,6 @@
 -- Russell Capital Systems — complete database schema
 -- Generated from drizzle/schema.ts by scripts/export_schema_sql.sh; do not hand-edit.
--- Tables: 163
+-- Tables: 165
 -- Import: mysql -u USER -p DBNAME < database/rcs-schema.sql   (or phpMyAdmin → Import)
 -- The database itself must already exist (create it in cPanel → MySQL Databases).
 
@@ -1000,6 +1000,19 @@ CREATE TABLE `hidden_material_reset_codes` (
 	`createdAt` timestamp NOT NULL DEFAULT (now()),
 	CONSTRAINT `hidden_material_reset_codes_id` PRIMARY KEY(`id`)
 );
+CREATE TABLE `hive_memory_events` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`userId` int NOT NULL,
+	`kind` enum('page_visit','page_close','calc_result','forecast_toggle','verification','decision','question','nudge','note') NOT NULL,
+	`routePath` varchar(200),
+	`engine` varchar(120),
+	`payload` json,
+	`source` varchar(200),
+	`asOf` varchar(40),
+	`outcome` enum('pass','fail','unverified'),
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	CONSTRAINT `hive_memory_events_id` PRIMARY KEY(`id`)
+);
 CREATE TABLE `household_fact_finders` (
 	`id` int AUTO_INCREMENT NOT NULL,
 	`clientId` int NOT NULL,
@@ -1935,6 +1948,16 @@ CREATE TABLE `sidebar_favorites` (
 	`sortOrder` int NOT NULL DEFAULT 0,
 	`createdAt` timestamp NOT NULL DEFAULT (now()),
 	CONSTRAINT `sidebar_favorites_id` PRIMARY KEY(`id`)
+);
+CREATE TABLE `site_map_visits` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`userId` int NOT NULL,
+	`routePath` varchar(200) NOT NULL,
+	`visitCount` int NOT NULL DEFAULT 1,
+	`firstVisitedAt` timestamp NOT NULL DEFAULT (now()),
+	`lastVisitedAt` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,
+	CONSTRAINT `site_map_visits_id` PRIMARY KEY(`id`),
+	CONSTRAINT `site_map_visits_user_route` UNIQUE(`userId`,`routePath`)
 );
 CREATE TABLE `skill_tree_progress` (
 	`id` int AUTO_INCREMENT NOT NULL,
