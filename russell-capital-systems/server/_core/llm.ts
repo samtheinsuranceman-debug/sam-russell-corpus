@@ -217,11 +217,63 @@ const resolveApiUrl = () =>
     ? `${ENV.forgeApiUrl.replace(/\/$/, "")}/v1/chat/completions`
     : "https://forge.manus.im/v1/chat/completions";
 
+/**
+ * The Forge gateway (forge.manus.im) is OFF unless the operator opts in with
+ * RCS_ALLOW_FORGE_GATEWAY=1 and a key (board D32, 22 Sep 2026). Without the
+ * opt-in every invokeLLM call is answered by the Brain Hub chain instead.
+ */
+export const forgeGatewayAllowed = (): boolean =>
+  process.env.RCS_ALLOW_FORGE_GATEWAY === "1" && Boolean(ENV.forgeApiKey);
+
 const assertApiKey = () => {
-  if (!ENV.forgeApiKey) {
-    throw new Error("OPENAI_API_KEY is not configured");
+  if (!forgeGatewayAllowed()) {
+    throw new Error("The built-in Forge gateway is disabled (set RCS_ALLOW_FORGE_GATEWAY=1 and BUILT_IN_FORGE_API_KEY to opt in)");
   }
 };
+
+/** Flatten a gateway-style message to the plain text the Brain Hub chain takes. Images and files cannot travel that path. */
+export function messageToChatText(m: Message): { role: "system" | "user" | "assistant"; content: string } {
+  const parts = ensureArray(m.content).map(normalizeContentPart);
+  const unsupported = parts.find(p => p.type !== "text");
+  if (unsupported) throw new Error(`invokeLLM: ${unsupported.type} content is not supported without the Forge gateway`);
+  const content = parts.map(p => (p as TextContent).text).join("\n");
+  const role: "system" | "user" | "assistant" = m.role === "system" || m.role === "assistant" ? m.role : "user";
+  return { role, content };
+}
+
+/** The instruction that stands in for the gateway's response_format when the chain answers. */
+export function jsonInstructionFor(format: ResponseFormat | undefined): string | null {
+  if (!format || format.type === "text") return null;
+  if (format.type === "json_object") return "Respond with a single valid JSON object and nothing else: no prose, no code fence.";
+  return `Respond with a single valid JSON object and nothing else (no prose, no code fence) that conforms to this JSON schema named "${format.json_schema.name}":\n${JSON.stringify(format.json_schema.schema)}`;
+}
+
+/**
+ * Answer an invokeLLM request through the Brain Hub chain and hand back the
+ * gateway's own result shape, so the eleven existing call sites change nothing.
+ */
+async function invokeViaBrainHub(params: InvokeParams): Promise<InvokeResult> {
+  if (params.tools && params.tools.length > 0) {
+    throw new Error("invokeLLM: tool calls are not supported without the Forge gateway");
+  }
+  const { completeChat } = await import("../providerRegistry");
+  const messages = params.messages.map(messageToChatText);
+  const format = normalizeResponseFormat({
+    responseFormat: params.responseFormat,
+    response_format: params.response_format,
+    outputSchema: params.outputSchema,
+    output_schema: params.output_schema,
+  });
+  const instruction = jsonInstructionFor(format ?? undefined);
+  if (instruction) messages.unshift({ role: "system", content: instruction });
+  const res = await completeChat({ messages, maxTokens: params.max_tokens ?? params.maxTokens });
+  return {
+    id: `brain-${Date.now().toString(36)}`,
+    created: Math.floor(Date.now() / 1000),
+    model: `${res.providerId}/${res.model}`,
+    choices: [{ index: 0, message: { role: "assistant", content: res.text }, finish_reason: "stop" }],
+  };
+}
 
 const normalizeResponseFormat = ({
   responseFormat,
@@ -341,6 +393,7 @@ const fetchWithBackoff = async (
 };
 
 export async function invokeLLM(params: InvokeParams): Promise<InvokeResult> {
+  if (!forgeGatewayAllowed()) return invokeViaBrainHub(params);
   assertApiKey();
 
   const {
