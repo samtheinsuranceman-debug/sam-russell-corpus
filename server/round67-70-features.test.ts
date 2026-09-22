@@ -125,11 +125,13 @@ describe("Round 67 — Mortgage Killer Strategy", () => {
       expect(result.summary.originalPayoffDate).toMatch(/^\d{4}-\d{2}-\d{2}$/);
     });
 
-    it("total wealth created should include compounded savings + policy CV + MGA annuity", () => {
+    it("total wealth created = compounded savings + policy CV; the MYGA path is reported beside it, not added", () => {
       const result = runMortgageKillerAnalysis(baseInput);
       // Wealth now includes compounded savings + policy CV + MGA annuity value
+      // Saved interest is reinvested once; the MYGA figure is an alternative
+      // deployment of the same dollars and must not be added on top.
       expect(result.summary.totalWealthCreated).toBe(
-        result.interestSavings.compoundedValue20yr + result.summary.finalPolicyCashValue + result.interestSavings.mgaAnnuityValue30yr
+        result.interestSavings.compoundedValue20yr + result.summary.finalPolicyCashValue
       );
     });
 
