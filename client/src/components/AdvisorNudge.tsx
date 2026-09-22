@@ -46,7 +46,6 @@ export default function AdvisorNudge() {
   const { isAuthenticated } = useAuth();
   const map = useSiteMap();
   const nudge = trpc.hive.nudge.useMutation();
-  const speak = trpc.ultra.speak.useMutation();
   const tree = trpc.siteMap.tree.useQuery(undefined, { staleTime: 10 * 60_000, enabled: isAuthenticated });
   const ask = trpc.thomas.ask.useMutation();
   const [text, setText] = useState<string | null>(null);
@@ -62,16 +61,18 @@ export default function AdvisorNudge() {
     if (!nudgeDue(map.opens, map.nudgeFired)) return;
     map.markNudgeFired();
     setText(SITE_MAP_NUDGE_TEXT);
-    // Tell the hive the advisor spoke (working memory; server-side once-per-session too). Text is ours, so no server audio here.
-    nudge.mutate({ routePath: location, sessionStartedAt: map.sessionStartedAt, speak: false });
-    if (muted) return;
-    speak.mutate(
-      { text: SITE_MAP_NUDGE_TEXT },
+    // One call: the hive records that the advisor spoke (working memory,
+    // once per session server-side too) and returns the server voice saying
+    // the operator's words. No audio back (muted, no voice configured, or the
+    // server already spoke this session) → the browser voice, unless muted.
+    nudge.mutate(
+      { routePath: location, sessionStartedAt: map.sessionStartedAt, speak: !muted, text: SITE_MAP_NUDGE_TEXT },
       {
         onSuccess: res => {
-          if (res.ok) {
+          if (muted) return;
+          if (res.fire && res.audio) {
             try {
-              const el = new Audio(`data:${res.mimeType};base64,${res.audioBase64}`);
+              const el = new Audio(`data:${res.audio.mimeType};base64,${res.audio.audioBase64}`);
               audioRef.current = el;
               void el.play();
               return;
@@ -79,10 +80,10 @@ export default function AdvisorNudge() {
           }
           speakInBrowser(SITE_MAP_NUDGE_TEXT);
         },
-        onError: () => speakInBrowser(SITE_MAP_NUDGE_TEXT),
+        onError: () => { if (!muted) speakInBrowser(SITE_MAP_NUDGE_TEXT); },
       },
     );
-  }, [isAuthenticated, dismissed, text, map, location, nudge, speak, muted]);
+  }, [isAuthenticated, dismissed, text, map, location, nudge, muted]);
 
   if (!text || dismissed) return null;
 
@@ -91,8 +92,10 @@ export default function AdvisorNudge() {
   for (const t of tree.data?.tabs ?? []) for (const g of t.groups) for (const l of g.leaves) titles[l.path] = l.title;
   const help = () => {
     stop();
-    const question = openedPagesQuestion(map.openedPaths.length ? map.openedPaths : [location], titles);
-    ask.mutate({ messages: [{ role: "user", content: question }], depth: "direct" }, { onSuccess: r => setReply(r.reply) });
+    const pagesOpened = map.openedPaths.length ? map.openedPaths : [location];
+    const question = openedPagesQuestion(pagesOpened, titles);
+    // The ordered page list rides both as the visible question and as typed context, so the advisor's system prompt carries it.
+    ask.mutate({ messages: [{ role: "user", content: question }], depth: "direct", context: { pagesOpened } }, { onSuccess: r => setReply(r.reply) });
   };
   const notNow = () => { stop(); setDismissed(true); };
   const mute = () => { try { localStorage.setItem(MUTE_KEY, "1"); } catch { /* ignore */ } stop(); };

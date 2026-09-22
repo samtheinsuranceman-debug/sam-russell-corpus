@@ -14,6 +14,7 @@
 // Pure; used by the server (siteMap.tree) and the client (overlay, nav).
 // ============================================================
 import { ROUTE_MANIFEST } from "./routeManifest";
+import { NUDGE_AFTER_PAGE_OPENS } from "./hiveMind";
 import { CALCULATORS, CATEGORY_LABELS, CATEGORY_ORDER, type CalculatorCategory, type CalculatorEntry } from "./calculatorCatalog";
 
 export type TabId = "map" | "assess" | "plan" | "advisor" | "reports" | "practice" | "admin";
@@ -375,8 +376,8 @@ export function leftNavFromTree(tree: SiteMapTree = siteMapTree()): SiteMapTab[]
 }
 
 // ── The advisor's nudge: when it is due ───────────────────────────────
-/** The advisor speaks on the visitor's third page open from the map, never before. */
-export const SITE_MAP_NUDGE_ON_OPEN = 3;
+/** The advisor speaks on the visitor's third page open from the map, never before. One definition: shared/hiveMind.ts. */
+export const SITE_MAP_NUDGE_ON_OPEN: number = NUDGE_AFTER_PAGE_OPENS;
 
 /**
  * True exactly once per session: on the open that reaches the threshold,
