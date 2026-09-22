@@ -12,6 +12,10 @@ export const FILING_KEYS: FilingKey[] = ["single", "joint", "hoh", "separate"];
 
 export type Bracket = { upTo: number | null; rate: number };
 
+/** Filing statuses the AMT statute distinguishes; see `TaxRuleSet.amt`. */
+export type AmtKey = FilingKey | "estatesTrusts";
+export const AMT_KEYS: AmtKey[] = [...FILING_KEYS, "estatesTrusts"];
+
 export type TaxRuleSet = {
   version: string;
   taxYear: number;
@@ -39,7 +43,29 @@ export type TaxRuleSet = {
     separatePhaseDownStartMagi: number;
     separateFloor: number;
   };
-  amt: { exemption: Record<"single" | "joint", number>; phaseOutStart: Record<"single" | "joint", number> } | null;
+  /**
+   * Alternative minimum tax, IRC §55. Keyed by the filing statuses the statute
+   * itself distinguishes — which are not the regular-tax ones. §55(d)(1)(B)
+   * says "Unmarried Individuals (other than Surviving Spouses)", and a head of
+   * household is unmarried, so `hoh` carries the same figures as `single`.
+   * Estates and trusts get their own line in the revenue procedure and are
+   * included here because §55 applies to them too.
+   *
+   * `completePhaseOut` is published, not derived, and is kept because it is a
+   * free check on the other three: exemption ÷ phaseOutRate + phaseOutStart
+   * must equal it. A test asserts that for every status, so a typo in any one
+   * of the four figures cannot pass silently.
+   */
+  amt: {
+    exemption: Record<AmtKey, number>;
+    phaseOutStart: Record<AmtKey, number>;
+    completePhaseOut: Record<AmtKey, number>;
+    /** Exemption lost per dollar of AMTI above the threshold. */
+    phaseOutRate: number;
+    /** AMT base above which 28% replaces 26% — §55(b)(1). */
+    rate28Threshold: Record<"separate" | "other", number>;
+    rates: { low: number; high: number };
+  } | null;
   niit: { rate: number; threshold: Record<FilingKey, number> };
 };
 
@@ -87,7 +113,22 @@ export const TAX_RULES_2026: TaxRuleSet = {
   retirement: { deferral401k: 24_500, catchUp50: 8_000, catchUp60to63: 11_250, ira: 7_500, iraCatchUp: 1_100, simple: 17_000 },
   estateBasicExclusion: 15_000_000,
   salt: { cap: 40_400, phaseDownStartMagi: 505_000, phaseDownRate: 0.30, floor: 10_000, separateCap: 20_200, separatePhaseDownStartMagi: 252_500, separateFloor: 5_000 },
-  amt: { exemption: { single: 90_100, joint: 140_200 }, phaseOutStart: { single: 500_000, joint: 1_000_000 } },
+  // Rev. Proc. 2025-32 §.10 (exemptions), §.11 (28% threshold), §.12 (phaseout).
+  // OBBBA raised the phaseout rate from 25% to 50% for 2026 onward, and reset
+  // the thresholds to $500,000 / $1,000,000. Both changes push more filers into
+  // AMT than 2025 despite the larger exemption.
+  //
+  // Note for anyone checking against press coverage: several 2025 articles give
+  // the single complete-phaseout as $676,200. That is the 2025 exemption
+  // ($88,100) run through the 2026 rate. The published 2026 figure is $680,200.
+  amt: {
+    exemption: { single: 90_100, hoh: 90_100, joint: 140_200, separate: 70_100, estatesTrusts: 31_400 },
+    phaseOutStart: { single: 500_000, hoh: 500_000, joint: 1_000_000, separate: 500_000, estatesTrusts: 104_800 },
+    completePhaseOut: { single: 680_200, hoh: 680_200, joint: 1_280_400, separate: 640_200, estatesTrusts: 167_600 },
+    phaseOutRate: 0.50,
+    rate28Threshold: { separate: 122_250, other: 244_500 },
+    rates: { low: 0.26, high: 0.28 },
+  },
   niit: NIIT,
 };
 
@@ -217,8 +258,14 @@ function flatten(r: TaxRuleSet): Record<string, number | null> {
   for (const [k, v] of Object.entries(r.retirement)) out[`retirement.${k}`] = v;
   out["estateBasicExclusion"] = r.estateBasicExclusion;
   for (const [k, v] of Object.entries(r.salt)) out[`salt.${k}`] = v;
-  out["amt.exemption.single"] = r.amt?.exemption.single ?? null;
-  out["amt.exemption.joint"] = r.amt?.exemption.joint ?? null;
+  for (const k of AMT_KEYS) {
+    out[`amt.exemption.${k}`] = r.amt?.exemption[k] ?? null;
+    out[`amt.phaseOutStart.${k}`] = r.amt?.phaseOutStart[k] ?? null;
+    out[`amt.completePhaseOut.${k}`] = r.amt?.completePhaseOut[k] ?? null;
+  }
+  out["amt.phaseOutRate"] = r.amt?.phaseOutRate ?? null;
+  out["amt.rate28Threshold.separate"] = r.amt?.rate28Threshold.separate ?? null;
+  out["amt.rate28Threshold.other"] = r.amt?.rate28Threshold.other ?? null;
   return out;
 }
 
