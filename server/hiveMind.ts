@@ -1,83 +1,51 @@
 // ============================================================
 // HIVE MIND ORCHESTRATOR — the one place a question becomes an answer.
 //
-// Members are discovered, never chosen by the caller: every provider whose
-// key resolves (the trunk's ultraAI env registry today; the Brain Hub vault
-// registry plugs in through `registerHiveMemberSource` when it lands) and
-// every MCP server a source reports. Ten, twenty or forty members, the page
-// that asked never learns which one spoke unless it reads `answeredBy`.
+// One AI address (board decision D24, 22 Sep 2026): every model call in this
+// file goes through `brainComplete()` from the Brain Hub registry. The hive
+// owns no provider transport of its own; a test reads this file and fails if
+// one appears. The chain — vault keys, then Railway environment keys, then the
+// built-in gateway — is the Brain Hub's, so the hive and the advisor page
+// answer through the same brains with the same fallback rule and the same
+// `answeredBy`.
 //
-// Grounding: the context block is built from the visitor's fact finder and
-// the working memory (page visits, calculator results, verification
-// outcomes). Engine outputs are pinned; the system prompt tells members to
-// cite them and never restate a figure from memory. The council router
-// (shared/council/aiCouncil.ts) names the domain; the domain picks how many
-// members answer and who reconciles.
+// What the hive adds on top of the Brain Hub: grounded context (the visitor's
+// fact finder and working memory: page visits, calculator results,
+// verification outcomes, pinned engine outputs the members must cite), the
+// council's domain routing, depth (one member, two, or three reconciled), and
+// the event bus that pages, engines and verifiers write to through
+// `hive.inform`.
+//
+// "Members" are the providers whose key resolves right now
+// (`liveProviderIds()`), reported for the roster; a page that asks never learns
+// which one spoke unless it reads `answeredBy`.
 // ============================================================
 import { classifyIntent, routeUtterance } from "@shared/council/aiCouncil";
-import { advisorSystemFor, configuredProviders, leadModel, type Provider } from "./ultraAI";
+import { advisorSystemFor } from "./ultraAI";
 import { factFinderSummary } from "@shared/clientFactFinder";
 import { getFactFinderForUser } from "./factFinderDb";
 import { buildHiveContext, domainForRoute, type HiveContext } from "@shared/hiveContext";
-import { ADVISOR_NAME } from "@shared/advisorIdentity";
+import { ADVISOR_NAME } from "@shared/aiAdvisor";
 import type { HiveAnswer, HiveAskInput, HiveRoster } from "@shared/hiveMind";
 import { legacyActivityEvents, recentHiveEvents, recordHiveEvent } from "./hiveMemoryDb";
 import { registeredModules } from "@shared/aiMemoryBank";
+import { brainComplete, environmentCredentials, liveProviderIds } from "./providerRegistry";
+import { loadEnabledServers } from "./mcpRegistry";
 
-/** A hive member: anything that can turn (system, user) into text. */
-export interface HiveMember {
-  providerId: string;
-  label: string;
-  via: "env" | "vault" | "gateway";
-  model?: string;
-  complete: (system: string, user: string) => Promise<string>;
+/** The gateway id brainComplete reports when no configured brain answered. */
+const GATEWAY_PROVIDER_ID = "forge";
+
+/** Every provider whose key resolves right now, tagged by where the key lives. */
+export async function hiveMembers(): Promise<HiveRoster["members"]> {
+  const ids = await liveProviderIds();
+  const envIds = new Set(environmentCredentials().map(c => c.providerId));
+  return ids.map(providerId => ({ providerId, via: envIds.has(providerId) ? "env" : "vault" }));
 }
 
-/** A source of members: the env registry, the vault registry, an MCP registry. */
-export interface HiveMemberSource {
-  id: string;
-  members: () => Promise<HiveMember[]>;
-  mcpServers?: () => Promise<{ label: string; tools: number }[]>;
-}
-
-const sources: HiveMemberSource[] = [];
-
-/** The trunk's own registry, wrapped: every provider whose env key exists. */
-export const envMemberSource: HiveMemberSource = {
-  id: "env",
-  async members() {
-    return configuredProviders().map((p: Provider): HiveMember => ({
-      providerId: p.id,
-      label: p.label,
-      via: p.id === "manus" ? "gateway" : "env",
-      complete: (system, user) => p.call(process.env[p.envKey] ?? "", system, user),
-    }));
-  },
-};
-
-sources.push(envMemberSource);
-
-/** The Brain Hub vault (or any other registry) registers itself here once. Idempotent by id. */
-export function registerHiveMemberSource(src: HiveMemberSource): void {
-  const i = sources.findIndex(s => s.id === src.id);
-  if (i >= 0) sources[i] = src; else sources.push(src);
-}
-
-/** Tests: replace every source. */
-export function _setHiveSourcesForTests(list: HiveMemberSource[] | null): void {
-  sources.splice(0, sources.length, ...(list ?? [envMemberSource]));
-}
-
-export async function hiveMembers(): Promise<HiveMember[]> {
-  const all = await Promise.all(sources.map(s => s.members().catch(() => [] as HiveMember[])));
-  const seen = new Set<string>();
-  const out: HiveMember[] = [];
-  for (const m of all.flat()) {
-    if (seen.has(m.providerId)) continue; // a vault key for the same provider overrides env: sources are ordered vault-first when registered later? No: first wins, so register the vault before env if it should win.
-    seen.add(m.providerId);
-    out.push(m);
-  }
-  return out;
+/** Connected MCP servers with at least one discovered tool. */
+export async function hiveMcpServers(): Promise<HiveRoster["mcpServers"]> {
+  const servers = await loadEnabledServers();
+  return servers.filter(s => s.tools.length > 0).map(s => ({ label: s.label, tools: s.tools.length }));
 }
 
 /** Verification engines the hive reads outcomes from (names, for the roster). */
@@ -85,18 +53,6 @@ export const HIVE_VERIFIERS = [
   "ag49Validator", "patentStatus", "routeManifest", "databaseSchemaFile", "sp500SeriesAudit",
   "timeMachineCompliance", "integrationScorecard", "brandGuard",
 ] as const;
-
-export async function hiveRoster(): Promise<HiveRoster> {
-  const members = await hiveMembers();
-  const mcp = (await Promise.all(sources.map(s => (s.mcpServers ? s.mcpServers().catch(() => []) : Promise.resolve([]))))).flat();
-  return {
-    address: "hive.ask",
-    informAddress: "hive.inform",
-    members: members.map(m => ({ providerId: m.providerId, via: m.via })),
-    mcpServers: mcp,
-    verifiers: [...HIVE_VERIFIERS],
-  };
-}
 
 /** Council domain → how many members answer by depth, and whether a reconciler runs. */
 function fanOutFor(depth: HiveAskInput["depth"]): { n: number; reconcile: boolean } {
@@ -115,8 +71,10 @@ const HIVE_PREAMBLE = [
 ].join(" ");
 
 export interface HiveDeps {
-  members?: () => Promise<HiveMember[]>;
-  lead?: (system: string, user: string) => Promise<{ text: string; via: string } | null>;
+  /** The one model call. Defaults to the Brain Hub's brainComplete. Tests inject a fake. */
+  complete?: typeof brainComplete;
+  members?: () => Promise<HiveRoster["members"]>;
+  mcpServers?: () => Promise<HiveRoster["mcpServers"]>;
   factFinder?: (userId: number) => Promise<string>;
   memory?: (userId: number, limit?: number) => Promise<Awaited<ReturnType<typeof recentHiveEvents>>>;
   record?: typeof recordHiveEvent;
@@ -125,8 +83,9 @@ export interface HiveDeps {
 }
 
 const defaultDeps: Required<Omit<HiveDeps, "titles">> & { titles?: Record<string, string> } = {
+  complete: brainComplete,
   members: hiveMembers,
-  lead: leadModel,
+  mcpServers: hiveMcpServers,
   factFinder: async (userId) => {
     const stored = await getFactFinderForUser(userId);
     return stored ? factFinderSummary(stored.data) : "";
@@ -140,6 +99,21 @@ const defaultDeps: Required<Omit<HiveDeps, "titles">> & { titles?: Record<string
   now: () => new Date(),
 };
 
+export async function hiveRoster(deps: HiveDeps = {}): Promise<HiveRoster> {
+  const d = { ...defaultDeps, ...deps };
+  const [members, mcpServers] = await Promise.all([
+    d.members().catch(() => [] as HiveRoster["members"]),
+    d.mcpServers().catch(() => [] as HiveRoster["mcpServers"]),
+  ]);
+  return {
+    address: "hive.ask",
+    informAddress: "hive.inform",
+    members,
+    mcpServers,
+    verifiers: [...HIVE_VERIFIERS],
+  };
+}
+
 /** Build the grounded context for a user. Exposed for the router's `hive.memory`. */
 export async function hiveContextFor(userId: number, routePath?: string, deps: HiveDeps = {}): Promise<HiveContext> {
   const d = { ...defaultDeps, ...deps };
@@ -147,7 +121,9 @@ export async function hiveContextFor(userId: number, routePath?: string, deps: H
   return buildHiveContext(events, { routePath, titles: d.titles });
 }
 
-/** Ask the hive. One address, every member behind it. */
+type Draft = { providerId: string; model: string; text: string };
+
+/** Ask the hive. One address, every member behind it, every call through brainComplete. */
 export async function askHive(userId: number, input: HiveAskInput, deps: HiveDeps = {}): Promise<HiveAnswer> {
   const d = { ...defaultDeps, ...deps };
   const question = input.question.trim();
@@ -168,48 +144,72 @@ export async function askHive(userId: number, input: HiveAskInput, deps: HiveDep
 
   await d.record(userId, { kind: "question", routePath: input.routePath, payload: { question: question.slice(0, 500), domain, depth: input.depth ?? "direct" } });
 
+  // Fan-out: prefer the first n live members, one brainComplete call each.
+  // With no live member the chain itself decides (it ends at the gateway).
   const { n, reconcile } = fanOutFor(input.depth);
-  const members = await d.members();
-  const chosen = members.slice(0, Math.max(1, n));
-  const answeredBy: HiveAnswer["answeredBy"] = [];
-  const drafts: { member: HiveMember; text: string }[] = [];
+  const members = await d.members().catch(() => [] as HiveRoster["members"]);
+  const preferred: (string | undefined)[] = members.slice(0, Math.max(1, n)).map(m => m.providerId);
+  if (preferred.length === 0) preferred.push(undefined);
+  const maxTokens = input.depth === "integrated" ? 16_000 : 8_000;
 
-  await Promise.all(chosen.map(async (m) => {
+  const drafts: Draft[] = [];
+  await Promise.all(preferred.map(async (preferProvider) => {
     try {
-      const text = (await m.complete(system, question)).trim();
-      if (text) drafts.push({ member: m, text });
+      const r = await d.complete({
+        messages: [{ role: "system", content: system }, { role: "user", content: question }],
+        maxTokens,
+        preferProvider,
+      });
+      const text = r.text.trim();
+      if (text) drafts.push({ providerId: r.providerId, model: r.model, text });
     } catch (e) {
-      console.warn(`[hive] ${m.providerId} failed:`, String(e).slice(0, 120));
+      console.warn(`[hive] brainComplete (prefer ${preferProvider ?? "chain"}) failed:`, String(e).slice(0, 160));
     }
   }));
 
+  // The chain may answer two preferences with the same brain; count it once, first answer wins.
+  const seen = new Set<string>();
+  const unique = drafts.filter(dr => (seen.has(dr.providerId) ? false : (seen.add(dr.providerId), true)));
+
+  const answeredBy: HiveAnswer["answeredBy"] = [];
   let text = "";
   let fallback = false;
-  if (drafts.length === 0) {
-    const lead = await d.lead(system, question);
-    if (lead) { text = lead.text; answeredBy.push({ providerId: lead.via, role: "primary" }); fallback = lead.via === "builtin"; }
-    else { text = `${ADVISOR_NAME} has no member able to answer right now: no provider key resolved and the gateway did not respond. The question was recorded.`; fallback = true; }
-  } else if (drafts.length === 1 || !reconcile) {
-    text = drafts[0].text;
-    drafts.forEach((dr, i) => answeredBy.push({ providerId: dr.member.providerId, model: dr.member.model, role: i === 0 ? "primary" : "second" }));
+
+  if (unique.length === 0) {
+    text = `${ADVISOR_NAME} has no member able to answer right now: no brain in the chain responded and the gateway did not respond. The question was recorded.`;
+    fallback = true;
+  } else if (unique.length === 1 || !reconcile) {
+    text = unique[0].text;
+    unique.forEach((dr, i) => answeredBy.push({ providerId: dr.providerId, model: dr.model, role: i === 0 ? "primary" : "second" }));
+    fallback = unique[0].providerId === GATEWAY_PROVIDER_ID;
   } else {
-    drafts.forEach((dr, i) => answeredBy.push({ providerId: dr.member.providerId, model: dr.member.model, role: i === 0 ? "primary" : "second" }));
+    unique.forEach((dr, i) => answeredBy.push({ providerId: dr.providerId, model: dr.model, role: i === 0 ? "primary" : "second" }));
     const reconcileUser = [
       `Question: ${question}`,
       "",
       "Independent drafts from hive members (do not name them):",
-      ...drafts.map((dr, i) => `--- draft ${i + 1} ---\n${dr.text}`),
+      ...unique.map((dr, i) => `--- draft ${i + 1} ---\n${dr.text}`),
       "",
       "Reconcile into one answer. Keep every cited figure with its source. Where drafts disagree, show the disagreement and say which is better supported by the working memory.",
     ].join("\n");
-    const rec = await d.lead(system, reconcileUser);
-    if (rec) { text = rec.text; answeredBy.push({ providerId: rec.via, role: "reconciler" }); fallback = rec.via === "builtin"; }
-    else { text = drafts[0].text; }
+    try {
+      const rec = await d.complete({ messages: [{ role: "system", content: system }, { role: "user", content: reconcileUser }], maxTokens });
+      if (rec.text.trim()) {
+        text = rec.text.trim();
+        answeredBy.push({ providerId: rec.providerId, model: rec.model, role: "reconciler" });
+        fallback = rec.providerId === GATEWAY_PROVIDER_ID;
+      } else {
+        text = unique[0].text;
+      }
+    } catch (e) {
+      console.warn("[hive] reconciliation failed, returning the primary draft:", String(e).slice(0, 160));
+      text = unique[0].text;
+    }
   }
 
   const citations = ctx.pinned.slice(0, 12).map(p => ({ ref: p.routePath ?? p.engine, source: p.source, asOf: p.asOf }));
 
-  await d.record(userId, { kind: "note", routePath: input.routePath, engine: "hive", payload: { answeredBy: answeredBy.map(a => a.providerId), domain, chars: text.length } });
+  await d.record(userId, { kind: "note", routePath: input.routePath, engine: "hive", payload: { answeredBy: answeredBy.map(a => a.providerId), domain, chars: text.length, fallback } });
 
   return { text, answeredBy, citations, domain, memoryEventsUsed: ctx.eventsUsed, fallback };
 }

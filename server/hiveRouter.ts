@@ -12,7 +12,7 @@ import { protectedProcedure, publicProcedure, router } from "./_core/trpc";
 import { askHive, hiveContextFor, hiveRoster } from "./hiveMind";
 import { recordHiveEvent, recentHiveEvents } from "./hiveMemoryDb";
 import { HIVE_MIND_ADDRESS, HIVE_MIND_INFORM_ADDRESS, NUDGE_AFTER_PAGE_OPENS } from "@shared/hiveMind";
-import { nudgeScript, ADVISOR_NAME } from "@shared/advisorIdentity";
+import { nudgeScript, ADVISOR_NAME } from "@shared/aiAdvisor";
 import { pageOpensSince } from "@shared/hiveContext";
 import { calculator } from "@shared/calculatorCatalog";
 import { synthesize } from "./speech";

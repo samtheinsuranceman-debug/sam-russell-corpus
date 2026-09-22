@@ -13,7 +13,7 @@ import { useMemo, useState } from "react";
 import { ArrowLeft, Map as MapIcon, Search, X } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { useSiteMap } from "@/contexts/SiteMapContext";
-import { ADVISOR_NAME } from "@shared/advisorIdentity";
+import { ADVISOR_NAME } from "@shared/aiAdvisor";
 import type { SiteMapLeaf, SiteMapTab } from "@shared/siteMapTree";
 
 function LeafButton({ leaf, visited, color, onOpen }: { leaf: SiteMapLeaf; visited: boolean; color: string; onOpen: (p: string) => void }) {
