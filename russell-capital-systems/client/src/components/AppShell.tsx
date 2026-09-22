@@ -1,3 +1,4 @@
+import HiddenBrainVault from "@/components/HiddenBrainVault";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "@/const";
 import {
@@ -649,6 +650,8 @@ const NAV_SECTIONS: NavSection[] = [
         { path: "/portal/charitable-giving-dashboard", label: "Charitable Giving Dashboard", icon: ChevronRight, color: "slate" },
       { path: "/portal/ai", label: "AI", icon: ChevronRight, color: "cyan" },
       { path: "/portal/ai-brain-hub", label: "AI Brain Hub", icon: ChevronRight, color: "cyan" },
+      { path: "/portal/thomas-goldman", label: "Thomas Goldman", icon: Sparkles, color: "gold" },
+      { path: "/portal/brain-hub", label: "Brain Hub", icon: ChevronRight, color: "gold" },
       { path: "/portal/ai-advisor", label: "AI Financial Advisor", icon: Sparkles, color: "purple" },
       { path: "/portal/whisperer", label: "AI Whisperer", icon: MessageCircle, color: "green" },
       { path: "/portal/advisor", label: "Advisor Dashboard", icon: MessageCircle, color: "green" },
@@ -1315,6 +1318,8 @@ function Sidebar({ open, onClose }: { open: boolean; onClose: () => void }) {
                 <LogOut size={12} />
                 Sign out
               </button>
+              {/* Owner only: the hidden brain vault. Renders nothing for anyone else. */}
+              <HiddenBrainVault />
             </>
           ) : (
             <>

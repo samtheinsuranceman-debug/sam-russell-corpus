@@ -3035,3 +3035,204 @@ export const engineChainRuns = mysqlTable("engine_chain_runs", {
 }, (t) => ({ byChain: index("engine_chain_runs_chain").on(t.chainId), byUser: index("engine_chain_runs_user").on(t.userId) }));
 export type EngineChainRun = typeof engineChainRuns.$inferSelect;
 export type InsertEngineChainRun = typeof engineChainRuns.$inferInsert;
+
+// ═══ Brain Hub: encrypted provider vault, MCP servers, custom endpoints ═══════
+// ─── Provider Credentials (encrypted) ────────────────────────────────────────
+// API keys for AI providers, entered in the admin UI rather than baked into
+// the deployment environment. `encryptedKey` is AES-256-GCM ciphertext; the
+// master key that opens it lives in RCS_VAULT_KEY and never touches this table.
+// Nothing here is ever sent to the browser — the UI shows `maskedKey` only.
+export const providerCredentials = mysqlTable("provider_credentials", {
+  id:            int("id").autoincrement().primaryKey(),
+  /** Stable provider id, e.g. "anthropic" — matches shared/aiProviders.ts. */
+  providerId:    varchar("providerId", { length: 64 }).notNull().unique(),
+  /** AES-256-GCM ciphertext, bound to providerId as additional auth data. */
+  encryptedKey:  text("encryptedKey").notNull(),
+  /** Display form, e.g. "sk-ant-••••••••••••9xQ2". Safe to show. */
+  maskedKey:     varchar("maskedKey", { length: 64 }).notNull(),
+  /** Optional per-provider override of the default model id. */
+  modelOverride: varchar("modelOverride", { length: 200 }),
+  /** Optional self-hosted or proxy base URL. */
+  baseUrlOverride: varchar("baseUrlOverride", { length: 500 }),
+  /** Whether this provider participates in routing. */
+  enabled:       boolean("enabled").default(true).notNull(),
+  /** Lower runs first in the routing chain. */
+  priority:      int("priority").default(100).notNull(),
+  /** Result of the last connection test. */
+  lastTestedAt:  timestamp("lastTestedAt"),
+  lastTestOk:    boolean("lastTestOk"),
+  lastTestDetail: varchar("lastTestDetail", { length: 500 }),
+  /** Last time this key actually served a request. */
+  lastUsedAt:    timestamp("lastUsedAt"),
+  useCount:      int("useCount").default(0).notNull(),
+  /** Who last changed it. */
+  updatedByEmail: varchar("updatedByEmail", { length: 320 }),
+  createdAt:     timestamp("createdAt").defaultNow().notNull(),
+  updatedAt:     timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type ProviderCredential = typeof providerCredentials.$inferSelect;
+export type InsertProviderCredential = typeof providerCredentials.$inferInsert;
+
+// ─── Vault Audit Log ─────────────────────────────────────────────────────────
+// Every unlock attempt and every credential change. Append-only by convention:
+// if a key is ever used in a way nobody expected, this is the record that says
+// when it was added and by whom. Secret values are never written here.
+export const vaultAuditLog = mysqlTable("vault_audit_log", {
+  id:         int("id").autoincrement().primaryKey(),
+  /** unlock | unlock_failed | key_set | key_rotated | key_deleted | key_tested | settings_changed */
+  action:     varchar("action", { length: 40 }).notNull(),
+  providerId: varchar("providerId", { length: 64 }),
+  actorEmail: varchar("actorEmail", { length: 320 }),
+  detail:     varchar("detail", { length: 500 }),
+  ipAddress:  varchar("ipAddress", { length: 64 }),
+  userAgent:  text("userAgent"),
+  createdAt:  timestamp("createdAt").defaultNow().notNull(),
+});
+export type VaultAuditEntry = typeof vaultAuditLog.$inferSelect;
+export type InsertVaultAuditEntry = typeof vaultAuditLog.$inferInsert;
+
+// ─── Vault Access Passphrase ─────────────────────────────────────────────────
+// The second factor on the key vault, separate from portal sign-in. Stored as
+// a bcrypt hash — the passphrase itself is never stored anywhere.
+export const vaultPassphrase = mysqlTable("vault_passphrase", {
+  id:           int("id").autoincrement().primaryKey(),
+  passhash:     varchar("passhash", { length: 255 }).notNull(),
+  /** Email of the owner who set it. */
+  ownerEmail:   varchar("ownerEmail", { length: 320 }).notNull(),
+  /** Consecutive failures; drives lockout. */
+  failedAttempts: int("failedAttempts").default(0).notNull(),
+  lockedUntil:  timestamp("lockedUntil"),
+  lastUnlockedAt: timestamp("lastUnlockedAt"),
+  createdAt:    timestamp("createdAt").defaultNow().notNull(),
+  updatedAt:    timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type VaultPassphrase = typeof vaultPassphrase.$inferSelect;
+
+
+// ─── MCP Servers ─────────────────────────────────────────────────────────────
+// Model Context Protocol endpoints. An MCP server exposes tools (search a CRM,
+// query a database, look up a carrier rate) that the advisor can call mid-
+// conversation. The URL is not secret; the auth token is, so it lives in the
+// same encrypted column scheme as provider keys.
+export const mcpServers = mysqlTable("mcp_servers", {
+  id:          int("id").autoincrement().primaryKey(),
+  /** Slug used as the GCM binding and as a tool-name prefix. */
+  slug:        varchar("slug", { length: 64 }).notNull().unique(),
+  label:       varchar("label", { length: 200 }).notNull(),
+  /** Streamable HTTP endpoint, e.g. https://mcp.example.com/mcp */
+  url:         varchar("url", { length: 1000 }).notNull(),
+  /** AES-256-GCM ciphertext of the bearer token, or null for an open server. */
+  encryptedToken: text("encryptedToken"),
+  maskedToken: varchar("maskedToken", { length: 64 }),
+  /** Extra headers as JSON, for servers wanting something other than Bearer. */
+  headersJson: text("headersJson"),
+  enabled:     boolean("enabled").default(true).notNull(),
+  /** Tools discovered at the last successful handshake, as JSON. */
+  toolsJson:   text("toolsJson"),
+  toolCount:   int("toolCount").default(0).notNull(),
+  /**
+   * Whether the advisor may call these tools without asking first. Off by
+   * default: an MCP tool can write to systems, and a model deciding on its own
+   * to call one is a different risk from it answering a question.
+   */
+  autoInvoke:  boolean("autoInvoke").default(false).notNull(),
+  lastTestedAt: timestamp("lastTestedAt"),
+  lastTestOk:  boolean("lastTestOk"),
+  lastTestDetail: varchar("lastTestDetail", { length: 500 }),
+  lastUsedAt:  timestamp("lastUsedAt"),
+  useCount:    int("useCount").default(0).notNull(),
+  updatedByEmail: varchar("updatedByEmail", { length: 320 }),
+  createdAt:   timestamp("createdAt").defaultNow().notNull(),
+  updatedAt:   timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type McpServer = typeof mcpServers.$inferSelect;
+export type InsertMcpServer = typeof mcpServers.$inferInsert;
+
+
+// ─── Custom Provider Definitions ─────────────────────────────────────────────
+// Any AI platform with an HTTP API that is not in the built-in catalogue.
+// Most services now expose an OpenAI-compatible endpoint, so a base URL, a key
+// and a model name are usually all that is needed. Stored separately from
+// provider_credentials' catalogue entries because these carry their own
+// endpoint definition rather than referencing one.
+export const customProviders = mysqlTable("custom_providers", {
+  id:          int("id").autoincrement().primaryKey(),
+  /** Slug, prefixed "custom-" so it cannot collide with a catalogue id. */
+  slug:        varchar("slug", { length: 64 }).notNull().unique(),
+  name:        varchar("name", { length: 200 }).notNull(),
+  /** API root, e.g. https://api.example.com */
+  baseUrl:     varchar("baseUrl", { length: 500 }).notNull(),
+  /** Path for a chat completion, e.g. /v1/chat/completions */
+  chatPath:    varchar("chatPath", { length: 200 }).notNull(),
+  /** openai-compatible | anthropic | google-generative */
+  wireFormat:  varchar("wireFormat", { length: 40 }).default("openai-compatible").notNull(),
+  defaultModel: varchar("defaultModel", { length: 200 }).notNull(),
+  /** Free-text note about what this provider is for. */
+  note:        varchar("note", { length: 500 }),
+  createdAt:   timestamp("createdAt").defaultNow().notNull(),
+  updatedAt:   timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type CustomProvider = typeof customProviders.$inferSelect;
+
+/**
+ * Carrier Rate Sheets — REAL carrier terms, entered by the owner.
+ * ════════════════════════════════════════════════════════════════════════════
+ *
+ * shared/iulCarriers.ts holds placeholder products named after rating tiers.
+ * Those are fine for demonstrating the math and useless for talking to a
+ * client. This table is where the real ones live.
+ *
+ * Deliberately a TABLE rather than an edit to the TypeScript file:
+ *
+ *   • Carriers move caps. A rate change should be a two-minute form entry, not
+ *     a code change, a build and a deploy.
+ *   • Every row carries its own `asOfDate` and `sourceNote`. A cap rate without
+ *     a date is a cap rate nobody can defend in twelve months' time, and the
+ *     advisor quotes the date alongside the figure.
+ *   • Rows are versioned by `supersededAt` rather than overwritten, so a
+ *     figure quoted to a client last quarter can still be produced.
+ *
+ * Rates are stored as decimals (0.105 = 10.5%) to match IULCarrier, so the
+ * same code path reads both and nothing has to remember which is which.
+ */
+export const carrierRateSheets = mysqlTable("carrier_rate_sheets", {
+  id:            int("id").autoincrement().primaryKey(),
+  /** Stable slug, e.g. "nationwide". Lowercase, hyphenated. */
+  carrierSlug:   varchar("carrierSlug", { length: 80 }).notNull(),
+  /** Legal company name, e.g. "Nationwide Life Insurance Company". */
+  carrierName:   varchar("carrierName", { length: 200 }).notNull(),
+  /** Product, e.g. "Indexed UL Accumulator III". */
+  productName:   varchar("productName", { length: 200 }).notNull(),
+
+  // Contract terms, as decimals. 0.105 = 10.5%.
+  capRate:           decimal("capRate", { precision: 6, scale: 5 }),
+  participationRate: decimal("participationRate", { precision: 6, scale: 5 }),
+  floorRate:         decimal("floorRate", { precision: 6, scale: 5 }),
+  loanRate:          decimal("loanRate", { precision: 6, scale: 5 }),
+  loadFee:           decimal("loadFee", { precision: 6, scale: 5 }),
+  coiRate:           decimal("coiRate", { precision: 6, scale: 5 }),
+
+  amBestRating:  varchar("amBestRating", { length: 40 }),
+  /** Is this carrier a mutual company? Drives the Mutual Carriers page. */
+  isMutual:      boolean("isMutual").default(false).notNull(),
+  /** Does this carrier accept credit cards for premium, and up to what? */
+  acceptsCreditCard:   boolean("acceptsCreditCard").default(false).notNull(),
+  creditCardMonthlyCap: int("creditCardMonthlyCap"),
+
+  /**
+   * WHERE THIS CAME FROM. Not optional in spirit even though the column allows
+   * null — the UI requires it. "Carrier rate sheet 3/2026", "illustration run
+   * 9/18/26 for 45M PNT". A number without this is a number nobody can defend.
+   */
+  sourceNote:    varchar("sourceNote", { length: 500 }),
+  /** Date the figures were effective, per the source. */
+  asOfDate:      varchar("asOfDate", { length: 20 }).notNull(),
+
+  notes:         text("notes"),
+  /** Set when a newer sheet replaces this one. Null means current. */
+  supersededAt:  timestamp("supersededAt"),
+  enteredBy:     varchar("enteredBy", { length: 320 }),
+  createdAt:     timestamp("createdAt").defaultNow().notNull(),
+  updatedAt:     timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type CarrierRateSheet = typeof carrierRateSheets.$inferSelect;
