@@ -39,6 +39,7 @@ export const ENGINE_SOURCE_LOADERS: Record<string, Loader> = {
   "shared/advisorModes.ts": () => import("./advisorModes").then(m => m.ADVISOR_MODES_SOURCES),
   "shared/altCredit/simulator.ts": () => import("./altCredit/simulator").then(m => m.ALT_CREDIT_SIMULATOR_SOURCES),
   "shared/balancedIndexedAccount.ts": () => import("./balancedIndexedAccount").then(m => m.BALANCED_INDEXED_ACCOUNT_SOURCES),
+  "shared/carrierRoster.ts": () => import("./carrierRoster").then(m => m.CARRIER_ROSTER_SOURCES),
   "shared/careerEngine.ts": () => import("./careerEngine").then(m => m.SOURCES),
   "shared/carrierRatings.ts": () => import("./carrierRatings").then(m => m.CARRIER_RATINGS_SOURCES),
   "shared/clientFactFinder.ts": () => import("./clientFactFinder").then(m => m.CLIENT_FACT_FINDER_SOURCES),

@@ -10,15 +10,15 @@
 import { describe, it, expect } from 'vitest';
 import { appRouter } from './routers';
 import { chargesFromBaseline } from './policyLabRouter';
-import { MUTUAL_A_BASELINE } from '../shared/costStructure';
+import { MUTUAL_N_BASELINE } from '../shared/costStructure';
 
 const caller = appRouter.createCaller({ user: null, req: {} as any, res: {} as any } as any);
 
 describe('the carrier basis reaches the page', () => {
-  it('serves Mutual Company A with the charges read off the cost summary', async () => {
+  it('serves Mutual Company N with the charges read off the cost summary', async () => {
     const r = await caller.policyLab.carriers();
     const a = r.complete[0]!;
-    expect(a.label).toBe('Mutual Company A');
+    expect(a.label).toBe('Mutual Company N');
     expect(a.percentOfPremiumByYear[0]).toBe(2.0);
     expect(a.percentOfPremiumByYear[1]).toBe(6.0);
     expect(a.perPolicyMonthly).toBe(10);
@@ -44,11 +44,11 @@ describe('the carrier basis reaches the page', () => {
     expect(a.caveats.join(' ')).toMatch(/ONE sex, ONE issue age and ONE risk class/);
   });
 
-  it('serves Mutual Company B with the charges read off its Charges Report', async () => {
+  it('serves Mutual Company S with the charges read off its Charges Report', async () => {
     const r = await caller.policyLab.carriers();
     expect(r.complete).toHaveLength(2);
     const b = r.complete[1]!;
-    expect(b.label).toBe('Mutual Company B');
+    expect(b.label).toBe('Mutual Company S');
     expect(b.creditingTarget).toBe('cash-value');
     expect(b.percentOfPremiumByYear.slice(0, 2)).toEqual([8.0, 6.5]);
     expect(b.perPolicyMonthly).toBe(5);
@@ -65,16 +65,16 @@ describe('the carrier basis reaches the page', () => {
   it('reports only C as pending now that B has its cost summary', async () => {
     const r = await caller.policyLab.carriers();
     expect(r.pending).toHaveLength(1);
-    expect(r.pending[0]!.carrierId).toBe('mutual-c');
-    expect(r.pending.find((p) => p.carrierId === 'mutual-b')).toBeUndefined();
+    expect(r.pending[0]!.carrierId).toBe('mutual-pc');
+    expect(r.pending.find((p) => p.carrierId === 'mutual-s')).toBeUndefined();
   });
 
   it('projects on B when asked, and names B as the basis', async () => {
     const r = await caller.policyLab.project({
       issueAge: 64, faceAmount: 2_918_696, annualPremium: 300_000,
-      premiumYears: 5, years: 10, creditedRatePct: 6.6, carrierId: 'mutual-b',
+      premiumYears: 5, years: 10, creditedRatePct: 6.6, carrierId: 'mutual-s',
     });
-    expect(r.basis.carrier).toBe('Mutual Company B');
+    expect(r.basis.carrier).toBe('Mutual Company S');
     expect(r.basis.source).toMatch(/Charges Report/);
     // B's surrender charge falls every year from the first, unlike A's flat three.
     const charges = r.years.map((y) => y.accountValue - y.surrenderValue);
@@ -101,7 +101,7 @@ describe('projecting on real charges', () => {
       issueAge: 63, faceAmount: 4_755_883, annualPremium: 480_000,
       premiumYears: 5, years: 10, creditedRatePct: 6.75,
     });
-    expect(r.basis.carrier).toBe('Mutual Company A');
+    expect(r.basis.carrier).toBe('Mutual Company N');
     expect(r.basis.source).toMatch(/Annual Cost Summary/);
     expect(r.basis.coiCoverage).toEqual({ fromAge: 64, toAge: 83 });
   });
@@ -195,7 +195,7 @@ describe('the statutory corridor and the gap register reach the page', () => {
 
 describe('the charge adapter', () => {
   it('puts the baseline into the shape the projection engine takes', () => {
-    const c = chargesFromBaseline(MUTUAL_A_BASELINE);
+    const c = chargesFromBaseline(MUTUAL_N_BASELINE);
     expect(c.monthlyPolicyFee).toBe(10);
     expect(c.perUnitMonthlyPerThousand).toBeCloseTo(7.783 / 12, 5);
     expect(c.coiTable).toHaveLength(20);
