@@ -196,12 +196,20 @@ export default function CarrierQuotes() {
     let totalPremium = 0;
     let avgTurnaroundDays = 0;
     let completedQuotes = 0;
+    // Premium and turnaround come only from the quote rows. A quote with no premium on its form
+    // contributes nothing; turnaround is created→last update on approved/rejected quotes.
+    const timelinePremium: Record<string, number> = {};
+    const carrierDecided: Record<string, { approved: number; rejected: number; days: number }> = {};
+    const quotePremium = (q: any): number => {
+      const v = Number(q.formData?.premiumAmount ?? q.formData?.targetPremium);
+      return Number.isFinite(v) && v > 0 ? v : 0;
+    };
 
     quotes.forEach((q) => {
       const carrier = q.carrierName || "Unknown";
       carrierCounts[carrier] = (carrierCounts[carrier] || 0) + 1;
       
-      const premium = q.formData?.premiumAmount || q.formData?.targetPremium || Math.floor(Math.random() * 50000) + 10000;
+      const premium = quotePremium(q);
       carrierPremium[carrier] = (carrierPremium[carrier] || 0) + premium;
       totalPremium += premium;
 
@@ -216,10 +224,15 @@ export default function CarrierQuotes() {
 
       const date = new Date(q.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric" });
       timelineData[date] = (timelineData[date] || 0) + 1;
+      timelinePremium[date] = (timelinePremium[date] || 0) + premium;
       
       if (q.status === "approved" || q.status === "rejected") {
         completedQuotes++;
-        avgTurnaroundDays += Math.floor(Math.random() * 10) + 2; // Mock 2-12 days
+        const days = Math.max(0, (new Date(q.updatedAt).getTime() - new Date(q.createdAt).getTime()) / 86_400_000);
+        avgTurnaroundDays += days;
+        const d = (carrierDecided[carrier] ||= { approved: 0, rejected: 0, days: 0 });
+        if (q.status === "approved") d.approved++; else d.rejected++;
+        d.days += days;
       }
     });
 
@@ -245,7 +258,7 @@ export default function CarrierQuotes() {
       .map(([date, count]) => ({ 
         date, 
         count,
-        premium: Math.floor(Math.random() * 100000) + 20000 // Mock premium over time
+        premium: timelinePremium[date] || 0
       }))
       .slice(-14); // Last 14 data points
 
@@ -253,14 +266,19 @@ export default function CarrierQuotes() {
       name, value, fill: COLORS[i % COLORS.length]
     }));
     
-    const carrierPerformance = carrierDist.slice(0, 5).map((c) => ({
-      carrier: c.name,
-      speed: Math.floor(Math.random() * 40) + 60,
-      pricing: Math.floor(Math.random() * 40) + 60,
-      underwriting: Math.floor(Math.random() * 40) + 60,
-      support: Math.floor(Math.random() * 40) + 60,
-      approvalRate: Math.floor(Math.random() * 30) + 70,
-    }));
+    // Per-carrier figures from decided quotes only. There is no recorded data for speed,
+    // pricing or support scores, so none are drawn.
+    const carrierPerformance = carrierDist.map((c) => {
+      const d = carrierDecided[c.name];
+      const decided = d ? d.approved + d.rejected : 0;
+      return {
+        name: c.name,
+        quotes: c.value,
+        decided,
+        approvalRate: decided ? d!.approved / decided : null,
+        avgTurnaround: decided ? d!.days / decided : null,
+      };
+    });
 
     return {
       carrierDist,
@@ -277,13 +295,7 @@ export default function CarrierQuotes() {
     };
   }, [quotes]);
 
-  const mockCarriers = [
-    { name: "Allianz", rating: "A+", quotes: 145, approvalRate: 0.88, avgTurnaround: 4.2 },
-    { name: "Athene", rating: "A", quotes: 112, approvalRate: 0.92, avgTurnaround: 3.5 },
-    { name: "Nationwide", rating: "A+", quotes: 89, approvalRate: 0.85, avgTurnaround: 5.1 },
-    { name: "Fidelity & Guaranty", rating: "A-", quotes: 76, approvalRate: 0.94, avgTurnaround: 2.8 },
-    { name: "Corebridge", rating: "A", quotes: 64, approvalRate: 0.81, avgTurnaround: 6.0 },
-  ];
+  const carrierRows = analyticsData.carrierPerformance;
 
   const handleExportCSV = () => {
     if (sorted.length === 0) {
@@ -321,12 +333,12 @@ export default function CarrierQuotes() {
   const renderStatsCards = () => (
     <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
       {[
-        { label: "Total Quotes", value: analyticsData.stats.total, color: "text-white", icon: Activity, trend: "+12%" },
-        { label: "Total Premium", value: fmt(analyticsData.stats.totalPremium), color: "text-[#22c55e]", icon: DollarSign, trend: "+8%" },
-        { label: "Submitted", value: analyticsData.statusDist.find((s) => s.originalName === "submitted")?.value || 0, color: "text-blue-400", icon: Send, trend: "+5%" },
-        { label: "Pending Review", value: analyticsData.statusDist.find((s) => s.originalName === "pending_review")?.value || 0, color: "text-[#f0c040]", icon: Clock, trend: "-2%" },
-        { label: "Approved", value: analyticsData.statusDist.find((s) => s.originalName === "approved")?.value || 0, color: "text-[#22c55e]", icon: CheckCircle2, trend: "+15%" },
-        { label: "Avg Turnaround", value: `${analyticsData.stats.avgTurnaroundDays.toFixed(1)}d`, color: "text-[#10b981]", icon: Zap, trend: "-1.2d" },
+        { label: "Total Quotes", value: analyticsData.stats.total, color: "text-white", icon: Activity },
+        { label: "Total Premium", value: fmt(analyticsData.stats.totalPremium), color: "text-[#22c55e]", icon: DollarSign },
+        { label: "Submitted", value: analyticsData.statusDist.find((s) => s.originalName === "submitted")?.value || 0, color: "text-blue-400", icon: Send },
+        { label: "Pending Review", value: analyticsData.statusDist.find((s) => s.originalName === "pending_review")?.value || 0, color: "text-[#f0c040]", icon: Clock },
+        { label: "Approved", value: analyticsData.statusDist.find((s) => s.originalName === "approved")?.value || 0, color: "text-[#22c55e]", icon: CheckCircle2 },
+        { label: "Avg Turnaround", value: `${analyticsData.stats.avgTurnaroundDays.toFixed(1)}d`, color: "text-[#10b981]", icon: Zap },
       ].map((s) => (
         <div key={s.label} className="rc-card flex flex-col justify-between hover:border-[#22c55e]/30 transition-all duration-300 group hover:-translate-y-1">
           <div className="flex justify-between items-start mb-2">
@@ -335,9 +347,6 @@ export default function CarrierQuotes() {
           </div>
           <div className="flex items-end justify-between">
             <div className={`rc-stat-value text-2xl lg:text-3xl font-bold ${s.color}`}>{s.value}</div>
-            <div className={`text-xs font-medium ${s.trend.startsWith('+') ? 'text-[#22c55e]' : 'text-rose-400'}`}>
-              {s.trend}
-            </div>
           </div>
         </div>
       ))}
@@ -993,21 +1002,23 @@ export default function CarrierQuotes() {
         <div className="lg:col-span-2 space-y-6">
           <div className="rc-card">
             <h3 className="text-white font-semibold mb-4 flex items-center gap-2">
-              <ShieldCheck size={18} className="text-[#22c55e]" /> Carrier Directory & Ratings
+              <ShieldCheck size={18} className="text-[#22c55e]" /> Carriers You Have Quoted
             </h3>
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
                 <thead>
                   <tr className="border-b border-[#12233e]">
                     <th className="pb-3 text-[#7a95b8] font-medium text-sm">Carrier</th>
-                    <th className="pb-3 text-[#7a95b8] font-medium text-sm">Rating</th>
                     <th className="pb-3 text-[#7a95b8] font-medium text-sm">Quote Vol</th>
                     <th className="pb-3 text-[#7a95b8] font-medium text-sm">Approval %</th>
                     <th className="pb-3 text-[#7a95b8] font-medium text-sm">Avg Turnaround</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#12233e]">
-                  {mockCarriers.map((c, i) => (
+                  {carrierRows.length === 0 && (
+                    <tr><td colSpan={4} className="py-6 text-center text-[#7a95b8] text-sm">No quotes yet. Each carrier you request a quote from appears here with its recorded approval rate and turnaround.</td></tr>
+                  )}
+                  {carrierRows.map((c, i) => (
                     <tr key={i} className="hover:bg-[#0d1a2e]/50 transition-colors">
                       <td className="py-4">
                         <div className="flex items-center gap-3">
@@ -1017,19 +1028,16 @@ export default function CarrierQuotes() {
                           <span className="text-white font-medium">{c.name}</span>
                         </div>
                       </td>
-                      <td className="py-4">
-                        <span className="bg-[#12233e] text-[#c8d8ec] px-2 py-1 rounded text-xs font-bold border border-[#1a3258]">{c.rating}</span>
-                      </td>
                       <td className="py-4 text-white">{c.quotes}</td>
                       <td className="py-4">
                         <div className="flex items-center gap-2">
-                          <span className="text-white">{fmtPct(c.approvalRate)}</span>
+                          <span className="text-white">{c.approvalRate == null ? "—" : fmtPct(c.approvalRate)}</span>
                           <div className="w-16 h-1.5 bg-[#12233e] rounded-full overflow-hidden">
-                            <div className="h-full bg-[#22c55e]" style={{ width: `${c.approvalRate * 100}%` }}></div>
+                            <div className="h-full bg-[#22c55e]" style={{ width: `${(c.approvalRate ?? 0) * 100}%` }}></div>
                           </div>
                         </div>
                       </td>
-                      <td className="py-4 text-white">{c.avgTurnaround} days</td>
+                      <td className="py-4 text-white">{c.avgTurnaround == null ? "—" : `${c.avgTurnaround.toFixed(1)} days`}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -1044,25 +1052,22 @@ export default function CarrierQuotes() {
             <Activity size={18} className="text-[#3b82f6]" /> Performance Metrics
           </h3>
           <div className="flex-1 min-h-[300px]">
-            {analyticsData.carrierPerformance.length > 0 ? (
+            {analyticsData.carrierPerformance.some((c) => c.approvalRate != null) ? (
               <ResponsiveContainer width="100%" height="100%">
-                <RadarChart cx="50%" cy="50%" outerRadius="65%" data={analyticsData.carrierPerformance}>
-                  <PolarGrid stroke="#12233e" />
-                  <PolarAngleAxis dataKey="carrier" tick={{ fill: '#c8d8ec', fontSize: 10 }} />
-                  <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
-                  <Radar name="Speed" dataKey="speed" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.2} />
-                  <Radar name="Pricing" dataKey="pricing" stroke="#22c55e" fill="#22c55e" fillOpacity={0.2} />
-                  <Radar name="Support" dataKey="support" stroke="#f0c040" fill="#f0c040" fillOpacity={0.2} />
-                  <Legend wrapperStyle={{ fontSize: '12px', paddingTop: '10px' }} />
+                <BarChart data={analyticsData.carrierPerformance.filter((c) => c.approvalRate != null).map((c) => ({ carrier: c.name, approval: Math.round((c.approvalRate ?? 0) * 100) }))}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#12233e" vertical={false} />
+                  <XAxis dataKey="carrier" tick={{ fill: '#c8d8ec', fontSize: 10 }} />
+                  <YAxis domain={[0, 100]} tick={{ fill: '#7a95b8', fontSize: 10 }} unit="%" />
                   <Tooltip contentStyle={{ backgroundColor: '#0a1526', borderColor: '#12233e', borderRadius: '8px' }} />
-                </RadarChart>
+                  <Bar dataKey="approval" name="Approval rate" fill="#22c55e" />
+                </BarChart>
               </ResponsiveContainer>
             ) : (
-              <div className="h-full flex items-center justify-center text-[#7a95b8]">No data available</div>
+              <div className="h-full flex items-center justify-center text-center text-[#7a95b8] px-6">No approved or rejected quotes yet. Approval rates appear here once carriers decide.</div>
             )}
           </div>
           <div className="mt-4 p-3 bg-[#0a1526] rounded-lg border border-[#12233e] text-xs text-[#7a95b8] leading-relaxed">
-            Performance metrics are calculated based on historical quote data, agent feedback, and SLA adherence. Higher scores indicate better performance in that category.
+            Approval rate = approved ÷ (approved + rejected), counted from your own quote requests. Speed, pricing and support scores are not recorded, so they are not shown.
           </div>
         </div>
       </div>

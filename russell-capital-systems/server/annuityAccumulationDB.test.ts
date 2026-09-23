@@ -18,7 +18,7 @@ function createOwnerContext() {
     openId: process.env.OWNER_OPEN_ID || "owner-open-id",
     email: "owner@example.com",
     name: "Sam Russell",
-    loginMethod: "manus" as const,
+    loginMethod: "owner-password" as const,
     role: "admin" as const,
     createdAt: new Date(),
     updatedAt: new Date(),

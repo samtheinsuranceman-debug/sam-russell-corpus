@@ -95,11 +95,11 @@ mistake; looking forward to our call."
 
 ## 6. Google Search Console for joinaqal.com (5 minutes, no DNS)
 
-Manus never published the DNS record, so use the tag method instead.
+The DNS record was never published, so use the tag method instead.
 1. Open https://search.google.com/search-console → **Add property**.
 2. Pick the **URL prefix** box on the right. Type `https://joinaqal.com/` → **Continue**.
 3. Under "Other verification methods" tap **HTML tag**. Tap **Copy**.
-4. Open Manus, open the joinaqal project, and type: "Add this exact meta tag inside the head of every page and publish." Paste the tag. Wait for it to say published.
+4. Add this exact meta tag inside the head of every page of joinaqal.com and publish (the site host's header-code setting, or ask me to do it). Wait for it to be live.
 5. Back in Search Console tap **Verify**.
 6. Left menu → **Sitemaps** → type `https://joinaqal.com/sitemap.xml` → **Submit**.
 
@@ -166,7 +166,7 @@ the FRED readers (inflation, Fed rate, money supply, Treasury yields):
 | Tax-Free Income for Life + Longevity | Carriers' published income rate sheets, SSA and SOA life tables, the Actuaries Longevity Illustrator, cited studies | No | Nothing. Later: tell me which carriers you place income plans with so I read their rate sheets first. |
 
 ## Not for you
-Manus's DNS push, the code, the tests, the deploys, the docs. Those are mine.
+The DNS push, the code, the tests, the deploys, the docs. Those are mine.
 
 ## Key check: does each key actually work?
 Open https://russellcapitalsystems.com/api/trpc/ultra.keyProbe in any browser.

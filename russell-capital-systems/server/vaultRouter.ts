@@ -229,7 +229,7 @@ export const vaultRouter = router({
         }));
       })(),
       // Definitions the UI needs: endpoints, model lists, where to get a key.
-      catalog: PROVIDERS.filter(p => p.id !== "forge").map(p => ({
+      catalog: PROVIDERS.map(p => ({
         id: p.id,
         name: p.name,
         country: p.country,

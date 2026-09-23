@@ -43,6 +43,7 @@ import { formatTaxCurrency } from "@shared/taxBracketEngine";
 import { RelatedCalculators } from "@/components/RelatedCalculators";
 import { ComplianceFooter } from "@/components/ComplianceFooter";
 import { SP500_ARITHMETIC_MEAN, SP500_ANNUAL_STDEV } from "@shared/monteCarloEngine";
+import { mulberry32, normal, MACRO_DEFAULT_SEED } from "@shared/macro/random";
 
 /* ── Strategy definitions ── */
 const ALL_STRATEGIES = [
@@ -59,18 +60,13 @@ type StrategyKey = (typeof ALL_STRATEGIES)[number]["key"];
 const COLORS = ["#3b82f6", "#22c55e", "#f59e0b", "#ef4444", "#a855f7", "#06b6d4", "#ec4899", "#14b8a6", "#f97316", "#10b981"];
 const RADIAN = Math.PI / 180;
 
-/* ── Monte Carlo helper (same as main page) ── */
-function boxMuller(): number {
-  let u = 0, v = 0;
-  while (u === 0) u = Math.random();
-  while (v === 0) v = Math.random();
-  return Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
-}
+/* ── Monte Carlo helper: seeded, so the same inputs give the same bands ── */
 
 function runMonteCarlo(iulProjection: any[], sims = 300) {
   if (!iulProjection || iulProjection.length === 0) return null;
   const years = iulProjection.length;
   const allPaths: number[][] = [];
+  const rng = mulberry32(MACRO_DEFAULT_SEED);
   for (let s = 0; s < sims; s++) {
     const path: number[] = [];
     let acctVal = 0;
@@ -81,7 +77,7 @@ function runMonteCarlo(iulProjection: any[], sims = 300) {
       const coi = row.coi ?? 0;
       const policyLoan = row.policyLoan ?? 0;
       // S&P 500 arithmetic mean 11.86% and SD 19.40%, Damodaran histretSP 1928-2025 (read 2026-09-23); see shared/monteCarloEngine.ts
-      const rawReturn = SP500_ARITHMETIC_MEAN + SP500_ANNUAL_STDEV * boxMuller();
+      const rawReturn = SP500_ARITHMETIC_MEAN + SP500_ANNUAL_STDEV * normal(rng);
       const effectiveReturn = Math.max(0, rawReturn);
       acctVal += premium - loadFee;
       acctVal *= (1 + effectiveReturn);
@@ -286,6 +282,7 @@ export default function StrategyCompare() {
         const summary = (saved as any).summaryJson as any;
         const inputs = (saved as any).inputsJson as any;
         const iulProj = (saved as any).iulProjectionJson as any[];
+        const savedIsSolar = String((saved as any).strategyType ?? "").includes("solar") || String((saved as any).strategyLabel ?? "").includes("Solar");
         return {
           key: `saved-${id}`,
           label: (saved as any).strategyLabel ?? `Strategy #${id}`,
@@ -302,9 +299,10 @@ export default function StrategyCompare() {
           netCashFlow: summary?.totalNetCashFlow ?? 0,
           propertyAppreciation: summary?.propertyAppreciation ?? 0,
           taxSaved: (summary?.totalTaxSaved || (summary?.finalRothBalance * 0.24)) ?? 0,
-          riskScore: Math.floor(Math.random() * 40) + 40, // Simulated risk score
-          liquidityScore: Math.floor(Math.random() * 40) + 50,
-          growthScore: Math.floor(Math.random() * 30) + 60,
+          // Same fixed qualitative ratings as the live comparison below, keyed on strategy type.
+          riskScore: savedIsSolar ? 75 : 45,
+          liquidityScore: savedIsSolar ? 40 : 85,
+          growthScore: savedIsSolar ? 90 : 65,
           inputs,
           iulProjection: iulProj,
           carrier: (saved as any).carrierName ?? "Generic",

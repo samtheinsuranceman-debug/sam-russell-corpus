@@ -41,7 +41,7 @@
  * a reader can change on the page.
  */
 import type { IsoDate } from "./types";
-import { TREASURY_HOLDINGS, TREASURY_MARKET, JAPAN_POSITION, CHINA_POSITION } from "./snapshot";
+import { TREASURY_HOLDINGS, TREASURY_MARKET, JAPAN_POSITION } from "./snapshot";
 import { mulberry32, triangular, coin, summarise, MACRO_SIMULATION_RUNS, MACRO_DEFAULT_SEED, type Summary } from "./random";
 import { A, citeAssumptions } from "./assumptions";
 
@@ -265,7 +265,7 @@ export function simulateLiquidation(input: LiquidationScenarioInput): Liquidatio
       ...citeAssumptions("liq.impact"),
       ...citeAssumptions("liq.tx"),
     ],
-    sourceIds: ["us-tic-mfh", "us-fiscaldata", "fred", "jp-mof-reserves", "cn-safe-reserves"],
+    sourceIds: ["us-tic-mfh", "us-fiscaldata", "fred", "jp-mof-reserves"],
   };
 }
 
@@ -370,10 +370,10 @@ export function forecastLiquidation(input: LiquidationForecastInput): Liquidatio
       intervention:
         input.holder === "JP"
           ? `${Math.round(interventionPPerMonth * 100)} %/month chance of an intervention-funded sale of $${interventionSale.low}–${interventionSale.high} bn [liq.fc.intervention*] (Aug 2026 precedent: ¥${JAPAN_POSITION.interventionYenTn} tn, foreign securities −$${Math.abs(JAPAN_POSITION.foreignSecuritiesChange)} bn).`
-          : `No intervention channel: China defends the yuan by fixing and capital controls before it sells Treasuries at scale (SAFE reserves $${CHINA_POSITION.fxReserves.toLocaleString()} bn).`,
+          : `No intervention channel: China defends the yuan by fixing and capital controls before it sells Treasuries at scale.`,
       stress: `With probability ${(stressP * 100).toFixed(0)} % a stress regime starts within 12 months and sells ${Math.round(stressPctPerMonth.low * 100)}–${Math.round(stressPctPerMonth.high * 100)} % of the book per month for ${stressDuration.low}–${stressDuration.high} months [liq.fc.stress*] (China Aug 2015–Jan 2017 precedent: −$180 bn from a ~$1.24 tn book, ~1 %/month, TIC).`,
     },
-    sourceIds: ["us-tic-mfh", "jp-mof-reserves", "jp-mof-intervention", "cn-safe-reserves", "fed-h41"],
+    sourceIds: ["us-tic-mfh", "jp-mof-reserves", "jp-mof-intervention", "fed-h41"],
   };
 }
 

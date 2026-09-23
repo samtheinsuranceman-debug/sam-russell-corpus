@@ -20,7 +20,7 @@ import { useAuth } from "@/_core/hooks/useAuth";
 interface AuditEntry {
   id: string;
   timestamp: Date;
-  type: "meeting" | "email" | "phone" | "document" | "trade" | "disclosure" | "login" | "plan_change" | "system" | "api";
+  type: "meeting" | "email" | "phone" | "document" | "trade" | "disclosure" | "login" | "plan_change" | "system" | "api" | "calculation";
   clientName: string;
   advisorName: string;
   summary: string;
@@ -28,95 +28,75 @@ interface AuditEntry {
   details: string;
   complianceFlags: string[];
   status: "clean" | "flagged" | "reviewed" | "pending";
-  riskScore: number;
+  /** Null when no risk score was recorded — never estimated. */
+  riskScore: number | null;
   location: string;
   ipAddress: string;
   device: string;
-  duration: number;
+  /** Minutes; null when not recorded. */
+  duration: number | null;
   tags: string[];
 }
 
-const generateAuditEntries = (): AuditEntry[] => {
-  const clients = ["John & Sarah Mitchell", "Robert Chen", "Maria Gonzalez", "David Thompson", "Lisa Park", "James Wilson", "Emily Rodriguez", "Michael Brown", "Acme Corp", "Tech Solutions Inc", "Global Logistics LLC", "Apex Financial", "Summit Wealth", "Pinnacle Partners", "Crestview Capital", "Horizon Trust"];
-  const types: AuditEntry["type"][] = ["meeting", "email", "phone", "document", "trade", "disclosure", "login", "plan_change", "system", "api"];
-  const entries: AuditEntry[] = [];
+const NOT_RECORDED = "Not recorded";
 
-  const templates: Record<string, { summary: string; aiSummary: string; details: string; flags: string[] }[]> = {
-    meeting: [
-      { summary: "Annual review meeting — discussed retirement timeline and IUL strategy", aiSummary: "Client expressed interest in accelerating retirement to age 60. Advisor presented IUL strategy with Ibbotson-backed projections. No suitability concerns. Client requested follow-up illustration.", details: "Duration: 45 min. Topics: Retirement gap analysis, IUL illustration review, beneficiary update. Action items: Send updated IUL quote, schedule 30-day follow-up.", flags: [] },
-      { summary: "Initial discovery meeting — fact-finding and risk assessment", aiSummary: "New client onboarding. Comprehensive fact-finder completed. Risk tolerance score: 62 (Moderate). Income $185K, net worth $1.2M. No red flags identified.", details: "Duration: 60 min. Completed: Fact-finder, risk assessment, KYC documentation. Suitability profile established.", flags: [] },
-    ],
-    email: [
-      { summary: "Sent quarterly performance report and market outlook", aiSummary: "Routine quarterly communication. Performance report attached showing 7.2% YTD return. Market outlook included standard disclaimers. No personalized recommendations in email body.", details: "Email with 2 attachments: Q1 Performance Report.pdf, Market Outlook.pdf. Opened by client.", flags: [] },
-      { summary: "Client requested information about variable annuity surrender", aiSummary: "Client inquired about surrendering existing variable annuity. Advisor responded with surrender schedule and tax implications. Flagged for suitability review — potential 1035 exchange opportunity.", details: "Email thread: 3 messages. Client initiated. Advisor provided factual information only, no recommendation made pending suitability review.", flags: ["Suitability Review Required"] },
-    ],
-    phone: [
-      { summary: "Client called regarding market volatility concerns", aiSummary: "Inbound call during market correction. Client expressed anxiety about portfolio decline. Advisor reviewed long-term plan and IUL floor protection. Client reassured, no changes requested.", details: "Duration: 18 min. Outcome: Client retained current allocation. Advisor documented behavioral coaching conversation.", flags: [] },
-    ],
-    trade: [
-      { summary: "Rebalanced portfolio — reduced equity overweight by 3%", aiSummary: "Systematic rebalance triggered by drift threshold. Sold $15K US Large Cap, bought $10K International Equity and $5K Bonds. Within IPS guidelines. Tax-loss harvesting applied to offset gains.", details: "Trade details: SELL VTI $15,000 | BUY VXUS $10,000 | BUY BND $5,000. Net tax impact: -$1,200 (harvested loss).", flags: [] },
-      { summary: "Executed Roth conversion — $50,000 from Traditional IRA", aiSummary: "Planned Roth conversion as part of multi-year strategy. Amount within current tax bracket ceiling. Client signed conversion authorization. Tax withholding: 0% (paid from external funds).", details: "Conversion: $50,000 from Traditional IRA to Roth IRA. Tax projection reviewed and signed. Part of 5-year conversion ladder.", flags: ["Tax Event Documented"] },
-    ],
-    disclosure: [
-      { summary: "Subscription agreement signed — Professional tier, annual billing", aiSummary: "Client completed full disclosure acceptance flow: legal agreement reviewed, payor identity verified, SMS PIN confirmed, e-signature recorded. Delaware governing law acknowledged. Non-refundable terms accepted.", details: "Disclosure ID: DSC-2026-0042. IP: 192.168.1.x. PIN verified at 2:34 PM. Signature hash recorded.", flags: [] },
-    ],
-    plan_change: [
-      { summary: "Updated retirement age from 65 to 62 — revised projections", aiSummary: "Client requested earlier retirement target. Advisor updated financial plan projections. New analysis shows $180K/yr shortfall at age 62 vs. original plan. Recommended increasing IUL premium by $500/mo. Client to review.", details: "Plan version: v3.2 → v3.3. Key change: Retirement age 65→62. Impact: Additional $180K/yr needed. Proposed solution: Increase IUL premium.", flags: ["Plan Modification"] },
-    ],
-    document: [
-      { summary: "Uploaded signed IUL application — Pacific Life Accumulator", aiSummary: "New IUL application submitted. Face amount: $1M. Annual premium: $24,000. Underwriting class: Preferred. All required signatures obtained. Replacement form N/A — no existing policy.", details: "Carrier: Pacific Life. Product: Accumulator IUL. Premium: $24K/yr. Death benefit: $1M. Riders: Chronic illness, waiver of premium.", flags: [] },
-    ],
-    login: [
-      { summary: "Client portal login from new device", aiSummary: "Client accessed portal from previously unrecognized device (iPhone, Safari). Location: San Francisco, CA. Multi-factor authentication completed successfully. No suspicious activity detected.", details: "Device: iPhone 16 Pro, Safari 19.2. IP: 73.xxx.xxx.xx. MFA: SMS code verified. Session duration: 12 minutes.", flags: [] },
-    ],
-    system: [
-      { summary: "Automated compliance scan completed", aiSummary: "Nightly compliance scan executed across all active accounts. Checked for drift, missing documentation, and upcoming RMDs. 3 accounts flagged for missing annual review.", details: "Scan ID: SYS-SCAN-992. Accounts checked: 450. Issues found: 3 missing annual reviews, 1 drift > 10%. Auto-notifications queued.", flags: ["System Alert"] },
-    ],
-    api: [
-      { summary: "Data sync with custodian via API", aiSummary: "Daily position and transaction sync with Charles Schwab API. Successfully updated 1,250 positions and 45 new transactions. No errors reported.", details: "API Endpoint: /v1/accounts/sync. Data transferred: 4.2MB. Duration: 14s. Status: Success.", flags: [] },
-    ],
+function auditTypeFromAction(action: string): AuditEntry["type"] {
+  const a = action.toLowerCase();
+  if (a.includes("login") || a.includes("logout") || a.includes("sign_in") || a.includes("signin")) return "login";
+  if (a.includes("export") || a.includes("document") || a.includes("pdf") || a.includes("upload")) return "document";
+  if (a.includes("disclosure") || a.includes("sign")) return "disclosure";
+  if (a.includes("plan")) return "plan_change";
+  if (a.includes("email")) return "email";
+  if (a.includes("api")) return "api";
+  return "system";
+}
+
+/** Workspace audit-log rows (enterprise.auditLogs) as audit-trail entries. */
+function fromWorkspaceAuditLog(log: any): AuditEntry {
+  const meta = (log.metadata ?? {}) as Record<string, unknown>;
+  const action = String(log.action ?? "action");
+  return {
+    id: `LOG-${log.id}`,
+    timestamp: new Date(log.createdAt),
+    type: auditTypeFromAction(action),
+    clientName: typeof meta.clientName === "string" ? meta.clientName : "—",
+    advisorName: log.actorName || log.actorEmail || (log.actorUserId ? `User #${log.actorUserId}` : "System"),
+    summary: log.entityType ? `${action.replace(/_/g, " ")} — ${log.entityType}${log.entityId ? ` #${log.entityId}` : ""}` : action.replace(/_/g, " "),
+    aiSummary: "",
+    details: Object.keys(meta).length ? JSON.stringify(meta) : "No further detail recorded.",
+    complianceFlags: [],
+    status: "pending",
+    riskScore: null,
+    location: NOT_RECORDED,
+    ipAddress: typeof meta.ip === "string" ? meta.ip : NOT_RECORDED,
+    device: NOT_RECORDED,
+    duration: null,
+    tags: [],
   };
+}
 
-  const locations = ["New York, NY", "Los Angeles, CA", "Chicago, IL", "Houston, TX", "Phoenix, AZ", "Philadelphia, PA", "San Antonio, TX", "San Diego, CA", "Dallas, TX", "San Jose, CA"];
-  const devices = ["iPhone 14 Pro", "MacBook Pro M2", "Windows 11 PC", "iPad Air", "Samsung Galaxy S23", "Google Pixel 8", "Chrome OS Device"];
-  const tagsList = ["High Priority", "Review Needed", "Follow-up", "Urgent", "Routine", "Automated", "Manual Entry", "Client Initiated", "Advisor Initiated"];
-
-  for (let i = 0; i < 200; i++) {
-    const type = types[Math.floor(Math.random() * types.length)];
-    const client = clients[Math.floor(Math.random() * clients.length)];
-    const template = templates[type]?.[Math.floor(Math.random() * (templates[type]?.length ?? 1))] ?? templates.meeting[0];
-    const daysAgo = Math.floor(Math.random() * 90);
-    const status: AuditEntry["status"] = template.flags.length > 0 ? (Math.random() > 0.5 ? "flagged" : (Math.random() > 0.5 ? "reviewed" : "pending")) : "clean";
-    
-    const entryTags = [];
-    const numTags = Math.floor(Math.random() * 3) + 1;
-    for (let j = 0; j < numTags; j++) {
-      const tag = tagsList[Math.floor(Math.random() * tagsList.length)];
-      if (!entryTags.includes(tag)) entryTags.push(tag);
-    }
-
-    entries.push({
-      id: `AUD-${String(2026000 + i).padStart(7, "0")}`,
-      timestamp: new Date(Date.now() - daysAgo * 86400000 - Math.random() * 86400000),
-      type,
-      clientName: client,
-      advisorName: "Russell Capital Systems™",
-      summary: template.summary,
-      aiSummary: template.aiSummary,
-      details: template.details,
-      complianceFlags: template.flags,
-      status,
-      riskScore: Math.floor(Math.random() * 100),
-      location: locations[Math.floor(Math.random() * locations.length)],
-      ipAddress: `192.168.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}`,
-      device: devices[Math.floor(Math.random() * devices.length)],
-      duration: Math.floor(Math.random() * 120),
-      tags: entryTags,
-    });
-  }
-
-  return entries.sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
-};
+/** Calculation audit rows (complianceAudit.search) as audit-trail entries. */
+function fromCalculationLog(log: any): AuditEntry {
+  const calcType = String(log.calculationType ?? "calculation").replace(/_/g, " ");
+  return {
+    id: `CALC-${log.id}`,
+    timestamp: new Date(log.createdAt),
+    type: "calculation",
+    clientName: log.clientName || (log.clientId ? `Client #${log.clientId}` : "—"),
+    advisorName: log.userName || (log.userId ? `User #${log.userId}` : "—"),
+    summary: log.summary || `${calcType} calculation run`,
+    aiSummary: "",
+    details: log.pagePath ? `Run from ${log.pagePath}` : "No further detail recorded.",
+    complianceFlags: [],
+    status: "pending",
+    riskScore: null,
+    location: NOT_RECORDED,
+    ipAddress: NOT_RECORDED,
+    device: NOT_RECORDED,
+    duration: null,
+    tags: [],
+  };
+}
 
 const typeConfig: Record<string, { label: string; icon: any; color: string }> = {
   meeting: { label: "Meeting", icon: Calendar, color: "bg-blue-500/20 text-blue-400 border-blue-500/30" },
@@ -129,6 +109,7 @@ const typeConfig: Record<string, { label: string; icon: any; color: string }> = 
   plan_change: { label: "Plan Change", icon: Settings, color: "bg-orange-500/20 text-orange-400 border-orange-500/30" },
   system: { label: "System", icon: Server, color: "bg-indigo-500/20 text-indigo-400 border-indigo-500/30" },
   api: { label: "API", icon: FileCode, color: "bg-rose-500/20 text-rose-400 border-rose-500/30" },
+  calculation: { label: "Calculation", icon: BarChart3, color: "bg-sky-500/20 text-sky-400 border-sky-500/30" },
 };
 
 const statusConfig: Record<string, { label: string; icon: any; color: string }> = {
@@ -140,7 +121,17 @@ const statusConfig: Record<string, { label: string; icon: any; color: string }> 
 
 export default function ComplianceAuditTrail() {
   const { user } = useAuth();
-  const [entries] = useState<AuditEntry[]>(() => generateAuditEntries());
+  // Real records only: the workspace audit log and the calculation audit log.
+  const workspaceAuditQuery = trpc.enterprise.auditLogs.useQuery({ page: 1, pageSize: 100 }, { enabled: !!user, staleTime: 30_000 });
+  const calculationAuditQuery = trpc.complianceAudit.search.useQuery({ page: 1, pageSize: 100 }, { enabled: !!user, staleTime: 30_000 });
+  const entries = useMemo<AuditEntry[]>(() => {
+    const rows = [
+      ...(workspaceAuditQuery.data?.logs ?? []).map(fromWorkspaceAuditLog),
+      ...(calculationAuditQuery.data?.logs ?? []).map(fromCalculationLog),
+    ];
+    return rows.sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
+  }, [workspaceAuditQuery.data, calculationAuditQuery.data]);
+  const entriesLoading = workspaceAuditQuery.isLoading || calculationAuditQuery.isLoading;
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
@@ -167,6 +158,7 @@ export default function ComplianceAuditTrail() {
       if (statusFilter !== "all" && e.status !== statusFilter) return false;
       
       if (riskFilter !== "all") {
+        if (e.riskScore === null) return false;
         if (riskFilter === "high" && e.riskScore < 75) return false;
         if (riskFilter === "medium" && (e.riskScore < 40 || e.riskScore >= 75)) return false;
         if (riskFilter === "low" && e.riskScore >= 40) return false;
@@ -209,8 +201,11 @@ export default function ComplianceAuditTrail() {
 
   const flaggedCount = entries.filter((e) => e.status === "flagged").length;
   const totalInteractions = entries.length;
-  const avgRiskScore = Math.round(entries.reduce((acc, e) => acc + e.riskScore, 0) / entries.length);
-  const highRiskCount = entries.filter((e) => e.riskScore >= 75).length;
+  const scoredEntries = entries.filter((e) => e.riskScore !== null);
+  const avgRiskScore: number | null = scoredEntries.length
+    ? Math.round(scoredEntries.reduce((acc, e) => acc + (e.riskScore as number), 0) / scoredEntries.length)
+    : null;
+  const highRiskCount = scoredEntries.filter((e) => (e.riskScore as number) >= 75).length;
 
   const typeDistribution = useMemo(() => {
     const counts = filtered.reduce((acc, entry) => {
@@ -280,7 +275,7 @@ export default function ComplianceAuditTrail() {
       const diffTime = Math.abs(now.getTime() - entryDate.getTime());
       const diffWeeks = Math.floor(diffTime / (1000 * 60 * 60 * 24 * 7));
       
-      if (diffWeeks < weeks) {
+      if (diffWeeks < weeks && entry.riskScore !== null) {
         const index = weeks - 1 - diffWeeks;
         if (!weekBuckets[index]) weekBuckets[index] = [];
         weekBuckets[index].push(entry.riskScore);
@@ -336,7 +331,7 @@ export default function ComplianceAuditTrail() {
   }, [filtered]);
 
   const riskDurationScatter = useMemo(() => {
-    return filtered.slice(0, 100).map((entry) => ({
+    return filtered.filter((entry) => entry.riskScore !== null && entry.duration !== null).slice(0, 100).map((entry) => ({
       id: entry.id,
       riskScore: entry.riskScore,
       duration: entry.duration,
@@ -344,17 +339,6 @@ export default function ComplianceAuditTrail() {
       z: 1 // size of bubble
     }));
   }, [filtered]);
-
-  const complianceRadar = useMemo(() => {
-    return [
-      { subject: "Documentation", A: Math.floor(Math.random() * 40) + 60, fullMark: 100 },
-      { subject: "Suitability", A: Math.floor(Math.random() * 40) + 60, fullMark: 100 },
-      { subject: "Timeliness", A: Math.floor(Math.random() * 40) + 60, fullMark: 100 },
-      { subject: "Disclosures", A: Math.floor(Math.random() * 40) + 60, fullMark: 100 },
-      { subject: "Supervision", A: Math.floor(Math.random() * 40) + 60, fullMark: 100 },
-      { subject: "Training", A: Math.floor(Math.random() * 40) + 60, fullMark: 100 },
-    ];
-  }, []);
 
   const COLORS = ["#22c55e", "#3b82f6", "#f0c040", "#34d399", "#ef4444", "#ec4899", "#14b8a6", "#f97316", "#6366f1", "#10b981"];
 
@@ -378,13 +362,13 @@ export default function ComplianceAuditTrail() {
 
   const markAsReviewed = () => {
     if (selectedEntries.size === 0) return;
-    toast.success(`Marked ${selectedEntries.size} entries as reviewed`);
+    toast.info("Review status is not saved to the audit log yet; nothing was changed.");
     setSelectedEntries(new Set());
   };
 
   const escalateSelected = () => {
     if (selectedEntries.size === 0) return;
-    toast.success(`Escalated ${selectedEntries.size} entries to compliance officer`);
+    toast.info("Escalation is not connected yet; nothing was sent.");
     setSelectedEntries(new Set());
   };
 
@@ -448,7 +432,7 @@ export default function ComplianceAuditTrail() {
                   items: [
                     { label: "Total Interactions", value: totalInteractions.toString() },
                     { label: "Flagged for Review", value: flaggedCount.toString() },
-                    { label: "Average Risk Score", value: avgRiskScore.toString() },
+                    { label: "Average Risk Score", value: avgRiskScore === null ? "Not scored" : avgRiskScore.toString() },
                     { label: "High Risk Events", value: highRiskCount.toString() }
                   ]
                 }
@@ -506,21 +490,21 @@ export default function ComplianceAuditTrail() {
             <p className="text-xs text-[#7a95b8] mt-2">Require compliance review</p>
           </div>
 
-          <div className={`rc-card rounded-2xl p-5 flex flex-col justify-center transition-all ${avgRiskScore > 50 ? "bg-[#ef4444]/5 border-[#ef4444]/30 hover:border-[#ef4444]/50" : "bg-[#0d1a2e] border-[#12233e] hover:border-[#34d399]/50"}`}>
+          <div className={`rc-card rounded-2xl p-5 flex flex-col justify-center transition-all ${avgRiskScore !== null && avgRiskScore > 50 ? "bg-[#ef4444]/5 border-[#ef4444]/30 hover:border-[#ef4444]/50" : "bg-[#0d1a2e] border-[#12233e] hover:border-[#34d399]/50"}`}>
             <div className="flex items-center justify-between mb-2">
-              <p className={`rc-stat-label text-xs font-medium uppercase tracking-wider ${avgRiskScore > 50 ? "text-[#ef4444]" : "text-[#7a95b8]"}`}>Avg Risk Score</p>
-              <div className={`p-1.5 rounded-md ${avgRiskScore > 50 ? "bg-[#ef4444]/10 text-[#ef4444]" : "bg-[#34d399]/10 text-[#34d399]"}`}>
+              <p className={`rc-stat-label text-xs font-medium uppercase tracking-wider ${avgRiskScore !== null && avgRiskScore > 50 ? "text-[#ef4444]" : "text-[#7a95b8]"}`}>Avg Risk Score</p>
+              <div className={`p-1.5 rounded-md ${avgRiskScore !== null && avgRiskScore > 50 ? "bg-[#ef4444]/10 text-[#ef4444]" : "bg-[#34d399]/10 text-[#34d399]"}`}>
                 <ShieldAlert className="h-4 w-4" />
               </div>
             </div>
             <div className="flex items-baseline gap-2">
-              <p className={`rc-stat-value text-3xl font-bold ${avgRiskScore > 50 ? "text-[#ef4444]" : "text-white"}`}>{avgRiskScore}</p>
+              <p className={`rc-stat-value text-3xl font-bold ${avgRiskScore !== null && avgRiskScore > 50 ? "text-[#ef4444]" : "text-white"}`}>{avgRiskScore ?? "—"}</p>
               <span className="text-xs font-medium text-[#22c55e] flex items-center"><ArrowDownRight className="h-3 w-3 mr-0.5" /> 2%</span>
             </div>
             <div className="w-full bg-[#12233e] h-1.5 rounded-full mt-3 overflow-hidden">
               <div 
                 className={`h-full ${avgRiskScore < 30 ? "bg-[#22c55e]" : avgRiskScore < 70 ? "bg-[#f0c040]" : "bg-[#ef4444]"}`}
-                style={{ width: `${avgRiskScore}%` }}
+                style={{ width: `${avgRiskScore ?? 0}%` }}
               />
             </div>
           </div>
@@ -607,6 +591,9 @@ export default function ComplianceAuditTrail() {
                 </div>
               </div>
               <div className="h-[200px] w-full">
+                {scoredEntries.length === 0 ? (
+                  <div className="h-full flex items-center justify-center text-center text-xs text-[#7a95b8] px-4">No risk scores are recorded on these entries, so no trend is shown. Scores are never estimated.</div>
+                ) : (
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={riskTrend} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#12233e" vertical={false} />
@@ -619,6 +606,7 @@ export default function ComplianceAuditTrail() {
                     <Line type="monotone" dataKey="maxRisk" name="Max Risk" stroke="#ef4444" strokeWidth={2} strokeDasharray="5 5" dot={false} />
                   </LineChart>
                 </ResponsiveContainer>
+                )}
               </div>
             </div>
 
@@ -630,16 +618,8 @@ export default function ComplianceAuditTrail() {
                   <h3 className="text-sm font-semibold text-white">Compliance Coverage</h3>
                 </div>
               </div>
-              <div className="h-[220px] w-full">
-                <ResponsiveContainer width="100%" height="100%">
-                  <RadarChart cx="50%" cy="50%" outerRadius="70%" data={complianceRadar}>
-                    <PolarGrid stroke="#12233e" />
-                    <PolarAngleAxis dataKey="subject" tick={{ fill: "#7a95b8", fontSize: 10 }} />
-                    <PolarRadiusAxis angle={30} domain={[0, 100]} tick={{ fill: "#7a95b8", fontSize: 8 }} />
-                    <Radar name="Score" dataKey="A" stroke="#22c55e" fill="#22c55e" fillOpacity={0.3} />
-                    <RTooltip contentStyle={{ background: "#0d1a2e", border: "1px solid #12233e", borderRadius: "8px", color: "#fff", fontSize: "12px" }} />
-                  </RadarChart>
-                </ResponsiveContainer>
+              <div className="h-[220px] w-full flex items-center justify-center text-center text-xs text-[#7a95b8] px-4">
+                No coverage scoring is recorded yet. Scores for documentation, suitability, disclosures and supervision will appear here once reviews are logged; none are estimated.
               </div>
             </div>
           </div>
@@ -912,7 +892,7 @@ export default function ComplianceAuditTrail() {
                                   </div>
                                   <div>
                                     <p className="text-[10px] text-[#7a95b8] uppercase mb-1">Duration</p>
-                                    <div className="flex items-center text-xs text-[#c8d8ec]"><Clock className="h-3 w-3 mr-1 text-[#f0c040]" /> {entry.duration} min</div>
+                                    <div className="flex items-center text-xs text-[#c8d8ec]"><Clock className="h-3 w-3 mr-1 text-[#f0c040]" /> {entry.duration === null ? NOT_RECORDED : `${entry.duration} min`}</div>
                                   </div>
                                 </div>
 
@@ -978,8 +958,8 @@ export default function ComplianceAuditTrail() {
                 ) : (
                   <div className="rc-card bg-[#0d1a2e] border border-[#12233e] rounded-2xl py-16 flex flex-col items-center justify-center text-center">
                     <Search className="h-10 w-10 text-[#7a95b8] mb-4 opacity-50" />
-                    <h3 className="text-lg font-medium text-white mb-1">No entries found</h3>
-                    <p className="text-sm text-[#7a95b8]">Try adjusting your search or filter criteria</p>
+                    <h3 className="text-lg font-medium text-white mb-1">{entriesLoading ? "Loading audit records…" : entries.length === 0 ? "No audit records yet" : "No entries found"}</h3>
+                    <p className="text-sm text-[#7a95b8]">{entries.length === 0 ? "Logged actions and calculation runs in this workspace will appear here." : "Try adjusting your search or filter criteria"}</p>
                     <button 
                       onClick={() => { setSearch(""); setTypeFilter("all"); setStatusFilter("all"); setRiskFilter("all"); setDateRangeFilter("all"); }}
                       className="mt-4 rc-btn rc-btn-ghost px-4 py-2 rounded-lg border border-[#12233e] text-white hover:bg-[#12233e] transition-colors text-sm"
@@ -1046,8 +1026,8 @@ export default function ComplianceAuditTrail() {
                               <div className="truncate max-w-[200px] lg:max-w-[300px]" title={entry.summary}>{entry.summary}</div>
                             </td>
                             <td className="px-4 py-3">
-                              <span className={`inline-flex items-center gap-1 text-xs font-medium ${entry.riskScore >= 75 ? "text-[#ef4444]" : entry.riskScore >= 40 ? "text-[#f0c040]" : "text-[#22c55e]"}`}>
-                                {entry.riskScore}
+                              <span className={`inline-flex items-center gap-1 text-xs font-medium ${entry.riskScore === null ? "text-[#7a95b8]" : entry.riskScore >= 75 ? "text-[#ef4444]" : entry.riskScore >= 40 ? "text-[#f0c040]" : "text-[#22c55e]"}`}>
+                                {entry.riskScore ?? "—"}
                               </span>
                             </td>
                             <td className="px-4 py-3">

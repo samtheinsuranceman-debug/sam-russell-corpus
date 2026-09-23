@@ -28,8 +28,8 @@ Notes:
   reports itself as not configured instead of failing.
 - Providers without keys are shown as "not configured" in the UI and are
   never faked in panel results.
-- "Manus" has no public inference API; additional models can be reached
-  through `OPENROUTER_API_KEY`.
+- Additional models can be reached through `OPENROUTER_API_KEY`. No
+  China-linked model or host is allowed (shared/aiProviders.ts).
 - Voice INPUT uses the browser's built-in speech recognition — no key, and
   the audio never leaves the visitor's machine; only the transcribed text
   is sent to the server.

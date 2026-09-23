@@ -1,4 +1,3 @@
-import { callDataApi } from "./_core/dataApi";
 import { getBenchmarks, getCpiFromFred, type Benchmark } from "./_core/fred";
 
 export interface DataFeedEntry {
@@ -122,25 +121,8 @@ async function fetchLiveCPI(): Promise<CPIData | null> {
     const f = await getCpiFromFred();
     if (f) return { name: "Consumer Price Index", value: f.index, unit: "index", annualRate: f.annualRate, monthlyRate: f.monthlyRate, coreRate: f.coreAnnualRate ?? f.annualRate, asOf: f.asOf, source: "live", lastUpdated: new Date().toISOString() };
   }
-  try {
-    const result = await callDataApi("EconomicIndicators/cpi", {}) as { data?: Record<string, unknown> };
-    const d = result?.data;
-    if (!d || ![d.value, d.annualRate, d.monthlyRate, d.coreRate].every(finite) || !dateText(d.date)) return null;
-    return {
-      name: "Consumer Price Index",
-      value: d.value as number,
-      unit: "index",
-      annualRate: d.annualRate as number,
-      monthlyRate: d.monthlyRate as number,
-      coreRate: d.coreRate as number,
-      asOf: d.date as string,
-      source: "live",
-      lastUpdated: new Date().toISOString(),
-    };
-  } catch {
-    console.warn("[DataFeed] CPI provider unavailable; using dated reference data");
-    return null;
-  }
+  console.warn("[DataFeed] CPI provider unavailable; using dated reference data");
+  return null;
 }
 
 const TREASURY_FROM_FRED: Array<{ series: "DGS3MO" | "DGS2" | "DGS5" | "DGS10" | "DGS30"; term: string; name: string }> = [
@@ -161,47 +143,14 @@ async function fetchLiveTreasury(): Promise<TreasuryData[] | null> {
     });
     if (rows.length === TREASURY_FROM_FRED.length) return rows;
   }
-  try {
-    const result = await callDataApi("TreasuryRates/yields", {}) as { data?: unknown[] };
-    if (!Array.isArray(result?.data)) return null;
-    const rows = result.data.flatMap((raw) => {
-      const d = raw as Record<string, unknown>;
-      if (!text(d.term) || !finite(d.yield) || !dateText(d.date)) return [];
-      return [{ name: `${d.term} Treasury`, value: d.yield, unit: "%", term: d.term, yield: d.yield, asOf: d.date, source: "live" as const, lastUpdated: new Date().toISOString() }];
-    });
-    return rows.length ? rows : null;
-  } catch {
-    console.warn("[DataFeed] Treasury provider unavailable; using dated reference data");
-    return null;
-  }
+  console.warn("[DataFeed] Treasury provider unavailable; using dated reference data");
+  return null;
 }
 
+// No live commodity source is wired (the hosted data proxy the platform shipped
+// with was removed on 23 Sep 2026); the dated reference rows above are served.
 async function fetchLiveCommodities(): Promise<CommodityData[] | null> {
-  try {
-    const result = await callDataApi("MarketData/commodities", {}) as { data?: unknown[] };
-    if (!Array.isArray(result?.data)) return null;
-    const rows = result.data.flatMap((raw) => {
-      const d = raw as Record<string, unknown>;
-      if (!text(d.name) || !text(d.symbol) || !text(d.unit) || ![d.price, d.high52w, d.low52w].every(finite) || !dateText(d.date)) return [];
-      return [{
-        name: d.name,
-        value: d.price as number,
-        unit: d.unit,
-        symbol: d.symbol,
-        change: finite(d.change) ? d.change : undefined,
-        changePercent: finite(d.changePercent) ? d.changePercent : undefined,
-        high52w: d.high52w as number,
-        low52w: d.low52w as number,
-        asOf: d.date,
-        source: "live" as const,
-        lastUpdated: new Date().toISOString(),
-      }];
-    });
-    return rows.length ? rows : null;
-  } catch {
-    console.warn("[DataFeed] Commodity provider unavailable; using dated reference data");
-    return null;
-  }
+  return null;
 }
 
 export async function getCPIData(): Promise<CPIData> {

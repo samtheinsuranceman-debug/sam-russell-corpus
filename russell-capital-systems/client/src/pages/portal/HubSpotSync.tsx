@@ -60,8 +60,6 @@ export default function HubSpotSync() {
   const [filterType, setFilterType] = useState<string>("ALL");
   const [dateRange, setDateRange] = useState<"7D" | "30D" | "90D" | "YTD">("30D");
   const [selectedLog, setSelectedLog] = useState<any>(null);
-  const [isSyncing, setIsSyncing] = useState(false);
-  const [syncProgress, setSyncProgress] = useState(0);
 
   const settingsQuery = trpc.hubspot.getSettings.useQuery(undefined, { staleTime: 30_000 });
   const historyQuery = trpc.hubspot.syncHistory.useQuery(undefined, { staleTime: 30_000 });
@@ -69,6 +67,10 @@ export default function HubSpotSync() {
   const mappingQuery = trpc.hubspot.getFieldMappings.useQuery(undefined, { staleTime: 60_000 });
   const connectionQuery = trpc.hubspot.getConnectionStatus.useQuery(undefined, { staleTime: 30_000 });
   const healthQuery = trpc.hubspot.getHealthScore.useQuery(undefined, { staleTime: 60_000 });
+  // True connection state: HubSpot counts as connected only when the server
+  // holds an access token. Nothing here pings or scores the connection.
+  const integrationsQuery = trpc.integrations.status.useQuery(undefined, { staleTime: 60_000 });
+  const hubspotConfigured = integrationsQuery.data?.live?.hubspot === true;
   
   const updateMutation = trpc.hubspot.updateSettings.useMutation({
     onSuccess: () => {
@@ -84,7 +86,6 @@ export default function HubSpotSync() {
       settingsQuery.refetch();
       historyQuery.refetch();
       analyticsQuery.refetch();
-      simulateSyncProgress();
     },
     onError: (err) => toast.error(err.message),
   });
@@ -97,81 +98,52 @@ export default function HubSpotSync() {
     onError: () => toast.error("Failed to update field mapping"),
   });
 
-  const simulateSyncProgress = useCallback(() => {
-    setIsSyncing(true);
-    setSyncProgress(0);
-    const interval = setInterval(() => {
-      setSyncProgress(prev => {
-        if (prev >= 100) {
-          clearInterval(interval);
-          setIsSyncing(false);
-          toast.success("Sync completed successfully");
-          return 100;
-        }
-        return prev + Math.floor(Math.random() * 15) + 5;
-      });
-    }, 500);
-  }, []);
+  const isSyncing = triggerMutation.isPending;
 
   const settings = settingsQuery.data;
   const history = historyQuery.data ?? [];
   const analytics = analyticsQuery.data ?? { dailyStats: [], objectStats: [], errorStats: [] };
   const mappings = mappingQuery.data ?? [];
-  const connection = connectionQuery.data ?? { status: "DISCONNECTED", lastPing: null, latency: 0 };
-  const health = healthQuery.data ?? { score: 0, issues: [] };
+  const connection = { status: hubspotConfigured ? "CONNECTED" : "DISCONNECTED", lastPing: null, latency: null };
+  const health = healthQuery.data ?? null;
 
   const isLoading = !settingsQuery.data || !historyQuery.data;
 
-  const mockDailyStats = useMemo(() => {
-    if (analytics.dailyStats?.length > 0) return analytics.dailyStats;
-    return Array.from({ length: 30 }).map((_, i) => ({
-      date: new Date(Date.now() - (29 - i) * 86400000).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-      success: Math.floor(Math.random() * 500) + 100,
-      failed: Math.floor(Math.random() * 20),
-      partial: Math.floor(Math.random() * 50)
-    }));
-  }, [analytics.dailyStats]);
+  // All sync statistics are computed from the stored sync history.
+  const dailyStats = useMemo(() => {
+    const days = dateRange === "7D" ? 7 : dateRange === "90D" ? 90 : 30;
+    const key = (d: Date) => d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    const buckets = new Map<string, { date: string; success: number; failed: number; partial: number }>();
+    for (let i = days - 1; i >= 0; i--) {
+      const d = new Date(Date.now() - i * 86400000);
+      buckets.set(key(d), { date: key(d), success: 0, failed: 0, partial: 0 });
+    }
+    history.forEach((h: any) => {
+      const b = h.syncedAt ? buckets.get(key(new Date(h.syncedAt))) : undefined;
+      if (!b) return;
+      if (h.status === "SUCCESS") b.success++;
+      else if (h.status === "FAILED") b.failed++;
+      else b.partial++;
+    });
+    return Array.from(buckets.values());
+  }, [history, dateRange]);
+  const hasDailyStats = dailyStats.some((d) => d.success + d.failed + d.partial > 0);
 
-  const mockObjectStats = useMemo(() => {
-    if (analytics.objectStats?.length > 0) return analytics.objectStats;
-    return [
-      { name: "Contacts", value: 4500, color: "#3b82f6" },
-      { name: "Companies", value: 1200, color: "#10b981" },
-      { name: "Deals", value: 850, color: "#f59e0b" },
-      { name: "Tickets", value: 320, color: "#10b981" },
-      { name: "Notes", value: 5600, color: "#6366f1" }
-    ];
-  }, [analytics.objectStats]);
+  const OBJECT_COLORS = ["#3b82f6", "#10b981", "#f59e0b", "#6366f1", "#ec4899"];
+  const objectStats = useMemo(() => {
+    const counts: Record<string, number> = {};
+    history.forEach((h: any) => { const k = h.objectType || "Other"; counts[k] = (counts[k] ?? 0) + 1; });
+    return Object.entries(counts).map(([name, value], i) => ({ name, value, color: OBJECT_COLORS[i % OBJECT_COLORS.length] }));
+  }, [history]);
 
-  const mockErrorStats = useMemo(() => {
-    if (analytics.errorStats?.length > 0) return analytics.errorStats;
-    return [
-      { type: "API Rate Limit", count: 45, severity: 80 },
-      { type: "Validation Error", count: 120, severity: 40 },
-      { type: "Missing Field", count: 85, severity: 60 },
-      { type: "Authentication", count: 12, severity: 95 },
-      { type: "Network Timeout", count: 34, severity: 70 }
-    ];
-  }, [analytics.errorStats]);
-
-  const mockLatencyData = useMemo(() => {
-    return Array.from({ length: 24 }).map((_, i) => ({
-      time: `${i}:00`,
-      latency: Math.floor(Math.random() * 150) + 50,
-      threshold: 200
-    }));
-  }, []);
-
-  const mockPerformanceData = useMemo(() => {
-    return [
-      { subject: "Speed", A: 120, B: 110, fullMark: 150 },
-      { subject: "Reliability", A: 98, B: 130, fullMark: 150 },
-      { subject: "Accuracy", A: 86, B: 130, fullMark: 150 },
-      { subject: "Throughput", A: 99, B: 100, fullMark: 150 },
-      { subject: "Efficiency", A: 85, B: 90, fullMark: 150 },
-      { subject: "Uptime", A: 65, B: 85, fullMark: 150 },
-    ];
-  }, []);
+  const errorStats = useMemo(() => {
+    const counts: Record<string, number> = {};
+    history.filter((h: any) => h.status === "FAILED" || h.status === "SKIPPED").forEach((h: any) => {
+      const k = (h.errorMessage || h.status || "Error").slice(0, 40);
+      counts[k] = (counts[k] ?? 0) + 1;
+    });
+    return Object.entries(counts).map(([type, count]) => ({ type, count })).sort((a, b) => b.count - a.count).slice(0, 5);
+  }, [history]);
 
   const filteredHistory = useMemo(() => {
     if (!history.length) return [];
@@ -232,17 +204,9 @@ export default function HubSpotSync() {
           <div>
             <p className="rc-stat-label">Sync Status</p>
             <p className="rc-stat-value text-xl mt-1">
-              {isSyncing ? `Syncing ${syncProgress}%` : settings?.syncEnabled ? "Running" : "Paused"}
+              {isSyncing ? "Requesting sync…" : settings?.syncEnabled ? "Enabled" : "Paused"}
             </p>
           </div>
-          {isSyncing && (
-            <div className="w-full bg-[#0d1a2e] rounded-full h-1.5 mt-4 overflow-hidden">
-              <div 
-                className="bg-emerald-500 h-1.5 rounded-full transition-all duration-300"
-                style={{ width: `${syncProgress}%` }}
-              />
-            </div>
-          )}
         </div>
 
         <div className="rc-card flex flex-col justify-between">
@@ -298,7 +262,7 @@ export default function HubSpotSync() {
           </div>
           <div className="mt-4 flex items-center text-xs text-[#7a95b8]">
             <Server size={12} className="mr-1" />
-            <span>Latency: {connection.latency}ms</span>
+            <span>{hubspotConfigured ? "Access token configured" : "Not connected"}</span>
           </div>
         </div>
       </div>
@@ -327,8 +291,11 @@ export default function HubSpotSync() {
             </div>
           </div>
           <div className="h-[300px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={mockDailyStats} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+            {!hasDailyStats ? (
+<div className="h-full flex items-center justify-center text-center text-sm text-[#7a95b8] px-6">No sync runs recorded in this period.</div>
+) : (
+<ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={dailyStats} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <defs>
                   <linearGradient id="colorSuccess" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="#22c55e" stopOpacity={0.3}/>
@@ -351,6 +318,7 @@ export default function HubSpotSync() {
                 <Area type="monotone" dataKey="failed" name="Failed" stroke="#ef4444" fillOpacity={1} fill="url(#colorFailed)" />
               </AreaChart>
             </ResponsiveContainer>
+)}
           </div>
         </div>
 
@@ -360,10 +328,13 @@ export default function HubSpotSync() {
             Object Distribution
           </h3>
           <div className="h-[250px]">
-            <ResponsiveContainer width="100%" height="100%">
+            {objectStats.length === 0 ? (
+<div className="h-full flex items-center justify-center text-center text-sm text-[#7a95b8] px-6">No objects synced yet.</div>
+) : (
+<ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
-                  data={mockObjectStats}
+                  data={objectStats}
                   cx="50%"
                   cy="50%"
                   innerRadius={60}
@@ -371,7 +342,7 @@ export default function HubSpotSync() {
                   paddingAngle={5}
                   dataKey="value"
                 >
-                  {mockObjectStats.map((entry, index) => (
+                  {objectStats.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}
                 </Pie>
@@ -382,12 +353,13 @@ export default function HubSpotSync() {
                 <Legend layout="vertical" verticalAlign="middle" align="right" iconType="circle" />
               </PieChart>
             </ResponsiveContainer>
+)}
           </div>
           <div className="mt-4 pt-4 border-t border-[#12233e]">
             <div className="flex justify-between items-center text-sm">
               <span className="text-[#7a95b8]">Total Objects</span>
               <span className="text-white font-medium">
-                {mockObjectStats.reduce((acc, curr) => acc + curr.value, 0).toLocaleString()}
+                {objectStats.reduce((acc, curr) => acc + curr.value, 0).toLocaleString()}
               </span>
             </div>
           </div>
@@ -401,8 +373,11 @@ export default function HubSpotSync() {
             Error Frequency by Type
           </h3>
           <div className="h-[250px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={mockErrorStats} layout="vertical" margin={{ top: 5, right: 30, left: 40, bottom: 5 }}>
+            {errorStats.length === 0 ? (
+<div className="h-full flex items-center justify-center text-center text-sm text-[#7a95b8] px-6">No failed or skipped syncs recorded.</div>
+) : (
+<ResponsiveContainer width="100%" height="100%">
+              <BarChart data={errorStats} layout="vertical" margin={{ top: 5, right: 30, left: 40, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#12233e" horizontal={false} />
                 <XAxis type="number" stroke="#4b6282" fontSize={12} tickLine={false} axisLine={false} />
                 <YAxis dataKey="type" type="category" stroke="#4b6282" fontSize={12} tickLine={false} axisLine={false} />
@@ -411,12 +386,13 @@ export default function HubSpotSync() {
                   cursor={{ fill: '#12233e', opacity: 0.4 }}
                 />
                 <Bar dataKey="count" name="Error Count" fill="#f59e0b" radius={[0, 4, 4, 0]}>
-                  {mockErrorStats.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.severity > 80 ? '#ef4444' : entry.severity > 50 ? '#f59e0b' : '#3b82f6'} />
+                  {errorStats.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill="#f59e0b" />
                   ))}
                 </Bar>
               </BarChart>
             </ResponsiveContainer>
+)}
           </div>
         </div>
 
@@ -426,17 +402,7 @@ export default function HubSpotSync() {
             Sync Performance
           </h3>
           <div className="h-[250px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <RadarChart cx="50%" cy="50%" outerRadius="80%" data={mockPerformanceData}>
-                <PolarGrid stroke="#12233e" />
-                <PolarAngleAxis dataKey="subject" stroke="#4b6282" fontSize={12} />
-                <PolarRadiusAxis angle={30} domain={[0, 150]} stroke="#4b6282" tick={false} axisLine={false} />
-                <Radar name="Current" dataKey="A" stroke="#10b981" fill="#10b981" fillOpacity={0.5} />
-                <Radar name="Target" dataKey="B" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.2} />
-                <Tooltip contentStyle={{ backgroundColor: '#060d18', borderColor: '#12233e' }} />
-                <Legend />
-              </RadarChart>
-            </ResponsiveContainer>
+            <div className="h-full flex items-center justify-center text-center text-sm text-[#7a95b8] px-6">Sync performance is not measured. No speed or reliability scores are shown.</div>
           </div>
         </div>
       </div>
@@ -582,8 +548,11 @@ export default function HubSpotSync() {
           Sync Volume vs Errors
         </h3>
         <div className="h-[300px]">
-          <ResponsiveContainer width="100%" height="100%">
-            <ComposedChart data={mockDailyStats} margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
+          {!hasDailyStats ? (
+<div className="h-full flex items-center justify-center text-center text-sm text-[#7a95b8] px-6">No sync runs recorded in this period.</div>
+) : (
+<ResponsiveContainer width="100%" height="100%">
+            <ComposedChart data={dailyStats} margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
               <CartesianGrid stroke="#12233e" strokeDasharray="3 3" vertical={false} />
               <XAxis dataKey="date" stroke="#4b6282" fontSize={12} tickLine={false} axisLine={false} />
               <YAxis yAxisId="left" stroke="#4b6282" fontSize={12} tickLine={false} axisLine={false} />
@@ -596,6 +565,7 @@ export default function HubSpotSync() {
               <Line yAxisId="right" type="monotone" dataKey="failed" name="Errors" stroke="#ef4444" strokeWidth={2} dot={{ r: 4, fill: '#ef4444', strokeWidth: 0 }} />
             </ComposedChart>
           </ResponsiveContainer>
+)}
         </div>
       </div>
     </div>
@@ -758,29 +728,21 @@ export default function HubSpotSync() {
                 {connection.status === 'CONNECTED' ? <CheckCircle2 size={40} /> : <XCircle size={40} />}
               </div>
               <h4 className="text-xl font-medium text-white">
-                {connection.status === 'CONNECTED' ? 'Connected' : 'Disconnected'}
+                {connection.status === 'CONNECTED' ? 'Connected' : 'Not connected'}
               </h4>
               <p className="text-sm text-[#7a95b8] mt-1">
-                {connection.status === 'CONNECTED' ? 'HubSpot API is reachable' : 'Cannot reach HubSpot API'}
+                {connection.status === 'CONNECTED' ? 'A HubSpot access token is configured on the server' : 'No HubSpot access token is configured'}
               </p>
             </div>
             
             <div className="py-4 space-y-3">
               <div className="flex justify-between text-sm">
-                <span className="text-[#7a95b8]">Portal ID</span>
-                <span className="text-white font-medium">8492015</span>
-              </div>
-              <div className="flex justify-between text-sm">
                 <span className="text-[#7a95b8]">Auth Type</span>
-                <span className="text-white font-medium">OAuth 2.0</span>
+                <span className="text-white font-medium">Private app access token</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-[#7a95b8]">Token Expires</span>
-                <span className="text-white font-medium">In 4 hours</span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-[#7a95b8]">API Version</span>
-                <span className="text-white font-medium">v3</span>
+                <span className="text-[#7a95b8]">Token</span>
+                <span className="text-white font-medium">{hubspotConfigured ? "Configured" : "Missing"}</span>
               </div>
             </div>
             
@@ -795,27 +757,7 @@ export default function HubSpotSync() {
               API Usage
             </h3>
             
-            <div className="space-y-4">
-              <div>
-                <div className="flex justify-between text-sm mb-1">
-                  <span className="text-[#c8d8ec]">Daily Limit</span>
-                  <span className="text-white font-medium">45,230 / 500,000</span>
-                </div>
-                <div className="w-full bg-[#0d1a2e] rounded-full h-2">
-                  <div className="bg-blue-500 h-2 rounded-full" style={{ width: '9%' }}></div>
-                </div>
-              </div>
-              
-              <div>
-                <div className="flex justify-between text-sm mb-1">
-                  <span className="text-[#c8d8ec]">Burst Limit (10s)</span>
-                  <span className="text-white font-medium">12 / 100</span>
-                </div>
-                <div className="w-full bg-[#0d1a2e] rounded-full h-2">
-                  <div className="bg-emerald-500 h-2 rounded-full" style={{ width: '12%' }}></div>
-                </div>
-              </div>
-            </div>
+            <p className="text-sm text-[#7a95b8]">HubSpot API usage is not tracked here. Check the HubSpot developer account for rate-limit usage.</p>
           </div>
         </div>
       </div>
@@ -958,7 +900,7 @@ export default function HubSpotSync() {
                     { label: "Deals Sync", value: settings?.syncDeals ? "Enabled" : "Disabled" },
                     { label: "Sync Direction", value: settings?.syncDirection || "Not configured" },
                     { label: "Last Sync Status", value: settings?.lastSyncStatus || "Never" },
-                    { label: "Connection Health", value: `${health.score}/100` },
+                    { label: "Connection", value: hubspotConfigured ? "Access token configured" : "Not connected" },
                   ],
                 },
               ]}
@@ -969,7 +911,7 @@ export default function HubSpotSync() {
               className="rc-btn rc-btn-primary flex items-center gap-2 disabled:opacity-50"
             >
               <RefreshCw size={16} className={isSyncing ? "animate-spin" : ""} />
-              {isSyncing ? `Syncing ${syncProgress}%` : "Sync Now"}
+              {isSyncing ? "Requesting…" : "Sync Now"}
             </button>
           </div>
         </div>
@@ -1039,7 +981,7 @@ export default function HubSpotSync() {
                 <div>
                   <p className="text-xs text-[#7a95b8] uppercase tracking-wider mb-1">Transaction ID</p>
                   <p className="text-sm text-white font-mono bg-[#0d1a2e] px-2 py-1 rounded border border-[#12233e] inline-block">
-                    {selectedLog.id || `txn_${Math.random().toString(36).substr(2, 9)}`}
+                    {selectedLog.id ?? "—"}
                   </p>
                 </div>
                 <div>

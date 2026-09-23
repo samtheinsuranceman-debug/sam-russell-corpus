@@ -125,19 +125,18 @@ systemd unit, a `.env` loaded by your process manager, etc.) — **not** in the 
 | `OWNER_EMAIL` | the owner's sign‑in email — **this is how you reach `/portal/leads` on your own host** |
 | `OWNER_PASSWORD_HASH` | bcrypt hash of the owner password; generate with `pnpm owner:password` (never store the password itself) |
 | `OWNER_NAME` | display name for the owner account (optional) |
-| `OWNER_OPEN_ID` | the owner's user id (optional; defaults to `owner`). Also gates the inbox for a managed‑OAuth user |
+| `OWNER_OPEN_ID` | the owner's user id (optional; defaults to `owner`) |
 | `ROOM_VIDEO_URLS` | Optional. JSON map of HeyGen room key → https URL (`{"engines":"https://…mp4"}`); keys in `shared/roomVideos.ts`, plus the page slots `heloc-before` and `heloc-after`. A tile appears on that room's pages once set. `ROOM_VIDEO_POSTERS` is the same shape for stills. |
 | `PUBLIC_HOMEPAGE` | leave unset: the homepage sits behind the entrance and an unsigned visitor to `/` is sent to `/login` first. Set to `1` to open the homepage to the public without signing in |
 | `GUEST_PASSCODE_HASH` | bcrypt hash of the **entrance passcode**: any email plus this passcode signs in as a regular user (never admin). Generate with `pnpm owner:password`; the passcode itself is never stored. Unset = no passcode entrance |
-| `OAUTH_SERVER_URL` | **managed host only** (Manus). Leave unset on cPanel/VPS — the owner sign‑in above replaces it |
+| `STORAGE_S3_BUCKET` | Optional. S3‑compatible bucket (AWS S3, R2, B2, MinIO) for uploaded files, served as `/files/…`; uses the same `S3_ENDPOINT`, `S3_REGION`, `S3_ACCESS_KEY_ID`, `S3_SECRET_ACCESS_KEY` as backups (`STORAGE_S3_PREFIX` defaults to `files/`). Unset = uploads fail with a "not configured" message |
 | `NODE_ENV` | `production` |
 | `PORT` | port to listen on (default `3000`) |
 
 ### AI advisors (optional — each is skip‑if‑absent; add the ones you use)
 `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, `XAI_API_KEY`, `GEMINI_API_KEY`,
 `PERPLEXITY_API_KEY`, `OPENROUTER_API_KEY`, `MISTRAL_API_KEY`, `GROQ_API_KEY`,
-`COHERE_API_KEY`, `TOGETHER_API_KEY`,
-`BUILT_IN_FORGE_API_KEY` (Manus / built‑in gateway; also powers `BUILT_IN_FORGE_API_URL` if self‑hosted).
+`COHERE_API_KEY`, `TOGETHER_API_KEY`. There is no built‑in hosted gateway: every AI call goes through these keys (the Brain Hub chain).
 > With zero AI keys the homepage concierge degrades gracefully to a written teaser.
 > **Owner's standing rule:** no China-linked AI on this platform — DeepSeek and every other
 > Chinese lab, model or host (Taiwan-based labs are suspect too). Do not add one as a provider,

@@ -8,12 +8,11 @@
  * gives a base rate per category and per environment — which is exactly the
  * number the confidence engine needs to weight a new threat.
  *
- * The seed ledger below is the historical record from 1979 to 2026, coded
- * from the public account (Xinhua / MFA / State Council releases and the
- * subsequent record). It is deliberately conservative: an outcome is
- * "followed" only when the stated action occurred in the stated form. The
- * refresh job appends new statements daily; outcomes are attached by hand or
- * by Thomas with a citation, never inferred.
+ * It is deliberately conservative: an outcome is "followed" only when the
+ * stated action occurred in the stated form. The refresh job appends new
+ * statements daily; outcomes are attached by hand or by Thomas with a
+ * citation, never inferred. No statement is taken from a Chinese government,
+ * Party or state-media channel (owner's order, 23 Sep 2026).
  */
 import type { IsoDate } from "./types";
 
@@ -89,44 +88,15 @@ export type Statement = {
   sourceId: string;
 };
 
-export const STATEMENT_LEDGER: Statement[] = [
-  { id: "1979-01-tw", date: "1979-01-01", speaker: "NPC Standing Committee", channel: "Message to Compatriots in Taiwan", category: "taiwan-political", severity: "routine", environment: "calm", claim: "Peaceful reunification; end of Kinmen shelling", outcome: "followed", outcomeNote: "Shelling ended 1 Jan 1979", sourceId: "cn-npc" },
-  { id: "1995-07-tw", date: "1995-07-18", speaker: "Xinhua", channel: "Announcement", category: "taiwan-military", severity: "threat", environment: "us-official-visit", claim: "Missile tests near Taiwan after Lee Teng-hui's Cornell visit", outcome: "followed", outcomeNote: "DF-15 launches July 1995 and March 1996", sourceId: "cn-xinhua" },
-  { id: "1996-03-tw", date: "1996-03-05", speaker: "Xinhua", channel: "Announcement", category: "taiwan-military", severity: "threat", environment: "taiwan-election", claim: "Live-fire exercises before Taiwan's first direct election", outcome: "followed", outcomeNote: "Exercises held; U.S. carriers deployed", sourceId: "cn-xinhua" },
-  { id: "1999-05-emb", date: "1999-05-09", speaker: "MFA", channel: "Statement", category: "diplomatic-warning", severity: "threat", environment: "military-incident", claim: "Suspend military contacts after Belgrade embassy bombing", outcome: "followed", outcomeNote: "Contacts suspended for months", sourceId: "cn-mofa" },
-  { id: "2000-02-wp", date: "2000-02-21", speaker: "State Council", channel: "White Paper", category: "taiwan-political", severity: "ultimatum", environment: "taiwan-election", claim: "Indefinite refusal to negotiate justifies force", outcome: "not-followed", outcomeNote: "No force used; codified in 2005 law instead", sourceId: "cn-gov-state-council" },
-  { id: "2005-03-asl", date: "2005-03-14", speaker: "NPC", channel: "Anti-Secession Law", category: "taiwan-political", severity: "ultimatum", environment: "calm", claim: "Non-peaceful means if secession occurs", outcome: "pending", outcomeNote: "Never triggered; remains the legal basis", sourceId: "cn-npc" },
-  { id: "2010-01-arms", date: "2010-01-30", speaker: "MFA", channel: "Statement", category: "trade-retaliation", severity: "threat", environment: "us-official-visit", claim: "Sanctions on U.S. firms selling arms to Taiwan", outcome: "not-followed", outcomeNote: "No sanctions imposed in 2010", sourceId: "cn-mofa" },
-  { id: "2010-09-re", date: "2010-09-22", speaker: "MOFCOM (via Xinhua)", channel: "Reported", category: "trade-retaliation", severity: "threat", environment: "military-incident", claim: "Rare-earth restrictions on Japan after Senkaku collision", outcome: "followed", outcomeNote: "Exports halted ~2 months; WTO ruled against China 2014", sourceId: "cn-mofcom" },
-  { id: "2012-09-jp", date: "2012-09-11", speaker: "MFA", channel: "Statement", category: "territorial-scs", severity: "threat", environment: "military-incident", claim: "Countermeasures after Japan nationalises Senkakus", outcome: "followed", outcomeNote: "Coast-guard patrols began and continue", sourceId: "cn-mofa" },
-  { id: "2013-11-adiz", date: "2013-11-23", speaker: "MND", channel: "Announcement", category: "territorial-scs", severity: "warning", environment: "calm", claim: "East China Sea ADIZ; 'defensive emergency measures' against non-compliance", outcome: "partial", outcomeNote: "ADIZ declared; enforcement never applied to U.S. flights", sourceId: "cn-mod" },
-  { id: "2015-08-fx", date: "2015-08-11", speaker: "PBOC", channel: "Statement", category: "currency-policy", severity: "routine", environment: "domestic-stress", claim: "One-off fixing adjustment; no basis for sustained depreciation", outcome: "reversed", outcomeNote: "Yuan fell ~10 % over 18 months; ~$500 bn of Treasuries sold to defend it", sourceId: "cn-pboc-mpc" },
-  { id: "2016-07-scs", date: "2016-07-12", speaker: "MFA", channel: "Statement", category: "territorial-scs", severity: "ultimatum", environment: "calm", claim: "Arbitration award 'null and void'; will not accept", outcome: "followed", outcomeNote: "Award ignored; island building continued", sourceId: "cn-mofa" },
-  { id: "2017-03-kr", date: "2017-03-03", speaker: "MFA / MOFCOM", channel: "Statement", category: "trade-retaliation", severity: "threat", environment: "military-incident", claim: "Consequences for Korea over THAAD", outcome: "followed", outcomeNote: "Lotte stores closed; tour groups banned; ~$7 bn cost to Korea", sourceId: "cn-mofcom" },
-  { id: "2018-04-soy", date: "2018-04-04", speaker: "MOFCOM", channel: "Announcement", category: "trade-retaliation", severity: "threat", environment: "trade-dispute", claim: "25 % tariff on U.S. soybeans, aircraft, autos", outcome: "followed", outcomeNote: "Imposed 6 July 2018", sourceId: "cn-mofcom" },
-  { id: "2019-05-ust", date: "2019-05-13", speaker: "Global Times editorial", channel: "State media", category: "financial-retaliation", severity: "threat", environment: "trade-dispute", claim: "China could dump U.S. Treasuries as a 'nuclear option'", outcome: "not-followed", outcomeNote: "Holdings drifted lower, no dump", sourceId: "cn-global-times" },
-  { id: "2019-05-uel", date: "2019-05-31", speaker: "MOFCOM", channel: "Announcement", category: "sanctions-countermeasure", severity: "threat", environment: "trade-dispute", claim: "Unreliable Entity List to be established", outcome: "partial", outcomeNote: "Rules issued Sept 2020; first listings Feb 2023", sourceId: "cn-mofcom" },
-  { id: "2019-06-re", date: "2019-05-29", speaker: "NDRC (via People's Daily)", channel: "State media", category: "trade-retaliation", severity: "warning", environment: "trade-dispute", claim: "'Don't say we didn't warn you' on rare earths", outcome: "not-followed", outcomeNote: "No 2019 restriction; controls came 2023–25", sourceId: "cn-peoples-daily" },
-  { id: "2020-05-hk", date: "2020-05-22", speaker: "NPC", channel: "Decision", category: "domestic-economic", severity: "ultimatum", environment: "domestic-stress", claim: "National security law for Hong Kong", outcome: "followed", outcomeNote: "Enacted 30 June 2020", sourceId: "cn-npc" },
-  { id: "2020-06-in", date: "2020-06-17", speaker: "MFA", channel: "Statement", category: "territorial-scs", severity: "warning", environment: "military-incident", claim: "India responsible for Galwan; China will defend sovereignty", outcome: "followed", outcomeNote: "Positions held; disengagement talks to 2024", sourceId: "cn-mofa" },
-  { id: "2020-12-au", date: "2020-12-01", speaker: "MOFCOM", channel: "Announcement", category: "trade-retaliation", severity: "threat", environment: "trade-dispute", claim: "Anti-dumping duties on Australian wine, barley; coal restrictions", outcome: "followed", outcomeNote: "Imposed; most lifted 2023–24", sourceId: "cn-mofcom" },
-  { id: "2021-06-afsl", date: "2021-06-10", speaker: "NPC", channel: "Anti-Foreign Sanctions Law", category: "sanctions-countermeasure", severity: "ultimatum", environment: "sanctions-escalation", claim: "Countermeasures against foreign sanctions", outcome: "partial", outcomeNote: "Used sparingly against individuals and firms", sourceId: "cn-npc" },
-  { id: "2022-08-pelosi", date: "2022-08-02", speaker: "MFA / MND", channel: "Statement", category: "taiwan-military", severity: "threat", environment: "us-official-visit", claim: "Resolute countermeasures if Pelosi visits", outcome: "followed", outcomeNote: "Largest exercises since 1996; missiles over Taiwan; sanctions on Pelosi", sourceId: "cn-mofa" },
-  { id: "2022-08-tw-trade", date: "2022-08-03", speaker: "MOFCOM / GACC", channel: "Announcement", category: "trade-retaliation", severity: "threat", environment: "us-official-visit", claim: "Ban Taiwanese citrus, fish; halt sand exports", outcome: "followed", outcomeNote: "Imposed 3 Aug 2022", sourceId: "cn-mofcom" },
-  { id: "2023-04-js", date: "2023-04-08", speaker: "Eastern Theater Command", channel: "Announcement", category: "taiwan-military", severity: "threat", environment: "us-official-visit", claim: "Joint Sword exercises after Tsai–McCarthy meeting", outcome: "followed", outcomeNote: "Three days of exercises", sourceId: "cn-mod" },
-  { id: "2023-07-ga", date: "2023-07-03", speaker: "MOFCOM", channel: "Announcement", category: "trade-retaliation", severity: "threat", environment: "sanctions-escalation", claim: "Export controls on gallium and germanium from 1 Aug", outcome: "followed", outcomeNote: "In force 1 Aug 2023", sourceId: "cn-mofcom" },
-  { id: "2023-10-graphite", date: "2023-10-20", speaker: "MOFCOM", channel: "Announcement", category: "trade-retaliation", severity: "threat", environment: "sanctions-escalation", claim: "Export controls on graphite from 1 Dec", outcome: "followed", outcomeNote: "In force 1 Dec 2023", sourceId: "cn-mofcom" },
-  { id: "2024-05-js2024a", date: "2024-05-23", speaker: "Eastern Theater Command", channel: "Announcement", category: "taiwan-military", severity: "threat", environment: "taiwan-election", claim: "Joint Sword-2024A 'punishment' after Lai inauguration", outcome: "followed", outcomeNote: "Two days of exercises", sourceId: "cn-mod" },
-  { id: "2024-10-js2024b", date: "2024-10-14", speaker: "Eastern Theater Command", channel: "Announcement", category: "taiwan-military", severity: "threat", environment: "calm", claim: "Joint Sword-2024B after National Day speech", outcome: "followed", outcomeNote: "One-day encirclement; record 153 aircraft", sourceId: "cn-mod" },
-  { id: "2024-12-uel", date: "2024-12-05", speaker: "MOFCOM", channel: "Announcement", category: "sanctions-countermeasure", severity: "threat", environment: "sanctions-escalation", claim: "Ban gallium, germanium, antimony exports to the U.S.", outcome: "followed", outcomeNote: "In force 3 Dec 2024", sourceId: "cn-mofcom" },
-  { id: "2025-04-re", date: "2025-04-04", speaker: "MOFCOM", channel: "Announcement", category: "trade-retaliation", severity: "threat", environment: "trade-dispute", claim: "Export controls on seven rare-earth elements", outcome: "followed", outcomeNote: "Licences required from 4 Apr 2025; eased under the truce", sourceId: "cn-mofcom" },
-  { id: "2025-04-tariff", date: "2025-04-11", speaker: "State Council Tariff Commission", channel: "Announcement", category: "trade-retaliation", severity: "threat", environment: "trade-dispute", claim: "125 % tariff on U.S. goods", outcome: "followed", outcomeNote: "Imposed; cut to 10 % under the May 2025 Geneva truce", sourceId: "cn-gov-state-council" },
-  { id: "2025-04-st", date: "2025-04-01", speaker: "Eastern Theater Command", channel: "Announcement", category: "taiwan-military", severity: "threat", environment: "calm", claim: "Strait Thunder-2025A exercises", outcome: "followed", outcomeNote: "Two days; blockade rehearsal", sourceId: "cn-mod" },
-  { id: "2025-12-jm", date: "2025-12-01", speaker: "Eastern Theater Command", channel: "Announcement", category: "taiwan-military", severity: "threat", environment: "calm", claim: "Justice Mission 2025 — port isolation and seizure rehearsal", outcome: "followed", outcomeNote: "Full maritime blockade rehearsed", sourceId: "cn-mod" },
-  { id: "2026-03-ust", date: "2026-03-10", speaker: "Global Times", channel: "State media", category: "financial-retaliation", severity: "warning", environment: "sanctions-escalation", claim: "Treasury holdings are a 'card' China can play", outcome: "not-followed", outcomeNote: "Holdings fell $33 bn over Apr–Jul, consistent with the multi-year drift, not a dump", sourceId: "cn-global-times" },
-  { id: "2026-06-gold", date: "2026-06-07", speaker: "PBOC (via SAFE)", channel: "Data release", category: "reserve-management", severity: "routine", environment: "calm", claim: "Continued reserve diversification", outcome: "followed", outcomeNote: "22nd straight month of gold buying, Aug 2026", sourceId: "cn-pboc-gold" },
-  { id: "2026-07-tw", date: "2026-07-15", speaker: "Taiwan Affairs Office", channel: "Press conference", category: "taiwan-political", severity: "warning", environment: "calm", claim: "'Taiwan independence forces' will be punished", outcome: "partial", outcomeNote: "Record 244 ships in July; no named exercise", sourceId: "cn-taiwan-affairs-office" },
-];
+/**
+ * The seed ledger. The 1979–2026 Beijing ledger (36 statements coded from
+ * Xinhua, MFA, MOFCOM, NPC, State Council, PBOC, MND, TAO, People's Daily and
+ * Global Times releases) was removed on 23 Sep 2026 under the owner's order
+ * that nothing is read from a Chinese government, Party or state-media site.
+ * Statements now arrive only through the refresh job's non-Chinese feeds and
+ * hand entries with a U.S. or allied citation.
+ */
+export const STATEMENT_LEDGER: Statement[] = [];
 
 export type FollowThroughRate = {
   n: number;
@@ -219,10 +189,14 @@ export function followThroughReport(ledger: Statement[] = STATEMENT_LEDGER, asOf
 /**
  * Weight a new statement for the confidence engine: the base rate for its
  * category × environment, shrunk toward the overall rate when the cell is
- * thin. Returns a signal multiplier in [0.2, 1.0].
+ * thin. Returns a signal multiplier in [0.2, 1.0]; 0.5 when the ledger holds
+ * no decided statement yet.
  */
 export function statementCredibility(category: StatementCategory, environment: Environment, ledger: Statement[] = STATEMENT_LEDGER): number {
-  const overall = rateOf(ledger).rate;
+  const all = rateOf(ledger);
+  // With no decided statement on record there is no base rate: an uninformed 0.5, not a penalty.
+  if (all.n - all.pending === 0) return 0.5;
+  const overall = all.rate;
   const cell = ledger.filter(s => s.category === category && s.environment === environment);
   const cat = ledger.filter(s => s.category === category);
   const cellRate = cell.length ? rateOf(cell) : null;

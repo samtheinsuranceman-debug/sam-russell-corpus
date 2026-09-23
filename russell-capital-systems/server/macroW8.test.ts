@@ -474,7 +474,8 @@ describe("the brief — since yesterday, budget, lookups", () => {
     expect(s).toEqual({ kind: "statement", query: "Federal Reserve" });
     const so = executeMacroLookup(s, extras);
     expect(so).toMatch(/2026-09-21 Example Person \(Chair of the Federal Reserve\).*outcome pending <https:\/\/www\.reuters\.com\/x>/);
-    expect(executeMacroLookup({ kind: "statement", query: "Treasuries" }, extras)).toMatch(/nuclear option/);
+    // The Beijing seed ledger is gone (23 Sep 2026): a state-media query finds nothing.
+    expect(executeMacroLookup({ kind: "statement", query: "Global Times" }, extras)).toMatch(/no ledger statement matches/);
     expect(executeMacroLookup({ kind: "statement", query: "zzzz-nothing" }, extras)).toMatch(/no ledger statement matches/);
     expect(parseMacroLookup('MACRO_LOOKUP: {"kind":"statement","query":""}')).toBeNull();
   });

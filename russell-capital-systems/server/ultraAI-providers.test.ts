@@ -25,12 +25,6 @@ describe("Ultra AI orchestrator — eleven AI advisors", () => {
     }
   });
 
-  it("never includes DeepSeek — the owner's standing rule", () => {
-    expect(src).not.toContain("DEEPSEEK_API_KEY");
-    expect(src).not.toContain("api.deepseek.com");
-    expect(src).not.toContain('"deepseek"');
-  });
-
   it("keeps API keys server-side only — never accepts them from the client", () => {
     // Keys are read from process.env inside providers; the client never sends them.
     expect(src).toContain("process.env[p.envKey]");

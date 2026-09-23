@@ -40,22 +40,14 @@ const NORMALISATION: Record<string, { neutral: number; span: number }> = {
   "cn-pboc-gold-streak": { neutral: 6, span: 18 },
   "cn-safe-reserves-change": { neutral: 0, span: -60 },
   "cn-agency-mbs-holdings": { neutral: 0, span: -30 },
-  "cn-cips-volume-growth": { neutral: 15, span: 30 },
   "cn-us-sanction-escalation": { neutral: 0, span: 4 },
-  "cn-mofcom-countermeasures": { neutral: 1, span: 5 },
-  "cn-mfa-dollar-rhetoric": { neutral: 1, span: 6 },
-  "cn-state-media-threat": { neutral: 2, span: 8 },
   "cn-cny-pressure": { neutral: 50, span: 300 },
-  "cn-capital-outflow-proxy": { neutral: -20, span: -100 },
-  "cn-npc-law-financial-security": { neutral: 0, span: 1 },
   "cn-taiwan-tension-link": { neutral: 0.08, span: 0.15 },
   "cn-ust-share-of-reserves": { neutral: 20, span: 10 },
 };
 
 /** Which indicators are words rather than data, and how to credit them. */
 const STATEMENT_INDICATORS: Record<string, Parameters<typeof statementCredibility>> = {
-  "cn-mfa-dollar-rhetoric": ["financial-retaliation", "sanctions-escalation"],
-  "cn-state-media-threat": ["financial-retaliation", "sanctions-escalation"],
   "jp-diet-reserve-debate": ["reserve-management", "calm"],
 };
 

@@ -194,43 +194,88 @@ export default function ComplianceAlerts() {
       .slice(0, 5);
   }, [allAlerts]);
 
+  // Every figure below is computed from the alerts actually stored for this
+  // workspace. Nothing is generated; with no alerts the charts show empty states.
+  const dayKey = (d: Date) => d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+
   const trendData = useMemo(() => {
-    const data = [];
     const now = new Date();
+    const buckets = new Map<string, { date: string; critical: number; warning: number; info: number; resolved: number }>();
     for (let i = 30; i >= 0; i--) {
       const d = new Date(now);
       d.setDate(d.getDate() - i);
-      data.push({
-        date: d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-        critical: Math.floor(Math.random() * 5),
-        warning: Math.floor(Math.random() * 10),
-        info: Math.floor(Math.random() * 15),
-        resolved: Math.floor(Math.random() * 20)
-      });
+      const key = dayKey(d);
+      buckets.set(key, { date: key, critical: 0, warning: 0, info: 0, resolved: 0 });
     }
-    return data;
-  }, []);
+    allAlerts.forEach((alert) => {
+      const created = buckets.get(dayKey(new Date(alert.createdAt)));
+      if (created) {
+        if (alert.severity === "CRITICAL") created.critical++;
+        else if (alert.severity === "WARNING") created.warning++;
+        else created.info++;
+      }
+      if (alert.resolvedAt) {
+        const resolved = buckets.get(dayKey(new Date(alert.resolvedAt)));
+        if (resolved) resolved.resolved++;
+      }
+    });
+    return Array.from(buckets.values());
+  }, [allAlerts]);
+
+  const hasTrend = useMemo(
+    () => trendData.some((d) => d.critical + d.warning + d.info + d.resolved > 0),
+    [trendData]
+  );
+
+  // Target SLAs are the firm's policy, not measured values.
+  const SLA_TARGET_DAYS: Record<string, number> = {
+    RMD_DEADLINE: 3, CONTRIBUTION_LIMIT: 5, FILING_DEADLINE: 2,
+    REBALANCE_OVERDUE: 7, REVIEW_OVERDUE: 14,
+  };
 
   const resolutionTimeData = useMemo(() => {
-    return [
-      { category: "RMD Deadline", avgDays: 2.5, target: 3 },
-      { category: "Contribution Limit", avgDays: 4.1, target: 5 },
-      { category: "Filing Deadline", avgDays: 1.8, target: 2 },
-      { category: "Rebalance Overdue", avgDays: 5.5, target: 7 },
-      { category: "Review Overdue", avgDays: 8.2, target: 14 },
-    ];
-  }, []);
+    const groups: Record<string, { total: number; resolved: number; days: number[] }> = {};
+    allAlerts.forEach((alert) => {
+      const g = (groups[alert.alertType] ??= { total: 0, resolved: 0, days: [] });
+      g.total++;
+      if (alert.resolvedAt) {
+        g.resolved++;
+        g.days.push((new Date(alert.resolvedAt).getTime() - new Date(alert.createdAt).getTime()) / 86_400_000);
+      }
+    });
+    return Object.entries(groups).map(([type, g]) => ({
+      category: ALERT_TYPE_LABELS[type] ?? type,
+      total: g.total,
+      resolved: g.resolved,
+      avgDays: g.days.length ? Math.round((g.days.reduce((a, b) => a + b, 0) / g.days.length) * 10) / 10 : null,
+      target: SLA_TARGET_DAYS[type] ?? null,
+    }));
+  }, [allAlerts]);
 
-  const radarData = useMemo(() => {
-    return [
-      { subject: 'Speed', A: 120, B: 110, fullMark: 150 },
-      { subject: 'Accuracy', A: 98, B: 130, fullMark: 150 },
-      { subject: 'Coverage', A: 86, B: 130, fullMark: 150 },
-      { subject: 'Resolution', A: 99, B: 100, fullMark: 150 },
-      { subject: 'Proactive', A: 85, B: 90, fullMark: 150 },
-      { subject: 'Client Impact', A: 65, B: 85, fullMark: 150 },
-    ];
-  }, []);
+  const alertsByClient = useMemo(() => {
+    const counts = new Map<string, { name: string; alerts: number }>();
+    allAlerts.forEach((alert) => {
+      const key = String(alert.clientId);
+      const name = alert.clientName || clients.find((c) => String(c.id) === key)?.name || `#${alert.clientId}`;
+      const row = counts.get(key) ?? { name, alerts: 0 };
+      row.alerts++;
+      counts.set(key, row);
+    });
+    return Array.from(counts.values()).sort((a, b) => b.alerts - a.alerts).slice(0, 10);
+  }, [allAlerts, clients]);
+
+  const keyFigures = useMemo(() => {
+    const total = allAlerts.length;
+    const resolved = allAlerts.filter((a) => a.resolvedAt).length;
+    const dismissed = allAlerts.filter((a) => a.dismissed).length;
+    return {
+      total,
+      open: total - resolved - dismissed,
+      resolved,
+      dismissed,
+      resolutionRate: total ? Math.round((resolved / total) * 100) : null,
+    };
+  }, [allAlerts]);
 
   const exportToCSV = () => {
     if (!filteredAlerts.length) {
@@ -308,6 +353,11 @@ export default function ComplianceAlerts() {
                   Alert Volume Trend (30 Days)
                 </h3>
                 <div className="h-[300px]">
+                  {!hasTrend ? (
+                    <div className="h-full flex flex-col items-center justify-center text-center text-[#7a95b8] px-6">
+                      <p>No alerts in the last 30 days. Alerts created by compliance checks will be charted here.</p>
+                    </div> 
+                  ) : (
                   <ResponsiveContainer width="100%" height="100%">
                     <AreaChart data={trendData}>
                       <defs>
@@ -332,6 +382,7 @@ export default function ComplianceAlerts() {
                       <Area type="monotone" dataKey="warning" stroke="#f59e0b" fillOpacity={1} fill="url(#colorWarning)" name="Warning" />
                     </AreaChart>
                   </ResponsiveContainer>
+                  )}
                 </div>
               </div>
 
@@ -381,6 +432,11 @@ export default function ComplianceAlerts() {
                   Average Resolution Time (Days)
                 </h3>
                 <div className="h-[250px]">
+                  {!resolutionTimeData.some((r) => r.avgDays !== null) ? (
+                    <div className="h-full flex flex-col items-center justify-center text-center text-[#7a95b8] px-6">
+                      <p>No resolved alerts yet. Average days from alert to resolution will appear here.</p>
+                    </div>
+                  ) : (
                   <ResponsiveContainer width="100%" height="100%">
                     <ComposedChart data={resolutionTimeData} layout="vertical">
                       <CartesianGrid strokeDasharray="3 3" stroke="#12233e" horizontal={false} />
@@ -394,26 +450,27 @@ export default function ComplianceAlerts() {
                       <Line dataKey="target" name="Target SLA" type="step" stroke="#ef4444" strokeWidth={2} />
                     </ComposedChart>
                   </ResponsiveContainer>
+                  )}
                 </div>
               </div>
 
               <div className="rc-card bg-[#0d1a2e] border-[#12233e] p-5">
                 <h3 className="text-sm font-medium text-white mb-6 flex items-center gap-2">
                   <Target size={16} className="text-[#ec4899]" />
-                  Compliance Score Metrics
+                  Alert Summary
                 </h3>
-                <div className="h-[250px]">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <RadarChart cx="50%" cy="50%" outerRadius="70%" data={radarData}>
-                      <PolarGrid stroke="#12233e" />
-                      <PolarAngleAxis dataKey="subject" tick={{ fill: '#7a95b8', fontSize: 10 }} />
-                      <PolarRadiusAxis angle={30} domain={[0, 150]} tick={false} axisLine={false} />
-                      <Radar name="Firm Avg" dataKey="B" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.3} />
-                      <Radar name="Your Score" dataKey="A" stroke="#22c55e" fill="#22c55e" fillOpacity={0.5} />
-                      <Legend wrapperStyle={{ fontSize: '12px' }} />
-                      <RTooltip contentStyle={{ backgroundColor: '#060d19', borderColor: '#12233e', color: '#fff' }} />
-                    </RadarChart>
-                  </ResponsiveContainer>
+                <div className="h-[250px] flex flex-col justify-center gap-3 text-sm">
+                  {keyFigures.total === 0 ? (
+                    <p className="text-center text-[#7a95b8]">No alerts on record yet. Run a compliance check to populate these figures.</p>
+                  ) : (
+                    <>
+                      <div className="flex justify-between"><span className="text-[#7a95b8]">Alerts loaded</span><span className="text-white font-medium">{keyFigures.total}</span></div>
+                      <div className="flex justify-between"><span className="text-[#7a95b8]">Open</span><span className="text-white font-medium">{keyFigures.open}</span></div>
+                      <div className="flex justify-between"><span className="text-[#7a95b8]">Resolved</span><span className="text-white font-medium">{keyFigures.resolved}</span></div>
+                      <div className="flex justify-between"><span className="text-[#7a95b8]">Dismissed</span><span className="text-white font-medium">{keyFigures.dismissed}</span></div>
+                      <div className="flex justify-between"><span className="text-[#7a95b8]">Resolution rate</span><span className="text-white font-medium">{keyFigures.resolutionRate}%</span></div>
+                    </>
+                  )}
                 </div>
               </div>
             </div>
@@ -731,8 +788,13 @@ export default function ComplianceAlerts() {
               <div className="rc-card bg-[#0d1a2e] border-[#12233e] p-5">
                 <h3 className="text-sm font-medium text-white mb-6">Alerts by Client (Top 10)</h3>
                 <div className="h-[300px]">
+                  {alertsByClient.length === 0 ? (
+                    <div className="h-full flex flex-col items-center justify-center text-center text-[#7a95b8] px-6">
+                      <p>No alerts on record. Clients with the most alerts will be listed here.</p>
+                    </div>
+                  ) : (
                   <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={clients?.slice(0, 10).map((c) => ({ name: c.name, alerts: Math.floor(Math.random() * 20) })) || []} layout="vertical">
+                    <BarChart data={alertsByClient} layout="vertical">
                       <CartesianGrid strokeDasharray="3 3" stroke="#12233e" horizontal={true} vertical={false} />
                       <XAxis type="number" stroke="#7a95b8" fontSize={12} tickLine={false} axisLine={false} />
                       <YAxis dataKey="name" type="category" stroke="#7a95b8" fontSize={12} tickLine={false} axisLine={false} width={100} />
@@ -740,11 +802,17 @@ export default function ComplianceAlerts() {
                       <Bar dataKey="alerts" fill="#3b82f6" radius={[0, 4, 4, 0]} />
                     </BarChart>
                   </ResponsiveContainer>
+                  )}
                 </div>
               </div>
               <div className="rc-card bg-[#0d1a2e] border-[#12233e] p-5">
                 <h3 className="text-sm font-medium text-white mb-6">Resolution Rate Trend</h3>
                 <div className="h-[300px]">
+                  {!trendData.some((d) => d.resolved > 0) ? (
+                    <div className="h-full flex flex-col items-center justify-center text-center text-[#7a95b8] px-6">
+                      <p>No alerts resolved in the last 30 days.</p>
+                    </div>
+                  ) : (
                   <ResponsiveContainer width="100%" height="100%">
                     <LineChart data={trendData}>
                       <CartesianGrid strokeDasharray="3 3" stroke="#12233e" vertical={false} />
@@ -755,6 +823,7 @@ export default function ComplianceAlerts() {
                       <Line type="monotone" dataKey="resolved" stroke="#22c55e" strokeWidth={2} dot={false} name="Resolved Alerts" />
                     </LineChart>
                   </ResponsiveContainer>
+                  )}
                 </div>
               </div>
             </div>
@@ -773,16 +842,25 @@ export default function ComplianceAlerts() {
                     </tr>
                   </thead>
                   <tbody>
+                    {resolutionTimeData.length === 0 && (
+                      <tr>
+                        <td colSpan={5} className="py-6 px-4 text-sm text-center text-[#7a95b8]">No alerts on record yet. Totals per category will appear here once compliance checks create alerts.</td>
+                      </tr>
+                    )}
                     {resolutionTimeData.map((row, idx) => (
                       <tr key={idx} className="border-b border-[#12233e] hover:bg-[#12233e]/50 transition-colors">
                         <td className="py-3 px-4 text-sm text-white font-medium">{row.category}</td>
-                        <td className="py-3 px-4 text-sm text-[#c8d8ec]">{Math.floor(Math.random() * 100) + 20}</td>
-                        <td className="py-3 px-4 text-sm text-[#c8d8ec]">{Math.floor(Math.random() * 80) + 10}</td>
-                        <td className="py-3 px-4 text-sm text-[#c8d8ec]">{row.avgDays} days</td>
+                        <td className="py-3 px-4 text-sm text-[#c8d8ec]">{row.total}</td>
+                        <td className="py-3 px-4 text-sm text-[#c8d8ec]">{row.resolved}</td>
+                        <td className="py-3 px-4 text-sm text-[#c8d8ec]">{row.avgDays === null ? "—" : `${row.avgDays} days`}</td>
                         <td className="py-3 px-4">
-                          <Badge variant="outline" className={row.avgDays > row.target ? "bg-red-500/10 text-red-400 border-red-500/20" : "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"}>
-                            {row.avgDays > row.target ? "Off Track" : "On Track"}
-                          </Badge>
+                          {row.avgDays === null || row.target === null ? (
+                            <span className="text-xs text-[#7a95b8]">—</span>
+                          ) : (
+                            <Badge variant="outline" className={row.avgDays > row.target ? "bg-red-500/10 text-red-400 border-red-500/20" : "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"}>
+                              {row.avgDays > row.target ? "Off Track" : "On Track"}
+                            </Badge>
+                          )}
                         </td>
                       </tr>
                     ))}

@@ -88,7 +88,7 @@ export function cspFor(env: Env = process.env): string {
     "https://widget.intercom.io", "https://js.intercomcdn.com",
     "https://js.sentry-cdn.com", "https://browser.sentry-cdn.com",
   ]);
-  for (const o of [origin(env.POSTHOG_HOST || "https://us.i.posthog.com"), origin(env.SENTRY_LOADER_URL), origin(env.VITE_ANALYTICS_ENDPOINT), origin(env.VITE_FRONTEND_FORGE_API_URL || "https://forge.butterfly-effect.dev")]) if (o) scripts.add(o);
+  for (const o of [origin(env.POSTHOG_HOST || "https://us.i.posthog.com"), origin(env.SENTRY_LOADER_URL), origin(env.VITE_ANALYTICS_ENDPOINT)]) if (o) scripts.add(o);
   for (const extra of (env.CSP_EXTRA_SRC ?? "").split(/[\s,]+/).filter(Boolean)) scripts.add(extra);
   return [
     "default-src 'self'",

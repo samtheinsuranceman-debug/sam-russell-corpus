@@ -1,5 +1,6 @@
 // @ts-nocheck
 import React, { useState, useRef, useMemo, useEffect, useCallback } from "react";
+import { getCarrierRating } from "@shared/carrierRatings";
 import { trpc } from "@/lib/trpc";
 import { NAICDisclaimer } from "@/components/NAICDisclaimer";
 import { useAuth } from "@/_core/hooks/useAuth";
@@ -520,28 +521,9 @@ export default function CarrierSettings() {
     }));
   }, [chartData]);
 
-  const historicalRatesData = useMemo(() => {
-    const years = [2018, 2019, 2020, 2021, 2022, 2023, 2024];
-    return years.map((year) => {
-      const point: any = { year: year.toString() };
-      chartData.slice(0, 3).forEach((c) => {
-        const variation = (Math.random() - 0.5) * 2;
-        const trend = (year - 2018) * 0.2;
-        point[c.name] = Math.max(0, c.capRate + variation + trend).toFixed(2);
-      });
-      return point;
-    });
-  }, [chartData]);
-
-  const marketShareData = useMemo(() => {
-    if (chartData.length <= 1) return [];
-    
-    return chartData.slice(1).map((c, i) => ({
-      name: c.name,
-      value: Math.floor(Math.random() * 50) + 10,
-      color: COLORS[i % COLORS.length]
-    }));
-  }, [chartData]);
+  // No cap-rate history and no per-carrier recommendation counts are recorded, so these two
+  // charts show an empty state instead of generated series.
+  const marketShareData: Array<{ name: string; value: number; color: string }> = [];
 
   const handleViewDetails = (carrier: any) => {
     setSelectedCarrier(carrier);
@@ -865,7 +847,7 @@ export default function CarrierSettings() {
                 <Badge variant="outline" className="bg-[#3b82f6]/10 text-[#3b82f6] border-[#3b82f6]/20">{c.fitch}</Badge>
               </TableCell>
               <TableCell className="text-right text-[#c8d8ec] font-medium">
-                {Math.floor(Math.random() * 15) + 80}
+                {getCarrierRating(c.id)?.financials.comdexScore ?? "—"}
               </TableCell>
             </TableRow>
           ))}
@@ -1025,32 +1007,11 @@ export default function CarrierSettings() {
           <Card className="rc-card">
             <CardHeader className="pb-2">
               <CardTitle className="text-lg text-white">Historical Cap Rates</CardTitle>
-              <CardDescription className="text-[#7a95b8]">Trend analysis (2018-2024)</CardDescription>
+              <CardDescription className="text-[#7a95b8]">Recorded rate changes</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="h-[250px] w-full">
-                <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={historicalRatesData} margin={{ top: 5, right: 10, left: 0, bottom: 0 }}>
-                    <defs>
-                      {chartData.slice(0, 3).map((c, i) => (
-                        <linearGradient key={`color-${i}`} id={`color${i}`} x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor={COLORS[i % COLORS.length]} stopOpacity={0.8}/>
-                          <stop offset="95%" stopColor={COLORS[i % COLORS.length]} stopOpacity={0}/>
-                        </linearGradient>
-                      ))}
-                    </defs>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#12233e" vertical={false} />
-                    <XAxis dataKey="year" stroke="#7a95b8" fontSize={10} />
-                    <YAxis stroke="#7a95b8" fontSize={10} tickFormatter={(value) => `${value}%`} />
-                    <Tooltip 
-                      contentStyle={{ backgroundColor: '#0d1a2e', borderColor: '#12233e', color: '#fff' }}
-                      formatter={(value: string) => [`${value}%`, undefined]}
-                    />
-                    {chartData.slice(0, 3).map((c, i) => (
-                      <Area key={c.name} type="monotone" dataKey={c.name} stroke={COLORS[i % COLORS.length]} fillOpacity={1} fill={`url(#color${i})`} />
-                    ))}
-                  </AreaChart>
-                </ResponsiveContainer>
+              <div className="h-[250px] w-full flex items-center justify-center text-center text-[#7a95b8] text-sm px-6">
+                No cap-rate history is recorded yet. Once rate changes are logged against a carrier, their history is charted here.
               </div>
             </CardContent>
           </Card>
@@ -1088,7 +1049,7 @@ export default function CarrierSettings() {
                 ) : (
                   <div className="text-[#7a95b8] text-sm flex flex-col items-center">
                     <PieChartIcon className="h-8 w-8 mb-2 opacity-50" />
-                    Add more carriers to see distribution
+                    Recommendation counts by carrier are not recorded yet. They will appear here once recommendations are tied to a carrier.
                   </div>
                 )}
               </div>
@@ -1621,6 +1582,7 @@ export default function CarrierSettings() {
 
       <PageInsights pageId="carrier-settings" />
       <NAICDisclaimer variant="footer" showsProjections showsHistoricalData />
+      <p className="mt-6 text-xs text-slate-500">Source: Comdex and financial-strength ratings from shared/carrierRatings.ts, read from each carrier's own published ratings; rate history and recommendation share appear once real quotes are recorded.</p>
     </div>
   );
 }

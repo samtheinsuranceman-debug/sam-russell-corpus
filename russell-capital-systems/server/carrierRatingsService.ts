@@ -42,17 +42,11 @@ function validateCarrier(value: unknown): EnrichedCarrierRating | null {
 
 export async function getEnrichedCarrierRatings(): Promise<EnrichedCarrierRating[]> {
   if (cachedRatings && Date.now() - cacheTimestamp < CACHE_TTL_MS) return cachedRatings.map(row => ({ ...row, dataSource: "cached" }));
-  try {
-    const { callDataApi } = await import("./_core/dataApi");
-    const response = await callDataApi("InsuranceRatings/carriers", { query: {} }) as unknown;
-    const candidates: unknown[] = Array.isArray(response) ? response : Array.isArray((response as any)?.carriers) ? (response as any).carriers : [];
-    const validated = candidates.map(validateCarrier).filter((row): row is EnrichedCarrierRating => row !== null);
-    cachedRatings = validated;
-    cacheTimestamp = Date.now();
-    return validated;
-  } catch {
-    return [];
-  }
+  // No live carrier-ratings feed is wired (the hosted data proxy the platform
+  // shipped with was removed on 23 Sep 2026). Callers show their curated data.
+  cachedRatings = [];
+  cacheTimestamp = Date.now();
+  return [];
 }
 
 export async function getEnrichedCarrierById(carrierId: string): Promise<EnrichedCarrierRating | null> {

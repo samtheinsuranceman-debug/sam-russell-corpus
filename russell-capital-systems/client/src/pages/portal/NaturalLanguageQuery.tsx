@@ -196,7 +196,9 @@ export default function NaturalLanguageQuery() {
       let data: any[] | null = null;
       let columns: string[] = [];
       let category = "General";
-      let confidence = Math.floor(Math.random() * 20) + 80; // 80-99%
+      // Deterministic: 100 when a query rule matched and the answer was computed
+      // directly from the client records; the fallback summary sets it lower below.
+      let confidence = 100;
 
       if (lower.includes("how many") && lower.includes("client")) {
         answer = `You have **${clients.length} clients** in your book of business.`;
@@ -274,7 +276,7 @@ Try asking more specific questions like "Which clients are over age 60?" or "Wha
       }
 
       const newResult: QueryResult = { 
-        id: `res_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+        id: `res_${crypto.randomUUID()}`,
         query: q, 
         answer, 
         data, 
@@ -282,7 +284,6 @@ Try asking more specific questions like "Which clients are over age 60?" or "Wha
         timestamp: new Date(),
         category,
         confidence,
-        tokens: Math.floor(Math.random() * 50) + 20,
         liked: false
       };
 
@@ -1157,10 +1158,10 @@ Try asking more specific questions like "Which clients are over age 60?" or "Wha
                               ) : (
                                 <AlertTriangle className="h-3 w-3 text-amber-500" />
                               )}
-                              {result.confidence}% Match
+                              {result.confidence && result.confidence > 90 ? "Exact rule match" : "No specific rule matched"}
                             </span>
-                            <span className="flex items-center gap-1" title="Tokens used">
-                              <Activity className="h-3 w-3" /> {result.tokens} tk
+                            <span className="flex items-center gap-1" title="Rows returned">
+                              <Activity className="h-3 w-3" /> {result.data?.length ?? 0} rows
                             </span>
                           </div>
                         </div>

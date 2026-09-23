@@ -480,7 +480,7 @@ export default function DivorceCalculator() {
             <div className="px-6 pb-6">
               <div className="relative w-full rounded-lg overflow-hidden bg-black" style={{ aspectRatio: "16/9" }}>
                 <video controls className="w-full h-full object-contain" preload="metadata">
-                  <source src="/manus-storage/divorce_calculator_explainer_3a588ea7.mp4" type="video/mp4" />
+                  <source src="/files/divorce_calculator_explainer_3a588ea7.mp4" type="video/mp4" />
                   Your browser does not support the video tag.
                 </video>
               </div>

@@ -15,6 +15,7 @@
 // sentence each came from; the sentence is checked against the fetched text
 // before anything is stored, and the owner approves each one into the panel.
 // ============================================================
+import { assertSafeUrl } from "./_core/safeFetch";
 import { and, eq } from "drizzle-orm";
 import { getDb } from "./db";
 import { forecastClaims, forecastHarvests, forecastSources, type ForecastClaimRow, type ForecastHarvestRow, type ForecastSourceRow } from "../drizzle/schema";
@@ -274,6 +275,11 @@ export async function harvestSource(source: SourceDef, opts: { url?: string; tex
   const voices = opts.voices ?? configuredProviders().map((p) => ({ label: p.label }));
   if (!voices.length) return { harvested: false, reason: "No AI provider is configured on the host" };
   const url = opts.url ?? source.url;
+  // An override URL is typed by the owner: it must be https on the source's own host and resolve to a public address.
+  if (opts.url && opts.url !== source.url && opts.text == null) {
+    try { await assertSafeUrl(opts.url, { allowHosts: [new URL(source.url).hostname] }); }
+    catch (e) { return { harvested: false, reason: `Override URL refused: ${e instanceof Error ? e.message : String(e)}` }; }
+  }
   let text = opts.text ?? null;
   if (text == null) { try { text = await fetchSourceText({ ...source, url }); } catch (e) { return { harvested: false, reason: `Could not read ${url}: ${String(e).slice(0, 120)}` }; } }
   if (!text || text.length < 200) return { harvested: false, reason: `Nothing readable at ${url}` };

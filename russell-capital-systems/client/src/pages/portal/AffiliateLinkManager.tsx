@@ -15,8 +15,8 @@ import {
   CartesianGrid,
   Tooltip as RechartsTooltip,
   ResponsiveContainer,
-  LineChart,
-  Line,
+  BarChart,
+  Bar,
 } from "recharts";
 import {
   Link2,
@@ -120,21 +120,14 @@ export default function AffiliateLinkManager() {
     });
   }, [links, searchTerm, filterType]);
 
+  // Per-link totals straight from the referral_links rows. No month-by-month history is
+  // recorded yet, so no trend line is drawn.
   const chartData = useMemo(() => {
-    const data = [];
-    const baseClicks = (stats?.totalClicks || 0) / 6;
-    const baseSignups = (stats?.totalSignups || 0) / 6;
-    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun"];
-    
-    for (let i = 0; i < 6; i++) {
-      data.push({
-        name: months[i],
-        clicks: Math.floor(baseClicks * (0.8 + Math.random() * 0.4)),
-        signups: Math.floor(baseSignups * (0.8 + Math.random() * 0.4)),
-      });
-    }
-    return data;
-  }, [stats]);
+    return [...links]
+      .sort((a, b) => b.clicks - a.clicks)
+      .slice(0, 8)
+      .map((link) => ({ name: link.partnerName, clicks: link.clicks, signups: link.signups }));
+  }, [links]);
 
   const partnerDistribution = useMemo(() => {
     const dist: Record<string, number> = {};
@@ -281,23 +274,29 @@ export default function AffiliateLinkManager() {
             <div className="rc-card bg-[#0d1a2e] border border-[#12233e] rounded-2xl p-5 lg:col-span-2">
               <h3 className="text-white font-semibold mb-6 flex items-center gap-2">
                 <TrendingUp className="w-4 h-4 text-[#22c55e]" />
-                Engagement Trends
+                Clicks and Sign-ups by Link
               </h3>
+              {chartData.length === 0 ? (
+                <div className="h-[300px] w-full flex items-center justify-center text-center text-[#7a95b8] text-sm px-6">
+                  No referral links yet. Once you create a link, its recorded clicks and sign-ups appear here.
+                </div>
+              ) : (
               <div className="h-[300px] w-full">
                 <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={chartData} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
+                  <BarChart data={chartData} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#12233e" vertical={false} />
                     <XAxis dataKey="name" stroke="#7a95b8" tick={{ fill: '#7a95b8' }} axisLine={false} tickLine={false} />
-                    <YAxis stroke="#7a95b8" tick={{ fill: '#7a95b8' }} axisLine={false} tickLine={false} />
+                    <YAxis stroke="#7a95b8" tick={{ fill: '#7a95b8' }} axisLine={false} tickLine={false} allowDecimals={false} />
                     <RechartsTooltip 
                       contentStyle={{ backgroundColor: '#0d1a2e', borderColor: '#12233e', color: '#c8d8ec' }}
                       itemStyle={{ color: '#c8d8ec' }}
                     />
-                    <Line type="monotone" dataKey="clicks" stroke="#3b82f6" strokeWidth={3} dot={{ r: 4, fill: '#3b82f6' }} activeDot={{ r: 6 }} name="Clicks" />
-                    <Line type="monotone" dataKey="signups" stroke="#22c55e" strokeWidth={3} dot={{ r: 4, fill: '#22c55e' }} activeDot={{ r: 6 }} name="Sign-ups" />
-                  </LineChart>
+                    <Bar dataKey="clicks" fill="#3b82f6" name="Clicks" />
+                    <Bar dataKey="signups" fill="#22c55e" name="Sign-ups" />
+                  </BarChart>
                 </ResponsiveContainer>
               </div>
+              )}
             </div>
             
             <div className="rc-card bg-[#0d1a2e] border border-[#12233e] rounded-2xl p-5">

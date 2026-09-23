@@ -147,7 +147,7 @@ export default function AdvisorChat() {
     onSuccess: (data) => {
       setIsTyping(false);
       const newMsg: ChatMessage = {
-        id: Math.random().toString(36).substr(2, 9),
+        id: crypto.randomUUID(),
         role: "assistant",
         content: data.reply,
         timestamp: new Date().toISOString()
@@ -182,7 +182,7 @@ export default function AdvisorChat() {
     onError: (e) => {
       setIsTyping(false);
       setMessages(prev => [...prev, { 
-        id: Math.random().toString(36).substr(2, 9),
+        id: crypto.randomUUID(),
         role: "assistant", 
         content: `Error: ${e.message}`,
         timestamp: new Date().toISOString()
@@ -221,7 +221,7 @@ export default function AdvisorChat() {
     if (!msg) return;
     
     const newMsg: ChatMessage = {
-      id: Math.random().toString(36).substr(2, 9),
+      id: crypto.randomUUID(),
       role: "user",
       content: msg,
       timestamp: new Date().toISOString()

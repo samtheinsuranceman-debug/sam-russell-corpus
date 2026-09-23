@@ -48,26 +48,21 @@ export type Corridor = {
  * range the sources disagree across. Refresh replaces rows by `id`.
  */
 export const CORRIDORS: Corridor[] = [
-  { id: "ru-cn-cny", exporter: "Russia", importer: "China", currency: "CNY", share: 0.85, shareLow: 0.75, shareHigh: 0.95, volumeMbd: 2.2, asOf: "2026-06-30", sourceIds: ["ru-cbr", "cn-customs", "ru-mosprime"], since: 2022, note: "Yuan and ruble; the largest non-dollar corridor on earth" },
+  { id: "ru-cn-cny", exporter: "Russia", importer: "China", currency: "CNY", share: 0.85, shareLow: 0.75, shareHigh: 0.95, volumeMbd: 2.2, asOf: "2026-06-30", sourceIds: ["ru-cbr", "ru-mosprime"], since: 2022, note: "Yuan and ruble; the largest non-dollar corridor on earth" },
   { id: "ru-cn-rub", exporter: "Russia", importer: "China", currency: "RUB", share: 0.10, shareLow: 0.05, shareHigh: 0.20, volumeMbd: 2.2, asOf: "2026-06-30", sourceIds: ["ru-cbr"], since: 2022 },
   { id: "ru-in-inr", exporter: "Russia", importer: "India", currency: "INR", share: 0.35, shareLow: 0.25, shareHigh: 0.50, volumeMbd: 1.7, asOf: "2026-06-30", sourceIds: ["in-rbi", "in-ppac"], since: 2022, note: "Rupee via Vostro; dirham for the balance" },
   { id: "ru-in-aed", exporter: "Russia", importer: "India", currency: "AED", share: 0.50, shareLow: 0.35, shareHigh: 0.65, volumeMbd: 1.7, asOf: "2026-06-30", sourceIds: ["in-ppac", "cnbc-reuters-energy"], since: 2023 },
-  { id: "sa-cn-cny", exporter: "Saudi Arabia", importer: "China", currency: "CNY", share: 0.45, shareLow: 0.30, shareHigh: 0.55, volumeMbd: 1.8, asOf: "2026-02-28", sourceIds: ["sa-aramco", "cn-customs", "cnbc-reuters-energy"], since: 2023, note: "45 % of Aramco–China trade in yuan by Feb 2026 (one estimate)" },
+  { id: "sa-cn-cny", exporter: "Saudi Arabia", importer: "China", currency: "CNY", share: 0.45, shareLow: 0.30, shareHigh: 0.55, volumeMbd: 1.8, asOf: "2026-02-28", sourceIds: ["sa-aramco", "cnbc-reuters-energy"], since: 2023, note: "45 % of Aramco–China trade in yuan by Feb 2026 (one estimate)" },
   { id: "ir-cn-cny", exporter: "Iran", importer: "China", currency: "CNY", share: 0.90, shareLow: 0.80, shareHigh: 1.0, volumeMbd: 1.4, asOf: "2026-06-30", sourceIds: ["kpler", "ofac"], since: 2019, note: "Routed via Malaysia; yuan and barter" },
   { id: "ir-cn-barter", exporter: "Iran", importer: "China", currency: "BARTER", share: 0.10, shareLow: 0.0, shareHigh: 0.20, volumeMbd: 1.4, asOf: "2026-06-30", sourceIds: ["kpler"], since: 2019 },
-  { id: "ae-cn-cny", exporter: "UAE", importer: "China", currency: "CNY", share: 0.15, shareLow: 0.05, shareHigh: 0.25, volumeMbd: 0.9, asOf: "2026-04-30", sourceIds: ["ae-cbuae", "cn-customs"], since: 2023, note: "April 2026: UAE warned it could shift further" },
-  { id: "iq-cn-cny", exporter: "Iraq", importer: "China", currency: "CNY", share: 0.10, shareLow: 0.0, shareHigh: 0.20, volumeMbd: 1.2, asOf: "2026-06-30", sourceIds: ["cn-customs"], since: 2023 },
+  { id: "ae-cn-cny", exporter: "UAE", importer: "China", currency: "CNY", share: 0.15, shareLow: 0.05, shareHigh: 0.25, volumeMbd: 0.9, asOf: "2026-04-30", sourceIds: ["ae-cbuae"], since: 2023, note: "April 2026: UAE warned it could shift further" },
   { id: "ve-cn-cny", exporter: "Venezuela", importer: "China", currency: "CNY", share: 0.70, shareLow: 0.50, shareHigh: 0.90, volumeMbd: 0.4, asOf: "2026-06-30", sourceIds: ["kpler", "ofac"], since: 2018, note: "Debt-for-oil; dark fleet" },
-  { id: "br-cn-cny", exporter: "Brazil", importer: "China", currency: "CNY", share: 0.10, shareLow: 0.0, shareHigh: 0.20, volumeMbd: 0.8, asOf: "2026-06-30", sourceIds: ["br-bcb", "cn-customs"], since: 2023 },
+  { id: "br-cn-cny", exporter: "Brazil", importer: "China", currency: "CNY", share: 0.10, shareLow: 0.0, shareHigh: 0.20, volumeMbd: 0.8, asOf: "2026-06-30", sourceIds: ["br-bcb"], since: 2023 },
   { id: "ru-tr-rub", exporter: "Russia", importer: "Türkiye", currency: "RUB", share: 0.30, shareLow: 0.20, shareHigh: 0.45, volumeMbd: 0.5, asOf: "2026-06-30", sourceIds: ["ru-cbr"], since: 2022 },
   { id: "ru-eu-eur", exporter: "Russia", importer: "EU (pipeline residual)", currency: "EUR", share: 0.60, shareLow: 0.40, shareHigh: 0.80, volumeMbd: 0.3, asOf: "2026-06-30", sourceIds: ["eurostat-gov"], since: 2020 },
   { id: "sa-in-inr", exporter: "Saudi Arabia", importer: "India", currency: "INR", share: 0.05, shareLow: 0.0, shareHigh: 0.10, volumeMbd: 0.7, asOf: "2026-06-30", sourceIds: ["in-rbi"], since: 2024 },
   { id: "ae-in-inr", exporter: "UAE", importer: "India", currency: "INR", share: 0.15, shareLow: 0.05, shareHigh: 0.25, volumeMbd: 0.4, asOf: "2026-06-30", sourceIds: ["in-rbi", "ae-cbuae"], since: 2023, note: "First rupee-settled ADNOC cargo Aug 2023" },
   { id: "ng-in-inr", exporter: "Nigeria", importer: "India", currency: "INR", share: 0.05, shareLow: 0.0, shareHigh: 0.10, volumeMbd: 0.3, asOf: "2026-06-30", sourceIds: ["in-rbi"], since: 2024 },
-  { id: "kz-cn-cny", exporter: "Kazakhstan", importer: "China", currency: "CNY", share: 0.30, shareLow: 0.15, shareHigh: 0.45, volumeMbd: 0.2, asOf: "2026-06-30", sourceIds: ["cn-customs"], since: 2021 },
-  { id: "ao-cn-cny", exporter: "Angola", importer: "China", currency: "CNY", share: 0.20, shareLow: 0.05, shareHigh: 0.35, volumeMbd: 0.6, asOf: "2026-06-30", sourceIds: ["cn-customs"], since: 2020, note: "Loan-for-oil repayments" },
-  { id: "om-cn-cny", exporter: "Oman", importer: "China", currency: "CNY", share: 0.10, shareLow: 0.0, shareHigh: 0.20, volumeMbd: 0.7, asOf: "2026-06-30", sourceIds: ["cn-customs"], since: 2024 },
-  { id: "sa-cn-gold", exporter: "Saudi Arabia", importer: "China", currency: "GOLD", share: 0.03, shareLow: 0.0, shareHigh: 0.08, volumeMbd: 1.8, asOf: "2026-03-31", sourceIds: ["sge"], since: 2024, note: "Yuan receipts converted on the SGE international board" },
 ];
 
 /** Global seaborne + pipeline crude trade, mb/d, for the denominator (rules table `oil.globalCrudeTradeMbd`). */
