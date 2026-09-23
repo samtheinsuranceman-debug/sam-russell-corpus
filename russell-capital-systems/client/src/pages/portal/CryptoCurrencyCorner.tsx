@@ -38,6 +38,7 @@ import { ExecutiveSummary, GoalsAccelerator, RecommendationSummary, DoNothingBas
 import { formatTaxCurrency } from "@shared/taxBracketEngine";
 import { RelatedCalculators } from "@/components/RelatedCalculators";
 import { ComplianceFooter } from "@/components/ComplianceFooter";
+import EngineSourcesFooter from "@/components/EngineSourcesFooter";
 
 export default function CryptoCurrencyCorner() {
   const [activeTab, setActiveTab] = useState("cycles");
@@ -952,6 +953,7 @@ export default function CryptoCurrencyCorner() {
           )}
         </TabsContent>
       </Tabs>
+      <EngineSourcesFooter path="/portal/crypto-corner" />
       <NAICDisclaimer variant="footer" showsProjections showsComparisons />
       
       <ComplianceFooter pageName="CryptoCurrencyCorner" showsIUL showsTax showsEstate showsProjections showsHistoricalData showsPolicyLoans />

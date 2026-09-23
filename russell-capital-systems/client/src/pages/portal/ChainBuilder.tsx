@@ -11,6 +11,7 @@ import { CHAIN_STORE_KEY, CHAIN_EVENT, loadChain, moveStep, patchStep, removeSte
 import { CHAIN_CALCULATORS, CHAIN_CALCULATOR_BY_ID, newStep, profileFromClientData, type ChainCalculatorId, type ChainStep } from "@shared/chainEngine";
 import { applyPreset, M2_PRESETS, type MacroAssumptions, type MoneyPrintingPreset } from "@shared/macroEngine";
 import { defaultModules, type ClientProfile, type TransferTarget, type UltraModules } from "@shared/ultraEngine";
+import EngineSourcesFooter from "@/components/EngineSourcesFooter";
 
 const money = (n: number) => `$${Math.round(n).toLocaleString()}`;
 const pct = (n: number | null | undefined) => (n == null ? "—" : `${n.toFixed(2)}%`);
@@ -350,6 +351,7 @@ export default function ChainBuilder() {
           </section>
         )}
         <p className="text-[11px] text-white/40">Chain state is saved in this browser ({CHAIN_STORE_KEY}).</p>
+        <EngineSourcesFooter path="/portal/chain" />
       </div>
     </div>
   );
