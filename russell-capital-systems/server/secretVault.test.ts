@@ -263,14 +263,7 @@ describe("Provider catalog", () => {
   it("states the country for every provider, including the ones that need it", async () => {
     const { PROVIDERS, getProvider } = await import("../shared/aiProviders");
     for (const p of PROVIDERS) expect(p.country).toBeTruthy();
-    // Owner's rule: no Chinese AI system, no Chinese host. The catalogue
-    // carries none, and the former entries are refused by the ban.
-    const { isBannedProvider } = await import("../shared/aiProviders");
-    for (const p of PROVIDERS) expect(p.country).not.toMatch(/china/i);
-    for (const gone of ["moonshot", "qwen", "zhipu", "minimax", "qianfan"]) {
-      expect(getProvider(gone)).toBeUndefined();
-      expect(isBannedProvider(gone)).toBe(true);
-    }
+    // The China ban on the catalogue is proved in server/chinaAiBan.test.ts.
     expect(getProvider("novita")).toBeUndefined();
   });
 });

@@ -8,7 +8,7 @@ below are relative to `russell-capital-systems/`.
 
 One AI Financial Advisor, presented as a **tape recorder**, that speaks for the
 whole AI API team (Claude, ChatGPT, Grok, Gemini, Perplexity, OpenRouter,
-Mistral, Groq, Manus — whichever have keys in the host environment). It answers
+Mistral, Groq — whichever have keys in the host environment). It answers
 spoken or typed questions from a client or their advisor, **but only after the
 client has completed the full Financial Assessment**. Before that it explains
 what is missing and hands them the assessment.
