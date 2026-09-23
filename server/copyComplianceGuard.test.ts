@@ -78,6 +78,7 @@ const EXTRA_FILES = ["../docs/mirror/index.html"];
 const EXEMPT: Record<string, string> = {
   "shared/aiCompliance.ts": "defines the banned words for the model, so it contains them",
   "shared/patentStatus.ts": "defines the patent phrases it forbids",
+  "shared/copyGuard.ts": "the first-login/genome screens' own copy guard (from master); it lists the phrases it bans",
   "shared/iulComplianceEngine.ts": "builds real carrier illustrations, where 'AG 49 compliant' is the correct term (same exemption as policyDisclosure.test.ts)",
   "shared/ag49Products.ts": "records the old AG 49 claim it corrected (same exemption as policyDisclosure.test.ts)",
 };
