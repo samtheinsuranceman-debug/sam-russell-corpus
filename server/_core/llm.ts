@@ -1,4 +1,5 @@
 import { ENV } from "./env";
+import { ChinaPolicyError, assertModelAllowed, isBannedModel, isBannedProvider } from "@shared/aiProviders";
 
 export type Role = "system" | "user" | "assistant" | "tool" | "function";
 
@@ -393,6 +394,8 @@ const fetchWithBackoff = async (
 };
 
 export async function invokeLLM(params: InvokeParams): Promise<InvokeResult> {
+  // Owner's rule: a caller cannot name a China-linked model, on either path.
+  assertModelAllowed(params.model);
   if (!forgeGatewayAllowed()) return invokeViaBrainHub(params);
   assertApiKey();
 
@@ -469,7 +472,10 @@ export async function invokeLLM(params: InvokeParams): Promise<InvokeResult> {
     throw new Error(`LLM invoke failed with upstream status ${response.status}`);
   }
 
-  return (await response.json()) as InvokeResult;
+  const result = (await response.json()) as InvokeResult;
+  // The gateway picks the model when none is named; a China-linked answer is discarded.
+  if (isBannedModel(result.model)) throw new ChinaPolicyError(result.model, "answering model");
+  return result;
 }
 
 export type ModelInfo = {
@@ -500,5 +506,6 @@ export async function listLLMModels(): Promise<ModelsResponse> {
     throw new Error(`List LLM models failed with upstream status ${response.status}`);
   }
 
-  return (await response.json()) as ModelsResponse;
+  const listed = (await response.json()) as ModelsResponse;
+  return { ...listed, data: (listed.data ?? []).filter(m => !isBannedModel(m.id) && !isBannedProvider(m.owned_by)) };
 }

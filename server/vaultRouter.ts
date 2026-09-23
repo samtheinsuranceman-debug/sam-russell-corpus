@@ -16,11 +16,13 @@ import { protectedProcedure, router } from "./_core/trpc";
 import { providerCredentials } from "../drizzle/schema";
 import {
   BRAIN_PROVIDERS,
+  CHINA_POLICY_MESSAGE,
   CUSTOM_PREFIX,
   MAX_BRAINS,
   MAX_MCP_SERVERS,
   PROVIDERS,
   buildCustomProvider,
+  isBannedModel,
   isBannedProvider,
   looksLikeValidKey,
   validateCustomEndpoint,
@@ -347,8 +349,8 @@ export const vaultRouter = router({
     .mutation(async ({ ctx, input }) => {
       const provider = resolveProvider(input.providerId);
       if (!provider) throw new TRPCError({ code: "BAD_REQUEST", message: "Unknown provider." });
-      if (isBannedProvider(input.model ?? "") || isBannedProvider(input.baseUrl ?? "")) {
-        throw new TRPCError({ code: "BAD_REQUEST", message: "That model or endpoint is excluded from this platform by the owner's standing rule." });
+      if (isBannedModel(input.model) || isBannedProvider(input.baseUrl)) {
+        throw new TRPCError({ code: "BAD_REQUEST", message: `${CHINA_POLICY_MESSAGE}. That model or endpoint cannot be saved.` });
       }
       if (provider.requiresBaseUrl && !input.baseUrl?.trim()) {
         throw new TRPCError({ code: "BAD_REQUEST", message: `${provider.name} needs a Base URL for your own account before it can be called. ${provider.caution ?? ""}`.trim() });
@@ -509,6 +511,9 @@ export const vaultRouter = router({
 
       const row = (await db.select().from(providerCredentials).where(eq(providerCredentials.providerId, input.providerId)).limit(1))[0];
       if (!row) throw new TRPCError({ code: "NOT_FOUND", message: "No key stored for that provider." });
+      if (isBannedModel(input.model) || isBannedProvider(input.baseUrl)) {
+        throw new TRPCError({ code: "BAD_REQUEST", message: `${CHINA_POLICY_MESSAGE}. That model or endpoint cannot be saved.` });
+      }
 
       const patch: Record<string, unknown> = { updatedByEmail: ctx.user.email ?? null };
       if (input.enabled !== undefined) patch.enabled = input.enabled;
@@ -651,8 +656,8 @@ export const vaultRouter = router({
       if (!endpointCheck.ok) {
         throw new TRPCError({ code: "BAD_REQUEST", message: endpointCheck.reason ?? "Invalid endpoint." });
       }
-      if (isBannedProvider(input.name) || isBannedProvider(input.model)) {
-        throw new TRPCError({ code: "BAD_REQUEST", message: "That provider is excluded from this platform by the owner's standing rule." });
+      if (isBannedProvider(input.name) || isBannedModel(input.model)) {
+        throw new TRPCError({ code: "BAD_REQUEST", message: `${CHINA_POLICY_MESSAGE}. That provider or model cannot be added.` });
       }
 
       const slug = `${CUSTOM_PREFIX}${slugify(input.name)}`;
@@ -804,6 +809,9 @@ export const vaultRouter = router({
     .mutation(async ({ ctx, input }) => {
       const urlCheck = validateMcpUrl(input.url.trim());
       if (!urlCheck.ok) throw new TRPCError({ code: "BAD_REQUEST", message: urlCheck.reason ?? "Invalid URL." });
+      if (isBannedProvider(input.url) || isBannedProvider(input.label)) {
+        throw new TRPCError({ code: "BAD_REQUEST", message: `${CHINA_POLICY_MESSAGE}. That MCP server cannot be added.` });
+      }
       await assertMcpSlotAvailable(input.slug || slugify(input.label));
 
       if (input.headers) {
