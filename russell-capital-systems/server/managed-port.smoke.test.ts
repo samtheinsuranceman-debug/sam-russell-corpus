@@ -11,7 +11,7 @@ const baseUser = {
   openId: "managed-smoke-user",
   email: "advisor@example.com",
   name: "Managed Advisor",
-  loginMethod: "manus",
+  loginMethod: "owner-password",
   role: "user" as const,
   createdAt: new Date(),
   updatedAt: new Date(),
@@ -46,12 +46,12 @@ describe("managed primary-port safeguards", () => {
     expect(currentRoutes.size).toBe(ROUTE_COUNT);
   });
 
-  it("keeps managed analytics and runtime public assets", () => {
+  it("keeps the owner-configured analytics tag and ships no hosting-vendor debug collector", () => {
     const html = readFileSync(resolve("client/index.html"), "utf8");
     expect(html).toContain("%VITE_ANALYTICS_ENDPOINT%/umami");
     expect(html).toContain("%VITE_ANALYTICS_WEBSITE_ID%");
-    expect(existsSync(resolve("client/public/__manus__/debug-collector.js"))).toBe(true);
-    // version.json is written by the managed host at deploy time; it was never a repo file.
+    expect(existsSync(resolve("client/public/debug-collector.js"))).toBe(false);
+    expect(html).not.toMatch(/debug-collector/);
   });
 
   it("retires password and email-bypass authentication", () => {
