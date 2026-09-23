@@ -18,12 +18,11 @@
  * declared an assumption in words, not left as a bare literal.
  */
 
-/** Engines that name no institution, URL, dated source or exported source constant. */
+/** Engines that carry typed-in numeric literals and name no institution, URL, dated source or exported source constant. */
 export const ZERO_SOURCE_ENGINES: readonly string[] = [
   "shared/accessControl.ts",
   "shared/advisorModes.ts",
   "shared/altCredit/simulator.ts",
-  "shared/branding.ts",
   "shared/carrierRatings.ts",
   "shared/cryptoCycleEngine.ts",
   "shared/erosion.ts",
@@ -31,19 +30,16 @@ export const ZERO_SOURCE_ENGINES: readonly string[] = [
   "shared/genomeStrategyFit.ts",
   "shared/historicalShocks.ts",
   "shared/householdWealth.ts",
-  "shared/mandates.ts",
   "shared/monteCarloEngine.ts",
   "shared/mortgageKiller.ts",
   "shared/mortgageLedger.ts",
   "shared/multiPropertyMyga.ts",
   "shared/mygaWaterfall.ts",
-  "shared/patentStatus.ts",
   "shared/premiumFinancing.ts",
   "shared/realEstateCapacityEngine.ts",
   "shared/regulatorySandbox.ts",
   "shared/reverseHeloc.ts",
   "shared/taxBracketEngine.ts",
-  "shared/wholeLifeBanking.ts",
 ];
 
 /** Engines with Math.random() in a value path. chainEngine uses it for step ids only (cosmetic, D47). */

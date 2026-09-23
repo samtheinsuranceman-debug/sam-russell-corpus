@@ -1,12 +1,12 @@
 {
-  "tree": "aecbb6c",
+  "tree": "8194d52",
   "summary": {
     "engines": 95,
     "enginesFromCatalogue": 36,
     "enginesFromMemoryBank": 87,
     "enginesMissingOnDisk": [],
     "counts": {
-      "enginesWithZeroSources": 24,
+      "enginesWithZeroSources": 20,
       "numericEnginesWithZeroSources": 8,
       "enginesWithHardCodedYearsOlderThan2025": 39,
       "enginesWithUnseededRandomness": 1,
@@ -22,7 +22,6 @@
         "shared/accessControl.ts",
         "shared/advisorModes.ts",
         "shared/altCredit/simulator.ts",
-        "shared/branding.ts",
         "shared/carrierRatings.ts",
         "shared/cryptoCycleEngine.ts",
         "shared/erosion.ts",
@@ -30,19 +29,16 @@
         "shared/genomeStrategyFit.ts",
         "shared/historicalShocks.ts",
         "shared/householdWealth.ts",
-        "shared/mandates.ts",
         "shared/monteCarloEngine.ts",
         "shared/mortgageKiller.ts",
         "shared/mortgageLedger.ts",
         "shared/multiPropertyMyga.ts",
         "shared/mygaWaterfall.ts",
-        "shared/patentStatus.ts",
         "shared/premiumFinancing.ts",
         "shared/realEstateCapacityEngine.ts",
         "shared/regulatorySandbox.ts",
         "shared/reverseHeloc.ts",
-        "shared/taxBracketEngine.ts",
-        "shared/wholeLifeBanking.ts"
+        "shared/taxBracketEngine.ts"
       ],
       "numericEnginesWithZeroSources": [
         "shared/altCredit/simulator.ts",

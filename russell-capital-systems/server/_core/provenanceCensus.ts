@@ -281,7 +281,8 @@ export function censusTree(root: string): Census {
   const rows = engineFiles.map(analyse);
 
   // 4. Summary counts, computed.
-  const zeroSources = rows.filter(r => r.exists && r.sources.length === 0);
+  // Zero sources: names nothing AND carries typed-in numbers. A file with no numeric literals has nothing to source.
+  const zeroSources = rows.filter(r => r.exists && r.sources.length === 0 && r.numericConstants > 0);
   const staleYears = rows.filter(r => r.exists && r.hardCodedYears.some(y => y < CENSUS_YEAR - 1));
   const unseeded = rows.filter(r => r.exists && r.simulation.unseededRandom);
   const pagesNoSource = new Set<string>();
