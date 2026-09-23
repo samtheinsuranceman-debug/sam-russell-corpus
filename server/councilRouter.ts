@@ -74,6 +74,17 @@ export async function councilAccess(user: AccessUser | null | undefined): Promis
   return { level: "advisor", workspaceIds: await advisorWorkspaceIds(user.id) };
 }
 
+/** The signed-in user's own workspace (read-only: an audit path creates nothing), or null. */
+async function sessionWorkspaceId(userId: number): Promise<number | null> {
+  try {
+    const { getWorkspaceByOwnerId } = await import("./db");
+    return (await getWorkspaceByOwnerId(userId))?.id ?? null;
+  } catch (e) {
+    console.warn("[council] workspace lookup failed:", String(e).slice(0, 120));
+    return null;
+  }
+}
+
 const FORBIDDEN = "The council is for advisors and the owner. Your advisor's answer already reflects it where it applies.";
 
 async function requireStaff(user: AccessUser): Promise<Exclude<CouncilAccess, { level: "household" }>> {
@@ -94,16 +105,14 @@ export const councilRouter = router({
         /** Honoured only for the forcing rooms (tax packet, worst-case packet, Einstein, Goldman). */
         force: z.boolean().default(false),
         facts: z.boolean().default(false),
-        /** Workspace the question is about; must be one the advisor works in. Stored as the only household link. */
-        workspaceId: z.number().int().positive().optional(),
+        // No workspaceId: it is derived from the session (guard: noClientWorkspaceId.test.ts).
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const access = await requireStaff(ctx.user);
-      if (access.level === "advisor" && input.workspaceId !== undefined && !access.workspaceIds.includes(input.workspaceId)) {
-        throw new TRPCError({ code: "FORBIDDEN", message: "That workspace is not one you advise." });
-      }
-      const workspaceId = input.workspaceId ?? (access.level === "advisor" ? access.workspaceIds[0] ?? null : null);
+      await requireStaff(ctx.user);
+      // The caller's own workspace, from the session: the audit row's only
+      // household link and the key for the per-workspace daily cap.
+      const workspaceId = await sessionWorkspaceId(ctx.user.id);
       const run = await runCouncil({
         question: input.question,
         context: input.context,

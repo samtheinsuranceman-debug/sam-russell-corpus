@@ -18,7 +18,11 @@ const chain = (rows: unknown[]): any => {
   return p;
 };
 const dbState: { handle: any } = { handle: null };
-vi.mock("./db", () => ({ getDb: async () => dbState.handle, getWorkspaceByOwnerId: async () => undefined }));
+const workspaceOf = new Map<number, number>();
+vi.mock("./db", () => ({
+  getDb: async () => dbState.handle,
+  getWorkspaceByOwnerId: async (userId: number) => (workspaceOf.has(userId) ? { id: workspaceOf.get(userId) } : undefined),
+}));
 vi.mock("./mcpRegistry", () => ({
   executeToolCall: vi.fn(),
   parseToolCall: () => null,
@@ -178,6 +182,7 @@ beforeEach(() => {
   process.env.PERPLEXITY_API_KEY = "test-placeholder-perplexity";
   process.env.COUNCIL_LOG_SECRET = "test-log-key";
   dbState.handle = null;
+  workspaceOf.clear();
   invalidateProviderCache();
   clearCouncilLogBuffer();
   calls.length = 0;
@@ -549,11 +554,25 @@ describe("who may call the council", () => {
     expect(runs.runs[0]).not.toHaveProperty("questionHash");
   });
 
-  it("an advisor named in COUNCIL_ADVISOR_EMAILS can ask, but only about their own workspaces", async () => {
+  it("an advisor named in COUNCIL_ADVISOR_EMAILS can ask", async () => {
     process.env.COUNCIL_ADVISOR_EMAILS = "someone@else.com, advisor@example.com";
     const r = await councilRouter.createCaller(advisorCtx()).ask({ question: "What is a backdoor Roth?" });
     expect(r.outcome).toBe("single");
-    await expect(councilRouter.createCaller(advisorCtx()).ask({ question: "q", workspaceId: 99 })).rejects.toMatchObject({ code: "FORBIDDEN" });
+  });
+
+  it("council.ask logs the caller's own workspace from the session, whatever the request carries", async () => {
+    workspaceOf.set(1, 77);
+    const r = await councilRouter
+      .createCaller(ownerCtx())
+      .ask({ question: "Worst case?", room: "worst_case_packet", force: true, workspaceId: 99 } as never);
+    expect(r.outcome).toBe("council");
+    const [row] = await listCouncilRuns();
+    expect(row.workspaceId).toBe(77);
+    // The per-workspace cap keys off the same derived id.
+    process.env.COUNCIL_MAX_RUNS_PER_WORKSPACE_PER_DAY = "1";
+    const again = await councilRouter.createCaller(ownerCtx()).ask({ question: "Again?", room: "worst_case_packet", force: true });
+    expect(again.outcome).toBe("refused");
+    expect(again.finalText).toMatch(/per-household limit/);
   });
 
   it("Goldman routes an expensive answer through the council; a household sees only the caller's text", async () => {

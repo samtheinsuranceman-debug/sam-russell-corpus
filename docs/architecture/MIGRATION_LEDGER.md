@@ -13,7 +13,7 @@ Every migration is additive (CREATE TABLE / ADD COLUMN / CREATE INDEX).
 | 0082 | `0082_site_map_and_hive.sql` | merged |
 | 0083 | genome branch | open branch |
 | 0084 | skins branch | open branch |
-| 0085 | `claude/workspace-scoping-m1bkv3` (`slide_shares.expiresAt`) | open branch |
+| 0085 | `0085_slide_share_expiry.sql` (`slide_shares.expiresAt`, #207) | merged |
 | 0086 | `0086_council_runs.sql` (`claude/council-engine-m1bkv3`) | open branch |
 
 `database/rcs-schema.sql` is regenerated from `drizzle/schema.ts` by
