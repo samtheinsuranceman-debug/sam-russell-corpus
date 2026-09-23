@@ -63,6 +63,7 @@ import { ExecutiveSummary, GoalsAccelerator, RecommendationSummary, DoNothingBas
 import { formatTaxCurrency } from "@shared/taxBracketEngine";
 import { RelatedCalculators } from "@/components/RelatedCalculators";
 import { ComplianceFooter } from "@/components/ComplianceFooter";
+import EngineSourcesFooter from "@/components/EngineSourcesFooter";
 
 
 function n(v: string | undefined | null): number {
@@ -1439,6 +1440,7 @@ export default function HouseholdWealth() {
           )}
         </TabsContent>
       </Tabs>
+      <EngineSourcesFooter path="/portal/household-wealth" />
       <div className="mt-8">
         <NAICDisclaimer variant="footer" showsProjections showsCashValues showsPolicyLoans />
       </div>
