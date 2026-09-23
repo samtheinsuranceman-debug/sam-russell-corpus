@@ -53,7 +53,7 @@ import { ExecutiveSummary, GoalsAccelerator, RecommendationSummary, DoNothingBas
 import { formatTaxCurrency } from "@shared/taxBracketEngine";
 import { RelatedCalculators } from "@/components/RelatedCalculators";
 import { ComplianceFooter } from "@/components/ComplianceFooter";
-import { useMacroScenario } from "@/components/MacroScenarioToggle";
+import { usePredictive } from "@/contexts/PredictiveContext";
 import { applyMacro } from "@shared/macro";
 import { HelocBeforeAfter } from "@/components/rooms/RoomVideoTile";
 
@@ -134,9 +134,10 @@ export default function MortgageKiller() {
     clientAge: 45,
   });
 
-  // Global macro scenarios: the toggle panel on the Projection tab shifts the
-  // Monte Carlo return and volatility assumptions and shows its sources.
-  const macro = useMacroScenario();
+  // Global macro scenarios: the portal-wide state (set in the predictive
+  // footer under this page) shifts the Monte Carlo return and volatility
+  // assumptions; the footer shows the sources, so nothing is rendered twice.
+  const macro = usePredictive();
 
   const [ibbotsonStartYear, setIbbotsonStartYear] = useState(IBBOTSON_DEFAULT_START_YEAR);
   const [useIbbotsonModel, setUseIbbotsonModel] = useState(true);
@@ -1731,7 +1732,6 @@ export default function MortgageKiller() {
 
           {/* ─── TAB: 30-YEAR CASCADING PROJECTION ──────────────────────── */}
           <TabsContent value="projection" className="space-y-6 mt-6">
-            {macro.panel}
             {result && result.cascadingProjection && (
               <>
                 {/* Before-and-after videos, once the host has them */}

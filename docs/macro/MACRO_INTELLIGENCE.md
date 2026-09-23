@@ -131,9 +131,20 @@ mounts `panel` and applies `adjustments` with `applyMacro(baseInputs,
 adjustments)` — which shifts only the fields it recognises (`expectedReturn`,
 `volatility`, `inflationRate`, `mortgageRate`, `tenYearYield`). The panel
 prints the rationale and sources; the PDF's evidence ledger should copy them.
-Wired so far: Sequence-of-Returns Risk (mean return and volatility) and
-Mortgage Killer (the IUL Monte Carlo). Every other predictive calculator
-follows the same four lines.
+Since 23 Sep 2026 the scenario state is portal-wide (`PredictiveProvider` in
+`App.tsx`; `usePredictive()` returns the same shape) and the app shell mounts
+`PredictiveFooter` under every predictive calculator (`predictiveDomainFor` in
+`shared/predictiveCalculators.ts`: the catalogue by category, minus lookup and
+how-it-works pages). The footer is closed until opened and carries the current
+forecast for the page's domain (`forecast.current`, with provenance), the macro
+scenario panel, the projection-confidence bands (`projectionConfidence` in
+`shared/macro/projectionConfidence.ts`, horizons from the rules table
+`projection.horizon.*`: confident to year 2, moderate to year 10, a band to
+year 30, shape only beyond) and the reasoning and citations with links. A page
+that wants its numbers to move applies `usePredictive().adjustments` with
+`applyMacro`; Mortgage Killer does (the IUL Monte Carlo). Every other page
+shows the engine and its confidence grade and keeps its own figures until it
+is wired the same way.
 
 ## Numbers and their sources (seed, as of 22 Sep 2026)
 
