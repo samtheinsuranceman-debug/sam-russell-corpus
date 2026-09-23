@@ -48,9 +48,6 @@ export const PAGES_PRINTING_NO_SOURCE: readonly string[] = [
   "client/src/components/VoiceAdvisor.tsx",
   "client/src/components/rooms/Reveal.tsx",
   "client/src/components/rooms/RoomTheme.tsx",
-  // Added by the numbers-market merge (7a06e90): it now reads the Monte Carlo inputs from monteCarloEngine.
-  // Its /client-portal/:token route renders outside the app shell, so the shell footer does not cover it.
-  "client/src/pages/ClientPortalView.tsx",
   "client/src/pages/Login.tsx",
   "client/src/pages/MassiveCalculatorsPage.tsx",
   "client/src/pages/TrialLogin.tsx",

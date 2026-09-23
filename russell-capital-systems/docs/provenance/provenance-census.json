@@ -1,5 +1,5 @@
 {
-  "tree": "a0b46db",
+  "tree": "39d44f0",
   "summary": {
     "engines": 98,
     "enginesFromCatalogue": 40,
@@ -10,7 +10,7 @@
       "numericEnginesWithZeroSources": 0,
       "enginesWithHardCodedYearsOlderThan2025": 50,
       "enginesWithUnseededRandomness": 0,
-      "pagesImportingAnEngineWithNoProvenanceOnPage": 36,
+      "pagesImportingAnEngineWithNoProvenanceOnPage": 35,
       "pagesImportingAnEngine": 125,
       "enginesThatSimulate": 22,
       "enginesOnALiveFeed": 10,
@@ -87,7 +87,6 @@
         "client/src/components/VoiceAdvisor.tsx",
         "client/src/components/rooms/Reveal.tsx",
         "client/src/components/rooms/RoomTheme.tsx",
-        "client/src/pages/ClientPortalView.tsx",
         "client/src/pages/Login.tsx",
         "client/src/pages/MassiveCalculatorsPage.tsx",
         "client/src/pages/TrialLogin.tsx",
@@ -3729,6 +3728,7 @@
       "provenanceOnPage": true,
       "provenancePages": [
         "client/src/components/PlatformEnhancements.tsx",
+        "client/src/pages/ClientPortalView.tsx",
         "client/src/pages/portal/MortgageKiller.tsx",
         "client/src/pages/portal/PremiumFinancing.tsx",
         "client/src/pages/portal/RothConversionSTR.tsx"

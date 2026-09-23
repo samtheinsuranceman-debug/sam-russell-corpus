@@ -1,4 +1,4 @@
-# Provenance census — summary (tree `a0b46db`)
+# Provenance census — summary (tree `39d44f0`)
 
 Every count below is computed from the tree; none is typed. `server/provenanceCensus.test.ts` fails the build if any list grows.
 
@@ -8,7 +8,7 @@ Every count below is computed from the tree; none is typed. `server/provenanceCe
 | **Engines with zero sources** | **0** (of which 0 carry 20+ typed-in numeric literals) |
 | **Catalogue engines whose sources the shell cannot print yet** | **0** |
 | **Engines with unseeded randomness** | **0** |
-| **Pages that import an engine and print no source** | **36** of 125 |
+| **Pages that import an engine and print no source** | **35** of 125 |
 | Engines with hard-coded years older than 2025 | 50 |
 | Engines that simulate | 22 |
 | Engines on a live feed seam | 10 |
@@ -41,7 +41,6 @@ Every count below is computed from the tree; none is typed. `server/provenanceCe
 - `client/src/components/VoiceAdvisor.tsx`
 - `client/src/components/rooms/Reveal.tsx`
 - `client/src/components/rooms/RoomTheme.tsx`
-- `client/src/pages/ClientPortalView.tsx`
 - `client/src/pages/Login.tsx`
 - `client/src/pages/MassiveCalculatorsPage.tsx`
 - `client/src/pages/TrialLogin.tsx`
