@@ -127,6 +127,7 @@ const NAV_SECTIONS: NavSection[] = [
     items: [
       { path: "/portal/map", label: "Map (how this site is arranged)", icon: ChevronRight, color: "gold" },
       { path: "/portal/samuel-goldman", label: "Samuel Goldman", icon: ChevronRight, color: "gold" },
+      { path: "/portal/sources", label: "Sources (where every number comes from)", icon: ChevronRight, color: "green" },
       { path: "/portal/command", label: "Command", icon: ChevronRight, color: "green" },
       { path: "/portal/command-center", label: "Command Center", icon: Activity, color: "slate" },
       { path: "/portal/daily-briefing", label: "Daily Briefing", icon: ChevronRight, color: "gold" },
@@ -656,6 +657,7 @@ const NAV_SECTIONS: NavSection[] = [
       { path: "/portal/ai-brain-hub", label: "AI Brain Hub", icon: ChevronRight, color: "cyan" },
       { path: "/portal/thomas-goldman", label: ADVISOR_NAME, icon: Sparkles, color: "gold" },
       { path: "/portal/brain-hub", label: "Brain Hub", icon: ChevronRight, color: "gold" },
+      { path: "/portal/macro-intelligence", label: "Global Macro Intelligence", icon: TrendingUp, color: "cyan" },
       { path: "/portal/ai-advisor", label: "AI Financial Advisor", icon: Sparkles, color: "purple" },
       { path: "/portal/whisperer", label: "AI Whisperer", icon: MessageCircle, color: "green" },
       { path: "/portal/advisor", label: "Advisor Dashboard", icon: MessageCircle, color: "green" },

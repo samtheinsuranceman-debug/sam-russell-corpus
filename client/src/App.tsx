@@ -26,6 +26,7 @@ import SiteMapOverlay from "./components/SiteMapOverlay";
 import AdvisorNudge from "./components/AdvisorNudge";
 const SiteMapPage = lazy(() => import("./pages/portal/SiteMapPage"));
 const SamuelGoldman = lazy(() => import("./pages/portal/SamuelGoldman"));
+const SourcesPage = lazy(() => import("./pages/portal/Sources"));
 
 // Public pages — lazy-loaded to reduce initial bundle
 const Landing = lazy(() => import("./pages/Landing"));
@@ -52,6 +53,7 @@ const InteropEnginePage = lazy(() => import("./pages/InteropEnginePage"));
 const AIBrainHubPage = lazy(() => import("./pages/AIBrainHubPage"));
 const ThomasGoldman = lazy(() => import("./pages/portal/ThomasGoldman"));
 const AIConnector = lazy(() => import("./pages/portal/AIConnector"));
+const MacroIntelligence = lazy(() => import("./pages/portal/MacroIntelligence"));
 const MatchAndDeployPage = lazy(() => import("./pages/MatchAndDeployPage"));
 const AutoCloserPage = lazy(() => import("./pages/AutoCloserPage"));
 const DealRoomPage = lazy(() => import("./pages/DealRoomPage"));
@@ -856,6 +858,8 @@ function Router() {
       <Route path="/portal/ai-brain-hub" component={gated(AIBrainHubPage, "/portal/ai-brain-hub")} />
       <Route path="/portal/thomas-goldman" component={gated(ThomasGoldman, "/portal/thomas-goldman")} />
       <Route path="/portal/brain-hub" component={gated(AIConnector, "/portal/brain-hub")} />
+      {/* ── Global Macro Intelligence — Treasury liquidation, petrodollar, sovereign debt, Taiwan, household signals ── */}
+      <Route path="/portal/macro-intelligence" component={gated(MacroIntelligence, "/portal/macro-intelligence")} />
       <Route path="/portal/match-and-deploy" component={gated(MatchAndDeployPage, "/portal/match-and-deploy")} />
       <Route path="/portal/auto-closer" component={gated(AutoCloserPage, "/portal/auto-closer")} />
       <Route path="/portal/deal-room" component={gated(DealRoomPage, "/portal/deal-room")} />
@@ -899,6 +903,7 @@ function Router() {
       {/* Site map + the hive front door (22 Sep 2026) */}
       <Route path="/portal/map" component={gated(SiteMapPage, "/portal/map")} />
       <Route path="/portal/samuel-goldman" component={gated(SamuelGoldman, "/portal/samuel-goldman")} />
+      <Route path="/portal/sources" component={gated(SourcesPage, "/portal/sources")} />
       {/* ─── PR-3b: pages ported from russell-capital-app ─── */}
       <Route path="/portal/retirement-advantage" component={gated(RetirementAdvantage, "/portal/retirement-advantage")} />
       <Route path="/portal/admin/health" component={gated(AdminHealthDashboard, "/portal/admin/health")} />
