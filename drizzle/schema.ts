@@ -3407,6 +3407,49 @@ export const macroFactorScores = mysqlTable("macro_factor_scores", {
   updatedAt:    timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });
 
+// ─── The Council: multi-model consensus audit (0086_council_runs) ────────────
+// Added 23 Sep 2026. One row per council run. Holds a keyed hash of the
+// question, never its text, and the workspace id as the only link to a
+// household: which models spoke, their latencies and token counts, and a
+// summary of the judge's verdict (counts, confidence, digest) — never its text.
+export type CouncilPanelLogJson = Array<{
+  label?: string;
+  providerId: string;
+  model: string;
+  ok: boolean;
+  latencyMs: number;
+  promptTokens?: number;
+  completionTokens?: number;
+  totalTokens?: number;
+  sourceCount?: number;
+  error?: string;
+}>;
+export type CouncilJudgeLogJson = Record<string, unknown>;
+
+export const councilRuns = mysqlTable("council_runs", {
+  id:              int("id").autoincrement().primaryKey(),
+  workspaceId:     int("workspaceId"),
+  room:            varchar("room", { length: 40 }).notNull(),
+  questionHash:    varchar("questionHash", { length: 64 }).notNull(),
+  outcome:         mysqlEnum("outcome", ["council", "single", "degraded", "refused"]).notNull(),
+  forced:          boolean("forced").default(false).notNull(),
+  decisionReason:  varchar("decisionReason", { length: 300 }),
+  panel:           json("panel").$type<CouncilPanelLogJson>(),
+  judgeProviderId: varchar("judgeProviderId", { length: 80 }),
+  judgeModel:      varchar("judgeModel", { length: 120 }),
+  judge:           json("judge").$type<CouncilJudgeLogJson>(),
+  judgeRepaired:   boolean("judgeRepaired").default(false).notNull(),
+  confidence:      mysqlEnum("confidence", ["high", "medium", "low"]),
+  factsProviderId: varchar("factsProviderId", { length: 80 }),
+  factCount:       int("factCount").default(0).notNull(),
+  totalTokens:     int("totalTokens").default(0).notNull(),
+  latencyMs:       int("latencyMs").default(0).notNull(),
+  createdAt:       timestamp("createdAt").defaultNow().notNull(),
+}, (t) => ({
+  byCreated:   index("council_runs_created").on(t.createdAt),
+  byWorkspace: index("council_runs_workspace_time").on(t.workspaceId, t.createdAt),
+}));
+export type CouncilRunRow = typeof councilRuns.$inferSelect;
 // ─── Arrival skins (RCS-AUDIO-SKINS-VALUE.md §2) ─────────────────────────────
 // One row per user: how many arrivals so far and the recent skin ids (most recent
 // last, capped at roster + window), so the next pick can avoid the last 7 and

@@ -1,6 +1,6 @@
 -- Russell Capital Systems — complete database schema
 -- Generated from drizzle/schema.ts by scripts/export_schema_sql.sh; do not hand-edit.
--- Tables: 175
+-- Tables: 176
 -- Import: mysql -u USER -p DBNAME < database/rcs-schema.sql   (or phpMyAdmin → Import)
 -- The database itself must already exist (create it in cPanel → MySQL Databases).
 
@@ -665,6 +665,27 @@ CREATE TABLE `consent_grants` (
 	`grantedByName` varchar(200),
 	`createdAt` timestamp NOT NULL DEFAULT (now()),
 	CONSTRAINT `consent_grants_id` PRIMARY KEY(`id`)
+);
+CREATE TABLE `council_runs` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`workspaceId` int,
+	`room` varchar(40) NOT NULL,
+	`questionHash` varchar(64) NOT NULL,
+	`outcome` enum('council','single','degraded','refused') NOT NULL,
+	`forced` boolean NOT NULL DEFAULT false,
+	`decisionReason` varchar(300),
+	`panel` json,
+	`judgeProviderId` varchar(80),
+	`judgeModel` varchar(120),
+	`judge` json,
+	`judgeRepaired` boolean NOT NULL DEFAULT false,
+	`confidence` enum('high','medium','low'),
+	`factsProviderId` varchar(80),
+	`factCount` int NOT NULL DEFAULT 0,
+	`totalTokens` int NOT NULL DEFAULT 0,
+	`latencyMs` int NOT NULL DEFAULT 0,
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	CONSTRAINT `council_runs_id` PRIMARY KEY(`id`)
 );
 CREATE TABLE `county_hazards` (
 	`id` int AUTO_INCREMENT NOT NULL,

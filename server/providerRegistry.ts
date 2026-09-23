@@ -348,6 +348,13 @@ export type CompletionRequest = {
   preferProvider?: string;
   /** Skip these — used to get a genuinely independent second opinion. */
   exclude?: string[];
+  /** Per-call ceiling, passed to the adapter (the council gives each panelist its own). */
+  timeoutMs?: number;
+  /**
+   * Pin the model instead of using the credential's. Only meaningful with
+   * preferProvider. The adapter still refuses a banned or router id.
+   */
+  modelOverride?: string;
 };
 
 export type CompletionResult = ProviderCallResult & {
@@ -405,12 +412,13 @@ export async function completeChat(req: CompletionRequest): Promise<CompletionRe
       const result = await callProvider({
         provider,
         apiKey: credential.apiKey,
-        model: credential.model,
+        model: req.modelOverride?.trim() || credential.model,
         messages: req.messages,
         maxTokens: req.maxTokens,
         temperature: req.temperature,
         thinkingBudget: req.thinkingBudget,
         baseUrlOverride: credential.baseUrlOverride,
+        timeoutMs: req.timeoutMs,
       });
 
       void recordUse(credential.providerId);
@@ -517,6 +525,17 @@ export async function providerStatus(): Promise<
       useCount: row?.useCount ?? 0,
     };
   });
+}
+
+/**
+ * The model a provider would answer with right now (vault override, then the
+ * environment override, then the catalogue default), or null when the provider
+ * has no key. Names only: the key is never returned.
+ */
+export async function configuredModelFor(providerId: string): Promise<string | null> {
+  const credentials = await loadCredentials();
+  const hit = credentials.find(c => c.providerId === providerId) ?? environmentCredentials().find(c => c.providerId === providerId);
+  return hit ? hit.model : null;
 }
 
 /** Provider ids that have a working, enabled key. Feeds the AI Stack panel. */
