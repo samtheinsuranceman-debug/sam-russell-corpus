@@ -55,6 +55,7 @@
 // ============================================================
 
 import { NATIONWIDE_PUBLISHED_LOOKBACKS, type PublishedLookback } from "./indexCreditingData";
+import { assumed, sourced, type Sourced } from "./sourcing";
 
 export type Provenance = "lived" | "backtested" | "unknown";
 
@@ -217,3 +218,243 @@ export const LOOKBACK_DISCLOSURE =
   "(FLM-1491AO.10 (02/25)). Where an index was established in 2022, every window longer than " +
   "five years is back-tested — Nationwide's term is \"designed with the benefit of hindsight\" — " +
   "and this platform shows the lived window as the headline with the back-test labelled beside it.";
+
+// ============================================================
+// START-YEAR INTEGRITY — how much of a backtest is the choice of where it begins.
+//
+// The published table above is one carrier's; the same trick works on any
+// series. Choose the start year after a crash and a ten-year backtest looks
+// like a strategy; choose it at a peak and the same strategy looks broken.
+// Neither number is false. Each is one draw from the set of every window of
+// that length the history allows, and a reader shown one draw without the
+// others cannot tell which kind they were handed.
+//
+// So a window is never judged on its own. `startYearIntegrity()` places it in
+// the full distribution of same-length windows from the same series, reports
+// where it ranks, and flags it when it sits in the flattering tail. The flag is
+// arithmetic on the series; the thresholds are named constants below and are
+// declared as assumptions in LOOKBACK_INTEGRITY_SOURCES, not dressed as rules.
+// ============================================================
+
+/** Calendar-year returns in percent, keyed by year. */
+export type AnnualSeries = Readonly<Record<number, number>>;
+
+export interface LookbackWindow {
+  startYear: number;
+  endYear: number;
+  years: number;
+  /** Compounded (geometric) annual rate over the window, percent. Null on a total loss. */
+  compounded: number | null;
+  /** Arithmetic mean of the annual rates, percent — shown beside, never instead. */
+  arithmetic: number | null;
+}
+
+export type WindowVerdict =
+  /** In the top tail of same-length windows: the start year is doing the work. */
+  | "flattering"
+  /** In the bottom tail: the start year makes the strategy look worse than typical. */
+  | "unflattering"
+  /** Inside the middle of the distribution. */
+  | "typical"
+  /** Too few same-length windows to rank against. Reported, not ranked. */
+  | "thin"
+  /** The window runs outside the years the series holds. */
+  | "unplaced";
+
+export interface StartYearIntegrity {
+  chosen: LookbackWindow | null;
+  /** Every same-length window the series holds, by start year. */
+  windows: LookbackWindow[];
+  n: number;
+  /** Mid-rank percentile of the chosen window among `windows`, 0–100. */
+  percentile: number | null;
+  median: number | null;
+  best: LookbackWindow | null;
+  worst: LookbackWindow | null;
+  /** chosen − median, in points. */
+  vsMedian: number | null;
+  /** The market's return in the year before the window begins, when known. */
+  priorYearReturn: number | null;
+  /** True when the window begins straight after a fall of TROUGH_DROP or worse. */
+  startsAfterDrop: boolean;
+  verdict: WindowVerdict;
+  /** True only for "flattering": the case a reader must be warned about. */
+  flagged: boolean;
+  /** One renderable paragraph. Always present. */
+  basis: string;
+}
+
+/** A window at or above this percentile of its peers is flagged as cherry-picked. */
+export const CHERRY_PICK_PERCENTILE = 80;
+/** A window at or below this percentile is reported as unflattering. */
+export const UNFLATTERING_PERCENTILE = 20;
+/** Fewer same-length windows than this is too thin to rank (sourcing.ts tooThin default). */
+export const MIN_WINDOWS_TO_RANK = 15;
+/** A prior-year market return at or below this (percent) counts as starting after a fall. */
+export const TROUGH_DROP = -10;
+
+const round2 = (x: number) => Number(x.toFixed(2));
+
+/** Years the series holds, ascending. */
+export function seriesYears(series: AnnualSeries): number[] {
+  return Object.keys(series).map(Number).filter((y) => Number.isFinite(series[y])).sort((a, b) => a - b);
+}
+
+/** One window, or null when any year in it is missing from the series. */
+export function windowOf(series: AnnualSeries, startYear: number, years: number): LookbackWindow | null {
+  if (!Number.isInteger(years) || years < 1) return null;
+  const rates: number[] = [];
+  for (let y = startYear; y < startYear + years; y++) {
+    const r = series[y];
+    if (typeof r !== "number" || !Number.isFinite(r)) return null;
+    rates.push(r);
+  }
+  const g = geometricMean(rates), a = arithmeticMean(rates);
+  return {
+    startYear, endYear: startYear + years - 1, years,
+    compounded: g === null ? null : round2(g),
+    arithmetic: a === null ? null : round2(a),
+  };
+}
+
+/** Every complete window of `years` length, one per start year, ascending. */
+export function allWindows(series: AnnualSeries, years: number): LookbackWindow[] {
+  const ys = seriesYears(series);
+  const out: LookbackWindow[] = [];
+  for (const start of ys) {
+    const w = windowOf(series, start, years);
+    if (w) out.push(w);
+  }
+  return out;
+}
+
+/**
+ * "Since year X" figures: every start year compounded through the same end year.
+ *
+ * The form in which start-year choice most often reaches a reader — a figure
+ * quoted "since" a crash year — and the one where it is hardest to see, because the
+ * window length changes with the start and nothing on the page looks chosen.
+ */
+export function sinceSweep(series: AnnualSeries, endYear: number, minYears = 5): LookbackWindow[] {
+  const out: LookbackWindow[] = [];
+  for (const start of seriesYears(series)) {
+    const years = endYear - start + 1;
+    if (years < minYears) continue;
+    const w = windowOf(series, start, years);
+    if (w) out.push(w);
+  }
+  return out;
+}
+
+function median(xs: number[]): number | null {
+  if (!xs.length) return null;
+  const s = [...xs].sort((a, b) => a - b);
+  const m = Math.floor(s.length / 2);
+  return s.length % 2 ? s[m]! : (s[m - 1]! + s[m]!) / 2;
+}
+
+/**
+ * Where a chosen backtest window sits among every window of the same length.
+ *
+ * `series` is what the backtest compounds (raw or credited). `market`, when
+ * given, is the raw index used to tell whether the window starts just after a
+ * fall — a credited series is floored at zero and cannot show the crash.
+ */
+export function startYearIntegrity(
+  series: AnnualSeries,
+  startYear: number,
+  years: number,
+  market: AnnualSeries = series,
+): StartYearIntegrity {
+  const windows = allWindows(series, years).filter((w) => w.compounded !== null);
+  const chosen = windowOf(series, startYear, years);
+  const rates = windows.map((w) => w.compounded as number);
+  const n = windows.length;
+  const med = median(rates);
+  const best = n ? windows.reduce((a, b) => ((b.compounded as number) > (a.compounded as number) ? b : a)) : null;
+  const worst = n ? windows.reduce((a, b) => ((b.compounded as number) < (a.compounded as number) ? b : a)) : null;
+  const prior = market[startYear - 1];
+  const priorYearReturn = typeof prior === "number" && Number.isFinite(prior) ? prior : null;
+  const startsAfterDrop = priorYearReturn !== null && priorYearReturn <= TROUGH_DROP;
+
+  const base = { windows, n, median: med === null ? null : round2(med), best, worst, priorYearReturn, startsAfterDrop };
+
+  if (!chosen || chosen.compounded === null) {
+    return {
+      ...base, chosen, percentile: null, vsMedian: null, verdict: "unplaced", flagged: false,
+      basis: `The ${years}-year window from ${startYear} runs outside the years this series holds, so it cannot be compared with anything.`,
+    };
+  }
+
+  const c = chosen.compounded;
+  const below = rates.filter((r) => r < c).length;
+  const equal = rates.filter((r) => r === c).length;
+  const percentile = n ? round2(((below + 0.5 * equal) / n) * 100) : null;
+  const vsMedian = med === null ? null : round2(c - med);
+  const range = best && worst
+    ? `Across all ${n} such windows the same method compounds from ${worst.compounded}% (${worst.startYear}–${worst.endYear}) to ${best.compounded}% (${best.startYear}–${best.endYear}); the median is ${base.median}%.`
+    : "";
+
+  let verdict: WindowVerdict;
+  if (n < MIN_WINDOWS_TO_RANK) verdict = "thin";
+  else if ((percentile as number) >= CHERRY_PICK_PERCENTILE) verdict = "flattering";
+  else if ((percentile as number) <= UNFLATTERING_PERCENTILE) verdict = "unflattering";
+  else verdict = "typical";
+
+  const head =
+    verdict === "thin"
+      ? `Only ${n} ${years}-year window${n === 1 ? "" : "s"} fit in this series — too few to say whether ${startYear}–${chosen.endYear} is typical.`
+      : verdict === "flattering"
+        ? `${startYear}–${chosen.endYear} compounds at ${c}%, better than ${Math.round(percentile as number)}% of ${years}-year windows. The start year is flattering the result.`
+        : verdict === "unflattering"
+          ? `${startYear}–${chosen.endYear} compounds at ${c}%, worse than ${100 - Math.round(percentile as number)}% of ${years}-year windows. This start year understates the method.`
+          : `${startYear}–${chosen.endYear} compounds at ${c}%, near the middle of ${years}-year windows (percentile ${Math.round(percentile as number)}).`;
+
+  const drop = !startsAfterDrop ? ""
+    : verdict === "flattering"
+      ? ` It also begins the year after a ${priorYearReturn}% market fall, so it starts from a low base.`
+      : ` It begins the year after a ${priorYearReturn}% market fall.`;
+
+  return {
+    ...base, chosen, percentile, vsMedian, verdict, flagged: verdict === "flattering",
+    basis: [head, range].filter(Boolean).join(" ") + drop,
+  };
+}
+
+/** A calendar-year series of credited rates from any per-year crediting function. */
+export function creditedSeries(market: AnnualSeries, credit: (raw: number, year: number) => number): Record<number, number> {
+  const out: Record<number, number> = {};
+  for (const y of seriesYears(market)) out[y] = credit(market[y]!, y);
+  return out;
+}
+
+/**
+ * Where this engine's figures come from, as `Sourced` records (shared/sourcing.ts).
+ *
+ * The published look-backs and the index series are sourced and dated. The
+ * thresholds that turn a ranking into a flag are the firm's conventions, so
+ * they are carried as assumptions: the sources footer prints them under "we
+ * assumed" and `assertSourced` would refuse them, which is the point.
+ */
+export const LOOKBACK_INTEGRITY_SOURCES: readonly Sourced<string | number>[] = [
+  sourced(
+    "Published look-back rates by option (30, 25, 20, 15, 10 and 5 years)",
+    "Nationwide, Accumulator II 2020 IUL rate guide, FLM-1491AO.10 (02/25)",
+    "2025-01-15",
+  ),
+  sourced(
+    "Index inception dates: J.P. Morgan Mercury 2022-04-25, BNP Paribas Global H-Factor 2022-04-08",
+    "Nationwide, Accumulator II 2020 IUL rate guide, FLM-1491AO.10 (02/25), index disclosures",
+    "2025-01-15",
+  ),
+  sourced(
+    "S&P 500 calendar-year price returns, 1994-2025 (total return less dividend)",
+    "ChartRow, S&P 500 Returns by Year",
+    "2026-09-14",
+    { url: "https://chartrow.com/sp500/returns" },
+  ),
+  assumed(LIVED_WINDOW_YEARS, `An index established in 2022 is treated as having lived only the ${LIVED_WINDOW_YEARS}-year published window; no shorter figure is interpolated.`),
+  assumed(CHERRY_PICK_PERCENTILE, `A window ranking at or above the ${CHERRY_PICK_PERCENTILE}th percentile of same-length windows is flagged as flattering. The firm's convention, not a regulatory standard.`),
+  assumed(MIN_WINDOWS_TO_RANK, `Fewer than ${MIN_WINDOWS_TO_RANK} same-length windows is too thin to rank, matching the sample-size floor in shared/sourcing.ts.`),
+  assumed(TROUGH_DROP, `A window is noted as starting after a fall when the prior calendar year returned ${TROUGH_DROP}% or worse.`),
+];

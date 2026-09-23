@@ -63,15 +63,16 @@ export default function SLATDeepDive() {
       <section className="mb-12">
         <h2 className="text-2xl font-semibold text-emerald-400 flex items-center">
           <Calendar className="mr-2" size={24} />
-          Exemption Sunset Countdown
+          Exemption Under Current Law
         </h2>
+        {/* $15M per person in 2026, indexed, no sunset — P.L. 119-21 § 70106 amending IRC § 2010(c)(3), https://www.congress.gov/119/plaws/publ21/PLAW-119publ21.pdf; Rev. Proc. 2025-32, https://www.irs.gov/pub/irs-drop/rp-25-32.pdf (read 23 Sep 2026). Was "sunset from $13.61M (2024) to $7M in 2026". */}
         <p className="mt-4 text-gray-200">
-          The federal estate and gift tax exemption is set to sunset from $13.61 million in 2024 to $7 million in 2026 unless extended. This reduction could significantly impact SLAT funding strategies.
+          The federal estate and gift tax exemption is $15 million per person in 2026, indexed for inflation. The One Big Beautiful Bill Act (P.L. 119-21, July 2025) made it permanent, so there is no scheduled sunset. A lower exemption is possible only if a future Congress changes the law.
         </p>
         <div className="mt-4 flex items-center justify-center">
           <div className="bg-[#0d1526] p-6 rounded-lg shadow-lg">
-            <p className="text-xl text-indigo-400">Current Exemption: $13.61M (as of {selectedYear})</p>
-            <p className="text-xl text-emerald-400 mt-2">Post-Sunset: $7M (2026)</p>
+            <p className="text-xl text-indigo-400">Current Exemption: $15M per person (2026, indexed)</p>
+            <p className="text-xl text-emerald-400 mt-2">Scheduled sunset: none (P.L. 119-21)</p>
             <button
               onClick={() => setSelectedYear(prev => prev + 1)}
               className="mt-4 bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded"
@@ -160,7 +161,7 @@ export default function SLATDeepDive() {
           <li>Risks: If not properly allocated, future distributions could incur GST tax.</li>
         </ul>
         <p className="mt-4 text-gray-200">
-          Example: A SLAT with GST provisions could transfer $13.61M to grandchildren tax-free, amplifying family wealth.
+          Example: A SLAT with GST provisions could transfer $15M (the 2026 GST exemption) to grandchildren tax-free, amplifying family wealth.
         </p>
       </section>
 

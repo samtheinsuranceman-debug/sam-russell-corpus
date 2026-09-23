@@ -9,22 +9,23 @@ export default function ComprehensiveIRCReferenceIndex() {
 
   const allSections = useMemo(() => [
     // Income Tax Category (approx. 50 sections)
-    { category: 'incomeTax', code: 'Section 1', description: 'Tax imposed on individuals based on taxable income', related: ['Section 2', 'Section 63'], changes: 'TCJA: Adjusted brackets', effective: '01/01/2018', sunset: '12/31/2025' },
+    // TCJA-era sunsets (12/31/2025) removed: P.L. 119-21 made these provisions permanent — P.L. 119-21, title VII, § 70101 et seq. (TCJA individual provisions made permanent), https://www.congress.gov/119/plaws/publ21/PLAW-119publ21.pdf; CRS R48611, https://www.congress.gov/crs-product/R48611 (read 23 Sep 2026); bonus depreciation: IRS Notice 2026-11, https://www.irs.gov/pub/irs-drop/n-26-11.pdf.
+    { category: 'incomeTax', code: 'Section 1', description: 'Tax imposed on individuals based on taxable income', related: ['Section 2', 'Section 63'], changes: 'TCJA brackets made permanent by P.L. 119-21 (2025)', effective: '01/01/2018', sunset: 'N/A' },
     { category: 'incomeTax', code: 'Section 2', description: 'Definitions and special rules for married individuals', related: ['Section 1', 'Section 7703'], changes: 'SECURE Act: No major changes', effective: '01/01/1954', sunset: 'N/A' },
     { category: 'incomeTax', code: 'Section 61', description: 'Gross income defined, including wages and dividends', related: ['Section 62', 'Section 101'], changes: 'TCJA: Expanded exclusions', effective: '01/01/1954', sunset: 'N/A' },
-    { category: 'incomeTax', code: 'Section 62', description: 'Adjusted gross income deductions', related: ['Section 61', 'Section 67'], changes: 'SECURE 2.0: Miscellaneous changes', effective: '01/01/2018', sunset: '12/31/2025' },
-    { category: 'incomeTax', code: 'Section 63', description: 'Taxable income calculation', related: ['Section 1', 'Section 67'], changes: 'IRA: Standard deduction increases', effective: '01/01/2018', sunset: '12/31/2025' },
-    { category: 'incomeTax', code: 'Section 67', description: '2% floor on miscellaneous itemized deductions', related: ['Section 62', 'Section 68'], changes: 'TCJA: Suspended for tax years 2018-2025', effective: '01/01/2018', sunset: '12/31/2025' },
-    { category: 'incomeTax', code: 'Section 68', description: 'Overall limitation on itemized deductions', related: ['Section 67', 'Section 151'], changes: 'TCJA: Increased thresholds', effective: '01/01/2018', sunset: '12/31/2025' },
+    { category: 'incomeTax', code: 'Section 62', description: 'Adjusted gross income deductions', related: ['Section 61', 'Section 67'], changes: 'SECURE 2.0: Miscellaneous changes', effective: '01/01/2018', sunset: 'N/A' },
+    { category: 'incomeTax', code: 'Section 63', description: 'Taxable income calculation', related: ['Section 1', 'Section 67'], changes: 'TCJA standard deduction made permanent by P.L. 119-21', effective: '01/01/2018', sunset: 'N/A' },
+    { category: 'incomeTax', code: 'Section 67', description: '2% floor on miscellaneous itemized deductions', related: ['Section 62', 'Section 68'], changes: 'Miscellaneous itemized deductions eliminated permanently (P.L. 119-21)', effective: '01/01/2018', sunset: 'N/A' },
+    { category: 'incomeTax', code: 'Section 68', description: 'Overall limitation on itemized deductions', related: ['Section 67', 'Section 151'], changes: 'Pease limit repealed; P.L. 119-21 adds a cap for 37%-bracket filers', effective: '01/01/2018', sunset: 'N/A' },
     { category: 'incomeTax', code: 'Section 101', description: 'Exclusion of life insurance proceeds from gross income', related: ['Section 61', 'Section 2035'], changes: 'No recent changes', effective: '01/01/1954', sunset: 'N/A' },
-    { category: 'incomeTax', code: 'Section 151', description: 'Allowance of deductions for personal exemptions', related: ['Section 63', 'Section 152'], changes: 'TCJA: Suspended through 2025', effective: '01/01/2018', sunset: '12/31/2025' },
-    { category: 'incomeTax', code: 'Section 152', description: 'Dependent definitions and qualifications', related: ['Section 151', 'Section 24'], changes: 'SECURE Act: Child tax credit modifications', effective: '01/01/2018', sunset: '12/31/2025' },
+    { category: 'incomeTax', code: 'Section 151', description: 'Allowance of deductions for personal exemptions', related: ['Section 63', 'Section 152'], changes: 'Personal exemption permanently $0 (P.L. 119-21)', effective: '01/01/2018', sunset: 'N/A' },
+    { category: 'incomeTax', code: 'Section 152', description: 'Dependent definitions and qualifications', related: ['Section 151', 'Section 24'], changes: 'TCJA child-credit rules made permanent (P.L. 119-21)', effective: '01/01/2018', sunset: 'N/A' },
     { category: 'incomeTax', code: 'Section 162', description: 'Trade or business expenses deductions', related: ['Section 61', 'Section 263'], changes: 'TCJA: Limited entertainment deductions', effective: '01/01/1954', sunset: 'N/A' },
-    { category: 'incomeTax', code: 'Section 163', description: 'Interest deductions, including mortgage interest', related: ['Section 162', 'Section 264'], changes: 'TCJA: Caps on home mortgage interest', effective: '01/01/2018', sunset: '12/31/2025' },
+    { category: 'incomeTax', code: 'Section 163', description: 'Interest deductions, including mortgage interest', related: ['Section 162', 'Section 264'], changes: '$750K mortgage-interest cap made permanent (P.L. 119-21)', effective: '01/01/2018', sunset: 'N/A' },
     { category: 'incomeTax', code: 'Section 165', description: 'Losses deductions for individuals and businesses', related: ['Section 162', 'Section 166'], changes: 'SECURE 2.0: Disaster loss expansions', effective: '01/01/1954', sunset: 'N/A' },
-    { category: 'incomeTax', code: 'Section 167', description: 'Depreciation deductions for property', related: ['Section 168', 'Section 179'], changes: 'TCJA: Bonus depreciation rules', effective: '01/01/2018', sunset: '12/31/2025' },
+    { category: 'incomeTax', code: 'Section 167', description: 'Depreciation deductions for property', related: ['Section 168', 'Section 179'], changes: '100% bonus depreciation (§168(k)) made permanent (P.L. 119-21)', effective: '01/01/2018', sunset: 'N/A' },
     { category: 'incomeTax', code: 'Section 168', description: 'Accelerated cost recovery system for depreciation', related: ['Section 167', 'Section 179D'], changes: 'TCJA: Extended provisions', effective: '01/01/1986', sunset: 'N/A' },
-    { category: 'incomeTax', code: 'Section 179', description: 'Election to expense certain depreciable assets', related: ['Section 167', 'Section 280C'], changes: 'SECURE Act: Increased limits', effective: '01/01/2003', sunset: '12/31/2026' },
+    { category: 'incomeTax', code: 'Section 179', description: 'Election to expense certain depreciable assets', related: ['Section 167', 'Section 280C'], changes: 'Expensing limit raised (P.L. 119-21)', effective: '01/01/2003', sunset: 'N/A' },
     { category: 'incomeTax', code: 'Section 212', description: 'Expenses for production of income', related: ['Section 162', 'Section 67'], changes: 'TCJA: Subject to 2% floor', effective: '01/01/1954', sunset: 'N/A' },
     { category: 'incomeTax', code: 'Section 263', description: 'Capital expenditures not deductible', related: ['Section 162', 'Section 266'], changes: 'No recent changes', effective: '01/01/1954', sunset: 'N/A' },
     { category: 'incomeTax', code: 'Section 351', description: 'Transfer to corporation controlled by transferor', related: ['Section 362', 'Section 368'], changes: 'TCJA: Anti-abuse rules', effective: '01/01/1954', sunset: 'N/A' },
@@ -32,11 +33,11 @@ export default function ComprehensiveIRCReferenceIndex() {
     // ... Add more income tax sections up to 50, e.g., Section 402 to Section 1000 with similar structure
 
     // Estate/Gift/GST Category (approx. 40 sections)
-    { category: 'estateGiftGST', code: 'Section 2001', description: 'Imposition of estate tax', related: ['Section 2010', 'Section 2032'], changes: 'TCJA: Doubled exemption amounts', effective: '01/01/2018', sunset: '12/31/2025' },
+    { category: 'estateGiftGST', code: 'Section 2001', description: 'Imposition of estate tax', related: ['Section 2010', 'Section 2032'], changes: '$15M exemption (2026), indexed, permanent (P.L. 119-21)', effective: '01/01/2018', sunset: 'N/A' },
     { category: 'estateGiftGST', code: 'Section 2010', description: 'Unified credit against estate tax', related: ['Section 2001', 'Section 2631'], changes: 'SECURE Act: Portability rules', effective: '01/01_2011', sunset: 'N/A' },
     { category: 'estateGiftGST', code: 'Section 2032', description: 'Alternate valuation for estate tax', related: ['Section 2001', 'Section 2033'], changes: 'No recent changes', effective: '01/01/1954', sunset: 'N/A' },
-    { category: 'estateGiftGST', code: 'Section 2501', description: 'Imposition of gift tax', related: ['Section 2511', 'Section 2522'], changes: 'TCJA: Exemption alignment', effective: '01/01_1932', sunset: '12/31/2025' },
-    { category: 'estateGiftGST', code: 'Section 2601', description: 'GST tax imposition', related: ['Section 2631', 'Section 2652'], changes: 'IRA: Exemption increases', effective: '01/01_1976', sunset: '12/31/2025' },
+    { category: 'estateGiftGST', code: 'Section 2501', description: 'Imposition of gift tax', related: ['Section 2511', 'Section 2522'], changes: 'Unified with the estate exemption: $15M (2026), permanent', effective: '01/01_1932', sunset: 'N/A' },
+    { category: 'estateGiftGST', code: 'Section 2601', description: 'GST tax imposition', related: ['Section 2631', 'Section 2652'], changes: 'GST exemption $15M (2026), permanent (P.L. 119-21)', effective: '01/01_1976', sunset: 'N/A' },
     // ... Add more estate/gift/GST sections up to 40
 
     // Retirement Category (approx. 30 sections)
@@ -51,7 +52,7 @@ export default function ComprehensiveIRCReferenceIndex() {
     // ... Add more business sections up to 40
 
     // International Category (approx. 20 sections)
-    { category: 'international', code: 'Section 901', description: 'Allowance of credit for foreign taxes', related: ['Section 902', 'Section 904'], changes: 'TCJA: GILTI and FDII', effective: '01/01_2018', sunset: '12/31_2025' },
+    { category: 'international', code: 'Section 901', description: 'Allowance of credit for foreign taxes', related: ['Section 902', 'Section 904'], changes: 'GILTI/FDII renamed NCTI/FDDEI and made permanent (P.L. 119-21)', effective: '01/01_2018', sunset: 'N/A' },
     { category: 'international', code: 'Section 904', description: 'Limitation on foreign tax credit', related: ['Section 901', 'Section 907'], changes: 'SECURE Act: No direct changes', effective: '01/01_1966', sunset: 'N/A' },
     // ... Add more international sections up to 20
 

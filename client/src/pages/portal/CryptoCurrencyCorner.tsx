@@ -38,6 +38,7 @@ import { ExecutiveSummary, GoalsAccelerator, RecommendationSummary, DoNothingBas
 import { formatTaxCurrency } from "@shared/taxBracketEngine";
 import { RelatedCalculators } from "@/components/RelatedCalculators";
 import { ComplianceFooter } from "@/components/ComplianceFooter";
+import EngineSourcesFooter from "@/components/EngineSourcesFooter";
 
 export default function CryptoCurrencyCorner() {
   const [activeTab, setActiveTab] = useState("cycles");
@@ -251,7 +252,7 @@ export default function CryptoCurrencyCorner() {
             <Card className="border-emerald-500/30 bg-gradient-to-br from-emerald-500/5 to-transparent">
               <CardContent className="pt-4 pb-3">
                 <div className="text-[10px] md:text-xs text-muted-foreground leading-tight">Last ATH</div>
-                <div className="text-lg md:text-2xl font-bold text-emerald-400">$126,200</div>
+                <div className="text-lg md:text-2xl font-bold text-emerald-400">$126,198</div>
                 <div className="text-[10px] md:text-xs text-muted-foreground mt-1">Oct 2025 (Cycle 4)</div>
               </CardContent>
             </Card>
@@ -352,7 +353,7 @@ export default function CryptoCurrencyCorner() {
                     </Bar>
                   </BarChart>
                 </ResponsiveContainer>
-                <p className="text-xs text-muted-foreground mt-2">Pattern: 93.7% → 87.1% → 84.2% → 77.5% → ~52.5% — drawdowns shrink each cycle as market matures.</p>
+                <p className="text-xs text-muted-foreground mt-2">Pattern: 93.6% → 86.9% → 84.2% → 77.5% → ~54.0% — drawdowns shrink each cycle as market matures.</p>
               </CardContent>
             </Card>
             <Card>
@@ -367,7 +368,7 @@ export default function CryptoCurrencyCorner() {
                     <Bar dataKey="gain" name="% Gain ATL→ATH" fill="#22c55e" radius={[4, 4, 0, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
-                <p className="text-xs text-muted-foreground mt-2">Diminishing returns: +12,912% → +2,104% → +716% — still massive gains each cycle.</p>
+                <p className="text-xs text-muted-foreground mt-2">Diminishing returns: +12,915% → +2,103% → +715% — still massive gains each cycle.</p>
               </CardContent>
             </Card>
           </div>
@@ -552,7 +553,9 @@ export default function CryptoCurrencyCorner() {
                     <NumberInput value={form.strAppreciationRate} onChange={(v) => setForm(f => ({ ...f, strAppreciationRate: v }))}  />
                   </div>
                   <div>
-                    <Label className="text-xs">1st Year Depreciation %</Label>
+                    {/* Share of the purchase price written off in year one = cost-segregated short-life share × the bonus rate.
+                        Bonus rate is 100% for property acquired after 19 Jan 2025 — P.L. 119-21 § 70301 amending IRC § 168(k) (https://www.congress.gov/119/plaws/publ21/PLAW-119publ21.pdf); IRS Notice 2026-11 (https://www.irs.gov/pub/irs-drop/n-26-11.pdf), read 23 Sep 2026. */}
+                    <Label className="text-xs">1st Year Depreciation (cost-seg share of price; bonus is 100%)</Label>
                     <NumberInput value={form.strFirstYearDepreciation} onChange={(v) => setForm(f => ({ ...f, strFirstYearDepreciation: v }))}  />
                   </div>
                   <div>
@@ -850,7 +853,7 @@ export default function CryptoCurrencyCorner() {
                       <Bar dataKey="depreciationOffset" name="Depreciation Offset" fill="#a855f7" radius={[2, 2, 0, 0]} />
                     </BarChart>
                   </ResponsiveContainer>
-                  <p className="text-xs text-muted-foreground mt-2">New STR purchases every {form.strPurchaseEveryYears} years provide 40% first-year depreciation to offset crypto capital gains during bull cycle profit-taking years.</p>
+                  <p className="text-xs text-muted-foreground mt-2">New STR purchases every {form.strPurchaseEveryYears} years provide {Math.round(form.strFirstYearDepreciation * 100)}% of the price as first-year depreciation (the cost-segregated share, deducted in full at the 100% bonus rate under P.L. 119-21) to offset crypto capital gains during bull cycle profit-taking years.</p>
                 </CardContent>
               </Card>
             </>
@@ -941,7 +944,7 @@ export default function CryptoCurrencyCorner() {
                       <p><span className="font-semibold text-yellow-400">Precious Metals:</span> Allocate excess profits to gold ({form.pctToGold}%) and silver ({form.pctToSilver}%) as a hedge.</p>
                     </div>
                     <div className="space-y-2">
-                      <p><span className="font-semibold text-blue-400">Real Estate:</span> Purchase a ${fmt(form.strPurchasePrice)} STR every {form.strPurchaseEveryYears} years with 30% down. Use 40% first-year depreciation to offset crypto capital gains.</p>
+                      <p><span className="font-semibold text-blue-400">Real Estate:</span> Purchase a ${fmt(form.strPurchasePrice)} STR every {form.strPurchaseEveryYears} years with 30% down. Write off {Math.round(form.strFirstYearDepreciation * 100)}% of the price in year one (cost segregation at 100% bonus depreciation) to offset crypto capital gains.</p>
                       <p><span className="font-semibold text-emerald-400">Funding Stack:</span> Crypto profits → IUL 90% loan → HELOC for remaining down payment.</p>
                       <p><span className="font-semibold text-red-400">Rental Income:</span> 20% gross annual income reinvested into next bear cycle DCA and mortgage paydown ({form.pctToMortgagePaydown}%).</p>
                     </div>
@@ -952,6 +955,7 @@ export default function CryptoCurrencyCorner() {
           )}
         </TabsContent>
       </Tabs>
+      <EngineSourcesFooter path="/portal/crypto-corner" />
       <NAICDisclaimer variant="footer" showsProjections showsComparisons />
       
       <ComplianceFooter pageName="CryptoCurrencyCorner" showsIUL showsTax showsEstate showsProjections showsHistoricalData showsPolicyLoans />

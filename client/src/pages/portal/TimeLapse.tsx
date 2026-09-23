@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
+import { rmdStartAgeForAge } from "@shared/uniformLifetimeTable";
 import {
   Play,
   Pause,
@@ -58,6 +59,10 @@ export default function TimeLapse() {
     let withStrategy = startNw;
     let withoutStrategy = startNw;
     let cumulativeTax = 0;
+    // RMDs begin at 73 (born 1951–1959) or 75 (born 1960+), SECURE 2.0 § 107
+    // (https://www.irs.gov/retirement-plans/plan-participant-employee/retirement-topics-required-minimum-distributions-rmds,
+    // read 23 Sep 2026). Was a fixed 72, the pre-2023 age.
+    const rmdStart = rmdStartAgeForAge(startAge);
 
     for (let i = 0; i <= 30; i++) {
       const age = startAge + i;
@@ -74,7 +79,7 @@ export default function TimeLapse() {
       if (age === 65) milestone = "📋 Medicare Eligible";
       if (age === 67) milestone = "🏖️ Full Retirement Age";
       if (age === 70) milestone = "💰 Max Social Security";
-      if (age === 72) milestone = "📊 RMDs Begin";
+      if (age === rmdStart) milestone = "📊 RMDs Begin";
 
       years.push({ year: i, age, withStrategy, withoutStrategy, taxSaved: taxThisYear, cumulativeTaxSaved: cumulativeTax, milestone });
     }

@@ -25,6 +25,7 @@
 //    exhibit, and shipping them separately is how two exhibits drift apart.
 // ============================================================
 
+import { HELOC_RATE_DEFAULT_PCT } from "@shared/marketRateDefaults";
 import type { Express, Request, Response, NextFunction } from "express";
 import { createHash, timingSafeEqual } from "node:crypto";
 import { generateDualIllustration } from "@shared/timeMachineEngine";
@@ -131,8 +132,9 @@ function sameSecret(a: string, b: string): boolean {
  *
  * Default start is IBBOTSON_START_YEAR. Note that this is 1929, while
  * Ibbotson and Sinquefield's SBBI series itself begins in 1926 — the three
- * earliest years are not in the table this repo holds, which is sourced to
- * NYU Stern / Damodaran. Adding 1926-1928 needs a sourced addition to
+ * earliest years are not in the table this repo holds, whose recent years
+ * match S&P Dow Jones Indices' published total returns (not Damodaran's
+ * histretSP, as this comment used to say). Adding 1926-1928 needs a sourced addition to
  * ibbotsonModel.ts, not three numbers typed from memory. Until then the
  * response reports the window it actually used, so nobody reads "Ibbotson"
  * and assumes 1926.
@@ -988,7 +990,7 @@ export function registerPartnerApi(app: Express): void {
       // Derived from the policy's own index strategy across the Ibbotson
       // series, not a number anyone chose. See creditingFrom().
       iulCreditRate: crediting.ratePct / 100,
-      helocRate: clampNum(q.helocRate, 0, 25, 8.5) / 100,
+      helocRate: clampNum(q.helocRate, 0, 25, HELOC_RATE_DEFAULT_PCT) / 100, // default: Curinos national average, 2026-09-21
     });
 
     res.json({
@@ -1090,7 +1092,7 @@ export function registerPartnerApi(app: Express): void {
       capLimitedYears: capped,
       source:
         "S&P 500 annual returns from Roger Ibbotson and Rex Sinquefield's Stocks, Bonds, Bills and Inflation series, " +
-        "as held in this repository from NYU Stern / Damodaran. The held table begins in " +
+        "with recent years as published by S&P Dow Jones Indices (S&P 500 total return). The held table begins in " +
         `${IBBOTSON_START_YEAR}; the published SBBI series itself begins in 1926, and those three earliest years are ` +
         "not included here.",
       notice:

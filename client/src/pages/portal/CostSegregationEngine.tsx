@@ -29,13 +29,16 @@ export default function CostSegregationEngine() {
     { year: 10, without: 89744, with: 20000, difference: -69744 },
   ], []);
 
+  // Bonus rate by acquisition year. P.L. 119-21 replaced the TCJA phase-down with a permanent 100% for
+  // property acquired after 19 Jan 2025 — P.L. 119-21 § 70301 amending IRC § 168(k) (https://www.congress.gov/119/plaws/publ21/PLAW-119publ21.pdf); IRS Notice 2026-11 (https://www.irs.gov/pub/irs-drop/n-26-11.pdf), read 23 Sep 2026.
+  // Was 2025 40%, 2026 20%, 2027+ 0%.
   const bonusDepreciationSchedule = [
     { year: 2022, percentage: 100 },
     { year: 2023, percentage: 80 },
     { year: 2024, percentage: 60 },
-    { year: 2025, percentage: 40 },
-    { year: 2026, percentage: 20 },
-    { year: '2027+', percentage: 0 },
+    { year: '2025 (acquired before 20 Jan)', percentage: 40 },
+    { year: '2025 (acquired after 19 Jan)', percentage: 100 },
+    { year: '2026 onward', percentage: 100 },
   ];
 
   const portfolioData = [
@@ -161,7 +164,7 @@ export default function CostSegregationEngine() {
             </li>
           ))}
         </ul>
-        <p className="mt-4 text-emerald-500 font-bold">ACT NOW — bonus depreciation is phasing out!</p>
+        <p className="mt-4 text-emerald-500 font-bold">100% bonus depreciation is permanent under P.L. 119-21 for property acquired after 19 January 2025.</p>
       </section>
 
       {/* STR Material Participation Strategy */}

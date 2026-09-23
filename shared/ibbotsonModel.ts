@@ -23,7 +23,15 @@
  */
 
 // ─── S&P 500 Annual Returns (1929–2025) ────────────────────────────────────
-// Source: NYU Stern / Damodaran, Ibbotson SBBI Yearbook
+// Total return, dividends reinvested, as a decimal.
+// Source, checked 23 Sep 2026 against recent years: these are S&P Dow Jones
+// Indices' published S&P 500 total returns (2008 −37.00%, 2022 −18.11%,
+// 2023 +26.29%, 2024 +25.02%), with the early years matching the Ibbotson SBBI
+// large-company stock series (the S&P composite before the S&P 500 existed in
+// 1957). They are NOT Damodaran's histretSP series, which differs by 0.1–0.5
+// points a year (e.g. 2008 −36.55%, 2022 −18.04%, 2023 +26.06%, 2024 +24.88%;
+// https://pages.stern.nyu.edu/~adamodar/New_Home_Page/datafile/histretSP.html).
+// The earlier "NYU Stern / Damodaran" label was inaccurate.
 export const SP500_ANNUAL_RETURNS: Record<number, number> = {
   1929: -0.0842,
   1930: -0.2490,
@@ -121,7 +129,11 @@ export const SP500_ANNUAL_RETURNS: Record<number, number> = {
   2022: -0.1811,
   2023:  0.2629,
   2024:  0.2502,
-  2025:  0.0200, // YTD estimate
+  // 2025 full year: price +16.39% (5,881.63 → 6,845.50), total return +17.88% — S&P Dow Jones Indices,
+  // "U.S. Equities Market Attributes December 2025",
+  // https://www.spglobal.com/spdji/en/commentary/article/us-equities-market-attributes/ (read 23 Sep 2026).
+  // Damodaran's histretSP reports 17.72% for the same year. Was 0.0200 marked "YTD estimate".
+  2025:  0.1788,
 };
 
 // ─── Available Years ────────────────────────────────────────────────────────
@@ -401,7 +413,8 @@ export function getIbbotsonSummary(config: IbbotsonConfig = {}): IbbotsonSummary
 // ─── Disclaimer Text ────────────────────────────────────────────────────────
 
 export const IBBOTSON_DISCLAIMER =
-  "Projections are based on Roger Ibbotson's historical S&P 500 data (SBBI) and " +
+  "Projections are based on historical S&P 500 total returns (S&P Dow Jones Indices; " +
+  "Ibbotson SBBI large-company stocks for years before the S&P 500) and " +
   "represent research-based estimates only. They are NOT guaranteed production " +
   "increases. Past performance does not guarantee future results. Actual IUL " +
   "policy performance depends on carrier crediting methods, policy charges, " +
@@ -410,5 +423,29 @@ export const IBBOTSON_DISCLAIMER =
   "professional before making any financial decisions.";
 
 export const IBBOTSON_SHORT_DISCLAIMER =
-  "Based on Ibbotson SBBI historical data. Research-based estimates only — not guaranteed. " +
+  "Based on historical S&P 500 total returns (S&P Dow Jones Indices / Ibbotson SBBI). Research-based estimates only — not guaranteed. " +
   "Past performance ≠ future results. Assumed crediting rate: 7.5%.";
+
+// ─── Where These Numbers Come From ──────────────────────────────────────────
+
+/**
+ * The return table above is the S&P 500 total return (price plus reinvested
+ * dividends), calendar years, in the series S&P Dow Jones Indices publishes
+ * and the Ibbotson SBBI yearbooks carry back to 1926. It was checked year by
+ * year against a public compilation of that series; it is not Damodaran's
+ * reconstruction, which differs slightly (-36.55% for 2008 against -37.00%).
+ */
+export const IBBOTSON_MODEL_SOURCES: readonly { label: string; url?: string; asOf?: string; note?: string }[] = [
+  {
+    label: "S&P Dow Jones Indices, S&P 500 total return (the index's publisher; before 1957 the S&P 90 Composite, as carried in Morningstar's Ibbotson SBBI yearbooks)",
+    url: "https://www.spglobal.com/spdji/en/indices/equity/sp-500/",
+    asOf: "read 2026-09-23",
+  },
+  {
+    label: "Slickcharts, S&P 500 Total Returns by Year Since 1926 (year-by-year compilation of the same series): -8.42% (1929), -24.90% (1930), -43.34% (1931), 52.62% (1954), -37.00% (2008), -18.11% (2022), 26.29% (2023), 25.02% (2024), 17.88% (2025)",
+    url: "https://www.slickcharts.com/sp500/returns",
+    asOf: "page last verified 2026-09-17; read 2026-09-23",
+    note: "SP500_ANNUAL_RETURNS matches this table for the years checked (1929-1931, 1954, 2008, 2022-2024). Its 2025 entry is 2.00%, marked 'YTD estimate'; the full-year 2025 total return is 17.88%. Not changed; flagged for review.",
+  },
+  { label: "Assumption: the 7.5% cap (the capRate default), 0% floor, 100% participation and 2005 default start year are inputs chosen by the firm; a carrier's current terms and its AG 49-A maximum illustrated rate govern" },
+];

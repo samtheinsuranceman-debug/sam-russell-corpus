@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildWindows, CHAIN_CALCULATORS, chainCalculatorForPath, defaultChain, defaultProfile, modulesForStep, newStep, profileFromClientData, runChain, runChainMonteCarlo, startNetWorth } from "@shared/chainEngine";
+import { buildWindows, CHAIN_CALCULATORS, chainCalculatorForPath, defaultChain, defaultProfile, modulesForStep, newStep, profileFromClientData, runChain, runChainMonteCarlo, startNetWorth, stepId } from "@shared/chainEngine";
 import { applyPreset, defaultMacro } from "@shared/macroEngine";
 
 describe("chain engine", () => {
@@ -102,6 +102,29 @@ describe("chain engine", () => {
     const again2 = runChainMonteCarlo(defaultProfile(), steps, defaultMacro(2026), { simulations: 300, seed: 7 });
     expect(again.final.netWorth.p50).toBe(again2.final.netWorth.p50);
   }, 90_000);
+
+  it("step ids are seeded: same seed gives the same id, a different seed a different id, and taken ids are skipped", () => {
+    expect(newStep("trust-iul", 10).id).toBe(newStep("trust-iul", 10).id);
+    expect(stepId("trust-iul", { seed: 5 })).toBe(stepId("trust-iul", { seed: 5 }));
+    expect(stepId("trust-iul", { seed: 5 })).not.toBe(stepId("trust-iul", { seed: 6 }));
+    expect(stepId("trust-iul", { seed: 5 })).not.toBe(stepId("income-annuity", { seed: 5 }));
+    expect(stepId("trust-iul", { seed: 5 })).toMatch(/^trust-iul-[0-9a-z]{6}$/);
+    const first = stepId("crypto", { seed: 3 });
+    const next = stepId("crypto", { seed: 3, taken: [first] });
+    expect(next).not.toBe(first);
+    expect(stepId("crypto", { seed: 3, taken: [first] })).toBe(next);
+  });
+
+  it("Monte Carlo: same seed gives identical output, a different seed different output", () => {
+    const steps = defaultChain();
+    const run = (seed: number) => runChainMonteCarlo(defaultProfile(), steps, defaultMacro(2026), { simulations: 200, seed, samplePaths: 3 });
+    const a = run(11), b = run(11), c = run(12);
+    expect(a.netWorth).toEqual(b.netWorth);
+    expect(a.samplePaths).toEqual(b.samplePaths);
+    expect(a.final).toEqual(b.final);
+    expect(c.samplePaths).not.toEqual(a.samplePaths);
+    expect(c.final.netWorth.p50).not.toBe(a.final.netWorth.p50);
+  });
 
   it("maps every catalogued page to a chain calculator and builds a window per step", () => {
     expect(chainCalculatorForPath("/portal/mortgage-killer")).toBe("mortgage-killer");

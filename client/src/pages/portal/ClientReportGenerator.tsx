@@ -177,17 +177,21 @@ export default function ClientReportGenerator() {
         delayed: i >= 8 ? Math.round((3200 * 1.24 + 1800) * 12 * (i - 3)) : 0,
       }))
     },
+    // Sample estate section, one person. Exclusion $15,000,000 in 2026, indexed (2% assumed here), no sunset —
+    // P.L. 119-21 § 70106 amending IRC § 2010(c)(3), https://www.congress.gov/119/plaws/publ21/PLAW-119publ21.pdf; Rev. Proc. 2025-32, https://www.irs.gov/pub/irs-drop/rp-25-32.pdf (read 23 Sep 2026).
+    // Was: exposure (18.3M − 13.62M) × 40% = $1,872,000 on the 2024 exclusion, and a $27M couple line
+    // "assuming sunset doesn't happen". 2035 exposure now (18.3M − 15M) × 40% = $1,320,000 (exclusion held at 2026).
     estateTax: {
       grossEstate: 8500000,
       projectedEstate2035: 18300000,
-      taxExposure: 1872000,
+      taxExposure: 1320000,
       withPlanning: 0,
-      savings: 1872000,
+      savings: 1320000,
       growthData: Array.from({ length: 20 }, (_, i) => ({
-        year: 2025 + i,
+        year: 2026 + i,
         estateValue: Math.round(8500000 * Math.pow(1.05, i)),
-        exemption: 27000000 * Math.pow(1.02, i), // Assuming sunset doesn't happen for illustration
-        taxExposure: Math.max(0, Math.round((8500000 * Math.pow(1.05, i) - 27000000 * Math.pow(1.02, i)) * 0.4))
+        exemption: 15000000 * Math.pow(1.02, i),
+        taxExposure: Math.max(0, Math.round((8500000 * Math.pow(1.05, i) - 15000000 * Math.pow(1.02, i)) * 0.4))
       }))
     },
   }), []);
@@ -1116,7 +1120,7 @@ export default function ClientReportGenerator() {
                           </tr>
                           <tr>
                             <td className="py-3 px-4 text-white font-medium">Spousal Lifetime Access Trust (SLAT)</td>
-                            <td className="py-3 px-4 text-[#7a95b8]">Lock in current high exemption amounts before potential sunset while maintaining indirect access.</td>
+                            <td className="py-3 px-4 text-[#7a95b8]">Use the $15M-per-person exemption (2026, P.L. 119-21) while keeping indirect access through the spouse.</td>
                             <td className="text-right py-3 px-4 text-[#22c55e]">Varies</td>
                           </tr>
                         </tbody>

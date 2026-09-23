@@ -44,9 +44,9 @@ export const SHOCKS: readonly ShockWindow[] = [
   { id: 'black-monday-1987', label: 'Black Monday, 1987', fromYear: 1987, toYear: 1987,
     description: 'The largest single-day percentage fall on record.' },
   { id: 'dotcom-2000', label: 'The dot-com unwind, 2000–2002', fromYear: 2000, toYear: 2002,
-    description: 'Three consecutive losing years — the only such run in the modern series.' },
+    description: 'Three consecutive losing years — the first such run since 1939–41.' },
   { id: 'gfc-2008', label: 'The financial crisis, 2008', fromYear: 2008, toYear: 2008,
-    description: 'Credit markets seized and equities lost roughly a third of their value in a year.' },
+    description: 'Credit markets seized and equities lost more than a third of their value in a year.' },
   { id: 'covid-2020', label: 'The pandemic crash, 2020', fromYear: 2020, toYear: 2020,
     description: 'The fastest fall into a bear market on record, followed by an equally sharp recovery.' },
   { id: 'rates-2022', label: 'The rate shock, 2022', fromYear: 2022, toYear: 2022,
@@ -92,8 +92,9 @@ const DAMODARAN_ANNUAL_RETURNS_SOURCE = {
   url: "https://pages.stern.nyu.edu/~adamodar/New_Home_Page/datafile/histretSP.html",
   asOf: "page updated January 5, 2026; read 2026-09-23",
   note:
-    "The same table shows 1939, 1940 and 1941 as three consecutive losing years (and 1929 to 1932 as four), so 2000 to 2002 is the only " +
-    "such run since the Second World War rather than in the whole series. A -36.55% year is somewhat more than the 'roughly a third' in the 2008 description.",
+    "The same table shows 1939, 1940 and 1941 as three consecutive losing years (and 1929 to 1932 as four), so the dot-com description says " +
+    "2000 to 2002 was the first such run since 1939-41, not the only one in the series. 2008 lost 36.55% with dividends (38.3% on price in " +
+    "RAW_INDEX_RETURNS), so the description says more than a third, not roughly a third.",
 };
 
 /** covid-2020: the fastest fall into a bear market. */

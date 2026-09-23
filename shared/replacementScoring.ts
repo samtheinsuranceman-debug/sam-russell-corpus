@@ -28,6 +28,7 @@ import {
   type StateCode,
   type AnnuityCategory,
 } from "./annuityData";
+import { federalMarginalRateOnTaxable } from "./taxBracketEngine";
 
 // ── Types ────────────────────────────────────────────────────────────────
 
@@ -684,14 +685,10 @@ function calculateSolarPathway(
   const filingStatus = contract.filingStatus ?? "single";
   const otherIncome = contract.otherTaxableIncome ?? 50000;
   const stateTaxRate = contract.stateTaxRate ?? 0.05;
-  // Simplified federal bracket estimation
+  // Federal marginal rate on the taxable total, from the current-year table
+  // for this filing status (shared/taxRules.ts via the bracket engine).
   const totalTaxableIncome = otherIncome + netAfterPenalties;
-  const federalRate = totalTaxableIncome > 578125 ? 0.37
-    : totalTaxableIncome > 231250 ? 0.35
-    : totalTaxableIncome > 182100 ? 0.32
-    : totalTaxableIncome > 95375 ? 0.24
-    : totalTaxableIncome > 44725 ? 0.22
-    : 0.12;
+  const federalRate = federalMarginalRateOnTaxable(totalTaxableIncome, filingStatus === "married" ? "joint" : "single");
   // Marginal tax on the converted amount
   const conversionTaxCost = Math.round(netAfterPenalties * (federalRate + stateTaxRate));
 
