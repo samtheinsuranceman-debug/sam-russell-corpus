@@ -213,6 +213,72 @@ const HELOC_LTV_DEFAULT = 0.70;
 const LIFE_LOAN_PCT = 0.80;
 const MGA_RATE = 0.0625;
 
+// ─── Where these numbers come from ──────────────────────────────────────────
+// Every typed-in number in this file is listed here: either a named, dated
+// source, or an assumption the firm chose and says it chose. None of these
+// objects is read by the arithmetic; they exist so the page can print them.
+
+/** HOME_APPRECIATION_RATE = 0.05. FHFA all-transactions index 60.04 (1975 Q1) to 719.87 (2026 Q2) compounds to 4.97% a year. */
+const HOME_APPRECIATION_SOURCE = {
+  label: "U.S. Federal Housing Finance Agency, All-Transactions House Price Index for the United States (USSTHPI, via FRED): 60.04 in 1975 Q1 to 719.87 in 2026 Q2, a compound 4.97% a year, which rounds to the 5% used here",
+  url: "https://fred.stlouisfed.org/series/USSTHPI",
+  asOf: "2026 Q2 observation, read 2026-09-23",
+  note: "The same index compounds to 3.36% a year over the 20 years to 2026 Q2 and 6.81% over the 10 years to 2026 Q2; 5% is the full-history figure, not a recent one.",
+};
+
+/** helocRate default 0.085. Compared with the Bankrate national HELOC average and the prime rate it is priced from. */
+const HELOC_RATE_SOURCE = {
+  label: "Bankrate Monitor National Index, Home Equity Line of Credit rate (BRMHELOC01, via FRED): 7.29% for the week of 2026-09-02",
+  url: "https://fred.stlouisfed.org/series/BRMHELOC01",
+  asOf: "2026-09-02 observation, read 2026-09-23",
+  note: "The default HELOC rate here is 8.5%, 1.21 points above this national average. Not changed; flagged for review.",
+};
+const PRIME_RATE_SOURCE = {
+  label: "Board of Governors of the Federal Reserve System, H.15 Selected Interest Rates, Bank Prime Loan Rate (DPRIME, via FRED): 6.75% on 2026-09-02",
+  url: "https://fred.stlouisfed.org/series/DPRIME",
+  asOf: "2026-09-02 observation, read 2026-09-23",
+  note: "HELOCs are usually priced as prime plus a margin; the 8.5% default equals prime plus 1.75 points, and that margin is the firm's assumption.",
+};
+
+/** mortgageRate is typed in by the client; this is the market reference for it, not a literal in this file. */
+const MORTGAGE_RATE_REFERENCE_SOURCE = {
+  label: "Freddie Mac, Primary Mortgage Market Survey, 30-Year Fixed Rate Mortgage Average in the United States (MORTGAGE30US, via FRED): 6.66% for the week ending 2026-08-27",
+  url: "https://fred.stlouisfed.org/series/MORTGAGE30US",
+  asOf: "2026-08-27 observation, read 2026-09-23",
+  note: "Reference only: the engine uses the mortgage rate the client enters.",
+};
+
+/** MGA_RATE = 0.0625. A dated 5-year MYGA rate table built from the CANNEX feed. */
+const MGA_RATE_SOURCE = {
+  label: "AnnuityRatesHQ, 5-Year MYGA Rates full rate table (CANNEX feed, $100,000 premium, 118 rates across 59 carriers): top rate 6.45%, market average 5.16%, median 5.20%, with 6.25% declared by two carriers",
+  url: "https://annuityrateshq.com/myga/rates/5-year",
+  asOf: "table as of 2026-09-18, read 2026-09-23",
+  note: "6.25% is a real declared rate near the top of the market, about 1.1 points above the market average; it is not a typical rate.",
+};
+
+/** iulCreditRate default 0.075. The header calls 7.5% the AG 49 maximum; the guideline states a formula, not a number. */
+const AG49_SOURCE = {
+  label: "NAIC, Actuarial Guideline XLIX-A, The Application of the Life Illustrations Model Regulation to Policies with Index-Based Interest, Section 4 (illustrated scale) and Section 6 (policy loan leverage)",
+  url: "https://content.naic.org/sites/default/files/inline-files/AG%2049A%28posted%29.pdf",
+  asOf: "guideline effective for policies sold on or after 2020-12-14, read 2026-09-23",
+  note: "AG 49-A caps the illustrated rate at the lesser of the benchmark index account lookback average and 145% of the insurer's net investment earnings rate, set per carrier and per year. It names no 7.5% figure; 7.5% is the firm's assumed credit rate and must not exceed the carrier's own AG 49-A maximum.",
+};
+
+const MORTGAGE_KILLER_ASSUMPTIONS = [
+  { label: "Assumption: maximum IUL premium years = 5 (MAX_PREMIUM_YEARS), chosen by the firm because the strategy funds premiums from the HELOC only over a short, fixed schedule; no external source" },
+  { label: "Assumption: HELOC loan-to-value = 70% (HELOC_LTV_DEFAULT), chosen by the firm because it leaves headroom below the 80% combined LTV most lenders quote; no external source" },
+  { label: "Assumption: policy loan = 80% of surrender value (LIFE_LOAN_PCT), chosen by the firm because it keeps a cushion against lapse; the carrier's contract sets the true limit; no external source" },
+  { label: "Assumption: IUL credit rate = 7.5% a year (iulCreditRate default), chosen by the firm as an illustration rate; see the NAIC AG 49-A note, the carrier's filed maximum governs; no external source for the figure itself" },
+  { label: "Assumption: IUL premium = 20% of annual income (incomeAllocationPct default), chosen by the firm because it is a planning share of income, not a carrier or regulatory figure; no external source" },
+  { label: "Assumption: policy loan carrying cost = 5% a year (policyLoanDragRate default), chosen by the firm to approximate a carrier loan rate; no external source" },
+  { label: "Assumption: saved interest reinvested at 7% a year for 20 years (interestReinvestRate, interestReinvestYears defaults), chosen by the firm as a long-run balanced return; no external source" },
+  { label: "Assumption: client age = 45 when none is entered (clientAge default), chosen by the firm as a mid-career default; no external source" },
+  { label: "Assumption: IUL charges are 8% premium load in year 1 and 6% in later premium years, $120 per-policy charge a year, $7.78 per $1,000 of face for years 1 to 10, face = 10 times premium, net amount at risk on 1.5 times face; chosen by the firm as a generic illustration, not any carrier's filed charges; no external source" },
+  { label: "Assumption: cost of insurance rates of 0.08% (age 40 and under) rising to 2.2% (age 81 to 85), then 1.8% (86 to 90), 0.8% (91 to 95) and 0 after; chosen by the firm as a generic curve; no external source", note: "The rates fall after age 85, which no mortality table does. Not changed; flagged for review." },
+  { label: "Assumption: 0.2% persistency credit on cash value from year 11, surrender charge of 37.6% of one premium in years 1 to 3 falling to zero by year 11, and 80% of each year's interest credit applied to principal after the premium years; chosen by the firm as a generic illustration; no external source" },
+  { label: "Assumption: 30-year projection horizon, chosen by the firm because it matches the term of a standard mortgage; no external source" },
+];
+
 // ─── Current Plan: Standard Amortization ─────────────────────────────────────
 
 export function buildStandardAmortization(
@@ -766,3 +832,16 @@ export function runMortgageKillerAnalysis(input: MortgageKillerInput): MortgageK
     },
   };
 }
+
+// ─── Sources ─────────────────────────────────────────────────────────────────
+
+/** Every source and declared assumption behind the typed-in numbers in this engine, for the page to print. */
+export const MORTGAGE_KILLER_SOURCES: readonly { label: string; url?: string; asOf?: string; note?: string }[] = [
+  HOME_APPRECIATION_SOURCE,
+  HELOC_RATE_SOURCE,
+  PRIME_RATE_SOURCE,
+  MORTGAGE_RATE_REFERENCE_SOURCE,
+  MGA_RATE_SOURCE,
+  AG49_SOURCE,
+  ...MORTGAGE_KILLER_ASSUMPTIONS,
+];
