@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { FORCES, HORIZONS, annualised, readForce, readSeries, weightedSources, _clearOutsideMemoForTests } from "./outsideForces";
 import type { Observation } from "./_core/fred";
+import { OUTSIDE_FORCES_SERIES_SOURCES, OUTSIDE_FORCES_SOURCES } from "@shared/outsideForcesSources";
 
 /** Series ids the platform has seen answer on FRED, or that are FRED's own published ids for these releases. */
 const KNOWN = new Set(["CPIAUCSL", "CPILFESL", "T10YIE", "M2SL", "WALCL", "GFDEBTN", "CSUSHPINSA", "RHORUSQ156N", "MSPUS", "MEHOINUSA672N", "MORTGAGE30US", "FEDFUNDS", "DRTSCILM", "TOTLL", "NFCI", "BAMLH0A0HYM2", "GFDEGDQ188S", "FDHBFIN", "T10Y2Y", "TOTALSA", "ALTSALES", "CUSR0000SETA01", "CUSR0000SETA02", "TRFVOLUSM227NFWA", "CUSR0000SETG01"]);
@@ -13,6 +14,14 @@ function monthly(from: number, years: number, start: number, growth: number): Ob
 }
 
 describe("outside forces — the registry", () => {
+  it("names a primary source for every series it reads, in the shell-safe list", () => {
+    const named = new Set(OUTSIDE_FORCES_SERIES_SOURCES.map((s) => s.seriesId));
+    for (const f of FORCES) for (const s of f.series) expect(named.has(s.id), `${f.id}: ${s.id} has no source row`).toBe(true);
+    const read = new Set(FORCES.flatMap((f) => f.series.map((s) => s.id)));
+    for (const id of Array.from(named)) expect(read.has(id), `${id} is listed but not read`).toBe(true);
+    for (const s of OUTSIDE_FORCES_SOURCES) expect(s.url).toMatch(/^https:\/\/fred\.stlouisfed\.org\//);
+  });
+
   it("has seven forces, each with a twelve-voice weighted panel and a caveat", () => {
     expect(FORCES.map((f) => f.id)).toEqual(["prices", "fiat", "home", "credit", "debt", "cars", "travel"]);
     for (const f of FORCES) {

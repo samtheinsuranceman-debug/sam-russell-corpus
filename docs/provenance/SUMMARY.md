@@ -1,4 +1,4 @@
-# Provenance census — summary (tree `d360a2f`)
+# Provenance census — summary (tree `9ea1fc0`)
 
 Every count below is computed from the tree; none is typed. `server/provenanceCensus.test.ts` fails the build if any list grows.
 
@@ -6,8 +6,8 @@ Every count below is computed from the tree; none is typed. `server/provenanceCe
 |---|---|
 | Engines censused | 97 (37 via catalogue bindings, 89 via memory-bank modules, union) |
 | **Engines with zero sources** | **0** (of which 0 carry 20+ typed-in numeric literals) |
-| **Catalogue engines whose sources the shell cannot print yet** | **1** |
-| **Engines with unseeded randomness** | **1** |
+| **Catalogue engines whose sources the shell cannot print yet** | **0** |
+| **Engines with unseeded randomness** | **0** |
 | **Pages that import an engine and print no source** | **82** of 120 |
 | Engines with hard-coded years older than 2025 | 50 |
 | Engines that simulate | 21 |
@@ -20,11 +20,11 @@ Every count below is computed from the tree; none is typed. `server/provenanceCe
 
 ## Catalogue engines whose sources the shell cannot print yet
 
-- `server/outsideForces.ts`
+- none
 
 ## Engines with unseeded randomness
 
-- `shared/chainEngine.ts`
+- none
 
 ## Pages that import an engine and print no source
 
@@ -113,7 +113,7 @@ Every count below is computed from the tree; none is typed. `server/provenanceCe
 
 ## Engines with hard-coded years older than 2025
 
-- `server/outsideForces.ts (2019, 2023)`
+- `server/outsideForces.ts (2019, 2024)`
 - `shared/ag49Validator.ts (2015, 2020, 2023)`
 - `shared/altCredit/deployment.ts (2014, 2015, 2019, 2022, 2023, 2024)`
 - `shared/altCredit/lenders.ts (2004, 2006, 2012, 2013, 2017, 2018, 2019, 2021)`

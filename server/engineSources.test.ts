@@ -57,7 +57,10 @@ describe("engine source loaders", () => {
   });
 
   it("names only engines the catalogue or memory bank could reach", () => {
-    for (const engine of Object.keys(ENGINE_SOURCE_LOADERS)) expect(engine).toMatch(/^shared\/.+\.ts$/);
+    const catalogueEngines = new Set(CALCULATORS.map(c => c.engine).filter(Boolean));
+    for (const engine of Object.keys(ENGINE_SOURCE_LOADERS)) {
+      expect(/^shared\/.+\.ts$/.test(engine) || catalogueEngines.has(engine), engine).toBe(true);
+    }
   });
 });
 
@@ -67,6 +70,8 @@ describe("engineForPath", () => {
     expect(engineForPath(withEngine.path)).toBe(withEngine.engine);
     expect(engineForPath(`${withEngine.path}?tab=x`)).toBe(withEngine.engine);
     expect(engineForPath("/portal/not-a-real-page")).toBeNull();
+    expect(engineForPath("/portal/outside-forces")).toBe("server/outsideForces.ts");
+    expect(ENGINES_WITH_SOURCE_LOADERS).toContain(engineForPath("/portal/outside-forces"));
   });
 });
 
