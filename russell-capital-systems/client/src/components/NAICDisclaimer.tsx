@@ -158,7 +158,7 @@ export function ComplianceBadge({ className = "" }: { className?: string }) {
   return (
     <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-medium bg-amber-500/10 text-amber-500/70 border border-amber-500/15 ${className}`}>
       <Shield className="w-2.5 h-2.5" />
-      NAIC AG 49 Compliant
+      Non-guaranteed projection
     </span>
   );
 }

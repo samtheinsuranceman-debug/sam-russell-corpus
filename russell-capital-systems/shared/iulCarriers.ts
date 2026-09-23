@@ -44,7 +44,7 @@ export const IUL_CARRIERS: IULCarrier[] = [
     participationRate: 1.0,
     loanRate: 0.05,
     floorRate: 0.0,
-    avgIllustratedRate: 0.075, // AG 49 max
+    avgIllustratedRate: 0.075, // assumed crediting rate
     illustrationUrl: "",
     description: "Top-rated carrier with competitive cap rates and strong cash value accumulation. Offers multiple index strategies with 100% participation rate on S&P 500.",
     amBestRating: "A+ (Superior)",
@@ -59,7 +59,7 @@ export const IUL_CARRIERS: IULCarrier[] = [
     participationRate: 1.0,
     loanRate: 0.05,
     floorRate: 0.0,
-    avgIllustratedRate: 0.075, // AG 49 max
+    avgIllustratedRate: 0.075, // assumed crediting rate
     illustrationUrl: "",
     description: "Mutual company with strong dividends history. Accumulation Builder II offers competitive cap rates and low COI charges for cash value growth strategies.",
     amBestRating: "A+ (Superior)",
@@ -89,7 +89,7 @@ export const IUL_CARRIERS: IULCarrier[] = [
     participationRate: 1.0,
     loanRate: 0.05,
     floorRate: 0.0,
-    avgIllustratedRate: 0.075, // AG 49 max (actual historical avg exceeds this)
+    avgIllustratedRate: 0.075, // assumed crediting rate
     illustrationUrl: "",
     description: "Highest cap rates in the industry at 12%+ on select strategies. Life Pro+ Advantage offers uncapped index options with participation rate multipliers.",
     amBestRating: "A+ (Superior)",
@@ -104,7 +104,7 @@ export const IUL_CARRIERS: IULCarrier[] = [
     participationRate: 1.0,
     loanRate: 0.05,
     floorRate: 0.0,
-    avgIllustratedRate: 0.075, // AG 49 max
+    avgIllustratedRate: 0.075, // assumed crediting rate
     illustrationUrl: "",
     description: "Strong accumulation product with competitive cap rates and low internal costs. Builder Plus 3 is popular for premium financing and cash value strategies.",
     amBestRating: "A+ (Superior)",
@@ -119,7 +119,7 @@ export const IUL_CARRIERS: IULCarrier[] = [
     participationRate: 1.0,
     loanRate: 0.05,
     floorRate: 0.0,
-    avgIllustratedRate: 0.075, // AG 49 max
+    avgIllustratedRate: 0.075, // assumed crediting rate
     illustrationUrl: "",
     description: "Established carrier with wellness program integration. Accumulation IUL 20 offers competitive rates with potential premium discounts for healthy policyholders.",
     amBestRating: "A+ (Superior)",
@@ -134,7 +134,7 @@ export const IUL_CARRIERS: IULCarrier[] = [
     participationRate: 1.0,
     loanRate: 0.05,
     floorRate: 0.0,
-    avgIllustratedRate: 0.075, // AG 49 max
+    avgIllustratedRate: 0.075, // assumed crediting rate
     illustrationUrl: "",
     description: "Solid carrier with WealthAccumulate featuring multiple index strategies and competitive accumulation potential. Good for long-term cash value growth.",
     amBestRating: "A+ (Superior)",
@@ -149,7 +149,7 @@ export const IUL_CARRIERS: IULCarrier[] = [
     participationRate: 1.0,
     loanRate: 0.05,
     floorRate: 0.0,
-    avgIllustratedRate: 0.075, // AG 49 max
+    avgIllustratedRate: 0.075, // assumed crediting rate
     illustrationUrl: "",
     description: "Low-cost carrier with competitive load fees and COI charges. Eclipse Accumulator is designed for maximum cash value accumulation with efficient internal costs.",
     amBestRating: "A+ (Superior)",
@@ -179,7 +179,7 @@ export const IUL_CARRIERS: IULCarrier[] = [
     participationRate: 1.0,
     loanRate: 0.05,
     floorRate: 0.0,
-    avgIllustratedRate: 0.075, // AG 49 max
+    avgIllustratedRate: 0.075, // assumed crediting rate
     illustrationUrl: "",
     description: "Enter custom carrier parameters manually. Use this option when working with a carrier not listed above or when you have specific illustration values.",
     amBestRating: "N/A",

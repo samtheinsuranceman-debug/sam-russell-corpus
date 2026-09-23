@@ -122,7 +122,7 @@ export default function MortgageKiller() {
 
   const [strategyParams, setStrategyParams] = useState({
     incomeAllocationPct: 0.20,
-    iulCreditRate: 0.075, // AG 49 max illustrated rate
+    iulCreditRate: 0.075, // assumed crediting rate (the visitor sets it)
     premiumYears: 5,
     helocRate: 0.085,
     helocLtvPct: 0.70,
@@ -762,7 +762,7 @@ export default function MortgageKiller() {
     );
   }, [tm.toggleProps.enabled, tm.toggleProps.selectedOptions, tm.toggleProps.startYear, result, strategyParams.premiumYears, strategyParams.clientAge]);
 
-  const TM_TOOLTIP = "This Time Machine value represents a hypothetical pre-existing account large enough that, when credited at AG 49-compliant rates (0\u20137.5%), it produces the same dollar interest credit that the actual 30-year historical index return would have generated. No AG 49 laws are violated \u2014 we are illustrating compliant crediting rates applied to a larger account, not illustrating non-compliant rates.";
+  const TM_TOOLTIP = "This Time Machine value represents a hypothetical pre-existing account large enough that, when credited at the assumed crediting rate you set, it produces the same dollar interest credit that the actual 30-year historical index return would have generated. This is a mechanic, not a carrier illustration.";
 
   const numField = (key: keyof typeof form, label: string, icon: React.ReactNode, prefix = "$") => (
     <div className="space-y-1.5">
@@ -1227,13 +1227,13 @@ export default function MortgageKiller() {
                     <p className="text-xs text-muted-foreground">Percentage of income allocated to IUL premium</p>
                   </div>
                   <div className="space-y-3">
-                    <Label className="text-sm font-medium">IUL Credit Rate: {(strategyParams.iulCreditRate * 100).toFixed(0)}%</Label>
+                    <Label className="text-sm font-medium">Assumed crediting rate: {(strategyParams.iulCreditRate * 100).toFixed(1)}%</Label>
                     <Slider
                       value={[strategyParams.iulCreditRate * 100]}
                       onValueChange={([v]) => setStrategyParams((p) => ({ ...p, iulCreditRate: v / 100 }))}
-                        min={4} max={7.5} step={0.5}
+                        min={4} max={12} step={0.5}
                     />
-                    <p className="text-xs text-muted-foreground">NAIC AG 49 max illustrated rate: 7.5%. 30-year historical averages exceed this but we follow the rules.</p>
+                    <p className="text-xs text-muted-foreground">A rate you set for the mechanics, not a guarantee and not an illustration. The carrier's own illustration governs any policy.</p>
                   </div>
                   {/* ─── Ibbotson Model Toggle ─── */}
                   <div className="space-y-3">
@@ -1356,9 +1356,9 @@ export default function MortgageKiller() {
                     <Slider
                       value={[strategyParams.interestReinvestRate * 100]}
                       onValueChange={([v]) => setStrategyParams((p) => ({ ...p, interestReinvestRate: v / 100 }))}
-                      min={3} max={7.5} step={0.5}
+                      min={3} max={12} step={0.5}
                     />
-                    <p className="text-xs text-muted-foreground">Compound rate on saved interest (AG 49 max: 7.5%)</p>
+                    <p className="text-xs text-muted-foreground">Compound rate on saved interest (an assumption you set)</p>
                   </div>
                   <div className="space-y-3">
                     <Label className="text-sm font-medium">Client Age: {strategyParams.clientAge}</Label>
@@ -1620,7 +1620,7 @@ export default function MortgageKiller() {
                             ]}
                             labelFormatter={(yr) => {
                               if (!tm.toggleProps.enabled) return `Year ${yr}`;
-                              return `Year ${yr} \u2014 Gold values show what historical index returns would have produced using a Time Machine-sized account at AG 49-compliant rates.`;
+                              return `Year ${yr} \u2014 Gold values show what historical index returns would have produced using a Time Machine-sized account at an assumed crediting rate.`;
                             }}
                           />
                           <Legend />
@@ -3208,10 +3208,10 @@ export default function MortgageKiller() {
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                       {[
                         { step: 1, title: "70% LTV HELOC", desc: `Take ${fmtPct(strategyParams.helocLtvPct)} of home equity via HELOC (${fmt(result.summary.totalHelocDrawn)}) to fund ${strategyParams.premiumYears}-year level IUL premiums`, color: "orange" },
-                        { step: 2, title: "IUL Grows at AG 49 Max Rate (illustrated, non-guaranteed)", desc: `Policy earns ${fmtPct(strategyParams.iulCreditRate)} compound annually (AG 49 max: 7.5%). 30-year historical averages exceed this but we follow the rules.`, color: "blue" },
+                        { step: 2, title: "Cash Value Grows at the Assumed Crediting Rate (non-guaranteed)", desc: `Policy cash value compounds at ${fmtPct(strategyParams.iulCreditRate)} a year, the assumed crediting rate you set.`, color: "blue" },
                         { step: 3, title: "80% Life Loans", desc: `Starting year 2: take ${fmtPct(strategyParams.policyLoanPct)} of surrender value as tax-free life loans → applied to mortgage principal`, color: "emerald" },
                         { step: 4, title: "Principal-Only Paydown", desc: `Apply policy loans directly to mortgage principal. After paydown, recalculate equity for next HELOC draw.`, color: "red" },
-                        { step: 5, title: "Post-Premium Growth", desc: `After ${strategyParams.premiumYears} years: ${fmtPct(strategyParams.iulCreditRate)} crediting (AG 49 max, non-guaranteed) minus ${fmtPct(strategyParams.policyLoanDragRate)} loan drag. Net growth funds continued paydowns.`, color: "cyan" },
+                        { step: 5, title: "Post-Premium Growth", desc: `After ${strategyParams.premiumYears} years: ${fmtPct(strategyParams.iulCreditRate)} crediting (assumed, non-guaranteed) minus ${fmtPct(strategyParams.policyLoanDragRate)} loan drag. Net growth funds continued paydowns.`, color: "cyan" },
                         { step: 6, title: "Mortgage Eliminated", desc: `Mortgage paid off ${result.summary.yearsSaved}+ years early. ${fmt(result.interestSavings.totalInterestSaved)} interest saved.`, color: "green" },
                         { step: 7, title: "MGA Compounding", desc: `Interest saved grows at 6.25% in Multi Guaranteed Annuity → ${fmt(result.interestSavings.mgaAnnuityValue30yr)} over 30 years`, color: "purple" },
                       ].map(({ step, title, desc, color }) => (

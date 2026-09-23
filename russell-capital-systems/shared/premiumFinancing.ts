@@ -32,7 +32,7 @@ const AFR_SOURCE = {
   note: "Applies when a family member or trust lends the premium (Section 7872 below-market loan rules). The 5% discount rate in this engine is close to the long-term AFR but is the firm's assumption, not read from this ruling.",
 };
 
-/** illustratedRate is typed in; the interface comment calls 7.5% the AG 49 maximum, which the guideline does not state. */
+/** illustratedRate is typed in: an assumed crediting rate. AG 49-A governs carrier illustrations and states a formula, not a number. */
 const AG49_SOURCE = {
   label: "NAIC, Actuarial Guideline XLIX-A, The Application of the Life Illustrations Model Regulation to Policies with Index-Based Interest, Section 4 (illustrated scale)",
   url: "https://content.naic.org/sites/default/files/inline-files/AG%2049A%28posted%29.pdf",
@@ -54,7 +54,7 @@ export interface PremiumFinancingInput {
   premiumYears: number;
   loanInterestRate: number; // e.g. 0.065 for 6.5%
   collateralRequirement: number; // e.g. 0.20 for 20% of loan
-  illustratedRate: number; // IUL credited rate e.g. 0.075 (AG 49 max: 7.5%)
+  illustratedRate: number; // assumed IUL crediting rate, e.g. 0.075
   issueAge: number;
   loanTermYears: number; // how long the financing loan runs
   projectionYears: number; // total projection horizon

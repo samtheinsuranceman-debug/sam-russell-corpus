@@ -15,7 +15,7 @@
  * - Grandchildren's 70% HELOC → proportional payback to parents' IUL
  *
  * Assumptions:
- * - 7.5% annual growth rate on IUL policies (NAIC AG 49 max illustrated rate)
+ * - 7.5% annual growth rate on IUL policies (an assumed crediting rate)
  * - 5% loan drag on policy loans (+0.5% positive arbitrage)
  * - 6% load fee on every new annual premium
  * - 80% of surrender value can be loaned against (life loan)
@@ -82,7 +82,7 @@ const PRIME_RATE_SOURCE = {
   note: "The 8.5% HELOC default equals prime plus 1.75 points; that margin is the firm's assumption.",
 };
 
-/** GROWTH_RATE = 0.075. The header calls it the NAIC AG 49 maximum; the guideline states a formula, not a number. */
+/** GROWTH_RATE = 0.075: an assumed crediting rate. AG 49-A governs carrier illustrations and states a formula, not a number. */
 const AG49_SOURCE = {
   label: "NAIC, Actuarial Guideline XLIX-A, The Application of the Life Illustrations Model Regulation to Policies with Index-Based Interest, Section 4 (illustrated scale) and Section 6 (policy loan leverage)",
   url: "https://content.naic.org/sites/default/files/inline-files/AG%2049A%28posted%29.pdf",
@@ -99,7 +99,7 @@ const CORRIDOR_SOURCE = {
 };
 
 const HOUSEHOLD_WEALTH_ASSUMPTIONS = [
-  { label: "Assumption: IUL growth = 7.5% a year (GROWTH_RATE), chosen by the firm as an illustration rate; see the NAIC AG 49-A note, the carrier's filed maximum governs; no external source for the figure itself" },
+  { label: "Assumption: IUL growth = 7.5% a year (GROWTH_RATE), an assumed crediting rate for the mechanics, not an illustration; the carrier's own illustration governs any policy; no external source for the figure itself" },
   { label: "Assumption: policy loan cost = 5% a year (LOAN_DRAG), chosen by the firm to approximate a carrier loan rate; no external source" },
   { label: "Assumption: premium load = 6% (LOAD_FEE), chosen by the firm as a generic illustration, not any carrier's filed charge; no external source" },
   { label: "Assumption: policy loan = 80% of surrender value (LOANABLE_PCT), chosen by the firm to keep a cushion against lapse; the carrier's contract sets the true limit; no external source" },

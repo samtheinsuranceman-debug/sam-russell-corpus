@@ -50,7 +50,7 @@ import { ComplianceFooter } from "@/components/ComplianceFooter";
 const fmt = (n: number) => `$${Math.round(n).toLocaleString()}`;
 const fmtM = (n: number) => n >= 1_000_000 ? `$${(n / 1_000_000).toFixed(2)}M` : fmt(n);
 
-const TM_TOOLTIP = "Time Machine values represent a hypothetical pre-existing account large enough that, when credited at AG 49-compliant rates (0\u20137.5%), it produces the same dollar interest credit that actual 30-year historical index returns would have generated. No AG 49 laws are violated.";
+const TM_TOOLTIP = "Time Machine values represent a hypothetical pre-existing account large enough that, when credited at the assumed crediting rate you set, it produces the same dollar interest credit that actual 30-year historical index returns would have generated. This is a mechanic, not a carrier illustration.";
 
 const HELOC_RATES = [{ value: "0", label: "0% \u2014 Pay back within 30 days", rate: 0 },
 ,

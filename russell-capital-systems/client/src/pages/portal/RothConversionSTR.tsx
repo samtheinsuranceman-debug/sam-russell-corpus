@@ -172,7 +172,7 @@ export default function RothConversionSTR() {
         floorRate: selectedCarrier.floorRate ?? 0,
       };
     }
-    return { loadFee: 0.08, coiRate: 0.008, loanRate: 0.05, avgReturn: 0.075, capRate: 0.145, floorRate: 0 }; // AG 49 max
+    return { loadFee: 0.08, coiRate: 0.008, loanRate: 0.05, avgReturn: 0.075, capRate: 0.145, floorRate: 0 }; // assumed crediting rate
   }, [carrierId, activeOverride, selectedCarrier]);
 
   // The charges the Monte Carlo paths deduct, in the shape the shared engine
@@ -1319,7 +1319,7 @@ export default function RothConversionSTR() {
                 </div>
 
                 <div className="mt-3 p-3 rounded-lg bg-amber-500/5 border border-amber-500/15 text-xs text-[#7a95b8]">
-                  <strong className="text-amber-400">How to read:</strong> Each line shows the IUL account value at different illustrated rates using your exact client inputs. The 7.5% base case uses the NAIC AG 49 maximum illustrated rate. The 5% scenario is conservative, while 6.5% is moderate. All scenarios use identical charge structures. <em className="text-amber-400/70">Per NAIC AG 49, the maximum hypothetical illustrated rate for IUL is 7.5% — even though 30-year historical averages are more than twice this number.</em>
+                  <strong className="text-amber-400">How to read:</strong> Each line shows the IUL account value at different illustrated rates using your exact client inputs. The 7.5% base case is an assumed crediting rate. The 5% scenario is conservative, while 6.5% is moderate. All scenarios use identical charge structures. <em className="text-amber-400/70">These are assumptions for the mechanics, not a carrier illustration; the carrier's own illustration governs any policy.</em>
                 </div>
               </>
             )}
@@ -1574,7 +1574,7 @@ export default function RothConversionSTR() {
                       <Tooltip formatter={(v: number) => fmtFull(v)} contentStyle={{ background: '#0a1628', border: '1px solid #1e3a5f', borderRadius: 8 }} />
                       <Legend />
                       <Area type="monotone" dataKey="historicalAV" name="Historical (Floor/Cap)" fill="#f43f5e" fillOpacity={0.1} stroke="#f43f5e" strokeWidth={2} />
-                      <Line type="monotone" dataKey="illustratedAV" name="Illustrated (AG 49 Max 7.5%)" stroke="#7a95b8" strokeWidth={2} strokeDasharray="5 5" dot={false} />
+                      <Line type="monotone" dataKey="illustratedAV" name="Assumed rate (7.5%)" stroke="#7a95b8" strokeWidth={2} strokeDasharray="5 5" dot={false} />
                       <Bar dataKey="spReturn" name="S&P Return %" fill="#3b82f6" fillOpacity={0.3} yAxisId="right" />
                     </ComposedChart>
                   </ResponsiveContainer>

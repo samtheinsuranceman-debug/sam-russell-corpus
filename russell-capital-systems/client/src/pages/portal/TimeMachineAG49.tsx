@@ -405,7 +405,7 @@ export default function TimeMachineAG49() {
             </Badge>
           </div>
           <p className="text-muted-foreground mt-2 max-w-3xl">
-            Same AG 49-compliant crediting rate. Same premium. The only variable is <strong>time</strong>.
+            Same assumed crediting rate. Same premium. The only variable is <strong>time</strong>.
             This calculator reveals how compound interest transforms a modest annual rate into what
             <em> appears</em> to be a 28%, 50%, or even 80% return on your original premium — all without
             violating any illustrated rate limits. The policy never lapses at death; it transfers to
@@ -524,12 +524,12 @@ export default function TimeMachineAG49() {
           <Card>
             <CardHeader>
               <CardTitle className="text-lg flex items-center gap-2">
-                <Percent className="w-5 h-5 text-blue-500" /> AG 49-Compliant Crediting Rate
+                <Percent className="w-5 h-5 text-blue-500" /> Assumed Crediting Rate
               </CardTitle>
               <CardDescription>
-                Select any rate from 0.1% to 7.5%. AG 49 maximum illustrated rates typically range from
-                5.0% to 6.5% for S&P 500 point-to-point strategies. Higher rates may apply to
-                volatility-controlled or proprietary indices (capped at 145% of S&P illustrated rate under AG 49-B).
+                Select any rate from 0.1% to 12%. This is an assumption for the mechanics, not an illustration.
+                For reference, a carrier's own illustrated maximum is set per product under NAIC AG 49-A and
+                typically lands between 5.0% and 6.5% for S&P 500 point-to-point strategies.
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -540,7 +540,7 @@ export default function TimeMachineAG49() {
                       value={[creditingRate]}
                       onValueChange={([v]) => setCreditingRate(Math.round(v * 10) / 10)}
                       min={0.1}
-                      max={7.5}
+                      max={12}
                       step={0.1}
                       className="w-full"
                     />
@@ -1011,7 +1011,7 @@ export default function TimeMachineAG49() {
                 <div>
                   <p className="font-semibold text-green-700 dark:text-green-300 mb-1">The Time Machine Insight</p>
                   <p className="text-sm text-muted-foreground">
-                    Every rate in this table is AG 49-compliant. The only variable is time. A policy earning
+                    Every rate in this table is an assumed crediting rate. The only variable is time. A policy earning
                     just {creditingRate}% per year will eventually produce annual interest credits equal to
                     {simulation.benchmarks[2]?.yearReached
                       ? ` 80% of the original premium by year ${simulation.benchmarks[2].yearReached}`
