@@ -12,6 +12,21 @@ import { notifyOwner } from "./_core/notification";
 // ═══════════════════════════════════════════════════════════════════════════════
 // NOTIFICATION HELPERS (fire-and-forget, never block the main flow)
 // ═══════════════════════════════════════════════════════════════════════════════
+
+/**
+ * Game events (level-ups, quests, streaks, pets, the morning ritual) do not
+ * e-mail the owner: he asked for them muted on 23 Sep 2026. Setting
+ * GAME_EVENT_EMAILS=on on Railway turns them back on without a code change.
+ * Client, lead and deal alerts elsewhere are unaffected.
+ */
+export function gameEventEmailsEnabled(env: NodeJS.ProcessEnv = process.env): boolean {
+  return env.GAME_EVENT_EMAILS?.trim().toLowerCase() === "on";
+}
+
+function notifyGameEvent(payload: Parameters<typeof notifyOwner>[0]): void {
+  if (!gameEventEmailsEnabled()) return;
+  notifyOwner(payload).catch(() => {});
+}
 const LEVEL_NAMES: Record<number, string> = {
   1: "Rookie", 2: "Apprentice", 3: "Advisor", 4: "Strategist", 5: "Optimizer",
   6: "Architect", 7: "Commander", 8: "Master", 9: "Grandmaster", 10: "Legend",
@@ -19,25 +34,25 @@ const LEVEL_NAMES: Record<number, string> = {
 
 function notifyLevelUp(userId: number, level: number) {
   const name = LEVEL_NAMES[level] || `Level ${level}`;
-  notifyOwner({
+  notifyGameEvent({
     title: `\u{1F3C6} Level Up! An advisor reached ${name} (Level ${level})`,
     content: `User #${userId} just leveled up to ${name}. The Experience Engine is working.`,
-  }).catch(() => {});
+  });
 }
 
 function notifyQuestComplete(userId: number, questTitle: string, xpReward: number) {
-  notifyOwner({
+  notifyGameEvent({
     title: `\u{2694}\u{FE0F} Quest Complete: ${questTitle}`,
     content: `User #${userId} completed the quest "${questTitle}" and earned ${xpReward} XP. Engagement is high.`,
-  }).catch(() => {});
+  });
 }
 
 function notifyStreakMilestone(userId: number, streak: number) {
   if (streak % 7 === 0 || streak === 3 || streak === 30 || streak === 100 || streak === 365) {
-    notifyOwner({
+    notifyGameEvent({
       title: `\u{1F525} Streak Milestone: ${streak}-Day Streak!`,
       content: `User #${userId} just hit a ${streak}-day login streak. The addiction engine is working perfectly.`,
-    }).catch(() => {});
+    });
   }
 }
 import { getDb } from "./db";
@@ -672,10 +687,10 @@ export const petRouter = router({
       unicorn: { strength: 4, wisdom: 6, charisma: 9, luck: 8 },
     };
     const result = await adoptPet(ctx.user.id, input.speciesId, input.name, BASE_STATS[input.speciesId]);
-    notifyOwner({
+    notifyGameEvent({
       title: `🐣 New Pet Adopted: ${input.name} the ${input.speciesId}`,
       content: `User #${ctx.user.id} adopted a ${input.speciesId} named "${input.name}". The pet system is engaging users.`,
-    }).catch(() => {});
+    });
     return result;
   }),
 
@@ -696,10 +711,10 @@ export const petRouter = router({
     }
     const result = await feedPet(ctx.user.id, input.foodId, food.xp, food.happiness);
     if (result.evolved) {
-      notifyOwner({
+      notifyGameEvent({
         title: `✨ Pet Evolution! ${result.pet.name} evolved to ${result.newStage}!`,
         content: `User #${ctx.user.id}'s pet "${result.pet.name}" just evolved to ${result.newStage} stage at level ${result.pet.level}!`,
-      }).catch(() => {});
+      });
     }
     return result;
   }),
@@ -730,10 +745,10 @@ export const morningRitualRouter = router({
       // Award XP and coins to the user's main profile
       await earnXp(ctx.user.id, result.xpGained, "morning_ritual_complete");
       await earnRussellCoin(ctx.user.id, result.coinsGained, "earn", "morning_ritual", "Morning ritual completed");
-      notifyOwner({
+      notifyGameEvent({
         title: `🌅 Morning Ritual Complete!`,
         content: `User #${ctx.user.id} completed their morning ritual (streak: ${result.ritual.streakDay} days). Earned ${result.xpGained} XP.`,
-      }).catch(() => {});
+      });
     }
     return result;
   }),
