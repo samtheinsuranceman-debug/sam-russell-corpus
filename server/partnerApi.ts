@@ -25,6 +25,7 @@
 //    exhibit, and shipping them separately is how two exhibits drift apart.
 // ============================================================
 
+import { HELOC_RATE_DEFAULT_PCT } from "@shared/marketRateDefaults";
 import type { Express, Request, Response, NextFunction } from "express";
 import { createHash, timingSafeEqual } from "node:crypto";
 import { generateDualIllustration } from "@shared/timeMachineEngine";
@@ -988,7 +989,7 @@ export function registerPartnerApi(app: Express): void {
       // Derived from the policy's own index strategy across the Ibbotson
       // series, not a number anyone chose. See creditingFrom().
       iulCreditRate: crediting.ratePct / 100,
-      helocRate: clampNum(q.helocRate, 0, 25, 8.5) / 100,
+      helocRate: clampNum(q.helocRate, 0, 25, HELOC_RATE_DEFAULT_PCT) / 100, // default: Curinos national average, 2026-09-21
     });
 
     res.json({

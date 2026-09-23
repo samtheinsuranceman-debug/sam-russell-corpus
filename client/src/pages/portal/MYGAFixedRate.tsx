@@ -1,4 +1,5 @@
 // @ts-nocheck
+import { HELOC_RATE_DEFAULT_PCT, MYGA_RATE_DEFAULT_PCT } from "@shared/marketRateDefaults";
 import { useCalculatorIntegration } from "@/hooks/useCalculatorIntegration";
 import { ClientSelectorBar } from "@/components/ClientSelectorBar";
 import { NumberInput } from "@/components/NumberInput";
@@ -773,7 +774,7 @@ export default function MYGAFixedRate() {
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
 
   const [wfPremium, setWfPremium] = useState(500000);
-  const [wfMygaRate, setWfMygaRate] = useState(7);
+  const [wfMygaRate, setWfMygaRate] = useState(MYGA_RATE_DEFAULT_PCT); // assumption: top 5-year compounding MYGA rate, Sep 2026; see MYGA_RATE_DEFAULT_SOURCES
   const [wfBankLoanRate, setWfBankLoanRate] = useState(7);
   const [wfOilGasReturn, setWfOilGasReturn] = useState(15);
   const [wfOilGasTerm, setWfOilGasTerm] = useState(12);
@@ -789,7 +790,7 @@ export default function MYGAFixedRate() {
   const [wfStateTaxRate, setWfStateTaxRate] = useState(5);
   const [wfHomeValue, setWfHomeValue] = useState(0);
   const [wfMortgageBalance, setWfMortgageBalance] = useState(0);
-  const [wfHelocRate, setWfHelocRate] = useState(8.5);
+  const [wfHelocRate, setWfHelocRate] = useState(HELOC_RATE_DEFAULT_PCT); // Curinos national average, 2026-09-21
   const [wfHelocMaxLtv, setWfHelocMaxLtv] = useState(0.80);
   const [wfTaxDeployment, setWfTaxDeployment] = useState<TaxDeploymentOption>("optimal_blend");
   const [showScenarioComparison, setShowScenarioComparison] = useState(false);
