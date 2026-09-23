@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { useCallback, useMemo, useState } from 'react';
 import {
   BarChart, Bar, PieChart, Pie, Cell, LineChart, Line, AreaChart, Area,
@@ -7,6 +6,17 @@ import {
   XAxis, YAxis, CartesianGrid, Tooltip as RTooltip, ResponsiveContainer, Legend,
 } from "recharts";
 import { toast } from "sonner";
+import {
+  Activity, AlertTriangle, ArrowUpRight, BarChart3, CheckCircle2, ChevronLeft, ChevronRight, Clock,
+  Cpu, CreditCard, Database, DollarSign, Download, FileText, Filter, Globe,
+  HardDrive, Info, Layers, Lock, Mail, RefreshCw, Search, Server,
+  Settings, Shield, Tag, ToggleLeft, ToggleRight, TrendingUp, Unlock, User2,
+  UserCheck, UserPlus, UserX, Users, Wifi, XCircle, Zap,
+} from "lucide-react";
+import { trpc } from "@/lib/trpc";
+import { useAuth } from "@/_core/hooks/useAuth";
+import { AppShell } from "@/components/AppShell";
+import { ExportToSlides } from "@/components/ExportToSlides";
 import { PageInsights } from "@/components/PageInsights";
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -50,7 +60,9 @@ const CHART_COLORS = ["#22c55e", "#34d399", "#f0c040", "#3b82f6", "#ef4444", "#e
 
 type TabKey = "overview" | "users" | "health" | "audit" | "flags";
 
-/* ─── Feature Flags (client-side simulation) ─────────────────────────────── */
+/* ─── Feature Flags ─────────────────────────────────────────────────────────
+   No feature-flag service is connected. These toggles live only in this page's state:
+   they are not saved and change nothing for other users, and the page says so. */
 const DEFAULT_FLAGS = [
   { key: "ai_slides", label: "AI Slide Generator", desc: "LLM-powered presentation builder", enabled: true, category: "AI" },
   { key: "competitive_analysis", label: "Competitive Analysis Center", desc: "Carrier comparison & battle cards", enabled: true, category: "AI" },
@@ -87,12 +99,12 @@ export default function EnterpriseAdmin() {
   const [selectedUser, setSelectedUser] = useState<string | null>(null);
   const [showInviteModal, setShowInviteModal] = useState(false);
   const [inviteEmail, setInviteEmail] = useState("");
-  const [inviteRole, setInviteRole] = useState("member");
+  const [inviteRole, setInviteRole] = useState<"ADMIN" | "ADVISOR" | "ANALYST" | "VIEWER">("ANALYST");
   const [healthRegion, setHealthRegion] = useState("all");
   const [dateRange, setDateRange] = useState("7d");
   const [showExportModal, setShowExportModal] = useState(false);
   const [exportFormat, setExportFormat] = useState("csv");
-  const [expandedRow, setExpandedRow] = useState<string | null>(null);
+  const [expandedRow, setExpandedRow] = useState<number | null>(null);
   const [sortConfig, setSortConfig] = useState<{key: string, direction: 'asc'|'desc'}>({key: 'createdAt', direction: 'desc'});
   const [systemAlertsAck, setSystemAlertsAck] = useState<string[]>([]);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('list');
@@ -114,23 +126,21 @@ export default function EnterpriseAdmin() {
 
   const metricsQuery = trpc.enterprise.metrics.useQuery(undefined, { staleTime: 30_000 });
   const auditQuery = trpc.enterprise.auditLogs.useQuery({ page: auditPage, pageSize: PAGE_SIZE }, { staleTime: 10_000 });
-  const usersQuery = trpc.enterprise.users.useQuery({ page, limit, search: searchQuery }, { staleTime: 60_000 });
-  const systemHealthQuery = trpc.enterprise.systemHealth.useQuery(undefined, { staleTime: 15_000 });
-  const analyticsQuery = trpc.enterprise.analytics.useQuery({ dateRange }, { staleTime: 300_000 });
-  
-  const inviteUserMutation = trpc.enterprise.inviteUser.useMutation({
+  const membersQuery = trpc.team.members.useQuery(undefined, { staleTime: 60_000 });
+
+  // Invitations go through the team router (team.invite), which records the invitation
+  // and emails the invitee.
+  const inviteUserMutation = trpc.team.invite.useMutation({
     onSuccess: () => {
-      toast.success("User invited successfully");
+      toast.success("Invitation sent");
       setShowInviteModal(false);
       setInviteEmail("");
-    }
+    },
+    onError: (e) => toast.error(e.message),
   });
 
   const metrics = metricsQuery.data;
   const auditData = auditQuery.data;
-  const usersData = usersQuery.data;
-  const systemHealth = systemHealthQuery.data;
-  const analyticsData = analyticsQuery.data;
 
   const handleTabChange = useCallback((newTab: TabKey) => {
     setTab(newTab);
@@ -173,10 +183,10 @@ export default function EnterpriseAdmin() {
   const handleInviteSubmit = useCallback((e: React.FormEvent) => {
     e.preventDefault();
     if (!inviteEmail) return toast.error("Email is required");
-    inviteUserMutation.mutate({ email: inviteEmail, role: inviteRole });
+    inviteUserMutation.mutate({ email: inviteEmail, role: inviteRole, origin: window.location.origin });
   }, [inviteEmail, inviteRole, inviteUserMutation]);
 
-  const toggleRowExpansion = useCallback((id: string) => {
+  const toggleRowExpansion = useCallback((id: number) => {
     setExpandedRow(prev => prev === id ? null : id);
   }, []);
 
@@ -197,11 +207,9 @@ export default function EnterpriseAdmin() {
     Promise.all([
       metricsQuery.refetch(),
       auditQuery.refetch(),
-      usersQuery.refetch(),
-      systemHealthQuery.refetch(),
-      analyticsQuery.refetch()
+      membersQuery.refetch(),
     ]).finally(() => setIsRefreshing(false));
-  }, [metricsQuery, auditQuery, usersQuery, systemHealthQuery, analyticsQuery]);
+  }, [metricsQuery, auditQuery, membersQuery]);
 
   const activityBreakdown = useMemo(() => {
     if (!auditData?.logs) return [];
@@ -263,7 +271,6 @@ export default function EnterpriseAdmin() {
 
   // Real workspace members. Fields the membership record does not hold
   // (department, last login) are shown as not recorded.
-  const membersQuery = trpc.team.members.useQuery(undefined, { staleTime: 60_000 });
   const workspaceUsers = useMemo(() => {
     return (membersQuery.data ?? []).map((m: any) => {
       const name = m.userName || [m.userFirstName, m.userLastName].filter(Boolean).join(" ") || m.userEmail || `User #${m.userId}`;
@@ -314,8 +321,8 @@ export default function EnterpriseAdmin() {
               <div className="text-sm text-[#7a95b8] flex items-center gap-2">
                 <span>Manage workspace settings, users, and security</span>
                 <span className="w-1 h-1 rounded-full bg-[#3b82f6]" />
-                <span className="flex items-center gap-1 text-[#22c55e]">
-                  <CheckCircle2 size={12} /> System Normal
+                <span className="flex items-center gap-1 text-[#7a95b8]">
+                  {metrics?.workspaceName ?? ""}
                 </span>
               </div>
             </div>
@@ -328,9 +335,19 @@ export default function EnterpriseAdmin() {
             <button onClick={() => setShowSettings(!showSettings)} className="rc-btn rc-btn-ghost">
               <Settings size={16} />
             </button>
-            <ExportToSlides 
-              content={`# Enterprise Administration\n\nWorkspace overview and system health metrics.\n\n## Key Metrics\n- Active Users: ${metrics?.activeMembers ?? 0}\n- Total Clients: ${metrics?.clientCount ?? 0}\n- Pipeline: $${Math.round((metrics?.pipelineValue ?? 0) / 1000)}K`} 
-              buttonText="Export Report"
+            <ExportToSlides
+              toolName="Enterprise Administration"
+              getSections={() => [
+                {
+                  title: "Workspace",
+                  items: [
+                    { label: "Active members", value: String(metrics?.activeMembers ?? 0) },
+                    { label: "Seats", value: String(metrics?.seats ?? 0) },
+                    { label: "Clients", value: String(metrics?.clientCount ?? 0) },
+                    { label: "Pipeline", value: fmt(metrics?.pipelineValue ?? 0) },
+                  ],
+                },
+              ]}
             />
           </div>
         </div>
@@ -975,7 +992,7 @@ export default function EnterpriseAdmin() {
                     <h2 className="text-lg font-bold text-white">Feature Management</h2>
                   </div>
                   <p className="text-sm text-[#7a95b8] max-w-2xl">
-                    Toggle experimental and premium features for your workspace. Changes apply globally to all users immediately. Use caution when disabling core functionality.
+                    No feature-flag service is connected yet. These switches are a preview of the settings: they are not saved and do not change anything for you or other users.
                   </p>
                 </div>
                 <div className="flex gap-2 shrink-0">
@@ -1130,12 +1147,13 @@ export default function EnterpriseAdmin() {
               </div>
               <div>
                 <label className="block text-sm font-medium text-[#7a95b8] mb-1.5">Role</label>
-                <div className="grid grid-cols-3 gap-2">
-                  {[
-                    { id: 'admin', label: 'Admin', desc: 'Full access' },
-                    { id: 'manager', label: 'Manager', desc: 'Can edit' },
-                    { id: 'member', label: 'Member', desc: 'View only' }
-                  ].map((role) => (
+                <div className="grid grid-cols-2 gap-2">
+                  {([
+                    { id: 'ADMIN', label: 'Admin', desc: 'Full access' },
+                    { id: 'ADVISOR', label: 'Advisor', desc: 'Can edit' },
+                    { id: 'ANALYST', label: 'Analyst', desc: 'Can analyse' },
+                    { id: 'VIEWER', label: 'Viewer', desc: 'View only' }
+                  ] as const).map((role) => (
                     <button
                       key={role.id}
                       type="button"

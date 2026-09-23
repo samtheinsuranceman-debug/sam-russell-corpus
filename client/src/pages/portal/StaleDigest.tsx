@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useState, useMemo, useCallback, useEffect } from "react";
 import { AppShell } from "@/components/AppShell";
 import { 
@@ -103,7 +102,7 @@ export default function StaleDigest() {
   const [showFilters, setShowFilters] = useState(false);
   const [viewMode, setViewMode] = useState<"grid" | "table">("table");
   const [expandedRows, setExpandedRows] = useState<Record<string, boolean>>({});
-  const [chartType, setChartType] = useState<"bar" | "line" | "area">("bar");
+  const [chartType, setChartType] = useState<"bar" | "pie">("bar");
   const [showExportMenu, setShowExportMenu] = useState(false);
   const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
   const [emailTemplate, setEmailTemplate] = useState("default");
@@ -138,16 +137,6 @@ export default function StaleDigest() {
   );
   
   const teamQuery = trpc.team.members.useQuery(
-    undefined,
-    { staleTime: 300_000 }
-  );
-  
-  const dashboardQuery = trpc.dashboard.metrics.useQuery(
-    { period: dateRange },
-    { staleTime: 300_000 }
-  );
-  
-  const strategyQuery = trpc.strategy.list.useQuery(
     undefined,
     { staleTime: 300_000 }
   );
@@ -207,8 +196,7 @@ export default function StaleDigest() {
     setIsRefreshing(true);
     previewQuery.refetch();
     activityQuery.refetch();
-    dashboardQuery.refetch();
-  }, [previewQuery, activityQuery, dashboardQuery]);
+  }, [previewQuery, activityQuery]);
 
   const handleSort = useCallback((key: string) => {
     setSortConfig(prev => ({
@@ -288,7 +276,7 @@ export default function StaleDigest() {
       result = result.filter((c) => c.wealthTier.toLowerCase() === wealthTierFilter.toLowerCase());
     }
     
-    if (regionSelected !== "all") {
+    if (selectedRegion !== "all") {
       result = result.filter((c) => c.region.toLowerCase() === selectedRegion.toLowerCase());
     }
     
@@ -400,7 +388,6 @@ export default function StaleDigest() {
     toast.success("Exported to CSV successfully");
   }, [filteredClients]);
 
-  const regionSelected = selectedRegion;
 
   const dummyFunc1 = useCallback(() => { return 1; }, []);
   const dummyFunc2 = useCallback(() => { return 2; }, []);
