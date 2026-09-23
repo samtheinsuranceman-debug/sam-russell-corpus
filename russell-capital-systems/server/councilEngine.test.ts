@@ -45,6 +45,7 @@ import {
   clearCouncilLogBuffer,
   dealLabels,
   fenceConversation,
+  hashQuestion,
   seatFamilyOk,
   fenceWebFacts,
   judgeOrder,
@@ -164,7 +165,7 @@ const ENV_NAMES = [
   "ANTHROPIC_MODEL", "OPENAI_MODEL", "GOOGLE_MODEL", "PERPLEXITY_MODEL",
   "RCS_BRAIN_ANTHROPIC_MODEL", "RCS_BRAIN_OPENAI_MODEL", "RCS_BRAIN_GOOGLE_MODEL", "RCS_BRAIN_PERPLEXITY_MODEL",
   "ANTHROPIC_BASE_URL", "OPENAI_BASE_URL", "GOOGLE_BASE_URL", "PERPLEXITY_BASE_URL",
-  "COUNCIL_MAX_RUNS_PER_DAY", "COUNCIL_MAX_TOKENS_PER_RUN", "COUNCIL_MAX_RUNS_PER_WORKSPACE_PER_DAY", "COUNCIL_LOG_SECRET", "JWT_SECRET", "COUNCIL_ADVISOR_EMAILS", "COUNCIL_JUDGE_PROVIDER", "OWNER_OPEN_ID", "OWNER_EMAIL",
+  "COUNCIL_MAX_RUNS_PER_DAY", "COUNCIL_MAX_TOKENS_PER_RUN", "COUNCIL_MAX_RUNS_PER_WORKSPACE_PER_DAY", "COUNCIL_LOG_SECRET", "COUNCIL_HASH_SECRET", "JWT_SECRET", "COUNCIL_ADVISOR_EMAILS", "COUNCIL_JUDGE_PROVIDER", "OWNER_OPEN_ID", "OWNER_EMAIL",
 ];
 const saved = Object.fromEntries(ENV_NAMES.map(n => [n, process.env[n]]));
 
@@ -545,6 +546,7 @@ describe("who may call the council", () => {
     const runs = await councilRouter.createCaller(ownerCtx()).runs();
     expect(runs.scope).toBe("owner");
     expect(runs.runs).toHaveLength(1);
+    expect(runs.runs[0]).not.toHaveProperty("questionHash");
   });
 
   it("an advisor named in COUNCIL_ADVISOR_EMAILS can ask, but only about their own workspaces", async () => {
@@ -617,7 +619,9 @@ describe("logging and the cost guard", () => {
     const r = await runCouncil({ question, context: "CLIENT RECORD: Name: Jane Smith, Income: $310,000", room: "tax_packet", force: true, facts: true, workspaceId: 12 });
     const [row] = await listCouncilRuns();
     expect(row.id).toBe(r.runId);
-    expect(row.questionHash).toBe(createHmac("sha256", "test-log-key").update(question).digest("hex"));
+    expect(row.questionHash).toBe(hashQuestion(question));
+    // A key derived for this purpose, never the configured secret itself.
+    expect(row.questionHash).not.toBe(createHmac("sha256", "test-log-key").update(question).digest("hex"));
     expect(row).toMatchObject({
       workspaceId: 12, room: "tax_packet", outcome: "council", forced: true, confidence: "high",
       judgeProviderId: "anthropic", judgeModel: "claude-opus-5", factsProviderId: "perplexity", factCount: 2,
@@ -679,11 +683,56 @@ describe("logging and the cost guard", () => {
     expect((await runCouncil({ question: "What is a Roth?", room: "advisor" })).outcome).toBe("single");
   });
 
-  it("concurrent runs cannot all slip under the daily cap", async () => {
-    process.env.COUNCIL_MAX_RUNS_PER_DAY = "1";
-    const outcomes = await Promise.all([1, 2, 3].map(i => runCouncil({ question: `concurrent ${i}?`, room: "einstein", force: true })));
-    expect(outcomes.filter(r => r.outcome === "council")).toHaveLength(1);
-    expect(outcomes.filter(r => r.outcome === "refused")).toHaveLength(2);
+  it("a question hash can never verify as a session token (R-B3)", async () => {
+    delete process.env.COUNCIL_LOG_SECRET;
+    process.env.JWT_SECRET = "test-jwt-secret-not-real";
+    const { jwtVerify } = await import("jose");
+    const key = new TextEncoder().encode(process.env.JWT_SECRET);
+    const b64 = (o: unknown) => Buffer.from(JSON.stringify(o)).toString("base64url");
+    const signingInput = `${b64({ alg: "HS256", typ: "JWT" })}.${b64({ openId: "owner-1", appId: "russell-capital-systems", name: "", exp: 9_999_999_999 })}`;
+    const forge = (hex: string) => `${signingInput}.${Buffer.from(hex, "hex").toString("base64url")}`;
+
+    // Not vacuous: a hash keyed with the raw secret IS a valid session signature.
+    const rawKeyed = createHmac("sha256", process.env.JWT_SECRET).update(signingInput).digest("hex");
+    await expect(jwtVerify(forge(rawKeyed), key, { algorithms: ["HS256"] })).resolves.toMatchObject({ payload: { openId: "owner-1" } });
+
+    // The attacker's path: ask the JWT signing input as a question, read the hash back.
+    await runCouncil({ question: signingInput, room: "advisor" });
+    const [row] = await listCouncilRuns();
+    expect(row.questionHash).toMatch(/^[0-9a-f]{64}$/);
+    await expect(jwtVerify(forge(row.questionHash), key, { algorithms: ["HS256"] })).rejects.toThrow();
+    // Nor under COUNCIL_HASH_SECRET-less fallbacks with the same secret elsewhere.
+    process.env.COUNCIL_HASH_SECRET = process.env.JWT_SECRET;
+    await expect(jwtVerify(forge(hashQuestion(signingInput)), key, { algorithms: ["HS256"] })).rejects.toThrow();
+  });
+
+  it("concurrent runs cannot all slip under the daily cap, however the database awaits interleave", async () => {
+    process.env.COUNCIL_MAX_RUNS_PER_DAY = "2";
+    // A fake audit table whose every query resolves after a different delay, so
+    // the requests' count checks and inserts genuinely interleave.
+    const table: Array<{ outcome: string }> = [];
+    const delays = [23, 2, 17, 9, 31, 4, 13, 27, 6, 19, 11, 29, 3, 21, 8];
+    let tick = 0;
+    const later = <T>(v: () => T) => new Promise<T>(r => setTimeout(() => r(v()), delays[tick++ % delays.length]));
+    const query = (resolve: () => unknown): any => {
+      const p: any = new Proxy(function () {}, {
+        get: (_t, prop) => (prop === "then" ? (ok: any, bad: any) => later(resolve).then(ok, bad) : () => p),
+        apply: () => p,
+      });
+      return p;
+    };
+    dbState.handle = {
+      select: (shape?: Record<string, unknown>) =>
+        query(() => (shape && "n" in shape ? [{ n: table.filter(r => r.outcome === "council" || r.outcome === "degraded").length }] : [])),
+      insert: () => ({ values: (row: { outcome: string }) => query(() => (table.push(row), [{ insertId: table.length }])) }),
+      update: () => query(() => []),
+    };
+    const outcomes = await Promise.all([1, 2, 3, 4, 5, 6].map(i => runCouncil({ question: `concurrent ${i}?`, room: "einstein", force: true })));
+    expect(outcomes.filter(r => r.outcome === "council")).toHaveLength(2);
+    expect(outcomes.filter(r => r.outcome === "refused")).toHaveLength(4);
+    expect(table.filter(r => r.outcome === "council")).toHaveLength(2);
+    // The first two requests in arrival order are the ones admitted.
+    expect(outcomes.slice(0, 2).map(r => r.outcome)).toEqual(["council", "council"]);
   });
 
   it("one household cannot use up the day for everyone: a per-workspace cap sits under the global one", async () => {

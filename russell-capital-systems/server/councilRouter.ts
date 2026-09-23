@@ -125,6 +125,8 @@ export const councilRouter = router({
         limit: input?.limit ?? 50,
         workspaceIds: access.level === "advisor" ? access.workspaceIds : undefined,
       });
-      return { scope: access.level, runs };
+      // No questionHash in any response: a keyed hash handed back to a caller who
+      // chose the input is an oracle for that key (review finding R-B3).
+      return { scope: access.level, runs: runs.map(({ questionHash: _omit, ...row }) => row) };
     }),
 });
