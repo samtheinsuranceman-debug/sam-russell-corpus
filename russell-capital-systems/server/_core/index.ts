@@ -100,6 +100,27 @@ async function startServer() {
       res.status(500).json({ error: e?.message ?? "macro refresh failed" });
     }
   });
+
+  // AI team roll call: one real call to every brain keyed on the host, plus a
+  // one-query ping of each web scout. Names, models, latency and errors only;
+  // never a key value. Nightly analyst runs call this first:
+  //   GET /api/cron/brain-roll-call?secret=$CRON_SECRET
+  app.get("/api/cron/brain-roll-call", async (_req, res) => {
+    try {
+      const { testEnvironmentKeys } = await import("../providerRegistry");
+      const { scoutSearch } = await import("../webScouts");
+      const [brains, scouts] = await Promise.all([testEnvironmentKeys(), scoutSearch("Federal Reserve H.8 release", 3)]);
+      res.json({
+        at: new Date().toISOString(),
+        brainsLive: brains.filter(b => b.ok).length,
+        brainsKeyed: brains.length,
+        brains,
+        scouts: scouts.map(s => ({ scoutId: s.scoutId, ok: s.ok, results: s.results.length, latencyMs: s.latencyMs, error: s.error })),
+      });
+    } catch (e: any) {
+      res.status(500).json({ error: e?.message ?? "roll call failed" });
+    }
+  });
   registerStorageProxy(app);
   registerOAuthRoutes(app);
   registerOwnerLoginRoutes(app);
