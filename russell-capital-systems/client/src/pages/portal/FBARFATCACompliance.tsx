@@ -1,4 +1,3 @@
-// @ts-nocheck
 
 import React, { useState, useMemo } from 'react';
 import { Globe, DollarSign, TrendingUp, Target, Calendar, Percent, ArrowRight, Shield, CheckCircle2, AlertTriangle, FileText, Lock } from 'lucide-react';
@@ -6,121 +5,47 @@ import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend, Area
 import { PageInsights } from "@/components/PageInsights";
 
 const FBARFATCACompliance: React.FC = () => {
-  // State for FBAR Calculator
+  // Inputs. Every result below is derived from these during render; nothing is stored twice.
   const [fbarAccounts, setFbarAccounts] = useState([{ name: '', value: 0 }]);
-  const [fbarTotal, setFbarTotal] = useState(0);
-  const [fbarResult, setFbarResult] = useState('');
-
-  // State for FATCA Calculator
   const [fatcaResidency, setFatcaResidency] = useState('domestic'); // 'domestic' or 'foreign'
   const [fatcaAssets, setFatcaAssets] = useState(0);
-  const [fatcaResult, setFatcaResult] = useState('');
-
-  // State for Foreign Trust Reporting
   const [trustType, setTrustType] = useState('');
   const [trustValue, setTrustValue] = useState(0);
-  const [trustResult, setTrustResult] = useState('');
-
-  // State for PFIC Reporting
   const [pficShares, setPficShares] = useState(0);
   const [pficIncome, setPficIncome] = useState(0);
-  const [pficResult, setPficResult] = useState('');
-
-  // State for Foreign Tax Credit Optimizer
   const [foreignTaxesPaid, setForeignTaxesPaid] = useState(0);
   const [usTaxesDue, setUsTaxesDue] = useState(0);
-  const [creditOptimized, setCreditOptimized] = useState(0);
-
-  // State for Treaty Benefit Analyzer
   const [treatyCountry, setTreatyCountry] = useState('');
   const [incomeType, setIncomeType] = useState('');
-  const [treatyResult, setTreatyResult] = useState('');
-
-  // State for Streamlined Filing Compliance Program
   const [streamlinedEligibility, setStreamlinedEligibility] = useState(false);
-  const [streamlinedResult, setStreamlinedResult] = useState('');
-
-  // State for Voluntary Disclosure Program Comparison
   const [vdProgram, setVdProgram] = useState(''); // e.g., 'Streamlined' or 'OVDP'
-  const [vdComparison, setVdComparison] = useState('');
-
-  // State for 50-Year Penalty Exposure Calculator
   const [penaltyYears, setPenaltyYears] = useState(0);
   const [penaltyAmount, setPenaltyAmount] = useState(0);
-  const [penaltyResult, setPenaltyResult] = useState('');
 
-  // Memoized calculations
-  const calculateFBAR = useMemo(() => {
-    const total = fbarAccounts.reduce((sum, acc) => sum + acc.value, 0);
-    setFbarTotal(total);
-    if (total > 10000) {
-      setFbarResult('Filing required under 31 USC 5314');
-    } else {
-      setFbarResult('No filing required');
-    }
-  }, [fbarAccounts]);
+  const fbarTotal = useMemo(() => fbarAccounts.reduce((sum, acc) => sum + acc.value, 0), [fbarAccounts]);
+  const fbarResult = fbarTotal > 10000 ? 'Filing required under 31 USC 5314' : 'No filing required';
 
-  const calculateFATCA = useMemo(() => {
-    if (fatcaResidency === 'domestic' && fatcaAssets > 50000) {
-      setFatcaResult('Filing required under IRC 6038D');
-    } else if (fatcaResidency === 'foreign' && fatcaAssets > 200000) {
-      setFatcaResult('Filing required under IRC 6038D');
-    } else {
-      setFatcaResult('No filing required');
-    }
-  }, [fatcaResidency, fatcaAssets]);
+  const fatcaResult =
+    (fatcaResidency === 'domestic' && fatcaAssets > 50000) || (fatcaResidency === 'foreign' && fatcaAssets > 200000)
+      ? 'Filing required under IRC 6038D'
+      : 'No filing required';
 
-  const calculateTrust = useMemo(() => {
-    if (trustType === 'foreign' && trustValue > 10000) {
-      setTrustResult('Report on Form 3520/3520-A under section 6677');
-    } else {
-      setTrustResult('No reporting required');
-    }
-  }, [trustType, trustValue]);
+  const trustResult =
+    trustType === 'foreign' && trustValue > 10000 ? 'Report on Form 3520/3520-A under section 6677' : 'No reporting required';
 
-  const calculatePFIC = useMemo(() => {
-    if (pficShares > 0) {
-      setPficResult('PFIC reporting required under section 1291');
-    } else {
-      setPficResult('No PFIC reporting');
-    }
-  }, [pficShares]);
+  const pficResult = pficShares > 0 ? 'PFIC reporting required under section 1291' : 'No PFIC reporting';
 
-  const optimizeForeignTaxCredit = useMemo(() => {
-    const optimized = Math.min(foreignTaxesPaid, usTaxesDue);
-    setCreditOptimized(optimized);
-    return optimized;
-  }, [foreignTaxesPaid, usTaxesDue]);
+  const creditOptimized = Math.min(foreignTaxesPaid, usTaxesDue);
 
-  const analyzeTreaty = useMemo(() => {
-    if (treatyCountry && incomeType) {
-      setTreatyResult(`Benefits available under section 901 for ${treatyCountry}`);
-    } else {
-      setTreatyResult('No treaty benefits analyzed');
-    }
-  }, [treatyCountry, incomeType]);
+  const treatyResult =
+    treatyCountry && incomeType ? `Benefits available under section 901 for ${treatyCountry}` : 'No treaty benefits analyzed';
 
-  const checkStreamlined = useMemo(() => {
-    if (streamlinedEligibility) {
-      setStreamlinedResult('Eligible for streamlined program');
-    } else {
-      setStreamlinedResult('Not eligible');
-    }
-  }, [streamlinedEligibility]);
+  const streamlinedResult = streamlinedEligibility ? 'Eligible for streamlined program' : 'Not eligible';
 
-  const compareVD = useMemo(() => {
-    if (vdProgram === 'Streamlined') {
-      setVdComparison('Lower penalties than OVDP');
-    } else {
-      setVdComparison('Standard program comparison');
-    }
-  }, [vdProgram]);
+  const vdComparison = vdProgram === 'Streamlined' ? 'Lower penalties than OVDP' : 'Standard program comparison';
 
-  const calculatePenalty = useMemo(() => {
-    const exposure = penaltyYears * penaltyAmount;
-    setPenaltyResult(`Exposure: $${exposure} under various sections`);
-    return exposure;
-  }, [penaltyYears, penaltyAmount]);
+  const penaltyExposure = penaltyYears * penaltyAmount;
+  const penaltyResult = `Exposure: $${penaltyExposure.toLocaleString()} under various sections`;
 
   return (
     <div style={{ backgroundColor: '#1a202c', color: '#ffffff', padding: '40px', fontFamily: 'Arial, sans-serif', minHeight: '100vh' }}>
@@ -143,7 +68,7 @@ const FBARFATCACompliance: React.FC = () => {
                 value={account.name}
                 onChange={(e) => {
                   const newAccounts = [...fbarAccounts];
-                  newAccounts[index].name = e.target.value;
+                  newAccounts[index] = { ...newAccounts[index], name: e.target.value };
                   setFbarAccounts(newAccounts);
                 }}
                 style={{ padding: '8px', marginRight: '10px', backgroundColor: '#4a5568', color: '#fff', border: '1px solid #00bcd4' }}
@@ -154,7 +79,7 @@ const FBARFATCACompliance: React.FC = () => {
                 value={account.value}
                 onChange={(e) => {
                   const newAccounts = [...fbarAccounts];
-                  newAccounts[index].value = parseFloat(e.target.value) || 0;
+                  newAccounts[index] = { ...newAccounts[index], value: parseFloat(e.target.value) || 0 };
                   setFbarAccounts(newAccounts);
                 }}
                 style={{ padding: '8px', backgroundColor: '#4a5568', color: '#fff', border: '1px solid #00bcd4' }}
@@ -358,7 +283,7 @@ const FBARFATCACompliance: React.FC = () => {
         />
         <p>{penaltyResult}</p>
         <ResponsiveContainer width="100%" height={300}>
-          <BarChart data={[{exposure: calculatePenalty()}]}>
+          <BarChart data={[{ exposure: penaltyExposure }]}>
             <Bar dataKey="exposure" fill="#ffd700" />
             <XAxis />
             <YAxis />
@@ -373,7 +298,7 @@ const FBARFATCACompliance: React.FC = () => {
         <p>References: 31 USC 5314 (FBAR), IRC 6038D (FATCA), section 6677 (Foreign Trust), section 1291 (PFIC), section 901 (Foreign Tax Credit), section 7701(b) (Residency).</p>
         <CheckCircle2 size={24} style={{ color: '#00bcd4' }} />
       </section>
-      <PageInsights section="f-b-a-r-f-a-t-c-a-compliance" />
+      <PageInsights pageId="f-b-a-r-f-a-t-c-a-compliance" />
     </div>
   );
 };

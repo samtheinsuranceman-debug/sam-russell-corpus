@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { NumberInput } from "@/components/NumberInput";
 import { useState, useMemo, useEffect } from "react";
 import { AppShell } from "@/components/AppShell";
@@ -9,8 +8,7 @@ import { Gem, Zap, Star } from "lucide-react";
 import {
   AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid,
   Tooltip, ResponsiveContainer, Legend, Cell, LineChart, Line,
-  PieChart, Pie, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar,
-  ComposedChart
+  PieChart, Pie,   ComposedChart
 } from "recharts";
 import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/_core/hooks/useAuth";
@@ -22,13 +20,9 @@ import { ComplianceFooter } from "@/components/ComplianceFooter";
 
 /* ─── INDEX DEFINITIONS ─── */
 const INDICES = [{ key: "SPXFCDUE", name: "S&P 500 Futures Dual Directional", shortName: "SPXFCDUE", color: "#2563eb" },
-,
   { key: "BOFANFCC", name: "BofA Nations Futures Commodity", shortName: "BOFANFCC", color: "#16a34a" },
-,
   { key: "BNPIMAD5", name: "BNP Paribas Multi-Asset Diversified 5", shortName: "BNPIMAD5", color: "#9333ea" },
-,
   { key: "SPX", name: "S&P 500 (Cap Rate)", shortName: "S&P 500", color: "#dc2626" },
-,
   { key: "AIGO", name: "AI Powered Global Opportunities", shortName: "AIGO", color: "#ea580c" }
 ];
 
@@ -44,25 +38,17 @@ const STRATEGY_DATA_2YR = [
 
 /* ─── 20-YEAR PROJECTION DATA (from illustration) ─── */
 const PROJECTION_DATA = [{ year: 1, age: 74, rate: 0.91, accumulated: 1904156, cashSurrender: 1337435, deathBenefit: 1904156, guaranteed: 1886903, minGuaranteed: 1330875 },
-,
   { year: 2, age: 75, rate: 8.92, accumulated: 2055870, cashSurrender: 1501920, deathBenefit: 2055870, guaranteed: 1868977, minGuaranteed: 1349507 },
-,
   { year: 3, age: 76, rate: 21.48, accumulated: 2477981, cashSurrender: 1810744, deathBenefit: 2477981, guaranteed: 1851222, minGuaranteed: 1368400 },
-,
   { year: 4, age: 77, rate: 11.43, accumulated: 2737740, cashSurrender: 2013898, deathBenefit: 2737740, guaranteed: 1833635, minGuaranteed: 1387558 },
-,
   { year: 5, age: 78, rate: 14.75, accumulated: 3115467, cashSurrender: 2306674, deathBenefit: 3115467, guaranteed: 1816216, minGuaranteed: 1406984 }
 ];
 
 /* ─── STRATEGY ALLOCATION ─── */
 const ALLOCATION = [{ strategy: "2-Yr PTP (AIGO)", allocation: 10.0, parRate: "160%", minGuarPar: "10%" },
-,
   { strategy: "2-Yr PTP (AIPEX)", allocation: 5.0, parRate: "175%", minGuarPar: "10%" },
-,
   { strategy: "2-Yr PTP (BNPIMAD5)", allocation: 10.0, parRate: "225%", minGuarPar: "10%" },
-,
   { strategy: "2-Yr PTP (BOFANFCC)", allocation: 7.5, parRate: "150%", minGuarPar: "10%" },
-,
   { strategy: "2-Yr PTP (SPXFCDUE)", allocation: 7.5, parRate: "100%", minGuarPar: "10%" }
 ];
 
@@ -70,7 +56,7 @@ const fmt = (n: number) => new Intl.NumberFormat("en-US", { style: "currency", c
 const fmtPct = (n: number) => `${n.toFixed(2)}%`;
 
 export default function AthenePEPlus15() {
-  const { clientData } = useClientData();
+  const { data: clientData } = useClientData();
   const { user } = useAuth();
   const [premium, setPremium] = useState<number>(1500000);
   const [activeTab, setActiveTab] = useState<string>("spreadsheet");
@@ -113,13 +99,6 @@ export default function AthenePEPlus15() {
   const [toggle33, setToggle33] = useState<boolean>(false);
   const [toggle34, setToggle34] = useState<boolean>(false);
 
-  const { data: clientApiData } = trpc.clients.list.useQuery();
-  const { data: strategyData } = trpc.strategy.list.useQuery();
-  const { data: aiInsights } = trpc.ai.generateInsights.useQuery({ context: "AthenePEPlus15" });
-  const { data: complianceData } = trpc.compliance.check.useQuery();
-  const { data: dashboardStats } = trpc.dashboard.stats.useQuery();
-  const { data: knowledgeBase } = trpc.knowledge.search.useQuery({ query: "Athene" });
-
   const bonusRate = 0.27;
 
   /* ─── Scale projections based on user premium ─── */
@@ -156,18 +135,12 @@ export default function AthenePEPlus15() {
     fill: row.rate > 15 ? "#22c55e" : row.rate > 5 ? "#3b82f6" : row.rate > 0 ? "#f0c040" : "#ef4444",
   }));
 
+  // Share of the allocation the illustration itemises (the 2-year point-to-point strategies)
+  // against the remainder it does not break down.
+  const itemisedPct = ALLOCATION.reduce((sum, a) => sum + a.allocation, 0);
   const pieData = [
-    { name: "2-Yr Strategies", value: 50 },
-    { name: "1-Yr Strategies", value: 50 }
-  ];
-
-  const radarData = [
-    { subject: 'Growth', A: 120, B: 110, fullMark: 150 },
-    { subject: 'Safety', A: 98, B: 130, fullMark: 150 },
-    { subject: 'Liquidity', A: 86, B: 130, fullMark: 150 },
-    { subject: 'Income', A: 99, B: 100, fullMark: 150 },
-    { subject: 'Legacy', A: 85, B: 90, fullMark: 150 },
-    { subject: 'Tax', A: 65, B: 85, fullMark: 150 },
+    { name: "2-Yr Strategies (itemised)", value: itemisedPct },
+    { name: "Other strategies (not itemised)", value: Math.max(0, 100 - itemisedPct) },
   ];
 
   const composedData = PROJECTION_DATA.map((row) => ({
@@ -259,7 +232,7 @@ export default function AthenePEPlus15() {
           <div className="flex items-center gap-4 w-full md:w-auto">
             <div className="w-48">
               <label className="block text-xs font-medium text-[#7a95b8] mb-1 uppercase tracking-wider">
-                Initial Premium
+                Initial Premium ($)
               </label>
               <NumberInput
                 value={premium}
@@ -267,7 +240,6 @@ export default function AthenePEPlus15() {
                 min={10000}
                 max={10000000}
                 step={10000}
-                prefix="$"
                 className="w-full"
               />
             </div>
@@ -600,30 +572,10 @@ export default function AthenePEPlus15() {
         {/* Table 2 */}
         <div className="rc-card">
           <h3 className="text-lg font-semibold text-white mb-4">Table 2: 1-Year Strategy Performance</h3>
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm text-left">
-              <thead className="text-[#7a95b8] bg-[#12233e]/50 border-b border-[#12233e]">
-                <tr>
-                  <th className="px-4 py-3 font-medium">Key</th>
-                  <th className="px-4 py-3 font-medium text-right">Par Rate</th>
-                  <th className="px-4 py-3 font-medium text-right">Avg Annual</th>
-                  <th className="px-4 py-3 font-medium text-right">Worst</th>
-                  <th className="px-4 py-3 font-medium text-right">Best</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-[#12233e]">
-                {STRATEGY_DATA_1YR.map((s) => (
-                  <tr key={s.key} className="hover:bg-[#1a2f4c]/50 transition-colors">
-                    <td className="px-4 py-3 font-medium text-white">{s.key}</td>
-                    <td className="px-4 py-3 text-right text-[#c8d8ec]">{s.parRate}</td>
-                    <td className="px-4 py-3 text-right text-white">{s.avgAnnual}%</td>
-                    <td className="px-4 py-3 text-right font-mono text-red-400">{s.worst}%</td>
-                    <td className="px-4 py-3 text-right text-green-400">{s.best}%</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <p className="text-sm text-[#7a95b8]">
+            The source illustration this page is built from does not include 1-year strategy performance, so none is shown.
+            See Table 3 for the 2-year strategies it does report.
+          </p>
         </div>
 
         {/* Table 3 */}
@@ -793,22 +745,6 @@ export default function AthenePEPlus15() {
               <Tooltip contentStyle={{ backgroundColor: '#0d1a2e', borderColor: '#12233e', color: '#fff' }} />
               <Legend />
             </PieChart>
-          </ResponsiveContainer>
-        </div>
-
-        {/* Chart 5: RadarChart */}
-        <div className="rc-card h-72">
-          <h3 className="text-lg font-semibold text-white mb-4">Radar Chart: Product Features</h3>
-          <ResponsiveContainer width="100%" height="100%">
-            <RadarChart cx="50%" cy="50%" outerRadius="80%" data={radarData}>
-              <PolarGrid stroke="#1a2f4c" />
-              <PolarAngleAxis dataKey="subject" tick={{ fill: '#7a95b8' }} />
-              <PolarRadiusAxis angle={30} domain={[0, 150]} tick={{ fill: '#7a95b8' }} />
-              <Radar name="Product A" dataKey="A" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.6} />
-              <Radar name="Product B" dataKey="B" stroke="#22c55e" fill="#22c55e" fillOpacity={0.6} />
-              <Legend />
-              <Tooltip contentStyle={{ backgroundColor: '#0d1a2e', borderColor: '#12233e', color: '#fff' }} />
-            </RadarChart>
           </ResponsiveContainer>
         </div>
 

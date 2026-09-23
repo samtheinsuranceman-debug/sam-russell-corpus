@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { useCalculatorIntegration } from "@/hooks/useCalculatorIntegration";
 import { ClientSelectorBar } from "@/components/ClientSelectorBar";
 import { useState, useMemo, useEffect } from "react";
@@ -227,7 +226,7 @@ function buildRateComparisonTable(
 export default function TimeMachineAG49() {
   const calcIntegration = useCalculatorIntegration({
     calculatorName: "TimeMachineAG49",
-    strategyType: "iul-growth",
+    strategyType: "time-machine",
   });
 
   const { data: clientData } = useClientData();
@@ -349,8 +348,15 @@ export default function TimeMachineAG49() {
         scenariosLoading={calcIntegration.scenariosLoading}
         scenarioName={calcIntegration.scenarioName}
         onSetScenarioName={calcIntegration.setScenarioName}
-        onSave={() => calcIntegration.saveScenario({}, {})}
-        onLoad={(s) => calcIntegration.loadScenario(s)}
+        onSave={() => calcIntegration.saveScenario({ annualPremium, fundingYears, creditingRate, currentAge }, {})}
+        onLoad={(s) => {
+          const saved = calcIntegration.loadScenario(s) as Partial<Record<"annualPremium" | "fundingYears" | "creditingRate" | "currentAge", number>> | null;
+          if (!saved) return;
+          if (typeof saved.annualPremium === "number") setAnnualPremium(saved.annualPremium);
+          if (typeof saved.fundingYears === "number") setFundingYears(saved.fundingYears);
+          if (typeof saved.creditingRate === "number") setCreditingRate(saved.creditingRate);
+          if (typeof saved.currentAge === "number") setCurrentAge(saved.currentAge);
+        }}
         isSaving={calcIntegration.isSaving}
         lastSavedAt={calcIntegration.lastSavedAt}
         calculatorName="TimeMachineAG49"
