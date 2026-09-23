@@ -98,8 +98,10 @@ export function calculateArbitrage(input: ArbitrageInput): ArbitrageResult {
       const loanInterest = loanBalance * scenario.loanRate;
       loanBalance += loanInterest;
 
-      // IUL credits on cash value (floor at 0% for most IUL)
-      const creditRate = Math.max(0, scenario.iulCreditRate + (Math.random() - 0.5) * 0.02);
+      // IUL credits on cash value at the scenario's illustrated rate (floor at 0% for most IUL).
+      // Deterministic: the same inputs always give the same figures. Year-to-year variation is
+      // modelled by the separate scenarios, not by random noise.
+      const creditRate = Math.max(0, scenario.iulCreditRate);
       policyCashValue *= (1 + creditRate);
 
       // COI deduction (increases with age)

@@ -15,6 +15,10 @@ import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { useClientData } from "@/contexts/ClientDataContext";
 import { INTAKE_ROLES, INTAKE_STORAGE_KEY, type IntakeRole } from "@shared/aiIntakeScript";
+import { arrivalSkinsEnabled } from "@shared/arrivalSkins";
+import { ArrivalField } from "@/components/ArrivalField";
+import { readOwnerPreview, writeOwnerPreview } from "@/lib/arrivalSession";
+import { useSoundSilence } from "@/contexts/ArrivalSoundContext";
 
 const ROLE_STORAGE_KEY = "rcs_role_v1";
 
@@ -106,6 +110,15 @@ export default function RoleDashboard({ role }: { role: IntakeRole }) {
     if (readAloud && spoken) void sayAnswer(spoken);
   };
 
+  // Return skins + sonic signature on the arrival field: off unless VITE_ARRIVAL_SKINS=on,
+  // or the owner (an admin account) switches the preview on for their own browser.
+  const isOwner = user?.role === "admin";
+  const [ownerPreview, setOwnerPreview] = useState(() => readOwnerPreview());
+  const arrivalOn = arrivalSkinsEnabled({ envFlag: import.meta.env.VITE_ARRIVAL_SKINS, isOwner, ownerPreview });
+  const toggleOwnerPreview = () => { const next = !ownerPreview; writeOwnerPreview(next); setOwnerPreview(next); };
+  // The arrival sound goes quiet during the spoken intake and while an answer is read aloud.
+  useSoundSilence(intakeOpen || speaking);
+
   const name = user?.name ?? "";
   const roleMeta = INTAKE_ROLES[role];
   const head = ROLE_HEADLINES[role];
@@ -113,6 +126,18 @@ export default function RoleDashboard({ role }: { role: IntakeRole }) {
   return (
     <AppShell title={head.title} subtitle={head.sub}>
       <div className="mx-auto max-w-6xl px-4 py-8 text-white" data-testid={`role-dashboard-${role}`}>
+        {arrivalOn && (
+          <div className="mb-8">
+            <ArrivalField userId={user?.id ?? null} name={name.split(" ")[0] || undefined} ownerCaption={isOwner} />
+          </div>
+        )}
+        {isOwner && (
+          <div className="mb-3 flex justify-end">
+            <button type="button" onClick={toggleOwnerPreview} aria-pressed={ownerPreview} className="rounded-full border border-emerald-300/25 px-3 py-1 text-xs text-emerald-100/70 hover:text-emerald-100" data-testid="arrival-preview-toggle">
+              Owner preview · arrival skins {ownerPreview ? "on" : "off"}
+            </button>
+          </div>
+        )}
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.26em] text-emerald-300">{roleMeta.label} · Russell Capital Systems</p>

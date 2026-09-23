@@ -521,7 +521,7 @@ export const TAB_SUMMARIES: TabSummary[] = [
   {
     id: "retirement-income",
     name: "Retirement Income Projection",
-    path: "/portal/retirement-income",
+    path: "/portal/retirement-projection",
     category: "iul-tools",
     categoryColor: "cyan",
     icon: "Target",
@@ -1131,7 +1131,7 @@ export const TAB_SUMMARIES: TabSummary[] = [
   {
     id: "tax-bracket-visualizer",
     name: "Tax Bracket Visualizer",
-    path: "/portal/tax-bracket-visualizer",
+    path: "/portal/tax-brackets",
     category: "tax-planning",
     categoryColor: "amber",
     icon: "BarChart",
@@ -1357,7 +1357,7 @@ export const TAB_SUMMARIES: TabSummary[] = [
   {
     id: "oil-gas-strategy",
     name: "Oil & Gas Strategy",
-    path: "/portal/strategy-lab",
+    path: "/portal/strategy",
     category: "oil-gas",
     categoryColor: "orange",
     icon: "Flame",

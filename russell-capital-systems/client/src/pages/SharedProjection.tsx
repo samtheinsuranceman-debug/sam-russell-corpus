@@ -84,7 +84,7 @@ export default function SharedProjection() {
         </div>
       </header>
 
-      <main className="max-w-6xl mx-auto px-6 py-8 space-y-6">
+      <div className="max-w-6xl mx-auto px-6 py-8 space-y-6">
         {/* Client Info */}
         <div className="bg-[#0f2035] rounded-xl border border-[#1e3a5f] p-6">
           <div className="flex items-center gap-3 mb-4">
@@ -265,7 +265,7 @@ export default function SharedProjection() {
             <strong className="text-[#7a95b8]">Important Disclosure:</strong> This projection is for illustrative purposes only and does not constitute financial advice, a guarantee of future performance, or an offer to sell securities. Actual results will vary based on market conditions, policy terms, interest rates, and individual circumstances. IUL illustrations assume a consistent credited rate which is not guaranteed. Past performance does not guarantee future results. Consult with your financial advisor before making any investment decisions. Russell Capital Systems™ is not a registered investment advisor.
           </p>
         </div>
-      </main>
+      </div>
 
       {/* Footer */}
       <footer className="border-t border-[#1e3a5f] bg-[#0f2035] mt-12">

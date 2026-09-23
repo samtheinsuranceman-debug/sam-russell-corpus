@@ -3,9 +3,10 @@
  *
  * Every provider is reached through `callProvider`, which normalises the
  * request and the response so the rest of the platform does not care which
- * model answered. Three formats cover the whole list: the OpenAI
+ * model answered. Four formats cover the whole list: the OpenAI
  * chat-completions shape (which most providers now speak), Anthropic's
- * messages API, and Google's generateContent.
+ * messages API, Google's generateContent, and IBM watsonx.ai's text/chat
+ * (OpenAI-like, behind an IAM token exchange and a project id).
  *
  * Errors are classified rather than passed through raw, because the difference
  * between "your key is wrong", "you are out of credit" and "their service is
@@ -13,6 +14,7 @@
  * takes an afternoon. Provider error bodies frequently contain the request
  * payload, so they are never surfaced verbatim to the browser.
  */
+import { createHash } from "node:crypto";
 import {
   CHINA_POLICY_MESSAGE,
   getProvider,
@@ -366,6 +368,120 @@ async function callGoogle(o: ProviderCallOptions): Promise<ProviderCallResult> {
   };
 }
 
+// ─── IBM watsonx.ai ──────────────────────────────────────────────────────────
+
+/** IBM Cloud's token service. The API key is traded here for an hour-long bearer token. */
+export const IBM_IAM_TOKEN_URL = "https://iam.cloud.ibm.com/identity/token";
+
+/** Bearer tokens by a hash of the API key, reused until a minute before they expire. */
+const watsonxTokens = new Map<string, { token: string; expiresAt: number }>();
+const WATSONX_TOKEN_MARGIN_MS = 60_000;
+
+/** Forget cached IAM tokens (a key changed, or a test wants a clean slate). */
+export function clearWatsonxTokenCache() {
+  watsonxTokens.clear();
+}
+
+/**
+ * The key field may carry the project as `<api key>:<project id>`, so a key
+ * typed into the Brain Hub is complete on its own; otherwise the project comes
+ * from WATSONX_PROJECT_ID. An IBM Cloud API key never contains a colon.
+ */
+export function splitWatsonxKey(stored: string, env: Record<string, string | undefined> = process.env): { apiKey: string; projectId: string | null } {
+  const i = stored.indexOf(":");
+  if (i > 0) return { apiKey: stored.slice(0, i).trim(), projectId: stored.slice(i + 1).trim() || null };
+  return { apiKey: stored.trim(), projectId: env.WATSONX_PROJECT_ID?.trim() || null };
+}
+
+async function watsonxToken(apiKey: string, provider: ProviderDefinition, timeoutMs: number): Promise<string> {
+  const slot = createHash("sha256").update(apiKey).digest("hex");
+  const cached = watsonxTokens.get(slot);
+  if (cached && cached.expiresAt - WATSONX_TOKEN_MARGIN_MS > Date.now()) return cached.token;
+
+  const res = await fetchWithTimeout(
+    IBM_IAM_TOKEN_URL,
+    {
+      method: "POST",
+      headers: { "content-type": "application/x-www-form-urlencoded", accept: "application/json" },
+      body: new URLSearchParams({ grant_type: "urn:ibm:params:oauth:grant-type:apikey", apikey: apiKey }).toString(),
+    },
+    Math.min(timeoutMs, 30_000),
+    provider.id,
+    provider.name,
+  );
+  // IAM answers an unknown or revoked key with HTTP 400, not 401.
+  if (!res.ok) throw classify(res.status === 400 ? 401 : res.status, provider.id, provider.name, await res.text().catch(() => ""));
+
+  const json: any = await res.json();
+  const token = typeof json?.access_token === "string" ? json.access_token : "";
+  if (!token) {
+    throw new ProviderError({ kind: "auth", providerId: provider.id, message: "watsonx IAM returned no access_token", userMessage: `${provider.name}: IBM Cloud did not issue a token for this API key.` });
+  }
+  const expiresAt =
+    typeof json.expiration === "number" ? json.expiration * 1000 : Date.now() + (typeof json.expires_in === "number" ? json.expires_in : 3600) * 1000;
+  watsonxTokens.set(slot, { token, expiresAt });
+  return token;
+}
+
+async function callWatsonx(o: ProviderCallOptions): Promise<ProviderCallResult> {
+  const { provider, model, messages } = o;
+  const { apiKey, projectId } = splitWatsonxKey(o.apiKey);
+  if (!projectId) {
+    throw new ProviderError({
+      kind: "bad_request",
+      providerId: provider.id,
+      message: "watsonx project id missing",
+      userMessage: `${provider.name} needs a project id: set WATSONX_PROJECT_ID, or save the key as <api key>:<project id>.`,
+    });
+  }
+  const timeoutMs = o.timeoutMs ?? 120_000;
+  // WATSONX_URL picks the region for a key typed into the Brain Hub as well as one on Railway.
+  const regionUrl = process.env.WATSONX_URL?.trim() || null;
+  if (!o.baseUrlOverride && isBannedProvider(regionUrl)) throw policyError(provider.id, `base URL: "${regionUrl}"`);
+  const base = (o.baseUrlOverride || regionUrl || provider.baseUrl).replace(/\/$/, "");
+  const started = Date.now();
+  const token = await watsonxToken(apiKey, provider, timeoutMs);
+
+  const body: Record<string, unknown> = {
+    model_id: model,
+    project_id: projectId,
+    messages: messages.map(m => ({ role: m.role, content: m.content })),
+  };
+  if (o.maxTokens) body.max_tokens = o.maxTokens;
+  if (typeof o.temperature === "number") body.temperature = o.temperature;
+
+  const res = await fetchWithTimeout(
+    `${base}${provider.chatPath}`,
+    {
+      method: "POST",
+      headers: { "content-type": "application/json", accept: "application/json", authorization: `Bearer ${token}` },
+      body: JSON.stringify(body),
+    },
+    timeoutMs,
+    provider.id,
+    provider.name,
+  );
+
+  if (!res.ok) {
+    // A token IBM has stopped honouring is not reused on the next call.
+    if (res.status === 401) watsonxTokens.delete(createHash("sha256").update(apiKey).digest("hex"));
+    throw classify(res.status, provider.id, provider.name, await res.text().catch(() => ""));
+  }
+
+  const json: any = await res.json();
+  return {
+    text: partsToText(json?.choices?.[0]?.message?.content),
+    model: json?.model_id ?? json?.model ?? model,
+    providerId: provider.id,
+    usage: {
+      promptTokens: json?.usage?.prompt_tokens,
+      completionTokens: json?.usage?.completion_tokens,
+      totalTokens: json?.usage?.total_tokens,
+    },
+    latencyMs: Date.now() - started,
+  };
+}
+
 // ─── Entry point ─────────────────────────────────────────────────────────────
 
 /**
@@ -405,17 +521,22 @@ export async function callProvider(o: ProviderCallOptions): Promise<ProviderCall
 }
 
 async function dispatch(o: ProviderCallOptions): Promise<ProviderCallResult> {
-  switch (o.provider.wireFormat) {
+  const format = o.provider.wireFormat;
+  switch (format) {
     case "anthropic": return callAnthropic(o);
     case "google-generative": return callGoogle(o);
     case "openai-compatible": return callOpenAiCompatible(o);
-    default:
+    case "ibm-watsonx": return callWatsonx(o);
+    default: {
+      // A new WireFormat without a case here fails the type check.
+      const unhandled: never = format;
       throw new ProviderError({
         kind: "bad_request",
         providerId: o.provider.id,
-        message: `No adapter for wire format ${o.provider.wireFormat}`,
+        message: `No adapter for wire format ${String(unhandled)}`,
         userMessage: "This provider has no adapter configured.",
       });
+    }
   }
 }
 

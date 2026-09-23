@@ -7,11 +7,27 @@ import { adminProcedure, protectedProcedure, publicProcedure, router } from "./_
 import { invokeLLM } from "./_core/llm";
 import { TRPCError } from "@trpc/server";
 import { storagePut } from "./storage";
+import { generateImage, imageErrorMessage, isImageGenerationConfigured, sniffImageType, ImageGenerationError } from "./imageGenerator";
 import { notifyOwner } from "./_core/notification";
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // NOTIFICATION HELPERS (fire-and-forget, never block the main flow)
 // ═══════════════════════════════════════════════════════════════════════════════
+
+/**
+ * Game events (level-ups, quests, streaks, pets, the morning ritual) do not
+ * e-mail the owner: he asked for them muted on 23 Sep 2026. Setting
+ * GAME_EVENT_EMAILS=on on Railway turns them back on without a code change.
+ * Client, lead and deal alerts elsewhere are unaffected.
+ */
+export function gameEventEmailsEnabled(env: NodeJS.ProcessEnv = process.env): boolean {
+  return env.GAME_EVENT_EMAILS?.trim().toLowerCase() === "on";
+}
+
+function notifyGameEvent(payload: Parameters<typeof notifyOwner>[0]): void {
+  if (!gameEventEmailsEnabled()) return;
+  notifyOwner(payload).catch(() => {});
+}
 const LEVEL_NAMES: Record<number, string> = {
   1: "Rookie", 2: "Apprentice", 3: "Advisor", 4: "Strategist", 5: "Optimizer",
   6: "Architect", 7: "Commander", 8: "Master", 9: "Grandmaster", 10: "Legend",
@@ -19,25 +35,25 @@ const LEVEL_NAMES: Record<number, string> = {
 
 function notifyLevelUp(userId: number, level: number) {
   const name = LEVEL_NAMES[level] || `Level ${level}`;
-  notifyOwner({
+  notifyGameEvent({
     title: `\u{1F3C6} Level Up! An advisor reached ${name} (Level ${level})`,
     content: `User #${userId} just leveled up to ${name}. The Experience Engine is working.`,
-  }).catch(() => {});
+  });
 }
 
 function notifyQuestComplete(userId: number, questTitle: string, xpReward: number) {
-  notifyOwner({
+  notifyGameEvent({
     title: `\u{2694}\u{FE0F} Quest Complete: ${questTitle}`,
     content: `User #${userId} completed the quest "${questTitle}" and earned ${xpReward} XP. Engagement is high.`,
-  }).catch(() => {});
+  });
 }
 
 function notifyStreakMilestone(userId: number, streak: number) {
   if (streak % 7 === 0 || streak === 3 || streak === 30 || streak === 100 || streak === 365) {
-    notifyOwner({
+    notifyGameEvent({
       title: `\u{1F525} Streak Milestone: ${streak}-Day Streak!`,
       content: `User #${userId} just hit a ${streak}-day login streak. The addiction engine is working perfectly.`,
-    }).catch(() => {});
+    });
   }
 }
 import { getDb } from "./db";
@@ -314,14 +330,52 @@ export const experienceRouter = router({
     style: z.enum(["professional", "warrior", "mystic", "futuristic", "royal"]).default("professional"),
     isSpouse: z.boolean().default(false),
   })).mutation(async ({ ctx, input }) => {
-    // No image-generation provider is wired: the hosted image service the
-    // platform shipped with was removed on 23 Sep 2026. Uploading a photo
-    // (uploadAvatarPhoto) still works when file storage is configured.
-    void ctx; void input;
-    throw new TRPCError({
-      code: "PRECONDITION_FAILED",
-      message: "AI avatar generation is not configured on this host.",
-    });
+    // The photo is restyled by the first keyed image provider (server/imageGenerator.ts):
+    // Flux Kontext on Replicate or fal, Stable Image Ultra, or gpt-image-1.
+    if (!isImageGenerationConfigured()) {
+      throw new TRPCError({
+        code: "PRECONDITION_FAILED",
+        message: "AI avatar generation is not configured on this host (set REPLICATE_API_TOKEN, FAL_KEY, STABILITY_API_KEY or OPENAI_API_KEY).",
+      });
+    }
+    const photo = Buffer.from(input.imageBase64, "base64");
+    const photoType = sniffImageType(photo);
+    if (!photoType) throw new TRPCError({ code: "BAD_REQUEST", message: "Upload a JPEG, PNG or WebP photo." });
+    if (photo.length > 10 * 1024 * 1024) throw new TRPCError({ code: "BAD_REQUEST", message: "The photo is larger than 10MB." });
+
+    const stylePrompts: Record<string, string> = {
+      professional: "a polished, sophisticated executive portrait in a luxury office setting, wearing a tailored suit, dramatic lighting, oil painting style, rich colors",
+      warrior: "an epic fantasy warrior portrait with golden armor, glowing sword, dramatic battlefield background, cinematic lighting, digital art masterpiece",
+      mystic: "a mystical sorcerer portrait with glowing runes, ethereal energy swirling around, cosmic background with stars and nebulae, fantasy art style",
+      futuristic: "a cyberpunk tech mogul portrait with holographic displays, neon city background, sleek futuristic attire, blade runner aesthetic",
+      royal: "a regal royal portrait in a grand palace, wearing a crown and royal robes, golden throne, renaissance painting style, dramatic chiaroscuro lighting",
+    };
+    const prompt = `Turn the person in this photo into ${stylePrompts[input.style]}. Keep their face and likeness recognisable. The subject should look powerful, confident, and successful, like a high-end character portrait from a AAA video game. Ultra detailed.`;
+
+    try {
+      const image = await generateImage({
+        prompt,
+        aspectRatio: "1:1",
+        reference: { data: photo, contentType: photoType },
+        keyPrefix: `avatars/${ctx.user.id}`,
+      });
+      // Store the avatar URL on the user's XP profile
+      const db = await getDb();
+      if (db) {
+        const { userXpProfiles } = await import("../drizzle/schema");
+        const field = input.isSpouse ? "spouseAvatarUrl" : "avatarUrl";
+        await db.update(userXpProfiles)
+          .set({ [field]: image.url })
+          .where(eq(userXpProfiles.userId, ctx.user.id));
+      }
+      return { avatarUrl: image.url, style: input.style };
+    } catch (error) {
+      const notConfigured = error instanceof ImageGenerationError && error.kind === "not_configured";
+      throw new TRPCError({
+        code: notConfigured ? "PRECONDITION_FAILED" : "INTERNAL_SERVER_ERROR",
+        message: `Avatar generation failed: ${imageErrorMessage(error)}`,
+      });
+    }
   }),
 });
 
@@ -329,25 +383,34 @@ export const experienceRouter = router({
 // WILL WRITER ROUTER
 // ═══════════════════════════════════════════════════════════════════════════════
 
+/**
+ * The client, household fact finder and properties for a will, read only from
+ * the caller's own workspace. A client in another workspace answers NOT_FOUND
+ * and nothing about it reaches the page or the model.
+ */
+async function loadWillSources(userId: number, clientId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("DB unavailable");
+  const { getWorkspaceByOwnerId } = await import("./db");
+  const ws = await getWorkspaceByOwnerId(userId);
+  if (!ws) throw new TRPCError({ code: "NOT_FOUND", message: "Client not found in your workspace" });
+  const clientRows = await db.select().from(clients)
+    .where(and(eq(clients.id, clientId), eq(clients.workspaceId, ws.id))).limit(1);
+  if (clientRows.length === 0) throw new TRPCError({ code: "NOT_FOUND", message: "Client not found in your workspace" });
+  const hhRows = await db.select().from(householdFactFinders)
+    .where(and(eq(householdFactFinders.clientId, clientId), eq(householdFactFinders.workspaceId, ws.id))).limit(1);
+  const props = await db.select().from(clientProperties)
+    .where(and(eq(clientProperties.clientId, clientId), eq(clientProperties.workspaceId, ws.id)));
+  return { db, client: clientRows[0], hh: hhRows[0] ?? null, props };
+}
+
 export const willWriterRouter = router({
   // ─── Get Family Context for Will ──────────────────────────────────────────
   getFamilyContext: protectedProcedure.input(z.object({
     clientId: z.number(),
   })).query(async ({ ctx, input }) => {
-    const db = await getDb();
-    if (!db) throw new Error("DB unavailable");
-
-    // Get client data
-    const clientRows = await db.select().from(clients).where(eq(clients.id, input.clientId)).limit(1);
-    if (clientRows.length === 0) throw new Error("Client not found");
-    const client = clientRows[0];
-
-    // Get household fact finder
-    const hhRows = await db.select().from(householdFactFinders).where(eq(householdFactFinders.clientId, input.clientId)).limit(1);
-    const hh = hhRows[0] ?? null;
-
-    // Get properties
-    const props = await db.select().from(clientProperties).where(eq(clientProperties.clientId, input.clientId));
+    // Client, household fact finder and properties: caller's workspace only.
+    const { client, hh, props } = await loadWillSources(ctx.user.id, input.clientId);
 
     // Build family context
     const context: WillFamilyContext = {
@@ -416,20 +479,8 @@ export const willWriterRouter = router({
     })).optional(),
     finalWishes: z.string().optional(),
   })).mutation(async ({ ctx, input }) => {
-    const db = await getDb();
-    if (!db) throw new Error("DB unavailable");
-
-    // Get client data
-    const clientRows = await db.select().from(clients).where(eq(clients.id, input.clientId)).limit(1);
-    if (clientRows.length === 0) throw new Error("Client not found");
-    const client = clientRows[0];
-
-    // Get household fact finder for family data
-    const hhRows = await db.select().from(householdFactFinders).where(eq(householdFactFinders.clientId, input.clientId)).limit(1);
-    const hh = hhRows[0] ?? null;
-
-    // Get properties
-    const props = await db.select().from(clientProperties).where(eq(clientProperties.clientId, input.clientId));
+    // Client, household fact finder and properties: caller's workspace only.
+    const { db, client, hh, props } = await loadWillSources(ctx.user.id, input.clientId);
 
     const clientName = client.name || `${client.firstName ?? ""} ${client.lastName ?? ""}`.trim();
     const spouseName = client.spouseName ?? hh?.spouseName;
@@ -672,10 +723,10 @@ export const petRouter = router({
       unicorn: { strength: 4, wisdom: 6, charisma: 9, luck: 8 },
     };
     const result = await adoptPet(ctx.user.id, input.speciesId, input.name, BASE_STATS[input.speciesId]);
-    notifyOwner({
+    notifyGameEvent({
       title: `🐣 New Pet Adopted: ${input.name} the ${input.speciesId}`,
       content: `User #${ctx.user.id} adopted a ${input.speciesId} named "${input.name}". The pet system is engaging users.`,
-    }).catch(() => {});
+    });
     return result;
   }),
 
@@ -696,10 +747,10 @@ export const petRouter = router({
     }
     const result = await feedPet(ctx.user.id, input.foodId, food.xp, food.happiness);
     if (result.evolved) {
-      notifyOwner({
+      notifyGameEvent({
         title: `✨ Pet Evolution! ${result.pet.name} evolved to ${result.newStage}!`,
         content: `User #${ctx.user.id}'s pet "${result.pet.name}" just evolved to ${result.newStage} stage at level ${result.pet.level}!`,
-      }).catch(() => {});
+      });
     }
     return result;
   }),
@@ -730,10 +781,10 @@ export const morningRitualRouter = router({
       // Award XP and coins to the user's main profile
       await earnXp(ctx.user.id, result.xpGained, "morning_ritual_complete");
       await earnRussellCoin(ctx.user.id, result.coinsGained, "earn", "morning_ritual", "Morning ritual completed");
-      notifyOwner({
+      notifyGameEvent({
         title: `🌅 Morning Ritual Complete!`,
         content: `User #${ctx.user.id} completed their morning ritual (streak: ${result.ritual.streakDay} days). Earned ${result.xpGained} XP.`,
-      }).catch(() => {});
+      });
     }
     return result;
   }),
@@ -754,15 +805,15 @@ export const withdrawalRouter = router({
 
   markRead: protectedProcedure.input(z.object({
     triggerId: z.number(),
-  })).mutation(async ({ input }) => {
-    await markTriggerRead(input.triggerId);
+  })).mutation(async ({ ctx, input }) => {
+    await markTriggerRead(input.triggerId, ctx.user.id);
     return { success: true };
   }),
 
   markClicked: protectedProcedure.input(z.object({
     triggerId: z.number(),
-  })).mutation(async ({ input }) => {
-    await markTriggerClicked(input.triggerId);
+  })).mutation(async ({ ctx, input }) => {
+    await markTriggerClicked(input.triggerId, ctx.user.id);
     return { success: true };
   }),
 
@@ -995,9 +1046,11 @@ export const dealScoringRouter = router({
 
   history: protectedProcedure
     .input(z.object({ dealId: z.number() }))
-    .query(async ({ input }) => {
-      const { getDealScoreHistory } = await import("./db");
-      return getDealScoreHistory(input.dealId);
+    .query(async ({ ctx, input }) => {
+      const { getDealScoreHistory, getWorkspaceByOwnerId } = await import("./db");
+      const ws = await getWorkspaceByOwnerId(ctx.user.id);
+      if (!ws) return [];
+      return getDealScoreHistory(input.dealId, ws.id);
     }),
 
   allScores: protectedProcedure.query(async ({ ctx }) => {

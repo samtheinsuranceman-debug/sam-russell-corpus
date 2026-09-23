@@ -370,6 +370,7 @@ export const ROUTE_MANIFEST: readonly string[] = [
   "/portal/russell-number",
   "/portal/sales-story",
   "/portal/samuel-goldman",
+  "/portal/genome-intake",
   "/portal/saved-scenarios",
   "/portal/scenario-play",
   "/portal/scenario-side-by-side",
