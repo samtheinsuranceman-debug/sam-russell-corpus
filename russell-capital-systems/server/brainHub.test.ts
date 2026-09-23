@@ -18,11 +18,27 @@ import {
 import { MCP_PRESETS, mcpPresetsByCategory } from "@shared/mcpPresets";
 import { environmentCredentials, environmentKeyNames } from "./providerRegistry";
 
-describe("the forty brains", () => {
-  it("offers exactly forty providers to the owner, plus the internal gateway", () => {
+describe("the fifty-five brains", () => {
+  it("offers exactly MAX_BRAINS providers to the owner, plus the internal gateway", () => {
+    expect(MAX_BRAINS).toBe(55);
     expect(BRAIN_PROVIDERS).toHaveLength(MAX_BRAINS);
     expect(PROVIDERS).toHaveLength(MAX_BRAINS + 1);
     expect(getProvider("forge")).toBeDefined();
+  });
+
+  it("carries the fifteen platforms added on 23 Sep 2026, each with a conventional Railway name", () => {
+    const added = [
+      "inception", "venice", "featherless", "parasail", "arcee", "wandb", "vultr", "edenai",
+      "sarvam", "krutrim", "naver-clova", "plamo", "aleph-alpha", "publicai", "databricks",
+    ];
+    for (const id of added) {
+      expect(getProvider(id), id).toBeDefined();
+      // The uniform name plus at least one conventional name, so the Railway
+      // panel can use either.
+      expect(environmentKeyNames(id).length, id).toBeGreaterThanOrEqual(2);
+    }
+    // Only Databricks needs an account-scoped base URL.
+    expect(added.filter(id => getProvider(id)?.requiresBaseUrl)).toEqual(["databricks"]);
   });
 
   it("every provider id is unique, stable-looking, and every entry is complete", () => {
