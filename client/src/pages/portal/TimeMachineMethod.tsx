@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * Time Machine Method — Dual Illustration Generator
  *
@@ -58,7 +57,7 @@ import {
 } from "@shared/timeMachineEngine";
 import { TimeMachineInlineDisclaimer } from "@/components/TimeMachineInlineDisclaimer";
 import { ExportToSlides } from "@/components/ExportToSlides";
-import { ExecutiveSummary, GoalsAccelerator, RecommendationSummary, DoNothingBaseline, TaxBracketPanel } from "@/components/ConsumerOutcomeBlocks";
+import { ExecutiveSummary, GoalsAccelerator, TaxBracketPanel } from "@/components/ConsumerOutcomeBlocks";
 import { formatTaxCurrency } from "@shared/taxBracketEngine";
 import { RelatedCalculators } from "@/components/RelatedCalculators";
 import { ComplianceFooter } from "@/components/ComplianceFooter";
@@ -121,63 +120,11 @@ function TimeMachineChartTooltip({ active, payload, label, startYear, totalPremi
   return (
     <div className="bg-background/95 backdrop-blur border border-border rounded-lg p-3 shadow-xl max-w-sm">
 
-      {/* Backend Integration Bar */}
-      <ClientSelectorBar
-        clients={calcIntegration.clients}
-        clientsLoading={calcIntegration.clientsLoading}
-        selectedClientId={calcIntegration.selectedClientId}
-        selectedClientName={calcIntegration.selectedClientName}
-        onSelectClient={calcIntegration.selectClient}
-        scenarios={calcIntegration.scenarios}
-        scenariosLoading={calcIntegration.scenariosLoading}
-        scenarioName={calcIntegration.scenarioName}
-        onSetScenarioName={calcIntegration.setScenarioName}
-        onSave={() => calcIntegration.saveScenario({}, {})}
-        onLoad={(s) => calcIntegration.loadScenario(s)}
-        isSaving={calcIntegration.isSaving}
-        lastSavedAt={calcIntegration.lastSavedAt}
-        calculatorName="TimeMachineMethod"
-      />
       <p className="text-xs font-bold mb-2">
         Year {year} · Age {payload[0]?.payload?.age} · Calendar {calYear}
       </p>
       <div className="space-y-1.5">
 
-        {/* ═══ CONSUMER OUTCOME BLOCKS — Flagship Tier ═══ */}
-        {/* Related Calculators Toggle */}
-        <RelatedCalculators currentPage="TimeMachineMethod" />
-
-        <ExecutiveSummary
-          pageTitle="Time Machine Method"
-          whatItDoes="This financial analysis tool provides institutional-grade analysis of your financial situation, modeling multiple scenarios and projecting outcomes based on your specific inputs. It transforms complex financial analysis concepts into clear, actionable insights with dollar-quantified recommendations."
-          opportunities="This tool reveals insights that most clients never see because they don\'t have access to institutional-grade analysis. The data here can change how you think about your entire financial picture."
-          intent="To give you the same caliber of financial analysis analysis that institutional investors and ultra-high-net-worth families receive — now accessible to every client."
-          takeaway="Understanding your financial analysis options with precise dollar amounts empowers you to make confident decisions that compound into significant wealth over time."
-          callToAction="Enter your numbers and see exactly how financial analysis strategies can improve your financial outcome."
-          followUpQuestions={[
-            "How does this financial analysis strategy interact with my other financial plans?",
-            "What\'s the single biggest financial analysis opportunity I\'m currently missing?",
-            "How would my results change if I started this strategy 5 years earlier?",
-          ]}
-        />
-        <GoalsAccelerator pageName="Time Machine Method" pageContext="Time Machine Method — financial analysis modeling with projections and scenario analysis" />
-        <TaxBracketPanel grossIncome={clientData?.annualIncome || 150000} filingStatus={clientData?.filingStatus || "single"} stateCode={clientData?.state || "TX"} />
-        <RecommendationSummary
-          headline="This financial analysis strategy can significantly improve your financial outcome"
-          detail="Based on your profile, implementing the recommended financial analysis approach could generate substantial savings and growth over your planning horizon."
-          dollarBenefit={200000}
-          timeHorizon="20 years"
-          confidence="high"
-          nextStep="Review with your advisor"
-        />
-        <DoNothingBaseline
-          metrics={[
-            { label: "Financial Clarity Score", doNothing: 40, recommended: 90, format: "percent" },
-            { label: "Optimization Potential", doNothing: 0, recommended: 200000, format: "currency" },
-            { label: "Decision Confidence", doNothing: 35, recommended: 92, format: "percent" },
-          ]}
-          summary="Without taking action on financial analysis, you leave significant value on the table that compounds into a major opportunity cost over time."
-        />
         {payload.map((entry: any, i: number) => {
           const isTimeMachine = entry.dataKey?.toLowerCase().includes("historical") || entry.dataKey?.toLowerCase().includes("tm");
           const color = isTimeMachine ? COLORS.timeMachine.primary : COLORS.yourPlan.primary;
@@ -210,7 +157,7 @@ function RateChartTooltip({ active, payload, label, startYear }: any) {
   if (!active || !payload?.length) return null;
   const year = typeof label === "number" ? label : parseInt(label);
   const calYear = startYear + year - 1;
-  const histRate = payload.find((p) => p.dataKey === "historicalRate")?.value ?? 0;
+  const histRate = payload.find((p: any) => p.dataKey === "historicalRate")?.value ?? 0;
 
   return (
     <div className="bg-background/95 backdrop-blur border border-border rounded-lg p-3 shadow-xl max-w-sm">
@@ -235,9 +182,7 @@ function RateChartTooltip({ active, payload, label, startYear }: any) {
           {AG49_TOOLTIP.rateHover(histRate / 100, calYear)}
         </p>
       </div>
-    
-        <ComplianceFooter pageName="TimeMachineMethod" showsIUL showsTax showsEstate showsProjections showsHistoricalData showsPolicyLoans />
-      </div>
+    </div>
   );
 }
 
@@ -295,7 +240,7 @@ function InfoPill({ text, variant }: { text: string; variant: "yourPlan" | "time
 export default function TimeMachineMethod() {
   const calcIntegration = useCalculatorIntegration({
     calculatorName: "TimeMachineMethod",
-    strategyType: "iul-growth",
+    strategyType: "time-machine",
   });
 
   const { data: clientData } = useClientData();
@@ -428,6 +373,45 @@ export default function TimeMachineMethod() {
   return (
     <div className="space-y-6">
       <FactFinderBadge className="mb-4" />
+
+      {/* Backend Integration Bar */}
+      <ClientSelectorBar
+        clients={calcIntegration.clients}
+        clientsLoading={calcIntegration.clientsLoading}
+        selectedClientId={calcIntegration.selectedClientId}
+        selectedClientName={calcIntegration.selectedClientName}
+        onSelectClient={calcIntegration.selectClient}
+        scenarios={calcIntegration.scenarios}
+        scenariosLoading={calcIntegration.scenariosLoading}
+        scenarioName={calcIntegration.scenarioName}
+        onSetScenarioName={calcIntegration.setScenarioName}
+        onSave={() => {
+          const last = result ? result.boring.length - 1 : -1;
+          calcIntegration.saveScenario(
+            { annualPremium, fundingYears, currentAge, projectionYears, boringRate, historicalStartYear, selectedOptions, showLoanAnalysis, loanStartYear, annualLoanAmount },
+            last >= 0 && result
+              ? { yourPlanFinalAV: result.boring[last].accountValue, timeMachineFinalAV: result.historical[last]?.accountValue ?? null }
+              : {},
+          );
+        }}
+        onLoad={(s) => {
+          const inputs = calcIntegration.loadScenario(s);
+          if (!inputs) return;
+          if (typeof inputs.annualPremium === "number") setAnnualPremium(inputs.annualPremium);
+          if (typeof inputs.fundingYears === "number") setFundingYears(inputs.fundingYears);
+          if (typeof inputs.currentAge === "number") setCurrentAge(inputs.currentAge);
+          if (typeof inputs.projectionYears === "number") setProjectionYears(inputs.projectionYears);
+          if (typeof inputs.boringRate === "number") setBoringRate(inputs.boringRate);
+          if (typeof inputs.historicalStartYear === "number") setHistoricalStartYear(inputs.historicalStartYear);
+          if (Array.isArray(inputs.selectedOptions)) setSelectedOptions(inputs.selectedOptions);
+          if (typeof inputs.showLoanAnalysis === "boolean") setShowLoanAnalysis(inputs.showLoanAnalysis);
+          if (typeof inputs.loanStartYear === "number") setLoanStartYear(inputs.loanStartYear);
+          if (typeof inputs.annualLoanAmount === "number") setAnnualLoanAmount(inputs.annualLoanAmount);
+        }}
+        isSaving={calcIntegration.isSaving}
+        lastSavedAt={calcIntegration.lastSavedAt}
+        calculatorName="TimeMachineMethod"
+      />
       {/* ─── Header ──────────────────────────────────────────────────────── */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
@@ -1308,7 +1292,28 @@ export default function TimeMachineMethod() {
         </TabsContent>
       </Tabs>
 <TimeMachineInlineDisclaimer />
+      {/* Related Calculators Toggle */}
+      <RelatedCalculators currentPage="TimeMachineMethod" />
+
+      <ExecutiveSummary
+        pageTitle="Time Machine Method"
+        whatItDoes="This financial analysis tool provides institutional-grade analysis of your financial situation, modeling multiple scenarios and projecting outcomes based on your specific inputs. It transforms complex financial analysis concepts into clear, actionable insights with dollar-quantified recommendations."
+        opportunities="This tool reveals insights that most clients never see because they don\'t have access to institutional-grade analysis. The data here can change how you think about your entire financial picture."
+        intent="To give you the same caliber of financial analysis analysis that institutional investors and ultra-high-net-worth families receive — now accessible to every client."
+        takeaway="Understanding your financial analysis options with precise dollar amounts empowers you to make confident decisions that compound into significant wealth over time."
+        callToAction="Enter your numbers and see exactly how financial analysis strategies can improve your financial outcome."
+        followUpQuestions={[
+          "How does this financial analysis strategy interact with my other financial plans?",
+          "What\'s the single biggest financial analysis opportunity I\'m currently missing?",
+          "How would my results change if I started this strategy 5 years earlier?",
+        ]}
+      />
+      <GoalsAccelerator pageName="Time Machine Method" pageContext="Time Machine Method — financial analysis modeling with projections and scenario analysis" />
+      {clientData?.annualIncome ? (
+        <TaxBracketPanel grossIncome={clientData.annualIncome} filingStatus={clientData.filingStatus} stateCode={clientData.state || undefined} />
+      ) : null}
       <PageInsights pageId="time-machine-method" />
+      <ComplianceFooter pageName="TimeMachineMethod" showsIUL showsTax showsEstate showsProjections showsHistoricalData showsPolicyLoans />
     </div>
   );
 }

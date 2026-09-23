@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { HELOC_RATE_DEFAULT_PCT, MYGA_RATE_DEFAULT_PCT } from "@shared/marketRateDefaults";
 import { useCalculatorIntegration } from "@/hooks/useCalculatorIntegration";
 import { ClientSelectorBar } from "@/components/ClientSelectorBar";
@@ -294,23 +293,6 @@ function MYGAvsSP500Section({ premium, mygaRate }: { premium: number; mygaRate: 
   return (
     <div className="space-y-6">
 
-      {/* Backend Integration Bar */}
-      <ClientSelectorBar
-        clients={calcIntegration.clients}
-        clientsLoading={calcIntegration.clientsLoading}
-        selectedClientId={calcIntegration.selectedClientId}
-        selectedClientName={calcIntegration.selectedClientName}
-        onSelectClient={calcIntegration.selectClient}
-        scenarios={calcIntegration.scenarios}
-        scenariosLoading={calcIntegration.scenariosLoading}
-        scenarioName={calcIntegration.scenarioName}
-        onSetScenarioName={calcIntegration.setScenarioName}
-        onSave={() => calcIntegration.saveScenario({}, {})}
-        onLoad={(s) => calcIntegration.loadScenario(s)}
-        isSaving={calcIntegration.isSaving}
-        lastSavedAt={calcIntegration.lastSavedAt}
-        calculatorName="MYGAFixedRate"
-      />
       {/* Header */}
       <Card>
         <CardHeader>
@@ -963,6 +945,34 @@ export default function MYGAFixedRate() {
     <AppShell>
       <div className="container py-6 space-y-6" id="myga-fixed-rate">
         <CalculationSyncBar />
+
+        {/* Backend Integration Bar */}
+        <ClientSelectorBar
+          clients={calcIntegration.clients}
+          clientsLoading={calcIntegration.clientsLoading}
+          selectedClientId={calcIntegration.selectedClientId}
+          selectedClientName={calcIntegration.selectedClientName}
+          onSelectClient={calcIntegration.selectClient}
+          scenarios={calcIntegration.scenarios}
+          scenariosLoading={calcIntegration.scenariosLoading}
+          scenarioName={calcIntegration.scenarioName}
+          onSetScenarioName={calcIntegration.setScenarioName}
+          onSave={() => calcIntegration.saveScenario(
+            { premium, rate, years, stateCode },
+            { year5Value, year10Value, year20Value },
+          )}
+          onLoad={(s) => {
+            const inputs = calcIntegration.loadScenario(s);
+            if (!inputs) return;
+            if (typeof inputs.premium === "number") setPremium(inputs.premium);
+            if (typeof inputs.rate === "number") setRate(inputs.rate);
+            if (typeof inputs.years === "number") setYears(inputs.years);
+            if (typeof inputs.stateCode === "string") { setStateCode(inputs.stateCode); setPendingState(inputs.stateCode); }
+          }}
+          isSaving={calcIntegration.isSaving}
+          lastSavedAt={calcIntegration.lastSavedAt}
+          calculatorName="MYGAFixedRate"
+        />
         <PlatformEnhancements
             pageTitle="MYGA Fixed Rate Waterfall"
             strategy="myga-waterfall"

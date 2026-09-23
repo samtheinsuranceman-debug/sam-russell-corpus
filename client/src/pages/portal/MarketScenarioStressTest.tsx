@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { useState, useMemo, useEffect, useCallback } from "react";
 import { AppShell } from "@/components/AppShell";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -41,6 +40,7 @@ import {
   History,
   ArrowUpRight,
   ArrowDownRight,
+  Sliders,
 } from "lucide-react";
 import { 
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, 
@@ -116,15 +116,10 @@ function computeImpact(client: any, scenario: Scenario, overrides?: any) {
 }
 
 export default function MarketScenarioStressTest() {
-  const { clientData } = useClientData();
+  const { data: clientData } = useClientData();
   const { user } = useAuth();
   
   const { data: clients } = trpc.clients.list.useQuery();
-  const { data: scenariosData } = trpc.scenarios.list.useQuery();
-  const { data: marketData } = trpc.marketData.getLatest.useQuery();
-  const { data: riskProfiles } = trpc.riskProfile.list.useQuery();
-  const { data: strategyAnalytics } = trpc.strategyAnalytics.getSummary.useQuery();
-  const { data: complianceAlerts } = trpc.complianceAlerts.list.useQuery();
   
   const [selectedClientId, setSelectedClientId] = useState<string>("");
   const [selectedScenario, setSelectedScenario] = useState(0);
@@ -1240,7 +1235,7 @@ export default function MarketScenarioStressTest() {
                           </div>
                           <div>
                             <h2 className="text-2xl font-bold text-white">Stress Test Analysis</h2>
-                            <p className="text-[#7a95b8]">Prepared for {(selectedClient.name?.split(" ")[0] ?? "")} {(selectedClient.name?.split(" ").slice(1).join(" ") ?? "")}</p>
+                            <p className="text-[#7a95b8]">Prepared for {(selectedClient?.name?.split(" ")[0] ?? "")} {(selectedClient?.name?.split(" ").slice(1).join(" ") ?? "")}</p>
                           </div>
                         </div>
                         <div className="text-right hidden sm:block">
