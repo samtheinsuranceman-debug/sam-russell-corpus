@@ -250,6 +250,76 @@ const TRANCHE_COLORS = [
   "#f97316", "#6366f1", "#84cc16", "#e11d48", "#0ea5e9",
 ];
 
+/* ─── WHERE THE DEFAULT NUMBERS COME FROM ─── */
+// Every typed-in number in getDefaultInput and runMYGAWaterfall is listed
+// here: a named, dated source, or an assumption the firm chose and says it
+// chose. None of these objects is read by the arithmetic.
+
+/** mygaRate default 7 (percent). A dated 5-year MYGA rate table built from the CANNEX feed. */
+const MYGA_RATE_SOURCE = {
+  label: "AnnuityRatesHQ, 5-Year MYGA Rates full rate table (CANNEX feed, $100,000 premium, 118 rates across 59 carriers): top rate 6.45%, market average 5.16%, median 5.20%",
+  url: "https://annuityrateshq.com/myga/rates/5-year",
+  asOf: "table as of 2026-09-18, read 2026-09-23",
+  note: "The 7% default is above every 5-year rate in this table (top 6.45%). Not changed; flagged for review.",
+};
+
+/** helocRate default 8.5 (percent). */
+const HELOC_RATE_SOURCE = {
+  label: "Bankrate Monitor National Index, Home Equity Line of Credit rate (BRMHELOC01, via FRED): 7.29% for the week of 2026-09-02, surveyed at 80% combined loan-to-value",
+  url: "https://fred.stlouisfed.org/series/BRMHELOC01",
+  asOf: "2026-09-02 observation, read 2026-09-23",
+  note: "The 8.5% default is 1.21 points above this national average. Not changed; flagged for review.",
+};
+const PRIME_RATE_SOURCE = {
+  label: "Board of Governors of the Federal Reserve System, H.15 Selected Interest Rates, Bank Prime Loan Rate (DPRIME, via FRED): 6.75% on 2026-09-02",
+  url: "https://fred.stlouisfed.org/series/DPRIME",
+  asOf: "2026-09-02 observation, read 2026-09-23",
+  note: "The 8.5% HELOC default equals prime plus 1.75 points; that margin is the firm's assumption.",
+};
+
+/** bankLoanRate default 7 (percent). Loans against an annuity are usually priced at SOFR plus a spread. */
+const SOFR_SOURCE = {
+  label: "Federal Reserve Bank of New York, Secured Overnight Financing Rate (SOFR, via FRED): 3.62% on 2026-09-11",
+  url: "https://fred.stlouisfed.org/series/SOFR",
+  asOf: "2026-09-11 observation, read 2026-09-23",
+  note: "The 7% bank loan default equals SOFR plus about 3.4 points; the spread is the firm's assumption.",
+};
+
+/** federalTaxRate default 32 (percent): a real 2026 bracket rate. */
+const FEDERAL_BRACKET_SOURCE = {
+  label: "Internal Revenue Service, Rev. Proc. 2025-32, Section 4.01, 2026 tax rate tables: 32% applies to taxable income over $201,775 (single) and over $403,550 (married filing jointly)",
+  url: "https://www.irs.gov/pub/irs-drop/rp-25-32.pdf",
+  asOf: "tax year 2026, published 2025-10-09, read 2026-09-23",
+  note: "32% is a marginal rate only for incomes in that band; the engine applies whatever rate is entered.",
+};
+
+/** oilGasDepreciationY1 default 80 (percent): the rule that allows it, not the percentage. */
+const IDC_RULE_SOURCE = {
+  label: "26 U.S. Code Section 263(c), intangible drilling and development costs of oil and gas wells may be deducted as expenses (Cornell Legal Information Institute)",
+  url: "https://www.law.cornell.edu/uscode/text/26/263",
+  asOf: "read 2026-09-23",
+  note: "The statute allows the deduction; the share of an investment that is intangible drilling cost (80% here) varies by program and is the firm's assumption.",
+};
+const DEPLETION_RULE_SOURCE = {
+  label: "26 U.S. Code Section 613A(c), percentage depletion of 15% of gross income for independent producers and royalty owners (Cornell Legal Information Institute)",
+  url: "https://www.law.cornell.edu/uscode/text/26/613A",
+  asOf: "read 2026-09-23",
+  note: "The ongoing 8% deduction in this engine is a share of the investment, not of gross income, so it is not the statutory 15%; it is the firm's assumption.",
+};
+
+const MYGA_WATERFALL_ASSUMPTIONS = [
+  { label: "Assumption: MYGA premium = $500,000 when none is entered, chosen by the firm as an example size; no external source" },
+  { label: "Assumption: MYGA term = 5 years and bank loan term = 5 years, chosen by the firm because 5 years is the most common MYGA term; no external source" },
+  { label: "Assumption: bank lends 70% of the MYGA value (bankLtv), chosen by the firm as a conservative advance rate against an annuity; the lender sets the true figure; no external source" },
+  { label: "Assumption: bank loan rate = 7% a year, chosen by the firm as SOFR plus a lender spread; no external source for the spread" },
+  { label: "Assumption: oil and gas program term = 12 years and income = 15% of the investment a year, chosen by the firm as a program illustration; no external source" },
+  { label: "Assumption: oil and gas deduction = 80% of the investment in year 1 and 8% a year after, chosen by the firm as a program illustration; see the Section 263(c) and 613A(c) notes; no external source for the percentages" },
+  { label: "Assumption: 25-year projection, chosen by the firm to cover five MYGA cycles; no external source" },
+  { label: "Assumption: state income tax rate = 5%, chosen by the firm as a mid-range state rate; no external source" },
+  { label: "Assumption: HELOC capped at 80% of home value (helocMaxLtv), chosen by the firm because it matches the combined loan-to-value most lenders quote; no external source" },
+  { label: "Assumption: tax savings are rolled into a new MYGA only once $10,000 has built up, and the optimal blend sends half of what is left after the HELOC to bank principal; chosen by the firm; no external source" },
+];
+
 export function getDefaultInput(): MYGAWaterfallInput {
   return {
     mygaPremium: 500000,
@@ -934,3 +1004,17 @@ export function runScenarioComparison(baseInput: MYGAWaterfallInput): ScenarioCo
     optimalLabel: optimal.label,
   };
 }
+
+/* ─── SOURCES ─── */
+
+/** Every source and declared assumption behind the typed-in numbers in this engine, for the page to print. */
+export const MYGA_WATERFALL_SOURCES: readonly { label: string; url?: string; asOf?: string; note?: string }[] = [
+  MYGA_RATE_SOURCE,
+  HELOC_RATE_SOURCE,
+  PRIME_RATE_SOURCE,
+  SOFR_SOURCE,
+  FEDERAL_BRACKET_SOURCE,
+  IDC_RULE_SOURCE,
+  DEPLETION_RULE_SOURCE,
+  ...MYGA_WATERFALL_ASSUMPTIONS,
+];

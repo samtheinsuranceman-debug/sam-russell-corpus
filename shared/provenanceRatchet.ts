@@ -28,12 +28,7 @@ export const ZERO_SOURCE_ENGINES: readonly string[] = [
   "shared/firewall.ts",
   "shared/genomeStrategyFit.ts",
   "shared/historicalShocks.ts",
-  "shared/householdWealth.ts",
   "shared/monteCarloEngine.ts",
-  "shared/mortgageKiller.ts",
-  "shared/multiPropertyMyga.ts",
-  "shared/mygaWaterfall.ts",
-  "shared/premiumFinancing.ts",
   "shared/regulatorySandbox.ts",
 ];
 
@@ -55,7 +50,6 @@ export const CATALOGUE_ENGINES_WITHOUT_SHELL_SOURCES: readonly string[] = [
   "shared/householdGenome.ts",
   "shared/liquidityRoutes.ts",
   "shared/mechanismDossiers.ts",
-  "shared/mortgageKiller.ts",
   "shared/nlpBrain.ts",
   "shared/pageRatings.ts",
   "shared/policyMechanics.ts",
