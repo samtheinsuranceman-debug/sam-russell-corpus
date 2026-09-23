@@ -82,6 +82,36 @@ const EPS = 1e-9;
  */
 export const MAX_HORIZON_MONTHS = 1_200;
 
+/**
+ * The monthly-rate convention (APR / 12) is a rule, not a choice: Regulation Z
+ * defines the annual percentage rate as the unit-period rate times the number
+ * of unit-periods in a year, and treats all months as equal.
+ */
+const MONTHLY_RATE_RULE = {
+  label: "Consumer Financial Protection Bureau, Regulation Z, 12 CFR Part 1026, Appendix J (Annual Percentage Rate Computations for Closed-End Credit Transactions), paragraph (b)(1) (APR = unit-period rate x unit-periods per year) and (b)(3)(iv) (all months considered equal)",
+  url: "https://www.consumerfinance.gov/rules-policy/regulations/1026/j/",
+  asOf: "current regulation, read 2026-09-23",
+};
+/** Why a rate above 25% is flagged as a misread: no 30-year fixed average has come near it. */
+const RATE_CEILING_SOURCE = {
+  label: "Freddie Mac, Primary Mortgage Market Survey: the 30-year fixed rate's record high was 18.63% (1981); the average was 6.65% on 2026-08-20",
+  url: "https://myhome.freddiemac.com/buying/mortgage-rates",
+  asOf: "read 2026-09-23",
+};
+const PMMS_SERIES_SOURCE = {
+  label: "Freddie Mac, 30-Year Fixed Rate Mortgage Average in the United States (Primary Mortgage Market Survey), via FRED series MORTGAGE30US: 6.66% for the week of 2026-08-27",
+  url: "https://fred.stlouisfed.org/series/MORTGAGE30US",
+  asOf: "2026-08-27 observation, read 2026-09-23",
+  note: "For comparison with a client's statement rate; no default rate is typed into this engine.",
+};
+/** For comparison with the 0.75 default in equityPosition. */
+const LTV_REFERENCE_SOURCE = {
+  label: "Fannie Mae, Eligibility Matrix (incorporated in the Selling Guide): maximum LTV 80% for a one-unit principal residence cash-out refinance, 75% for a one-unit investment property",
+  url: "https://singlefamily.fanniemae.com/media/20786/display",
+  asOf: "matrix dated 2026-08-05, read 2026-09-23",
+  note: "equityPosition defaults to 75%, five points below the principal-residence cash-out ceiling.",
+};
+
 export function monthlyRate(annualRate: number): number {
   return annualRate / 12;
 }
@@ -522,3 +552,20 @@ export function equityPosition(balance: number, marketValue: number, maxLtv = 0.
   const maxLoan = marketValue * maxLtv;
   return { equity, currentLtv, maxLoan, availableToBorrow: Math.max(0, maxLoan - balance) };
 }
+
+/**
+ * Every source this engine's typed-in numbers rest on, and every number that
+ * is the firm's own choice, said so in words.
+ */
+export const MORTGAGE_LEDGER_SOURCES: readonly { label: string; url?: string; asOf?: string; note?: string }[] = [
+  MONTHLY_RATE_RULE,
+  RATE_CEILING_SOURCE,
+  PMMS_SERIES_SOURCE,
+  LTV_REFERENCE_SOURCE,
+  { label: "Assumption: schedules stop at 1,200 months (100 years) and a payment that would take longer is reported as never amortising, chosen by the firm; no external source" },
+  { label: "Assumption: a stated rate above 25% is flagged as a misread, chosen by the firm as a margin above the 18.63% record (Freddie Mac, above); no external source for 25% itself" },
+  { label: "Assumption: tolerances = 2% on the statement payment cross-check and 5% on the extracted interest figure, chosen by the firm to absorb rounding and small servicing fees; no external source" },
+  { label: "Assumption: equityPosition lends to 75% of market value unless told otherwise, chosen by the firm as a conservative home-equity ceiling; no external source" },
+  { label: "Assumption: interest per day on a 365-day year, and the reading bands at 75% and 50% interest share, chosen by the firm for plain-language display; 50% is the crossover point by definition; no external source" },
+  { label: "Assumption: extra-payment menu of $100, $250 and $500 a month, half again, double, and one extra payment a year, chosen by the firm as common examples; no external source" },
+];
