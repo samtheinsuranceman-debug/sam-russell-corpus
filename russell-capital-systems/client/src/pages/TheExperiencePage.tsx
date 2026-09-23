@@ -55,7 +55,7 @@ const TheExperiencePage: React.FC = () => {
               <p className="text-gray-400 text-sm">During live client meetings, the AI can instantly model "what-if" scenarios across all connected calculators, creating an interactive experience that builds trust.</p>
             </div>
           </div>
-          <Link href="/portal/ai-brain" className="mt-6 inline-block bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors">
+          <Link href="/portal/ai-brain-hub" className="mt-6 inline-block bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors">
             Open AI Brain Hub →
           </Link>
         </div>

@@ -63,8 +63,8 @@ export interface Theme {
   tokens: ThemeTokens;
 }
 
-export const COPPER = "#C45C26";
-export const COPPER_HOVER = "#D4682E";
+export const COPPER = "#A34A1C"; // #F7F4EE text 5.4:1 (the old #C45C26 was 3.9:1)
+export const COPPER_HOVER = "#B0521F"; // 4.7:1
 export const SEAL_BROWN = "#8B5A2B";
 export const IVORY_INK = "#F7F4EE";
 export const ENERGY_LINE = "#3EE0A2";
@@ -182,7 +182,7 @@ export const THEMES: Record<ThemeId, Theme> = {
       line: "#3D6B4F",
       fill: "rgba(61,107,79,0.12)",
       calculate: SEAL_BROWN,
-      calculateHover: "#9E6A38",
+      calculateHover: "#80532A",
       grid: "transparent",
       muted: "#6B716C",
       danger: "#A3322D",
