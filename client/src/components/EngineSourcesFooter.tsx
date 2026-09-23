@@ -1,11 +1,14 @@
 /**
- * EngineSourcesFooter — "Where these numbers come from", on every catalogue page.
+ * EngineSourcesFooter — "Where these numbers come from", on every sourced page.
  *
- * Mounted by the app shell. For a route in the calculator catalogue, it names
- * the engine behind the page and lists that engine's own sources, with links
- * and as-of dates, loaded lazily from the engine module. An engine that has
- * not yet exported its sources gets an honest line saying so; the provenance
- * census tracks those and the list is meant to reach zero.
+ * Mounted by the app shell, and by the few sourced pages that render outside
+ * it. For a route in the calculator catalogue, it names the engine behind the
+ * page and lists that engine's own sources, with links and as-of dates, loaded
+ * lazily from the engine module. Routes in shared/pageSources.ts add the
+ * engines the page really computes with and the figures the page carries
+ * itself. An engine that has not yet exported its sources gets an honest line
+ * saying so; the provenance census tracks those and the list is meant to
+ * reach zero.
  *
  * An engine that exports `Sourced` records (shared/sourcing.ts) gets its
  * assumptions printed as "We assumed", in a different voice from its sources,
@@ -15,24 +18,35 @@
  */
 import { useEffect, useState } from "react";
 import { BookOpen, ChevronDown, ChevronUp, ExternalLink } from "lucide-react";
-import { catalogueEntryForPath, loadEngineSources, uniqueSources, type SourceRef } from "@shared/engineSources";
+import { loadEngineSources, sourcePlanForPath, uniqueSources, type SourceRef } from "@shared/engineSources";
 
 export default function EngineSourcesFooter({ path }: { path: string }) {
-  const entry = catalogueEntryForPath(path);
-  const engine = entry?.engine ?? null;
+  const plan = sourcePlanForPath(path);
+  const planKey = plan ? `${plan.engines.join("|")}#${plan.pageSources.map(s => s.label).join("|")}` : "";
   const [open, setOpen] = useState(false);
   const [sources, setSources] = useState<SourceRef[] | null | undefined>(undefined);
+  const [unsourcedEngines, setUnsourcedEngines] = useState<string[]>([]);
 
   useEffect(() => {
     let live = true;
     setSources(undefined);
-    if (!open || !engine) return;
-    loadEngineSources(engine).then(s => { if (live) setSources(s === null ? null : uniqueSources(s)); });
+    setUnsourcedEngines([]);
+    if (!open || !plan) return;
+    Promise.all(plan.engines.map(e => loadEngineSources(e).then(s => [e, s] as const))).then(results => {
+      if (!live) return;
+      const fromEngines = results.flatMap(([, s]) => s ?? []);
+      const missing = results.filter(([, s]) => s === null).map(([e]) => e);
+      const all = uniqueSources([...plan.pageSources, ...fromEngines]);
+      setUnsourcedEngines(missing);
+      setSources(all.length === 0 && missing.length > 0 ? null : all);
+    });
     return () => { live = false; };
-  }, [open, engine]);
+    // planKey stands in for plan, which is rebuilt on every render.
+  }, [open, planKey]);
 
-  if (!entry || !engine) return null;
-  const engineName = engine.replace(/^shared\//, "").replace(/\.ts$/, "");
+  if (!plan) return null;
+  const names = plan.engines.map(e => e.replace(/^shared\//, "").replace(/\.ts$/, ""));
+  const caption = names.length ? `engine ${names.join(", ")}` : "page sources";
 
   return (
     <section
@@ -48,21 +62,21 @@ export default function EngineSourcesFooter({ path }: { path: string }) {
       >
         <BookOpen className="h-4 w-4 text-amber-300" aria-hidden />
         <span className="text-sm font-semibold text-white">Where these numbers come from</span>
-        <span className="ml-1 text-xs text-slate-500">engine {engineName}</span>
+        <span className="ml-1 text-xs text-slate-500">{caption}</span>
         {open ? <ChevronUp className="ml-auto h-4 w-4 text-slate-400" aria-hidden /> : <ChevronDown className="ml-auto h-4 w-4 text-slate-400" aria-hidden />}
       </button>
 
       {open && (
         <div className="border-t border-[#1e3a5f]/40 px-5 py-4 text-sm">
-          {sources === undefined && <p className="text-slate-400">Reading the engine's source list…</p>}
-          {sources === null && (
-            <p className="text-slate-300">
-              This engine's constants are typed into <code className="text-amber-300">{engine}</code> and it has not yet
-              exported a source list. It is on the provenance census, which the build checks; the list only shrinks.
-              Until it is sourced, treat every figure on this page as the firm's assumption, not a published fact.
+          {sources === undefined && <p className="text-slate-400">Reading the source list…</p>}
+          {unsourcedEngines.length > 0 && (
+            <p className="mb-3 text-slate-300">
+              {unsourcedEngines.map(e => <code key={e} className="mr-1 text-amber-300">{e}</code>)} has not yet exported a source
+              list; its constants are typed in. It is on the provenance census, which the build checks; the list only
+              shrinks. Until it is sourced, treat its figures as the firm's assumption, not a published fact.
             </p>
           )}
-          {sources && sources.length === 0 && (
+          {sources && sources.length === 0 && unsourcedEngines.length === 0 && (
             <p className="text-slate-300">The engine exports a source list, but it is empty. Treat the figures as assumptions.</p>
           )}
           {sources && sources.length > 0 && (

@@ -15,7 +15,8 @@
  *     the Senate and the House
  *   - a page counts as printing a source when the app shell prints one for
  *     it: its route is a catalogue entry whose engine has a loader in
- *     shared/engineSources.ts (the EngineSourcesFooter)
+ *     shared/engineSources.ts (the EngineSourcesFooter), or a route that
+ *     shared/pageSources.ts gives engines with loaders or its own sources
  *
  * Reads files only. Never evaluates an engine, never prints an environment
  * value, never reproduces a formula.
@@ -23,7 +24,7 @@
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import path from "node:path";
 import { CALCULATORS } from "@shared/calculatorCatalog";
-import { ENGINES_WITH_SOURCE_LOADERS } from "@shared/engineSources";
+import { ENGINES_WITH_SOURCE_LOADERS, ROUTES_WITH_SHELL_SOURCES } from "@shared/engineSources";
 
 export interface SimulationFacts {
   seeded: boolean | null;
@@ -191,6 +192,11 @@ export function censusTree(root: string): Census {
   for (const c of CALCULATORS) {
     const file = routes.get(c.path);
     if (file && c.engine && ENGINES_WITH_SOURCE_LOADERS.includes(c.engine)) shellSourcedFiles.add(file);
+  }
+  // …and any route shared/pageSources.ts gives a source list (engines with loaders, or the page's own sources).
+  for (const r of ROUTES_WITH_SHELL_SOURCES) {
+    const file = routes.get(r);
+    if (file) shellSourcedFiles.add(file);
   }
 
   const importers = (engine: string, texts: Map<string, string>) => {
