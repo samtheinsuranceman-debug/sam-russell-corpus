@@ -9,6 +9,8 @@
  * - O&G tax savings → HELOC principal paydown
  */
 
+import { HELOC_RATE_DEFAULT_PCT } from "./marketRateDefaults";
+
 /* ─── CARRIER PRODUCT DEFINITIONS ─── */
 export interface FIAProduct {
   id: string;
@@ -625,7 +627,7 @@ export function getDefaultFIAInput(): FIAWaterfallInput {
     stateTaxRate: 5,
     homeValue: 750000,
     mortgageBalance: 300000,
-    helocRate: 8.5,
+    helocRate: HELOC_RATE_DEFAULT_PCT, // Curinos national average, 2026-09-21; see HELOC_RATE_DEFAULT_SOURCE
     helocMaxLtv: 0.80,
     clientAge: 55,
   };

@@ -1,4 +1,5 @@
 // @ts-nocheck
+import { HELOC_RATE_DEFAULT } from "@shared/marketRateDefaults";
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { trpc } from "@/lib/trpc";
 import { useClientData, FactFinderBadge } from "@/contexts/ClientDataContext";
@@ -143,7 +144,7 @@ export default function HouseholdWealth() {
   const [spouseIra, setSpouseIra] = useState("0");
   const [spouseRothIra, setSpouseRothIra] = useState("0");
   const [spouseCash, setSpouseCash] = useState("0");
-  const [helocRate, setHelocRate] = useState("0.06");
+  const [helocRate, setHelocRate] = useState(String(HELOC_RATE_DEFAULT)); // Curinos national average, 2026-09-21
   const [helocMaxLtv, setHelocMaxLtv] = useState("0.80");
   const [rentBasement, setRentBasement] = useState(false);
   const [children, setChildren] = useState<ChildInput[]>([]);
@@ -198,7 +199,7 @@ export default function HouseholdWealth() {
       setSpouseIra(d.spouseIra ?? "0");
       setSpouseRothIra(d.spouseRothIra ?? "0");
       setSpouseCash(d.spouseCash ?? "0");
-      setHelocRate(d.helocRate ?? "0.06");
+      setHelocRate(d.helocRate ?? String(HELOC_RATE_DEFAULT));
       setHelocMaxLtv(d.helocMaxLtv ?? "0.80");
       setRentBasement(d.rentBasement ?? false);
       setChildren((d.children as ChildInput[]) ?? []);

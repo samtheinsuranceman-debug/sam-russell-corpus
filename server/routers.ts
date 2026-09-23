@@ -1,3 +1,4 @@
+import { HELOC_RATE_DEFAULT } from "@shared/marketRateDefaults";
 import { TRPCError } from "@trpc/server";
 import { createHash, randomBytes } from "crypto";
 import { z } from "zod";
@@ -339,7 +340,7 @@ const mortgageKillerInputSchema = z.object({
   incomeAllocationPct: z.number().min(0.05).max(0.50).default(0.20),
   iulCreditRate: z.number().min(0.04).max(0.20).default(0.075),
   premiumYears: z.number().min(3).max(5).default(5),
-  helocRate: z.number().min(0.01).max(0.20).default(0.085),
+  helocRate: z.number().min(0.01).max(0.20).default(HELOC_RATE_DEFAULT), // Curinos national average, 2026-09-21; see HELOC_RATE_DEFAULT_SOURCE
   helocLtvPct: z.number().min(0.10).max(0.90).default(0.70),
   policyLoanPct: z.number().min(0.10).max(0.95).default(0.80),
   policyLoanDragRate: z.number().min(0.01).max(0.10).default(0.05),

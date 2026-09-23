@@ -17,13 +17,15 @@
  * 10) New MYGA → 70% bank loan → new O&G tranche → more overlapping income
  */
 
+import { HELOC_RATE_DEFAULT_PCT, HELOC_RATE_DEFAULT_SOURCE } from "./marketRateDefaults";
+
 /* ─── INPUT ─── */
 export interface ReverseHelocInput {
   /** Home value for HELOC calculation */
   homeValue: number;
   /** HELOC LTV ratio (default 0.70 = 70%) */
   helocLtv: number;
-  /** HELOC annual interest rate (e.g. 8.5 = 8.5%) */
+  /** HELOC annual interest rate (e.g. 7.09 = 7.09%) */
   helocRate: number;
   /** Annual IUL premium (paid from HELOC, years 1 & 2) */
   iulPremium: number;
@@ -213,7 +215,7 @@ const PRIME_RATE_BENCHMARK = {
   label: "Board of Governors of the Federal Reserve System, H.15 Selected Interest Rates, Bank Prime Loan Rate, via FRED series DPRIME: 6.75% on 2026-09-02",
   url: "https://fred.stlouisfed.org/series/DPRIME",
   asOf: "2026-09-02 observation, read 2026-09-23",
-  note: "The 8.5% HELOC default is prime plus 1.75 points at this reading.",
+  note: "The 7.09% HELOC default is prime plus 0.34 points at this reading.",
 };
 /** The IUL growth default is an assumption; this is the regulation that limits what an illustration may show. */
 const IUL_ILLUSTRATION_RULE = {
@@ -227,7 +229,7 @@ export function getDefaultReverseHelocInput(): ReverseHelocInput {
   return {
     homeValue: 500000,
     helocLtv: 0.70,
-    helocRate: 8.5,
+    helocRate: HELOC_RATE_DEFAULT_PCT,
     iulPremium: 50000,
     iulLoanPct: 0.90,
     iulLoanRate: 5.5,
@@ -777,7 +779,8 @@ export const REVERSE_HELOC_SOURCES: readonly { label: string; url?: string; asOf
   PRIME_RATE_BENCHMARK,
   IUL_ILLUSTRATION_RULE,
   { label: "Assumption: illustrative client = $500,000 home, $50,000 annual IUL premium, $250,000 annual income, chosen by the firm as a sample case; the client replaces all three" },
-  { label: "Assumption: HELOC at 70% of home value and 8.5% interest, chosen by the firm as a conservative draw and a rate near prime plus a margin; no external source" },
+  { label: "Assumption: HELOC at 70% of home value, chosen by the firm as a conservative draw; no external source. HELOC interest defaults to 7.09%, the Curinos national average (see the next entry)" },
+  HELOC_RATE_DEFAULT_SOURCE,
   { label: "Assumption: IUL policy loan of 90% of cash value at month 13 at 5.5%, a second loan of 80% of tax-savings-boosted value, and 12% assumed annual cash value growth, chosen by the firm; carrier contract terms govern the real figures; no external source" },
   { label: "Assumption: IUL cash value equal to 65% of the year 1 premium and 85% of the year 2 premium, chosen by the firm as an early surrender-value profile; the carrier's illustration governs; no external source" },
   { label: "Assumption: MYGA at 6.25% for 5 years, and a bank loan of 70% of MYGA value at 7%, chosen by the firm; no external source" },

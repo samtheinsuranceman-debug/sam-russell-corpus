@@ -1,3 +1,4 @@
+import { HELOC_RATE_DEFAULT } from "@shared/marketRateDefaults";
 import { useState, useMemo, useCallback } from "react";
 import { useLocation } from "wouter";
 import {
@@ -175,7 +176,7 @@ export default function MortgageKillerV3() {
     mortgageTermYears: 30,
     propertyAppreciation: 0.05,
     helocLtvPct: 0.70,
-    helocRate: 0.085,
+    helocRate: HELOC_RATE_DEFAULT, // Curinos national average, 2026-09-21
     maxHelocDrawPct: 0.40,
     acquisitionInterval: 24,
     maxProperties: 10,
