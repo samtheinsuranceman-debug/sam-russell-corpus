@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useState, useMemo, useEffect, useCallback } from "react";
 import { AppShell } from "@/components/AppShell";
 import { NumberInput } from "@/components/NumberInput";
@@ -184,10 +183,6 @@ export default function RebalanceAlerts() {
   
   // Unfiltered list for the analytics charts (the table above follows the status filter).
   const { data: allAlerts } = trpc.rebalance.alerts.useQuery({});
-  const { data: dashboardStats } = trpc.dashboard.stats.useQuery();
-  const { data: clientData } = trpc.clients.list.useQuery();
-  const { data: marketData } = trpc.marketData.overview.useQuery();
-  const { data: teamMembers } = trpc.team.members.useQuery();
   
   const runCheck = trpc.rebalance.runCheck.useMutation({
     onSuccess: (result) => {
@@ -216,7 +211,8 @@ export default function RebalanceAlerts() {
     onSuccess: () => { utils.rebalance.alerts.invalidate(); toast.success("Alert resolved."); },
   });
   
-  const addNote = trpc.notes.add.useMutation({
+  // Notes are saved on the alert's client record (notes.create), prefixed with the alert.
+  const addNote = trpc.notes.create.useMutation({
     onSuccess: () => { toast.success("Note added successfully"); setNotesText(""); setShowNotes(false); }
   });
 
@@ -238,11 +234,11 @@ export default function RebalanceAlerts() {
     });
   }, [utils]);
 
-  const toggleRowExpansion = useCallback((id: string) => {
+  const toggleRowExpansion = useCallback((id: string | number) => {
     setExpandedRows(prev => ({ ...prev, [id]: !prev[id] }));
   }, []);
 
-  const toggleRowSelection = useCallback((id: string) => {
+  const toggleRowSelection = useCallback((id: string | number) => {
     setSelectedRows(prev => ({ ...prev, [id]: !prev[id] }));
   }, []);
 
@@ -264,15 +260,62 @@ export default function RebalanceAlerts() {
     }
     
     if (bulkAction === "acknowledge") {
-      selectedIds.forEach((id) => acknowledge.mutate({ alertId: id }));
+      selectedIds.forEach((id) => acknowledge.mutate({ alertId: Number(id) }));
       toast.success(`Acknowledged ${selectedIds.length} alerts`);
     } else if (bulkAction === "resolve") {
-      selectedIds.forEach((id) => resolve.mutate({ alertId: id }));
+      selectedIds.forEach((id) => resolve.mutate({ alertId: Number(id) }));
       toast.success(`Resolved ${selectedIds.length} alerts`);
     }
     setSelectedRows({});
     setBulkAction("");
   }, [selectedRows, bulkAction, acknowledge, resolve]);
+
+  const handleNotesSubmit = useCallback((e: React.FormEvent) => {
+    e.preventDefault();
+    if (!notesText.trim() || !selectedAlert) return;
+    addNote.mutate({
+      clientId: selectedAlert.clientId,
+      noteType: "GENERAL",
+      content: `Rebalance alert (${selectedAlert.assetClass}, drift ${parseFloat(String(selectedAlert.driftPct)).toFixed(2)}%): ${notesText.trim()}`,
+    });
+  }, [notesText, selectedAlert, addNote]);
+
+  const openCount = useMemo(() => (alerts ?? []).filter((a) => a.status === "OPEN").length, [alerts]);
+  const ackCount = useMemo(() => (alerts ?? []).filter((a) => a.status === "ACKNOWLEDGED").length, [alerts]);
+  const resCount = useMemo(() => (alerts ?? []).filter((a) => a.status === "RESOLVED").length, [alerts]);
+  const totalDrift = useMemo(() => (alerts ?? []).reduce((acc: number, a: any) => acc + Math.abs(parseFloat(String(a.driftPct || 0))), 0), [alerts]);
+  const avgDrift = useMemo(() => alerts?.length ? totalDrift / alerts.length : 0, [alerts, totalDrift]);
+
+  const filteredAlerts = useMemo(() => {
+    if (!alerts) return [];
+    let filtered = alerts;
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase();
+      filtered = filtered.filter((a) => 
+        String(a.clientId).toLowerCase().includes(q) || 
+        a.assetClass?.toLowerCase().includes(q)
+      );
+    }
+    if (assetClassFilter !== "ALL") {
+      filtered = filtered.filter((a) => a.assetClass === assetClassFilter);
+    }
+    
+    filtered = [...filtered].sort((a, b) => {
+      let valA = (a as Record<string, unknown>)[sortBy] as string | number;
+      let valB = (b as Record<string, unknown>)[sortBy] as string | number;
+      
+      if (sortBy === "driftPct" || sortBy === "currentPct" || sortBy === "targetPct") {
+        valA = parseFloat(String(valA || 0));
+        valB = parseFloat(String(valB || 0));
+      }
+      
+      if (valA < valB) return sortOrder === "asc" ? -1 : 1;
+      if (valA > valB) return sortOrder === "asc" ? 1 : -1;
+      return 0;
+    });
+    
+    return filtered;
+  }, [alerts, searchQuery, assetClassFilter, sortBy, sortOrder]);
 
   const handleExportCSV = useCallback(() => {
     setIsExporting(true);
@@ -301,49 +344,6 @@ export default function RebalanceAlerts() {
       toast.success("Export complete");
     }, 800);
   }, [filteredAlerts]);
-
-  const handleNotesSubmit = useCallback((e: React.FormEvent) => {
-    e.preventDefault();
-    if (!notesText.trim() || !selectedAlert) return;
-    addNote.mutate({ targetId: selectedAlert.id, targetType: "ALERT", content: notesText });
-  }, [notesText, selectedAlert, addNote]);
-
-  const openCount = useMemo(() => (alerts ?? []).filter((a) => a.status === "OPEN").length, [alerts]);
-  const ackCount = useMemo(() => (alerts ?? []).filter((a) => a.status === "ACKNOWLEDGED").length, [alerts]);
-  const resCount = useMemo(() => (alerts ?? []).filter((a) => a.status === "RESOLVED").length, [alerts]);
-  const totalDrift = useMemo(() => (alerts ?? []).reduce((acc: number, a: any) => acc + Math.abs(parseFloat(String(a.driftPct || 0))), 0), [alerts]);
-  const avgDrift = useMemo(() => alerts?.length ? totalDrift / alerts.length : 0, [alerts, totalDrift]);
-
-  const filteredAlerts = useMemo(() => {
-    if (!alerts) return [];
-    let filtered = alerts;
-    if (searchQuery) {
-      const q = searchQuery.toLowerCase();
-      filtered = filtered.filter((a) => 
-        a.clientId?.toLowerCase().includes(q) || 
-        a.assetClass?.toLowerCase().includes(q)
-      );
-    }
-    if (assetClassFilter !== "ALL") {
-      filtered = filtered.filter((a) => a.assetClass === assetClassFilter);
-    }
-    
-    filtered = [...filtered].sort((a, b) => {
-      let valA = a[sortBy];
-      let valB = b[sortBy];
-      
-      if (sortBy === "driftPct" || sortBy === "currentPct" || sortBy === "targetPct") {
-        valA = parseFloat(String(valA || 0));
-        valB = parseFloat(String(valB || 0));
-      }
-      
-      if (valA < valB) return sortOrder === "asc" ? -1 : 1;
-      if (valA > valB) return sortOrder === "asc" ? 1 : -1;
-      return 0;
-    });
-    
-    return filtered;
-  }, [alerts, searchQuery, assetClassFilter, sortBy, sortOrder]);
 
   const paginatedAlerts = useMemo(() => {
     const startIndex = (currentPage - 1) * pageSize;
@@ -379,7 +379,7 @@ export default function RebalanceAlerts() {
   const impactData = useMemo(() => generateClientImpact(alertRows), [allAlerts]);
 
   const isLoading = !alerts;
-  const isSelectedAll = alerts?.length > 0 && alerts.every((a: any) => selectedRows[a.id]);
+  const isSelectedAll = (alerts?.length ?? 0) > 0 && (alerts ?? []).every((a: any) => selectedRows[a.id]);
   const selectedCount = Object.values(selectedRows).filter(Boolean).length;
 
   return (

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { NumberInput } from "@/components/NumberInput";
 import { AppShell } from "@/components/AppShell";
@@ -159,12 +158,6 @@ export default function EstateFlowChart() {
   const { user } = useAuth();
   const { data: clientData } = useClientData();
 
-  const { data: strategiesData } = trpc.strategy.list.useQuery(undefined, { enabled: !!user });
-  const { data: scenariosData } = trpc.scenarios.list.useQuery(undefined, { enabled: !!user });
-  const { data: marketData } = trpc.marketData.getLatest.useQuery(undefined, { enabled: !!user });
-  const { data: goalsData } = trpc.goals.list.useQuery(undefined, { enabled: !!user });
-  const { data: complianceData } = trpc.complianceAlerts.list.useQuery(undefined, { enabled: !!user });
-  const { data: riskData } = trpc.riskScoring.scores.useQuery(undefined, { enabled: !!user });
 
   const [grossEstate, setGrossEstate] = useState(12000000);
   const [primaryHome, setPrimaryHome] = useState(2500000);
@@ -379,26 +372,28 @@ export default function EstateFlowChart() {
   }, [analysis.totalEstate, analysis.totalReductions, analysis.charitableDeduction, exemption2024, exemption2026, growthRate, inflationRate, projectionYears]);
 
   const assetCompositionData = [{ name: "Primary Home", value: primaryHome, fill: "#3b82f6" },
-,
     { name: "Investments", value: investmentAccounts, fill: "#10b981" },
-,
     { name: "Retirement", value: retirementAccounts, fill: "#10b981" },
-,
     { name: "Business", value: businessInterests, fill: "#f59e0b" },
-,
     { name: "Life Insurance", value: lifeInsurance, fill: "#ef4444" }
 ];
 
   const waterfallData = [{ name: "Gross Estate", value: analysis.totalEstate, isTotal: true },
-,
     { name: "ILIT Protection", value: -analysis.iliProtected },
-,
     { name: "Charitable", value: -analysis.charitableDeduction },
-,
     { name: "QPRT Discount", value: -analysis.qprtReduction },
-,
     { name: "FLP Discount", value: -analysis.flpDiscount }
 ];
+
+  // Dollar reduction each planning strategy makes to the estate, from the analysis above.
+  const strategyImpactData = [
+    { name: "ILIT", value: analysis.iliProtected },
+    { name: "Charitable", value: analysis.charitableDeduction },
+    { name: "QPRT", value: analysis.qprtReduction },
+    { name: "FLP", value: analysis.flpDiscount },
+    { name: "GRAT", value: analysis.gratReduction },
+    { name: "SLAT", value: analysis.slatReduction },
+  ];
 
   let runningTotal = 0;
   const processedWaterfallData = waterfallData.map((item, index) => {

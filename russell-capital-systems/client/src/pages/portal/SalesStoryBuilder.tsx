@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { NumberInput } from "@/components/NumberInput";
 import { useState, useMemo, useCallback, useEffect } from "react";
 
@@ -9,6 +8,7 @@ import { uniformLifetimeDivisor, FIRST_RMD_DIVISOR_AT_73 } from "@shared/uniform
 import { IRMAA_2026 } from "@shared/irmaa";
 import { runIbbotsonModel, IBBOTSON_END_YEAR } from "@shared/ibbotsonModel";
 import { useAuth } from "@/_core/hooks/useAuth";
+import { toast } from "sonner";
 import { BarChart, LineChart, PieChart, AreaChart, RadarChart, ComposedChart, ResponsiveContainer, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Bar, Line, Pie, Cell, Area, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis } from "recharts";
 
 import { useClientData, FactFinderBadge } from "@/contexts/ClientDataContext";
@@ -491,13 +491,10 @@ export default function SalesStoryBuilder() {
   const { data: clientData } = useClientData();
 
   const { user } = useAuth();
-  const { data: clientPortalData } = trpc.clientPortal.getDashboard.useQuery(undefined, { enabled: !!user });
-  const { data: strategyData } = trpc.strategy.list.useQuery();
-  const { data: scenariosData } = trpc.scenarios.list.useQuery();
-  const { data: complianceData } = trpc.compliance.getStatus.useQuery();
-  const { data: marketData } = trpc.marketData.getLatest.useQuery();
-  
-  const saveStoryMutation = trpc.savedStrategies.save.useMutation();
+  const saveStoryMutation = trpc.savedStrategies.save.useMutation({
+    onSuccess: () => toast.success("Scenario saved"),
+    onError: (e) => toast.error(e.message),
+  });
 
   const [clientName, setClientName] = useState("John & Jane Smith");
   const [clientAge, setClientAge] = useState(55);
@@ -530,11 +527,14 @@ export default function SalesStoryBuilder() {
   const handleSaveScenario = useCallback(async () => {
     if (saveStoryMutation) {
       await saveStoryMutation.mutateAsync({
-        name: `${clientName} Scenario`,
-        data: { clientAge, spouseAge, annualIncome, retirement401k }
-      });
+        clientName,
+        strategyType: "sales-story",
+        strategyLabel: `${clientName} Scenario`,
+        inputsJson: { clientAge, spouseAge, annualIncome, retirement401k, currentMortgage, estateValue, selectedTemplate },
+        summaryJson: { template: selectedTemplate },
+      }).catch(() => undefined);
     }
-  }, [saveStoryMutation, clientName, clientAge, spouseAge, annualIncome, retirement401k]);
+  }, [saveStoryMutation, clientName, clientAge, spouseAge, annualIncome, retirement401k, currentMortgage, estateValue, selectedTemplate]);
 
   const memoizedCalculations = useMemo(() => {
     return {
@@ -1230,7 +1230,7 @@ export default function SalesStoryBuilder() {
                   <div><Label>Life Expectancy</Label><NumberInput value={lifeExpectancy} onChange={setLifeExpectancy} /></div>
                   <div className="flex items-center gap-2 mt-4">
                     <Button onClick={handleSimulate} variant="secondary">Run Simulation</Button>
-                    <Button onClick={handleSaveScenario} disabled={!saveStoryMutation}>Save Scenario</Button>
+                    <Button onClick={handleSaveScenario} disabled={!user || saveStoryMutation.isPending}>Save Scenario</Button>
                   </div>
                 </CardContent>
               </Card>

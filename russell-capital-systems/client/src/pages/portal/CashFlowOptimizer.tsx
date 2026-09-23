@@ -1,230 +1,254 @@
-// @ts-nocheck
-
-import React, { useState, useMemo } from 'react';
-import { Banknote, DollarSign, TrendingUp, ArrowUpDown, Calendar, Target, Percent, Shield, CheckCircle2, AlertTriangle, Zap, PiggyBank } from 'lucide-react';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend, AreaChart, Area, ComposedChart, Line } from 'recharts';
+import { useMemo, useState } from "react";
+import { Banknote, DollarSign, TrendingUp, ArrowUpDown, Calendar, Target, Percent, Shield, CheckCircle2, AlertTriangle, Zap } from "lucide-react";
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend, AreaChart, Area, ComposedChart, Line } from "recharts";
 import { PageInsights } from "@/components/PageInsights";
 
+// ============================================================
+// CASH FLOW OPTIMIZER
+// All amounts are annual and entered by the visitor. Every rate and split the page uses
+// (how the surplus is deployed, the assumed growth and cash rates, the stress-test
+// shocks) is an input with a neutral default; nothing is fixed in the code.
+// ============================================================
+
+type IncomeKey = "w2" | "form1099" | "k1" | "rental" | "dividends" | "capitalGains";
+type ExpenseKey = "housing" | "utilities" | "food" | "transportation" | "entertainment" | "other";
+
+const INCOME_FIELDS: ReadonlyArray<{ key: IncomeKey; label: string }> = [
+  { key: "w2", label: "W-2" },
+  { key: "form1099", label: "1099" },
+  { key: "k1", label: "K-1" },
+  { key: "rental", label: "Rental" },
+  { key: "dividends", label: "Dividends" },
+  { key: "capitalGains", label: "Capital Gains" },
+];
+
+const EXPENSE_FIELDS: ReadonlyArray<{ key: ExpenseKey; label: string; suggestion: string }> = [
+  { key: "housing", label: "Housing", suggestion: "Review the mortgage rate and refinancing options" },
+  { key: "utilities", label: "Utilities", suggestion: "Compare providers and efficiency upgrades" },
+  { key: "food", label: "Food", suggestion: "Meal planning" },
+  { key: "transportation", label: "Transportation", suggestion: "Compare ownership and commuting costs" },
+  { key: "entertainment", label: "Entertainment", suggestion: "Audit recurring subscriptions" },
+  { key: "other", label: "Other", suggestion: "Review and categorise" },
+];
+
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+const zeros = <K extends string>(keys: ReadonlyArray<{ key: K }>) =>
+  Object.fromEntries(keys.map((k) => [k.key, 0])) as Record<K, number>;
+
+const money = (n: number) => `$${n.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+const num = (v: string) => parseFloat(v) || 0;
+
+const inputStyle = { padding: "6px", margin: "4px", backgroundColor: "#2d3748", color: "#fff", border: "1px solid #38bdf8", borderRadius: 4 };
+
 const CashFlowOptimizer = () => {
-  const [incomes, setIncomes] = useState({
-    w2: 0,
-    form1099: 0,
-    k1: 0,
-    rental: 0,
-    dividends: 0,
-    capitalGains: 0,
-  });
+  const [incomes, setIncomes] = useState<Record<IncomeKey, number>>(() => zeros(INCOME_FIELDS));
+  const [expenses, setExpenses] = useState<Record<ExpenseKey, number>>(() => zeros(EXPENSE_FIELDS));
 
-  const [expenses, setExpenses] = useState({
-    housing: 0,
-    utilities: 0,
-    food: 0,
-    transportation: 0,
-    entertainment: 0,
-    other: 0,
-  });
+  // Assumptions, all set by the visitor.
+  const [debtPct, setDebtPct] = useState(40);
+  const [investPct, setInvestPct] = useState(40);
+  const [growthRate, setGrowthRate] = useState(5);
+  const [cashRate, setCashRate] = useState(0);
+  const [years, setYears] = useState(50);
+  const [incomeLossPct, setIncomeLossPct] = useState(50);
+  const [marketDropPct, setMarketDropPct] = useState(30);
+  const [expenseRisePct, setExpenseRisePct] = useState(20);
 
-  const [surplus, setSurplus] = useState(0);
-  const [projections, setProjections] = useState({ monthly: [], annual: [] });
-  const [stressTests, setStressTests] = useState({ jobLoss: {}, marketCrash: {}, disability: {} });
-  const [optimizedSavings, setOptimizedSavings] = useState([]);
-  const [unoptimizedSavings, setUnoptimizedSavings] = useState([]);
+  const insurancePct = Math.max(0, 100 - debtPct - investPct);
 
-  const handleIncomeChange = (type, value) => {
-    setIncomes(prev => ({ ...prev, [type]: parseFloat(value) || 0 }));
+  const totalIncome = useMemo(() => Object.values(incomes).reduce((s, v) => s + v, 0), [incomes]);
+  const totalExpenses = useMemo(() => Object.values(expenses).reduce((s, v) => s + v, 0), [expenses]);
+  const surplus = totalIncome - totalExpenses;
+
+  const deployment = useMemo(
+    () => [
+      { name: "Debt Payoff", pct: debtPct, value: (surplus * debtPct) / 100, icon: ArrowUpDown },
+      { name: "Invest", pct: investPct, value: (surplus * investPct) / 100, icon: TrendingUp },
+      { name: "Insurance Premium", pct: insurancePct, value: (surplus * insurancePct) / 100, icon: Shield },
+    ],
+    [surplus, debtPct, investPct, insurancePct],
+  );
+  const invested = deployment[1].value;
+
+  const incomeData = INCOME_FIELDS.map((f) => ({ name: f.label, value: incomes[f.key] }));
+  const monthlyData = MONTHS.map((month, i) => ({ month, value: (surplus / 12) * (i + 1) }));
+
+  // Cumulative value of investing the invested share each year at the assumed growth rate,
+  // against holding the same contributions at the assumed cash rate.
+  const savingsComparison = useMemo(() => {
+    const rows: { year: string; invested: number; cash: number }[] = [];
+    let a = 0;
+    let b = 0;
+    const n = Math.max(1, Math.min(100, Math.round(years)));
+    for (let y = 1; y <= n; y++) {
+      a = (a + invested) * (1 + growthRate / 100);
+      b = (b + invested) * (1 + cashRate / 100);
+      rows.push({ year: `Year ${y}`, invested: Math.round(a), cash: Math.round(b) });
+    }
+    return rows;
+  }, [invested, growthRate, cashRate, years]);
+  const finalRow = savingsComparison[savingsComparison.length - 1];
+
+  const stress = {
+    jobLoss: totalIncome * (1 - incomeLossPct / 100) - totalExpenses,
+    marketCrash: -invested * (marketDropPct / 100),
+    disability: totalIncome - totalExpenses * (1 + expenseRisePct / 100),
   };
 
-  const handleExpenseChange = (type, value) => {
-    setExpenses(prev => ({ ...prev, [type]: parseFloat(value) || 0 }));
-  };
-
-  const calculateTotalIncome = useMemo(() => {
-    return incomes.w2 + incomes.form1099 + incomes.k1 + incomes.rental + incomes.dividends + incomes.capitalGains;
-  }, [incomes]);
-
-  const calculateTotalExpenses = useMemo(() => {
-    return expenses.housing + expenses.utilities + expenses.food + expenses.transportation + expenses.entertainment + expenses.other;
-  }, [expenses]);
-
-  const calculateSurplus = useMemo(() => {
-    return calculateTotalIncome - calculateTotalExpenses;
-  }, [calculateTotalIncome, calculateTotalExpenses]);
-
-  useMemo(() => {
-    setSurplus(calculateSurplus);
-    // Tax-efficient routing: Prioritize pre-tax, then Roth, then taxable
-    const optimizedSurplus = surplus * 0.7; // Simplified optimization factor
-    setProjections({
-      monthly: Array(12).fill(optimizedSurplus / 12),
-      annual: Array(5).fill(optimizedSurplus), // Example for 5 years
-    });
-
-    // Surplus deployment: 40% debt, 40% invest, 20% insurance
-    const debtPayoff = optimizedSurplus * 0.4;
-    const investment = optimizedSurplus * 0.4;
-    const insurance = optimizedSurplus * 0.2;
-
-    // 50-year projections
-    const optimizedArray = Array(50).fill().map((_, i) => optimizedSurplus * (1 + 0.05) ** i); // 5% growth
-    const unoptimizedArray = Array(50).fill().map((_, i) => surplus * (1 + 0.03) ** i); // 3% growth
-    setOptimizedSavings(optimizedArray);
-    setUnoptimizedSavings(unoptimizedArray);
-
-    // Stress tests
-    setStressTests({
-      jobLoss: { impact: surplus * 0.5 }, // 50% income loss
-      marketCrash: { impact: investment * 0.3 }, // 30% loss
-      disability: { impact: surplus * 0.2 }, // 20% expense increase
-    });
-  }, [surplus]);
-
-  const incomeWaterfallData = useMemo(() => [
-    { name: 'W-2', value: incomes.w2 },
-    { name: '1099', value: incomes.form1099 },
-    { name: 'K-1', value: incomes.k1 },
-    { name: 'Rental', value: incomes.rental },
-    { name: 'Dividends', value: incomes.dividends },
-    { name: 'Capital Gains', value: incomes.capitalGains },
-  ], [incomes]);
-
-  const expenseData = useMemo(() => [
-    { name: 'Housing', value: expenses.housing, suggestion: 'Reduce by refinancing mortgage' },
-    { name: 'Utilities', value: expenses.utilities, suggestion: 'Switch to energy-efficient options' },
-    { name: 'Food', value: expenses.food, suggestion: 'Meal planning for savings' },
-    { name: 'Transportation', value: expenses.transportation, suggestion: 'Use public transit' },
-    { name: 'Entertainment', value: expenses.entertainment, suggestion: 'Cut subscriptions' },
-    { name: 'Other', value: expenses.other, suggestion: 'Review and categorize' },
-  ], [expenses]);
-
-  const surplusDeploymentData = useMemo(() => [
-    { name: 'Debt Payoff', value: surplus * 0.4, icon: ArrowUpDown },
-    { name: 'Invest', value: surplus * 0.4, icon: TrendingUp },
-    { name: 'Insurance Premium', value: surplus * 0.2, icon: Shield },
-  ], [surplus]);
-
-  const projectionsData = useMemo(() => [
-    { month: 'Jan', value: projections.monthly[0] || 0 },
-    { month: 'Feb', value: projections.monthly[1] || 0 },
-    { month: 'Mar', value: projections.monthly[2] || 0 },
-    { month: 'Apr', value: projections.monthly[3] || 0 },
-    { month: 'May', value: projections.monthly[4] || 0 },
-    { month: 'Jun', value: projections.monthly[5] || 0 },
-    { month: 'Jul', value: projections.monthly[6] || 0 },
-    { month: 'Aug', value: projections.monthly[7] || 0 },
-    { month: 'Sep', value: projections.monthly[8] || 0 },
-    { month: 'Oct', value: projections.monthly[9] || 0 },
-    { month: 'Nov', value: projections.monthly[10] || 0 },
-    { month: 'Dec', value: projections.monthly[11] || 0 },
-  ], [projections]);
-
-  const savingsComparisonData = useMemo(() => [
-    { year: 'Year 1', optimized: optimizedSavings[0], unoptimized: unoptimizedSavings[0] },
-    { year: 'Year 2', optimized: optimizedSavings[1], unoptimized: unoptimizedSavings[1] },
-    { year: 'Year 3', optimized: optimizedSavings[2], unoptimized: unoptimizedSavings[2] },
-    // ... up to 50, but truncated for brevity
-  ].slice(0, 10), [optimizedSavings, unoptimizedSavings]);  // Showing first 10 for UI
+  const pctInput = (label: string, value: number, set: (v: number) => void, step = 1) => (
+    <label style={{ display: "inline-block", marginRight: 12 }}>
+      {label}
+      <input type="number" step={step} value={value} onChange={(e) => set(num(e.target.value))} style={{ ...inputStyle, width: 90 }} />
+    </label>
+  );
 
   return (
-    <div style={{ backgroundColor: '#1a202c', color: '#ffffff', minHeight: '100vh', padding: '20px' }}>
-      <h1 style={{ color: '#38bdf8' }}>Cash Flow Optimizer</h1> {/* Teal accent */}
-      
-      <section style={{ marginBottom: '40px' }}>
-        <h2><DollarSign color="#e11d48" /> Income Waterfall</h2> {/* Rose accent */}
+    <div style={{ backgroundColor: "#1a202c", color: "#ffffff", minHeight: "100vh", padding: "20px" }}>
+      <h1 style={{ color: "#38bdf8" }}>Cash Flow Optimizer</h1>
+      <p>Enter annual amounts. Every assumption below is yours to set.</p>
+
+      <section style={{ marginBottom: "40px" }}>
+        <h2>
+          <DollarSign color="#e11d48" /> Income Waterfall
+        </h2>
         <div>
-          <input type="number" placeholder="W-2 Income" onChange={e => handleIncomeChange('w2', e.target.value)} />
-          <input type="number" placeholder="1099 Income" onChange={e => handleIncomeChange('form1099', e.target.value)} />
-          <input type="number" placeholder="K-1 Income" onChange={e => handleIncomeChange('k1', e.target.value)} />
-          <input type="number" placeholder="Rental Income" onChange={e => handleIncomeChange('rental', e.target.value)} />
-          <input type="number" placeholder="Dividends" onChange={e => handleIncomeChange('dividends', e.target.value)} />
-          <input type="number" placeholder="Capital Gains" onChange={e => handleIncomeChange('capitalGains', e.target.value)} />
+          {INCOME_FIELDS.map((f) => (
+            <input
+              key={f.key}
+              type="number"
+              placeholder={`${f.label} income`}
+              aria-label={`${f.label} income`}
+              onChange={(e) => setIncomes((prev) => ({ ...prev, [f.key]: num(e.target.value) }))}
+              style={inputStyle}
+            />
+          ))}
         </div>
         <ResponsiveContainer width="100%" height={300}>
-          <BarChart data={incomeWaterfallData}>
+          <BarChart data={incomeData}>
             <XAxis dataKey="name" />
             <YAxis />
             <Tooltip />
             <Legend />
-            <Bar dataKey="value" fill="#38bdf8" /> {/* Teal */}
+            <Bar dataKey="value" name="Annual income" fill="#38bdf8" />
           </BarChart>
         </ResponsiveContainer>
       </section>
 
-      <section style={{ marginBottom: '40px' }}>
-        <h2><Banknote color="#e11d48" /> Expense Categorization</h2>
+      <section style={{ marginBottom: "40px" }}>
+        <h2>
+          <Banknote color="#e11d48" /> Expense Categorization
+        </h2>
         <div>
-          <input type="number" placeholder="Housing" onChange={e => handleExpenseChange('housing', e.target.value)} />
-          <input type="number" placeholder="Utilities" onChange={e => handleExpenseChange('utilities', e.target.value)} />
-          <input type="number" placeholder="Food" onChange={e => handleExpenseChange('food', e.target.value)} />
-          <input type="number" placeholder="Transportation" onChange={e => handleExpenseChange('transportation', e.target.value)} />
-          <input type="number" placeholder="Entertainment" onChange={e => handleExpenseChange('entertainment', e.target.value)} />
-          <input type="number" placeholder="Other" onChange={e => handleExpenseChange('other', e.target.value)} />
+          {EXPENSE_FIELDS.map((f) => (
+            <input
+              key={f.key}
+              type="number"
+              placeholder={f.label}
+              aria-label={`${f.label} expense`}
+              onChange={(e) => setExpenses((prev) => ({ ...prev, [f.key]: num(e.target.value) }))}
+              style={inputStyle}
+            />
+          ))}
         </div>
         <ul>
-          {expenseData.map(exp => (
-            <li key={exp.name}>
-              {exp.name}: ${exp.value} - Suggestion: {exp.suggestion}
+          {EXPENSE_FIELDS.map((f) => (
+            <li key={f.key}>
+              {f.label}: {money(expenses[f.key])} - Suggestion: {f.suggestion}
             </li>
           ))}
         </ul>
       </section>
 
-      <section style={{ marginBottom: '40px' }}>
-        <h2><Percent color="#38bdf8" /> Tax-Efficient Cash Flow Routing</h2>
-        <p>Maximize pre-tax, then Roth, then taxable. Surplus: ${surplus.toFixed(2)}</p>
+      <section style={{ marginBottom: "40px" }}>
+        <h2>
+          <Percent color="#38bdf8" /> Surplus
+        </h2>
+        <p>
+          Income {money(totalIncome)} less expenses {money(totalExpenses)} = surplus <strong>{money(surplus)}</strong> a year.
+          Route it to pre-tax accounts first, then Roth, then taxable.
+        </p>
       </section>
 
-      <section style={{ marginBottom: '40px' }}>
-        <h2><Target color="#e11d48" /> Surplus Deployment Optimizer</h2>
+      <section style={{ marginBottom: "40px" }}>
+        <h2>
+          <Target color="#e11d48" /> Surplus Deployment
+        </h2>
+        <div>
+          {pctInput("Debt payoff %", debtPct, setDebtPct)}
+          {pctInput("Invest %", investPct, setInvestPct)}
+          <span>Insurance premium %: {insurancePct} (the remainder)</span>
+        </div>
         <ul>
-          {surplusDeploymentData.map(item => (
-            <li key={item.name}><item.icon color="#38bdf8" /> {item.name}: ${item.value.toFixed(2)}</li>
+          {deployment.map((item) => (
+            <li key={item.name}>
+              <item.icon color="#38bdf8" /> {item.name} ({item.pct}%): {money(item.value)}
+            </li>
           ))}
         </ul>
       </section>
 
-      <section style={{ marginBottom: '40px' }}>
-        <h2><Calendar color="#e11d48" /> Monthly and Annual Projections</h2>
+      <section style={{ marginBottom: "40px" }}>
+        <h2>
+          <Calendar color="#e11d48" /> Cumulative Surplus Through the Year
+        </h2>
         <ResponsiveContainer width="100%" height={300}>
-          <AreaChart data={projectionsData}>
+          <AreaChart data={monthlyData}>
             <XAxis dataKey="month" />
             <YAxis />
             <Tooltip />
-            <Area type="monotone" dataKey="value" fill="#38bdf8" stroke="#e11d48" /> {/* Teal fill, Rose stroke */}
+            <Area type="monotone" dataKey="value" name="Cumulative surplus" fill="#38bdf8" stroke="#e11d48" />
           </AreaChart>
         </ResponsiveContainer>
       </section>
 
-      <section style={{ marginBottom: '40px' }}>
-        <h2><Zap color="#38bdf8" /> 50-Year Cumulative Savings Comparison</h2>
+      <section style={{ marginBottom: "40px" }}>
+        <h2>
+          <Zap color="#38bdf8" /> Invested vs Held as Cash
+        </h2>
+        <div>
+          {pctInput("Assumed growth rate %", growthRate, setGrowthRate, 0.1)}
+          {pctInput("Assumed cash rate %", cashRate, setCashRate, 0.1)}
+          {pctInput("Years", years, setYears)}
+        </div>
+        <p>
+          After {savingsComparison.length} years: invested {money(finalRow?.invested ?? 0)} vs cash {money(finalRow?.cash ?? 0)}.
+        </p>
         <ResponsiveContainer width="100%" height={300}>
-          <ComposedChart data={savingsComparisonData}>
+          <ComposedChart data={savingsComparison}>
             <XAxis dataKey="year" />
             <YAxis />
             <Tooltip />
             <Legend />
-            <Bar dataKey="optimized" fill="#38bdf8" /> {/* Optimized in Teal */}
-            <Line dataKey="unoptimized" stroke="#e11d48" /> {/* Unoptimized in Rose */}
+            <Bar dataKey="invested" name="Invested at assumed growth rate" fill="#38bdf8" />
+            <Line dataKey="cash" name="Held at assumed cash rate" stroke="#e11d48" dot={false} />
           </ComposedChart>
         </ResponsiveContainer>
       </section>
 
-      <section style={{ marginBottom: '40px' }}>
-        <h2><AlertTriangle color="#e11d48" /> Cash Flow Stress Test</h2>
+      <section style={{ marginBottom: "40px" }}>
+        <h2>
+          <AlertTriangle color="#e11d48" /> Cash Flow Stress Test
+        </h2>
+        <div>
+          {pctInput("Income lost %", incomeLossPct, setIncomeLossPct)}
+          {pctInput("Market drop %", marketDropPct, setMarketDropPct)}
+          {pctInput("Expense rise %", expenseRisePct, setExpenseRisePct)}
+        </div>
         <ul>
-          <li>Job Loss Impact: ${stressTests.jobLoss.impact.toFixed(2)} <AlertTriangle color="#e11d48" /></li>
-          <li>Market Crash Impact: ${stressTests.marketCrash.impact.toFixed(2)} <AlertTriangle color="#38bdf8" /></li>
-          <li>Disability Impact: ${stressTests.disability.impact.toFixed(2)} <AlertTriangle color="#e11d48" /></li>
+          <li>Surplus after losing {incomeLossPct}% of income: {money(stress.jobLoss)}</li>
+          <li>Change in this year&apos;s invested amount after a {marketDropPct}% drop: {money(stress.marketCrash)}</li>
+          <li>Surplus after a {expenseRisePct}% rise in expenses (e.g. disability): {money(stress.disability)}</li>
         </ul>
       </section>
 
       <section>
-        <h2><CheckCircle2 color="#38bdf8" /> Compliance</h2>
-        <p>Gross Income (IRC 61): ${calculateTotalIncome.toFixed(2)}</p>
-        <p>AGI (IRC 62): ${(calculateTotalIncome - calculateTotalExpenses * 0.1).toFixed(2)} (estimated)</p> {/* Simplified */}
-        <p>Taxable Income (IRC 63): ${(calculateTotalIncome - calculateTotalExpenses).toFixed(2)} (estimated)</p>
-        <PiggyBank color="#e11d48" />
+        <h2>
+          <CheckCircle2 color="#38bdf8" /> Gross Income
+        </h2>
+        <p>Gross income (IRC 61) from the amounts entered: {money(totalIncome)}. Adjusted gross and taxable income need deductions this page does not collect.</p>
       </section>
-      <PageInsights section="cash-flow-optimizer" />
+      <PageInsights pageId="cash-flow-optimizer" />
     </div>
   );
 };

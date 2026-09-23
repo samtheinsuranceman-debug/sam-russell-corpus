@@ -4427,12 +4427,15 @@ Keep it personal, specific with dollar amounts, and actionable. Use their actual
 
     list: protectedProcedure.input(z.object({
       clientId: z.number().optional(),
+      /** Only scenarios saved with exactly this tag (calculators tag scenarios with their own name). */
+      tag: z.string().max(500).optional(),
     }).optional()).query(async ({ ctx, input }) => {
       const ws = await getWorkspaceForUser(ctx.user.id);
       if (!ws) return [];
       const db = (await getDb())!;
       const conditions = [eq(savedScenarios.workspaceId, ws.id)];
       if (input?.clientId) conditions.push(eq(savedScenarios.clientId, input.clientId));
+      if (input?.tag) conditions.push(eq(savedScenarios.tags, input.tag));
       return db.select().from(savedScenarios)
         .where(and(...conditions))
         .orderBy(desc(savedScenarios.createdAt))
