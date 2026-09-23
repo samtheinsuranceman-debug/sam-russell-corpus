@@ -134,7 +134,6 @@ const ALL_PAGES: NavItem[] = [
   // Market & Analytics
   { path: "/portal/market-data", label: "Market Data", section: "Market & Analytics" },
   { path: "/portal/predictive-analytics", label: "Predictive Analytics", section: "Market & Analytics" },
-  { path: "/portal/advisor-performance", label: "Advisor Metrics", section: "Market & Analytics" },
   { path: "/portal/client-comparison", label: "Client Compare", section: "Market & Analytics" },
   { path: "/portal/stale-digest", label: "Stale Digest", section: "Market & Analytics" },
   // Compliance & Legal
@@ -143,8 +142,6 @@ const ALL_PAGES: NavItem[] = [
   { path: "/portal/compliance-alerts", label: "Alerts", section: "Compliance & Legal" },
   { path: "/portal/compliance-reports", label: "Reports", section: "Compliance & Legal" },
   { path: "/portal/compliance-audit-trail", label: "Audit Trail", section: "Compliance & Legal" },
-  { path: "/portal/disclaimers", label: "Disclaimers", section: "Compliance & Legal" },
-  { path: "/portal/communication-log", label: "Comm Log", section: "Compliance & Legal" },
   { path: "/portal/website-usage", label: "Website Usage", section: "Compliance & Legal" },
   { path: "/portal/legal-payment-folder", label: "Payment Folder", section: "Compliance & Legal" },
   { path: "/portal/monitoring-agreement", label: "Monitoring", section: "Compliance & Legal" },

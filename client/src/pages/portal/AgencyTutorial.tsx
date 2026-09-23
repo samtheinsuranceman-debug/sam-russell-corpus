@@ -198,7 +198,7 @@ const TOP_FEATURES = [{
     id: "f3",
     rank: 3,
     name: "Team Performance Dashboard",
-    path: "/portal/advisor-metrics",
+    path: "/portal/team-management",
     icon: BarChart3,
     category: "Team Management",
     difficulty: "Essential",

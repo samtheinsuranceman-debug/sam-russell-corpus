@@ -68,8 +68,8 @@ function seed() {
     ],
     slide_shares: [
       { id: 21, deckId: 12, sharedByUserId: 8, sharedWithEmail: "x@example.test", permission: "view", shareToken: "other-token", expiresAt: null },
-      { id: 22, deckId: 11, sharedByUserId: 7, sharedWithEmail: "y@example.test", permission: "view", shareToken: "expired-token", expiresAt: new Date(Date.now() - DAY) },
-      { id: 23, deckId: 11, sharedByUserId: 7, sharedWithEmail: "z@example.test", permission: "comment", shareToken: "live-token", expiresAt: new Date(Date.now() + DAY) },
+      { id: 22, deckId: 11, sharedByUserId: 7, sharedWithEmail: "y@example.test", permission: "view", shareToken: "expired-share-token-0001", expiresAt: new Date(Date.now() - DAY) },
+      { id: 23, deckId: 11, sharedByUserId: 7, sharedWithEmail: "z@example.test", permission: "comment", shareToken: "live-share-token-000001", expiresAt: new Date(Date.now() + DAY) },
     ],
     slide_comments: [
       { id: 31, deckId: 12, userId: 8, userName: "Other", content: "note", resolved: false },
@@ -146,10 +146,12 @@ describe("slide decks (C-2)", () => {
 
   it("the public readers refuse an expired share and honour a live one", async () => {
     const anon = appRouter.createCaller({ user: null, req: {} as never, res: {} as never });
-    await expect(anon.slides.getByShareToken({ token: "expired-token" })).rejects.toMatchObject({ code: "NOT_FOUND" });
-    await expect(anon.slides.getSharedDeck({ token: "expired-token" })).rejects.toMatchObject({ code: "NOT_FOUND" });
-    await expect(anon.slides.getByShareToken({ token: "live-token" })).resolves.toMatchObject({ deck: { id: 11 }, permission: "comment" });
-    await expect(anon.slides.getSharedDeck({ token: "live-token" })).resolves.toMatchObject({ deck: { id: 11 } });
+    // Tokens are shaped like real ones (shared/shareTokens.ts refuses malformed tokens before any lookup),
+    // so the expired one is refused by its expiry, not by its shape.
+    await expect(anon.slides.getByShareToken({ token: "expired-share-token-0001" })).rejects.toMatchObject({ code: "NOT_FOUND" });
+    await expect(anon.slides.getSharedDeck({ token: "expired-share-token-0001" })).rejects.toMatchObject({ code: "NOT_FOUND" });
+    await expect(anon.slides.getByShareToken({ token: "live-share-token-000001" })).resolves.toMatchObject({ deck: { id: 11 }, permission: "comment" });
+    await expect(anon.slides.getSharedDeck({ token: "live-share-token-000001" })).resolves.toMatchObject({ deck: { id: 11 } });
   });
 
   it("slideShareIsLive: no expiry lives, a past expiry does not", () => {

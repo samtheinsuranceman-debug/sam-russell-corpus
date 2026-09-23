@@ -132,7 +132,11 @@ describe("the rooms — Grok's theme map on the route table", () => {
   it("loads the four-file type rack and nothing more", () => {
     expect(html).toContain("family=Fraunces");
     expect(html).toContain("family=IBM+Plex+Sans");
-    expect(html).toContain("family=IBM+Plex+Mono");
+    // IBM Plex Mono is self-hosted (styles/patent360/fonts.css, 400/500/600), so index.html no longer
+    // requests it from Google a second time.
+    const selfHosted = readFileSync(resolve("client/src/styles/patent360/fonts.css"), "utf8");
+    expect(html.includes("family=IBM+Plex+Mono") || /font-family:\s*'IBM Plex Mono'/.test(selfHosted)).toBe(true);
+    expect(html).not.toContain("family=Cormorant+Garamond");
     expect(css).toContain('--font-display: "Fraunces"');
     expect(css).toContain('--font-ui: "IBM Plex Sans"');
     expect(css).toContain("tabular-nums lining-nums");

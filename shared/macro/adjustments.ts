@@ -19,19 +19,8 @@ import { contagion } from "./globalDebt";
 import { simulateTaiwanImpact, TAIWAN_PRIORS } from "./taiwanRisk";
 import { A } from "./assumptions";
 
-export const NEUTRAL_ADJUSTMENTS: MacroAdjustments = {
-  tenYearYieldDelta: 0,
-  mortgageRateDelta: 0,
-  inflationDelta: 0,
-  equityReturnMultiplier: 1,
-  equityVolMultiplier: 1,
-  dollarIndexPct: 0,
-  goldPct: 0,
-  recessionProbability: 0.15,
-  rationale: ["No macro scenario toggled; calculator uses its own assumptions."],
-  sourceIds: [],
-  confidence: 100,
-};
+import { NEUTRAL_ADJUSTMENTS } from "./neutral";
+export { NEUTRAL_ADJUSTMENTS };
 
 /** Fast path: fewer Monte Carlo runs for interactive toggling; the page can request the full 10,000. */
 export function macroAdjustments(toggles: MacroToggles, opts: { runs?: number } = {}): MacroAdjustments {
