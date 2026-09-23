@@ -20,8 +20,13 @@
 
 export const VAULT_KEY_WORD_COUNT = 16;
 
-/** A long free-text passphrase is still accepted, at this minimum length. */
-export const VAULT_PASSPHRASE_MIN_LENGTH = 32;
+/**
+ * A free-text passphrase is accepted at this minimum length. Lowered from 32
+ * to 12 on the owner's word (23 Sep 2026): the vault already sits behind the
+ * owner's portal sign-in, and a 32-character floor stopped the owner saving a
+ * chosen passphrase. At least 8 distinct characters are still required.
+ */
+export const VAULT_PASSPHRASE_MIN_LENGTH = 12;
 
 // 512 words → 9 bits each. Kept alphabetical so duplicates are easy to spot.
 export const VAULT_WORDLIST: readonly string[] = Object.freeze([
