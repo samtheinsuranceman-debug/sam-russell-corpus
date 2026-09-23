@@ -529,3 +529,24 @@ export function forgivenessOutlook(p: BorrowerProfile, prob: ProbabilityInputs, 
   const std = standardPayment(p.balance, p.annualRate);
   return { profile: p, paths, best, alternative: best ? investmentAlternative(p, best, invest.nominalReturn, invest.taxDrag, invest.wrapperCost) : null, correlation: politicalCorrelation(), standardPayment: Math.round(std), standardTotal: Math.round(std * 120), asOf: now.toISOString().slice(0, 10) };
 }
+
+// ─── Sources the shell prints ───────────────────────────────────────────────
+// Built from the citations already carried by PROGRAMS, so the list cannot
+// drift from the record, plus the figures cited only in comments above and the
+// stated assumptions. Named FORGIVENESS_ENGINE_SOURCES because
+// server/forgivenessSources.ts already exports a FORGIVENESS_SOURCES panel.
+type ForgivenessSourceRef = { label: string; url?: string; asOf?: string; note?: string };
+function dedupeByLabel(refs: ForgivenessSourceRef[]): ForgivenessSourceRef[] {
+  const seen = new Set<string>();
+  return refs.filter((r) => (seen.has(r.label) ? false : (seen.add(r.label), true)));
+}
+export const FORGIVENESS_ENGINE_SOURCES: readonly ForgivenessSourceRef[] = dedupeByLabel([
+  ...PROGRAMS.flatMap((p) => p.citations.map((c) => ({ label: c, note: p.name }))),
+  ...PROGRAMS.flatMap((p) => p.outcomes.map((o) => ({ label: o.citation, asOf: o.asOf, note: `${p.name}: ${o.metric}, ${o.value}` }))),
+  { label: "HHS 2026 poverty guideline, 48 states and D.C.: $15,960 for one, +$5,680 per additional person (aspe.hhs.gov)" },
+  { label: "Assumption: statutory hazard = 0.5 / (years of PSLF on record + 1), the Jeffreys estimate for a record with no statutory change removing forgiveness; chosen as stated in the engine, no external source for the rate itself" },
+  { label: "Assumption: regulatory hazard = twice the statutory hazard, because rules move faster than statutes; no external source" },
+  { label: "Assumption: annual probability of staying in qualifying employment = 0.97 (physicians at nonprofit systems); no external source" },
+  { label: "Assumption: political tilt of the statutory hazard runs from x0.5 fully left to x1.5 fully right; the direction follows the record, the size is stated as an assumption; no external source" },
+  { label: "Assumption: investment alternative defaults to a 7% nominal return, 25% of growth lost to tax in a taxable account, and a 1% a year wrapper cost; the reader enters the real figures; no external source" },
+]);

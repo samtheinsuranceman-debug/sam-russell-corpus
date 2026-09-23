@@ -485,3 +485,24 @@ export function factFinderSummary(ff: ClientFactFinder | null | undefined, opts:
 export function factFinderFieldCount(): number {
   return FACT_FINDER_SECTIONS.reduce((n, s) => n + s.fields.length + (s.list?.fields.length ?? 0), 0);
 }
+
+/**
+ * Where the few figures printed in the questionnaire come from. The fact
+ * finder computes nothing; the only numbers it shows are the federal bracket
+ * rates offered as answers and the net investment income tax rate named in a
+ * question. The 10% concentration and 30% drawdown in two questions are
+ * question wording chosen by the firm, not figures anything is computed from.
+ */
+export const CLIENT_FACT_FINDER_SOURCES: readonly { label: string; url?: string; asOf?: string; note?: string }[] = [
+  {
+    label: "IRS Rev. Proc. 2025-32, section 4.01, 2026 tax rate tables under 26 U.S.C. 1(j)(2): rates of 10%, 12%, 22%, 24%, 32%, 35% and 37% (the marginal bracket options)",
+    url: "https://www.irs.gov/pub/irs-drop/rp-25-32.pdf",
+    asOf: "2026 tax year, read 2026-09-23",
+  },
+  {
+    label: "IRS, Net Investment Income Tax: 3.8 percent on the lesser of net investment income or modified AGI above the statutory threshold (26 U.S.C. 1411)",
+    url: "https://www.irs.gov/individuals/net-investment-income-tax",
+    asOf: "page last reviewed 2026-07-01, read 2026-09-23",
+  },
+  { label: "Assumption: the 10% single-holding and 30% one-year-fall figures in two risk questions are question wording, chosen by the firm because they are round, familiar thresholds a client can answer quickly; no external source" },
+];

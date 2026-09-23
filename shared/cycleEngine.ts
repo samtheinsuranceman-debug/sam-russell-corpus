@@ -554,3 +554,28 @@ export const INFINITE_BANKING_QUESTIONS: readonly CommonQuestion[] = [
 /** The one-line definition used in the page description and meta tags. */
 export const INFINITE_BANKING_DEFINITION =
   'Borrowing against an overfunded whole life policy so capital keeps compounding while you use it — and what happens when you run that loop, and four others, for twenty years.';
+
+// ─── Sources ─────────────────────────────────────────────────────────────────
+
+const pctBand = (b: { readonly low: number; readonly high: number }) =>
+  `${(b.low * 100).toFixed(1)}% to ${(b.high * 100).toFixed(1)}%`;
+
+/**
+ * What the shell prints for this engine. The engine names one outside source
+ * (the search questions); every mechanism parameter is a stated band or
+ * default, not a quote, and is listed as one, built from the records above so
+ * the list moves when they do.
+ */
+export const CYCLE_ENGINE_SOURCES: readonly { label: string; url?: string; asOf?: string; note?: string }[] = [
+  {
+    label: 'Common questions about infinite banking: the recurring "people also ask" set across betterwealth.com, bankingtruths.com, allstate.com, policyadvisor.com and insurancegeek.com',
+    asOf: 'gathered 2026-09-18',
+  },
+  ...MECHANISMS.map((m) => ({
+    label: `Assumption: ${m.name} cost of capital ${pctBand(m.costOfCapital)} a year, release rate ${Math.round(m.releaseRate * 100)}% a turn, a turn of ${m.turnMonths.typical} months typical; parameters stated by the engine, no external source recorded`,
+    note: m.costOfCapital.note,
+  })),
+  {
+    label: `Assumption: default cycle inputs (starting asset $${DEFAULT_CYCLE.startingAsset.toLocaleString('en-US')}, appreciation ${(DEFAULT_CYCLE.appreciation * 100).toFixed(1)}%, surplus $${DEFAULT_CYCLE.annualSurplus.toLocaleString('en-US')} a year, reserve $${DEFAULT_CYCLE.reserve.toLocaleString('en-US')}, renovation uplift ${DEFAULT_CYCLE.renovationUplift}, redeploy rate ${DEFAULT_CYCLE.redeployRate}) are starting values the reader changes; no external source`,
+  },
+];

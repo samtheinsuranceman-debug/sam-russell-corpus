@@ -611,3 +611,22 @@ export const MODULE_CATALOG: Record<ModuleKey, { name: string; whenNecessary: st
     benefit: "Carves an allocation from taxable assets (and optionally a slice of yearly savings) at the return and volatility you assume — no floor, no cap.",
   },
 };
+
+/**
+ * The sources the shell prints. The engine names no outside source: its rate
+ * fields are the reader's own assumptions (see the header), so the defaults
+ * are declared as defaults, read from defaultModules() so the list moves when
+ * they do.
+ */
+export const ULTRA_ENGINE_SOURCES: readonly { label: string; url?: string; asOf?: string; note?: string }[] = (() => {
+  const d = defaultModules();
+  return [
+    { label: `Assumption: default investment growth ${d.investmentGrowth.growthPct}% a year, with ${d.investmentGrowth.savingsRatePctOfNetCash}% of net cash saved; a starting value the reader changes, no external source` },
+    { label: `Assumption: default mortgage-killer cycle ${d.mortgageKiller.cycleYears} years with ${d.mortgageKiller.extraPrincipalPctOfNetCash}% of net cash to extra principal; a starting value the reader changes, no external source` },
+    { label: `Assumption: default real estate appreciation ${d.realEstate.appreciationPctDefault}% a year; short-term rental gross receipts ${d.realEstate.strGrossReceiptsPctOfValue}% of value with a ${d.realEstate.strExpenseRatioPct}% expense ratio; long-term rental net yield ${d.realEstate.ltrNetYieldPctOfValue}% of value; starting values the reader changes, no external source` },
+    { label: `Assumption: default trust-owned IUL premium $${d.trustIUL.premiumAnnual.toLocaleString('en-US')} a year for ${d.trustIUL.premiumYears} years, crediting ${d.trustIUL.creditRatePct}%, income at ${d.trustIUL.incomeRatePct}% from year ${d.trustIUL.incomeStartYear}, chronic illness multiple ${d.trustIUL.chronicIllnessMultiple}; starting values the reader changes, not a carrier illustration, no external source` },
+    { label: `Assumption: default income annuity premium $${d.incomeAnnuity.premium.toLocaleString('en-US')} paying ${d.incomeAnnuity.payoutRatePct}% from year ${d.incomeAnnuity.startYear}; a starting value the reader changes, not a carrier quote, no external source` },
+    { label: `Assumption: default equity deployment ${d.equityDeployment.pctOfHomeEquityDeployed}% of home equity; crypto ${d.crypto.allocationPctOfTaxable}% of taxable assets, expected return ${d.crypto.expectedReturnPct}%, volatility ${d.crypto.volatilityPct}%; starting values the reader changes, no external source` },
+    { label: 'Assumption: a lien drawn against the paid-off rental portfolio is repaid at 8% of its balance a year, at the home mortgage rate; typed into the engine, no external source recorded' },
+  ];
+})();

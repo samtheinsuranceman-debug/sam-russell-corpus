@@ -37,7 +37,7 @@
  * curve is wrong in a way nobody can see by looking at it.
  */
 
-import { CORRIDOR_FACTOR_BY_AGE, VERIFIED_AGAINST_PRIMARY_TEXT } from './irc7702';
+import { CORRIDOR_AUTHORITY, CORRIDOR_FACTOR_BY_AGE, VERIFIED_AGAINST_PRIMARY_TEXT } from './irc7702';
 
 export interface CoiRate {
   /** Attained age this rate applies from. */
@@ -370,3 +370,23 @@ export function runPolicyMechanics(input: PolicyMechanicsInput): PolicyMechanics
     notes,
   };
 }
+
+/**
+ * The sources the shell prints. The corridor is statute; the cost of insurance
+ * bands are the unsourced illustrative table above, declared as such; every
+ * other charge is an input read off the carrier's own illustration.
+ */
+export const POLICY_MECHANICS_SOURCES: readonly { label: string; url?: string; asOf?: string; note?: string }[] = [
+  {
+    label: `IRC 7702 cash value corridor: ${CORRIDOR_AUTHORITY}, applied through shared/irc7702.ts`,
+    url: 'https://www.law.cornell.edu/uscode/text/26/7702',
+    asOf: 'statute page opened 2026-09-23',
+    note: VERIFIED_AGAINST_PRIMARY_TEXT
+      ? 'The transcribed table has been read beside the primary text.'
+      : 'The transcribed table has not yet been read beside the primary text; see VERIFIED_AGAINST_PRIMARY_TEXT in shared/irc7702.ts.',
+  },
+  {
+    label: `Assumption: illustrative cost of insurance bands ${ILLUSTRATIVE_COI_TABLE.map((r) => `${r.perThousand} per $1,000 from age ${r.age}`).join(', ')}; carried unchanged from policyLoanOptimizer.ts, nobody sourced them, and any result built on them reports reliable: false`,
+  },
+  { label: 'Premium load, policy fee, per-unit charge, surrender schedule and the carrier cost of insurance table: inputs typed from the carrier\'s own illustration; missing ones are named and the result is marked unreliable' },
+];
