@@ -7,6 +7,10 @@
  * not yet exported its sources gets an honest line saying so; the provenance
  * census tracks those and the list is meant to reach zero.
  *
+ * An engine that exports `Sourced` records (shared/sourcing.ts) gets its
+ * assumptions printed as "We assumed", in a different voice from its sources,
+ * and any record that fails `sourceDefect` printed with the reason.
+ *
  * Closed by default so the calculator's own layout stands; one click opens it.
  */
 import { useEffect, useState } from "react";
@@ -67,7 +71,9 @@ export default function EngineSourcesFooter({ path }: { path: string }) {
                 <li key={`${s.label}-${i}`} className="flex gap-2 text-slate-300">
                   <span className="w-5 shrink-0 text-right text-slate-500">{i + 1}.</span>
                   <span>
-                    {s.url ? (
+                    {s.kind === "assumption" ? (
+                      <span data-testid="engine-source-assumption" className="italic text-slate-400">{s.label}</span>
+                    ) : s.url ? (
                       <a href={s.url} target="_blank" rel="noreferrer" className="text-amber-200 underline decoration-amber-200/40 underline-offset-2">
                         {s.label} <ExternalLink className="inline h-3 w-3" aria-hidden />
                       </a>
@@ -75,6 +81,7 @@ export default function EngineSourcesFooter({ path }: { path: string }) {
                       s.label
                     )}
                     {s.asOf && <span className="ml-2 text-xs text-slate-500">as of {s.asOf}</span>}
+                    {s.defect && <span className="block text-xs text-amber-300">Not a source yet: {s.defect}.</span>}
                     {s.note && <span className="block text-xs text-slate-500">{s.note}</span>}
                   </span>
                 </li>

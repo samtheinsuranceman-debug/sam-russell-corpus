@@ -439,6 +439,7 @@ const NAV_SECTIONS: NavSection[] = [
           { path: "/portal/batch-illustration", label: "Batch Illustration", icon: ChevronRight, color: "amber" },
           { path: "/portal/bulk-generation", label: "Bulk Generation", icon: Lock, color: "slate" },
           { path: "/portal/iul-historical", label: "IUL Historical", icon: History, color: "cyan" },
+          { path: "/portal/lookback-integrity", label: "Look-back Integrity", icon: ShieldAlert, color: "cyan" },
           { path: "/portal/iul-loan-optimizer", label: "IUL Loan Optimizer", icon: Landmark, color: "green" },
           { path: "/portal/iul-projection", label: "IUL Projection", icon: ChevronRight, color: "amber" },
           { path: "/portal/ibbotson-charts", label: "Ibbotson Charts", icon: BarChart3, color: "cyan" },
