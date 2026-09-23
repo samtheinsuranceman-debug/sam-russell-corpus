@@ -88,7 +88,7 @@ export const TIER_RULES: Record<EvidenceTier, { readonly mayStateFlatly: boolean
  * tiers. Concrete rather than abstract, because the sorting is the whole skill
  * and an example teaches it faster than a rule.
  *
- * Case ID 29335303, prepared 15 September 2026, male age 65, preferred
+ * one client case (de-identified), prepared 15 September 2026, male age 65, preferred
  * non-tobacco, $250,000 annual outlay for ten years.
  */
 export const MN_BGA3_EVIDENCE: readonly EvidenceItem[] = [
