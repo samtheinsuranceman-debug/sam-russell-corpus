@@ -905,7 +905,9 @@ export const BRAIN_PROVIDERS: ProviderDefinition[] = PROVIDERS;
  * 2026-09-06: DeepSeek out. 2026-09-22: widened to every Chinese AI system and
  * every Chinese host. 2026-09-23: widened again to anything connected to the
  * Chinese government or related to China at all, with Taiwan-based labs
- * treated as suspect. The rule covers provider ids, provider names, base
+ * treated as suspect. 2026-09-23 also: Manus (Butterfly Effect) and its
+ * hosted gateway, OAuth, storage and runtime removed and banned by name.
+ * The rule covers provider ids, provider names, base
  * URLs, chat paths and model ids — including OpenRouter-style `vendor/model`
  * ids, Hugging Face org prefixes, and open-weight Chinese models served by an
  * American host (Groq, Together, Fireworks, Venice, Featherless and every
@@ -959,6 +961,9 @@ const BANNED_TERMS: readonly string[] = [
   String.raw`dots-studio`, String.raw`\bdots[.-]?(?:llm|ocr|vlm|\d)`, String.raw`huawei`, String.raw`\bpangu`, String.raw`\bbaai\b`, String.raw`\bbge-(?:m3|large|base|small|reranker)`,
   // Arcee's small models distilled from DeepSeek-V3 or built on Qwen (Trinity and AFM are its own, US-trained)
   String.raw`\bvirtuoso-(?:small|medium|large|lite)`, String.raw`\barcee-blitz`, String.raw`\bmaestro-reasoning`,
+  // Manus (Butterfly Effect): China-origin agent platform, its Forge gateway, runtime and debug collector.
+  // "manus" only as a whole word, so "manuscript" is not caught.
+  String.raw`\bmanus(?![a-z])`, String.raw`__manus__`, String.raw`forge\.manus`, String.raw`butterfly-effect`,
   // Taiwan-based labs (suspect under the rule)
   String.raw`\btaide\b`, String.raw`mediatek`, String.raw`taiwan-llm`, String.raw`foxbrain`,
   // Hosts: any PRC, Hong Kong, Macau or Taiwan TLD, and PRC cloud regions (AWS China, Alibaba, Volcengine)
