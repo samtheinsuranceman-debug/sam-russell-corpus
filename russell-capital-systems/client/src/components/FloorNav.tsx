@@ -2,15 +2,18 @@
  * The four-floor navigation: Body, Wound, Work, Talk.
  *
  * Replaces the left rail when the nav flag is on (localStorage `nav=floors`,
- * `?nav=floors` once, or VITE_NAV_FLOORS=on at build). Off by default, so
- * production is unchanged until the owner flips it.
+ * a `?nav=floors` link opened by the owner or an admin, or VITE_NAV_FLOORS=on
+ * at build). Off by default, so production is unchanged until the owner flips it.
  *
- *   - The stairs: four words, always visible. The floor you are on reads
- *     1.25x larger. Desktop: in the top bar. Phone: a bottom bar.
- *   - The floor panel: at most seven short links, the advisor doors on Work
- *     only, and "All tools".
+ *   - The stairs: four words, always visible (the top level; the owner allows
+ *     at most eight). The floor you are on reads 1.25x larger. Desktop: in the
+ *     top bar. Phone: a bottom bar.
+ *   - The floor panel: at most four rooms, each opening to at most four links
+ *     (4 -> 4 -> 4). The advisor doors are a room on Work only.
  *   - All tools: a command-palette index of the whole floor (or every floor),
  *     searchable, so no page the rail reached is lost.
+ *   - Who sees what is by audience (shared/floors.ts): a household never sees
+ *     advisor or owner pages, in the rooms or in the index.
  *
  * Keyboard: the stairs are a tab list (Left/Right/Home/End). The index is a
  * dialog with a combobox (Up/Down/Enter/Escape) and a focus trap, and focus
@@ -21,18 +24,22 @@ import { Link, useLocation } from "wouter";
 import { Search, X } from "lucide-react";
 import {
   ACTIVE_WORD_SCALE,
-  ADVISOR_DOORS,
   FLOORS,
   FLOOR_BLURB,
-  FLOOR_FEATURED,
   NAV_MODE_EVENT,
   NAV_MODE_KEY,
+  audienceOf,
+  canSee,
   floorForLocation,
   floorOf,
   matchesQuery,
   resolveNavMode,
+  roomsFor,
+  type Audience,
   type FloorId,
+  type FloorLink,
   type NavEntry,
+  type Room,
 } from "@shared/floors";
 
 export type FloorNavEntry = NavEntry & { icon?: ComponentType<{ size?: number; className?: string }> };
@@ -62,17 +69,20 @@ export function setNavMode(mode: NavMode) {
   window.dispatchEvent(new Event(NAV_MODE_EVENT));
 }
 
+/** A `?nav=floors|classic` preview link, if the URL carries one. The shell honours it for the owner and admins only. */
+export function navModeFromUrl(): NavMode | null {
+  try {
+    const q = new URLSearchParams(window.location.search).get("nav");
+    return q === "floors" || q === "classic" ? q : null;
+  } catch {
+    return null;
+  }
+}
+
 /** Current nav mode; re-reads when the switch changes in this tab or another. */
 export function useNavMode(): NavMode {
   const [mode, setMode] = useState<NavMode>(() => resolveNavMode(readStoredMode(), envFlag()));
   useEffect(() => {
-    // A shared preview link: ?nav=floors or ?nav=classic sets the switch once.
-    try {
-      const q = new URLSearchParams(window.location.search).get("nav");
-      if (q === "floors" || q === "classic") setNavMode(q);
-    } catch {
-      /* no URL API: ignore */
-    }
     const sync = () => setMode(resolveNavMode(readStoredMode(), envFlag()));
     window.addEventListener(NAV_MODE_EVENT, sync);
     window.addEventListener("storage", sync);
@@ -87,7 +97,11 @@ export function useNavMode(): NavMode {
 /* ─── Floor state ─────────────────────────────────────────────────────────── */
 
 export type FloorNavState = {
+  /** The entries this viewer may see. */
   entries: readonly FloorNavEntry[];
+  viewer: Audience;
+  /** The rooms this viewer sees on a floor. */
+  rooms: (f: FloorId) => Room[];
   location: string;
   /** The floor the current page is on, if it is on one. */
   current: FloorId | null;
@@ -99,9 +113,21 @@ export type FloorNavState = {
   closeIndex: () => void;
 };
 
-export function useFloorNav(entries: readonly FloorNavEntry[]): FloorNavState {
+export function useFloorNav(allEntries: readonly FloorNavEntry[], viewer: Audience): FloorNavState {
   const [location] = useLocation();
-  const current = useMemo(() => floorForLocation(location, entries), [location, entries]);
+  // Who sees what is by audience: a household never gets advisor or owner pages, even in the index.
+  const entries = useMemo(() => allEntries.filter((e) => canSee(audienceOf(e), viewer)), [allEntries, viewer]);
+  const audienceByPath = useMemo(() => {
+    const m = new Map<string, Audience>();
+    for (const e of allEntries) m.set(e.path, audienceOf(e));
+    return m;
+  }, [allEntries]);
+  const rooms = useCallback(
+    (f: FloorId) => roomsFor(f, viewer, (p) => audienceByPath.get(p) ?? "owner"),
+    [viewer, audienceByPath],
+  );
+  // The stairs follow the page, whoever may see it.
+  const current = useMemo(() => floorForLocation(location, allEntries), [location, allEntries]);
   const [selected, setSelected] = useState<FloorId>(current ?? "Body");
   const [indexOpen, setIndexOpen] = useState(false);
   const triggerRef = useRef<HTMLElement | null>(null);
@@ -121,7 +147,7 @@ export function useFloorNav(entries: readonly FloorNavEntry[]): FloorNavState {
     if (t && typeof t.focus === "function") window.setTimeout(() => t.focus(), 0);
   }, []);
 
-  return { entries, location, current, selected, select: setSelected, indexOpen, openIndex, closeIndex };
+  return { entries, viewer, rooms, location, current, selected, select: setSelected, indexOpen, openIndex, closeIndex };
 }
 
 function isCurrentPath(location: string, path: string) {
@@ -178,12 +204,12 @@ export function FloorStairs({ state }: { state: FloorNavState }) {
   );
 }
 
-/* ─── The floor's links ───────────────────────────────────────────────────── */
+/* ─── The floor's rooms (level 2) and their links (level 3) ────────────────── */
 
-function FloorLinks({ floor, location, onNavigate }: { floor: FloorId; location: string; onNavigate?: () => void }) {
+function RoomLinks({ links, location, onNavigate, id, label }: { links: readonly FloorLink[]; location: string; onNavigate?: () => void; id?: string; label: string }) {
   return (
-    <ul className="rc-floor-links">
-      {FLOOR_FEATURED[floor].map((l) => {
+    <ul id={id} className="rc-floor-links" aria-label={label}>
+      {links.map((l) => {
         const here = isCurrentPath(location, l.path);
         return (
           <li key={l.path}>
@@ -197,31 +223,42 @@ function FloorLinks({ floor, location, onNavigate }: { floor: FloorId; location:
   );
 }
 
-/** Clients, pipeline, presentations, AI assist. Rendered on Work only. */
-function AdvisorDoors({ location, onNavigate }: { location: string; onNavigate?: () => void }) {
-  const inside = ADVISOR_DOORS.some((d) => isCurrentPath(location, d.path));
-  const [open, setOpen] = useState(inside);
-  const listId = useId();
+/**
+ * A floor opens to at most four rooms; a room opens to at most four links.
+ * The advisor doors are a room on Work alone (control 35), and only advisors
+ * and the owner are given it (roomsFor filters by audience).
+ */
+function FloorRooms({ state, floor, onNavigate }: { state: FloorNavState; floor: FloorId; onNavigate?: () => void }) {
+  const rooms = state.rooms(floor);
+  const here = rooms.findIndex((r) => r.links.some((l) => isCurrentPath(state.location, l.path)));
+  const [open, setOpen] = useState(here >= 0 ? here : 0);
+  const baseId = useId();
   useEffect(() => {
-    if (inside) setOpen(true);
-  }, [inside]);
+    setOpen(here >= 0 ? here : 0);
+  }, [floor, here]);
+  if (!rooms.length) return null;
+  const room = rooms[Math.min(open, rooms.length - 1)];
+  const linksId = `${baseId}-links`;
   return (
-    <div className="rc-floor-doors">
-      <button type="button" className="rc-floor-link rc-floor-doors-toggle" aria-expanded={open} aria-controls={listId} onClick={() => setOpen((o) => !o)}>
-        Advisor doors
-      </button>
-      <ul id={listId} hidden={!open} className="rc-floor-links rc-floor-doors-list" aria-label="Advisor doors">
-        {ADVISOR_DOORS.map((d) => {
-          const here = isCurrentPath(location, d.path);
-          return (
-            <li key={d.path}>
-              <Link href={d.path} onClick={onNavigate} aria-current={here ? "page" : undefined} className="rc-floor-link" data-active={here ? "true" : undefined}>
-                {d.label}
-              </Link>
-            </li>
-          );
-        })}
+    <div className="rc-floor-rooms">
+      <ul className="rc-floor-room-list" aria-label={`${floor} rooms`}>
+        {rooms.map((r, i) => (
+          <li key={r.label}>
+            <button
+              type="button"
+              className="rc-floor-room"
+              aria-expanded={i === open}
+              aria-controls={linksId}
+              data-active={i === open ? "true" : undefined}
+              data-doors={floor === "Work" && r.audience !== "household" ? "true" : undefined}
+              onClick={() => setOpen(i)}
+            >
+              {r.label}
+            </button>
+          </li>
+        ))}
       </ul>
+      <RoomLinks id={linksId} links={room.links} location={state.location} onNavigate={onNavigate} label={room.label} />
     </div>
   );
 }
@@ -242,8 +279,7 @@ export function FloorPanel({ state, utilities }: { state: FloorNavState; utiliti
   return (
     <div role="tabpanel" id={PANEL_ID} aria-labelledby={tabId(floor)} className="rc-floor-panel">
       <span className="sr-only">{FLOOR_BLURB[floor]}</span>
-      <FloorLinks floor={floor} location={state.location} />
-      {floor === "Work" && <AdvisorDoors location={state.location} />}
+      <FloorRooms state={state} floor={floor} />
       <AllToolsButton state={state} floor={floor} />
       {utilities && <div className="rc-floor-utilities">{utilities}</div>}
     </div>
@@ -290,8 +326,7 @@ export function FloorBottomBar({ state, utilities }: { state: FloorNavState; uti
               <X size={16} aria-hidden="true" />
             </button>
           </div>
-          <FloorLinks floor={sheet} location={state.location} onNavigate={() => setSheet(null)} />
-          {sheet === "Work" && <AdvisorDoors location={state.location} onNavigate={() => setSheet(null)} />}
+          <FloorRooms state={state} floor={sheet} onNavigate={() => setSheet(null)} />
           <AllToolsButton state={state} floor={sheet} />
           {utilities && <div className="rc-floor-utilities">{utilities}</div>}
         </div>
@@ -327,7 +362,7 @@ export function FloorBottomBar({ state, utilities }: { state: FloorNavState; uti
 
 type Group = { key: string; floor: FloorId; items: FloorNavEntry[] };
 
-export function FloorIndex({ state }: { state: FloorNavState }) {
+export function FloorIndex({ state, favorites = [] }: { state: FloorNavState; favorites?: readonly FloorLink[] }) {
   const [, navigate] = useLocation();
   const [query, setQuery] = useState("");
   const [scope, setScope] = useState<"floor" | "all">("floor");
@@ -354,6 +389,12 @@ export function FloorIndex({ state }: { state: FloorNavState }) {
   const groups = useMemo(() => {
     const out: Group[] = [];
     const byKey = new Map<string, Group>();
+    // The viewer's favourites first, limited to pages this viewer may see.
+    const visible = new Map(state.entries.map((e) => [e.path, e]));
+    const favs = favorites
+      .map((f) => visible.get(f.path))
+      .filter((e): e is FloorNavEntry => !!e && matchesQuery(e, query) && (scope === "all" || floorOf(e) === floor));
+    if (favs.length) out.push({ key: "Favorites", floor, items: favs });
     for (const e of results) {
       const f = floorOf(e);
       const key = `${scope === "all" ? `${f} · ` : ""}${e.section}${e.subLabel ? ` / ${e.subLabel}` : ""}`;
@@ -366,7 +407,7 @@ export function FloorIndex({ state }: { state: FloorNavState }) {
       g.items.push(e);
     }
     return out;
-  }, [results, scope]);
+  }, [results, scope, favorites, state.entries, query, floor]);
 
   // Options in on-screen order, so the arrow keys follow what is shown.
   const ordered = useMemo(() => groups.flatMap((g) => g.items), [groups]);
