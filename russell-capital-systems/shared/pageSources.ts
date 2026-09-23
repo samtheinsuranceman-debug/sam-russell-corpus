@@ -71,12 +71,6 @@ const INHERITED_TEN_YEAR: SourceRef = {
   asOf: READ,
 };
 
-const BRACKETS_2024: SourceRef = {
-  label: "Internal Revenue Service, IR-2023-208, 'IRS provides tax inflation adjustments for tax year 2024' (Rev. Proc. 2023-34): 10% to $11,600 / $23,200, 12% to $47,150 / $94,300, 22% to $100,525 / $201,050, 24% to $191,950 / $383,900, 32% to $243,725 / $487,450, 35% to $609,350 / $731,200, 37% above (single / married filing jointly)",
-  url: "https://www.irs.gov/newsroom/irs-provides-tax-inflation-adjustments-for-tax-year-2024",
-  asOf: `tax year 2024, released 2023-11-09; ${READ}`,
-};
-
 const BRACKETS_2026: SourceRef = {
   label: "Internal Revenue Service, 'IRS releases tax inflation adjustments for tax year 2026, including amendments from the One Big Beautiful Bill' (Rev. Proc. 2025-32): 12% over $12,400 / $24,800, 22% over $50,400 / $100,800, 24% over $105,700 / $211,400, 32% over $201,775 / $403,550, 35% over $256,225 / $512,450, 37% over $640,600 / $768,700 (single / married filing jointly)",
   url: "https://www.irs.gov/newsroom/irs-releases-tax-inflation-adjustments-for-tax-year-2026-including-amendments-from-the-one-big-beautiful-bill",
@@ -392,7 +386,6 @@ export const ROUTE_SOURCES: Record<string, RouteSources> = {
   "/portal/hot-income": {
     engines: ["shared/taxBracketEngine.ts"],
     sources: [
-      { ...BRACKETS_2024, note: "The page labels its bracket tables '2026 Federal'; the figures are the 2024 schedules. The 2026 schedules are in the next source. Not changed; flagged for review." },
       BRACKETS_2026,
       { label: "26 U.S.C. §263(c): intangible drilling and development costs of oil and gas wells may be deducted as expenses (Cornell Legal Information Institute)", url: LII("263"), asOf: READ, note: "The statute allows the deduction; the page's 75% intangible share is the firm's assumption." },
       { label: "26 U.S.C. §613A(c): percentage depletion of 15% of gross income for independent producers and royalty owners (Cornell Legal Information Institute)", url: LII("613A"), asOf: READ },
@@ -411,7 +404,6 @@ export const ROUTE_SOURCES: Record<string, RouteSources> = {
         asOf: `tax year 2024; ${READ}`,
         note: "The page's Roth limits are the 2024 figures. For 2026 the IRA limit is $7,500 with a $1,100 catch-up (IRS Notice 2025-67). Not changed; flagged for review.",
       },
-      { ...BRACKETS_2024, note: "The page's bracket tables are the 2024 schedules. The tax panel uses 2026. Not changed; flagged for review." },
       IRS_2026_RETIREMENT_LIMITS,
       INHERITED_TEN_YEAR,
       { label: "Not sourced here: the chronic-illness 4% and 'often 10-20x first premium' figures are carrier-dependent illustrations. The historical S&P 500 series behind the IUL column is sourced by shared/ibbotsonModel.ts, listed above" },
