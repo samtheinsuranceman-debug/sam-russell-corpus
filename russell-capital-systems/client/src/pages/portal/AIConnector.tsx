@@ -70,7 +70,7 @@ export default function AIConnector() {
   const data = overview.data!;
 
   return (
-    <AppShell title="Brain Hub" subtitle="Fifty-five brains, forty MCP servers — keyed here or on Railway, never in code">
+    <AppShell title="Brain Hub" subtitle="Fifty-six brains, forty MCP servers — keyed here or on Railway, never in code">
       <div className="max-w-5xl space-y-5 pb-10">
         {/* The Railway keys work whether or not the vault exists, so they are
             shown and testable before any vault gate — otherwise the page can

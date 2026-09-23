@@ -238,7 +238,7 @@ describe("Provider catalog", () => {
       expect(p.id, "id must be set").toBeTruthy();
       expect(p.defaultModel, `${p.id} needs a default model`).toBeTruthy();
       expect(p.suggestedModels.length, `${p.id} needs suggested models`).toBeGreaterThan(0);
-      expect(["openai-compatible", "anthropic", "google-generative"]).toContain(p.wireFormat);
+      expect(["openai-compatible", "anthropic", "google-generative", "ibm-watsonx"]).toContain(p.wireFormat);
 
       // A provider either ships a working https default, or has no sensible
       // default and must say so in its caution — Azure needs your own resource

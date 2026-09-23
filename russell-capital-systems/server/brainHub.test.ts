@@ -18,9 +18,9 @@ import {
 import { MCP_PRESETS, mcpPresetsByCategory } from "@shared/mcpPresets";
 import { environmentCredentials, environmentKeyNames } from "./providerRegistry";
 
-describe("the fifty-five brains", () => {
+describe("the fifty-six brains", () => {
   it("offers exactly MAX_BRAINS providers to the owner, and no internal gateway", () => {
-    expect(MAX_BRAINS).toBe(55);
+    expect(MAX_BRAINS).toBe(56);
     expect(BRAIN_PROVIDERS).toHaveLength(MAX_BRAINS);
     expect(PROVIDERS).toHaveLength(MAX_BRAINS);
     expect(getProvider("forge")).toBeUndefined();
@@ -41,13 +41,22 @@ describe("the fifty-five brains", () => {
     expect(added.filter(id => getProvider(id)?.requiresBaseUrl)).toEqual(["databricks"]);
   });
 
+  it("carries IBM watsonx.ai on its own wire format, a Granite default and US/EU models only", () => {
+    const w = getProvider("watsonx")!;
+    expect(w.wireFormat).toBe("ibm-watsonx");
+    expect(w.defaultModel).toMatch(/^ibm\/granite-/);
+    for (const m of w.suggestedModels) expect(m, m).toMatch(/^(?:ibm\/granite-|meta-llama\/|mistralai\/)/);
+    expect(w.requiresBaseUrl).toBeFalsy();
+    expect(environmentKeyNames("watsonx")).toEqual(["RCS_BRAIN_WATSONX_API_KEY", "WATSONX_API_KEY", "IBM_CLOUD_API_KEY", "WATSONX_APIKEY"]);
+  });
+
   it("every provider id is unique, stable-looking, and every entry is complete", () => {
     const ids = PROVIDERS.map(p => p.id);
     expect(new Set(ids).size).toBe(ids.length);
     for (const p of PROVIDERS) {
       expect(p.id).toMatch(/^[a-z0-9-]+$/);
       expect(p.name.length).toBeGreaterThan(1);
-      expect(["openai-compatible", "anthropic", "google-generative"]).toContain(p.wireFormat);
+      expect(["openai-compatible", "anthropic", "google-generative", "ibm-watsonx"]).toContain(p.wireFormat);
       expect(p.chatPath.startsWith("/")).toBe(true);
       expect(p.defaultModel.length).toBeGreaterThan(0);
       expect(p.suggestedModels).toContain(p.defaultModel);
