@@ -53,6 +53,58 @@ export const SHOCKS: readonly ShockWindow[] = [
     description: 'Stocks and bonds fell together — the diversification most retirees rely on did not hold.' },
 ];
 
+// Where each window's years and one-sentence description come from. The index
+// changes themselves are read from RAW_INDEX_RETURNS, which carries its own
+// source in shared/indexCreditingData.ts.
+
+/** oil-1973: the embargo, the price rise and the recession around it. */
+const OIL_SHOCK_SOURCE = {
+  label:
+    "Federal Reserve History, 'Oil Shock of 1973-74' (Michael Corbett): OAPEC embargo from October 19, 1973; production cuts nearly quadrupled " +
+    "the oil price from $2.90 a barrel to $11.65 in January 1974",
+  url: "https://www.federalreservehistory.org/essays/oil-shock-of-1973-74",
+  asOf: "read 2026-09-23",
+};
+
+/** black-monday-1987: the largest one-day fall. */
+const BLACK_MONDAY_SOURCE = {
+  label:
+    "Federal Reserve History, 'Stock Market Crash of 1987' (Bernhardt and Eckblad): on October 19, 1987 the Dow Jones Industrial Average fell 22.6%, " +
+    "the largest one-day stock market decline in history",
+  url: "https://www.federalreservehistory.org/essays/stock-market-crash-of-1987",
+  asOf: "read 2026-09-23",
+};
+
+/** The recession dates that bracket the 1973-74, 2000-02, 2008 and 2020 windows. */
+const NBER_RECESSIONS_SOURCE = {
+  label:
+    "National Bureau of Economic Research, 'US Business Cycle Expansions and Contractions': peaks and troughs November 1973 to March 1975, " +
+    "March 2001 to November 2001, December 2007 to June 2009, February 2020 to April 2020; no recession dated in 2022",
+  url: "https://www.nber.org/research/data/us-business-cycle-expansions-and-contractions",
+  asOf: "business cycle data last updated 2023-03-14; read 2026-09-23",
+};
+
+/** dotcom-2000, gfc-2008 and rates-2022: calendar-year total returns. */
+const DAMODARAN_ANNUAL_RETURNS_SOURCE = {
+  label:
+    "Aswath Damodaran, NYU Stern, 'Historical Returns on Stocks, Bonds and Bills: 1928-2025': S&P 500 including dividends -9.03% (2000), " +
+    "-11.85% (2001), -21.97% (2002), -36.55% (2008); in 2022 the S&P 500 returned -18.04% and the 10-year Treasury bond -17.83%",
+  url: "https://pages.stern.nyu.edu/~adamodar/New_Home_Page/datafile/histretSP.html",
+  asOf: "page updated January 5, 2026; read 2026-09-23",
+  note:
+    "The same table shows 1939, 1940 and 1941 as three consecutive losing years (and 1929 to 1932 as four), so 2000 to 2002 is the only " +
+    "such run since the Second World War rather than in the whole series. A -36.55% year is somewhat more than the 'roughly a third' in the 2008 description.",
+};
+
+/** covid-2020: the fastest fall into a bear market. */
+const COVID_BEAR_MARKET_SOURCE = {
+  label:
+    "LPL Financial, Weekly Market Commentary, March 22, 2021: the S&P 500 fell 33.9% from the February 19, 2020 peak to the March 23, 2020 low " +
+    "and set the record for the fastest 20% bear market, 16 trading days",
+  url: "https://www.lpl.com/content/dam/lpl-www/documents/asset-library/weekly-market-commentary-032221.pdf",
+  asOf: "published 2021-03-22; read 2026-09-23",
+};
+
 export interface ShockYear {
   readonly year: number;
   readonly indexChange: number;
@@ -174,3 +226,18 @@ export function runAllShocks(
 export function isAvailable(r: ShockResult | ShockUnavailable): r is ShockResult {
   return r.available;
 }
+
+/** Every source behind the shock windows, for the shell's source footer. */
+export const HISTORICAL_SHOCKS_SOURCES: readonly { label: string; url?: string; asOf?: string; note?: string }[] = [
+  OIL_SHOCK_SOURCE,
+  BLACK_MONDAY_SOURCE,
+  NBER_RECESSIONS_SOURCE,
+  DAMODARAN_ANNUAL_RETURNS_SOURCE,
+  COVID_BEAR_MARKET_SOURCE,
+  {
+    label:
+      "Index changes run through each window: RAW_INDEX_RETURNS in shared/indexCreditingData.ts, S&P 500 calendar-year price return " +
+      "excluding dividends, 1994-2025, sourced there (INDEX_RETURN_SOURCES)",
+  },
+  { label: "Assumption: the default index is the S&P 500 ('SP500'), chosen by the firm because it is the only index series held here that carries a stated source; no external source" },
+];

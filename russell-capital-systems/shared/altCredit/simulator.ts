@@ -115,6 +115,49 @@ function quantile(sorted: number[], q: number): number {
   return lo === hi ? sorted[lo]! : sorted[lo]! + (sorted[hi]! - sorted[lo]!) * (i - lo);
 }
 
+// Where DEFAULT_CYCLE's numbers come from. Only the tax rate is a published
+// figure. The rest describe a hypothetical lending plan and are declared as the
+// firm's choices, with the published benchmarks a reader should hold them against.
+
+/** taxRate 0.37. */
+const TOP_BRACKET_SOURCE = {
+  label: "IRS Rev. Proc. 2025-32, section 4.01, 2026 tax rate tables: top marginal ordinary income rate 37%",
+  url: "https://www.irs.gov/pub/irs-drop/rp-25-32.pdf",
+  asOf: "tax year 2026; read 2026-09-23",
+};
+
+/** Benchmark for borrowAnnualRate: the base rate most business lines float over. */
+const PRIME_RATE_SOURCE = {
+  label: "Board of Governors of the Federal Reserve System, H.15 Selected Interest Rates, Bank Prime Loan Rate (DPRIME), via FRED: 6.75% on 2026-09-02",
+  url: "https://fred.stlouisfed.org/series/DPRIME",
+  asOf: "read 2026-09-23",
+};
+
+/** Benchmark for borrowAnnualRate if the line is a credit card. */
+const CARD_RATE_SOURCE = {
+  label:
+    "Board of Governors of the Federal Reserve System, G.19 Consumer Credit, Commercial Bank Interest Rate on Credit Card Plans, All Accounts (TERMCBCCALLNS), via FRED: 20.94% for May 2026",
+  url: "https://fred.stlouisfed.org/series/TERMCBCCALLNS",
+  asOf: "read 2026-09-23",
+  note: "A plan funded on credit cards at this rate, rather than on a line near prime, needs a far higher return than DEFAULT_CYCLE assumes.",
+};
+
+/** 30.4375 days per month in the cycle-length arithmetic. */
+const MONTH_LENGTH_NOTE = {
+  label: "Arithmetic: 30.4375 days per month is 365.25 days divided by 12; a 365-day year is used for the run length",
+};
+
+/** Everything else in DEFAULT_CYCLE: the firm's choices, said in words. */
+const CYCLE_ASSUMPTIONS = [
+  { label: "Assumption: amount drawn = $250,000 over 5 years, chosen by the firm as a representative line size and horizon for the example; no external source" },
+  { label: "Assumption: borrowing cost = 9.5% a year, chosen by the firm as a secured line priced above the prime rate; the lender's quote governs; no external source" },
+  { label: "Assumption: gross return per deployment = 14% with a 5% standard deviation, chosen by the firm as an illustrative merchant-advance or bridge-loan yield; no external source" },
+  { label: "Assumption: deployment length = 6 months with 21 idle days between deployments, chosen by the firm to show the cost of the term mismatch; no external source" },
+  { label: "Assumption: default probability = 6% per deployment with 15% recovery, chosen by the firm as a cautious figure for unsecured small-business advances; no external source" },
+  { label: "Assumption: fees = 2% per deployment and 10 positions per cycle, chosen by the firm as a syndication cost and a modest level of diversification; no external source" },
+  { label: "Assumption: verdict bands at 50%, 25% and 10% chance of loss, chosen by the firm as the points where the wording should change; no external source" },
+] as const;
+
 export const DEFAULT_CYCLE: CycleInput = {
   principal: 250_000,
   borrowAnnualRate: 0.095,
@@ -227,3 +270,12 @@ export function utilisation(input: CycleInput): number {
   const cycleDays = input.cycleMonths * 30.4375 + input.idleDays;
   return (input.cycleMonths * 30.4375) / cycleDays;
 }
+
+/** Every source and declared assumption behind the simulator, for the shell's source footer. */
+export const ALT_CREDIT_SIMULATOR_SOURCES: readonly { label: string; url?: string; asOf?: string; note?: string }[] = [
+  TOP_BRACKET_SOURCE,
+  PRIME_RATE_SOURCE,
+  CARD_RATE_SOURCE,
+  MONTH_LENGTH_NOTE,
+  ...CYCLE_ASSUMPTIONS,
+];
