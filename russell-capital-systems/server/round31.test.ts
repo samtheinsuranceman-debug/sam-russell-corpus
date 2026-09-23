@@ -1,9 +1,11 @@
 import { describe, it, expect } from "vitest";
+import { SP500_ARITHMETIC_MEAN, SP500_ANNUAL_STDEV } from "../shared/monteCarloEngine";
 
 // ─── Sensitivity Analysis Grid Logic ─────────────────────────────────────────
 describe("Sensitivity Analysis Grid", () => {
   const RETURN_RATES = [0.06, 0.07, 0.08, 0.09, 0.10, 0.11, 0.12];
-  const VOLATILITIES = [0.10, 0.12, 0.15, 0.18, 0.20];
+  // Base column is the S&P 500 sample SD, 19.40% (Damodaran histretSP 1928-2025).
+  const VOLATILITIES = [0.10, 0.12, 0.15, SP500_ANNUAL_STDEV, 0.24];
 
   function runSensitivityCell(params: {
     returnRate: number;
@@ -84,11 +86,11 @@ describe("Sensitivity Analysis Grid", () => {
     }
   });
 
-  it("base case cell (10% return, 15% vol) should exist in the grid", () => {
+  it("base case cell (10% return, 19.4% vol) should exist in the grid", () => {
     expect(RETURN_RATES).toContain(0.10);
-    expect(VOLATILITIES).toContain(0.15);
+    expect(VOLATILITIES).toContain(SP500_ANNUAL_STDEV);
     const baseVal = runSensitivityCell({
-      returnRate: 0.10, volatility: 0.15, loadFee: 0.06, coiRate: 0.05,
+      returnRate: 0.10, volatility: SP500_ANNUAL_STDEV, loadFee: 0.06, coiRate: 0.05,
       years: 20, premiums: Array(20).fill(50000), simulations: 200, seed: 42,
     });
     expect(baseVal).toBeGreaterThan(0);
@@ -102,8 +104,8 @@ describe("Sensitivity Analysis Grid", () => {
     }
   });
 
-  it("volatilities should include 10%, 12%, 15%, 18%, 20%", () => {
-    expect(VOLATILITIES).toEqual([0.10, 0.12, 0.15, 0.18, 0.20]);
+  it("volatilities should include 10%, 12%, 15%, 19.4%, 24%", () => {
+    expect(VOLATILITIES).toEqual([0.10, 0.12, 0.15, 0.194, 0.24]);
   });
 
   it("color coding: higher values should get green, lower values red", () => {
@@ -132,9 +134,9 @@ describe("PDF Report Monte Carlo & Sensitivity", () => {
     expect(MC_SIMS).toBe(500);
   });
 
-  it("Monte Carlo in PDF should use 15% volatility", () => {
-    const MC_VOL = 0.15;
-    expect(MC_VOL).toBe(0.15);
+  it("Monte Carlo in PDF should use the 19.4% S&P 500 standard deviation", () => {
+    const MC_VOL = SP500_ANNUAL_STDEV;
+    expect(MC_VOL).toBe(0.194);
   });
 
   it("Sensitivity in PDF should use 200 simulations per cell", () => {
@@ -153,7 +155,7 @@ describe("PDF Report Monte Carlo & Sensitivity", () => {
 
   it("PDF sensitivity grid should have 7 return rates x 5 volatilities = 35 cells", () => {
     const returnRates = [0.06, 0.07, 0.08, 0.09, 0.10, 0.11, 0.12];
-    const volatilities = [0.10, 0.12, 0.15, 0.18, 0.20];
+    const volatilities = [0.10, 0.12, 0.15, SP500_ANNUAL_STDEV, 0.24];
     expect(returnRates.length * volatilities.length).toBe(35);
   });
 
@@ -245,8 +247,8 @@ describe("Client Portal Saved Strategies", () => {
 describe("Monte Carlo Client-Side for Portal", () => {
   function runPortalMonteCarlo(iulProjection: any[]) {
     const SIMS = 300;
-    const VOL = 0.15;
-    const AVG_RETURN = 0.10;
+    const VOL = SP500_ANNUAL_STDEV;
+    const AVG_RETURN = SP500_ARITHMETIC_MEAN;
     const LOAD_FEE = 0.06;
     const COI_RATE = 0.05;
     const years = iulProjection.length;

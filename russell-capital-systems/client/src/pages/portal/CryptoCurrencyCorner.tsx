@@ -251,7 +251,7 @@ export default function CryptoCurrencyCorner() {
             <Card className="border-emerald-500/30 bg-gradient-to-br from-emerald-500/5 to-transparent">
               <CardContent className="pt-4 pb-3">
                 <div className="text-[10px] md:text-xs text-muted-foreground leading-tight">Last ATH</div>
-                <div className="text-lg md:text-2xl font-bold text-emerald-400">$126,200</div>
+                <div className="text-lg md:text-2xl font-bold text-emerald-400">$126,198</div>
                 <div className="text-[10px] md:text-xs text-muted-foreground mt-1">Oct 2025 (Cycle 4)</div>
               </CardContent>
             </Card>
@@ -352,7 +352,7 @@ export default function CryptoCurrencyCorner() {
                     </Bar>
                   </BarChart>
                 </ResponsiveContainer>
-                <p className="text-xs text-muted-foreground mt-2">Pattern: 93.7% → 87.1% → 84.2% → 77.5% → ~52.5% — drawdowns shrink each cycle as market matures.</p>
+                <p className="text-xs text-muted-foreground mt-2">Pattern: 93.6% → 86.9% → 84.2% → 77.5% → ~54.0% — drawdowns shrink each cycle as market matures.</p>
               </CardContent>
             </Card>
             <Card>
@@ -367,7 +367,7 @@ export default function CryptoCurrencyCorner() {
                     <Bar dataKey="gain" name="% Gain ATL→ATH" fill="#22c55e" radius={[4, 4, 0, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
-                <p className="text-xs text-muted-foreground mt-2">Diminishing returns: +12,912% → +2,104% → +716% — still massive gains each cycle.</p>
+                <p className="text-xs text-muted-foreground mt-2">Diminishing returns: +12,915% → +2,103% → +715% — still massive gains each cycle.</p>
               </CardContent>
             </Card>
           </div>
