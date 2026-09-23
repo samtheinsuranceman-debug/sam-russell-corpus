@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * Time Machine Calculator — Unified Compounding Calculator
  *
@@ -212,23 +211,6 @@ function InfoTip({ text }: { text: string }) {
   return (
     <TooltipProvider delayDuration={200}>
 
-      {/* Backend Integration Bar */}
-      <ClientSelectorBar
-        clients={calcIntegration.clients}
-        clientsLoading={calcIntegration.clientsLoading}
-        selectedClientId={calcIntegration.selectedClientId}
-        selectedClientName={calcIntegration.selectedClientName}
-        onSelectClient={calcIntegration.selectClient}
-        scenarios={calcIntegration.scenarios}
-        scenariosLoading={calcIntegration.scenariosLoading}
-        scenarioName={calcIntegration.scenarioName}
-        onSetScenarioName={calcIntegration.setScenarioName}
-        onSave={() => calcIntegration.saveScenario({}, {})}
-        onLoad={(s) => calcIntegration.loadScenario(s)}
-        isSaving={calcIntegration.isSaving}
-        lastSavedAt={calcIntegration.lastSavedAt}
-        calculatorName="TimeMachineCalculator"
-      />
       <Tooltip>
         <TooltipTrigger asChild>
           <Info className="h-3.5 w-3.5 text-muted-foreground cursor-help inline-block ml-1" />
@@ -285,7 +267,7 @@ function ChartTooltipContent({ active, payload, label }: any) {
 export default function TimeMachineCalculator() {
   const calcIntegration = useCalculatorIntegration({
     calculatorName: "TimeMachineCalculator",
-    strategyType: "iul-growth",
+    strategyType: "time-machine",
   });
 
   const { data: clientData } = useClientData();
@@ -444,6 +426,40 @@ export default function TimeMachineCalculator() {
           summary="Without taking action on financial analysis, you leave significant value on the table that compounds into a major opportunity cost over time."
         />
       <FactFinderBadge className="mb-4" />
+
+      {/* Backend Integration Bar */}
+      <ClientSelectorBar
+        clients={calcIntegration.clients}
+        clientsLoading={calcIntegration.clientsLoading}
+        selectedClientId={calcIntegration.selectedClientId}
+        selectedClientName={calcIntegration.selectedClientName}
+        onSelectClient={calcIntegration.selectClient}
+        scenarios={calcIntegration.scenarios}
+        scenariosLoading={calcIntegration.scenariosLoading}
+        scenarioName={calcIntegration.scenarioName}
+        onSetScenarioName={calcIntegration.setScenarioName}
+        onSave={() => {
+          const last = compoundRows?.[compoundRows.length - 1];
+          calcIntegration.saveScenario(
+            { annualPremium, fundingYears, startAge, creditRate, projectionYears, selectedIndices, boringRate },
+            last ? { finalAccountValue: last.endingValue, finalSurrenderValue: last.surrenderValue, finalEffectiveReturn: last.effectiveReturn } : {},
+          );
+        }}
+        onLoad={(s) => {
+          const inputs = calcIntegration.loadScenario(s);
+          if (!inputs) return;
+          if (inputs.annualPremium !== undefined) setAnnualPremium(String(inputs.annualPremium));
+          if (typeof inputs.fundingYears === "number") setFundingYears(inputs.fundingYears);
+          if (typeof inputs.startAge === "number") setStartAge(inputs.startAge);
+          if (typeof inputs.creditRate === "number") setCreditRate(inputs.creditRate);
+          if (typeof inputs.projectionYears === "number") setProjectionYears(inputs.projectionYears);
+          if (Array.isArray(inputs.selectedIndices)) setSelectedIndices(inputs.selectedIndices);
+          if (typeof inputs.boringRate === "number") setBoringRate(inputs.boringRate);
+        }}
+        isSaving={calcIntegration.isSaving}
+        lastSavedAt={calcIntegration.lastSavedAt}
+        calculatorName="TimeMachineCalculator"
+      />
       {/* Header */}
       <div className="flex flex-col gap-2">
         <div className="flex items-center justify-between">

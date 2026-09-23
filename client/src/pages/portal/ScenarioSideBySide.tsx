@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { useState, useMemo, useEffect, useCallback } from "react";
 import { 
   PieChart, Pie, Cell, BarChart, Bar, AreaChart, Area, 
@@ -85,14 +84,9 @@ const RADAR_COLORS = ["#3b82f6", "#10b981", "#f59e0b", "#a855f7", "#f43f5e"];
 
 export default function ScenarioSideBySide() {
   const { user } = useAuth();
-  const { selectedClientId } = useClientData();
+  const { selectedClientId, data: clientData } = useClientData();
   
   const { data: clients } = trpc.clients.list.useQuery();
-  const { data: marketData } = trpc.marketData.getOverview.useQuery(undefined, { enabled: !!user });
-  const { data: riskScoring } = trpc.riskScoring.scores.useQuery({ clientId: selectedClientId || 0 }, { enabled: !!selectedClientId });
-  const { data: recommendations } = trpc.recommendations.list.useQuery({ clientId: selectedClientId || 0 }, { enabled: !!selectedClientId });
-  const { data: strategyAnalytics } = trpc.strategyAnalytics.getMetrics.useQuery(undefined, { enabled: !!user });
-  const { data: savedStrategies } = trpc.savedStrategies.list.useQuery(undefined, { enabled: !!user });
   
   const [clientId, setClientId] = useState<number | null>(selectedClientId ?? null);
   const [activeTab, setActiveTab] = useState("overview");
