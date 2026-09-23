@@ -85,6 +85,7 @@ export default function MacroIntelligence() {
             <TabsTrigger value="patterns"><Radar className="mr-1 h-4 w-4" />Patterns</TabsTrigger>
             <TabsTrigger value="factors"><Activity className="mr-1 h-4 w-4" />Factors</TabsTrigger>
             <TabsTrigger value="household"><Landmark className="mr-1 h-4 w-4" />Household</TabsTrigger>
+            <TabsTrigger value="treasury"><Database className="mr-1 h-4 w-4" />Treasury</TabsTrigger>
             <TabsTrigger value="sources"><Database className="mr-1 h-4 w-4" />Sources</TabsTrigger>
           </TabsList>
 
@@ -96,6 +97,7 @@ export default function MacroIntelligence() {
           <TabsContent value="patterns"><PatternsTab /></TabsContent>
           <TabsContent value="factors"><FactorsTab /></TabsContent>
           <TabsContent value="household"><HouseholdTab /></TabsContent>
+          <TabsContent value="treasury"><TreasuryTab /></TabsContent>
           <TabsContent value="sources"><SourcesTab /></TabsContent>
         </Tabs>
       </div>
@@ -559,6 +561,98 @@ function FactorsTab() {
           );
         })}</TableBody>
       </Table>
+    </div>
+  );
+}
+
+// ─── Treasury pool (the daily watch, the archaeology, the grid) ───────────────
+
+function TreasuryTab() {
+  const q = trpc.macro.treasuryPool.useQuery({ archaeology: true });
+  const g = trpc.macro.globalTreasuries.useQuery();
+  if (!q.data) return <p className="p-6 text-sm text-emerald-200/70">Loading…</p>;
+  const d = q.data;
+  const regimeTone: Record<string, string> = { abundant: "border-emerald-400/40 text-emerald-100", normal: "border-emerald-400/20 text-emerald-200", tightening: "border-yellow-400/40 text-yellow-100", draining: "border-orange-400/50 text-orange-100", "dried-up": "border-rose-400/60 text-rose-100" };
+  return (
+    <div className="space-y-6 pt-4">
+      {d.note && <p className="rounded border border-yellow-400/30 bg-yellow-950/20 p-3 text-xs text-yellow-100">{d.note}</p>}
+      <div className="grid gap-4 lg:grid-cols-3">
+        <Card className="border-emerald-400/20 bg-emerald-950/30">
+          <CardHeader><CardTitle className="text-yellow-100">Liquidity dry-up indicator</CardTitle><CardDescription>Is the pool draining? Eight readings, one score, a regime, and the playbook for it.</CardDescription></CardHeader>
+          <CardContent className="space-y-2 text-sm">
+            <div className="flex items-center gap-3"><span className="text-4xl text-yellow-100">{d.dryUp.score}</span><Badge variant="outline" className={regimeTone[d.dryUp.regime]}>{d.dryUp.regime}</Badge><span className="text-xs text-emerald-200/60">coverage {Math.round(d.dryUp.coverage * 100)}%</span></div>
+            <ul className="text-xs">{d.dryUp.drivers.map(x => <li key={x.id} className="flex justify-between gap-2"><span className="text-emerald-100/90">{x.id}</span><span className="text-emerald-200/60">{x.reading === null ? "no reading" : `${x.reading} → ${x.points} pts`}</span></li>)}</ul>
+            <ul className="text-[11px] text-emerald-200/50">{d.dryUp.method.map((m, i) => <li key={i}>• {m}</li>)}</ul>
+          </CardContent>
+        </Card>
+        <Card className="border-emerald-400/20 bg-emerald-950/30 lg:col-span-2">
+          <CardHeader><CardTitle className="text-yellow-100">Prediction grid</CardTitle><CardDescription>Target × horizon from measured leads and current z-scores. "pending" until the stored history has been scanned.</CardDescription></CardHeader>
+          <CardContent>
+            <Table>
+              <TableHeader><TableRow><TableHead>Target</TableHead>{[3, 6, 12].map(h => <TableHead key={h}>{h} m</TableHead>)}</TableRow></TableHeader>
+              <TableBody>{["tp-10y", "tp-foreign-total", "tp-prime", "tp-mortgage-30y", "tp-ci-loans", "tp-home-price"].map(t => (
+                <TableRow key={t}><TableCell className="text-xs">{t}</TableCell>{[3, 6, 12].map(h => { const c = d.grid.find(x => x.target === t && x.horizonMonths === h); return <TableCell key={h} className="text-xs">{c ? (c.direction === "pending" ? <span className="text-emerald-200/40">pending</span> : <span>{c.direction} {c.score} <Badge variant="outline" className="ml-1">{c.grade}</Badge></span>) : "—"}</TableCell>; })}</TableRow>
+              ))}</TableBody>
+            </Table>
+          </CardContent>
+        </Card>
+      </div>
+      <Card className="border-emerald-400/20 bg-emerald-950/30">
+        <CardHeader><CardTitle className="text-yellow-100">Playbook for the current regime: {d.dryUp.regime}</CardTitle><CardDescription>Considerations for the advisor to review with the client, by wealth tier. Never applied automatically.</CardDescription></CardHeader>
+        <CardContent className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">{d.dryUp.playbook.map(p => <div key={p.tier} className="rounded bg-emerald-950/50 p-2 text-xs"><div className="mb-1 text-yellow-100">{p.tier}</div><ul>{p.considerations.map((c, i) => <li key={i}>• {c}</li>)}</ul></div>)}</CardContent>
+      </Card>
+      <Card className="border-emerald-400/20 bg-emerald-950/30">
+        <CardHeader><CardTitle className="text-yellow-100">The fifty pool series</CardTitle><CardDescription>Latest stored reading, three-month change, coverage. {d.manifest} series in the daily pull.</CardDescription></CardHeader>
+        <CardContent>
+          <Table>
+            <TableHeader><TableRow><TableHead>Series</TableHead><TableHead>Group · role</TableHead><TableHead>From</TableHead><TableHead>Latest</TableHead><TableHead>3-month</TableHead><TableHead>Coverage</TableHead></TableRow></TableHeader>
+            <TableBody>{d.series.map(s => (
+              <TableRow key={s.id}>
+                <TableCell><div className="text-yellow-100">{s.name}</div><div className="text-[10px] text-emerald-200/50">{s.id} · <code>{s.series}</code> · {s.sourceId}</div></TableCell>
+                <TableCell className="text-xs">{s.group} · {s.role}</TableCell>
+                <TableCell className="text-xs">{s.publishedFrom.slice(0, 4)}</TableCell>
+                <TableCell className="text-xs">{s.latest ? `${s.latest.value} ${s.unit} (${s.latest.asOf})` : <span className="text-emerald-200/40">not yet pulled</span>}</TableCell>
+                <TableCell className="text-xs">{s.change3m === null || s.change3m === undefined ? "—" : `${s.change3m > 0 ? "+" : ""}${Math.round(s.change3m * 100) / 100}${s.role === "prices" || s.group === "yields" ? "" : "%"}`}</TableCell>
+                <TableCell className="text-xs">{s.meta && s.meta.points > 0 ? `${s.meta.coverageYears} y · ${s.meta.status}` : <span className="text-emerald-200/40">pending</span>}</TableCell>
+              </TableRow>
+            ))}</TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+      {d.archaeology && (
+        <Card className="border-emerald-400/20 bg-emerald-950/30">
+          <CardHeader><CardTitle className="text-yellow-100">Archaeology</CardTitle><CardDescription>{d.archaeology.seriesStored} of {d.archaeology.seriesTotal} series stored · {d.archaeology.months} months · {d.archaeology.patterns?.leads.length ?? 0} leads · {d.archaeology.dominoes.length} domino chains · {d.archaeology.loudest.length} turning points scanned</CardDescription></CardHeader>
+          <CardContent className="space-y-3 text-xs">
+            {d.archaeology.dominoes.slice(0, 8).map((c, i) => <div key={i} className="rounded bg-emerald-950/50 p-2">{c.reading} <span className="text-emerald-200/50">(strength {c.strength}, {c.totalLagMonths} m, conf {c.confidence})</span></div>)}
+            {d.archaeology.loudest.slice(0, 6).map((l, i) => <div key={i} className="rounded bg-emerald-950/50 p-2"><span className="text-yellow-100">{l.turningPoint.kind} {l.turningPoint.asOf} ({l.turningPoint.value})</span>: {l.movers.slice(0, 5).map(m => `${m.name} z ${m.z} [${m.awareness}]`).join("; ")}</div>)}
+            <Table>
+              <TableHeader><TableRow><TableHead>Hypothesis</TableHead><TableHead>Kind</TableHead><TableHead>Claim</TableHead><TableHead>Measured</TableHead></TableRow></TableHeader>
+              <TableBody>{d.archaeology.hypotheses.map(h => <TableRow key={h.id}><TableCell>{h.id}</TableCell><TableCell>{h.kind}</TableCell><TableCell>{h.claim}</TableCell><TableCell>{h.measured ? `r ${h.measured.r} lag ${h.measured.lag} · ${h.measured.grade} · ${h.measured.agrees ? "sign agrees" : "sign disagrees"}` : <span className="text-emerald-200/40">pending</span>}</TableCell></TableRow>)}</TableBody>
+            </Table>
+            <ul className="text-[11px] text-emerald-200/50">{d.archaeology.method.map((m, i) => <li key={i}>• {m}</li>)}</ul>
+          </CardContent>
+        </Card>
+      )}
+      {g.data && (
+        <Card className="border-emerald-400/20 bg-emerald-950/30">
+          <CardHeader><CardTitle className="text-yellow-100">Global treasuries — twenty-five countries</CardTitle><CardDescription>The flow calculus: positive fills the U.S. pool, negative drains it. {g.data.manifest} series in the daily pull.</CardDescription></CardHeader>
+          <CardContent>
+            <Table>
+              <TableHeader><TableRow><TableHead>Country</TableHead><TableHead>Score</TableHead><TableHead>Direction</TableHead><TableHead>Top drivers</TableHead><TableHead>Why on the list</TableHead></TableRow></TableHeader>
+              <TableBody>{g.data.countries.map(c => (
+                <TableRow key={c.iso3}>
+                  <TableCell className="text-yellow-100">{c.name}</TableCell>
+                  <TableCell className="text-xs">{c.result ? c.result.score : <span className="text-emerald-200/40">pending</span>}</TableCell>
+                  <TableCell className="text-xs">{c.result ? c.result.direction : "—"}</TableCell>
+                  <TableCell className="text-xs">{c.result ? c.result.drivers.filter(x => x.reading !== null).slice(0, 3).map(x => `${x.name} ${x.contribution > 0 ? "+" : ""}${x.contribution}`).join("; ") || "no readings stored" : "—"}</TableCell>
+                  <TableCell className="text-xs text-emerald-100/80">{c.why}</TableCell>
+                </TableRow>
+              ))}</TableBody>
+            </Table>
+            <ul className="mt-2 text-[11px] text-emerald-200/50">{g.data.method.map((m, i) => <li key={i}>• {m}</li>)}</ul>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }

@@ -1,13 +1,22 @@
-// @ts-nocheck
-
+// A25 (2026-09-23): the year and gifting inputs now drive results, and the 50-year
+// chart is computed from the client's estate and growth inputs. Before: both inputs
+// were bound to state nothing read, and the evolution chart was seven fixed points.
+// Math: shared/estateProjection.ts (test: server/a25Calculators.test.ts).
 import React, { useState, useMemo } from 'react';
 import { Clock, DollarSign, TrendingUp, Target, Calendar, Percent, ArrowRight, Shield, CheckCircle2, AlertTriangle, FileText, Users } from 'lucide-react';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend, AreaChart, Area, ComposedChart, Line } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend, AreaChart, Area, ComposedChart, Line, ReferenceLine } from 'recharts';
 import { PageInsights } from "@/components/PageInsights";
+import { NumberField, Stat, Notes, ProvenanceSources, usd } from "@/components/calc/CalcKit";
+import { projectEstate, publishedExclusion, ESTATE_PROJECTION_SOURCES } from "@shared/estateProjection";
 
 export default function EstatePlanningTimeline() {
-  const [selectedYear, setSelectedYear] = useState(2024);
-  const [giftingAmount, setGiftingAmount] = useState(0);
+  const [selectedYear, setSelectedYear] = useState(2026);
+  const [giftingAmount, setGiftingAmount] = useState(19000);
+  const [donees, setDonees] = useState(2);
+  const [giftYears, setGiftYears] = useState(10);
+  // Example inputs so the chart opens with a worked case; every one is editable.
+  const [estateValue, setEstateValue] = useState(20000000);
+  const [growthPct, setGrowthPct] = useState(4);
 
   const lifeStageMilestones = useMemo(() => [
     { age: '20s', description: 'Focus on basic financial planning: Start saving, create a will, and designate beneficiaries for simple assets like bank accounts.', icon: <Clock className="w-6 h-6 text-amber-400" /> },
@@ -54,22 +63,22 @@ export default function EstatePlanningTimeline() {
     { year: 2026, amount: 19000 },
   ], []);
 
-  const estateEvolutionData = useMemo(() => [
-    { year: 2024, value: 500000 },
-    { year: 2030, value: 750000 },
-    { year: 2040, value: 1000000 },
-    { year: 2050, value: 1250000 },
-    { year: 2060, value: 1500000 },
-    { year: 2070, value: 1750000 },
-    { year: 2074, value: 2000000 }, // 50-year projection
-  ], []);
+  const projection = useMemo(() => projectEstate({
+    startYear: 2026, estateValue, growthRate: growthPct / 100, horizonYears: 50, married: false,
+    charitableBequest: 0, ilitDeathBenefit: 0, annualGiftPerDonee: giftingAmount, donees, giftYears, priorTaxableGifts: 0,
+  }), [estateValue, growthPct, giftingAmount, donees, giftYears]);
+  const estateEvolutionData = useMemo(() => projection.rows.map(r => ({ year: r.year, value: r.grossEstate, tax: r.estateTax })), [projection]);
+  const exclusionForYear = publishedExclusion(selectedYear);
+  const excessPerDonee = Math.max(0, giftingAmount - projection.annualExclusionUsed);
 
   const handleYearChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedYear(parseInt(e.target.value));
+    const n = parseInt(e.target.value, 10);
+    setSelectedYear(Number.isFinite(n) ? n : 2026);
   };
 
   const handleGiftingChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setGiftingAmount(parseFloat(e.target.value));
+    const n = parseFloat(e.target.value);
+    setGiftingAmount(Number.isFinite(n) ? n : 0);
   };
 
   return (
@@ -155,7 +164,13 @@ export default function EstatePlanningTimeline() {
           onChange={handleYearChange}
           className="mt-4 p-2 bg-slate-700 text-amber-400 rounded"
           placeholder="Select Year"
+          data-testid="timeline-year"
         />
+        <p className="mt-2 text-slate-300" data-testid="timeline-exclusion">
+          {exclusionForYear != null
+            ? `Basic exclusion for a death in ${selectedYear}: ${usd(exclusionForYear)} per person.`
+            : `No exclusion is published for ${selectedYear}. After 2026 it is indexed for inflation (P.L. 119-21); the figure is set each autumn by revenue procedure.`}
+        </p>
       </section>
       
       {/* Annual Gifting Tracker Section */}
@@ -168,15 +183,26 @@ export default function EstatePlanningTimeline() {
           value={giftingAmount}
           onChange={handleGiftingChange}
           className="p-2 bg-slate-700 text-amber-400 rounded mb-4"
-          placeholder="Enter Gifting Amount"
+          placeholder="Gift per donee"
+          data-testid="timeline-gift"
         />
+        <div className="mb-4 grid gap-4 md:grid-cols-2">
+          <NumberField label="Number of donees" value={donees} min={0} onChange={setDonees} />
+          <NumberField label="Years of gifting" value={giftYears} min={0} onChange={setGiftYears} />
+        </div>
+        <p className="mb-4 text-slate-300" data-testid="timeline-gift-result">
+          {excessPerDonee > 0
+            ? `${usd(excessPerDonee)} per donee is above the ${usd(projection.annualExclusionUsed)} annual exclusion: a taxable gift of ${usd(excessPerDonee * donees)} a year that uses lifetime exclusion and needs Form 709.`
+            : `Within the ${usd(projection.annualExclusionUsed)} annual exclusion: ${usd(giftingAmount * donees)} a year leaves the estate with no gift tax and no use of lifetime exclusion.`}
+        </p>
         <ResponsiveContainer width="100%" height={300}>
           <BarChart data={giftingData}>
             <XAxis dataKey="year" />
             <YAxis />
             <Tooltip />
             <Legend />
-            <Bar dataKey="amount" fill="#fbbf24" /> {/* Amber accent */}
+            <Bar dataKey="amount" name="Annual exclusion per donee" fill="#fbbf24" />
+            <ReferenceLine y={giftingAmount} stroke="#34d399" strokeDasharray="4 4" label={{ value: "Your gift", fill: "#34d399" }} />
           </BarChart>
         </ResponsiveContainer>
       </section>
@@ -186,16 +212,26 @@ export default function EstatePlanningTimeline() {
         <h2 className="text-2xl font-semibold mb-4 flex items-center text-amber-400">
           <ArrowRight className="mr-2" /> 50-Year Estate Plan Evolution Timeline
         </h2>
+        <div className="mb-4 grid gap-4 md:grid-cols-2">
+          <NumberField label="Estate value today (example — replace)" value={estateValue} step={100000} onChange={setEstateValue} testId="timeline-estate" />
+          <NumberField label="Assumed annual growth" suffix="%" value={growthPct} step={0.1} onChange={setGrowthPct} hint="Client assumption" />
+        </div>
+        <div className="mb-4 grid gap-4 md:grid-cols-3">
+          <Stat label="Estate tax, death in 2026" value={usd(projection.today.estateTax)} tone="bad" />
+          <Stat label="Estate tax, year 25" value={usd(projection.rows[25]?.estateTax)} tone="bad" />
+          <Stat label="Estate tax, year 50" value={usd(projection.atHorizon.estateTax)} tone="bad" testId="timeline-tax-50" />
+        </div>
         <ResponsiveContainer width="100%" height={300}>
           <ComposedChart data={estateEvolutionData}>
             <XAxis dataKey="year" />
-            <YAxis />
-            <Tooltip />
+            <YAxis tickFormatter={v => `$${(Number(v) / 1e6).toFixed(0)}M`} />
+            <Tooltip formatter={(v: number) => usd(v)} />
             <Legend />
-            <Area type="monotone" dataKey="value" fill="#fbbf24" stroke="#fbbf24" /> {/* Amber accent */}
-            <Line type="monotone" dataKey="value" stroke="#fbbf24" />
+            <Area type="monotone" dataKey="value" name="Gross estate" fill="#fbbf24" stroke="#fbbf24" fillOpacity={0.3} />
+            <Line type="monotone" dataKey="tax" name="Estate tax" stroke="#f87171" dot={false} />
           </ComposedChart>
         </ResponsiveContainer>
+        <div className="mt-4"><Notes notes={projection.notes} /></div>
       </section>
       
       {/* Compliance Section */}
@@ -221,9 +257,9 @@ export default function EstatePlanningTimeline() {
         <ResponsiveContainer width="100%" height={300}>
           <AreaChart data={estateEvolutionData}>
             <XAxis dataKey="year" />
-            <YAxis />
-            <Tooltip />
-            <Area type="monotone" dataKey="value" fill="#fbbf24" stroke="#fbbf24" />
+            <YAxis tickFormatter={v => `$${(Number(v) / 1e6).toFixed(0)}M`} />
+            <Tooltip formatter={(v: number) => usd(v)} />
+            <Area type="monotone" dataKey="value" name="Gross estate" fill="#fbbf24" stroke="#fbbf24" />
           </AreaChart>
         </ResponsiveContainer>
       </section>
@@ -231,7 +267,8 @@ export default function EstatePlanningTimeline() {
       <footer className="mt-12 text-[#7a95b8]">
         <p>This timeline is for illustrative purposes. Consult a professional for personalized advice.</p>
       </footer>
-      <PageInsights section="estate-planning-timeline" />
+      <ProvenanceSources sources={ESTATE_PROJECTION_SOURCES} disclosure="Federal estate and gift tax only; state taxes not included. Growth is the client's assumption. Not legal or tax advice." />
+      <PageInsights pageId="estate-planning-timeline" />
     </div>
   );
 }

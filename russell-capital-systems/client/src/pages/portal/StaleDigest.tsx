@@ -39,6 +39,7 @@ import {
 } from "lucide-react";
 import { ExportToSlides } from "@/components/ExportToSlides";
 import { PageInsights } from "@/components/PageInsights";
+import { NotAvailable } from "@/components/NotAvailable";
 import { toast } from "sonner";
 
 const COLORS = ["#22c55e", "#3b82f6", "#f0c040", "#34d399", "#ef4444", "#ec4899", "#06b6d4", "#f97316"];
@@ -102,6 +103,7 @@ export default function StaleDigest() {
   const [showFilters, setShowFilters] = useState(false);
   const [viewMode, setViewMode] = useState<"grid" | "table">("table");
   const [expandedRows, setExpandedRows] = useState<Record<string, boolean>>({});
+  // The distribution card toggles between a bar chart and a pie chart.
   const [chartType, setChartType] = useState<"bar" | "pie">("bar");
   const [showExportMenu, setShowExportMenu] = useState(false);
   const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
@@ -113,7 +115,8 @@ export default function StaleDigest() {
   const [compareMode, setCompareMode] = useState(false);
   const [selectedRegion, setSelectedRegion] = useState("all");
   const [clientTypeFilter, setClientTypeFilter] = useState("all");
-  const [wealthTierFilter, setWealthTierFilter] = useState("all");
+  // A25b: replaces the wealth-tier / region filters, which filtered invented values.
+  const [contactFilter, setContactFilter] = useState<"all" | "email" | "phone" | "none">("all");
   const [lastContactMethod, setLastContactMethod] = useState("all");
   const [engagementScoreFilter, setEngagementScoreFilter] = useState("all");
   const [riskProfileFilter, setRiskProfileFilter] = useState("all");
@@ -136,10 +139,20 @@ export default function StaleDigest() {
     { staleTime: 300_000 }
   );
   
+  // A25b: client records, for the risk tolerance, state and net worth that the
+  // stale-client rows do not carry (these replace invented tier/region/AUM values).
+  const clientsQuery = trpc.clients.list.useQuery(undefined, { staleTime: 300_000 });
+
+  // A25b: real campaigns for the Campaigns tab (it used to show typed-in ones).
+  const campaignsQuery = trpc.emailCampaigns.list.useQuery(undefined, { staleTime: 300_000 });
+
   const teamQuery = trpc.team.members.useQuery(
     undefined,
     { staleTime: 300_000 }
   );
+  
+  // dashboard.metrics and strategy.list do not exist on the server (and their data
+  // was never read), so those calls are gone.
   
   const sendMut = trpc.staleDigest.send.useMutation({
     onSuccess: (data) => {
@@ -228,34 +241,38 @@ export default function StaleDigest() {
 
   const staleClients = useMemo(() => previewQuery.data?.staleClients ?? [], [previewQuery.data]);
   
+  // A25b: a stale-digest row carries only id, name, email, phone, createdAt, lastContact
+  // and daysSinceContact (server/db.ts getStaleClients). Each row used to be "enriched"
+  // with random-number AUM, portfolio size, engagement score and YTD return, and with
+  // index-based (i % n) wealth tier, risk profile, region, client type and contact method.
+  // None of that was the client's data, so it is gone. The two derived fields below
+  // follow a stated rule from the real email/phone fields.
+  // Risk tolerance, state and net worth are read from the client records
+  // (clients.list), matched by id; a client without a value shows "not recorded".
+  const clientRecords = useMemo(() => {
+    const byId = new Map<number, { riskTolerance: string | null; state: string | null; totalNetWorth: number | null }>();
+    (clientsQuery.data ?? []).forEach((r) => byId.set(r.id, {
+      riskTolerance: r.riskTolerance ?? null,
+      state: r.state ?? null,
+      totalNetWorth: r.totalNetWorth != null && r.totalNetWorth !== "" ? Number(r.totalNetWorth) : null,
+    }));
+    return byId;
+  }, [clientsQuery.data]);
+
   const enrichedClients = useMemo(() => {
-    // Every field comes from the client's own record or is computed from it.
-    // Nothing is invented: a value the record does not hold shows as unknown.
-    const num = (v: unknown) => (v === null || v === undefined || v === "" ? null : Number(v));
-    return staleClients.map((c: any, i) => {
-      const netWorth = num(c.totalNetWorth);
-      const accounts = [c.iraBalance, c.rothBalance, c.taxableAssets, c.k401Balance].map(num).filter((v): v is number => v !== null);
-      const investable = accounts.length ? accounts.reduce((s, v) => s + v, 0) : null;
-      const aumValue = investable ?? netWorth;
-      const risk = c.riskTolerance ? String(c.riskTolerance).replace("_", " ") : null;
+    return staleClients.map((c, i) => {
+      const rec = clientRecords.get(c.id);
       return {
         ...c,
-        id: c.id || `client-${i}`,
-        wealthTier: netWorth === null ? "Unrated" : netWorth >= 5_000_000 ? "Platinum" : netWorth >= 1_000_000 ? "Gold" : "Silver",
-        riskProfile: risk ? risk.charAt(0).toUpperCase() + risk.slice(1) : "Not set",
-        portfolioSize: aumValue ?? 0,
-        // Contact-recency score: 100 minus days since last contact, floored at 0.
-        engagementScore: Math.max(0, 100 - c.daysSinceContact),
-        lastContactMethod: null as string | null,
-        region: c.state || "Unknown",
-        clientType: "Not recorded",
-        aum: aumValue ?? 0,
-        aumKnown: aumValue !== null,
-        ytdReturn: null as string | null,
-        nextAction: c.daysSinceContact >= 90 ? "Call" : c.daysSinceContact >= 60 ? "Schedule Review" : "Send Update",
+        id: String(c.id ?? `client-${i}`),
+        contactOnFile: c.email && c.phone ? "Email + phone" : c.email ? "Email only" : c.phone ? "Phone only" : "None",
+        nextAction: c.phone ? "Call" : c.email ? "Send email" : "Add contact details",
+        riskTolerance: rec?.riskTolerance ?? null,
+        state: rec?.state ?? null,
+        netWorth: rec?.totalNetWorth != null && Number.isFinite(rec.totalNetWorth) ? rec.totalNetWorth : null,
       };
     });
-  }, [staleClients]);
+  }, [staleClients, clientRecords]);
 
   const filteredClients = useMemo(() => {
     let result = enrichedClients;
@@ -272,22 +289,27 @@ export default function StaleDigest() {
     if (filterType !== "all") {
     }
     
-    if (wealthTierFilter !== "all") {
-      result = result.filter((c) => c.wealthTier.toLowerCase() === wealthTierFilter.toLowerCase());
+    // A25b: the wealth-tier and region filters filtered on invented values; this filters
+    // on the contact details actually on file. (A24: the old region filter read
+    // `regionSelected` before it was declared, which crashed the page.)
+    if (contactFilter !== "all") {
+      result = result.filter((c) =>
+        contactFilter === "email" ? !!c.email :
+        contactFilter === "phone" ? !!c.phone :
+        !c.email && !c.phone);
     }
-    
-    if (selectedRegion !== "all") {
-      result = result.filter((c) => c.region.toLowerCase() === selectedRegion.toLowerCase());
-    }
-    
+
+    const key = sortConfig.key as keyof (typeof result)[number];
     result = [...result].sort((a, b) => {
-      if (a[sortConfig.key] < b[sortConfig.key]) return sortConfig.direction === 'asc' ? -1 : 1;
-      if (a[sortConfig.key] > b[sortConfig.key]) return sortConfig.direction === 'asc' ? 1 : -1;
+      const va = a[key] as unknown as string | number;
+      const vb = b[key] as unknown as string | number;
+      if (va < vb) return sortConfig.direction === 'asc' ? -1 : 1;
+      if (va > vb) return sortConfig.direction === 'asc' ? 1 : -1;
       return 0;
     });
     
     return result;
-  }, [enrichedClients, searchQuery, filterType, wealthTierFilter, selectedRegion, sortConfig]);
+  }, [enrichedClients, searchQuery, filterType, contactFilter, sortConfig]);
 
   const paginatedClients = useMemo(() => {
     const startIndex = (currentPage - 1) * itemsPerPage;
@@ -315,65 +337,52 @@ export default function StaleDigest() {
     if (!enrichedClients.length) return [];
     return [...enrichedClients]
       .sort((a, b) => b.daysSinceContact - a.daysSinceContact)
-      .slice(0, 5)
-      .map((c) => ({
-        name: c.name.split(" ")[0] || c.name,
-        days: c.daysSinceContact,
-        score: c.engagementScore
-      }));
+      .slice(0, 5);
   }, [enrichedClients]);
 
-  const wealthTierData = useMemo(() => {
-    if (!enrichedClients.length) return [];
-    const tiers: Record<string, { name: string, count: number, aum: number }> = {};
+  // A25b: counted from the rows. Replaces the wealth-tier chart and the regional table
+  // (both built on invented tiers/regions/AUM) and the fixed risk-vs-AUM and
+  // contact-efficacy arrays, which were typed-in numbers unrelated to any client.
+  const contactOnFileData = useMemo(() => {
+    const groups: Record<string, { name: string; value: number; totalDays: number }> = {};
     enrichedClients.forEach((c) => {
-      if (!tiers[c.wealthTier]) {
-        tiers[c.wealthTier] = { name: c.wealthTier, count: 0, aum: 0 };
-      }
-      tiers[c.wealthTier].count++;
-      tiers[c.wealthTier].aum += c.aum;
+      const g = (groups[c.contactOnFile] ??= { name: c.contactOnFile, value: 0, totalDays: 0 });
+      g.value++;
+      g.totalDays += c.daysSinceContact;
     });
-    return Object.values(tiers).map((t) => ({
-      ...t,
-      aumMillions: parseFloat((t.aum / 1000000).toFixed(2))
-    }));
+    return Object.values(groups).map((g) => ({ ...g, avgDays: Math.round(g.totalDays / g.value) }));
   }, [enrichedClients]);
 
-  const regionalData = useMemo(() => {
-    if (!enrichedClients.length) return [];
-    const regions: Record<string, number> = {};
+  // A25b: counted from the client records' riskTolerance; replaces the typed-in
+  // risk-vs-AUM array (Aggressive $15.2M / 12 clients, ...).
+  const riskToleranceData = useMemo(() => {
+    const label: Record<string, string> = { conservative: "Conservative", moderate: "Moderate", aggressive: "Aggressive", very_aggressive: "Very aggressive" };
+    const groups: Record<string, { name: string; clients: number; netWorth: number; withNetWorth: number }> = {};
     enrichedClients.forEach((c) => {
-      regions[c.region] = (regions[c.region] || 0) + 1;
+      const name = c.riskTolerance ? (label[c.riskTolerance] ?? c.riskTolerance) : "Not recorded";
+      const g = (groups[name] ??= { name, clients: 0, netWorth: 0, withNetWorth: 0 });
+      g.clients++;
+      if (c.netWorth != null) { g.netWorth += c.netWorth; g.withNetWorth++; }
     });
-    return Object.entries(regions).map(([name, value]) => ({ name, value }));
+    return Object.values(groups);
   }, [enrichedClients]);
 
-
-  const riskAumData = useMemo(() => {
-    const byRisk: Record<string, { name: string; aum: number; clients: number }> = {};
-    enrichedClients.forEach((c) => {
-      const e = (byRisk[c.riskProfile] ??= { name: c.riskProfile, aum: 0, clients: 0 });
-      e.aum += c.aum;
-      e.clients += 1;
-    });
-    return Object.values(byRisk).map((e) => ({ ...e, aum: parseFloat((e.aum / 1_000_000).toFixed(2)) }));
-  }, [enrichedClients]);
-
+  const netWorthKnown = useMemo(() => enrichedClients.filter((c) => c.netWorth != null), [enrichedClients]);
 
   const handleExportCSV = useCallback(() => {
     if (!filteredClients.length) return;
     
-    const headers = ["Client Name", "Email", "Last Contact", "Days Since Contact", "Wealth Tier", "AUM", "Risk Profile"];
+    // A25b: the export used to write the random AUM and invented tier/risk columns
+    // into a file advisers could keep; it now writes only the stored fields.
+    const headers = ["Client Name", "Email", "Phone", "Last Contact", "Days Since Contact"];
     const csvContent = [
       headers.join(","),
       ...filteredClients.map((c) => [
         `"${c.name}"`,
         `"${c.email || ""}"`,
+        `"${c.phone || ""}"`,
         `"${c.lastContact ? new Date(c.lastContact).toLocaleDateString() : ""}"`,
         c.daysSinceContact,
-        `"${c.wealthTier}"`,
-        c.aum,
-        `"${c.riskProfile}"`
       ].join(","))
     ].join("\n");
 
@@ -630,7 +639,8 @@ export default function StaleDigest() {
         {/* OVERVIEW TAB */}
         {activeTab === "overview" && (
           <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            {/* Summary stats */}
+            {/* Summary stats. A25b: the cards also showed typed-in trend badges
+                (+5.2 %, -2.1 %, +8.4 %) with no history behind them; those are removed. */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <MetricCard 
                 title="Stale Clients" 
@@ -638,7 +648,6 @@ export default function StaleDigest() {
                 subtitle={`Not contacted in ${staleDays}+ days`}
                 icon={AlertTriangle} 
                 color="#facc15" 
-                trend={5.2}
               />
               <MetricCard 
                 title="Longest Gap" 
@@ -646,15 +655,18 @@ export default function StaleDigest() {
                 subtitle="Maximum days without contact"
                 icon={Clock} 
                 color="#f87171" 
-                trend={-2.1}
               />
+              {/* A25b: this card was "At Risk AUM", a sum of a random AUM per client. AUM is not
+                  recorded per client; this sums the net worth on the client records and says
+                  how many of the stale clients have one. */}
               <MetricCard 
-                title="At Risk AUM" 
-                value={`$${(enrichedClients.reduce((sum, c) => sum + c.aum, 0) / 1000000).toFixed(1)}M`} 
-                subtitle="Total assets of stale clients"
+                title="Recorded Net Worth" 
+                value={netWorthKnown.length ? `$${(netWorthKnown.reduce((sum, c) => sum + (c.netWorth ?? 0), 0) / 1000000).toFixed(1)}M` : "Not available"} 
+                subtitle={netWorthKnown.length
+                  ? `Net worth on record for ${netWorthKnown.length} of ${enrichedClients.length} stale clients`
+                  : "No stale client has a net worth on record"}
                 icon={DollarSign} 
                 color="#22c55e" 
-                trend={8.4}
               />
               <MetricCard 
                 title="Contactable" 
@@ -751,9 +763,10 @@ export default function StaleDigest() {
                   </select>
                 </div>
                 <div className="flex-1 min-h-[300px]">
-                  <div className="h-full min-h-[300px] flex flex-col items-center justify-center text-center text-[#7a95b8] border border-dashed border-[#12233e] rounded-lg px-6">
-                    <p className="text-sm font-medium text-white">No engagement history recorded yet</p>
-                    <p className="text-xs mt-1">Monthly engagement is not stored, so a trend will appear here once snapshots are kept.</p>
+                  {/* This chart used to plot a random walk. Engagement is not recorded
+                      over time, so the trend is shown as not available rather than invented. */}
+                  <div className="h-full flex items-center justify-center text-center text-sm text-[#7a95b8] px-6" data-testid="engagement-trend-not-available">
+                    Engagement history is not available: engagement scores are not recorded over time yet.
                   </div>
                 </div>
               </div>
@@ -775,35 +788,28 @@ export default function StaleDigest() {
                   <thead>
                     <tr className="border-b border-[#12233e]">
                       <th className="text-left py-3 px-4 text-[#7a95b8] font-medium">Client</th>
-                      <th className="text-left py-3 px-4 text-[#7a95b8] font-medium">Tier</th>
+                      <th className="text-left py-3 px-4 text-[#7a95b8] font-medium">Contact on file</th>
                       <th className="text-right py-3 px-4 text-[#7a95b8] font-medium">Days Stale</th>
-                      <th className="text-right py-3 px-4 text-[#7a95b8] font-medium">AUM</th>
+                      <th className="text-left py-3 px-4 text-[#7a95b8] font-medium">Last Contact</th>
                       <th className="text-center py-3 px-4 text-[#7a95b8] font-medium">Action</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-[#12233e]/50">
-                    {topStaleClients.map((client, i) => {
-                      const fullClient = enrichedClients.find((c) => c.name.includes(client.name));
+                    {/* A25b: the Tier, Score and AUM cells were invented (index-based tier,
+                        random-number score and AUM); these cells are the stored fields. */}
+                    {topStaleClients.map((client) => {
                       return (
-                        <tr key={i} className="hover:bg-[#0f1e35] transition-colors">
+                        <tr key={client.id} className="hover:bg-[#0f1e35] transition-colors">
                           <td className="py-3 px-4">
                             <div className="font-medium text-white">{client.name}</div>
-                            <div className="text-xs text-[#7a95b8]">Score: {client.score}/100</div>
+                            <div className="text-xs text-[#7a95b8]">{client.email || "No email"}</div>
                           </td>
-                          <td className="py-3 px-4">
-                            <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${
-                              fullClient?.wealthTier === 'Platinum' ? 'bg-emerald-500/10 text-emerald-400' :
-                              fullClient?.wealthTier === 'Gold' ? 'bg-amber-500/10 text-amber-400' :
-                              'bg-slate-500/10 text-slate-400'
-                            }`}>
-                              {fullClient?.wealthTier || 'Standard'}
-                            </span>
-                          </td>
+                          <td className="py-3 px-4 text-[#c8d8ec]">{client.contactOnFile}</td>
                           <td className="py-3 px-4 text-right">
-                            <span className="text-rose-400 font-medium">{client.days}d</span>
+                            <span className="text-rose-400 font-medium">{client.daysSinceContact}d</span>
                           </td>
-                          <td className="py-3 px-4 text-right text-[#c8d8ec]">
-                            {fullClient?.aumKnown ? `$${((fullClient?.aum || 0) / 1000).toFixed(0)}k` : "—"}
+                          <td className="py-3 px-4 text-[#c8d8ec]">
+                            {client.lastContact ? new Date(client.lastContact).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : "—"}
                           </td>
                           <td className="py-3 px-4 text-center">
                             <button className="p-1.5 rounded-md bg-[#12233e] text-[#c8d8ec] hover:bg-[#22c55e] hover:text-white transition-colors">
@@ -886,31 +892,19 @@ export default function StaleDigest() {
             {showFilters && (
               <div className="rc-card p-4 animate-in slide-in-from-top-2 duration-200">
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-                  <div>
-                    <label className="block text-xs text-[#7a95b8] mb-1">Wealth Tier</label>
+                  {/* A25b: the Wealth Tier and Region filters filtered values that were invented
+                      per row; this filters on the contact details actually on file. */}
+                  <div className="sm:col-span-2">
+                    <label className="block text-xs text-[#7a95b8] mb-1">Contact on file</label>
                     <select 
-                      value={wealthTierFilter} 
-                      onChange={(e) => setWealthTierFilter(e.target.value)}
+                      value={contactFilter} 
+                      onChange={(e) => setContactFilter(e.target.value as typeof contactFilter)}
                       className="rc-input text-sm w-full bg-[#0d1a2e] border-[#12233e]"
                     >
-                      <option value="all">All Tiers</option>
-                      <option value="Platinum">Platinum</option>
-                      <option value="Gold">Gold</option>
-                      <option value="Silver">Silver</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-xs text-[#7a95b8] mb-1">Region</label>
-                    <select 
-                      value={selectedRegion} 
-                      onChange={(e) => setSelectedRegion(e.target.value)}
-                      className="rc-input text-sm w-full bg-[#0d1a2e] border-[#12233e]"
-                    >
-                      <option value="all">All Regions</option>
-                      <option value="North">North</option>
-                      <option value="South">South</option>
-                      <option value="East">East</option>
-                      <option value="West">West</option>
+                      <option value="all">All clients</option>
+                      <option value="email">Has email</option>
+                      <option value="phone">Has phone</option>
+                      <option value="none">No contact details</option>
                     </select>
                   </div>
                   <div>
@@ -925,8 +919,6 @@ export default function StaleDigest() {
                     >
                       <option value="daysSinceContact-desc">Days Stale (High to Low)</option>
                       <option value="daysSinceContact-asc">Days Stale (Low to High)</option>
-                      <option value="aum-desc">AUM (High to Low)</option>
-                      <option value="engagementScore-asc">Engagement (Low to High)</option>
                       <option value="name-asc">Name (A-Z)</option>
                     </select>
                   </div>
@@ -934,8 +926,7 @@ export default function StaleDigest() {
                     <button 
                       onClick={() => {
                         setSearchQuery("");
-                        setWealthTierFilter("all");
-                        setSelectedRegion("all");
+                        setContactFilter("all");
                         setSortConfig({ key: "daysSinceContact", direction: "desc" });
                       }}
                       className="rc-btn rc-btn-ghost text-sm w-full border border-[#12233e] hover:bg-[#12233e]"
@@ -991,18 +982,11 @@ export default function StaleDigest() {
                           </th>
                           <th 
                             className="text-left px-4 py-4 text-[#7a95b8] font-semibold text-xs uppercase tracking-wider cursor-pointer hover:text-white transition-colors"
-                            onClick={() => handleSort('wealthTier')}
+                            onClick={() => handleSort('contactOnFile')}
                           >
+                            {/* A25b: was "Tier" and "AUM" (invented tier, random-number AUM). */}
                             <div className="flex items-center gap-1">
-                              Tier {sortConfig.key === 'wealthTier' && (sortConfig.direction === 'asc' ? <ChevronUp size={12} /> : <ChevronDown size={12} />)}
-                            </div>
-                          </th>
-                          <th 
-                            className="text-left px-4 py-4 text-[#7a95b8] font-semibold text-xs uppercase tracking-wider cursor-pointer hover:text-white transition-colors"
-                            onClick={() => handleSort('aum')}
-                          >
-                            <div className="flex items-center gap-1">
-                              AUM {sortConfig.key === 'aum' && (sortConfig.direction === 'asc' ? <ChevronUp size={12} /> : <ChevronDown size={12} />)}
+                              Contact on file {sortConfig.key === 'contactOnFile' && (sortConfig.direction === 'asc' ? <ChevronUp size={12} /> : <ChevronDown size={12} />)}
                             </div>
                           </th>
                           <th 
@@ -1021,14 +1005,7 @@ export default function StaleDigest() {
                               Days {sortConfig.key === 'daysSinceContact' && (sortConfig.direction === 'asc' ? <ChevronUp size={12} /> : <ChevronDown size={12} />)}
                             </div>
                           </th>
-                          <th 
-                            className="text-center px-4 py-4 text-[#7a95b8] font-semibold text-xs uppercase tracking-wider cursor-pointer hover:text-white transition-colors"
-                            onClick={() => handleSort('engagementScore')}
-                          >
-                            <div className="flex items-center justify-center gap-1">
-                              Recency {sortConfig.key === 'engagementScore' && (sortConfig.direction === 'asc' ? <ChevronUp size={12} /> : <ChevronDown size={12} />)}
-                            </div>
-                          </th>
+                          {/* A25b: the "Health" column plotted a random-number engagement score; removed. */}
                           <th className="px-4 py-4"></th>
                         </tr>
                       </thead>
@@ -1050,23 +1027,14 @@ export default function StaleDigest() {
                                   <Mail size={10} /> {c.email || 'No email'}
                                 </div>
                               </td>
-                              <td className="px-4 py-4">
-                                <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${
-                                  c.wealthTier === 'Platinum' ? 'bg-emerald-500/10 text-emerald-400' :
-                                  c.wealthTier === 'Gold' ? 'bg-amber-500/10 text-amber-400' :
-                                  'bg-slate-500/10 text-slate-400'
-                                }`}>
-                                  {c.wealthTier}
-                                </span>
-                              </td>
                               <td className="px-4 py-4 text-[#c8d8ec]">
-                                {c.aumKnown ? `$${(c.aum / 1000000).toFixed(2)}M` : "—"}
+                                {c.contactOnFile}
+                                {c.phone ? <div className="text-xs text-[#7a95b8] mt-1">{c.phone}</div> : null}
                               </td>
                               <td className="px-4 py-4">
                                 <div className="text-[#c8d8ec]">
                                   {c.lastContact ? new Date(c.lastContact).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : "—"}
                                 </div>
-                                {c.lastContactMethod && <div className="text-xs text-[#7a95b8] mt-1">via {c.lastContactMethod}</div>}
                               </td>
                               <td className="px-4 py-4 text-center">
                                 <span className={`rc-badge ${
@@ -1076,17 +1044,6 @@ export default function StaleDigest() {
                                 }`}>
                                   {c.daysSinceContact}d
                                 </span>
-                              </td>
-                              <td className="px-4 py-4">
-                                <div className="flex items-center gap-2 justify-center">
-                                  <div className="w-16 h-2 bg-[#12233e] rounded-full overflow-hidden">
-                                    <div 
-                                      className={`h-full rounded-full ${c.engagementScore > 70 ? 'bg-[#22c55e]' : c.engagementScore > 40 ? 'bg-amber-400' : 'bg-rose-400'}`}
-                                      style={{ width: `${c.engagementScore}%` }}
-                                    />
-                                  </div>
-                                  <span className="text-xs text-[#7a95b8] w-6">{c.engagementScore}</span>
-                                </div>
                               </td>
                               <td className="px-4 py-4 text-right">
                                 <div className="flex items-center justify-end gap-1">
@@ -1106,17 +1063,21 @@ export default function StaleDigest() {
                             {/* Expanded Row Details */}
                             {expandedRows[c.id] && (
                               <tr className="bg-[#0a1424] border-b border-[#12233e]">
-                                <td colSpan={8} className="p-0">
+                                <td colSpan={6} className="p-0">
                                   <div className="px-8 py-6 grid grid-cols-1 md:grid-cols-3 gap-6 animate-in slide-in-from-top-2 duration-200">
                                     <div>
                                       <h4 className="text-sm font-medium text-white mb-3 flex items-center gap-2">
                                         <Activity size={14} className="text-[#3b82f6]" /> Client Profile
                                       </h4>
                                       <div className="space-y-2 text-sm">
-                                        <div className="flex justify-between"><span className="text-[#7a95b8]">Risk Profile:</span> <span className="text-[#c8d8ec]">{c.riskProfile}</span></div>
-                                        <div className="flex justify-between"><span className="text-[#7a95b8]">Region:</span> <span className="text-[#c8d8ec]">{c.region}</span></div>
-                                        <div className="flex justify-between"><span className="text-[#7a95b8]">Client Type:</span> <span className="text-[#c8d8ec]">{c.clientType}</span></div>
-                                        <div className="flex justify-between"><span className="text-[#7a95b8]">YTD Return:</span> <span className="text-[#7a95b8]">{c.ytdReturn === null ? "Not tracked" : `${c.ytdReturn}%`}</span></div>
+                                        {/* A25b: Risk Profile, Region, Client Type (index-based) and YTD Return
+                                            (random) were invented; these are the stored fields. */}
+                                        <div className="flex justify-between"><span className="text-[#7a95b8]">Email:</span> <span className="text-[#c8d8ec]">{c.email || "—"}</span></div>
+                                        <div className="flex justify-between"><span className="text-[#7a95b8]">Phone:</span> <span className="text-[#c8d8ec]">{c.phone || "—"}</span></div>
+                                        <div className="flex justify-between"><span className="text-[#7a95b8]">Risk tolerance:</span> <span className="text-[#c8d8ec] capitalize">{c.riskTolerance ? c.riskTolerance.replace("_", " ") : "Not recorded"}</span></div>
+                                        <div className="flex justify-between"><span className="text-[#7a95b8]">State:</span> <span className="text-[#c8d8ec]">{c.state || "Not recorded"}</span></div>
+                                        <div className="flex justify-between"><span className="text-[#7a95b8]">Net worth:</span> <span className="text-[#c8d8ec]">{c.netWorth != null ? `$${c.netWorth.toLocaleString("en-US")}` : "Not recorded"}</span></div>
+                                        <div className="flex justify-between"><span className="text-[#7a95b8]">Client since:</span> <span className="text-[#c8d8ec]">{c.createdAt ? new Date(c.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : "—"}</span></div>
                                       </div>
                                     </div>
                                     <div>
@@ -1125,7 +1086,7 @@ export default function StaleDigest() {
                                       </h4>
                                       <div className="bg-[#0d1a2e] border border-[#12233e] rounded-lg p-3">
                                         <div className="font-medium text-[#c8d8ec] mb-1">{c.nextAction}</div>
-                                        <p className="text-xs text-[#7a95b8] mb-3">Based on {c.daysSinceContact} days of inactivity and recent market changes.</p>
+                                        <p className="text-xs text-[#7a95b8] mb-3">No contact for {c.daysSinceContact} days. Rule: call if a phone number is on file, otherwise email, otherwise add contact details.</p>
                                         <button className="text-xs bg-[#3b82f6] hover:bg-[#2563eb] text-white px-3 py-1.5 rounded transition-colors w-full">
                                           Execute Action
                                         </button>
@@ -1135,22 +1096,28 @@ export default function StaleDigest() {
                                       <h4 className="text-sm font-medium text-white mb-3 flex items-center gap-2">
                                         <Clock size={14} className="text-[#34d399]" /> Recent History
                                       </h4>
-                                      <div className="space-y-3">
-                                        <div className="flex gap-3">
-                                          <div className="w-1.5 h-1.5 rounded-full bg-[#12233e] mt-1.5 shrink-0" />
-                                          <div>
-                                            <div className="text-xs text-[#c8d8ec]">System sent automated digest</div>
-                                            <div className="text-[10px] text-[#7a95b8]">45 days ago</div>
+                                      {/* A25b: this list was two made-up events ("System sent automated digest,
+                                          45 days ago"). It now shows this client's entries from the activity
+                                          log the page already loads (activity.list, last 50 workspace events). */}
+                                      {(() => {
+                                        const events = (activityQuery.data ?? []).filter((e) => String(e.clientId) === c.id).slice(0, 3);
+                                        if (!events.length) {
+                                          return <div className="text-xs text-[#7a95b8]" data-testid="client-history-empty">No entries for this client in the latest workspace activity.</div>;
+                                        }
+                                        return (
+                                          <div className="space-y-3">
+                                            {events.map((e) => (
+                                              <div key={e.id} className="flex gap-3">
+                                                <div className="w-1.5 h-1.5 rounded-full bg-[#22c55e] mt-1.5 shrink-0" />
+                                                <div>
+                                                  <div className="text-xs text-[#c8d8ec]">{e.summary || e.action}</div>
+                                                  <div className="text-[10px] text-[#7a95b8]">{new Date(e.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</div>
+                                                </div>
+                                              </div>
+                                            ))}
                                           </div>
-                                        </div>
-                                        <div className="flex gap-3">
-                                          <div className="w-1.5 h-1.5 rounded-full bg-[#22c55e] mt-1.5 shrink-0" />
-                                          <div>
-                                            <div className="text-xs text-[#c8d8ec]">Quarterly review meeting</div>
-                                            <div className="text-[10px] text-[#7a95b8]">{c.daysSinceContact} days ago</div>
-                                          </div>
-                                        </div>
-                                      </div>
+                                        );
+                                      })()}
                                     </div>
                                   </div>
                                 </td>
@@ -1169,94 +1136,95 @@ export default function StaleDigest() {
         )}
 
         {/* ANALYTICS TAB */}
+        {/* A25b: this tab charted invented wealth tiers and random-number AUM, a regional
+            table over index-based regions, and two typed-in arrays (risk vs AUM, contact
+            efficacy). It now charts only what the stale-client rows hold; the rest says
+            what is missing. */}
         {activeTab === "analytics" && (
           <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* Chart 3: Wealth Tier Analysis */}
               <div className="rc-card flex flex-col">
                 <div className="flex items-center justify-between mb-6">
                   <h3 className="text-lg font-semibold text-white flex items-center gap-2">
-                    <Award size={18} className="text-[#7a95b8]" />
-                    Stale Clients by Wealth Tier
+                    <Phone size={18} className="text-[#7a95b8]" />
+                    Stale Clients by Contact Details on File
                   </h3>
                 </div>
                 <div className="flex-1 min-h-[300px]">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={wealthTierData} layout="vertical" margin={{ top: 10, right: 30, left: 20, bottom: 5 }}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#12233e" horizontal={false} />
-                      <XAxis type="number" stroke="#7a95b8" fontSize={12} tickLine={false} axisLine={false} />
-                      <YAxis dataKey="name" type="category" stroke="#7a95b8" fontSize={12} tickLine={false} axisLine={false} />
-                      <RTooltip content={<CustomTooltip />} cursor={{ fill: "#12233e", opacity: 0.4 }} />
-                      <Legend verticalAlign="top" height={36} />
-                      <Bar dataKey="count" name="Client Count" fill="#3b82f6" radius={[0, 4, 4, 0]} barSize={20} />
-                      <Bar dataKey="aumMillions" name="AUM ($M)" fill="#22c55e" radius={[0, 4, 4, 0]} barSize={20} />
-                    </BarChart>
-                  </ResponsiveContainer>
+                  {contactOnFileData.length > 0 ? (
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart data={contactOnFileData} layout="vertical" margin={{ top: 10, right: 30, left: 20, bottom: 5 }}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#12233e" horizontal={false} />
+                        <XAxis type="number" allowDecimals={false} stroke="#7a95b8" fontSize={12} tickLine={false} axisLine={false} />
+                        <YAxis dataKey="name" type="category" width={110} stroke="#7a95b8" fontSize={12} tickLine={false} axisLine={false} />
+                        <RTooltip content={<CustomTooltip />} cursor={{ fill: "#12233e", opacity: 0.4 }} />
+                        <Bar dataKey="value" name="Stale clients" fill="#3b82f6" radius={[0, 4, 4, 0]} barSize={20} />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  ) : (
+                    <div className="h-full flex items-center justify-center text-sm text-[#7a95b8]">No stale clients at this threshold.</div>
+                  )}
                 </div>
               </div>
 
-              {/* Chart 4: Contact Method Radar */}
-              <div className="rc-card flex flex-col">
-                <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-lg font-semibold text-white flex items-center gap-2">
-                    <Target size={18} className="text-[#7a95b8]" />
-                    Historical Contact Efficacy
-                  </h3>
-                </div>
-                <div className="flex-1 min-h-[300px]">
-                  <div className="h-full min-h-[300px] flex flex-col items-center justify-center text-center text-[#7a95b8] border border-dashed border-[#12233e] rounded-lg px-6">
-                    <p className="text-sm font-medium text-white">No contact-method data recorded</p>
-                    <p className="text-xs mt-1">Notes and activity entries do not record the channel used, so contact efficacy by method cannot be shown.</p>
-                  </div>
-                </div>
+              <div className="space-y-4">
+                <NotAvailable
+                  what="Stale clients by wealth tier and AUM"
+                  reason="Wealth tiers are not defined and AUM is not recorded per client. The net worth on client records is summed on the Overview tab."
+                  from="a firm-defined tier rule and an AUM field on the client record"
+                />
+                <NotAvailable
+                  what="Contact efficacy by channel"
+                  reason="Contact attempts and outcomes are not recorded by channel."
+                  from="a contact-attempt log with channel and outcome"
+                />
               </div>
-              
-              {/* Chart 5: Risk vs AUM Composed Chart */}
+
               <div className="rc-card flex flex-col lg:col-span-2">
                 <div className="flex items-center justify-between mb-6">
                   <h3 className="text-lg font-semibold text-white flex items-center gap-2">
                     <Shield size={18} className="text-[#7a95b8]" />
-                    Risk Profile vs Total AUM at Risk
+                    Stale Clients by Recorded Risk Tolerance
                   </h3>
                 </div>
-                <div className="flex-1 min-h-[350px]">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <ComposedChart data={riskAumData} margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#12233e" vertical={false} />
-                      <XAxis dataKey="name" stroke="#7a95b8" fontSize={12} tickLine={false} axisLine={false} />
-                      <YAxis yAxisId="left" stroke="#7a95b8" fontSize={12} tickLine={false} axisLine={false} label={{ value: 'AUM ($M)', angle: -90, position: 'insideLeft', fill: '#7a95b8' }} />
-                      <YAxis yAxisId="right" orientation="right" stroke="#7a95b8" fontSize={12} tickLine={false} axisLine={false} label={{ value: 'Client Count', angle: 90, position: 'insideRight', fill: '#7a95b8' }} />
-                      <RTooltip content={<CustomTooltip />} />
-                      <Legend />
-                      <Bar yAxisId="left" dataKey="aum" name="Total AUM ($M)" barSize={40} fill="#10b981" radius={[4, 4, 0, 0]} />
-                      <Line yAxisId="right" type="monotone" dataKey="clients" name="Number of Clients" stroke="#facc15" strokeWidth={3} dot={{ r: 6, fill: '#0a1424', strokeWidth: 2 }} />
-                    </ComposedChart>
-                  </ResponsiveContainer>
+                <div className="flex-1 min-h-[300px]">
+                  {riskToleranceData.length > 0 ? (
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart data={riskToleranceData} margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#12233e" vertical={false} />
+                        <XAxis dataKey="name" stroke="#7a95b8" fontSize={12} tickLine={false} axisLine={false} />
+                        <YAxis allowDecimals={false} stroke="#7a95b8" fontSize={12} tickLine={false} axisLine={false} />
+                        <RTooltip content={<CustomTooltip />} cursor={{ fill: "#12233e", opacity: 0.4 }} />
+                        <Bar dataKey="clients" name="Stale clients" fill="#10b981" barSize={40} radius={[4, 4, 0, 0]} />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  ) : (
+                    <div className="h-full flex items-center justify-center text-sm text-[#7a95b8]">No stale clients at this threshold.</div>
+                  )}
                 </div>
+                <p className="text-xs text-[#7a95b8] mt-2">From the risk tolerance on each client record; "Not recorded" means the record has none.</p>
               </div>
             </div>
 
-            {/* Table 3: Regional Breakdown */}
             <div className="rc-card">
-              <h3 className="text-lg font-semibold text-white mb-6">Regional Breakdown</h3>
+              <h3 className="text-lg font-semibold text-white mb-6">Contact Details on File</h3>
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b border-[#12233e]">
-                      <th className="text-left py-3 px-4 text-[#7a95b8] font-medium">Region</th>
+                      <th className="text-left py-3 px-4 text-[#7a95b8] font-medium">Contact on file</th>
                       <th className="text-right py-3 px-4 text-[#7a95b8] font-medium">Stale Clients</th>
                       <th className="text-right py-3 px-4 text-[#7a95b8] font-medium">% of Total</th>
                       <th className="text-right py-3 px-4 text-[#7a95b8] font-medium">Avg Days Stale</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-[#12233e]/50">
-                    {regionalData.map((region, i) => {
-                      const total = regionalData.reduce((sum, r) => sum + r.value, 0);
-                      const percent = ((region.value / total) * 100).toFixed(1);
+                    {contactOnFileData.map((row) => {
+                      const percent = ((row.value / enrichedClients.length) * 100).toFixed(1);
                       return (
-                        <tr key={i} className="hover:bg-[#0f1e35] transition-colors">
-                          <td className="py-3 px-4 font-medium text-white">{region.name}</td>
-                          <td className="py-3 px-4 text-right text-[#c8d8ec]">{region.value}</td>
+                        <tr key={row.name} className="hover:bg-[#0f1e35] transition-colors">
+                          <td className="py-3 px-4 font-medium text-white">{row.name}</td>
+                          <td className="py-3 px-4 text-right text-[#c8d8ec]">{row.value}</td>
                           <td className="py-3 px-4 text-right text-[#c8d8ec]">
                             <div className="flex items-center justify-end gap-2">
                               <div className="w-16 h-1.5 bg-[#12233e] rounded-full overflow-hidden">
@@ -1265,9 +1233,7 @@ export default function StaleDigest() {
                               <span>{percent}%</span>
                             </div>
                           </td>
-                          <td className="py-3 px-4 text-right text-[#c8d8ec]">
-                            {Math.round(enrichedClients.filter((c) => c.region === region.name).reduce((sum, c) => sum + c.daysSinceContact, 0) / region.value)}d
-                          </td>
+                          <td className="py-3 px-4 text-right text-[#c8d8ec]">{row.avgDays}d</td>
                         </tr>
                       );
                     })}
@@ -1292,78 +1258,57 @@ export default function StaleDigest() {
                 </button>
               </div>
 
-              {/* Table 4: Active Campaigns */}
+              {/* Table 4: Campaigns. A25b: this table was four typed-in campaigns with
+                  made-up sent counts and open/action rates. It now lists the workspace's
+                  real email campaigns (emailCampaigns.list). Delivery counts and rates are
+                  not recorded per campaign, so those columns are gone. */}
+              {campaignsQuery.isLoading ? (
+                <div className="text-sm text-[#7a95b8]">Loading campaigns…</div>
+              ) : !(campaignsQuery.data ?? []).length ? (
+                <div className="text-sm text-[#7a95b8]" data-testid="campaigns-empty">No email campaigns have been created in this workspace.</div>
+              ) : (
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="bg-[#0a1424] border-b border-[#12233e]">
                       <th className="text-left py-3 px-4 text-[#7a95b8] font-medium">Campaign Name</th>
-                      <th className="text-left py-3 px-4 text-[#7a95b8] font-medium">Target Segment</th>
+                      <th className="text-left py-3 px-4 text-[#7a95b8] font-medium">Type</th>
                       <th className="text-center py-3 px-4 text-[#7a95b8] font-medium">Status</th>
-                      <th className="text-right py-3 px-4 text-[#7a95b8] font-medium">Sent</th>
-                      <th className="text-right py-3 px-4 text-[#7a95b8] font-medium">Open Rate</th>
-                      <th className="text-right py-3 px-4 text-[#7a95b8] font-medium">Action Rate</th>
+                      <th className="text-right py-3 px-4 text-[#7a95b8] font-medium">Created</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-[#12233e]/50">
-                    {[
-                      { name: "Quarterly Market Update", target: "All > 60 days", status: "Active", sent: 145, open: 68, action: 12 },
-                      { name: "Platinum Touchpoint", target: "Platinum > 30 days", status: "Active", sent: 24, open: 85, action: 35 },
-                      { name: "Year-End Review Prompt", target: "All > 90 days", status: "Paused", sent: 312, open: 42, action: 8 },
-                      { name: "Risk Reassessment", target: "Aggressive > 45 days", status: "Draft", sent: 0, open: 0, action: 0 },
-                    ].map((camp, i) => (
-                      <tr key={i} className="hover:bg-[#0f1e35] transition-colors">
+                    {(campaignsQuery.data ?? []).map((camp) => (
+                      <tr key={camp.id} className="hover:bg-[#0f1e35] transition-colors">
                         <td className="py-3 px-4 font-medium text-white">{camp.name}</td>
-                        <td className="py-3 px-4 text-[#c8d8ec]">{camp.target}</td>
+                        <td className="py-3 px-4 text-[#c8d8ec] capitalize">{camp.campaignType}</td>
                         <td className="py-3 px-4 text-center">
-                          <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${
-                            camp.status === 'Active' ? 'bg-emerald-500/10 text-emerald-400' :
-                            camp.status === 'Paused' ? 'bg-amber-500/10 text-amber-400' :
+                          <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium capitalize ${
+                            camp.status === 'active' ? 'bg-emerald-500/10 text-emerald-400' :
+                            camp.status === 'paused' ? 'bg-amber-500/10 text-amber-400' :
                             'bg-slate-500/10 text-slate-400'
                           }`}>
                             {camp.status}
                           </span>
                         </td>
-                        <td className="py-3 px-4 text-right text-[#c8d8ec]">{camp.sent}</td>
-                        <td className="py-3 px-4 text-right text-[#c8d8ec]">{camp.open}%</td>
-                        <td className="py-3 px-4 text-right text-[#c8d8ec]">{camp.action}%</td>
+                        <td className="py-3 px-4 text-right text-[#7a95b8]">{new Date(camp.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
               </div>
+              )}
             </div>
 
-            {/* Table 5: Recent Activity Log */}
+            {/* Table 5: Recent Activity Log. A25b: this was four made-up log lines, two of
+                them attributed to the signed-in user. Digest sends are not logged. */}
             <div className="rc-card">
               <h3 className="text-lg font-semibold text-white mb-6">Recent Digest Activity</h3>
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="border-b border-[#12233e]">
-                      <th className="text-left py-3 px-4 text-[#7a95b8] font-medium">Date</th>
-                      <th className="text-left py-3 px-4 text-[#7a95b8] font-medium">Action</th>
-                      <th className="text-left py-3 px-4 text-[#7a95b8] font-medium">Initiated By</th>
-                      <th className="text-right py-3 px-4 text-[#7a95b8] font-medium">Clients Affected</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-[#12233e]/50">
-                    {[
-                      { date: "Today, 9:41 AM", action: "Manual Digest Sent", user: user?.name || "Advisor", count: 12 },
-                      { date: "Yesterday, 2:00 PM", action: "Automated Rules Run", user: "System", count: 45 },
-                      { date: "Oct 12, 10:15 AM", action: "Exported CSV", user: user?.name || "Advisor", count: 86 },
-                      { date: "Oct 10, 8:00 AM", action: "Campaign 'Market Update' Triggered", user: "System", count: 34 },
-                    ].map((log, i) => (
-                      <tr key={i} className="hover:bg-[#0f1e35] transition-colors">
-                        <td className="py-3 px-4 text-[#c8d8ec] whitespace-nowrap">{log.date}</td>
-                        <td className="py-3 px-4 text-white">{log.action}</td>
-                        <td className="py-3 px-4 text-[#7a95b8]">{log.user}</td>
-                        <td className="py-3 px-4 text-right text-[#c8d8ec]">{log.count}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+              <NotAvailable
+                what="Digest activity log"
+                reason="Digest sends, rule runs and exports are not recorded anywhere yet."
+                from="a digest-send log written by staleDigest.send"
+              />
             </div>
           </div>
         )}
@@ -1430,36 +1375,13 @@ export default function StaleDigest() {
                 <button className="rc-btn rc-btn-ghost text-sm border border-[#12233e]">Add Client</button>
               </div>
               
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="border-b border-[#12233e]">
-                      <th className="text-left py-3 px-4 text-[#7a95b8] font-medium">Client Name</th>
-                      <th className="text-left py-3 px-4 text-[#7a95b8] font-medium">Reason</th>
-                      <th className="text-right py-3 px-4 text-[#7a95b8] font-medium">Added On</th>
-                      <th className="px-4 py-3"></th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-[#12233e]/50">
-                    {[
-                      { name: "Robert Johnson", reason: "Requested annual contact only", date: "Jan 15, 2023" },
-                      { name: "Sarah Williams", reason: "Account closing in progress", date: "Mar 22, 2023" },
-                      { name: "TechCorp Inc.", reason: "Handled by enterprise team", date: "Jun 05, 2023" },
-                    ].map((client, i) => (
-                      <tr key={i} className="hover:bg-[#0f1e35] transition-colors">
-                        <td className="py-3 px-4 font-medium text-white">{client.name}</td>
-                        <td className="py-3 px-4 text-[#c8d8ec]">{client.reason}</td>
-                        <td className="py-3 px-4 text-right text-[#7a95b8]">{client.date}</td>
-                        <td className="py-3 px-4 text-right">
-                          <button className="text-[#7a95b8] hover:text-rose-400 transition-colors">
-                            <Trash2 size={16} />
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+              {/* A25b: this table listed three made-up clients ("Robert Johnson", ...).
+                  There is no exclusion store; getStaleClients excludes nobody. */}
+              <NotAvailable
+                what="Exclusion list"
+                reason="No exclusion list is stored, so every client past the threshold appears in the digest."
+                from="an exclusion table read by getStaleClients (server/db.ts)"
+              />
             </div>
           </div>
         )}
