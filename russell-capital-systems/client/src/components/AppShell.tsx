@@ -1766,7 +1766,7 @@ export function AppShell({ children, title: _title, subtitle: _subtitle }: { chi
   );
 
   return (
-    <div className={`rc-portal-theme min-h-screen relative${floors ? " rc-floors" : ""}`}>
+    <div className="rc-portal-theme min-h-screen relative" data-nav={floors ? "floors" : "classic"}>
       {!floors && <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />}
 
       <div className="rc-main">
