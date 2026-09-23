@@ -76,8 +76,9 @@ describe("Batch 8 — Wire remaining 4 experience pages", () => {
 
     it("STRATEGY_PATHS includes live-copilot, social-narcotic, war-room", async () => {
       const { STRATEGY_PATHS } = await import("../client/src/contexts/StrategyContext");
-      expect(STRATEGY_PATHS["live-copilot"]).toBe("/portal/live-copilot");
-      expect(STRATEGY_PATHS["social-narcotic"]).toBe("/portal/social-narcotic");
+      // The real routes (App.tsx): /portal/live-copilot and /portal/social-narcotic never existed.
+      expect(STRATEGY_PATHS["live-copilot"]).toBe("/portal/co-pilot");
+      expect(STRATEGY_PATHS["social-narcotic"]).toBe("/portal/social");
       expect(STRATEGY_PATHS["war-room"]).toBe("/portal/war-room");
     });
   });

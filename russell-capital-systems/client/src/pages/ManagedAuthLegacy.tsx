@@ -28,7 +28,7 @@ export default function ManagedAuthLegacy() {
   const copy = routeCopy[window.location.pathname] ?? routeCopy["/register"];
 
   return (
-    <main className="relative min-h-screen grid place-items-center bg-[#04100c] px-6 py-16 text-emerald-50">
+    <div className="relative min-h-screen grid place-items-center bg-[#04100c] px-6 py-16 text-emerald-50">
       {/* The boulevard's two text-free edges, one per side on wide screens; the seam sits behind the card. */}
       <img src="/rcs-city-boulevard.webp" alt="Rain-washed boulevard at night lined with lamps, trees and green banners" className="absolute inset-y-0 left-0 h-full w-full object-cover object-center brightness-[.6] saturate-[1.1] md:w-1/2" loading="lazy" decoding="async" />
       <img src="/rcs-city-boulevard-r.webp" alt="" aria-hidden="true" className="absolute inset-y-0 right-0 hidden h-full w-1/2 object-cover object-center brightness-[.6] saturate-[1.1] md:block" loading="lazy" decoding="async" />
@@ -51,6 +51,6 @@ export default function ManagedAuthLegacy() {
           <ArrowLeft className="h-4 w-4" /> Return to homepage
         </a>
       </section>
-    </main>
+    </div>
   );
 }

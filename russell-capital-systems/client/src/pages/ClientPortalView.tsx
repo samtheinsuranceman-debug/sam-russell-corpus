@@ -1,4 +1,5 @@
 import { trpc } from "@/lib/trpc";
+import { isPlausibleShareToken } from "@shared/shareTokens";
 import { useParams } from "wouter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -9,7 +10,7 @@ import {
   TrendingUp, Shield, ChevronDown, ChevronUp, BarChart3, Home,
   Target, Wallet, Activity,
 } from "lucide-react";
-import { useState, useMemo } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { SP500_ARITHMETIC_MEAN, SP500_ANNUAL_STDEV } from "@shared/monteCarloEngine";
 import { mulberry32, normal, MACRO_DEFAULT_SEED } from "@shared/macro/random";
 
@@ -584,23 +585,44 @@ export default function ClientPortalView() {
   const params = useParams<{ token: string }>();
   const token = params.token ?? "";
 
-  const { data, isLoading, error } = trpc.clientPortal.view.useQuery(
+  // A token that cannot be one we issued is refused here, without a request.
+  const tokenOk = isPlausibleShareToken(token);
+  const { data, isLoading, error, refetch } = trpc.clientPortal.view.useQuery(
     { token },
-    { enabled: !!token, retry: false }
+    { enabled: tokenOk, retry: false }
   );
+
+  // Never leave a visitor on the spinner: after 15 s say so and offer a retry.
+  const [slow, setSlow] = useState(false);
+  useEffect(() => {
+    if (!isLoading) { setSlow(false); return; }
+    const t = setTimeout(() => setSlow(true), 15000);
+    return () => clearTimeout(t);
+  }, [isLoading]);
 
   if (isLoading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center space-y-3">
-          <div className="animate-spin h-8 w-8 border-2 border-emerald-500 border-t-transparent rounded-full mx-auto" />
-          <p className="text-muted-foreground">Loading your portal...</p>
+        <div className="text-center space-y-3" role="status" aria-live="polite">
+          {slow ? (
+            <>
+              <p className="text-muted-foreground">Your portal is taking longer than usual to open.</p>
+              <button type="button" onClick={() => refetch()} className="rounded-md border border-border px-4 py-2 text-sm hover:bg-muted/40">
+                Try again
+              </button>
+            </>
+          ) : (
+            <>
+              <div className="animate-spin h-8 w-8 border-2 border-emerald-500 border-t-transparent rounded-full mx-auto" />
+              <p className="text-muted-foreground">Loading your portal...</p>
+            </>
+          )}
         </div>
       </div>
     );
   }
 
-  if (error || !data) {
+  if (!tokenOk || error || !data) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <Card className="max-w-md w-full mx-4">
@@ -660,7 +682,7 @@ export default function ClientPortalView() {
         </div>
       </header>
 
-      <main className="container max-w-5xl py-6">
+      <div className="container max-w-5xl py-6">
         <Tabs defaultValue="overview" className="space-y-6">
           <TabsList className="grid w-full grid-cols-4 h-11">
             <TabsTrigger value="overview" className="flex items-center gap-1.5 text-xs sm:text-sm">
@@ -729,7 +751,7 @@ export default function ClientPortalView() {
           <p>This portal provides read-only access to your financial information.</p>
           <p className="mt-1">For questions or changes, please contact your financial advisor at <strong>{firmName}</strong>.</p>
         </div>
-      </main>
+      </div>
     </div>
   );
 }

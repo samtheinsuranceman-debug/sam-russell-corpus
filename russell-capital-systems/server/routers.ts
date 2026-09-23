@@ -1,5 +1,6 @@
 import { HELOC_RATE_DEFAULT } from "@shared/marketRateDefaults";
 import { TRPCError } from "@trpc/server";
+import { assertShareToken, noDatabase } from "./_core/shareTokens";
 import { createHash, randomBytes } from "crypto";
 import { z } from "zod";
 import { COOKIE_NAME } from "@shared/const";
@@ -1576,8 +1577,9 @@ Keep it personal, specific with dollar amounts, and actionable. Use their actual
 
     /** Public: Get deck by share token — no auth required */
     getByShareToken: publicProcedure.input(z.object({ token: z.string() })).query(async ({ input }) => {
+      assertShareToken(input.token, "shared deck");
       const db = await getDb();
-      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+      if (!db) throw noDatabase();
       const { slideShares, savedSlideDecks } = await import("../drizzle/schema");
       const { eq } = await import("drizzle-orm");
       const [share] = await db.select().from(slideShares).where(eq(slideShares.shareToken, input.token)).limit(1);
@@ -2612,6 +2614,7 @@ Keep it personal, specific with dollar amounts, and actionable. Use their actual
     }),
     // Public procedure for client-facing portal access (enhanced with portfolio + meetings)
     view: publicProcedure.input(z.object({ token: z.string() })).query(async ({ input }) => {
+      assertShareToken(input.token, "client portal");
       const tokenRow = await validatePortalToken(input.token);
       if (!tokenRow) throw new TRPCError({ code: "NOT_FOUND", message: "Invalid or expired portal link" });
       const data = await getClientPortalDataEnhanced(tokenRow.clientId, tokenRow.workspaceId);
@@ -4280,9 +4283,11 @@ Keep it personal, specific with dollar amounts, and actionable. Use their actual
     }),
 
     getByToken: publicProcedure.input(z.object({ token: z.string() })).query(async ({ input }) => {
-      const db = (await getDb())!;
+      assertShareToken(input.token, "shared projection");
+      const db = await getDb();
+      if (!db) throw noDatabase();
       const [row] = await db.select().from(sharedProjections).where(eq(sharedProjections.token, input.token)).limit(1);
-      if (!row) return null;
+      if (!row) throw new TRPCError({ code: "NOT_FOUND", message: "This shared projection link does not exist or has been removed." });
       if (new Date(row.expiresAt) < new Date()) return { expired: true, data: null };
       // Increment view count
       await db!.update(sharedProjections).set({ viewCount: (row.viewCount ?? 0) + 1, lastViewedAt: new Date() }).where(eq(sharedProjections.id, row.id));
@@ -9314,6 +9319,7 @@ If a field cannot be determined, use 0 for numbers and "unknown" for strings. Be
     }),
     // Public endpoint for client portal video viewing
     getByShareToken: publicProcedure.input(z.object({ token: z.string() })).query(async ({ input }) => {
+      assertShareToken(input.token, "video");
       const { getVideoProposalByShareToken, getVideoProposalChapters } = await import("./db");
       const proposal = await getVideoProposalByShareToken(input.token);
       if (!proposal || proposal.status !== "completed") throw new TRPCError({ code: "NOT_FOUND", message: "Video not found or not ready" });

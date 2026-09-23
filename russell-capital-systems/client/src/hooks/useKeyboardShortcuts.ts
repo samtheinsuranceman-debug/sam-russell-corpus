@@ -22,7 +22,7 @@ const GO_SHORTCUTS: Record<string, { path: string; label: string }> = {
   c: { path: "/portal/clients", label: "Clients" },
   a: { path: "/portal/arena", label: "Arena" },
   n: { path: "/portal/nerve-center", label: "Nerve Center" },
-  s: { path: "/portal/strategy-lab", label: "Strategy Lab" },
+  s: { path: "/portal/strategy", label: "Strategy Lab" },
   p: { path: "/portal/pet", label: "Pet System" },
   m: { path: "/portal/morning-ritual", label: "Morning Ritual" },
   t: { path: "/portal/toilet", label: "Quick Glance" },

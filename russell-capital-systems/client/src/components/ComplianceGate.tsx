@@ -1,8 +1,9 @@
-import { useState, useEffect, useCallback, createContext, useContext, useRef, useMemo } from "react";
+import { useState, useEffect, useCallback, createContext, useContext, useRef, useMemo, lazy, Suspense } from "react";
 import { useLocation } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/_core/hooks/useAuth";
-import ComplianceDisclosure from "@/pages/ComplianceDisclosure";
+// Only needed until the visitor acknowledges; loaded on demand, not in every page's entry bundle.
+const ComplianceDisclosure = lazy(() => import("@/pages/ComplianceDisclosure"));
 import { isOwnerBypassEmail } from "@shared/accessControl";
 import { apiUrl } from "@/lib/api";
 
@@ -236,11 +237,13 @@ export default function ComplianceGate({ children, returnTo }: ComplianceGatePro
 
   if (!signed && !isOwner) {
     return (
-      <ComplianceDisclosure
-        returnTo={returnTo}
-        onSigned={handleSigned}
-        isAnonymous={!isAuthenticated}
-      />
+      <Suspense fallback={null}>
+        <ComplianceDisclosure
+          returnTo={returnTo}
+          onSigned={handleSigned}
+          isAnonymous={!isAuthenticated}
+        />
+      </Suspense>
     );
   }
 

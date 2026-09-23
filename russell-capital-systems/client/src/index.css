@@ -464,8 +464,9 @@ input:focus, select:focus, textarea:focus,
   font-size: 14px; font-weight: 600; cursor: pointer;
   transition: all 0.12s; border: none; outline: none;
 }
-.rc-btn-primary { background: #22c55e; color: #fff; }
-.rc-btn-primary:hover { background: #16a34a; }
+/* White text needs >= 4.5:1: #15803d is 5.0:1 (the old #22c55e was 2.3:1, a WCAG AA failure). */
+.rc-btn-primary { background: #15803d; color: #fff; }
+.rc-btn-primary:hover { background: #166534; }
 .rc-btn-secondary { background: rgba(34,197,94,0.12); color: #22c55e; border: 1px solid rgba(34,197,94,0.25); }
 .rc-btn-secondary:hover { background: rgba(34,197,94,0.2); }
 .rc-btn-ghost { background: transparent; color: var(--muted-text); }
@@ -1178,12 +1179,13 @@ th {
 
 .rc-portal-theme .rc-btn-primary {
   color: white;
-  background: linear-gradient(135deg, #059669, #10b981 58%, #34d399);
+  /* Every stop keeps white text at >= 4.5:1 (#047857 5.5:1, #065f46 7.7:1). */
+  background: linear-gradient(135deg, #065f46, #047857 58%, #047857);
   box-shadow: 0 10px 30px rgba(6,95,70, 0.34);
 }
 
 .rc-portal-theme .rc-btn-primary:hover {
-  background: linear-gradient(135deg, #10b981, #34d399);
+  background: linear-gradient(135deg, #047857, #065f46);
   transform: translateY(-1px);
 }
 
