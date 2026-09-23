@@ -209,7 +209,7 @@ function MonteCarloSummary({ iulProjection, primaryColor }: { iulProjection: any
         ))}
       </div>
       <div className="mt-2 p-2 rounded bg-muted/20 border border-border/20 text-[10px] text-muted-foreground">
-        Monte Carlo simulation models {iulProjection.length}-year IUL outcomes from S&P 500 draws at the historical 11.86% arithmetic mean and 19.4% annual volatility (Damodaran, 1928–2025). The IUL floor of 0% prevents negative returns. Base case uses a fixed 10% return: <strong style={{ color: primaryColor }}>{fmt(mcData.actual)}</strong>.
+        Monte Carlo simulation models {iulProjection.length}-year IUL outcomes from S&P 500 draws at the historical 11.86% arithmetic mean and 19.4% annual volatility. Source: NYU Stern (Damodaran), S&P 500 annual returns including dividends, 1928–2025, read Sep 23, 2026. The IUL floor of 0% prevents negative returns. Base case uses a fixed 10% return: <strong style={{ color: primaryColor }}>{fmt(mcData.actual)}</strong>.
       </div>
     </div>
   );
