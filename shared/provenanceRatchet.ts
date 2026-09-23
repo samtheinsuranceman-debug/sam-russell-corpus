@@ -92,7 +92,6 @@ export const PAGES_PRINTING_NO_SOURCE: readonly string[] = [
   "client/src/pages/portal/MultiGenWealthTransfer.tsx",
   "client/src/pages/portal/MultiScenarioPlayZone.tsx",
   "client/src/pages/portal/PatentShowcase.tsx",
-  "client/src/pages/portal/PolicyLoans.tsx",
   "client/src/pages/portal/PolicyReview.tsx",
   "client/src/pages/portal/PortfolioDriftMonitor.tsx",
   "client/src/pages/portal/PredictiveAnalytics.tsx",

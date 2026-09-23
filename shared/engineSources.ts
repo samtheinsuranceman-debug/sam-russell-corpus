@@ -70,6 +70,7 @@ export const ENGINE_SOURCE_LOADERS: Record<string, Loader> = {
   "shared/nlpBrain.ts": () => import("./nlpBrain").then(m => m.NLP_BRAIN_SOURCES),
   "shared/pageRatings.ts": () => import("./pageRatings").then(m => m.PAGE_RATINGS_SOURCES),
   "shared/policyMechanics.ts": () => import("./policyMechanics").then(m => m.POLICY_MECHANICS_SOURCES),
+  "shared/policyLoanMechanics.ts": () => import("./policyLoanMechanics").then(m => m.POLICY_LOAN_SOURCES),
   "shared/powerHistory.ts": () => import("./powerHistory").then(m => m.POWER_HISTORY_SOURCES),
   "shared/premiumFinancing.ts": () => import("./premiumFinancing").then(m => m.PREMIUM_FINANCING_SOURCES),
   "shared/provenance.ts": () => import("./provenance").then(m => m.PROVENANCE_SOURCES),
