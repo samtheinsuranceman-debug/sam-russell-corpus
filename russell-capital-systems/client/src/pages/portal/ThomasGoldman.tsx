@@ -49,12 +49,18 @@ import {
   X,
 } from "lucide-react";
 import { toast } from "sonner";
+import type { inferRouterOutputs } from "@trpc/server";
+import type { AppRouter } from "../../../../server/routers";
+
+/** The council's workings. The server sends them to advisors and the owner only; a household gets null. */
+type CouncilDetails = NonNullable<inferRouterOutputs<AppRouter>["thomas"]["ask"]["council"]>;
 
 type Turn = {
   role: "user" | "assistant";
   content: string;
   /** Carrier records this turn consulted, shown as a grounding badge. */
   carriers?: string[];
+  council?: CouncilDetails | null;
 };
 
 type Review = {
@@ -85,7 +91,7 @@ export default function ThomasGoldman() {
 
   const ask = trpc.thomas.ask.useMutation({
     onSuccess: res => {
-      setTurns(prev => [...prev, { role: "assistant", content: res.reply, carriers: res.carriersConsulted }]);
+      setTurns(prev => [...prev, { role: "assistant", content: res.reply, carriers: res.carriersConsulted, council: res.council }]);
       setSummary(res.summary);
       if (res.foldedTurns > 0) {
         // Say so rather than silently changing what he remembers.
@@ -156,7 +162,8 @@ export default function ThomasGoldman() {
     const next: Turn[] = [...turns, { role: "user", content: message }];
     setTurns(next);
     setInput("");
-    ask.mutate({ messages: next, depth, priorSummary: summary || undefined });
+    // Role and text only: the grounding badges and council workings stay on this screen.
+    ask.mutate({ messages: next.map(({ role, content }) => ({ role, content })), depth, priorSummary: summary || undefined });
   };
 
   const [finishing, setFinishing] = useState(false);
@@ -327,6 +334,9 @@ export default function ThomasGoldman() {
                       <span>Grounded on platform data: {t.carriers.join(", ")}</span>
                     </div>
                   )}
+
+                  {/* Council details — advisors and the owner only (the server sends nothing to a household) */}
+                  {t.role === "assistant" && t.council && <CouncilBlock council={t.council} />}
 
                   {/* Challenge */}
                   {t.role === "assistant" && (
@@ -590,6 +600,63 @@ function ReviewBlock({
               Only one AI provider is connected, so the same model reviewed its own work. That is worth much
               less than a genuine second opinion — add another provider in the AI Connector.
             </p>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function CouncilBlock({ council }: { council: CouncilDetails }) {
+  const [open, setOpen] = useState(false);
+  const spoke = council.panel.filter(p => p.ok).length;
+  return (
+    <div className="mt-3 rounded-xl border border-sky-500/25 bg-sky-500/5">
+      <button
+        type="button"
+        onClick={() => setOpen(!open)}
+        aria-expanded={open}
+        className="w-full flex items-center gap-2 px-3 py-2 text-left text-[12px] text-sky-300"
+      >
+        <Layers className="w-3.5 h-3.5 shrink-0" />
+        <span className="font-medium">Council details</span>
+        <span className="text-slate-400">
+          {council.outcome} · {spoke}/{council.panel.length} models
+          {council.confidence ? ` · confidence ${council.confidence}` : ""}
+        </span>
+      </button>
+      {open && (
+        <div className="px-3 pb-3 space-y-2 text-[12px] text-slate-300">
+          <p className="text-slate-400">{council.refusal ?? council.decisionReason}</p>
+          <ul className="space-y-1">
+            {council.panel.map(p => (
+              <li key={p.label}>
+                <span className="text-white">{p.label}</span> — {p.providerId}
+                {p.model ? ` / ${p.model}` : ""} · {p.ok ? `${p.latencyMs} ms, ${p.sources.length} sources` : `failed: ${p.error ?? "no answer"}`}
+              </li>
+            ))}
+          </ul>
+          <p className="text-slate-400">
+            Judge: {council.judgeProviderId ? `${council.judgeProviderId} / ${council.judgeModel}` : "none"}
+            {council.judgeRepaired ? " (JSON repaired once)" : ""}
+            {council.judgeError ? ` — ${council.judgeError}` : ""}
+          </p>
+          <p className="text-slate-400">
+            Web facts: {council.factsProviderId ? `${council.factSources.length} sources via ${council.factsProviderId}` : council.factsError ?? "not requested"}
+            {" · "}
+            {council.totalTokens.toLocaleString()} tokens · {Math.round(council.latencyMs / 100) / 10}s
+          </p>
+          {council.judge && council.judge.contradictions.length > 0 && (
+            <div>
+              <p className="text-amber-300 font-medium">Contradictions</p>
+              <ul className="list-disc pl-4">
+                {council.judge.contradictions.map((c, i) => (
+                  <li key={i}>
+                    {c.claim}: {c.positions.map(pos => `${pos.model} — ${pos.stance}`).join("; ")}
+                  </li>
+                ))}
+              </ul>
+            </div>
           )}
         </div>
       )}

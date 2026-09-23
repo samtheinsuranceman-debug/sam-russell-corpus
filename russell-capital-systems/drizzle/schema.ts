@@ -3403,3 +3403,45 @@ export const macroFactorScores = mysqlTable("macro_factor_scores", {
   lastScoredAsOf: varchar("lastScoredAsOf", { length: 10 }),
   updatedAt:    timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });
+
+// ─── The Council: multi-model consensus audit (0086_council_runs) ────────────
+// Added 23 Sep 2026. One row per council run. Holds a SHA-256 of the question,
+// never its text, and the workspace id as the only link to a household: which
+// models spoke, their latencies and token counts, and the judge's JSON.
+export type CouncilPanelLogJson = Array<{
+  providerId: string;
+  model: string;
+  ok: boolean;
+  latencyMs: number;
+  promptTokens?: number;
+  completionTokens?: number;
+  totalTokens?: number;
+  sourceCount?: number;
+  error?: string;
+}>;
+export type CouncilJudgeLogJson = Record<string, unknown>;
+
+export const councilRuns = mysqlTable("council_runs", {
+  id:              int("id").autoincrement().primaryKey(),
+  workspaceId:     int("workspaceId"),
+  room:            varchar("room", { length: 40 }).notNull(),
+  questionHash:    varchar("questionHash", { length: 64 }).notNull(),
+  outcome:         mysqlEnum("outcome", ["council", "single", "degraded", "refused"]).notNull(),
+  forced:          boolean("forced").default(false).notNull(),
+  decisionReason:  varchar("decisionReason", { length: 300 }),
+  panel:           json("panel").$type<CouncilPanelLogJson>(),
+  judgeProviderId: varchar("judgeProviderId", { length: 80 }),
+  judgeModel:      varchar("judgeModel", { length: 120 }),
+  judge:           json("judge").$type<CouncilJudgeLogJson>(),
+  judgeRepaired:   boolean("judgeRepaired").default(false).notNull(),
+  confidence:      mysqlEnum("confidence", ["high", "medium", "low"]),
+  factsProviderId: varchar("factsProviderId", { length: 80 }),
+  factCount:       int("factCount").default(0).notNull(),
+  totalTokens:     int("totalTokens").default(0).notNull(),
+  latencyMs:       int("latencyMs").default(0).notNull(),
+  createdAt:       timestamp("createdAt").defaultNow().notNull(),
+}, (t) => ({
+  byCreated:   index("council_runs_created").on(t.createdAt),
+  byWorkspace: index("council_runs_workspace_time").on(t.workspaceId, t.createdAt),
+}));
+export type CouncilRunRow = typeof councilRuns.$inferSelect;
