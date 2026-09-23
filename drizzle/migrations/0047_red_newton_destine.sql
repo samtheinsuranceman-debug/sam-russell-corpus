@@ -1,1 +1,0 @@
--- already applied: 0047_red_newton_destine

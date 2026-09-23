@@ -1,1 +1,0 @@
--- already applied: 0019_supreme_supreme_intelligence

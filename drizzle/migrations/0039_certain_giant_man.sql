@@ -1,1 +1,0 @@
--- already applied: 0039_certain_giant_man

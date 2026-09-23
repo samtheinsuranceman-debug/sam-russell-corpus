@@ -1,1 +1,0 @@
--- already applied: 0032_shallow_the_anarchist

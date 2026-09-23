@@ -26,6 +26,7 @@ import SiteMapOverlay from "./components/SiteMapOverlay";
 import AdvisorNudge from "./components/AdvisorNudge";
 const SiteMapPage = lazy(() => import("./pages/portal/SiteMapPage"));
 const SamuelGoldman = lazy(() => import("./pages/portal/SamuelGoldman"));
+const SourcesPage = lazy(() => import("./pages/portal/Sources"));
 
 // Public pages — lazy-loaded to reduce initial bundle
 const Landing = lazy(() => import("./pages/Landing"));
@@ -899,6 +900,7 @@ function Router() {
       {/* Site map + the hive front door (22 Sep 2026) */}
       <Route path="/portal/map" component={gated(SiteMapPage, "/portal/map")} />
       <Route path="/portal/samuel-goldman" component={gated(SamuelGoldman, "/portal/samuel-goldman")} />
+      <Route path="/portal/sources" component={gated(SourcesPage, "/portal/sources")} />
       {/* ─── PR-3b: pages ported from russell-capital-app ─── */}
       <Route path="/portal/retirement-advantage" component={gated(RetirementAdvantage, "/portal/retirement-advantage")} />
       <Route path="/portal/admin/health" component={gated(AdminHealthDashboard, "/portal/admin/health")} />
