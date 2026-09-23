@@ -2037,3 +2037,8 @@ html[data-quiet] .rc-integral { display: none; }
   .rcs-sweep { opacity: 0 !important; }
   .rcs-kenburns { transform: scale(1.06); }
 }
+
+/* Arrival field filaments (ArrivalField.tsx): one steady direction, never expand-contract; still under reduced motion. */
+.rc-arrival-filament { animation: rc-arrival-drift linear infinite; }
+@keyframes rc-arrival-drift { from { stroke-dashoffset: 0; } to { stroke-dashoffset: -2100; } }
+@media (prefers-reduced-motion: reduce) { .rc-arrival-filament { animation: none; } }
