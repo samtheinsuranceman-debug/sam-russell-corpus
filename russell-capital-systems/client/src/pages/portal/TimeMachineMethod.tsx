@@ -6,7 +6,7 @@
  *   YOUR PLAN (Client's Real Policy)  → Cool Blue/Silver (#60a5fa / #94a3b8)
  *   TIME MACHINE (Historical Model)   → Warm Amber/Gold (#f59e0b / #fbbf24)
  *
- * Every hover tooltip explains the AG 49-compliant methodology:
+ * Every hover tooltip explains the methodology:
  * We show compliant crediting rates (0-7.5%) applied to a hypothetical
  * pre-existing account large enough that the dollar credits match what
  * actual historical index returns would have produced.
@@ -98,14 +98,14 @@ const fmtM = (n: number) => {
 };
 
 const AG49_TOOLTIP = {
-  yourPlan: "YOUR PLAN: This column shows your actual premium schedule compounding at the AG 49-compliant flat illustrated rate. These are the numbers you would see on a standard carrier illustration.",
+  yourPlan: "YOUR PLAN: This column shows your actual premium schedule compounding at the assumed flat crediting rate you set. A carrier's own illustration may differ.",
   timeMachine: (year: number, rate: number, startYear: number) => {
     const calYear = startYear + year - 1;
-    return `TIME MACHINE MODEL (${calYear}): This value represents a hypothetical pre-existing account large enough that, when credited at the AG 49-compliant rate of ${fmtPct(rate * 100)}, it produces the same dollar interest credit that the actual historical index return would have generated in ${calYear}. No AG 49 laws are violated — we illustrate compliant crediting rates (0%-7.5%) applied to a larger account, not non-compliant rates applied to your account.`;
+    return `TIME MACHINE MODEL (${calYear}): This value represents a hypothetical pre-existing account large enough that, when credited at the assumed crediting rate of ${fmtPct(rate * 100)}, it produces the same dollar interest credit that the actual historical index return would have generated in ${calYear}. This is a mechanic, not a carrier illustration.`;
   },
   chartHover: (year: number, startYear: number) => {
     const calYear = startYear + year - 1;
-    return `Year ${year} (Calendar ${calYear}): The Time Machine model demonstrates actual 30+ year historical index performance by imagining a super-sized pre-existing account compounding at AG 49-compliant maximum rates. This allows the truth of historical returns to be shown without violating any NAIC AG 49 laws.`;
+    return `Year ${year} (Calendar ${calYear}): The Time Machine model demonstrates actual 30+ year historical index performance by imagining a super-sized pre-existing account compounding at the assumed crediting rate. This is a mechanic, not a carrier illustration.`;
   },
   rateHover: (rate: number, calYear: number) =>
     rate === 0
@@ -197,7 +197,7 @@ function TimeMachineChartTooltip({ active, payload, label, startYear, totalPremi
       </div>
       <div className="mt-2 pt-2 border-t border-border/50">
         <p className="text-[9px] text-muted-foreground leading-tight">
-          The Time Machine values represent a hypothetical pre-existing account credited at AG 49-compliant rates
+          The Time Machine values represent a hypothetical pre-existing account credited at an assumed crediting rate
           ({"\u2264"}7.5%) sized to match what actual {calYear} index returns would have produced.
           No non-compliant rates are illustrated.
         </p>
@@ -247,9 +247,9 @@ This tool employs the "Time Machine Method," a proprietary educational framework
 
 HOW THE TIME MACHINE METHOD WORKS WITHIN THE LAW:
 
-Rather than illustrating non-compliant crediting rates (which would violate AG 49), the Time Machine Method takes a different approach. It imagines a hypothetical pre-existing account that is large enough that, when credited at AG 49-compliant rates (0% to 7.5%), the resulting dollar amount of interest credit matches what actual historical index returns would have produced. This is mathematically equivalent but legally distinct:
+Rather than illustrating non-compliant crediting rates (which would violate AG 49), the Time Machine Method takes a different approach. It imagines a hypothetical pre-existing account that is large enough that, when credited at an assumed rate you set, the resulting dollar amount of interest credit matches what actual historical index returns would have produced. This is mathematically equivalent but legally distinct:
 
-• WHAT WE DO NOT DO: We never show a crediting rate above the AG 49 maximum. Every rate shown is between 0% and the strategy's cap rate.
+• WHAT THIS IS: A mechanic, not an illustration. Every rate shown is an assumption the visitor sets; the carrier's own illustration governs any policy.
 • WHAT WE DO: We show what account value would be required so that a compliant crediting rate produces the same dollar result as the historical return.
 • WHY THIS MATTERS: It allows clients to see the truth of 30+ years of actual market history applied to real carrier crediting parameters — without any AG 49 violation.
 
@@ -754,7 +754,7 @@ export default function TimeMachineMethod() {
                       <span className={COLORS.timeMachine.text}>Time Machine</span>
                       <Badge className="bg-amber-600 text-[10px]">Historical</Badge>
                       <InfoPill
-                        text="TIME MACHINE: This model shows what a hypothetical super-sized pre-existing account would have produced when credited at AG 49-compliant rates matching actual historical index returns. The account is sized so that compliant rates produce dollar credits equivalent to what the real index returned."
+                        text="TIME MACHINE: This model shows what a hypothetical super-sized pre-existing account would have produced when credited at an assumed rate and sized to match actual historical index returns. The account is sized so that compliant rates produce dollar credits equivalent to what the real index returned."
                         variant="timeMachine"
                       />
                     </CardTitle>
@@ -834,7 +834,7 @@ export default function TimeMachineMethod() {
                           <button className="p-1.5 rounded-md hover:bg-muted"><Info className="w-4 h-4 text-muted-foreground" /></button>
                         </TooltipTrigger>
                         <TooltipContent className="max-w-sm text-xs">
-                          Hover over any point to see the AG 49-compliant methodology. The Time Machine model uses a hypothetical super-sized account credited at compliant rates to demonstrate what actual historical index returns would have produced.
+                          Hover over any point to see the methodology. The Time Machine model uses a hypothetical super-sized account credited at compliant rates to demonstrate what actual historical index returns would have produced.
                         </TooltipContent>
                       </Tooltip>
                     </TooltipProvider>
@@ -887,7 +887,7 @@ export default function TimeMachineMethod() {
                           <button className="p-1.5 rounded-md hover:bg-muted"><Info className="w-4 h-4 text-muted-foreground" /></button>
                         </TooltipTrigger>
                         <TooltipContent className="max-w-sm text-xs">
-                          Every gold bar represents the actual credited rate that would have been applied based on the index strategy's cap, floor, participation rate, and spread. All rates are AG 49-compliant (0% to cap). Hover any bar for details.
+                          Every gold bar represents the actual credited rate that would have been applied based on the index strategy's cap, floor, participation rate, and spread. All rates run from 0% to the strategy's cap. Hover any bar for details.
                         </TooltipContent>
                       </Tooltip>
                     </TooltipProvider>
@@ -932,7 +932,7 @@ export default function TimeMachineMethod() {
                           <button className="p-1.5 rounded-md hover:bg-muted"><Info className="w-4 h-4 text-muted-foreground" /></button>
                         </TooltipTrigger>
                         <TooltipContent className="max-w-sm text-xs">
-                          Effective Return = (This Year's Interest Credit / Total Premiums Paid) x 100. When the gold line crosses 28%, 50%, or 80%, it means a single year's interest credit equals that percentage of all premiums ever paid — using only AG 49-compliant rates.
+                          Effective Return = (This Year's Interest Credit / Total Premiums Paid) x 100. When the gold line crosses 28%, 50%, or 80%, it means a single year's interest credit equals that percentage of all premiums ever paid — using only the assumed crediting rate.
                         </TooltipContent>
                       </Tooltip>
                     </TooltipProvider>
@@ -1033,7 +1033,7 @@ export default function TimeMachineMethod() {
                       <button className="ml-auto p-1 rounded hover:bg-muted"><Info className="w-3.5 h-3.5 text-muted-foreground" /></button>
                     </TooltipTrigger>
                     <TooltipContent className="max-w-sm text-xs">
-                      Hover over any Time Machine cell for a detailed explanation of how that value was calculated using AG 49-compliant rates applied to a hypothetical super-sized account.
+                      Hover over any Time Machine cell for a detailed explanation of how that value was calculated using the assumed crediting rate applied to a hypothetical super-sized account.
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
@@ -1295,7 +1295,7 @@ export default function TimeMachineMethod() {
           <NAICDisclaimer
             variant="full"
             showsHistoricalData showsProjections showsComparisons showsPolicyLoans showsCashValues
-            additionalText="The Time Machine Method is a proprietary educational framework of Russell Capital Systems™. It demonstrates actual 30+ year historical index performance by imagining a super-sized pre-existing account compounding at AG 49-compliant maximum rates, allowing the truth of historical returns to be shown without violating any NAIC AG 49 laws."
+            additionalText="The Time Machine Method is a proprietary educational framework of Russell Capital Systems™. It demonstrates actual 30+ year historical index performance by imagining a super-sized pre-existing account compounding at the assumed crediting rate. This is a mechanic, not a carrier illustration."
           />
         </TabsContent>
       </Tabs>

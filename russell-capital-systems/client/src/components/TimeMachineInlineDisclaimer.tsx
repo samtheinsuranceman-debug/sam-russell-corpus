@@ -15,7 +15,7 @@ export function TimeMachineInlineDisclaimer() {
         </p>
         <p className="leading-relaxed">
           Time Machine (gold) values represent a <strong className="text-amber-300">hypothetical pre-existing account</strong> large
-          enough that AG 49-compliant crediting rates (0%–7.5%) produce the same dollar interest credits as actual
+          enough that the assumed crediting rate produces the same dollar interest credits as actual
           historical index returns. <strong className="text-amber-300">No non-compliant rates are illustrated.</strong>{" "}
           This is an educational tool — not a carrier illustration. Consult your carrier's formal illustration
           for guaranteed and non-guaranteed ledger values.

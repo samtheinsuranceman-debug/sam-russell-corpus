@@ -11,7 +11,7 @@
  *   • Compound growth projections using actual historical index data
  *
  * Default parameters:
- *   Cap Rate:           7.5% (per NAIC AG 49 max illustrated rate)
+ *   Cap Rate:           7.5% (an assumed rate; AG 49-A sets each carrier's illustrated maximum by formula)
  *   Floor Rate:         0%   (standard IUL floor)
  *   Participation Rate: 100%
  *   Default Start Year: 2005
@@ -405,10 +405,10 @@ export const IBBOTSON_DISCLAIMER =
   "represent research-based estimates only. They are NOT guaranteed production " +
   "increases. Past performance does not guarantee future results. Actual IUL " +
   "policy performance depends on carrier crediting methods, policy charges, " +
-  "current cap rates, and other factors. The 7.5% cap rate reflects the NAIC " +
-  "AG 49 maximum illustrated rate. Consult with a qualified financial " +
+  "current cap rates, and other factors. The 7.5% rate is an assumption, not a " +
+  "carrier illustration. Consult with a qualified financial " +
   "professional before making any financial decisions.";
 
 export const IBBOTSON_SHORT_DISCLAIMER =
   "Based on Ibbotson SBBI historical data. Research-based estimates only — not guaranteed. " +
-  "Past performance ≠ future results. AG 49 max illustrated rate: 7.5%.";
+  "Past performance ≠ future results. Assumed crediting rate: 7.5%.";
