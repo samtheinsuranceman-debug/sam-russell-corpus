@@ -39,7 +39,6 @@ export const INTEGRATIONS: Integration[] = [
   { id: "groq", name: "Groq", category: "ai", mode: "runtime", purpose: "Fast additional voice", envKeys: ["GROQ_API_KEY"], wiredTo: "ultraAI fan-out" },
   { id: "cohere", name: "Cohere", category: "ai", mode: "runtime", purpose: "Additional voice", envKeys: ["COHERE_API_KEY"], wiredTo: "ultraAI fan-out" },
   { id: "together", name: "Together AI", category: "ai", mode: "runtime", purpose: "Additional voice", envKeys: ["TOGETHER_API_KEY"], wiredTo: "ultraAI fan-out" },
-  { id: "manus", name: "Manus / built-in gateway", category: "ai", mode: "runtime", purpose: "Managed-host model, notifications, heartbeat cron", envKeys: ["BUILT_IN_FORGE_API_KEY", "BUILT_IN_FORGE_API_URL"], wiredTo: "portalAI, notifyOwner, heartbeat" },
   // ── Voice / video ──
   { id: "elevenlabs", name: "ElevenLabs", category: "voice", mode: "runtime", purpose: "The tape recorder's cloned voice", envKeys: ["ELEVENLABS_API_KEY", "ELEVENLABS_VOICE_ID"], wiredTo: "ultra.speak, journey guides read aloud" },
   { id: "heygen", name: "HeyGen", category: "voice", mode: "runtime", purpose: "Video proposals", envKeys: ["HEYGEN_API_KEY"], wiredTo: "videoProposal router" },

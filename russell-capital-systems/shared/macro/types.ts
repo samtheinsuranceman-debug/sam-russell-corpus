@@ -24,7 +24,7 @@ export type SourceTier =
   | "wire-service"
   /** Think tanks and bank research: Rhodium, CSIS, Carnegie, JPMorgan. */
   | "research"
-  /** State media: Xinhua, People's Daily, Global Times. Declared positions, not facts. */
+  /** State media: government-controlled outlets. Declared positions, not facts. None is registered (23 Sep 2026). */
   | "state-media"
   /** Trade press, aggregators, commentary. Lead, never confirm. */
   | "secondary";

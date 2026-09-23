@@ -104,7 +104,7 @@ export const EXTRA_ALLOWED_HOSTS = [
   "api.eia.gov", "comtradeapi.un.org",
   "api.gdeltproject.org", "query.wikidata.org", "www.wikidata.org",
   "api.bcb.gov.br", "api.bcra.gob.ar", "www.nhc.noaa.gov", "api.unhcr.org", "api.russiafossiltracker.com",
-  "english.news.cn", "www.opec.org", "www.whitehouse.gov", "ustr.gov", "www.bankofengland.co.uk",
+  "www.opec.org", "www.whitehouse.gov", "ustr.gov", "www.bankofengland.co.uk",
   "press.un.org", "www.iaea.org", "www.rbi.org.in", "news.ambest.com", "www.gao.gov", "www.weforum.org",
 ];
 
@@ -398,7 +398,7 @@ export const worldBankConnector: Connector = {
   },
 };
 
-// ─── Xinhua RSS (statement ledger feed) ───────────────────────────────────────
+// ─── RSS parsing (statement ledger feeds) ─────────────────────────────────────
 
 export type FeedItem = { title: string; link: string; pubDate: string; sourceId: string };
 
@@ -416,23 +416,12 @@ export function parseRss(xml: string, sourceId: string): FeedItem[] {
   return items;
 }
 
-/** Keywords that mark a headline as a declared position worth logging. */
-export const STATEMENT_KEYWORDS = /taiwan|treasur|dollar|sanction|countermeasure|rare earth|export control|reunification|yuan|renminbi|reserve|pboc|mofcom|foreign ministry/i;
-
-export const xinhuaConnector: Connector = {
-  sourceId: "cn-xinhua",
-  indicatorIds: ["cn-mfa-dollar-rhetoric", "cn-state-media-threat"],
-  async run(fetchImpl, _env, today) {
-    const xml = await getText(fetchImpl, "https://english.news.cn/rss/world.xml");
-    const items = parseRss(xml, "cn-xinhua").filter(i => STATEMENT_KEYWORDS.test(i.title));
-    // The observation is the count of relevant headlines today; the headlines themselves go to the statement ledger via the router.
-    return [{ indicatorId: "cn-state-media-threat", asOf: today, value: items.length, sourceId: "cn-xinhua", note: items.slice(0, 5).map(i => i.title).join(" | ").slice(0, 480) }];
-  },
-};
+// No Chinese government, Party or state-media feed is read (owner's order,
+// 23 Sep 2026). The Xinhua connector that counted state-media headlines is gone.
 
 // ─── Registry and runner ──────────────────────────────────────────────────────
 
-export const CONNECTORS: Connector[] = [fredConnector, ticConnector, imfConnector, worldBankConnector, eiaConnector, xinhuaConnector];
+export const CONNECTORS: Connector[] = [fredConnector, ticConnector, imfConnector, worldBankConnector, eiaConnector];
 
 export type RunAllResult = {
   today: string;

@@ -13,7 +13,7 @@ import type { TrpcContext } from "./_core/context";
 function createAuthContext(): { ctx: TrpcContext } {
   const user = {
     id: 1, openId: "test-advisor", email: "advisor@russellcapital.com",
-    name: "Test Advisor", loginMethod: "manus" as const, role: "admin" as const,
+    name: "Test Advisor", loginMethod: "owner-password" as const, role: "admin" as const,
     createdAt: new Date(), updatedAt: new Date(), lastSignedIn: new Date(),
   };
   const ctx: TrpcContext = {

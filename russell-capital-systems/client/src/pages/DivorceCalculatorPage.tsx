@@ -44,7 +44,7 @@ const DivorceCalculatorPage: React.FC = () => {
                 poster=""
                 preload="metadata"
               >
-                <source src="/manus-storage/divorce_calculator_explainer_3a588ea7.mp4" type="video/mp4" />
+                <source src="/files/divorce_calculator_explainer_3a588ea7.mp4" type="video/mp4" />
                 Your browser does not support the video tag.
               </video>
             </div>

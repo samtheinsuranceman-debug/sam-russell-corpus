@@ -14,7 +14,7 @@ function createCtx(role: "user" | "admin" = "user"): { ctx: TrpcContext; cleared
     openId: "test-user-openid",
     email: "test@russellcapitalsystems.com",
     name: "Test User",
-    loginMethod: "manus",
+    loginMethod: "owner-password",
     role,
     createdAt: new Date(),
     updatedAt: new Date(),

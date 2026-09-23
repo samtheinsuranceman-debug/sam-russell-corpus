@@ -20,7 +20,6 @@ const envState = {
   appId: "russell-capital-systems",
   cookieSecret: "test-secret-".padEnd(48, "x"),
   databaseUrl: "",
-  oAuthServerUrl: "",
   ownerOpenId: "",
   ownerEmail: "",
   ownerPasswordHash: "",
@@ -29,8 +28,6 @@ const envState = {
   guestPasscodeHash: "",
   publicHomepage: false,
   isProduction: false,
-  forgeApiUrl: "",
-  forgeApiKey: "",
 };
 vi.mock("./_core/env", () => ({ ENV: envState }));
 
@@ -53,7 +50,6 @@ beforeEach(() => {
   envState.ownerEmail = TEST_EMAIL;
   envState.ownerPasswordHash = TEST_HASH;
   envState.guestPasscodeHash = GUEST_HASH;
-  envState.oAuthServerUrl = "";
   envState.ownerOpenId = "";
   upserts.length = 0;
   signatures.length = 0;
@@ -80,12 +76,10 @@ describe("entrance disclaimers", () => {
 
 describe("authMode", () => {
   it("reports each sign-in only when its variables are set, and the closed front door", () => {
-    expect(mod.authMode()).toEqual({ managedOAuth: false, ownerLogin: true, ownerTotp: false, guestLogin: true, gateHomepage: true });
+    expect(mod.authMode()).toEqual({ ownerLogin: true, ownerTotp: false, guestLogin: true, gateHomepage: true });
     envState.ownerPasswordHash = "";
     envState.guestPasscodeHash = "";
-    expect(mod.authMode()).toEqual({ managedOAuth: false, ownerLogin: false, ownerTotp: false, guestLogin: false, gateHomepage: true });
-    envState.oAuthServerUrl = "https://oauth.example.test";
-    expect(mod.authMode()).toEqual({ managedOAuth: true, ownerLogin: false, ownerTotp: false, guestLogin: false, gateHomepage: true });
+    expect(mod.authMode()).toEqual({ ownerLogin: false, ownerTotp: false, guestLogin: false, gateHomepage: true });
   });
   it("opens the homepage to the public only with PUBLIC_HOMEPAGE=1", () => {
     envState.publicHomepage = true;
@@ -163,7 +157,7 @@ describe("HTTP routes", () => {
 
   it("GET /api/auth/mode tells the login page what to show", async () => {
     const res = await fetch(`${base}${mod.AUTH_MODE_PATH}`);
-    expect(await res.json()).toEqual({ managedOAuth: false, ownerLogin: true, ownerTotp: false, guestLogin: true, gateHomepage: true });
+    expect(await res.json()).toEqual({ ownerLogin: true, ownerTotp: false, guestLogin: true, gateHomepage: true });
   });
 
   it("signs the owner in with a session cookie the SDK verifies, as admin", async () => {

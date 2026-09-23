@@ -58,7 +58,12 @@ describe("expansion registry", () => {
   it("every one of the twenty-five domains has at least ten sources across the registry", () => {
     const count = new Map<string, number>();
     for (const s of MACRO_SOURCES) for (const d of s.domains) count.set(d, (count.get(d) ?? 0) + 1);
-    const short = EXPANSION_DOMAINS.filter(d => (count.get(d) ?? 0) < 10);
+    // Four domains lost their Chinese government, Party or state-affiliated rows on
+    // 23 Sep 2026 (owner's order) and hold only their U.S. and allied sources
+    // until more are registered: China party-state (Interpret: China, MERICS),
+    // sovereign wealth (CIC), minerals (SHFE) and WEF-style forums (Boao).
+    const floor: Partial<Record<Domain, number>> = { "china-party": 2, swf: 9, minerals: 9, wef: 9 };
+    const short = EXPANSION_DOMAINS.filter(d => (count.get(d) ?? 0) < (floor[d] ?? 10));
     expect(short).toEqual([]);
   });
 

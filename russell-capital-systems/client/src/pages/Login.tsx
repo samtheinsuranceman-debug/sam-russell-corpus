@@ -1,5 +1,4 @@
 import { useAuth } from "@/_core/hooks/useAuth";
-import { startLogin } from "@/const";
 import { LOGIN_DISCLAIMERS } from "@shared/loginDisclaimers";
 import { ArrowRight, LockKeyhole, ShieldCheck } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
@@ -22,8 +21,8 @@ function requestedReturnPath() {
   return value.startsWith("/") && !value.startsWith("//") ? value : "/portal/dashboard";
 }
 
-type AuthMode = { managedOAuth: boolean; ownerLogin: boolean; ownerTotp?: boolean; guestLogin?: boolean };
-const NO_MODE: AuthMode = { managedOAuth: false, ownerLogin: false, guestLogin: false };
+type AuthMode = { ownerLogin: boolean; ownerTotp?: boolean; guestLogin?: boolean };
+const NO_MODE: AuthMode = { ownerLogin: false, guestLogin: false };
 
 export default function Login() {
   const [role, setRole] = useState<IntakeRole | null>(requestedRole);
@@ -170,17 +169,7 @@ export default function Login() {
             </form>
           )}
 
-          {mode?.managedOAuth && (
-            <>
-              <p className="mt-3 leading-7 text-emerald-100/60">{mode.ownerLogin || mode.guestLogin ? "Or continue with your authorized account." : "Continue with your authorized account."}</p>
-              <button type="button" onClick={() => startLogin(returnPath)}
-                className={`mt-5 flex w-full items-center justify-center gap-2 rounded-xl px-5 py-3 font-semibold transition duration-200 active:scale-[0.97] ${mode.ownerLogin || mode.guestLogin ? "border border-emerald-300/30 text-emerald-100 hover:bg-emerald-500/15" : "bg-emerald-500 text-white shadow-lg shadow-emerald-950/40 hover:bg-emerald-400"}`}>
-                Continue to sign in <ArrowRight className="h-5 w-5" />
-              </button>
-            </>
-          )}
-
-          {mode && !mode.ownerLogin && !mode.managedOAuth && !mode.guestLogin && (
+          {mode && !mode.ownerLogin && !mode.guestLogin && (
             <p className="mt-3 leading-7 text-emerald-100/60">
               Sign-in is not configured on this host yet. The site owner sets <code className="text-emerald-200">GUEST_PASSCODE_HASH</code> or <code className="text-emerald-200">OWNER_EMAIL</code> and <code className="text-emerald-200">OWNER_PASSWORD_HASH</code> in the server environment (see LAUNCH.md, section 4).
             </p>

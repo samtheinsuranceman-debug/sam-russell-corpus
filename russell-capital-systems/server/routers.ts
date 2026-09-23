@@ -133,6 +133,20 @@ import { recommendCarriers, type CarrierRates, type RiskTolerance } from "@share
 import { IUL_CARRIERS } from "@shared/iulCarriers";
 import { requiredMinimumDistribution, rmdStartAgeForAge } from "@shared/uniformLifetimeTable";
 import { dispatchWebhook, WEBHOOK_EVENTS } from "./webhookDispatch";
+import { UnsafeUrlError, checkUrlShape, safeFetch } from "./_core/safeFetch";
+
+/** Slack incoming webhooks live on one host. */
+const SLACK_WEBHOOK_HOSTS = ["hooks.slack.com"];
+
+/** Refuse a user-supplied webhook URL when it is saved: https, public hostname, optional host list. */
+function assertWebhookUrlShape(url: string, allowHosts?: string[]) {
+  try {
+    checkUrlShape(url, { allowHosts });
+  } catch (e) {
+    if (e instanceof UnsafeUrlError) throw new TRPCError({ code: "BAD_REQUEST", message: `Webhook URL refused: ${e.message}` });
+    throw e;
+  }
+}
 import { generateBulkComparisonPdf, type BulkResult, type BulkSummary } from "./bulkComparisonPdf";
 import { getDb } from "./db";
 import { workspaceSubscriptions, workspaces as workspacesTable, sharedProjections, followUpEmails, carrierQuoteRequests, savedScenarios, illustrationUploads, emailCampaigns as emailCampaignsTable, emailTemplates as emailTemplatesTable, campaignEnrollments as campaignEnrollmentsTable, calculationAuditLogs, referralLinks, hiddenMaterialConfig, hiddenMaterialResetCodes, clientRiskAssessments, clientLifeGoals, clientScores, clientBadges, clientRecommendations, clientSessionRatings, encouragementEmails, clients, tutorialProgress, agencyTeams, agencyTeamMembers, supervisorMonitoringAgreements, legalDocuments, userSessions, pageActivityLogs, memberships, leaderboardProfiles, leaderboardConsents, deals } from "../drizzle/schema";
@@ -2281,6 +2295,7 @@ Keep it personal, specific with dollar amounts, and actionable. Use their actual
       label: z.string().max(200).optional(),
       events: z.array(z.string()).min(1),
     })).mutation(async ({ ctx, input }) => {
+      assertWebhookUrlShape(input.url);
       const ws = await getWorkspaceForUser(ctx.user.id);
       if (!ws) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Workspace not found" });
       return createWebhook({ workspaceId: ws.id, url: input.url, label: input.label, events: input.events });
@@ -2292,6 +2307,7 @@ Keep it personal, specific with dollar amounts, and actionable. Use their actual
       events: z.array(z.string()).optional(),
       active: z.boolean().optional(),
     })).mutation(async ({ ctx, input }) => {
+      if (input.url) assertWebhookUrlShape(input.url);
       const ws = await getWorkspaceForUser(ctx.user.id);
       if (!ws) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Workspace not found" });
       const { webhookId, ...data } = input;
@@ -2446,6 +2462,7 @@ Keep it personal, specific with dollar amounts, and actionable. Use their actual
       botToken: z.string().optional(),
       active: z.boolean().optional(),
     })).mutation(async ({ ctx, input }) => {
+      if (input.webhookUrl) assertWebhookUrlShape(input.webhookUrl, SLACK_WEBHOOK_HOSTS);
       const ws = await getWorkspaceForUser(ctx.user.id);
       if (!ws) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Workspace not found" });
       return upsertSlackIntegration({ workspaceId: ws.id, ...input });
@@ -2461,10 +2478,14 @@ Keep it personal, specific with dollar amounts, and actionable. Use their actual
       const integration = await getSlackIntegration(ws.id);
       if (!integration?.webhookUrl) throw new TRPCError({ code: "BAD_REQUEST", message: "No Slack webhook URL configured" });
       try {
-        const resp = await fetch(integration.webhookUrl, {
+        // The stored URL is user-supplied: Slack's webhook host only, no redirect, bounded.
+        const resp = await safeFetch(integration.webhookUrl, {
+          allowHosts: SLACK_WEBHOOK_HOSTS,
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ text: input.message ?? `\u2705 Test message from Russell Capital Systems™ (${ws.name})` }),
+          timeoutMs: 10_000,
+          maxBytes: 64 * 1024,
         });
         return { sent: resp.ok };
       } catch (e: any) {
@@ -2640,7 +2661,7 @@ Keep it personal, specific with dollar amounts, and actionable. Use their actual
           id: d.id,
           name: d.name,
           category: d.category,
-          url: d.url.startsWith("/manus-storage/") ? `${d.url}?portalToken=${encodeURIComponent(input.token)}` : d.url,
+          url: d.url.startsWith("/files/") ? `${d.url}?portalToken=${encodeURIComponent(input.token)}` : d.url,
           createdAt: d.createdAt,
         })),
         strategies: strats.map(s => ({ id: s.id, summary: s.summary, createdAt: s.createdAt })),
@@ -5674,16 +5695,7 @@ Extract ALL years shown in the illustration. Use the ILLUSTRATED (non-guaranteed
       ];
       let dataSource: "live" | "static" = "static";
       let liveData: Record<string, any> = {};
-      try {
-        const { callDataApi } = await import("./_core/dataApi");
-        const resp = await callDataApi("MarketData/indices", {
-          query: { symbols: indices.map(i => i.symbol).join(",") },
-        });
-        if (resp && typeof resp === "object") {
-          liveData = resp as Record<string, any>;
-          dataSource = "live";
-        }
-      } catch { /* fall through to static */ }
+      // No live index feed is wired; the curated static data below is served.
 
       // Static performance data (updated quarterly) used as fallback
       const STATIC_PERFORMANCE: Record<string, { ytd: number; oneYear: number; threeYear: number; fiveYear: number; tenYear: number }> = {
@@ -5992,16 +6004,15 @@ Return a JSON object with:
 
     // Email the agenda PDF to a client
     emailAgenda: protectedProcedure.input(z.object({
-      pdfUrl: z.string().url(),
+      pdfUrl: z.string().min(1).max(2048),
       clientEmail: z.string().email(),
       clientName: z.string(),
       agendaTitle: z.string(),
       advisorName: z.string().optional(),
     })).mutation(async ({ ctx, input }) => {
-      // Fetch the PDF from S3 URL
-      const pdfResponse = await fetch(input.pdfUrl);
-      if (!pdfResponse.ok) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Failed to fetch PDF" });
-      const pdfBuffer = Buffer.from(await pdfResponse.arrayBuffer());
+      // Read the exported PDF: first-party storage only, never an arbitrary URL (server/reportPdf.ts).
+      const { loadReportPdf } = await import("./reportPdf");
+      const pdfBuffer = await loadReportPdf(input.pdfUrl);
       const { sendClientReportEmail } = await import("./email");
       const workspace = await getWorkspaceForUser(ctx.user.id);
       const result = await sendClientReportEmail({
@@ -6179,14 +6190,13 @@ Return a JSON object with:
 
     // Email the report PDF to a client
     emailReport: protectedProcedure.input(z.object({
-      pdfUrl: z.string().url(),
+      pdfUrl: z.string().min(1).max(2048),
       clientEmail: z.string().email(),
       clientName: z.string(),
       reportTitle: z.string(),
     })).mutation(async ({ ctx, input }) => {
-      const pdfResponse = await fetch(input.pdfUrl);
-      if (!pdfResponse.ok) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Failed to fetch PDF" });
-      const pdfBuffer = Buffer.from(await pdfResponse.arrayBuffer());
+      const { loadReportPdf } = await import("./reportPdf");
+      const pdfBuffer = await loadReportPdf(input.pdfUrl);
       const { sendClientReportEmail } = await import("./email");
       const workspace = await getWorkspaceForUser(ctx.user.id);
       const result = await sendClientReportEmail({

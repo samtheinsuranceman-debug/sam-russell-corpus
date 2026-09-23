@@ -4,9 +4,15 @@
  *
  * Four panels:
  *   • JAPAN_LIQUIDATION   — will Japan sell Treasuries, and how much (15)
- *   • CHINA_LIQUIDATION   — will China sell Treasuries / U.S. assets (15)
- *   • PETRODOLLAR_RIPPLE  — fifty indicators around oil leaving the dollar
- *   • TAIWAN_STRIKE       — fifty indicators around a strike or blockade
+ *   • CHINA_LIQUIDATION   — will China sell Treasuries / U.S. assets (9)
+ *   • PETRODOLLAR_RIPPLE  — forty-four indicators around oil leaving the dollar
+ *   • TAIWAN_STRIKE       — thirty-nine indicators around a strike or blockade
+ *
+ * The China-side rows are read only through U.S. and allied publishers (TIC,
+ * IMF IFS, OFAC, FRED, Kpler, UN, USDA, SIPRI, DoD, CSIS). Rows that could only
+ * be read from a Chinese government, Party, state-media or .cn/.hk site were
+ * removed on 23 Sep 2026 (owner's order): the Politburo/MFA/MOFCOM/NPC/TAO
+ * statement counts, CIPS, INE, SGE, PBOC swap lines and SAFE balance of payments.
  *
  * Each row is sourced (ids from sources.ts), directional, weighted, and tagged
  * with an awareness level. "latent" rows are the ones no one talks about; the
@@ -75,38 +81,26 @@ export const JAPAN_LIQUIDATION: Indicator[] = [
 export const CHINA_LIQUIDATION: Indicator[] = [
   ind("cn-tic-mom", "China TIC holdings, 3-month change", "treasury-holdings", "risk-up", 1.0, ["us-tic-mfh"], "USD bn", "monthly", "visible",
     "$618.0 bn in July 2026, lowest since Sept 2008; −$33 bn over three months."),
-  ind("cn-tic-plus-belgium-hk", "China + Belgium (Euroclear) + Hong Kong holdings, 3-month change", "treasury-holdings", "risk-up", 0.8, ["us-tic-mfh", "cn-hkma"], "USD bn", "monthly", "latent",
+  ind("cn-tic-plus-belgium-hk", "China + Belgium (Euroclear) + Hong Kong holdings, 3-month change", "treasury-holdings", "risk-up", 0.8, ["us-tic-mfh"], "USD bn", "monthly", "latent",
     "Beijing custodies through Euroclear; the headline series understates both the stock and the selling."),
-  ind("cn-pboc-gold-streak", "Consecutive months of PBOC gold purchases", "reserves-fx", "risk-up", 0.7, ["cn-pboc-gold"], "months", "monthly", "visible",
-    "22 months to Aug 2026, +650k oz — revealed preference for a sanction-proof asset."),
-  ind("cn-safe-reserves-change", "SAFE FX reserves, monthly change net of valuation", "reserves-fx", "risk-up", 0.6, ["cn-safe-reserves", "cn-safe-bop"], "USD bn", "monthly", "structural",
-    "$3.4383 tn (Aug 2026). A fall with a flat dollar is a sale."),
+  ind("cn-pboc-gold-streak", "Consecutive months of rising official gold holdings, China row of IMF IFS", "reserves-fx", "risk-up", 0.7, ["imf-ifs"], "months", "monthly", "visible",
+    "Revealed preference for a sanction-proof asset, read from the IMF's table rather than Beijing's own release."),
+  ind("cn-safe-reserves-change", "China FX reserves (IMF IFS), monthly change net of valuation", "reserves-fx", "risk-up", 0.6, ["imf-ifs"], "USD bn", "monthly", "structural",
+    "A fall with a flat dollar is a sale."),
   ind("cn-agency-mbs-holdings", "China's U.S. agency and MBS holdings", "treasury-holdings", "risk-up", 0.5, ["us-tic-press"], "USD bn", "monthly", "latent",
     "Agencies were sold before Treasuries in 2022–24; the leading edge of a broader U.S.-asset exit."),
-  ind("cn-cips-volume-growth", "CIPS yuan clearing volume, y/y", "oil-settlement", "risk-up", 0.5, ["cn-cips"], "%", "monthly", "structural",
-    "More yuan plumbing lowers the cost of needing fewer dollars."),
-  ind("cn-us-sanction-escalation", "New U.S. financial sanctions on Chinese banks / entities, trailing 90 days", "china-policy", "risk-up", 0.85, ["ofac", "cn-mofcom"], "count", "daily", "visible",
+  ind("cn-us-sanction-escalation", "New U.S. financial sanctions on Chinese banks / entities, trailing 90 days", "china-policy", "risk-up", 0.85, ["ofac"], "count", "daily", "visible",
     "Rhodium: sanctions on the largest banks put $3 tn of flows at risk; the asset-freeze precedent (Russia 2022) is the thing Beijing plans against."),
-  ind("cn-mofcom-countermeasures", "MOFCOM countermeasures / export-control actions, trailing 90 days", "china-policy", "risk-up", 0.6, ["cn-mofcom", "cn-gov-state-council"], "count", "daily", "visible",
-    "Economic coercion in use is the precursor to financial coercion."),
-  ind("cn-mfa-dollar-rhetoric", "MFA / State Council statements on 'weaponisation' of the dollar or U.S. debt", "china-policy", "risk-up", 0.4, ["cn-mofa", "cn-gov-state-council"], "statements / month", "daily", "structural",
-    "Declared positions; weighted low because the follow-through rate on financial threats is historically poor."),
-  ind("cn-state-media-threat", "Global Times / People's Daily 'nuclear option' commentary", "china-policy", "risk-up", 0.2, ["cn-global-times", "cn-peoples-daily"], "articles / month", "daily", "visible",
-    "Loudest, least followed-through. Included so the scorer can measure that."),
-  ind("cn-cny-pressure", "CNY fixing vs onshore spot gap and reserve defence", "reserves-fx", "risk-up", 0.6, ["cn-pboc-mpc", "fred"], "bp", "daily", "structural",
+  ind("cn-cny-pressure", "CNY fixing vs onshore spot gap and reserve defence", "reserves-fx", "risk-up", 0.6, ["fred"], "bp", "daily", "structural",
     "Defending the yuan is the one reason China has actually sold Treasuries (2015–16, $500 bn)."),
-  ind("cn-capital-outflow-proxy", "Errors and omissions + net portfolio outflow", "reserves-fx", "risk-up", 0.55, ["cn-safe-bop"], "USD bn / quarter", "quarterly", "latent",
-    "Private outflow forces official selling to hold the currency — the 2015 mechanism."),
-  ind("cn-npc-law-financial-security", "Laws or regulations on financial security / reserve management", "china-policy", "risk-up", 0.75, ["cn-npc", "cn-gov-state-council"], "count", "irregular", "visible",
-    "Put into law outranks said. Foreign Relations Law (2023) and Anti-Foreign Sanctions Law (2021) are the base."),
   ind("cn-taiwan-tension-link", "Taiwan strike-risk composite (cross-model)", "taiwan-risk", "risk-up", 0.7, ["tw-mnd-daily"], "probability", "daily", "structural",
     "A blockade with sanctions makes pre-emptive Treasury sales rational; the two models share this node."),
-  ind("cn-ust-share-of-reserves", "Treasuries as share of SAFE reserves (estimated)", "treasury-holdings", "risk-down", 0.4, ["us-tic-mfh", "cn-safe-reserves"], "%", "monthly", "latent",
+  ind("cn-ust-share-of-reserves", "Treasuries as share of China's reserves (TIC over IMF IFS, estimated)", "treasury-holdings", "risk-down", 0.4, ["us-tic-mfh", "imf-ifs"], "%", "monthly", "latent",
     "Under 20 % now; the lower it goes, the less any further sale can move the market — and the less deterrent the threat carries."),
 ];
 
 // ═══════════════════════════════════════════════════════════════════════════
-// PETRODOLLAR RIPPLE — fifty indicators around oil settled outside the dollar
+// PETRODOLLAR RIPPLE — forty-four indicators around oil settled outside the dollar
 // ═══════════════════════════════════════════════════════════════════════════
 const P = "oil-settlement" as const;
 const R = "reserves-fx" as const;
@@ -114,7 +108,7 @@ const M = "rates-markets" as const;
 export const PETRODOLLAR_RIPPLE: Indicator[] = [
   // Core measurement (1–8)
   ind("oil-nonusd-share", "Share of global crude trade settled outside USD", P, "risk-up", 1.0, ["jpm-research", "atlantic-council-dollar", "carnegie"], "%", "quarterly", "visible", "~20 % Q1 2026 vs ~5 % in 2014. Contested range 15–22 %."),
-  ind("oil-cny-share", "Share settled in CNY", P, "risk-up", 0.9, ["cn-pboc-rmb-report", "platts", "swift-rmb-tracker"], "%", "quarterly", "visible", "4–9 % range; Saudi–China corridor 45 % yuan by Feb 2026."),
+  ind("oil-cny-share", "Share settled in CNY", P, "risk-up", 0.9, ["platts", "swift-rmb-tracker"], "%", "quarterly", "visible", "4–9 % range; Saudi–China corridor 45 % yuan by Feb 2026."),
   ind("oil-rub-share", "Share settled in RUB", P, "risk-up", 0.5, ["ru-cbr"], "%", "monthly", "structural", "~4 %; sanctions-driven, could reverse on a settlement."),
   ind("oil-inr-share", "Share settled in INR / via Vostro", P, "risk-up", 0.5, ["in-rbi", "in-ppac"], "%", "monthly", "structural", "~3 %; India–Russia corridor."),
   ind("oil-aed-gcc-share", "Share settled in AED and other GCC currencies", P, "risk-up", 0.6, ["ae-cbuae", "sa-sama"], "%", "quarterly", "structural", "~2.5 %; the UAE's April 2026 warning is the swing factor."),
@@ -122,18 +116,13 @@ export const PETRODOLLAR_RIPPLE: Indicator[] = [
   ind("oil-barter-share", "Barter / gold / crypto settlement share", P, "risk-up", 0.3, ["kpler", "ofac"], "%", "quarterly", "latent", "~1 %; the Iran–Venezuela–Russia dark share."),
   ind("oil-sanctioned-volume", "Sanctioned-origin crude volume (RU+IR+VE)", P, "risk-up", 0.8, ["kpler", "vortexa", "ofac"], "mb/d", "monthly", "structural", "The non-dollar share is mostly the sanctioned share."),
   // Plumbing (9–16)
-  ind("cips-participants", "CIPS direct + indirect participants", P, "risk-up", 0.5, ["cn-cips"], "count", "monthly", "structural", "Capacity to settle in yuan."),
-  ind("cips-volume", "CIPS monthly settlement volume", P, "risk-up", 0.6, ["cn-cips"], "CNY tn", "monthly", "structural", ""),
   ind("swift-cny-share", "SWIFT payments share in CNY", P, "risk-up", 0.5, ["swift-rmb-tracker"], "%", "monthly", "visible", "Understates because CIPS traffic is excluded."),
-  ind("ine-crude-oi", "INE yuan crude futures open interest", P, "risk-up", 0.6, ["sh-ine"], "lots", "daily", "structural", "Hedging capacity for yuan-priced barrels."),
-  ind("sge-intl-volume", "SGE international board gold volume", P, "risk-up", 0.5, ["sge"], "t / month", "monthly", "latent", "The yuan→gold exit that makes yuan receipts acceptable to Gulf sellers."),
-  ind("pboc-swap-lines", "Active PBOC bilateral swap lines and drawn amounts", P, "risk-up", 0.5, ["cn-pboc-mpc"], "count / CNY bn", "quarterly", "structural", ""),
   ind("mbridge-volume", "mBridge / BRICS payment-system transaction volume", P, "risk-up", 0.5, ["brics-ndb"], "USD bn", "quarterly", "structural", ""),
   ind("gulf-yuan-swap-usage", "Gulf central bank yuan swap-line usage", P, "risk-up", 0.6, ["ae-cbuae", "sa-sama"], "CNY bn", "monthly", "latent", "Drawn lines mean real yuan invoicing."),
   // Reserve behaviour (17–24)
   ind("cofer-usd-share", "USD share of allocated reserves", R, "risk-up", 0.9, ["imf-cofer"], "%", "quarterly", "visible", "56.3 % Q1 2026 from 71 % in 2000."),
   ind("cofer-cny-share", "CNY share of reserves", R, "risk-up", 0.5, ["imf-cofer"], "%", "quarterly", "visible", "3.1 % Q1 2026."),
-  ind("cb-gold-purchases", "Central bank net gold purchases, trailing 4 quarters", R, "risk-up", 0.8, ["cn-pboc-gold", "imf-cofer"], "t", "quarterly", "visible", "289 t in Q2 2026 alone."),
+  ind("cb-gold-purchases", "Central bank net gold purchases, trailing 4 quarters", R, "risk-up", 0.8, ["imf-cofer"], "t", "quarterly", "visible", "289 t in Q2 2026 alone."),
   ind("gold-share-of-reserves", "Gold share of global reserves at market value", R, "risk-up", 0.6, ["imf-cofer"], "%", "quarterly", "structural", ""),
   ind("gulf-ust-holdings", "Saudi + UAE + Kuwait + Qatar Treasury holdings", R, "risk-down", 0.6, ["us-tic-mfh"], "USD bn", "monthly", "structural", "Petrodollar recycling measured directly."),
   ind("oil-exporter-reserve-mix", "Oil exporters' non-USD reserve share (where disclosed)", R, "risk-up", 0.4, ["sa-sama", "ae-cbuae", "ru-cbr"], "%", "annual", "latent", ""),
@@ -146,16 +135,16 @@ export const PETRODOLLAR_RIPPLE: Indicator[] = [
   ind("ust-indirect-bid", "Indirect bidder share at 10y/30y auctions, 6-auction average", M, "risk-down", 0.7, ["us-treasury-auctions"], "%", "weekly", "structural", ""),
   ind("mortgage30y", "30-year fixed mortgage rate", M, "risk-up", 0.5, ["fred"], "%", "weekly", "visible", "The household transmission channel."),
   ind("breakeven10y", "10-year inflation breakeven", M, "risk-up", 0.5, ["fred"], "%", "daily", "structural", ""),
-  ind("gold-usd", "Gold price in USD", M, "risk-up", 0.6, ["fred", "sge"], "USD/oz", "daily", "visible", ""),
+  ind("gold-usd", "Gold price in USD", M, "risk-up", 0.6, ["fred"], "USD/oz", "daily", "visible", ""),
   ind("gold-oil-ratio", "Barrels of oil per ounce of gold", M, "risk-up", 0.4, ["fred", "eia-api"], "bbl/oz", "daily", "latent", "A rising ratio during flat oil = gold is being monetised."),
   ind("brent-wti-spread", "Brent–WTI spread", M, "risk-up", 0.3, ["eia-api"], "USD", "daily", "latent", "Widens when seaborne (non-dollar-prone) crude is bid separately."),
   ind("urals-brent-discount", "Urals discount to Brent", M, "risk-up", 0.4, ["argus"], "USD", "daily", "structural", "The price of settling outside the dollar, observed."),
   ind("usdcny", "USD/CNY", M, "risk-down", 0.4, ["fred"], "rate", "daily", "visible", ""),
   ind("us-net-interest-share", "U.S. net interest as share of federal revenue", M, "risk-up", 0.6, ["us-fiscaldata", "cbo"], "%", "monthly", "structural", "The reason lost foreign demand matters more each year."),
   // Volumes and corridors (37–44)
-  ind("cn-crude-imports-ru", "China crude imports from Russia", P, "risk-up", 0.6, ["cn-customs"], "mb/d", "monthly", "structural", ""),
-  ind("cn-crude-imports-sa", "China crude imports from Saudi Arabia", P, "risk-up", 0.5, ["cn-customs", "sa-aramco"], "mb/d", "monthly", "structural", "China buys ~35 % of Saudi crude."),
-  ind("cn-crude-imports-ir", "China crude imports from Iran (incl. via Malaysia)", P, "risk-up", 0.5, ["kpler", "cn-customs"], "mb/d", "monthly", "latent", ""),
+  ind("cn-crude-imports-ru", "China crude imports from Russia", P, "risk-up", 0.6, ["kpler", "un-comtrade"], "mb/d", "monthly", "structural", ""),
+  ind("cn-crude-imports-sa", "China crude imports from Saudi Arabia", P, "risk-up", 0.5, ["sa-aramco"], "mb/d", "monthly", "structural", "China buys ~35 % of Saudi crude."),
+  ind("cn-crude-imports-ir", "China crude imports from Iran (incl. via Malaysia)", P, "risk-up", 0.5, ["kpler"], "mb/d", "monthly", "latent", ""),
   ind("in-crude-imports-ru", "India crude imports from Russia", P, "risk-up", 0.5, ["in-ppac"], "mb/d", "monthly", "structural", ""),
   ind("saudi-yuan-export-share", "Share of Saudi crude exports settled in yuan", P, "risk-up", 0.8, ["sa-sama", "cnbc-reuters-energy"], "%", "quarterly", "visible", "12–15 % (2026 estimates)."),
   ind("me-nonusd-crossborder", "Middle East cross-border transactions in non-USD", P, "risk-up", 0.6, ["swift-rmb-tracker", "ae-cbuae"], "%", "quarterly", "structural", "18 % → 31 % Dec 2025–Mar 2026 (one estimate)."),
@@ -166,12 +155,11 @@ export const PETRODOLLAR_RIPPLE: Indicator[] = [
   ind("uae-oil-currency-statements", "UAE official statements on shifting oil settlement", P, "risk-up", 0.6, ["ae-cbuae", "cnbc-reuters-energy"], "count", "irregular", "visible", "April 2026 warning to the U.S. Treasury."),
   ind("saudi-brics-status", "Saudi Arabia's BRICS participation status", P, "risk-up", 0.4, ["brics-ndb"], "ordinal", "annual", "structural", ""),
   ind("us-secondary-sanctions", "New U.S. secondary sanctions on oil intermediaries", P, "risk-up", 0.6, ["ofac"], "count / quarter", "daily", "structural", "Each round pushes a corridor out of the dollar."),
-  ind("cn-oil-law-mandate", "Chinese law / mandate on yuan energy settlement", P, "risk-up", 0.7, ["cn-gov-state-council", "cn-npc"], "count", "irregular", "visible", "Put into law outranks said."),
   ind("ru-export-currency-decree", "Russian decrees on export settlement currency", P, "risk-up", 0.4, ["ru-cbr"], "count", "irregular", "structural", ""),
 ];
 
 // ═══════════════════════════════════════════════════════════════════════════
-// TAIWAN STRIKE — fifty indicators, direct and indirect
+// TAIWAN STRIKE — thirty-nine indicators, direct and indirect
 // ═══════════════════════════════════════════════════════════════════════════
 const T = "taiwan-risk" as const;
 export const TAIWAN_STRIKE: Indicator[] = [
@@ -179,7 +167,7 @@ export const TAIWAN_STRIKE: Indicator[] = [
   ind("tw-pla-aircraft-30d", "PLA aircraft around Taiwan, 30-day total", T, "risk-up", 0.9, ["tw-mnd-daily"], "sorties", "daily", "visible", ""),
   ind("tw-pla-ships-30d", "PLA navy + CCG ships around Taiwan, 30-day total", T, "risk-up", 0.9, ["tw-mnd-daily", "tw-cga"], "vessels", "daily", "visible", "Record 244 in July 2026."),
   ind("tw-median-line-crossings", "Median-line crossings, 30-day", T, "risk-up", 0.7, ["tw-mnd-daily"], "count", "daily", "structural", ""),
-  ind("tw-large-exercise", "Named large-scale exercise in trailing 90 days", T, "risk-up", 0.8, ["cn-mod", "csis-china-power"], "count", "irregular", "visible", "Seven since Aug 2022; Justice Mission 2025 rehearsed a blockade."),
+  ind("tw-large-exercise", "Named large-scale exercise in trailing 90 days", T, "risk-up", 0.8, ["csis-china-power"], "count", "irregular", "visible", "Seven since Aug 2022; Justice Mission 2025 rehearsed a blockade."),
   ind("tw-exercise-duration-trend", "Average exercise duration, trailing 4", T, "risk-up", 0.5, ["csis-china-power"], "days", "irregular", "structural", ""),
   ind("tw-kinmen-cga-incursions", "CCG incursions into Kinmen/Matsu restricted waters, 30-day", T, "risk-up", 0.6, ["tw-cga"], "count", "daily", "structural", "Quarantine rehearsal at small scale."),
   ind("tw-miyako-transits", "PLAN carrier / task-group Miyako Strait transits, 90-day", T, "risk-up", 0.5, ["jp-mod-taiwan"], "count", "daily", "latent", "The northern flank."),
@@ -187,31 +175,21 @@ export const TAIWAN_STRIKE: Indicator[] = [
   ind("tw-roro-ferry-mobilisation", "Civilian RO-RO ferry mobilisation exercises", T, "risk-up", 0.5, ["us-dod-cmpr", "csis-china-power"], "count / year", "irregular", "latent", "The lift the navy lacks comes from civilian ferries."),
   ind("tw-cable-cuts", "Undersea cable incidents near Taiwan, 12-month", T, "risk-up", 0.5, ["tw-cga"], "count", "irregular", "structural", ""),
   ind("tw-balloons-drones", "Balloon / drone overflights, 30-day", T, "risk-up", 0.3, ["tw-mnd-daily"], "count", "daily", "structural", ""),
-  ind("tw-pla-readiness-milestone", "PLA modernisation milestone statements (2027 benchmark)", T, "risk-up", 0.5, ["us-dod-cmpr", "cn-mod"], "ordinal", "annual", "visible", ""),
+  ind("tw-pla-readiness-milestone", "PLA modernisation milestone statements (2027 benchmark)", T, "risk-up", 0.5, ["us-dod-cmpr"], "ordinal", "annual", "visible", ""),
   // Political signalling (13–22)
-  ind("tw-tao-rhetoric-index", "TAO / MFA Taiwan rhetoric severity index", T, "risk-up", 0.6, ["cn-taiwan-affairs-office", "cn-mofa"], "index", "weekly", "structural", "Wording shifts precede exercises."),
-  ind("tw-anti-secession-invocation", "Formal invocation of Anti-Secession Law Article 8 language", T, "risk-up", 0.8, ["cn-npc", "cn-mofa"], "count", "irregular", "visible", "Put into law outranks said."),
-  ind("tw-white-paper", "New Taiwan white paper or NPC decision", T, "risk-up", 0.6, ["cn-gov-state-council", "cn-npc"], "count", "irregular", "visible", ""),
-  ind("tw-xi-speech-taiwan-share", "Share of Xi major speeches devoted to reunification", T, "risk-up", 0.4, ["cn-peoples-daily"], "%", "irregular", "latent", ""),
   ind("tw-us-arms-sale", "U.S. arms sales notifications to Taiwan, 90-day", T, "risk-up", 0.4, ["us-odni-ata"], "count", "irregular", "structural", "Each triggers a response cycle."),
   ind("tw-us-official-visits", "Senior U.S. official visits to Taiwan, 90-day", T, "risk-up", 0.4, ["csis-china-power"], "count", "irregular", "visible", ""),
   ind("tw-mac-poll-independence", "Taiwan public support for independence (MAC poll)", T, "risk-up", 0.3, ["tw-mac"], "%", "quarterly", "structural", ""),
   ind("tw-election-cycle", "Months to next Taiwan presidential election", T, "risk-up", 0.3, ["tw-mac"], "months", "annual", "structural", "Pressure peaks around elections."),
   ind("tw-odni-assessment", "U.S. ODNI stated judgement on invasion timeline", T, "risk-down", 0.7, ["us-odni-ata"], "ordinal", "annual", "visible", "2026: no fixed timeline; invasion seen as high-risk."),
-  ind("tw-cn-mofcom-taiwan-sanctions", "MOFCOM trade measures against Taiwan (ECFA suspensions, bans)", T, "risk-up", 0.5, ["cn-mofcom"], "count / quarter", "irregular", "structural", ""),
   // Economic preparation (23–34) — these are the ones below public awareness
-  ind("tw-cn-gold-purchases", "PBOC gold purchases (cross-model)", T, "risk-up", 0.5, ["cn-pboc-gold"], "t / month", "monthly", "latent", "Sanction-proofing reserves is what you do before you need it."),
+  ind("tw-cn-gold-purchases", "China official gold additions, IMF IFS (cross-model)", T, "risk-up", 0.5, ["imf-ifs"], "t / month", "monthly", "latent", "Sanction-proofing reserves is what you do before you need it."),
   ind("tw-cn-ust-reduction", "China Treasury reduction pace (cross-model)", T, "risk-up", 0.5, ["us-tic-mfh"], "USD bn / quarter", "monthly", "latent", ""),
-  ind("tw-cn-food-stockpiles", "China grain and soybean stockpile builds", T, "risk-up", 0.4, ["cn-nbs"], "months of cover", "quarterly", "latent", "Blockade-proofing."),
-  ind("tw-cn-spr-fill", "China strategic petroleum reserve fill rate", T, "risk-up", 0.5, ["kpler", "cn-customs"], "mb / month", "monthly", "latent", ""),
-  ind("tw-cn-chip-self-sufficiency", "China mature-node chip self-sufficiency", T, "risk-up", 0.4, ["cn-nbs"], "%", "annual", "latent", "Less to lose."),
-  ind("tw-cn-export-controls-rare-earth", "China rare-earth / gallium export controls in force", T, "risk-up", 0.4, ["cn-mofcom"], "count", "irregular", "structural", ""),
-  ind("tw-cn-swift-independence", "CIPS volume as share of China's cross-border payments", T, "risk-up", 0.4, ["cn-cips"], "%", "quarterly", "latent", ""),
-  ind("tw-cn-capital-controls", "New PRC capital-control measures", T, "risk-up", 0.3, ["cn-safe-bop"], "count", "irregular", "latent", ""),
-  ind("tw-cn-defence-budget-growth", "PRC defence budget growth", T, "risk-up", 0.4, ["cn-npc"], "%", "annual", "visible", ""),
-  ind("tw-cn-domestic-stress", "PRC domestic economic stress composite (property, youth unemployment)", T, "risk-up", 0.3, ["cn-nbs", "imf-article-iv"], "index", "monthly", "structural", "Diversionary-war hypothesis; weighted low, contested."),
+  ind("tw-cn-food-stockpiles", "China grain and soybean stockpile builds", T, "risk-up", 0.4, ["usda-psd"], "months of cover", "quarterly", "latent", "Blockade-proofing."),
+  ind("tw-cn-spr-fill", "China strategic petroleum reserve fill rate", T, "risk-up", 0.5, ["kpler"], "mb / month", "monthly", "latent", ""),
+  ind("tw-cn-defence-budget-growth", "PRC defence budget growth", T, "risk-up", 0.4, ["sipri-milex", "us-dod-cmpr"], "%", "annual", "visible", ""),
+  ind("tw-cn-domestic-stress", "PRC domestic economic stress composite (property, youth unemployment)", T, "risk-up", 0.3, ["imf-article-iv"], "index", "monthly", "structural", "Diversionary-war hypothesis; weighted low, contested."),
   ind("tw-cn-purge-pla-leadership", "Senior PLA leadership removals, 12-month", T, "risk-down", 0.4, ["us-dod-cmpr"], "count", "irregular", "structural", "Purges degrade near-term readiness."),
-  ind("tw-cn-leadership-succession", "Signals on leadership succession / term", T, "risk-up", 0.2, ["cn-peoples-daily"], "ordinal", "irregular", "latent", ""),
   // Market and insurance tells (35–44)
   ind("tw-lloyds-listing", "Lloyd's JWC listing of Taiwan Strait waters", T, "risk-up", 0.7, ["lloyds-jwc"], "ordinal", "irregular", "structural", "The insurance market moves before ships."),
   ind("tw-war-risk-premium", "Marine war-risk premium, Taiwan routes", T, "risk-up", 0.6, ["lloyds-jwc", "ais-marinetraffic"], "% of hull", "weekly", "structural", ""),
@@ -225,11 +203,10 @@ export const TAIWAN_STRIKE: Indicator[] = [
   ind("tw-jp-defence-posture", "Japan defence statements naming a Taiwan contingency", T, "risk-up", 0.3, ["jp-mod-taiwan", "jp-kantei"], "count / quarter", "irregular", "structural", ""),
   // Deterrence and diplomacy (45–50)
   ind("tw-us-cn-mil-mil-channel", "U.S.–China military-to-military channel active", T, "risk-down", 0.5, ["us-dod-cmpr"], "boolean", "irregular", "structural", ""),
-  ind("tw-us-cn-summit", "U.S.–China leader-level meeting in trailing 6 months", T, "risk-down", 0.4, ["cn-mofa"], "count", "irregular", "visible", ""),
+  ind("tw-us-cn-summit", "U.S.–China leader-level meeting in trailing 6 months", T, "risk-down", 0.4, ["whitehouse-briefing"], "count", "irregular", "visible", ""),
   ind("tw-us-carrier-presence", "U.S. carrier strike groups in the Western Pacific", T, "risk-down", 0.4, ["us-dod-cmpr"], "count", "weekly", "structural", ""),
   ind("tw-us-ally-basing", "New U.S. basing access (Philippines EDCA sites, Japan)", T, "risk-down", 0.3, ["us-dod-cmpr"], "count", "irregular", "structural", ""),
-  ind("tw-un-votes-taiwan", "UN / multilateral statements on the Strait, 90-day", T, "risk-down", 0.2, ["cn-mofa"], "count", "irregular", "latent", ""),
-  ind("tw-cn-us-trade-truce", "U.S.–China tariff / trade truce in force", T, "risk-down", 0.4, ["cn-mofcom", "ofac"], "boolean", "irregular", "visible", "Economic interdependence still deters."),
+  ind("tw-cn-us-trade-truce", "U.S.–China tariff / trade truce in force", T, "risk-down", 0.4, ["ofac"], "boolean", "irregular", "visible", "Economic interdependence still deters."),
 ];
 
 // ═══════════════════════════════════════════════════════════════════════════

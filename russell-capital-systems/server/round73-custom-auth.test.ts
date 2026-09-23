@@ -296,7 +296,7 @@ describe("Custom Authentication System", () => {
   });
 
   describe("getLoginUrl", () => {
-    it("should return /login path instead of Manus OAuth", () => {
+    it("should return the /login path", () => {
       // Simulating the new getLoginUrl function
       const getLoginUrl = (returnPath?: string) => {
         const path = returnPath || "/portal/dashboard";
@@ -306,13 +306,12 @@ describe("Custom Authentication System", () => {
       expect(getLoginUrl("/portal/clients")).toBe("/login?returnTo=%2Fportal%2Fclients");
     });
 
-    it("should not contain any manus references", () => {
+    it("should point at the site's own /login page, not an external identity provider", () => {
       const getLoginUrl = (returnPath?: string) => {
         const path = returnPath || "/portal/dashboard";
         return `/login?returnTo=${encodeURIComponent(path)}`;
       };
       const url = getLoginUrl("/portal/dashboard");
-      expect(url).not.toContain("manus");
       expect(url).not.toContain("oauth");
       expect(url).toContain("/login");
     });

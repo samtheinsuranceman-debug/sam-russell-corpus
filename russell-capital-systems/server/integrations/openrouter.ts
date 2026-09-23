@@ -240,8 +240,8 @@ export class OpenRouterBus {
         headers: {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${this.getApiKey()}`,
-          "HTTP-Referer": "https://drbuddy.xyz",
-          "X-Title": "Russell Labs Agentic Stack",
+          "HTTP-Referer": "https://russellcapitalsystems.com",
+          "X-Title": "Russell Capital Solutions",
         },
         body: JSON.stringify(body),
         signal: controller.signal,
@@ -317,8 +317,8 @@ export class OpenRouterBus {
       }
     }
 
-    // Ultimate fallback: built-in LLM
-    console.warn("[OpenRouterBus] All OpenRouter models failed, falling back to built-in LLM");
+    // Ultimate fallback: the Brain Hub chain
+    console.warn("[OpenRouterBus] All OpenRouter models failed, falling back to the Brain Hub chain");
     const builtInResult = await invokeLLM({
       messages: options.messages as Message[],
       max_tokens: options.max_tokens,
@@ -335,14 +335,14 @@ export class OpenRouterBus {
 
     return {
       id: `fallback-${Date.now()}`,
-      model: "built-in-llm",
+      model: builtInResult.model,
       choices: [{
         index: 0,
         message: { role: "assistant", content: contentStr },
         finish_reason: builtInResult.choices?.[0]?.finish_reason || "stop",
       }],
       usage: builtInResult.usage,
-      provider: "manus-built-in",
+      provider: "brain-hub",
     };
   }
 
