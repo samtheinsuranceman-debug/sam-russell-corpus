@@ -19,6 +19,7 @@ import nodemailer from "nodemailer";
 import type { Transporter } from "nodemailer";
 import type { Express, Request, Response } from "express";
 import { isEmailOptedOut, recordEmailOptOut } from "../messagingDb";
+import { legacySessionKeyForVerifyOnly, purposeKey } from "./purposeKeys";
 
 export type MailAttachment = { filename: string; content: Buffer | string; contentType?: string };
 export type MailMessage = {
@@ -85,16 +86,27 @@ export function senderDomain(env: MailEnv = process.env as MailEnv): string {
 }
 
 // ─── Unsubscribe tokens + headers ────────────────────────────────────────────
-function secret(env: MailEnv): string {
-  return env.JWT_SECRET || "rcs-unsubscribe";
+// Keyed with a purpose key derived from JWT_SECRET, never JWT_SECRET itself:
+// the email is chosen by whoever fills in the form and the token is mailed back
+// to them, so a raw-key HMAC here would hand out session-key MACs.
+function unsubscribeMac(key: string, email: string): string {
+  return createHmac("sha256", key).update(email.trim().toLowerCase()).digest("hex").slice(0, 32);
 }
 export function unsubscribeToken(email: string, env: MailEnv = process.env as MailEnv): string {
-  return createHmac("sha256", secret(env)).update(email.trim().toLowerCase()).digest("hex").slice(0, 32);
+  return unsubscribeMac(purposeKey("unsubscribe-link", env), email);
+}
+function sameToken(expected: string, token: string): boolean {
+  const a = Buffer.from(expected);
+  const b = Buffer.from(String(token ?? ""));
+  return a.length === b.length && timingSafeEqual(a, b);
 }
 export function verifyUnsubscribeToken(email: string, token: string, env: MailEnv = process.env as MailEnv): boolean {
-  const expected = Buffer.from(unsubscribeToken(email, env));
-  const given = Buffer.from(String(token ?? ""));
-  return expected.length === given.length && timingSafeEqual(expected, given);
+  if (sameToken(unsubscribeToken(email, env), token)) return true;
+  // Links mailed before key separation were keyed with JWT_SECRET directly and
+  // must keep working (one-click unsubscribe). Verify only; never issue with it.
+  // TODO(2027-03-31): drop the legacy key once pre-separation mail has aged out.
+  const legacy = legacySessionKeyForVerifyOnly(env);
+  return legacy !== null && sameToken(unsubscribeMac(legacy, email), token);
 }
 export function publicBaseUrl(env: MailEnv = process.env as MailEnv): string {
   return (env.PUBLIC_BASE_URL || "https://russellcapitalsystems.com").replace(/\/+$/, "");
