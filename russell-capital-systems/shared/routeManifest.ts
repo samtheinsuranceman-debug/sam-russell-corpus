@@ -384,6 +384,7 @@ export const ROUTE_MANIFEST: readonly string[] = [
   "/portal/smart-rebalancing",
   "/portal/social",
   "/portal/social-security",
+  "/portal/sources",
   "/portal/special-needs",
   "/portal/spending-guardrails",
   "/portal/sphere",

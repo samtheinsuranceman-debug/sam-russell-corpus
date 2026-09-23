@@ -1,1 +1,0 @@
--- already applied: 0040_zippy_sunspot

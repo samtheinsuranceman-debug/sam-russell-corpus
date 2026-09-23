@@ -1,1 +1,0 @@
--- already applied: 0048_yielding_stryfe
