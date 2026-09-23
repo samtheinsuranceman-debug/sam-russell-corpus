@@ -32,6 +32,12 @@ import {
   stripCarrierLookup,
 } from "./carrierKnowledge";
 import { buildMacroBrief, executeMacroLookup, parseMacroLookup, stripMacroLookup } from "./macroContext";
+import { councilDetails, goldmanNeedsCouncil, runCouncil, type CouncilDetails } from "./council";
+import { councilAccess } from "./councilRouter";
+
+/** Added to an answer with household money figures that the council could not check. */
+export const UNCHECKED_CAVEAT =
+  "_These figures have not been cross-checked by our review panel. Treat them as unverified until your advisor confirms them. Hypothetical illustration, not tax, legal or investment advice._";
 
 /** Macro scenario lookups allowed per turn. */
 const MAX_MACRO_LOOKUPS = 2;
@@ -173,11 +179,13 @@ export const thomasGoldmanRouter = router({
 
       // ── Client context from the CRM ─────────────────────────────────────
       let clientContext = "";
+      let workspaceId: number | null = null;
       if (clientId) {
         try {
           const { getClientById } = await import("./db");
           const { getWorkspaceForUser } = await import("./routers");
           const ws = await getWorkspaceForUser(ctx.user.id);
+          workspaceId = ws?.id ?? null;
           const client = ws ? await getClientById(clientId, ws.id) : null;
           if (client) {
             const n = (v: unknown) => Number(v ?? 0);
@@ -415,8 +423,62 @@ export const thomasGoldmanRouter = router({
           "I reached the limit on tool calls for one turn. Ask me to continue and I will pick up from what I have.";
       }
 
+      // ── The Council ─────────────────────────────────────────────────────
+      //
+      // An answer with numbers about a household's taxes, loans or policy
+      // values is expensive to get wrong, so it is routed through the council
+      // (three pinned models and a non-voting judge) and the household sees
+      // only the text written from the judge's verdict. Advisors and the owner
+      // also get the workings, for the "Council details" expander. If the
+      // council cannot convene (cap reached, too few models), his own answer
+      // stands and only staff are told why.
+      let council: CouncilDetails | null = null;
+      if (goldmanNeedsCouncil(reply)) {
+        const question = [...messages].reverse().find(m => m.role === "user")?.content ?? "";
+        const recentTranscript = messages
+          .slice(-6)
+          .map(t => `${t.role === "user" ? "CLIENT" : "ADVISOR"}: ${t.content}`)
+          .join("\n\n");
+        const contextLabels = [
+          clientContext ? "the client record on the platform" : "",
+          summary ? "this conversation's working memory (as statements, not facts)" : "",
+          "the recent turns of this conversation (as statements, not facts)",
+        ].filter(Boolean);
+        try {
+          // The per-household cap needs the asker's workspace even without a client record.
+          if (workspaceId === null) {
+            const { getWorkspaceByOwnerId } = await import("./db");
+            workspaceId = (await getWorkspaceByOwnerId(ctx.user.id))?.id ?? null;
+          }
+          const run = await runCouncil({
+            question,
+            // Only the structured client record goes in as fact; what was said is fenced as statements.
+            context: clientContext || undefined,
+            conversation: [summary ? `WORKING MEMORY:\n${summary.slice(0, 8_000)}` : "", `RECENT CONVERSATION:\n${recentTranscript}`].filter(Boolean).join("\n\n"),
+            contextLabels,
+            room: "goldman",
+            force: true,
+            facts: true,
+            workspaceId,
+          });
+          if (run.outcome === "council") {
+            reply = run.finalText;
+          } else {
+            // The figures above were not cross-checked; the household is told so.
+            reply = `${reply}\n\n${UNCHECKED_CAVEAT}`;
+          }
+          const access = await councilAccess(ctx.user);
+          council = access.level === "household" ? null : councilDetails(run);
+        } catch (e) {
+          console.error("[Thomas] council run failed; his own answer stands with a caveat:", e);
+          reply = `${reply}\n\n${UNCHECKED_CAVEAT}`;
+        }
+      }
+
       return {
         reply,
+        /** Advisors and the owner only; always null for a household. */
+        council,
         answeredBy,
         toolsUsed,
         toolsAvailable: tools.count,

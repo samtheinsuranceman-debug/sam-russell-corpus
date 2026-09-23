@@ -17,6 +17,7 @@ import { ultraRouter } from "./ultraAI";
 import { aiStackRouter } from "./aiStackRouter";
 import { macroRouter } from "./macroRouter";
 import { thomasGoldmanRouter } from "./thomasGoldmanRouter";
+import { councilRouter } from "./councilRouter";
 import { vaultRouter } from "./vaultRouter";
 import { leadsRouter } from "./leadsRouter";
 import { factFinderRouter } from "./factFinderRouter";
@@ -391,6 +392,8 @@ export const appRouter = router({
   aiStack: aiStackRouter,
   /** The AI advisor (ADVISOR_NAME in shared/aiAdvisor.ts) — behind the blue microphone. */
   thomas: thomasGoldmanRouter,
+  /** The Council: pinned multi-model consensus with a non-voting judge. Advisors and the owner only. */
+  council: councilRouter,
   /** Global Macro Intelligence: Treasury liquidation, petrodollar, sovereign debt, Taiwan — daily, sourced, confidence-scored. */
   macro: macroRouter,
   /** Brain Hub: encrypted vault for forty brains + forty MCP servers. Owner only. */
