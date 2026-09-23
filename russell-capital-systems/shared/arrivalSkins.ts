@@ -36,6 +36,8 @@ export interface ArrivalSkin {
 export interface SkinRegistry {
   version: number;
   recentWindow: number;
+  /** The skin a household sees on its first visit: the house key (C major cream and mint). */
+  houseSkin?: string;
   houseVoicing: string[];
   skins: ArrivalSkin[];
 }
@@ -89,6 +91,21 @@ export function contrastRatio(a: string, b: string): number {
   return (hi + 0.05) / (lo + 0.05);
 }
 
+/** `top` laid over `base` at `alpha` (0..1), as #RRGGBB. */
+export function blendHex(base: string, top: string, alpha: number): string {
+  const ch = (h: string, i: number) => parseInt(h.slice(i, i + 2), 16);
+  const mix = [1, 3, 5].map((i) => Math.round(ch(base, i) * (1 - alpha) + ch(top, i) * alpha));
+  return `#${mix.map((v) => v.toString(16).padStart(2, "0")).join("").toUpperCase()}`;
+}
+
+/** How strongly the filament colour tints the field's lower edge on the arrival band (0x22 / 255). */
+export const FIELD_EDGE_TINT = 0x22 / 255;
+
+/** The darkest-case background behind the band's text: the field with its filament tint at the edge. */
+export function fieldEdgeColour(skin: Pick<ArrivalSkin, "field" | "filament">): string {
+  return blendHex(skin.field, skin.filament, FIELD_EDGE_TINT);
+}
+
 /** Every problem with a registry, as readable strings. [] means valid. */
 export function validateRegistry(reg: SkinRegistry): string[] {
   const errs: string[] = [];
@@ -102,6 +119,7 @@ export function validateRegistry(reg: SkinRegistry): string[] {
     ids.add(s.id);
     for (const k of ["field", "filament", "ink"] as const) if (!HEX.test(s[k] ?? "")) errs.push(`${at}: ${k} is not #RRGGBB`);
     if (HEX.test(s.field ?? "") && HEX.test(s.ink ?? "") && contrastRatio(s.field, s.ink) < 7) errs.push(`${at}: ink on field is below 7:1 contrast`);
+    if (HEX.test(s.field ?? "") && HEX.test(s.ink ?? "") && HEX.test(s.filament ?? "") && contrastRatio(fieldEdgeColour(s), s.ink) < 4.5) errs.push(`${at}: ink on the tinted field edge is below 4.5:1`);
     if (!s.name?.trim() || !s.family?.trim()) errs.push(`${at}: name and family are required`);
     if (!s.source?.trim()) errs.push(`${at}: source is required (where the colours come from)`);
     if (!Array.isArray(s.voicing) || s.voicing.length < 2) errs.push(`${at}: voicing needs at least two notes`);
@@ -112,6 +130,7 @@ export function validateRegistry(reg: SkinRegistry): string[] {
       if (!st?.alt?.trim()) errs.push(`${at}: still ${st?.url} has no alt text`);
     }
   }
+  if (reg.houseSkin !== undefined && !reg.skins.some((s) => s.id === reg.houseSkin)) errs.push(`houseSkin ${reg.houseSkin} is not in the roster`);
   for (const n of reg.houseVoicing ?? []) { try { noteToMidi(n); } catch { errs.push(`houseVoicing note ${n} is not in C major`); } }
   return errs;
 }
@@ -149,6 +168,7 @@ export interface SkinPick {
  *   1. never one of the last `recentWindow` skins seen (7 by default);
  *   2. full rotation before repeats: within a rotation of `skins.length` sessions,
  *      every skin appears once;
+ *   0. the first visit wears the house skin (C major), when the roster names one;
  *   3. among the skins left, a seeded draw on (userSeed, sessionNumber), so the same
  *      user and session always get the same skin, on the server or in the browser.
  * With at least recentWindow + 1 skins both rules can always be met.
@@ -171,11 +191,22 @@ export function selectSkin(reg: SkinRegistry, userSeed: string, history: SkinHis
     reg.skins,
   ];
   const candidates = tiers.find((t) => t.length > 0)!;
+  const house = sessionCount === 0 && reg.houseSkin ? candidates.find((s) => s.id === reg.houseSkin) : undefined;
   const rng = mulberry32(hashSeed(`${userSeed}|arrival-skin|${sessionNumber}`));
-  const skin = candidates[Math.floor(rng() * candidates.length)];
+  const skin = house ?? candidates[Math.floor(rng() * candidates.length)];
 
   const nextRecent = [...recent, skin.id].slice(-historyCap(reg));
   return { skin, sessionNumber, history: { sessionCount: sessionNumber, recent: nextRecent } };
+}
+
+/** The picker's seed string for a signed-in user; the server and the browser fallback use the same one. */
+export function userSkinSeed(userId: number): string {
+  return `user:${userId}`;
+}
+
+/** The sonic signature's seed for a user: a hash, so the raw id never travels as the seed. */
+export function signatureSeedFor(userId: number): number {
+  return hashSeed(`signature-user:${userId}`);
 }
 
 export function skinById(reg: SkinRegistry, id: string): ArrivalSkin | undefined {

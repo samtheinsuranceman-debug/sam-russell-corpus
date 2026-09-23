@@ -1,5 +1,5 @@
 // ============================================================
-// ARRIVAL SKINS — per-user history (table arrival_skin_history, migration 0083).
+// ARRIVAL SKINS — per-user history (table arrival_skin_history, migration 0084).
 //
 // beginArrival() reads the user's history, picks this session's skin with the pure
 // picker in shared/arrivalSkins.ts, and writes the new history back. If the database
@@ -11,7 +11,9 @@ import { eq } from "drizzle-orm";
 import { arrivalSkinHistory } from "../drizzle/schema";
 import { getDb } from "./db";
 import { jsonColumn } from "./_core/jsonColumn";
-import { EMPTY_HISTORY, SKIN_REGISTRY, hashSeed, selectSkin, type ArrivalSkin, type SkinHistory, type SkinRegistry } from "@shared/arrivalSkins";
+import { EMPTY_HISTORY, SKIN_REGISTRY, selectSkin, signatureSeedFor, userSkinSeed, type ArrivalSkin, type SkinHistory, type SkinRegistry } from "@shared/arrivalSkins";
+
+export { signatureSeedFor, userSkinSeed };
 
 const memory = new Map<number, SkinHistory>();
 
@@ -22,15 +24,6 @@ export interface ArrivalBegin {
   signatureSeed: number;
   houseVoicing: string[];
   stored: "database" | "memory";
-}
-
-/** The seed string the picker uses for this user. The same function serves the browser fallback's shape. */
-export function userSkinSeed(userId: number): string {
-  return `user:${userId}`;
-}
-
-export function signatureSeedFor(userId: number): number {
-  return hashSeed(`signature-user:${userId}`);
 }
 
 function cleanHistory(raw: { sessionCount?: unknown; recent?: unknown } | undefined): SkinHistory {
