@@ -34,7 +34,9 @@ const FEDERAL_BRACKETS_2026: Record<FilingStatus, TaxBracket[]> = {
  * taxRules.ts; the 10% starting marginal rate in calculateTax is the lowest of
  * those seven.
  */
-const FEDERAL_RATES_SOURCE = {
+export const FEDERAL_RATES_SOURCE = {
+  /** One line for a page footer under a bracket chart or tax figure. */
+  short: "IRS Rev. Proc. 2025-32 (tax year 2026 brackets and standard deduction)",
   label: "IRS, Rev. Proc. 2025-32 (tax year 2026): section 2.01 (the seven rates 10%, 12%, 22%, 24%, 32%, 35%, 37% made permanent by P.L. 119-21 section 70101), section 4.01 (tax rate tables) and section 4.14 (standard deduction)",
   url: "https://www.irs.gov/pub/irs-drop/rp-25-32.pdf",
   asOf: "read 2026-09-23",
@@ -214,12 +216,59 @@ export function calculateTaxSavings(
  * "Married Filing Jointly", "head of household"; anything else is single.
  */
 export function federalMarginalRateFor(grossIncome: number, filing: unknown = "single"): number {
+  return calculateTax(grossIncome, filingStatusFrom(filing), "TX").federalMarginalRate;
+}
+
+/**
+ * This engine's filing key for a page's own wording: "joint", "married",
+ * "married_joint", "Married Filing Jointly", "mfj" -> joint; "hoh",
+ * "head_of_household", "headOfHousehold" -> hoh; married filing separately
+ * and anything else -> single (the separate table matches single below the
+ * 35% bracket).
+ */
+export function filingStatusFrom(filing: unknown): FilingStatus {
   const f = String(filing ?? "").toLowerCase();
-  const key: FilingStatus = f.includes("separat") ? "single"
-    : f === "joint" || f.includes("joint") || f.includes("married") || f === "mfj" ? "joint"
-    : f === "hoh" || f.includes("head") ? "hoh"
-    : "single";
-  return calculateTax(grossIncome, key, "TX").federalMarginalRate;
+  if (f.includes("separat")) return "single";
+  if (f === "joint" || f.includes("joint") || f.includes("married") || f === "mfj") return "joint";
+  if (f === "hoh" || f.includes("head")) return "hoh";
+  return "single";
+}
+
+/** Tax year the federal tables below are for (taxRules.ts). */
+export const FEDERAL_TAX_YEAR = TAX_RULES_2026.taxYear;
+
+/**
+ * The current-year federal brackets as {min, max, rate} rows, read from
+ * taxRules.ts. Pages that draw or walk the bracket table call this instead
+ * of typing their own copy. Returns a fresh array; `filing` accepts the same
+ * wording as filingStatusFrom.
+ */
+export function federalBrackets(filing: unknown = "single"): TaxBracket[] {
+  return FEDERAL_BRACKETS_2026[filingStatusFrom(filing)].map((b) => ({ ...b }));
+}
+
+/** The current-year federal standard deduction (taxRules.ts); `filing` as in filingStatusFrom. */
+export function federalStandardDeduction(filing: unknown = "single"): number {
+  return STANDARD_DEDUCTIONS[filingStatusFrom(filing)];
+}
+
+/** Federal income tax on a taxable income (after deductions), from the current-year table. */
+export function federalTaxOnTaxable(taxableIncome: number, filing: unknown = "single"): number {
+  let tax = 0;
+  for (const b of FEDERAL_BRACKETS_2026[filingStatusFrom(filing)]) {
+    if (taxableIncome <= b.min) break;
+    tax += (Math.min(taxableIncome, b.max) - b.min) * b.rate;
+  }
+  return tax;
+}
+
+/** Federal marginal rate on a taxable income (after deductions), from the current-year table. */
+export function federalMarginalRateOnTaxable(taxableIncome: number, filing: unknown = "single"): number {
+  let rate = 0.10;
+  for (const b of FEDERAL_BRACKETS_2026[filingStatusFrom(filing)]) {
+    if (taxableIncome > b.min) rate = b.rate;
+  }
+  return rate;
 }
 
 /**

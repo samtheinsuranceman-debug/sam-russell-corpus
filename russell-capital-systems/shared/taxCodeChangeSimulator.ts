@@ -6,6 +6,8 @@
  * before laws are enacted.
  */
 
+import { TAX_RULES_2026 } from "./taxRules";
+
 export interface TaxScenario {
   name: string;
   description: string;
@@ -64,16 +66,20 @@ export interface TaxSimulatorResult {
   irsReferences: string[];
 }
 
+// Current-law values in the scenarios below are read from shared/taxRules.ts
+// (tax year 2026); the proposed values are the scenario's own assumptions.
+const SINGLE_37_START = TAX_RULES_2026.brackets.single[5]!.upTo!;
+
 // Pre-built tax scenarios based on current legislative proposals
 const BUILT_IN_SCENARIOS: TaxScenario[] = [
   {
     name: "TCJA Sunset (2026)",
     description: "Tax Cuts and Jobs Act provisions expire, reverting to pre-2018 rates",
     changes: [
-      { category: "income", description: "Top rate reverts 37% → 39.6%", currentValue: 0.37, proposedValue: 0.396, affectedBrackets: ["$578,126+"] },
-      { category: "estate", description: "Estate exemption halved ~$13.6M → ~$7M", currentValue: 13610000, proposedValue: 7000000, affectedBrackets: ["All estates"] },
-      { category: "deduction", description: "SALT deduction cap removed ($10K → unlimited)", currentValue: 10000, proposedValue: 999999, affectedBrackets: ["Itemizers"] },
-      { category: "deduction", description: "Standard deduction reduced", currentValue: 29200, proposedValue: 24800, affectedBrackets: ["All filers"] },
+      { category: "income", description: "Top rate reverts 37% → 39.6%", currentValue: 0.37, proposedValue: 0.396, affectedBrackets: [`$${(SINGLE_37_START + 1).toLocaleString("en-US")}+`] },
+      { category: "estate", description: `Estate exemption cut ~$${(TAX_RULES_2026.estateBasicExclusion / 1e6).toFixed(1)}M → ~$7M`, currentValue: TAX_RULES_2026.estateBasicExclusion, proposedValue: 7000000, affectedBrackets: ["All estates"] },
+      { category: "deduction", description: `SALT deduction cap removed ($${Math.round(TAX_RULES_2026.salt.cap / 1000)}K → unlimited)`, currentValue: TAX_RULES_2026.salt.cap, proposedValue: 999999, affectedBrackets: ["Itemizers"] },
+      { category: "deduction", description: "Standard deduction reduced", currentValue: TAX_RULES_2026.standardDeduction.joint, proposedValue: 24800, affectedBrackets: ["All filers"] },
     ],
     effectiveYear: 2026,
     sunsetYear: null,

@@ -4,6 +4,7 @@ import React, { useState, useMemo } from 'react';
 import { Heart, DollarSign, TrendingUp, Shield, CheckCircle2, AlertTriangle, Calendar, Target, Percent, ArrowRight, Gift, Scale } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend, ComposedChart, Line, PieChart, Pie, Cell, AreaChart, Area } from 'recharts';
 import { PageInsights } from "@/components/PageInsights";
+import { federalStandardDeduction, FEDERAL_RATES_SOURCE } from "@shared/taxBracketEngine";
 
 export default function CharitableGivingDashboard() {
   const [adjustedGrossIncome, setAdjustedGrossIncome] = useState(100000);
@@ -36,7 +37,7 @@ export default function CharitableGivingDashboard() {
   }, [adjustedGrossIncome, charitableDeduction]);
 
   const bunchingStrategy = useMemo(() => {
-    const standardDeduction = 12950; 
+    const standardDeduction = federalStandardDeduction("single"); // current-year single-filer figure, shared/taxRules.ts
     const itemizedDeduction = bunchingAmount + charitableDeduction;
     return itemizedDeduction > standardDeduction ? 'Itemized is better' : 'Standard is better';
   }, [bunchingAmount, charitableDeduction]);
@@ -153,6 +154,7 @@ export default function CharitableGivingDashboard() {
             />
           </div>
           <p className="text-gold-400">Strategy: {bunchingStrategy}</p>
+          <p className="text-xs text-gray-500">Standard deduction source: {FEDERAL_RATES_SOURCE.short}, single filer.</p>
           <p className="text-sm mt-2">Compares standard deduction vs. itemized for bunching donations.</p>
         </section>
 
