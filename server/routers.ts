@@ -1,11 +1,14 @@
 import { HELOC_RATE_DEFAULT } from "@shared/marketRateDefaults";
 import { TRPCError } from "@trpc/server";
-import { createHash, randomBytes } from "crypto";
+import { createHash, randomBytes, randomUUID } from "crypto";
 import { z } from "zod";
 import { COOKIE_NAME } from "@shared/const";
 import { SYSTEM_PREAMBLE, CLIENT_FACING_PREAMBLE, BRAND_SYSTEM_IDENTITY } from "@shared/branding";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { invokeLLM } from "./_core/llm";
+import { assertDeckInWorkspace, isHostSession } from "./workspaceScope";
+import { callerMayReadStorageKey } from "./storageOwnership";
+import { ownerOpenId } from "./_core/ownerLogin";
 import { decodePdfUpload, extractPdfText, isPdf, loadPdfFromUrl, readPdfAsJson, readerErrorMessage } from "./pdfReader";
 import { invokePortalAI } from "./portalAI";
 import { ultraRouter } from "./ultraAI";
@@ -323,6 +326,18 @@ export async function getWorkspaceForUser(userId: number) {
   const created = await getOrCreateWorkspace(userId, "My Workspace", slug);
   if (created) await ensureMembership(userId, created.id);
   return created;
+}
+
+/**
+ * The caller's workspace (from the session, never the request) and the client,
+ * which must be in it. A client in another workspace answers NOT_FOUND.
+ */
+async function requireClientInOwnWorkspace(userId: number, clientId: number) {
+  const ws = await getWorkspaceForUser(userId);
+  if (!ws) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Workspace not found" });
+  const client = await getClientById(clientId, ws.id);
+  if (!client) throw new TRPCError({ code: "NOT_FOUND", message: "Client not found in your workspace" });
+  return { ws, client };
 }
 
 const TRIAL_SLIDE_DAILY_LIMIT = 999; // All users get unlimited slide generation
@@ -1517,6 +1532,9 @@ Keep it personal, specific with dollar amounts, and actionable. Use their actual
       content: z.string().min(1).max(5000),
       parentId: z.number().optional(),
     })).mutation(async ({ ctx, input }) => {
+      const ws = await getWorkspaceForUser(ctx.user.id);
+      if (!ws) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+      await assertDeckInWorkspace(input.deckId, ws.id);
       return addSlideComment({
         deckId: input.deckId,
         slideIndex: input.slideIndex,
@@ -1528,12 +1546,17 @@ Keep it personal, specific with dollar amounts, and actionable. Use their actual
       });
     }),
 
-    getComments: protectedProcedure.input(z.object({ deckId: z.number() })).query(async ({ input }) => {
+    getComments: protectedProcedure.input(z.object({ deckId: z.number() })).query(async ({ ctx, input }) => {
+      const ws = await getWorkspaceForUser(ctx.user.id);
+      if (!ws) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+      await assertDeckInWorkspace(input.deckId, ws.id);
       return getSlideComments(input.deckId);
     }),
 
-    resolveComment: protectedProcedure.input(z.object({ id: z.number() })).mutation(async ({ input }) => {
-      await resolveSlideComment(input.id);
+    resolveComment: protectedProcedure.input(z.object({ id: z.number() })).mutation(async ({ ctx, input }) => {
+      const ws = await getWorkspaceForUser(ctx.user.id);
+      if (!ws) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+      if (!(await resolveSlideComment(input.id, ws.id))) throw new TRPCError({ code: "NOT_FOUND", message: "Comment not found in your workspace" });
       return { success: true };
     }),
 
@@ -1547,17 +1570,29 @@ Keep it personal, specific with dollar amounts, and actionable. Use their actual
       deckId: z.number(),
       email: z.string().email(),
       permission: z.enum(["view", "comment", "edit"]).default("comment"),
+      /** Optional: the link stops working at this moment. Omitted = no expiry. */
+      expiresAt: z.coerce.date().optional(),
     })).mutation(async ({ ctx, input }) => {
+      const ws = await getWorkspaceForUser(ctx.user.id);
+      if (!ws) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+      await assertDeckInWorkspace(input.deckId, ws.id);
+      if (input.expiresAt && (Number.isNaN(input.expiresAt.getTime()) || input.expiresAt.getTime() <= Date.now())) {
+        throw new TRPCError({ code: "BAD_REQUEST", message: "The expiry must be in the future." });
+      }
       const result = await createSlideShare({
         deckId: input.deckId,
         sharedByUserId: ctx.user.id,
         sharedWithEmail: input.email,
         permission: input.permission,
+        expiresAt: input.expiresAt ?? null,
       });
       return result;
     }),
 
-    getShares: protectedProcedure.input(z.object({ deckId: z.number() })).query(async ({ input }) => {
+    getShares: protectedProcedure.input(z.object({ deckId: z.number() })).query(async ({ ctx, input }) => {
+      const ws = await getWorkspaceForUser(ctx.user.id);
+      if (!ws) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+      await assertDeckInWorkspace(input.deckId, ws.id);
       return getSlideShares(input.deckId);
     }),
 
@@ -1572,18 +1607,20 @@ Keep it personal, specific with dollar amounts, and actionable. Use their actual
       return { deck, permission: share.permission };
     }),
 
-    removeShare: protectedProcedure.input(z.object({ id: z.number() })).mutation(async ({ input }) => {
-      await deleteSlideShare(input.id);
+    removeShare: protectedProcedure.input(z.object({ id: z.number() })).mutation(async ({ ctx, input }) => {
+      const ws = await getWorkspaceForUser(ctx.user.id);
+      if (!ws) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+      if (!(await deleteSlideShare(input.id, ws.id))) throw new TRPCError({ code: "NOT_FOUND", message: "Share not found in your workspace" });
       return { success: true };
     }),
 
-    /** Public: Get deck by share token — no auth required */
+    /** Public: Get deck by share token — no auth required. Expired shares are refused. */
     getByShareToken: publicProcedure.input(z.object({ token: z.string() })).query(async ({ input }) => {
       const db = await getDb();
       if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
-      const { slideShares, savedSlideDecks } = await import("../drizzle/schema");
+      const { savedSlideDecks } = await import("../drizzle/schema");
       const { eq } = await import("drizzle-orm");
-      const [share] = await db.select().from(slideShares).where(eq(slideShares.shareToken, input.token)).limit(1);
+      const share = await getSlideShareByToken(input.token);
       if (!share) throw new TRPCError({ code: "NOT_FOUND", message: "Invalid or expired share link" });
       const [deck] = await db.select().from(savedSlideDecks).where(eq(savedSlideDecks.id, share.deckId)).limit(1);
       if (!deck) throw new TRPCError({ code: "NOT_FOUND", message: "Deck no longer exists" });
@@ -1610,7 +1647,13 @@ Keep it personal, specific with dollar amounts, and actionable. Use their actual
       if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
       const { clients: clientsTable } = await import("../drizzle/schema");
       const { inArray } = await import("drizzle-orm");
-      const allClients = await db.select().from(clientsTable).where(inArray(clientsTable.id, input.clientIds));
+      // Only clients in the caller's own workspace; any other id answers NOT_FOUND before a model is called.
+      const requestedIds = Array.from(new Set(input.clientIds));
+      const allClients = await db.select().from(clientsTable)
+        .where(and(inArray(clientsTable.id, requestedIds), eq(clientsTable.workspaceId, ws.id)));
+      if (allClients.length !== requestedIds.length) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Client not found in your workspace" });
+      }
 
       const results: Array<{ clientId: number; clientName: string; slides: any[]; savedId?: number; pptxUrl?: string }> = [];
 
@@ -2882,8 +2925,10 @@ Keep it personal, specific with dollar amounts, and actionable. Use their actual
       if (!ws) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Workspace not found" });
       return { count: await getUnreadNotificationCount(ws.id) };
     }),
-    markRead: protectedProcedure.input(z.object({ notificationId: z.number() })).mutation(async ({ input }) => {
-      await markNotificationRead(input.notificationId);
+    markRead: protectedProcedure.input(z.object({ notificationId: z.number() })).mutation(async ({ ctx, input }) => {
+      const ws = await getWorkspaceForUser(ctx.user.id);
+      if (!ws) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Workspace not found" });
+      await markNotificationRead(input.notificationId, ws.id);
       return { marked: true };
     }),
     markAllRead: protectedProcedure.mutation(async ({ ctx }) => {
@@ -5063,7 +5108,7 @@ Keep it personal, specific with dollar amounts, and actionable. Use their actual
           settings: input.settings,
         });
         const dateStr = new Date().toISOString().slice(0, 10);
-        const fileKey = `bulk-reports/${ctx.user.id}-${dateStr}-${Date.now()}.pdf`;
+        const fileKey = `bulk-reports/${ctx.user.id}/${dateStr}-${randomUUID()}.pdf`;
         const { url } = await storagePut(fileKey, pdfBuffer, "application/pdf");
         return { url, fileKey };
       }),
@@ -5455,8 +5500,10 @@ Extract ALL years shown in the illustration. Use the ILLUSTRATED (non-guaranteed
     }),
 
     getStatus: protectedProcedure.input(z.object({ id: z.number() })).query(async ({ ctx, input }) => {
+      const ws = await getWorkspaceForUser(ctx.user.id);
+      if (!ws) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Workspace not found" });
       const db = (await getDb())!;
-      const rows = await db!.select().from(illustrationUploads).where(eq(illustrationUploads.id, input.id));
+      const rows = await db!.select().from(illustrationUploads).where(and(eq(illustrationUploads.id, input.id), eq(illustrationUploads.workspaceId, ws.id)));
       if (!rows.length) throw new TRPCError({ code: "NOT_FOUND" });
       return rows[0];
     }),
@@ -5471,8 +5518,10 @@ Extract ALL years shown in the illustration. Use the ILLUSTRATED (non-guaranteed
     }),
 
     delete: protectedProcedure.input(z.object({ id: z.number() })).mutation(async ({ ctx, input }) => {
+      const ws = await getWorkspaceForUser(ctx.user.id);
+      if (!ws) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Workspace not found" });
       const db = (await getDb())!;
-      await db!.delete(illustrationUploads).where(eq(illustrationUploads.id, input.id));
+      await db!.delete(illustrationUploads).where(and(eq(illustrationUploads.id, input.id), eq(illustrationUploads.workspaceId, ws.id)));
       return { success: true };
     }),
 
@@ -5480,8 +5529,10 @@ Extract ALL years shown in the illustration. Use the ILLUSTRATED (non-guaranteed
       uploadId: z.number(),
       overrideRate: z.number().optional(),
     })).query(async ({ ctx, input }) => {
+      const ws = await getWorkspaceForUser(ctx.user.id);
+      if (!ws) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Workspace not found" });
       const db = (await getDb())!;
-      const rows = await db!.select().from(illustrationUploads).where(eq(illustrationUploads.id, input.uploadId));
+      const rows = await db!.select().from(illustrationUploads).where(and(eq(illustrationUploads.id, input.uploadId), eq(illustrationUploads.workspaceId, ws.id)));
       if (!rows.length) throw new TRPCError({ code: "NOT_FOUND" });
       const upload = rows[0];
       if (upload.status !== "ready" || !upload.yearByYear) {
@@ -6000,7 +6051,10 @@ Return a JSON object with:
         firmName: input.firmName,
       });
       const { storagePut } = await import("./storage");
-      const key = `agendas/agenda-${Date.now()}.pdf`;
+      const ws = await getWorkspaceForUser(ctx.user.id);
+      if (!ws) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Workspace not found" });
+      // Owner in the key (server/storageOwnership.ts) and an unguessable name.
+      const key = `agendas/${ws.id}/${randomUUID()}.pdf`;
       const { url } = await storagePut(key, pdfBuffer, "application/pdf");
       return { url, fileName: `${input.title.replace(/[^a-zA-Z0-9]/g, "_")}.pdf` };
     }),
@@ -6013,11 +6067,14 @@ Return a JSON object with:
       agendaTitle: z.string(),
       advisorName: z.string().optional(),
     })).mutation(async ({ ctx, input }) => {
-      // Read the exported PDF: first-party storage only, never an arbitrary URL (server/reportPdf.ts).
+      // Read the exported PDF: first-party storage only, never an arbitrary URL (server/reportPdf.ts),
+      // and only a file the caller's workspace owns.
       const { loadReportPdf } = await import("./reportPdf");
-      const pdfBuffer = await loadReportPdf(input.pdfUrl);
-      const { sendClientReportEmail } = await import("./email");
       const workspace = await getWorkspaceForUser(ctx.user.id);
+      const pdfBuffer = await loadReportPdf(input.pdfUrl, {
+        canReadKey: (key) => callerMayReadStorageKey(key, { userId: ctx.user.id, role: ctx.user.role, workspaceId: workspace?.id ?? null }),
+      });
+      const { sendClientReportEmail } = await import("./email");
       const result = await sendClientReportEmail({
         toEmail: input.clientEmail,
         toName: input.clientName,
@@ -6186,7 +6243,11 @@ Return a JSON object with:
         firmName: input.firmName,
       });
       const { storagePut } = await import("./storage");
-      const key = `reports/${input.reportId}.pdf`;
+      const ws = await getWorkspaceForUser(ctx.user.id);
+      if (!ws) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Workspace not found" });
+      // The storage key is generated here, never taken from input.reportId, so one
+      // user cannot overwrite another's report; the owner is in the key.
+      const key = `reports/${ws.id}/${randomUUID()}.pdf`;
       const { url } = await storagePut(key, pdfBuffer, "application/pdf");
       return { url, reportId: input.reportId, fileName: `${input.title.replace(/[^a-zA-Z0-9]/g, "_")}.pdf` };
     }),
@@ -6199,9 +6260,11 @@ Return a JSON object with:
       reportTitle: z.string(),
     })).mutation(async ({ ctx, input }) => {
       const { loadReportPdf } = await import("./reportPdf");
-      const pdfBuffer = await loadReportPdf(input.pdfUrl);
-      const { sendClientReportEmail } = await import("./email");
       const workspace = await getWorkspaceForUser(ctx.user.id);
+      const pdfBuffer = await loadReportPdf(input.pdfUrl, {
+        canReadKey: (key) => callerMayReadStorageKey(key, { userId: ctx.user.id, role: ctx.user.role, workspaceId: workspace?.id ?? null }),
+      });
+      const { sendClientReportEmail } = await import("./email");
       const result = await sendClientReportEmail({
         toEmail: input.clientEmail,
         toName: input.clientName,
@@ -6628,7 +6691,7 @@ If a field cannot be determined, use 0 for numbers and "Unknown" for strings. Be
       sessionId: z.number(),
     })).mutation(async ({ ctx, input }) => {
       await closePageVisit(input.sessionId, ctx.user.id);
-      await endUserSession(input.sessionId);
+      await endUserSession(input.sessionId, ctx.user.id);
       return { success: true };
     }),
 
@@ -7316,7 +7379,9 @@ If a field cannot be determined, use 0 for numbers and "Unknown" for strings. Be
         notes: input.notes,
       });
       const { storagePut } = await import("./storage");
-      const key = `strategy-exports/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.pdf`;
+      const ws = await getWorkspaceForUser(ctx.user.id);
+      if (!ws) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Workspace not found" });
+      const key = `strategy-exports/${ws.id}/${randomUUID()}.pdf`;
       const { url } = await storagePut(key, pdfBuffer, "application/pdf");
       return { url, fileName: `${input.pageTitle.replace(/[^a-zA-Z0-9]/g, "_")}.pdf` };
     }),
@@ -7337,19 +7402,20 @@ If a field cannot be determined, use 0 for numbers and "Unknown" for strings. Be
     }),
 
     initScore: protectedProcedure.input(z.object({
-      clientId: z.number(), workspaceId: z.number(),
-    })).mutation(async ({ input }) => {
+      clientId: z.number(),
+    })).mutation(async ({ ctx, input }) => {
+      const { ws } = await requireClientInOwnWorkspace(ctx.user.id, input.clientId);
       const db = await getDb();
       if (!db) throw new Error("Database not available");
-      const existing = await db.select().from(clientScores).where(and(eq(clientScores.clientId, input.clientId), eq(clientScores.workspaceId, input.workspaceId))).limit(1);
+      const existing = await db.select().from(clientScores).where(and(eq(clientScores.clientId, input.clientId), eq(clientScores.workspaceId, ws.id))).limit(1);
       if (existing.length > 0) return existing[0];
       const [row] = await db.insert(clientScores).values({
-        clientId: input.clientId, workspaceId: input.workspaceId,
+        clientId: input.clientId, workspaceId: ws.id,
         overallScore: 50, financialHealthScore: 50, goalAlignmentScore: 50,
         behaviorScore: 50, diversificationScore: 50,
         level: 1, levelName: "Starter", totalPointsEarned: 0, streakDays: 0,
       });
-      return { id: row.insertId, ...input, overallScore: 50, level: 1, levelName: "Starter" };
+      return { id: row.insertId, clientId: input.clientId, workspaceId: ws.id, overallScore: 50, level: 1, levelName: "Starter" };
     }),
 
     updateScore: protectedProcedure.input(z.object({
@@ -7362,11 +7428,12 @@ If a field cannot be determined, use 0 for numbers and "Unknown" for strings. Be
       level: z.number().min(1).max(10).optional(),
       levelName: z.string().optional(),
       totalPointsEarned: z.number().optional(),
-    })).mutation(async ({ input }) => {
+    })).mutation(async ({ ctx, input }) => {
+      const { ws } = await requireClientInOwnWorkspace(ctx.user.id, input.clientId);
       const db = await getDb();
       if (!db) throw new Error("Database not available");
       const { clientId, ...updates } = input;
-      await db.update(clientScores).set(updates).where(eq(clientScores.clientId, clientId));
+      await db.update(clientScores).set(updates).where(and(eq(clientScores.clientId, clientId), eq(clientScores.workspaceId, ws.id)));
       return { success: true };
     }),
 
@@ -7382,13 +7449,14 @@ If a field cannot be determined, use 0 for numbers and "Unknown" for strings. Be
     }),
 
     awardBadge: protectedProcedure.input(z.object({
-      clientId: z.number(), workspaceId: z.number(),
+      clientId: z.number(),
       badgeType: z.string(), badgeName: z.string(), badgeEmoji: z.string(),
       badgeDescription: z.string().optional(), level: z.number().default(1),
-    })).mutation(async ({ input }) => {
+    })).mutation(async ({ ctx, input }) => {
+      const { ws } = await requireClientInOwnWorkspace(ctx.user.id, input.clientId);
       const db = await getDb();
       if (!db) throw new Error("Database not available");
-      const [row] = await db.insert(clientBadges).values(input);
+      const [row] = await db.insert(clientBadges).values({ ...input, workspaceId: ws.id });
       return { id: row.insertId };
     }),
 
@@ -7422,7 +7490,7 @@ If a field cannot be determined, use 0 for numbers and "Unknown" for strings. Be
       return rows[0] ?? null;
     }),
     save: protectedProcedure.input(z.object({
-      clientId: z.number(), workspaceId: z.number(),
+      clientId: z.number(),
       marketDropReaction: z.number().min(1).max(10),
       timeHorizon: z.number().min(1).max(10),
       incomeStability: z.number().min(1).max(10),
@@ -7431,7 +7499,8 @@ If a field cannot be determined, use 0 for numbers and "Unknown" for strings. Be
       volatilityComfort: z.number().min(1).max(10),
       guaranteePreference: z.number().min(1).max(10),
       growthVsIncome: z.number().min(1).max(10),
-    })).mutation(async ({ input }) => {
+    })).mutation(async ({ ctx, input }) => {
+      const { ws } = await requireClientInOwnWorkspace(ctx.user.id, input.clientId);
       const db = await getDb();
       if (!db) throw new Error("Database not available");
       // Calculate composite risk score (1-100)
@@ -7443,11 +7512,12 @@ If a field cannot be determined, use 0 for numbers and "Unknown" for strings. Be
       const riskCategory = riskScore <= 25 ? "conservative" : riskScore <= 40 ? "moderate_conservative" :
         riskScore <= 60 ? "moderate" : riskScore <= 75 ? "moderate_aggressive" : "aggressive";
 
-      const existing = await db.select().from(clientRiskAssessments).where(and(eq(clientRiskAssessments.clientId, input.clientId), eq(clientRiskAssessments.workspaceId, input.workspaceId))).limit(1);
+      const existing = await db.select().from(clientRiskAssessments).where(and(eq(clientRiskAssessments.clientId, input.clientId), eq(clientRiskAssessments.workspaceId, ws.id))).limit(1);
       if (existing.length > 0) {
-        await db.update(clientRiskAssessments).set({ ...input, riskScore, riskCategory }).where(eq(clientRiskAssessments.id, existing[0].id));
+        await db.update(clientRiskAssessments).set({ ...input, workspaceId: ws.id, riskScore, riskCategory })
+          .where(and(eq(clientRiskAssessments.id, existing[0].id), eq(clientRiskAssessments.workspaceId, ws.id)));
       } else {
-        await db.insert(clientRiskAssessments).values({ ...input, riskScore, riskCategory });
+        await db.insert(clientRiskAssessments).values({ ...input, workspaceId: ws.id, riskScore, riskCategory });
       }
       return { riskScore, riskCategory };
     }),
@@ -7465,7 +7535,7 @@ If a field cannot be determined, use 0 for numbers and "Unknown" for strings. Be
       return db.select().from(clientLifeGoals).where(and(eq(clientLifeGoals.clientId, input.clientId), eq(clientLifeGoals.workspaceId, ws.id))).orderBy(clientLifeGoals.targetAge);
     }),
     save: protectedProcedure.input(z.object({
-      clientId: z.number(), workspaceId: z.number(),
+      clientId: z.number(),
       targetAge: z.number().min(20).max(100),
       goalCategory: z.enum(["retirement", "travel", "education", "home_purchase", "debt_free",
         "business", "charity", "health", "family", "luxury", "legacy", "other"]),
@@ -7473,12 +7543,14 @@ If a field cannot be determined, use 0 for numbers and "Unknown" for strings. Be
       goalDescription: z.string().optional(),
       estimatedCost: z.number().optional(),
       priority: z.enum(["must_have", "nice_to_have", "dream"]).default("nice_to_have"),
-    })).mutation(async ({ input }) => {
+    })).mutation(async ({ ctx, input }) => {
+      const { ws } = await requireClientInOwnWorkspace(ctx.user.id, input.clientId);
       const db = await getDb();
       if (!db) throw new Error("Database not available");
       const { estimatedCost, ...rest } = input;
       const [row] = await db.insert(clientLifeGoals).values({
         ...rest,
+        workspaceId: ws.id,
         ...(estimatedCost !== undefined ? { estimatedCost: String(estimatedCost) } : {}),
       });
       return { id: row.insertId };
@@ -7491,20 +7563,30 @@ If a field cannot be determined, use 0 for numbers and "Unknown" for strings. Be
       estimatedCost: z.number().optional(),
       priority: z.enum(["must_have", "nice_to_have", "dream"]).optional(),
       isAchieved: z.boolean().optional(),
-    })).mutation(async ({ input }) => {
+    })).mutation(async ({ ctx, input }) => {
+      const ws = await getWorkspaceForUser(ctx.user.id);
+      if (!ws) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Workspace not found" });
       const db = await getDb();
       if (!db) throw new Error("Database not available");
       const { id, estimatedCost, ...rest } = input;
+      const own = and(eq(clientLifeGoals.id, id), eq(clientLifeGoals.workspaceId, ws.id));
+      const [goal] = await db.select({ id: clientLifeGoals.id }).from(clientLifeGoals).where(own).limit(1);
+      if (!goal) throw new TRPCError({ code: "NOT_FOUND", message: "Goal not found in your workspace" });
       const updates: Record<string, any> = { ...rest };
       if (estimatedCost !== undefined) updates.estimatedCost = String(estimatedCost);
-      await db.update(clientLifeGoals).set(updates).where(eq(clientLifeGoals.id, id));
+      await db.update(clientLifeGoals).set(updates).where(own);
       return { success: true };
     }),
 
-    delete: protectedProcedure.input(z.object({ id: z.number() })).mutation(async ({ input }) => {
+    delete: protectedProcedure.input(z.object({ id: z.number() })).mutation(async ({ ctx, input }) => {
+      const ws = await getWorkspaceForUser(ctx.user.id);
+      if (!ws) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Workspace not found" });
       const db = await getDb();
       if (!db) throw new Error("Database not available");
-      await db.delete(clientLifeGoals).where(eq(clientLifeGoals.id, input.id));
+      const own = and(eq(clientLifeGoals.id, input.id), eq(clientLifeGoals.workspaceId, ws.id));
+      const [goal] = await db.select({ id: clientLifeGoals.id }).from(clientLifeGoals).where(own).limit(1);
+      if (!goal) throw new TRPCError({ code: "NOT_FOUND", message: "Goal not found in your workspace" });
+      await db.delete(clientLifeGoals).where(own);
       return { success: true };
     }),
 
@@ -7609,14 +7691,15 @@ If a field cannot be determined, use 0 for numbers and "Unknown" for strings. Be
       return db.select().from(clientRecommendations).where(and(eq(clientRecommendations.clientId, input.clientId), eq(clientRecommendations.workspaceId, ws.id))).orderBy(desc(clientRecommendations.scoreImpact));
     }),
     generate: protectedProcedure.input(z.object({
-      clientId: z.number(), workspaceId: z.number(),
+      clientId: z.number(),
       currentScore: z.number(),
       age: z.number(), income: z.number(), netWorth: z.number(),
       riskScore: z.number().optional(),
       mortgageBalance: z.number().optional(),
       iraBalance: z.number().optional(),
       rothBalance: z.number().optional(),
-    })).mutation(async ({ input }) => {
+    })).mutation(async ({ ctx, input }) => {
+      const { ws } = await requireClientInOwnWorkspace(ctx.user.id, input.clientId);
       const db = await getDb();
       if (!db) throw new Error("Database not available");
 
@@ -7668,16 +7751,21 @@ If a field cannot be determined, use 0 for numbers and "Unknown" for strings. Be
       // Insert all recommendations
       for (const rec of recs) {
         await db.insert(clientRecommendations).values({
-          clientId: input.clientId, workspaceId: input.workspaceId, ...rec,
+          clientId: input.clientId, workspaceId: ws.id, ...rec,
         });
       }
       return { count: recs.length, recommendations: recs };
     }),
 
-    accept: protectedProcedure.input(z.object({ id: z.number() })).mutation(async ({ input }) => {
+    accept: protectedProcedure.input(z.object({ id: z.number() })).mutation(async ({ ctx, input }) => {
+      const ws = await getWorkspaceForUser(ctx.user.id);
+      if (!ws) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Workspace not found" });
       const db = await getDb();
       if (!db) throw new Error("Database not available");
-      await db.update(clientRecommendations).set({ isAccepted: true }).where(eq(clientRecommendations.id, input.id));
+      const own = and(eq(clientRecommendations.id, input.id), eq(clientRecommendations.workspaceId, ws.id));
+      const [rec] = await db.select({ id: clientRecommendations.id }).from(clientRecommendations).where(own).limit(1);
+      if (!rec) throw new TRPCError({ code: "NOT_FOUND", message: "Recommendation not found in your workspace" });
+      await db.update(clientRecommendations).set({ isAccepted: true }).where(own);
       return { success: true };
     }),
 
@@ -7688,10 +7776,11 @@ If a field cannot be determined, use 0 for numbers and "Unknown" for strings. Be
       if (!client) throw new TRPCError({ code: "NOT_FOUND", message: "Client not found in your workspace" });
       const db = await getDb();
       if (!db) throw new Error("Database not available");
-      // Mark recommendation as completed
-      const recs = await db.select().from(clientRecommendations).where(eq(clientRecommendations.id, input.id)).limit(1);
-      if (recs.length === 0) throw new Error("Recommendation not found");
-      await db.update(clientRecommendations).set({ isCompleted: true, completedAt: new Date() }).where(eq(clientRecommendations.id, input.id));
+      // Mark recommendation as completed: it must be this client's, in this workspace.
+      const ownRec = and(eq(clientRecommendations.id, input.id), eq(clientRecommendations.workspaceId, ws.id), eq(clientRecommendations.clientId, input.clientId));
+      const recs = await db.select().from(clientRecommendations).where(ownRec).limit(1);
+      if (recs.length === 0) throw new TRPCError({ code: "NOT_FOUND", message: "Recommendation not found in your workspace" });
+      await db.update(clientRecommendations).set({ isCompleted: true, completedAt: new Date() }).where(ownRec);
       // Boost the client's score
       const scores = await db.select().from(clientScores).where(and(eq(clientScores.clientId, input.clientId), eq(clientScores.workspaceId, ws.id))).limit(1);
       if (scores.length > 0) {
@@ -7707,7 +7796,7 @@ If a field cannot be determined, use 0 for numbers and "Unknown" for strings. Be
         await db.update(clientScores).set({
           overallScore: newScore, totalPointsEarned: newPoints,
           level: newLevel, levelName: levelNames[newLevel - 1],
-        }).where(eq(clientScores.clientId, input.clientId));
+        }).where(and(eq(clientScores.clientId, input.clientId), eq(clientScores.workspaceId, ws.id)));
         return { success: true, newScore, newLevel, levelName: levelNames[newLevel - 1], pointsEarned: recs[0].scoreImpact };
       }
       return { success: true, newScore: 0, newLevel: 1, levelName: "Starter", pointsEarned: recs[0].scoreImpact };
@@ -7726,17 +7815,18 @@ If a field cannot be determined, use 0 for numbers and "Unknown" for strings. Be
       return db.select().from(clientSessionRatings).where(and(eq(clientSessionRatings.clientId, input.clientId), eq(clientSessionRatings.workspaceId, ws.id))).orderBy(desc(clientSessionRatings.createdAt));
     }),
     rate: protectedProcedure.input(z.object({
-      clientId: z.number(), workspaceId: z.number(),
+      clientId: z.number(),
       sessionId: z.number().optional(),
       rating: z.number().min(1).max(10),
       explanation: z.string().optional(),
       behaviors: z.array(z.string()).optional(),
       actions: z.array(z.string()).optional(),
-    })).mutation(async ({ input }) => {
+    })).mutation(async ({ ctx, input }) => {
+      const { ws } = await requireClientInOwnWorkspace(ctx.user.id, input.clientId);
       const db = await getDb();
       if (!db) throw new Error("Database not available");
       const [row] = await db.insert(clientSessionRatings).values({
-        clientId: input.clientId, workspaceId: input.workspaceId,
+        clientId: input.clientId, workspaceId: ws.id,
         sessionId: input.sessionId ?? null,
         rating: String(input.rating),
         explanation: input.explanation ?? null,
@@ -7747,12 +7837,15 @@ If a field cannot be determined, use 0 for numbers and "Unknown" for strings. Be
     }),
 
     aiRate: protectedProcedure.input(z.object({
-      clientId: z.number(), workspaceId: z.number(),
+      clientId: z.number(),
       sessionNotes: z.string(),
       tabsVisited: z.array(z.string()).optional(),
       actionsPerformed: z.array(z.string()).optional(),
       duration: z.number().optional(),
     })).mutation(async ({ ctx, input }) => {
+      // The client must be in the caller's own workspace before anything is
+      // rated, stored or e-mailed; the e-mail goes only to that client.
+      const { ws, client } = await requireClientInOwnWorkspace(ctx.user.id, input.clientId);
       const db = await getDb();
       if (!db) throw new Error("Database not available");
       const response = await invokeLLM({
@@ -7785,20 +7878,19 @@ If a field cannot be determined, use 0 for numbers and "Unknown" for strings. Be
       const rawContent = response.choices[0].message.content;
       const parsed = JSON.parse(typeof rawContent === "string" ? rawContent : "{}");
       const [row] = await db.insert(clientSessionRatings).values({
-        clientId: input.clientId, workspaceId: input.workspaceId,
+        clientId: client.id, workspaceId: ws.id,
         rating: String(parsed.rating ?? 5),
         explanation: parsed.explanation ?? null,
         behaviors: parsed.behaviors ?? null,
         actions: parsed.actions ?? null,
       });
-      // Send email if client has email
-      const clientRows = await db.select().from(clients).where(and(eq(clients.id, input.clientId), eq(clients.workspaceId, input.workspaceId))).limit(1);
-      if (clientRows[0]?.email) {
+      // Send email if the (own-workspace) client has an email
+      if (client.email && client.workspaceId === ws.id) {
         const { sendSessionRatingEmail } = await import("./email");
         const ratingEmojis = ["😟", "😕", "😐", "🙂", "😊", "😄", "🌟", "⭐", "🏆", "👑"];
         await sendSessionRatingEmail({
-          toEmail: clientRows[0].email,
-          clientName: clientRows[0].name ?? "Client",
+          toEmail: client.email,
+          clientName: client.name ?? "Client",
           sessionDate: new Date().toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" }),
           rating: parsed.rating ?? 5,
           ratingEmoji: ratingEmojis[Math.min(9, Math.max(0, (parsed.rating ?? 5) - 1))],
@@ -8279,7 +8371,7 @@ If a field cannot be determined, use 0 for numbers and "unknown" for strings. Be
       if (!teamRows[0]) throw new TRPCError({ code: "FORBIDDEN", message: "Only the team supervisor can remove members" });
       await db.update(agencyTeamMembers)
         .set({ status: "removed" })
-        .where(eq(agencyTeamMembers.id, input.memberId));
+        .where(and(eq(agencyTeamMembers.id, input.memberId), eq(agencyTeamMembers.teamId, input.teamId)));
       return { success: true };
     }),
 
@@ -9181,12 +9273,14 @@ If a field cannot be determined, use 0 for numbers and "unknown" for strings. Be
       chapterId: z.number(),
       script: z.string().optional(),
       title: z.string().optional(),
-    })).mutation(async ({ input }) => {
+    })).mutation(async ({ ctx, input }) => {
       const { updateVideoProposalChapter } = await import("./db");
+      const ws = await getWorkspaceForUser(ctx.user.id);
+      if (!ws) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "No workspace" });
       const data: Record<string, unknown> = {};
       if (input.script !== undefined) data.script = input.script;
       if (input.title !== undefined) data.title = input.title;
-      await updateVideoProposalChapter(input.chapterId, data as any);
+      if (!(await updateVideoProposalChapter(input.chapterId, ws.id, data as any))) throw new TRPCError({ code: "NOT_FOUND", message: "Chapter not found in your workspace" });
       return { success: true };
     }),
     regenerateChapter: protectedProcedure.input(z.object({
@@ -9216,10 +9310,11 @@ If a field cannot be determined, use 0 for numbers and "unknown" for strings. Be
         advisorName,
         input.customInstructions,
       );
-      await updateVideoProposalChapter(input.chapterId, {
+      const updated = await updateVideoProposalChapter(input.chapterId, ws.id, {
         script: result.script,
         durationEstimate: result.durationEstimate,
-      });
+      }, proposal.id);
+      if (!updated) throw new TRPCError({ code: "NOT_FOUND", message: "Chapter not found in this proposal" });
       return result;
     }),
     generateVideo: protectedProcedure.input(z.object({
@@ -9396,6 +9491,14 @@ If a field cannot be determined, use 0 for numbers and "unknown" for strings. Be
         maxResults: z.number().min(1).max(100).default(25),
       }).optional())
       .query(async ({ ctx, input }) => {
+        // The Google Calendar connected on this host is the host's own: only the
+        // host's session reads it. Everyone else sees their workspace's local events.
+        if (!isHostSession(ctx.user, ownerOpenId())) {
+          const ws = await getWorkspaceForUser(ctx.user.id);
+          if (!ws) return { events: [], synced: false };
+          const { getCalendarEvents } = await import("./db");
+          return { events: await getCalendarEvents(ws.id, ctx.user.id), synced: false };
+        }
         try {
           const { searchCalendarEvents: listEvents } = await import("./calendarService");
           const start = input?.startDate || new Date().toISOString();
@@ -9448,23 +9551,28 @@ If a field cannot be determined, use 0 for numbers and "unknown" for strings. Be
       }))
       .mutation(async ({ ctx, input }) => {
         const ws = await getWorkspaceForUser(ctx.user.id);
+        if (input.clientId !== undefined) {
+          if (!ws || !(await getClientById(input.clientId, ws.id))) throw new TRPCError({ code: "NOT_FOUND", message: "Client not found in your workspace" });
+        }
         let googleEventId: string | null = null;
         let meetingLink: string | null = null;
-        // Try Google Calendar first
-        try {
-          const { createCalendarEvent: createEvent } = await import("./calendarService");
-          const result = await createEvent({
-            summary: input.title,
-            description: input.description,
-            startTime: input.startTime,
-            endTime: input.endTime,
-            location: input.location,
-            attendees: input.attendees,
-          });
-          googleEventId = result?.id || null;
-          meetingLink = result?.hangoutLink || null;
-        } catch (e) {
-          console.warn("[CalendarSync] Google create failed, saving locally", e);
+        // Try Google Calendar first (the host's calendar: host session only)
+        if (isHostSession(ctx.user, ownerOpenId())) {
+          try {
+            const { createCalendarEvent: createEvent } = await import("./calendarService");
+            const result = await createEvent({
+              summary: input.title,
+              description: input.description,
+              startTime: input.startTime,
+              endTime: input.endTime,
+              location: input.location,
+              attendees: input.attendees,
+            });
+            googleEventId = result?.id || null;
+            meetingLink = result?.hangoutLink || null;
+          } catch (e) {
+            console.warn("[CalendarSync] Google create failed, saving locally", e);
+          }
         }
         // Always save to local DB
         if (ws) {
@@ -9490,7 +9598,6 @@ If a field cannot be determined, use 0 for numbers and "unknown" for strings. Be
     updateEvent: protectedProcedure
       .input(z.object({
         eventId: z.number(),
-        googleEventId: z.string().optional(),
         title: z.string().optional(),
         description: z.string().optional(),
         startTime: z.string().optional(),
@@ -9499,11 +9606,17 @@ If a field cannot be determined, use 0 for numbers and "unknown" for strings. Be
         status: z.string().optional(),
       }))
       .mutation(async ({ ctx, input }) => {
-        // Try Google Calendar update
-        if (input.googleEventId) {
+        const ws = await getWorkspaceForUser(ctx.user.id);
+        if (!ws) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Workspace not found" });
+        const { getCalendarEventForWorkspace, updateCalendarEvent } = await import("./db");
+        const event = await getCalendarEventForWorkspace(input.eventId, ws.id);
+        if (!event) throw new TRPCError({ code: "NOT_FOUND", message: "Event not found in your workspace" });
+        // The Google event touched is the one stored on this workspace's event, never
+        // one named in the request, and only from the host's own session.
+        if (event.googleEventId && isHostSession(ctx.user, ownerOpenId())) {
           try {
             const { updateCalendarEvent: updateEvent } = await import("./calendarService");
-            await updateEvent(input.googleEventId, {
+            await updateEvent(event.googleEventId, {
               summary: input.title,
               description: input.description,
               startTime: input.startTime,
@@ -9514,9 +9627,7 @@ If a field cannot be determined, use 0 for numbers and "unknown" for strings. Be
             console.warn("[CalendarSync] Google update failed", e);
           }
         }
-        // Update local DB
-        const { updateCalendarEvent } = await import("./db");
-        await updateCalendarEvent(input.eventId, {
+        await updateCalendarEvent(event.id, ws.id, {
           title: input.title,
           description: input.description,
           startTime: input.startTime,
@@ -9530,19 +9641,22 @@ If a field cannot be determined, use 0 for numbers and "unknown" for strings. Be
     deleteEvent: protectedProcedure
       .input(z.object({
         eventId: z.number(),
-        googleEventId: z.string().optional(),
       }))
       .mutation(async ({ ctx, input }) => {
-        if (input.googleEventId) {
+        const ws = await getWorkspaceForUser(ctx.user.id);
+        if (!ws) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Workspace not found" });
+        const { getCalendarEventForWorkspace, deleteCalendarEvent } = await import("./db");
+        const event = await getCalendarEventForWorkspace(input.eventId, ws.id);
+        if (!event) throw new TRPCError({ code: "NOT_FOUND", message: "Event not found in your workspace" });
+        if (event.googleEventId && isHostSession(ctx.user, ownerOpenId())) {
           try {
             const { deleteCalendarEvent: deleteEvent } = await import("./calendarService");
-            await deleteEvent(input.googleEventId);
+            await deleteEvent(event.googleEventId);
           } catch (e) {
             console.warn("[CalendarSync] Google delete failed", e);
           }
         }
-        const { deleteCalendarEvent } = await import("./db");
-        await deleteCalendarEvent(input.eventId);
+        await deleteCalendarEvent(event.id, ws.id);
         return { success: true };
       }),
 

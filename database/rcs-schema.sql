@@ -2129,6 +2129,7 @@ CREATE TABLE `slide_shares` (
 	`permission` enum('view','comment','edit') NOT NULL DEFAULT 'comment',
 	`shareToken` varchar(255) NOT NULL,
 	`accessedAt` timestamp,
+	`expiresAt` timestamp,
 	`createdAt` timestamp NOT NULL DEFAULT (now()),
 	CONSTRAINT `slide_shares_id` PRIMARY KEY(`id`),
 	CONSTRAINT `slide_shares_shareToken_unique` UNIQUE(`shareToken`)
