@@ -56,6 +56,7 @@ export const ENGINE_SOURCE_LOADERS: Record<string, Loader> = {
   "shared/incomeForLife.ts": () => import("./incomeForLife").then(m => m.INCOME_SOURCES),
   "shared/indexCreditingData.ts": () => import("./indexCreditingData").then(m => m.INDEX_RETURN_SOURCES),
   "shared/inheritanceEngine.ts": () => import("./inheritanceEngine").then(m => m.INHERITANCE_SOURCES),
+  "shared/irmaa.ts": () => import("./irmaa").then(m => m.IRMAA_SOURCES),
   "shared/iulLinks.ts": () => import("./iulLinks").then(m => m.IUL_LINK_SOURCES),
   "shared/liquidityRoutes.ts": () => import("./liquidityRoutes").then(m => m.LIQUIDITY_ROUTES_SOURCES),
   "shared/longevityEngine.ts": () => import("./longevityEngine").then(m => m.LONGEVITY_SOURCES),

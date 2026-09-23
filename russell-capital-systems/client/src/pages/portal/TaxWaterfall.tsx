@@ -22,6 +22,7 @@ import { NAICDisclaimer } from "@/components/NAICDisclaimer";
 import { useClientData, FactFinderBadge } from "@/contexts/ClientDataContext";
 import { PlatformEnhancements } from "@/components/PlatformEnhancements";
 import { ExecutiveSummary, GoalsAccelerator, RecommendationSummary, DoNothingBaseline, TaxBracketPanel } from "@/components/ConsumerOutcomeBlocks";
+import { IRMAA_2026, PART_B_STANDARD_MONTHLY_2026, irmaaTierIndex, type IrmaaFiling } from "@shared/irmaa";
 import { formatTaxCurrency } from "@shared/taxBracketEngine";
 import { RelatedCalculators } from "@/components/RelatedCalculators";
 import { ComplianceFooter } from "@/components/ComplianceFooter";
@@ -180,31 +181,26 @@ export default function TaxWaterfall() {
   const irmaaData = useMemo(() => {
     if (!result) return { currentTier: "", surcharge: 0, tiers: [] as any[] };
     const magi = result.adjustedGrossIncome;
-    const tiers = filingStatus === "married" ? [
-      { threshold: 0, partB: 174.70, partD: 0, label: "Standard" },
-      { threshold: 206000, partB: 244.60, partD: 12.90, label: "Tier 1" },
-      { threshold: 258000, partB: 349.40, partD: 33.30, label: "Tier 2" },
-      { threshold: 322000, partB: 454.20, partD: 53.80, label: "Tier 3" },
-      { threshold: 386000, partB: 559.00, partD: 74.20, label: "Tier 4" },
-      { threshold: 750000, partB: 594.00, partD: 81.00, label: "Tier 5" },
-    ] : [
-      { threshold: 0, partB: 174.70, partD: 0, label: "Standard" },
-      { threshold: 103000, partB: 244.60, partD: 12.90, label: "Tier 1" },
-      { threshold: 129000, partB: 349.40, partD: 33.30, label: "Tier 2" },
-      { threshold: 161000, partB: 454.20, partD: 53.80, label: "Tier 3" },
-      { threshold: 193000, partB: 559.00, partD: 74.20, label: "Tier 4" },
-      { threshold: 500000, partB: 594.00, partD: 81.00, label: "Tier 5" },
-    ];
-    let currentTier = tiers[0];
-    for (const t of tiers) {
-      if (magi > t.threshold) currentTier = t;
-    }
-    const annualSurcharge = (currentTier.partB - 174.70 + currentTier.partD) * 12;
-    const projections = tiers.map((t) => ({
+    // 2026 IRMAA (2024 MAGI) from shared/irmaa.ts — SSA POMS HI 01101.031, read
+    // 2026-09-23. partB is the monthly total (standard $202.90 + IRMAA); partD
+    // is the monthly IRMAA. Replaces a 2024 table (standard $174.70, joint
+    // tiers from $206,000) that also put the tier edges on the wrong side.
+    const irmaaFiling: IrmaaFiling = filingStatus === "married" ? "married" : "single";
+    const table = IRMAA_2026[irmaaFiling];
+    const tiers = table.map((t, i) => ({
+      threshold: i === 0 ? 0 : table[i - 1]!.maxMagi,
+      partB: PART_B_STANDARD_MONTHLY_2026 + t.partBMonthly,
+      partD: t.partDMonthly,
+      label: t.tier === 1 ? "Standard" : `Tier ${t.tier}`,
+    }));
+    const currentIdx = irmaaTierIndex(magi, irmaaFiling);
+    const currentTier = tiers[currentIdx]!;
+    const annualSurcharge = (currentTier.partB - PART_B_STANDARD_MONTHLY_2026 + currentTier.partD) * 12;
+    const projections = tiers.map((t, i) => ({
       ...t,
       annualCost: (t.partB + t.partD) * 12,
-      surcharge: (t.partB - 174.70 + t.partD) * 12,
-      active: magi > t.threshold,
+      surcharge: (t.partB - PART_B_STANDARD_MONTHLY_2026 + t.partD) * 12,
+      active: i <= currentIdx,
     }));
     return { currentTier: currentTier.label, surcharge: Math.round(annualSurcharge), tiers: projections, magi };
   }, [result, filingStatus]);

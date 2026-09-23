@@ -22,7 +22,7 @@ import { toast } from "sonner";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { ExecutiveSummary, GoalsAccelerator, RecommendationSummary, DoNothingBaseline, TaxBracketPanel } from "@/components/ConsumerOutcomeBlocks";
 import { useClientData } from "@/contexts/ClientDataContext";
-import { formatTaxCurrency } from "@shared/taxBracketEngine";
+import { formatTaxCurrency, federalMarginalRateFor } from "@shared/taxBracketEngine";
 import { RelatedCalculators } from "@/components/RelatedCalculators";
 import { ComplianceFooter } from "@/components/ComplianceFooter";
 
@@ -48,7 +48,10 @@ interface GivingStrategy {
 
 function computeStrategies(client: any, annualGiving: number): GivingStrategy[] {
   const income = client?.income ?? 200000;
-  const taxRate = income > 500000 ? 0.37 : income > 200000 ? 0.32 : income > 100000 ? 0.24 : 0.22;
+  // 2026 federal marginal rate from the bracket table (taxBracketEngine / taxRules,
+  // IRS Rev. Proc. 2025-32 as amended by OBBBA). Replaces an income ladder that
+  // put every household over $200,000 in 32%, including a $250,000 joint one (24%).
+  const taxRate = federalMarginalRateFor(income, client?.filingStatus);
   const stateRate = client?.stateTaxRate ?? 0.05;
   const combinedRate = taxRate + stateRate;
   const age = client?.age ?? 55;
@@ -442,7 +445,7 @@ export default function CharitableGivingOptimizer() {
                 <div className="flex flex-col">
                   <span className="text-xs text-[#7a95b8]">Est. Marginal Rate</span>
                   <span className="text-sm font-medium text-white">
-                    {selectedClient ? fmtPct((selectedClient.income > 500000 ? 0.37 : selectedClient.income > 200000 ? 0.32 : 0.24) + (selectedClient.stateTaxRate || 0.05)) : "N/A"}
+                    {selectedClient ? fmtPct(federalMarginalRateFor(selectedClient.income ?? 0, (selectedClient as any).filingStatus) + (selectedClient.stateTaxRate || 0.05)) : "N/A"}
                   </span>
                 </div>
                 <div className="w-px h-6 bg-[#12233e]"></div>

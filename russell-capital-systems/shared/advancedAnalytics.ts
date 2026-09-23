@@ -1,4 +1,5 @@
 import { currentRules, rulesForYear, saltAllowed, type FilingKey } from "./taxRules";
+import { getStateTaxRate } from "./taxBracketEngine";
 /**
  * Advanced Analytics Shared Module
  * Tax Bracket Waterfall, Estate Tax Impact, Income Timeline,
@@ -599,34 +600,24 @@ export function generateRecommendation(profile: OnboardingProfile): StrategyReco
 }
 // ─── Comprehensive Tax Waterfall ────────────────────────────────────────────
 
-const STATE_TAX_RATES: Record<string, { rate: number; name: string }> = {
-  AL: { rate: 0.05, name: "Alabama" }, AK: { rate: 0, name: "Alaska" },
-  AZ: { rate: 0.025, name: "Arizona" }, AR: { rate: 0.047, name: "Arkansas" },
-  CA: { rate: 0.133, name: "California" }, CO: { rate: 0.044, name: "Colorado" },
-  CT: { rate: 0.0699, name: "Connecticut" }, DE: { rate: 0.066, name: "Delaware" },
-  FL: { rate: 0, name: "Florida" }, GA: { rate: 0.055, name: "Georgia" },
-  HI: { rate: 0.11, name: "Hawaii" }, ID: { rate: 0.058, name: "Idaho" },
-  IL: { rate: 0.0495, name: "Illinois" }, IN: { rate: 0.0305, name: "Indiana" },
-  IA: { rate: 0.06, name: "Iowa" }, KS: { rate: 0.057, name: "Kansas" },
-  KY: { rate: 0.04, name: "Kentucky" }, LA: { rate: 0.0425, name: "Louisiana" },
-  ME: { rate: 0.0715, name: "Maine" }, MD: { rate: 0.0575, name: "Maryland" },
-  MA: { rate: 0.09, name: "Massachusetts" }, MI: { rate: 0.0425, name: "Michigan" },
-  MN: { rate: 0.0985, name: "Minnesota" }, MS: { rate: 0.05, name: "Mississippi" },
-  MO: { rate: 0.048, name: "Missouri" }, MT: { rate: 0.0675, name: "Montana" },
-  NE: { rate: 0.0664, name: "Nebraska" }, NV: { rate: 0, name: "Nevada" },
-  NH: { rate: 0, name: "New Hampshire" }, NJ: { rate: 0.1075, name: "New Jersey" },
-  NM: { rate: 0.059, name: "New Mexico" }, NY: { rate: 0.109, name: "New York" },
-  NC: { rate: 0.0475, name: "North Carolina" }, ND: { rate: 0.025, name: "North Dakota" },
-  OH: { rate: 0.04, name: "Ohio" }, OK: { rate: 0.0475, name: "Oklahoma" },
-  OR: { rate: 0.099, name: "Oregon" }, PA: { rate: 0.0307, name: "Pennsylvania" },
-  RI: { rate: 0.0599, name: "Rhode Island" }, SC: { rate: 0.065, name: "South Carolina" },
-  SD: { rate: 0, name: "South Dakota" }, TN: { rate: 0, name: "Tennessee" },
-  TX: { rate: 0, name: "Texas" }, UT: { rate: 0.0465, name: "Utah" },
-  VT: { rate: 0.0875, name: "Vermont" }, VA: { rate: 0.0575, name: "Virginia" },
-  WA: { rate: 0, name: "Washington" }, WV: { rate: 0.065, name: "West Virginia" },
-  WI: { rate: 0.0765, name: "Wisconsin" }, WY: { rate: 0, name: "Wyoming" },
-  DC: { rate: 0.0975, name: "Washington DC" },
+// State rates are read from the single 2026 table in taxBracketEngine.ts
+// (Tax Foundation, rates as of 2026-01-01; see STATE_TAX_RATES_SOURCE there).
+// This module used to carry its own copy, which had drifted (e.g. DC 9.75%,
+// OH 4%, WV 6.5%, NC 4.75%, AR 4.7%, GA 5.5%).
+const STATE_NAMES: Record<string, string> = {
+  AL: "Alabama", AK: "Alaska", AZ: "Arizona", AR: "Arkansas", CA: "California", CO: "Colorado",
+  CT: "Connecticut", DE: "Delaware", FL: "Florida", GA: "Georgia", HI: "Hawaii", ID: "Idaho",
+  IL: "Illinois", IN: "Indiana", IA: "Iowa", KS: "Kansas", KY: "Kentucky", LA: "Louisiana",
+  ME: "Maine", MD: "Maryland", MA: "Massachusetts", MI: "Michigan", MN: "Minnesota", MS: "Mississippi",
+  MO: "Missouri", MT: "Montana", NE: "Nebraska", NV: "Nevada", NH: "New Hampshire", NJ: "New Jersey",
+  NM: "New Mexico", NY: "New York", NC: "North Carolina", ND: "North Dakota", OH: "Ohio", OK: "Oklahoma",
+  OR: "Oregon", PA: "Pennsylvania", RI: "Rhode Island", SC: "South Carolina", SD: "South Dakota", TN: "Tennessee",
+  TX: "Texas", UT: "Utah", VT: "Vermont", VA: "Virginia", WA: "Washington", WV: "West Virginia",
+  WI: "Wisconsin", WY: "Wyoming", DC: "Washington DC",
 };
+const STATE_TAX_RATES: Record<string, { rate: number; name: string }> = Object.fromEntries(
+  Object.entries(STATE_NAMES).map(([code, name]) => [code, { rate: getStateTaxRate(code), name }]),
+);
 
 export function getStateList() {
   return Object.entries(STATE_TAX_RATES)

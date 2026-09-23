@@ -114,6 +114,12 @@ export const TAX_RULES_2026: TaxRuleSet = {
   taxYear: 2026,
   source: "Rev. Proc. 2025-32 (brackets, standard deduction, AMT, estate); IRS Notice 2025-67 (retirement limits); OBBBA §70120 (SALT, indexed)",
   effectiveFrom: "2026-01-01",
+  // Single and joint thresholds re-checked 2026-09-23 against the IRS release
+  // "IRS releases tax inflation adjustments for tax year 2026, including
+  // amendments from the One, Big, Beautiful Bill" (Rev. Proc. 2025-32):
+  // https://www.irs.gov/newsroom/irs-releases-tax-inflation-adjustments-for-tax-year-2026-including-amendments-from-the-one-big-beautiful-bill
+  // Joint: 24,800 / 100,800 / 211,400 / 403,550 / 512,450 / 768,700.
+  // Single: 12,400 / 50,400 / 105,700 / 201,775 / 256,225 / 640,600. Both match.
   brackets: {
     single: SEVEN([12_400, 50_400, 105_700, 201_775, 256_225, 640_600]),
     joint: SEVEN([24_800, 100_800, 211_400, 403_550, 512_450, 768_700]),
