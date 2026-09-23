@@ -31,6 +31,10 @@ import {
   parseCarrierLookup,
   stripCarrierLookup,
 } from "./carrierKnowledge";
+import { buildMacroBrief, executeMacroLookup, parseMacroLookup, stripMacroLookup } from "./macroContext";
+
+/** Macro scenario lookups allowed per turn. */
+const MAX_MACRO_LOOKUPS = 2;
 
 /** How many verbatim turns to keep before folding older ones into a summary. */
 const VERBATIM_TURNS = 20;
@@ -217,6 +221,18 @@ export const thomasGoldmanRouter = router({
       // products get demoted to "demonstration only".
       const realCarriers = await loadRealCarriers();
 
+      // The platform's own macro models — Treasury liquidation odds, Taiwan,
+      // oil settlement, sovereign debt — dated and sourced. Without this he
+      // would answer "what if China dumps Treasuries" from training data.
+      let macroBrief = "";
+      try {
+        const { currentObservations } = await import("./macroRouter");
+        const cur = await currentObservations();
+        macroBrief = buildMacroBrief(cur.observations).text;
+      } catch (e) {
+        console.error("[Thomas] macro brief failed:", e);
+      }
+
       const system = [
         buildAdvisorSystemPrompt({
           clientFirstName: input.clientFirstName,
@@ -227,6 +243,7 @@ export const thomasGoldmanRouter = router({
         // rate questions from training data, which is the single most
         // dangerous thing this system can do.
         buildCarrierSummary(realCarriers),
+        macroBrief,
         tools.text,
         summary
           ? `\n--- WORKING MEMORY (earlier in this conversation) ---\n${summary}\n--- END WORKING MEMORY ---\nTreat everything above as things the client already told you. Do not ask them again.`
@@ -301,6 +318,39 @@ export const thomasGoldmanRouter = router({
       if (parseCarrierLookup(reply)) reply = stripCarrierLookup(reply);
       recent = carrierMessages;
 
+      // ── Macro scenario round trip ───────────────────────────────────────
+      //
+      // In-process engine calls (no network): a liquidation scenario at a
+      // stated fraction, or a sovereign debt row. Two per turn.
+      const macroConsulted: string[] = [];
+      let macroHops = 0;
+      let macroMessages = [...recent];
+      while (macroHops < MAX_MACRO_LOOKUPS) {
+        const q = parseMacroLookup(reply);
+        if (!q) break;
+        macroHops += 1;
+        const result = executeMacroLookup(q);
+        macroConsulted.push(q.kind === "liquidation" ? `liquidation ${q.holder} ${Math.round(q.fraction * 100)}%/${q.months}m` : `debt ${q.iso3}`);
+        macroMessages = [
+          ...macroMessages,
+          { role: "assistant" as const, content: reply },
+          { role: "user" as const, content: result },
+        ];
+        try {
+          const followUp = await brainComplete({
+            messages: [{ role: "system", content: system }, ...macroMessages],
+            maxTokens: depth === "integrated" ? 16_000 : 8_000,
+          });
+          reply = followUp.text;
+        } catch (e) {
+          console.error("[Thomas] follow-up after macro lookup failed:", e);
+          reply = result;
+          break;
+        }
+      }
+      if (parseMacroLookup(reply)) reply = stripMacroLookup(reply);
+      recent = macroMessages;
+
       // ── Tool round trip ─────────────────────────────────────────────────
       //
       // If the advisor asked for a tool, run it and give it one more turn with
@@ -351,6 +401,7 @@ export const thomasGoldmanRouter = router({
         toolsUsed,
         toolsAvailable: tools.count,
         carriersConsulted,
+        macroConsulted,
         carrierData: { ...carrierDataStats(), realCarriers: realCarriers.length },
         /** Pass this back on the next turn to preserve the session. */
         summary,
