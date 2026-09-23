@@ -1,239 +1,142 @@
-// @ts-nocheck
-
-import React, { useState } from 'react';
-import { Calculator, DollarSign, TrendingDown, ArrowRight, CheckCircle2, AlertTriangle, Layers, FileText, BarChart3, Target, Zap, Shield } from 'lucide-react';
-import { 
-  BarChart, 
-  Bar, 
-  XAxis, 
-  YAxis, 
-  Tooltip, 
-  ResponsiveContainer, 
-  Legend, 
-  PieChart, 
-  Pie, 
-  Cell, 
-  LineChart, 
-  Line, 
-  ComposedChart, 
-  Area 
-} from 'recharts';
+// A25 (2026-09-23): every input is now live and every figure computed. Before: the
+// income and deduction inputs were readOnly, the filing-status and state selects were
+// unbound, and "Current Tax $335.4K / Optimized $199.4K / Savings $136K", the waterfall
+// and the ten-year line were typed-in constants.
+// Math: shared/taxStrategyOptimizer.ts (test: server/a25Calculators.test.ts).
+import { useMemo, useState } from "react";
+import { Calculator, DollarSign, Target, Layers } from "lucide-react";
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend, PieChart, Pie, Cell, CartesianGrid } from "recharts";
 import { PageInsights } from "@/components/PageInsights";
+import { NumberField, SelectField, Toggle, Stat, Panel, Notes, ProvenanceSources, usd, pct } from "@/components/calc/CalcKit";
+import { optimizeTaxes, TAX_OPTIMIZER_SOURCES } from "@shared/taxStrategyOptimizer";
+import { getStateCodes } from "@shared/taxBracketEngine";
+import type { FilingKey } from "@shared/taxRules";
 
-const TaxStrategyOptimizer = () => {
-  const [taxYear, setTaxYear] = useState('2023');
+const COLORS = ["#f97316", "#10b981", "#ef4444", "#6366f1"];
 
-  // Sample data for charts
-  const currentTaxData = [
-    { name: 'Federal', value: 245000 },
-    { name: 'State', value: 78000 },
-    { name: 'FICA', value: 12400 },
-  ];
+export default function TaxStrategyOptimizer() {
+  // Example inputs so the page opens with a worked case; every one is editable.
+  const [taxYear, setTaxYear] = useState<"2025" | "2026">("2026");
+  const [filing, setFiling] = useState<FilingKey>("joint");
+  const [age, setAge] = useState(50);
+  const [stateCode, setStateCode] = useState("CA");
+  const [wages, setWages] = useState(400_000);
+  const [businessIncome, setBusinessIncome] = useState(150_000);
+  const [isSSTB, setIsSSTB] = useState(true);
+  const [rentalIncome, setRentalIncome] = useState(40_000);
+  const [rep, setRep] = useState(false);
+  const [otherIncome, setOtherIncome] = useState(10_000);
+  const [itemizedOther, setItemizedOther] = useState(25_000);
+  const [saltPaid, setSaltPaid] = useState(45_000);
+  const [k401, setK401] = useState(0);
+  const [charity, setCharity] = useState(0);
+  const [costSeg, setCostSeg] = useState(0);
+  const [roth, setRoth] = useState(0);
 
-  const optimizedTaxData = [
-    { name: 'Federal', value: 142000 },
-    { name: 'State', value: 45000 },
-    { name: 'FICA', value: 12400 },  // Assuming FICA remains the same
-  ];
+  const result = useMemo(() => optimizeTaxes({
+    taxYear: Number(taxYear) as 2025 | 2026, filing, age, stateCode, wages, businessIncome, businessIsSSTB: isSSTB,
+    rentalIncome, realEstateProfessional: rep, otherOrdinaryIncome: otherIncome, itemizedOther, saltPaid,
+    strategies: { pretax401k: k401, charitableCash: charity, costSegDepreciation: costSeg, rothConversion: roth },
+  }), [taxYear, filing, age, stateCode, wages, businessIncome, isSSTB, rentalIncome, rep, otherIncome, itemizedOther, saltPaid, k401, charity, costSeg, roth]);
 
-  const COLORS = ['#f97316', '#10b981', '#ef4444'];  // Orange, Emerald, Red accents
+  const pie = (b: typeof result.baseline) => [
+    { name: "Federal income", value: b.federalIncomeTax },
+    { name: "State", value: b.stateTax },
+    { name: "FICA (wages)", value: b.ficaWages },
+    { name: "Self-employment", value: b.selfEmploymentTax },
+  ].filter(x => x.value > 0);
 
-  const waterfallData = [
-    { name: 'Initial', value: 335400 },
-    { name: 'Roth', value: -18000 },
-    { name: 'Cost Seg', value: -42000 },
-    { name: 'O&G', value: -28000 },
-    { name: 'Charitable', value: -15000 },
-    { name: 'HELOC', value: -8000 },
-    { name: 'Business', value: -12000 },
-    { name: 'Retirement', value: -13000 },
-    { name: 'Final', value: 199400 },  // Optimized total
-  ];
-
-  const projectionData = [
-    { year: 1, savings: 136000 },
-    { year: 2, savings: 272000 },
-    { year: 3, savings: 408000 },
-    { year: 4, savings: 544000 },
-    { year: 5, savings: 680000 },
-    { year: 6, savings: 816000 },
-    { year: 7, savings: 952000 },
-    { year: 8, savings: 1088000 },
-    { year: 9, savings: 1224000 },
-    { year: 10, savings: 1800000 },  // Cumulative over 10 years
-  ];
-
-  const strategies = [
-    { title: 'Roth Conversion', code: 'IRC 408A', savings: '$18K', icon: <Zap className="text-emerald-500" /> },
-    { title: 'Cost Segregation', code: 'IRC 168', savings: '$42K', icon: <Layers className="text-orange-500" /> },
-    { title: 'Oil & Gas', code: 'IRC 263(c)', savings: '$28K', icon: <TrendingDown className="text-emerald-500" /> },
-    { title: 'Charitable Contributions', code: 'IRC 170', savings: '$15K', icon: <CheckCircle2 className="text-orange-500" /> },
-    { title: 'HELOC', code: 'IRC 163', savings: '$8K', icon: <Shield className="text-emerald-500" /> },
-    { title: 'Business Deductions', code: 'IRC 162', savings: '$12K', icon: <FileText className="text-orange-500" /> },
-    { title: 'Retirement Contributions', code: 'IRC 401', savings: '$13K', icon: <Target className="text-emerald-500" /> },
-    { title: 'Additional Strategy', code: 'IRC 121', savings: '$10K', icon: <AlertTriangle className="text-orange-500" /> },
+  const waterfall = [
+    { name: "Baseline", value: result.baseline.total },
+    ...result.steps.map(s => ({ name: s.label, value: -s.saving })),
+    { name: "Optimized", value: result.optimized.total },
   ];
 
   return (
-    <div className="min-h-screen bg-[#0a0f1a] text-white p-4 font-sans">
-      {/* Header */}
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold flex items-center">
-          <Calculator className="mr-2 text-emerald-500" />
-          Tax Strategy Optimizer
-        </h1>
-        <select 
-          className="bg-[#0d1526] p-2 rounded border border-[#1e3a5f] text-white"
-          onChange={(e) => setTaxYear(e.target.value)}
-          value={taxYear}
-        >
-          <option value="2023">2023</option>
-          <option value="2024">2024</option>
-          <option value="2025">2025</option>
-        </select>
-        <button className="bg-emerald-500 px-4 py-2 rounded flex items-center">
-          <ArrowRight className="mr-2" /> Analyze
-        </button>
-      </div>
-
-      {/* Inputs Section */}
-      <div className="mb-8 bg-[#0d1526] p-6 rounded-lg shadow-lg">
-        <h2 className="text-2xl mb-4 flex items-center">
-          <DollarSign className="mr-2 text-orange-500" /> Inputs
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="block mb-1">Gross Income</label>
-            <input 
-              type="number" 
-              value="850000" 
-              className="bg-gray-700 p-2 rounded w-full text-white" 
-              readOnly 
-            />
-          </div>
-          <div>
-            <label className="block mb-1">Filing Status</label>
-            <select className="bg-gray-700 p-2 rounded w-full text-white">
-              <option>Single</option>
-              <option>Married Filing Jointly</option>
-            </select>
-          </div>
-          <div>
-            <label className="block mb-1">State</label>
-            <select className="bg-gray-700 p-2 rounded w-full text-white">
-              <option>California</option>
-              <option>New York</option>
-            </select>
-          </div>
-          <div>
-            <label className="block mb-1">Deductions</label>
-            <input type="number" value="50000" className="bg-gray-700 p-2 rounded w-full text-white" readOnly />
-          </div>
-          <div className="col-span-2">
-            <label className="block mb-1">Business/Investment/RE Income</label>
-            <input type="number" value="200000" className="bg-gray-700 p-2 rounded w-full text-white" readOnly />
-          </div>
+    <div className="min-h-screen bg-[#0a0f1a] p-4 text-white">
+      <div className="mx-auto max-w-6xl">
+        <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
+          <h1 className="flex items-center text-3xl font-bold text-white"><Calculator className="mr-2 text-emerald-500" /> Tax Strategy Optimizer</h1>
+          <div className="w-40"><SelectField label="Tax year" value={taxYear} onChange={setTaxYear} options={[{ value: "2025", label: "2025" }, { value: "2026", label: "2026" }]} testId="taxopt-year" /></div>
         </div>
-      </div>
 
-      {/* Current Tax Section */}
-      <div className="mb-8 bg-[#0d1526] p-6 rounded-lg shadow-lg">
-        <h2 className="text-2xl mb-4 flex items-center">
-          <BarChart3 className="mr-2 text-orange-500" /> Current Tax
-        </h2>
-        <p className="mb-2">Federal: $245K</p>
-        <p className="mb-2">State: $78K</p>
-        <p className="mb-2">FICA: $12.4K</p>
-        <p className="mb-2">Total: $335.4K</p>
-        <p className="mb-4">Rate: 39.5%</p>
-        <ResponsiveContainer width="100%" height={300}>
-          <PieChart>
-            <Pie data={currentTaxData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={100} fill="#8884d8" label>
-              {currentTaxData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-              ))}
-            </Pie>
-            <Tooltip />
-            <Legend />
-          </PieChart>
-        </ResponsiveContainer>
-      </div>
+        <Panel title="The return (example inputs — replace with the client's)" icon={<DollarSign className="h-5 w-5 text-orange-500" />}>
+          <div className="grid gap-4 md:grid-cols-4">
+            <SelectField label="Filing status" value={filing} onChange={setFiling} testId="taxopt-filing" options={[{ value: "single", label: "Single" }, { value: "joint", label: "Married filing jointly" }, { value: "hoh", label: "Head of household" }, { value: "separate", label: "Married filing separately" }]} />
+            <SelectField label="State" value={stateCode} onChange={setStateCode} options={getStateCodes().map(c => ({ value: c, label: c }))} testId="taxopt-state" />
+            <NumberField label="Age" value={age} min={18} max={100} onChange={setAge} />
+            <NumberField label="W-2 wages" value={wages} step={1000} onChange={setWages} testId="taxopt-wages" />
+            <NumberField label="Self-employment profit" value={businessIncome} step={1000} onChange={setBusinessIncome} />
+            <div className="pt-6"><Toggle label="Specified service business (§199A)" checked={isSSTB} onChange={setIsSSTB} /></div>
+            <NumberField label="Net rental income" value={rentalIncome} step={1000} onChange={setRentalIncome} />
+            <div className="pt-6"><Toggle label="Real estate professional (§469(c)(7))" checked={rep} onChange={setRep} /></div>
+            <NumberField label="Other ordinary income" value={otherIncome} step={1000} onChange={setOtherIncome} />
+            <NumberField label="Itemized deductions (excl. SALT, charity)" value={itemizedOther} step={1000} onChange={setItemizedOther} />
+            <NumberField label="State and local taxes paid" value={saltPaid} step={1000} onChange={setSaltPaid} />
+          </div>
+        </Panel>
 
-      {/* Optimized Tax Section */}
-      <div className="mb-8 bg-[#0d1526] p-6 rounded-lg shadow-lg">
-        <h2 className="text-2xl mb-4 flex items-center">
-          <Target className="mr-2 text-emerald-500" /> Optimized Tax
-        </h2>
-        <p className="mb-2">Federal: $142K</p>
-        <p className="mb-2">State: $45K</p>
-        <p className="mb-2">FICA: $12.4K</p>
-        <p className="mb-2">Total: $199.4K</p>
-        <p className="mb-2">Rate: 23.5%</p>
-        <p className="mb-4">Savings: $136K</p>
-        <ResponsiveContainer width="100%" height={300}>
-          <PieChart>
-            <Pie data={optimizedTaxData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={100} fill="#82ca9d" label>
-              {optimizedTaxData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-              ))}
-            </Pie>
-            <Tooltip />
-            <Legend />
-          </PieChart>
-        </ResponsiveContainer>
-      </div>
+        <Panel title="Strategies" icon={<Layers className="h-5 w-5 text-emerald-500" />}>
+          <div className="grid gap-4 md:grid-cols-4">
+            <NumberField label="Pre-tax 401(k) deferral" value={k401} step={500} onChange={setK401} testId="taxopt-401k" />
+            <NumberField label="Charitable cash gifts" value={charity} step={1000} onChange={setCharity} />
+            <NumberField label="Cost-segregation depreciation" value={costSeg} step={1000} onChange={setCostSeg} />
+            <NumberField label="Roth conversion" value={roth} step={1000} onChange={setRoth} />
+          </div>
+        </Panel>
 
-      {/* Waterfall Chart */}
-      <div className="mb-8 bg-[#0d1526] p-6 rounded-lg shadow-lg">
-        <h2 className="text-2xl mb-4 flex items-center">
-          <TrendingDown className="mr-2 text-orange-500" /> Waterfall Chart
-        </h2>
-        <ResponsiveContainer width="100%" height={400}>
-          <ComposedChart data={waterfallData}>
-            <XAxis dataKey="name" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Bar dataKey="value" fill="#f97316" />
-            <Area type="monotone" dataKey="value" fill="#10b981" stroke="#10b981" />
-          </ComposedChart>
-        </ResponsiveContainer>
-      </div>
+        <div className="mb-6 grid gap-4 md:grid-cols-4">
+          <Stat label="Current tax" value={usd(result.baseline.total)} tone="bad" testId="taxopt-baseline" sub={`Effective ${pct(result.baseline.effectiveRate)} · marginal ${pct(result.baseline.marginalRate, 0)}`} />
+          <Stat label="With strategies" value={usd(result.optimized.total)} testId="taxopt-optimized" sub={`Effective ${pct(result.optimized.effectiveRate)}`} />
+          <Stat label="Saving this year" value={usd(result.totalSaving)} tone={result.totalSaving >= 0 ? "good" : "bad"} testId="taxopt-saving" />
+          <Stat label="State rate applied" value={pct(result.stateRate, 2)} sub={`${stateCode} top marginal rate, flat`} />
+        </div>
 
-      {/* Strategy Details */}
-      <div className="mb-8 bg-[#0d1526] p-6 rounded-lg shadow-lg">
-        <h2 className="text-2xl mb-4 flex items-center">
-          <Layers className="mr-2 text-emerald-500" /> Strategy Details
-        </h2>
-        <div className="space-y-4">
-          {strategies.map((strategy, index) => (
-            <details key={index} className="bg-gray-700 p-4 rounded">
-              <summary className="cursor-pointer font-bold">{strategy.icon} {strategy.title} - Savings: {strategy.savings}</summary>
-              <p>IRC Code: {strategy.code}</p>
-              <p>Implementation Steps: 1. Consult a tax advisor. 2. Apply via IRS forms. 3. Track expenses.</p>
-            </details>
+        <div className="mb-6 grid gap-6 md:grid-cols-2">
+          {[{ label: "Current", b: result.baseline }, { label: "With strategies", b: result.optimized }].map(({ label, b }) => (
+            <Panel key={label} title={`${label} tax by type`} icon={<Target className="h-5 w-5 text-orange-500" />}>
+              <ResponsiveContainer width="100%" height={240}>
+                <PieChart>
+                  <Pie data={pie(b)} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={90} label={e => usd(Number(e.value))}>
+                    {pie(b).map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
+                  </Pie>
+                  <Tooltip formatter={(v: number) => usd(v)} />
+                  <Legend />
+                </PieChart>
+              </ResponsiveContainer>
+              <p className="text-xs text-slate-400">AGI {usd(b.agi)} · {b.deductionMethod} deduction {usd(b.deduction)} · §199A {usd(b.qbiDeduction)} · taxable {usd(b.taxableIncome)}</p>
+            </Panel>
           ))}
         </div>
-      </div>
 
-      {/* 10-Year Projection */}
-      <div className="bg-[#0d1526] p-6 rounded-lg shadow-lg">
-        <h2 className="text-2xl mb-4 flex items-center">
-          <LineChart className="mr-2 text-orange-500" /> 10-Year Projection
-        </h2>
-        <ResponsiveContainer width="100%" height={300}>
-          <LineChart data={projectionData}>
-            <XAxis dataKey="year" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Line type="monotone" dataKey="savings" stroke="#10b981" />
-          </LineChart>
-        </ResponsiveContainer>
+        <Panel title="What each strategy changes (sequential)">
+          {result.steps.length === 0 ? <p className="text-slate-400">Enter an amount for a strategy to see its effect.</p> : (
+            <>
+              <ResponsiveContainer width="100%" height={280}>
+                <BarChart data={waterfall}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#1e3a5f" />
+                  <XAxis dataKey="name" stroke="#94a3b8" />
+                  <YAxis stroke="#94a3b8" tickFormatter={v => `$${Math.round(Number(v) / 1000)}k`} />
+                  <Tooltip formatter={(v: number) => usd(v)} />
+                  <Bar dataKey="value" fill="#f97316" />
+                </BarChart>
+              </ResponsiveContainer>
+              <ul className="mt-4 space-y-2 text-sm">
+                {result.steps.map(s => (
+                  <li key={s.key} className="rounded bg-[#0a0f1a] p-3">
+                    <span className="font-semibold">{s.label}</span> — {usd(s.amountApplied)} applied; {s.saving >= 0 ? "saves" : "costs"} <span className={s.saving >= 0 ? "text-emerald-400" : "text-rose-400"}>{usd(Math.abs(s.saving))}</span>
+                    <span className="block text-xs text-slate-400">{s.authority}{s.note ? ` · ${s.note}` : ""}</span>
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
+        </Panel>
+
+        <Notes notes={result.notes} />
+        <ProvenanceSources sources={TAX_OPTIMIZER_SOURCES} disclosure={`Rules version ${result.rulesVersion}. Educational estimate for one tax year; not tax advice. Confirm every strategy with a CPA before acting.`} />
       </div>
-      <PageInsights section="tax-strategy-optimizer" />
+      <PageInsights pageId="tax-strategy-optimizer" />
     </div>
   );
-};
-
-export default TaxStrategyOptimizer;
+}

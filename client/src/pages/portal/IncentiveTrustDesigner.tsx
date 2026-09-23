@@ -1,382 +1,170 @@
-// @ts-nocheck
-
-import React, { useState, useMemo } from 'react';
-import { Award, DollarSign, TrendingUp, Target, Calendar, Percent, ArrowRight, Shield, CheckCircle2, AlertTriangle, Users, Star } from 'lucide-react';
-import { 
-  RadarChart, 
-  Radar, 
-  PolarGrid, 
-  PolarAngleAxis, 
-  PolarRadiusAxis, 
-  BarChart, 
-  Bar, 
-  XAxis, 
-  YAxis, 
-  Tooltip, 
-  ResponsiveContainer, 
-  Legend, 
-  PieChart, 
-  Pie, 
-  Cell 
-} from 'recharts';
+// A25 (2026-09-23): the provisions now carry amounts and years that drive a real
+// projection. Before: the 50-year chart was six fixed points, the radar scored the
+// categories 80/70/90/85/75 from nothing, and the pie split them 30/25/20/15/10.
+// Math: shared/incentiveTrust.ts (test: server/a25Calculators.test.ts).
+import { useMemo, useState } from "react";
+import { Award, Target, Shield, Users, CheckCircle2, TrendingUp, Plus, Trash2 } from "lucide-react";
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend, PieChart, Pie, Cell, CartesianGrid, AreaChart, Area } from "recharts";
 import { PageInsights } from "@/components/PageInsights";
+import { NumberField, Toggle, Stat, Panel, Notes, ProvenanceSources, usd } from "@/components/calc/CalcKit";
+import { projectIncentiveTrust, INCENTIVE_TRUST_SOURCES, type IncentiveProvision } from "@shared/incentiveTrust";
 
-const IncentiveTrustDesigner = () => {
-  // State for incentive categories
-  const [educationIncentives, setEducationIncentives] = useState('');
-  const [careerIncentives, setCareerIncentives] = useState('');
-  const [philanthropyIncentives, setPhilanthropyIncentives] = useState('');
-  const [healthIncentives, setHealthIncentives] = useState('');
-  const [familyIncentives, setFamilyIncentives] = useState('');
+type Provision = IncentiveProvision & { condition: string };
 
-  // State for distribution triggers
-  const [triggers, setTriggers] = useState([
-    { id: 1, description: 'Achieve degree', condition: '' },
-    { id: 2, description: 'Job milestone', condition: '' },
-  ]);
+const COLORS = ["#10B981", "#F59E0B", "#6366F1", "#EC4899", "#06b6d4", "#f97316"];
 
-  // State for protections
-  const [spendthriftProtection, setSpendthriftProtection] = useState(false);
-  const [substanceAbuseProvisions, setSubstanceAbuseProvisions] = useState(false);
-  const [matchingDistribution, setMatchingDistribution] = useState(0); // Percentage
+// Example inputs so the page opens with a worked case; every one is editable.
+const EXAMPLE: Provision[] = [
+  { id: "p1", category: "Education", annualAmount: 40_000, startYear: 1, endYear: 4, condition: "Enrolled full-time, GPA 3.0+" },
+  { id: "p2", category: "Career", annualAmount: 25_000, startYear: 5, endYear: 10, condition: "Employed full-time" },
+  { id: "p3", category: "Philanthropy", annualAmount: 10_000, startYear: 5, endYear: 30, condition: "Matched to documented charitable gifts" },
+];
 
-  // State for trustee guidelines
-  const [trusteeGuidelines, setTrusteeGuidelines] = useState('');
+const COMPLIANCE = [
+  ["utc411", "UTC §411 modification or termination"],
+  ["utc814", "UTC §814 trustee discretion standards"],
+  ["spendthrift", "State spendthrift-trust statute"],
+  ["claflin", "Claflin doctrine (material purpose)"],
+  ["feinberg", "In re Estate of Feinberg (conditions on beneficiaries)"],
+  ["publicPolicy", "Public-policy limits on conditions"],
+] as const;
 
-  // State for projection data
-  const [projectionData, setProjectionData] = useState([
-    { year: 0, value: 100000 },
-    { year: 10, value: 150000 },
-    { year: 20, value: 200000 },
-    { year: 30, value: 250000 },
-    { year: 40, value: 300000 },
-    { year: 50, value: 350000 },
-  ]);
+export default function IncentiveTrustDesigner() {
+  const [funding, setFunding] = useState(2_000_000);
+  const [returnPct, setReturnPct] = useState(5);
+  const [feePct, setFeePct] = useState(1);
+  const [inflationPct, setInflationPct] = useState(2.5);
+  const [years, setYears] = useState(50);
+  const [provisions, setProvisions] = useState<Provision[]>(EXAMPLE);
+  const [matchingPct, setMatchingPct] = useState(0);
+  const [earnedIncome, setEarnedIncome] = useState(60_000);
+  const [matchStart, setMatchStart] = useState(5);
+  const [matchEnd, setMatchEnd] = useState(25);
+  const [spendthrift, setSpendthrift] = useState(true);
+  const [substanceAbuse, setSubstanceAbuse] = useState(false);
+  const [trusteeGuidelines, setTrusteeGuidelines] = useState("");
+  const [compliance, setCompliance] = useState<Record<string, boolean>>({});
 
-  // State for compliance selections
-  const [complianceOptions, setComplianceOptions] = useState({
-    utcSection411: false,
-    section814: false,
-    stateSpendthrift: false,
-    claflinDoctrine: false,
-    inReEstate: false,
-    publicPolicy: false,
-  });
+  const result = useMemo(() => projectIncentiveTrust({
+    funding, assumedReturn: returnPct / 100, trusteeFeeRate: feePct / 100, inflation: inflationPct / 100, years,
+    provisions, matchingRate: matchingPct / 100, beneficiaryEarnedIncome: earnedIncome, matchingStartYear: matchStart, matchingEndYear: matchEnd,
+  }), [funding, returnPct, feePct, inflationPct, years, provisions, matchingPct, earnedIncome, matchStart, matchEnd]);
 
-  // Memoized chart data for 50-year projection
-  const memoizedProjectionData = useMemo(() => projectionData, [projectionData]);
-
-  // Sample data for charts
-  const radarData = [
-    { subject: 'Education', A: 80, fullMark: 100 },
-    { subject: 'Career', A: 70, fullMark: 100 },
-    { subject: 'Philanthropy', A: 90, fullMark: 100 },
-    { subject: 'Health', A: 85, fullMark: 100 },
-    { subject: 'Family', A: 75, fullMark: 100 },
-  ];
-
-  const barData = [
-    { name: 'Year 10', value: 150000 },
-    { name: 'Year 20', value: 200000 },
-    { name: 'Year 30', value: 250000 },
-    { name: 'Year 40', value: 300000 },
-    { name: 'Year 50', value: 350000 },
-  ];
-
-  const pieData = [
-    { name: 'Education', value: 30 },
-    { name: 'Career', value: 25 },
-    { name: 'Philanthropy', value: 20 },
-    { name: 'Health', value: 15 },
-    { name: 'Family', value: 10 },
-  ];
-
-  const COLORS = ['#10B981', '#F59E0B', '#6366F1', '#EC4899', '#6366f1']; // Emerald, Amber accents
+  const update = (id: string, patch: Partial<Provision>) => setProvisions(ps => ps.map(p => (p.id === id ? { ...p, ...patch } : p)));
+  const balanceSeries = result.years.map(y => ({ year: y.year, balance: y.endBalance, distributed: y.totalDistributed }));
 
   return (
-    <div className="min-h-screen bg-[#0a0f1a] text-gray-100 p-8 font-sans">
+    <div className="min-h-screen bg-[#0a0f1a] p-8 text-gray-100">
       <header className="mb-8">
-        <h1 className="text-3xl font-bold text-emerald-400 flex items-center">
-          <Award className="mr-2" /> Incentive Trust Designer
-        </h1>
-        <p className="text-[#7a95b8]">Build and visualize incentive trusts with behavioral provisions.</p>
+        <h1 className="flex items-center text-3xl font-bold text-emerald-400"><Award className="mr-2" /> Incentive Trust Designer</h1>
+        <p className="text-[#7a95b8]">Design incentive provisions and see what the trust can actually pay, year by year. Every figure recomputes from the inputs.</p>
       </header>
 
-      {/* Incentive Provision Categories Section */}
-      <section className="mb-12">
-        <h2 className="text-2xl font-semibold text-amber-400 mb-4 flex items-center">
-          <Target className="mr-2" /> Incentive Provision Categories
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <label className="block text-[#94a3b8]">Education Incentives</label>
-            <input
-              type="text"
-              value={educationIncentives}
-              onChange={(e) => setEducationIncentives(e.target.value)}
-              className="w-full p-2 rounded bg-[#0d1526] border border-[#1e3a5f] text-gray-100"
-              placeholder="e.g., Funding for college degrees"
-            />
-          </div>
-          <div>
-            <label className="block text-[#94a3b8]">Career Incentives</label>
-            <input
-              type="text"
-              value={careerIncentives}
-              onChange={(e) => setCareerIncentives(e.target.value)}
-              className="w-full p-2 rounded bg-[#0d1526] border border-[#1e3a5f] text-gray-100"
-              placeholder="e.g., Bonuses for promotions"
-            />
-          </div>
-          <div>
-            <label className="block text-[#94a3b8]">Philanthropy Incentives</label>
-            <input
-              type="text"
-              value={philanthropyIncentives}
-              onChange={(e) => setPhilanthropyIncentives(e.target.value)}
-              className="w-full p-2 rounded bg-[#0d1526] border border-[#1e3a5f] text-gray-100"
-              placeholder="e.g., Matching donations"
-            />
-          </div>
-          <div>
-            <label className="block text-[#94a3b8]">Health Incentives</label>
-            <input
-              type="text"
-              value={healthIncentives}
-              onChange={(e) => setHealthIncentives(e.target.value)}
-              className="w-full p-2 rounded bg-[#0d1526] border border-[#1e3a5f] text-gray-100"
-              placeholder="e.g., Rewards for fitness goals"
-            />
-          </div>
-          <div>
-            <label className="block text-[#94a3b8]">Family Incentives</label>
-            <input
-              type="text"
-              value={familyIncentives}
-              onChange={(e) => setFamilyIncentives(e.target.value)}
-              className="w-full p-2 rounded bg-[#0d1526] border border-[#1e3a5f] text-gray-100"
-              placeholder="e.g., Support for family planning"
-            />
-          </div>
+      <Panel title="Funding and assumptions (client's own)" icon={<TrendingUp className="h-5 w-5 text-amber-400" />}>
+        <div className="grid gap-4 md:grid-cols-5">
+          <NumberField label="Funding today" value={funding} step={50_000} onChange={setFunding} testId="trust-funding" />
+          <NumberField label="Net annual return" suffix="%" value={returnPct} step={0.1} onChange={setReturnPct} testId="trust-return" />
+          <NumberField label="Trustee fee" suffix="% of balance" value={feePct} step={0.05} onChange={setFeePct} />
+          <NumberField label="Provision inflation" suffix="%/yr" value={inflationPct} step={0.1} onChange={setInflationPct} />
+          <NumberField label="Years to project" value={years} min={1} max={50} onChange={setYears} />
         </div>
-      </section>
+      </Panel>
 
-      {/* Distribution Trigger Builder Section */}
-      <section className="mb-12">
-        <h2 className="text-2xl font-semibold text-emerald-400 mb-4 flex items-center">
-          <Calendar className="mr-2" /> Distribution Trigger Builder
-        </h2>
-        {triggers.map((trigger) => (
-          <div key={trigger.id} className="mb-4 p-4 bg-[#0d1526] rounded shadow">
-            <input
-              type="text"
-              value={trigger.condition}
-              onChange={(e) => {
-                const newTriggers = triggers.map(t => t.id === trigger.id ? { ...t, condition: e.target.value } : t);
-                setTriggers(newTriggers);
-              }}
-              className="w-full p-2 rounded bg-gray-700 border border-[#1e3a5f] text-gray-100"
-              placeholder={`Condition for ${trigger.description}`}
-            />
+      <Panel title="Incentive provisions (example — replace)" icon={<Target className="h-5 w-5 text-amber-400" />}>
+        {provisions.map(p => (
+          <div key={p.id} className="mb-3 grid grid-cols-2 gap-3 border-b border-[#1e3a5f] pb-3 md:grid-cols-6">
+            <label className="block text-sm"><span className="text-slate-300">Category</span>
+              <input value={p.category} onChange={e => update(p.id, { category: e.target.value })} className="mt-1 w-full rounded-md border border-[#1e3a5f] bg-[#0a0f1a] p-2 text-white" />
+            </label>
+            <label className="col-span-2 block text-sm"><span className="text-slate-300">Condition (trigger)</span>
+              <input value={p.condition} onChange={e => update(p.id, { condition: e.target.value })} className="mt-1 w-full rounded-md border border-[#1e3a5f] bg-[#0a0f1a] p-2 text-white" />
+            </label>
+            <NumberField label="Annual amount (today's $)" value={p.annualAmount} step={1000} onChange={n => update(p.id, { annualAmount: n })} testId={`trust-amount-${p.id}`} />
+            <NumberField label="From year" value={p.startYear} min={1} onChange={n => update(p.id, { startYear: n })} />
+            <div className="flex items-end gap-2">
+              <NumberField label="To year" value={p.endYear} min={1} onChange={n => update(p.id, { endYear: n })} />
+              <button type="button" onClick={() => setProvisions(ps => ps.filter(x => x.id !== p.id))} className="mb-1 rounded-md bg-slate-800 p-2 text-slate-300" aria-label="Remove provision"><Trash2 className="h-4 w-4" /></button>
+            </div>
           </div>
         ))}
-        <button
-          onClick={() => setTriggers([...triggers, { id: triggers.length + 1, description: 'New Trigger', condition: '' }])}
-          className="bg-amber-500 hover:bg-amber-600 text-gray-900 px-4 py-2 rounded flex items-center"
-        >
-          <ArrowRight className="mr-2" /> Add Trigger
-        </button>
-      </section>
+        <button type="button" onClick={() => setProvisions(ps => [...ps, { id: `p${Date.now()}`, category: "Health", annualAmount: 0, startYear: 1, endYear: 10, condition: "" }])} className="flex items-center gap-1 rounded-md bg-amber-500/20 px-3 py-2 text-sm text-amber-300"><Plus className="h-4 w-4" /> Add provision</button>
+      </Panel>
 
-      {/* Protections Section */}
-      <section className="mb-12">
-        <h2 className="text-2xl font-semibold text-amber-400 mb-4 flex items-center">
-          <Shield className="mr-2" /> Protections and Provisions
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <label className="flex items-center">
-              <input
-                type="checkbox"
-                checked={spendthriftProtection}
-                onChange={() => setSpendthriftProtection(!spendthriftProtection)}
-                className="mr-2"
-              />
-              <Shield className="mr-2" /> Spendthrift Protection
-            </label>
-          </div>
-          <div>
-            <label className="flex items-center">
-              <input
-                type="checkbox"
-                checked={substanceAbuseProvisions}
-                onChange={() => setSubstanceAbuseProvisions(!substanceAbuseProvisions)}
-                className="mr-2"
-              />
-              <AlertTriangle className="mr-2" /> Substance Abuse Provisions
-            </label>
-          </div>
-          <div>
-            <label className="block text-[#94a3b8]">Matching Distribution Program (%)</label>
-            <input
-              type="number"
-              value={matchingDistribution}
-              onChange={(e) => setMatchingDistribution(Number(e.target.value))}
-              className="w-full p-2 rounded bg-[#0d1526] border border-[#1e3a5f] text-gray-100"
-            />
-          </div>
+      <Panel title="Matching distribution program" icon={<Shield className="h-5 w-5 text-amber-400" />}>
+        <div className="grid gap-4 md:grid-cols-4">
+          <NumberField label="Trust matches" suffix="% of earned income" value={matchingPct} step={5} onChange={setMatchingPct} testId="trust-matching" />
+          <NumberField label="Beneficiary earned income" value={earnedIncome} step={1000} onChange={setEarnedIncome} />
+          <NumberField label="From year" value={matchStart} min={1} onChange={setMatchStart} />
+          <NumberField label="To year" value={matchEnd} min={1} onChange={setMatchEnd} />
         </div>
-      </section>
+        <div className="mt-4 flex flex-wrap gap-6">
+          <Toggle label="Spendthrift protection" checked={spendthrift} onChange={setSpendthrift} />
+          <Toggle label="Substance-abuse provisions" checked={substanceAbuse} onChange={setSubstanceAbuse} />
+        </div>
+      </Panel>
 
-      {/* Trustee Discretion Guidelines Section */}
-      <section className="mb-12">
-        <h2 className="text-2xl font-semibold text-emerald-400 mb-4 flex items-center">
-          <Users className="mr-2" /> Trustee Discretion Guidelines
-        </h2>
-        <textarea
-          value={trusteeGuidelines}
-          onChange={(e) => setTrusteeGuidelines(e.target.value)}
-          className="w-full p-2 rounded bg-[#0d1526] border border-[#1e3a5f] text-gray-100 h-32"
-          placeholder="Define guidelines for trustee decisions..."
-        />
-      </section>
+      <div className="mb-6 grid gap-4 md:grid-cols-4">
+        <Stat label="Total distributed" value={usd(result.totalDistributed)} testId="trust-distributed" />
+        <Stat label="Trustee fees" value={usd(result.totalFees)} />
+        <Stat label={`Balance after year ${years}`} value={usd(result.endingBalance)} tone={result.endingBalance > 0 ? "good" : "bad"} testId="trust-ending" />
+        <Stat label="Runs short in" value={result.depletedInYear == null ? "Never" : `Year ${result.depletedInYear}`} tone={result.depletedInYear == null ? "good" : "bad"} />
+      </div>
 
-      {/* 50-Year Beneficiary Outcome Projection Section */}
-      <section className="mb-12">
-        <h2 className="text-2xl font-semibold text-amber-400 mb-4 flex items-center">
-          <TrendingUp className="mr-2" /> 50-Year Beneficiary Outcome Projection
-        </h2>
-        <ResponsiveContainer width="100%" height={400}>
-          <BarChart data={memoizedProjectionData}>
-            <XAxis dataKey="year" stroke="#9CA3AF" />
-            <YAxis stroke="#9CA3AF" />
-            <Tooltip />
-            <Legend />
-            <Bar dataKey="value" fill="#10B981" />
+      <div className="mb-6 grid gap-6 md:grid-cols-2">
+        <Panel title="Trust balance and distributions">
+          <ResponsiveContainer width="100%" height={300}>
+            <AreaChart data={balanceSeries}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#1e3a5f" />
+              <XAxis dataKey="year" stroke="#9CA3AF" />
+              <YAxis stroke="#9CA3AF" tickFormatter={v => `$${(Number(v) / 1e6).toFixed(1)}M`} />
+              <Tooltip formatter={(v: number) => usd(v)} />
+              <Legend />
+              <Area type="monotone" dataKey="balance" name="Balance" stroke="#10B981" fill="#10B981" fillOpacity={0.25} />
+              <Area type="monotone" dataKey="distributed" name="Distributed that year" stroke="#F59E0B" fill="#F59E0B" fillOpacity={0.4} />
+            </AreaChart>
+          </ResponsiveContainer>
+        </Panel>
+        <Panel title="Distributions by category">
+          {result.totalsByCategory.length === 0 ? <p className="text-slate-400">No distributions scheduled.</p> : (
+            <ResponsiveContainer width="100%" height={300}>
+              <PieChart>
+                <Pie data={result.totalsByCategory} dataKey="total" nameKey="category" cx="50%" cy="50%" outerRadius={100} label={e => e.category}>
+                  {result.totalsByCategory.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
+                </Pie>
+                <Tooltip formatter={(v: number) => usd(v)} />
+              </PieChart>
+            </ResponsiveContainer>
+          )}
+        </Panel>
+      </div>
+
+      <Panel title="Distributions by category, total">
+        <ResponsiveContainer width="100%" height={240}>
+          <BarChart data={result.totalsByCategory}>
+            <XAxis dataKey="category" stroke="#9CA3AF" />
+            <YAxis stroke="#9CA3AF" tickFormatter={v => `$${Math.round(Number(v) / 1000)}k`} />
+            <Tooltip formatter={(v: number) => usd(v)} />
+            <Bar dataKey="total" fill="#10B981" />
           </BarChart>
         </ResponsiveContainer>
-        <p className="mt-4 text-[#7a95b8]">Projection based on current incentives. Adjust data to see changes.</p>
-      </section>
+      </Panel>
 
-      {/* Additional Charts for Visualization */}
-      <section className="mb-12">
-        <h3 className="text-xl font-semibold text-emerald-400 mb-4">Incentive Radar Chart</h3>
-        <ResponsiveContainer width="100%" height={400}>
-          <RadarChart outerRadius={90} data={radarData}>
-            <PolarGrid stroke="#4B5563" />
-            <PolarAngleAxis dataKey="subject" stroke="#9CA3AF" />
-            <PolarRadiusAxis angle={30} domain={[0, 100]} stroke="#9CA3AF" />
-            <Radar name="Incentives" dataKey="A" stroke="#F59E0B" fill="#F59E0B" fillOpacity={0.6} />
-            <Legend />
-            <Tooltip />
-          </RadarChart>
-        </ResponsiveContainer>
-      </section>
+      <Notes notes={result.notes} />
 
-      <section className="mb-12">
-        <h3 className="text-xl font-semibold text-amber-400 mb-4">Category Distribution Pie Chart</h3>
-        <ResponsiveContainer width="100%" height={400}>
-          <PieChart>
-            <Pie
-              data={pieData}
-              cx="50%"
-              cy="50%"
-              labelLine={false}
-              outerRadius={80}
-              fill="#8884d8"
-              dataKey="value"
-            >
-              {pieData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-              ))}
-            </Pie>
-            <Tooltip />
-            <Legend />
-          </PieChart>
-        </ResponsiveContainer>
-      </section>
+      <Panel title="Trustee discretion guidelines" icon={<Users className="h-5 w-5 text-emerald-400" />}>
+        <textarea value={trusteeGuidelines} onChange={e => setTrusteeGuidelines(e.target.value)} className="h-28 w-full rounded border border-[#1e3a5f] bg-[#0d1526] p-2 text-gray-100" placeholder="Define guidelines for trustee decisions..." />
+      </Panel>
 
-      {/* Compliance Section */}
-      <section>
-        <h2 className="text-2xl font-semibold text-emerald-400 mb-4 flex items-center">
-          <CheckCircle2 className="mr-2" /> Compliance and Legal Provisions
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <label className="flex items-center">
-              <input
-                type="checkbox"
-                checked={complianceOptions.utcSection411}
-                onChange={() => setComplianceOptions({ ...complianceOptions, utcSection411: !complianceOptions.utcSection411 })}
-                className="mr-2"
-              />
-              <Star className="mr-2" /> UTC Section 411 Modification
-            </label>
-          </div>
-          <div>
-            <label className="flex items-center">
-              <input
-                type="checkbox"
-                checked={complianceOptions.section814}
-                onChange={() => setComplianceOptions({ ...complianceOptions, section814: !complianceOptions.section814 })}
-                className="mr-2"
-              />
-              <Shield className="mr-2" /> Section 814 Accumulation Trusts
-            </label>
-          </div>
-          <div>
-            <label className="flex items-center">
-              <input
-                type="checkbox"
-                checked={complianceOptions.stateSpendthrift}
-                onChange={() => setComplianceOptions({ ...complianceOptions, stateSpendthrift: !complianceOptions.stateSpendthrift })}
-                className="mr-2"
-              />
-              <AlertTriangle className="mr-2" /> State Spendthrift Trust Statutes
-            </label>
-          </div>
-          <div>
-            <label className="flex items-center">
-              <input
-                type="checkbox"
-                checked={complianceOptions.claflinDoctrine}
-                onChange={() => setComplianceOptions({ ...complianceOptions, claflinDoctrine: !complianceOptions.claflinDoctrine })}
-                className="mr-2"
-              />
-              <CheckCircle2 className="mr-2" /> Claflin Doctrine
-            </label>
-          </div>
-          <div>
-            <label className="flex items-center">
-              <input
-                type="checkbox"
-                checked={complianceOptions.inReEstate}
-                onChange={() => setComplianceOptions({ ...complianceOptions, inReEstate: !complianceOptions.inReEstate })}
-                className="mr-2"
-              />
-              <Users className="mr-2" /> In re Estate of Feinberg
-            </label>
-          </div>
-          <div>
-            <label className="flex items-center">
-              <input
-                type="checkbox"
-                checked={complianceOptions.publicPolicy}
-                onChange={() => setComplianceOptions({ ...complianceOptions, publicPolicy: !complianceOptions.publicPolicy })}
-                className="mr-2"
-              />
-              <AlertTriangle className="mr-2" /> Public Policy Limitations
-            </label>
-          </div>
+      <Panel title="Compliance and legal provisions to review with counsel" icon={<CheckCircle2 className="h-5 w-5 text-emerald-400" />}>
+        <div className="grid gap-3 md:grid-cols-2">
+          {COMPLIANCE.map(([key, label]) => (
+            <Toggle key={key} label={label} checked={!!compliance[key]} onChange={b => setCompliance(c => ({ ...c, [key]: b }))} />
+          ))}
         </div>
-      </section>
+      </Panel>
 
-      <footer className="mt-12 text-[#7a95b8]">
-        <p>Designed with dark theme and emerald/amber accents for optimal visualization.</p>
-      </footer>
-      <PageInsights section="incentive-trust-designer" />
+      <ProvenanceSources sources={INCENTIVE_TRUST_SOURCES} disclosure="Illustration on the client's own assumptions; not a forecast. Trust drafting, conditions and taxation require an estate-planning attorney." />
+      <PageInsights pageId="incentive-trust-designer" />
     </div>
   );
-};
-
-export default IncentiveTrustDesigner;
+}

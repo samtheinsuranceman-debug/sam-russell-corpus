@@ -262,8 +262,7 @@ export default function OwnerWarRoom() {
     return [
       { name: "Advisors", value: summary.totalAdvisors || 0 },
       { name: "Clients", value: summary.totalClients || 0 },
-      { name: "Staff", value: Math.floor((summary.totalUsers || 0) * 0.05) },
-      { name: "Guests", value: Math.floor((summary.totalUsers || 0) * 0.1) },
+      // "Staff" (5% of users) and "Guests" (10%) were invented shares, not counted from any record; removed.
     ];
   }, [summary]);
 

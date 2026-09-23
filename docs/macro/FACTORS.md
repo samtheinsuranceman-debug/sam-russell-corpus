@@ -1,6 +1,6 @@
 # Macro factors — the twenty-five, with source, coverage and verdict
 
-Generated from `shared/macro/indicators.ts` (`MACRO_FACTORS`) by `server/macroFactorsDoc.ts`; macro layer 2026.09.23a; rendered 2026-09-22. Do not edit by hand — the test `server/macroW8.test.ts` compares this file with the renderer's output.
+Generated from `shared/macro/indicators.ts` (`MACRO_FACTORS`) by `server/macroFactorsDoc.ts`; macro layer 2026.09.23b; rendered 2026-09-22. Do not edit by hand — the test `server/macroW8.test.ts` compares this file with the renderer's output.
 
 **Counts:** 25 factors · 5 keyless sources (fred, nyfed-acm, nyfed-soma, fiscaldata-debt, wb-wdi-api) · verdicts: 0 signal, 0 context, 25 pending.
 
