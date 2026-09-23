@@ -41,6 +41,7 @@ import { siteHealthRouter } from "./siteHealthRouter";
 import { hiveRouter } from "./hiveRouter";
 import { siteMapRouter } from "./siteMapRouter";
 import { forecastRouter } from "./forecastRouter";
+import { arrivalRouter } from "./arrivalRouter";
 import { sourcesRouter } from "./sourcesRouter";
 import { hiveGroundingMessages } from "./hiveGround";
 import { integrationRouter } from "./integrationRouter";
@@ -411,6 +412,7 @@ export const appRouter = router({
   hive: hiveRouter,
   siteMap: siteMapRouter,
   forecast: forecastRouter,
+  arrival: arrivalRouter,
   sources: sourcesRouter,
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),
