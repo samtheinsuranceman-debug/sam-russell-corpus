@@ -108,7 +108,7 @@ const TOOL_COMMISSIONS: ToolCommission[] = [{
   {
     id: "retirement-drivers",
     name: "Retirement Drivers",
-    route: "/portal/retirement-drivers",
+    route: "/portal/ecological-drivers",
     icon: TrendingUp,
     commissionType: "both",
     monthlyCommission: 100000,

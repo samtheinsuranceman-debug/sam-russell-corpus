@@ -170,7 +170,7 @@ export default function TrialLogin() {
               <Button
                 onClick={handleSubscribe}
                 disabled={subscribing}
-                className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-3 text-base"
+                className="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-semibold py-3 text-base"
               >
                 {subscribing ? (
                   <span className="flex items-center gap-2">
@@ -246,7 +246,7 @@ export default function TrialLogin() {
                 <Button
                   type="submit"
                   disabled={loading}
-                  className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-3 text-base"
+                  className="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-semibold py-3 text-base"
                 >
                   {loading ? (
                     <span className="flex items-center gap-2">

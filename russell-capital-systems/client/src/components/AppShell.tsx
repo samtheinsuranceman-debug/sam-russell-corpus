@@ -682,7 +682,6 @@ const NAV_SECTIONS: NavSection[] = [
         items: [
           { path: "/portal/innovation-dashboard", label: "Innovation Dashboard", icon: ChevronRight, color: "slate" },
           { path: "/portal/advisor-directory", label: "Advisor Directory", icon: ChevronRight, color: "slate" },
-          { path: "/portal/interior", label: "Interior", icon: ChevronRight, color: "slate" },
           { path: "/portal/owner-oversight", label: "Owner Oversight", icon: ChevronRight, color: "slate" },
           { path: "/portal/team", label: "Team", icon: ChevronRight, color: "slate" },
           { path: "/portal/team-management", label: "Team Management", icon: ChevronRight, color: "slate" },
