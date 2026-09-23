@@ -1,11 +1,11 @@
-# Provenance census — summary (tree `aecbb6c`)
+# Provenance census — summary (tree `8194d52`)
 
 Every count below is computed from the tree; none is typed. `server/provenanceCensus.test.ts` fails the build if any list grows.
 
 | Count | Value |
 |---|---|
 | Engines censused | 95 (36 via catalogue bindings, 87 via memory-bank modules, union) |
-| **Engines with zero sources** | **24** (of which 8 carry 20+ typed-in numeric literals) |
+| **Engines with zero sources** | **20** (of which 8 carry 20+ typed-in numeric literals) |
 | **Catalogue engines whose sources the shell cannot print yet** | **26** |
 | **Engines with unseeded randomness** | **1** |
 | **Pages that import an engine and print no source** | **95** of 120 |
@@ -19,7 +19,6 @@ Every count below is computed from the tree; none is typed. `server/provenanceCe
 - `shared/accessControl.ts`
 - `shared/advisorModes.ts`
 - `shared/altCredit/simulator.ts`
-- `shared/branding.ts`
 - `shared/carrierRatings.ts`
 - `shared/cryptoCycleEngine.ts`
 - `shared/erosion.ts`
@@ -27,19 +26,16 @@ Every count below is computed from the tree; none is typed. `server/provenanceCe
 - `shared/genomeStrategyFit.ts`
 - `shared/historicalShocks.ts`
 - `shared/householdWealth.ts`
-- `shared/mandates.ts`
 - `shared/monteCarloEngine.ts`
 - `shared/mortgageKiller.ts`
 - `shared/mortgageLedger.ts`
 - `shared/multiPropertyMyga.ts`
 - `shared/mygaWaterfall.ts`
-- `shared/patentStatus.ts`
 - `shared/premiumFinancing.ts`
 - `shared/realEstateCapacityEngine.ts`
 - `shared/regulatorySandbox.ts`
 - `shared/reverseHeloc.ts`
 - `shared/taxBracketEngine.ts`
-- `shared/wholeLifeBanking.ts`
 
 ## Catalogue engines whose sources the shell cannot print yet
 
