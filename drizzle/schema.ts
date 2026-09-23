@@ -1545,6 +1545,9 @@ export const slideShares = mysqlTable("slide_shares", {
   permission:   mysqlEnum("permission", ["view", "comment", "edit"]).default("comment").notNull(),
   shareToken:   varchar("shareToken", { length: 255 }).notNull().unique(),
   accessedAt:   timestamp("accessedAt"),
+  // Optional expiry (0085_slide_share_expiry). NULL = no expiry, as before; the
+  // public readers refuse a share once this moment has passed.
+  expiresAt:    timestamp("expiresAt"),
   createdAt:    timestamp("createdAt").defaultNow().notNull(),
 });
 export type SlideShare = typeof slideShares.$inferSelect;

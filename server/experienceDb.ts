@@ -1039,21 +1039,23 @@ export async function getUnreadTriggers(userId: number) {
     .limit(20);
 }
 
-export async function markTriggerRead(triggerId: number) {
+/** Marks one of the user's own triggers read; another user's trigger id is left alone. */
+export async function markTriggerRead(triggerId: number, userId: number) {
   const db = await getDb();
   if (!db) throw new Error("DB unavailable");
   await db.update(withdrawalTriggers).set({
     isRead: true,
     openedAt: new Date(),
-  }).where(eq(withdrawalTriggers.id, triggerId));
+  }).where(and(eq(withdrawalTriggers.id, triggerId), eq(withdrawalTriggers.userId, userId)));
 }
 
-export async function markTriggerClicked(triggerId: number) {
+/** Marks one of the user's own triggers clicked; another user's trigger id is left alone. */
+export async function markTriggerClicked(triggerId: number, userId: number) {
   const db = await getDb();
   if (!db) throw new Error("DB unavailable");
   await db.update(withdrawalTriggers).set({
     clickedAt: new Date(),
-  }).where(eq(withdrawalTriggers.id, triggerId));
+  }).where(and(eq(withdrawalTriggers.id, triggerId), eq(withdrawalTriggers.userId, userId)));
 }
 
 export async function generateWithdrawalTriggers(userId: number) {
