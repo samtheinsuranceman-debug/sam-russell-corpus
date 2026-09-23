@@ -73,7 +73,7 @@ const CompetePage: React.FC = () => {
               <a href="/portal/ai-assist" className="px-4 py-2 bg-emerald-500/20 text-emerald-400 rounded-lg text-sm hover:bg-emerald-500/30 transition-all">
                 Send to AI Advisor →
               </a>
-              <a href="/portal/ai-brain" className="px-4 py-2 bg-emerald-500/20 text-emerald-400 rounded-lg text-sm hover:bg-emerald-500/30 transition-all">
+              <a href="/portal/ai-brain-hub" className="px-4 py-2 bg-emerald-500/20 text-emerald-400 rounded-lg text-sm hover:bg-emerald-500/30 transition-all">
                 View AI Brain Hub →
               </a>
             </div>

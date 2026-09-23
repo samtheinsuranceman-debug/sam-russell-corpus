@@ -1,4 +1,5 @@
 import { getLoginUrl } from "@/const";
+import { PUBLIC_HOME_FALLBACK, useHomepageOpen } from "@/hooks/useHomepageOpen";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { trpc } from "@/lib/trpc";
 import PageBackdrop from "@/components/PageBackdrop";
@@ -102,6 +103,7 @@ export default function Pricing() {
   const recordDisclosureMut = trpc.paymentCompliance.recordDisclosure.useMutation();
   const plansQuery = trpc.billing.plans.useQuery();
   const { isAuthenticated } = useAuth();
+  const homeOpen = useHomepageOpen(); // "/" bounces a signed-out visitor to /login while the homepage is gated
   const [, navigate] = useLocation();
 
   const checkoutMut = trpc.billing.createCheckout.useMutation({
@@ -173,8 +175,8 @@ export default function Pricing() {
       {/* Header */}
       <div className="relative z-10 border-b border-white/10">
         <div className="container py-4 flex items-center justify-between">
-          <Link href="/" className="inline-flex items-center gap-2 text-sm text-[#7a95b8] hover:text-white transition-colors">
-            <ArrowLeft size={14} /> Back to Home
+          <Link href={homeOpen ? "/" : PUBLIC_HOME_FALLBACK.href} className="inline-flex items-center gap-2 text-sm text-[#7a95b8] hover:text-white transition-colors">
+            <ArrowLeft size={14} /> {homeOpen ? "Back to Home" : PUBLIC_HOME_FALLBACK.label}
           </Link>
           {!isAuthenticated && (
             <Link href="/login" className="rc-btn rc-btn-secondary text-sm">
@@ -203,16 +205,16 @@ export default function Pricing() {
           <div className="flex gap-1 bg-[#0b1628] rounded-xl p-1 border border-[#12233e]">
             <button
               onClick={() => setInterval("MONTHLY")}
-              className={`px-5 py-2.5 rounded-lg text-sm font-medium transition-all ${interval === "MONTHLY" ? "bg-[#22c55e] text-white shadow-lg shadow-[#22c55e]/20" : "text-[#7a95b8] hover:text-white"}`}
+              className={`px-5 py-2.5 rounded-lg text-sm font-medium transition-all ${interval === "MONTHLY" ? "bg-[#15803d] text-white shadow-lg shadow-[#22c55e]/20" : "text-[#7a95b8] hover:text-white"}`}
             >
               Monthly
             </button>
             <button
               onClick={() => setInterval("ANNUAL")}
-              className={`px-5 py-2.5 rounded-lg text-sm font-medium transition-all relative ${interval === "ANNUAL" ? "bg-[#22c55e] text-white shadow-lg shadow-[#22c55e]/20" : "text-[#7a95b8] hover:text-white"}`}
+              className={`px-5 py-2.5 rounded-lg text-sm font-medium transition-all relative ${interval === "ANNUAL" ? "bg-[#15803d] text-white shadow-lg shadow-[#22c55e]/20" : "text-[#7a95b8] hover:text-white"}`}
             >
               Annual
-              <span className="ml-2 inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 text-xs font-bold">
+              <span className="ml-2 inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#0a1929] text-amber-300 text-xs font-bold">
                 <Percent size={10} /> 20% OFF
               </span>
             </button>
@@ -302,7 +304,7 @@ export default function Pricing() {
                     disabled={checkoutMut.isPending}
                     className={`w-full py-3 rounded-xl font-semibold text-sm transition-all flex items-center justify-center gap-2 ${
                       isPopular
-                        ? "bg-[#22c55e] text-white hover:bg-[#22c55e]/90 shadow-lg shadow-[#22c55e]/20"
+                        ? "bg-[#15803d] text-white hover:bg-[#166534] shadow-lg shadow-[#22c55e]/20"
                         : plan.slug === "enterprise"
                           ? "bg-amber-500/15 text-amber-400 border border-amber-500/30 hover:bg-amber-500/25"
                           : "bg-white/8 text-white border border-[#12233e] hover:bg-white/12"
