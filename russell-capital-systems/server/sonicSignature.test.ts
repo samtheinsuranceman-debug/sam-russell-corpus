@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
 import {
   ACCENT_DBFS,
+  MIN_ATTACK_S,
   TEXTURE_HEADPHONES_DBFS,
   accentVoices,
   CUE_PEAK_DBFS,
@@ -130,6 +131,12 @@ describe("palette and pitch", () => {
       expect(PALETTE_MIDI).toContain(m);
       expect(midiToHz(m)).toBeGreaterThanOrEqual(MIN_FUNDAMENTAL_HZ);
     }
+  });
+
+  it("no sharp onsets: every cue ramps in over at least 20 ms", () => {
+    const sig = signatureCues(seedFor(9), 25);
+    for (const c of [...sig, ...new CueStream(seedFor(9), 1, sig).take(300)]) expect(c.attackS).toBeGreaterThanOrEqual(MIN_ATTACK_S);
+    expect(MIN_ATTACK_S).toBeGreaterThanOrEqual(0.02);
   });
 
   it("cues never overlap: the next cue starts after this one ends", () => {

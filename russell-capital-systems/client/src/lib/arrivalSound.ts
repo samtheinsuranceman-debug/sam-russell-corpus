@@ -22,6 +22,7 @@ import {
   FADE_IN_S,
   FADE_OUT_S,
   MASTER_DBFS,
+  MIN_ATTACK_S,
   MUTE_RAMP_S,
   TEXTURE_HEADPHONES_DBFS,
   TEXTURE_SPEAKERS_DBFS,
@@ -396,7 +397,7 @@ export class ArrivalSoundEngine {
     this.accentTimer = setTimeout(() => {
       if (this.state !== "playing" || !this.ctx || this.scape.id !== scape.id) return;
       const midi = scape.accentNotes[this.accentIndex % scape.accentNotes.length];
-      this.voice(accentVoices(midi), "sine", 0.01, 0.9, 0, this.fader!);
+      this.voice(accentVoices(midi), "sine", MIN_ATTACK_S, 0.9, 0, this.fader!);
       this.accentIndex++;
       this.scheduleAccent();
     }, delay * 1000);
