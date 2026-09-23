@@ -190,7 +190,9 @@ describe("every user-supplied server fetch goes through the guard", () => {
   it("emailAgenda and emailReport never fetch the URL they are given", () => {
     const src = read("routers.ts");
     expect(src).not.toMatch(/fetch\(input\.pdfUrl\)/);
-    expect(src.match(/loadReportPdf\(input\.pdfUrl\)/g)?.length).toBe(2);
+    expect(src.match(/loadReportPdf\(input\.pdfUrl[,)]/g)?.length).toBe(2);
+    // ...and only a stored file the caller's workspace owns (C-3, server/storageOwnership.ts).
+    expect(src.match(/loadReportPdf\(input\.pdfUrl, \{\s*canReadKey: \(key\) => callerMayReadStorageKey\(key,/g)?.length).toBe(2);
   });
 
   it("workspace webhooks and the Slack test message use safeFetch; saved URLs are shape-checked", () => {

@@ -1189,7 +1189,7 @@ export default function MySlides() {
               <p className="text-sm text-muted-foreground mb-6 max-w-md mx-auto">
                 AI Slide generation, the My Slides library, and advanced analytics are available on paid plans.
               </p>
-              <Button className="bg-amber-600 hover:bg-amber-700" onClick={() => window.location.href = "/billing"}>
+              <Button className="bg-amber-600 hover:bg-amber-700" onClick={() => window.location.href = "/portal/billing"}>
                 View Plans
               </Button>
             </CardContent>

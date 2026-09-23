@@ -6,6 +6,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { CHINA_POLICY_MESSAGE } from "@shared/aiProviders";
 import { RUNWAY_VERSION, createVideo, lumaBody, lumaCreate, lumaJob, runwayBody, runwayCreate, runwayJob, videoGenConfigured } from "./videoGen";
 import { videoGenRouter } from "./videoGenRouter";
+import { ownerOpenId } from "./_core/ownerLogin";
 
 type Call = { url: string; method: string; headers: Record<string, string>; body: string };
 let calls: Call[] = [];
@@ -106,13 +107,21 @@ describe("Luma", () => {
 });
 
 describe("the videoGen router", () => {
-  const caller = (user: { role?: string; email?: string | null }) =>
+  const caller = (user: { role?: string; email?: string | null; openId?: string }) =>
     videoGenRouter.createCaller({ user: { id: 1, openId: "o", name: "U", role: "user", email: null, ...user }, req: {} as never, res: {} as never } as never);
 
-  it("is closed to anyone but the owner and admins", async () => {
-    await expect(caller({ role: "user", email: "someone@example.com" }).status()).rejects.toThrow(/for the site owner/);
-    const s = await caller({ role: "admin" }).status();
-    expect(s.models.runway.text).toContain("gen4.5");
-    expect(s.models.luma).toContain("ray-2");
+  it("is closed to anyone but the owner's own session: every job is billed", async () => {
+    vi.stubEnv("OWNER_EMAIL", "owner@example.com");
+    try {
+      await expect(caller({ role: "user", email: "someone@example.com" }).status()).rejects.toThrow(/for the site owner/);
+      // an admin is not the owner, and the owner's email without the owner's session proves nothing
+      await expect(caller({ role: "admin", email: "admin@example.com" }).status()).rejects.toThrow(/for the site owner/);
+      await expect(caller({ role: "admin", email: "owner@example.com", openId: "someone-else" }).status()).rejects.toThrow(/for the site owner/);
+      const s = await caller({ role: "admin", email: "owner@example.com", openId: ownerOpenId() }).status();
+      expect(s.models.runway.text).toContain("gen4.5");
+      expect(s.models.luma).toContain("ray-2");
+    } finally {
+      vi.unstubAllEnvs();
+    }
   });
 });

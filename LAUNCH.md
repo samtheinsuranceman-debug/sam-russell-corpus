@@ -137,6 +137,10 @@ systemd unit, a `.env` loaded by your process manager, etc.) — **not** in the 
 `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, `XAI_API_KEY`, `GEMINI_API_KEY`,
 `PERPLEXITY_API_KEY`, `OPENROUTER_API_KEY`, `MISTRAL_API_KEY`, `GROQ_API_KEY`,
 `COHERE_API_KEY`, `TOGETHER_API_KEY`. There is no built‑in hosted gateway: every AI call goes through these keys (the Brain Hub chain).
+IBM watsonx.ai: `WATSONX_API_KEY` (or `IBM_CLOUD_API_KEY` / `WATSONX_APIKEY`), `WATSONX_PROJECT_ID`, optional `WATSONX_URL` (default `https://us-south.ml.cloud.ibm.com`).
+Image generation (AI avatars, `vault.generateImage`), tried in this order: `REPLICATE_API_TOKEN` or `REPLICATE_API_KEY`,
+`FAL_KEY` or `FAL_API_KEY`, `STABILITY_API_KEY`, then `OPENAI_API_KEY`; needs `STORAGE_S3_BUCKET`. Optional model overrides:
+`REPLICATE_IMAGE_MODEL`, `FAL_IMAGE_MODEL`, `STABILITY_IMAGE_MODEL`, `OPENAI_IMAGE_MODEL`.
 > With zero AI keys the homepage concierge degrades gracefully to a written teaser.
 > **Owner's standing rule:** no China-linked AI on this platform — DeepSeek and every other
 > Chinese lab, model or host (Taiwan-based labs are suspect too). Do not add one as a provider,

@@ -183,7 +183,7 @@ async function loadCredentials(): Promise<CachedCredential[]> {
 const CONVENTIONAL_ENV_NAMES: Record<string, string[]> = {
   anthropic: ["ANTHROPIC_API_KEY"],
   openai: ["OPENAI_API_KEY"],
-  google: ["GOOGLE_API_KEY", "GEMINI_API_KEY"],
+  google: ["GOOGLE_API_KEY", "GEMINI_API_KEY", "GOOGLE_AI_API_KEY"],
   xai: ["XAI_API_KEY"],
   perplexity: ["PERPLEXITY_API_KEY"],
   openrouter: ["OPENROUTER_API_KEY"],
@@ -240,6 +240,14 @@ const CONVENTIONAL_ENV_NAMES: Record<string, string[]> = {
   "aleph-alpha": ["ALEPH_ALPHA_API_KEY", "AA_TOKEN"],
   publicai: ["PUBLICAI_API_KEY"],
   databricks: ["DATABRICKS_TOKEN"],
+  // IBM's own names for the key. The project id is WATSONX_PROJECT_ID and the
+  // region WATSONX_URL (read in aiProviderAdapters.ts and below).
+  watsonx: ["WATSONX_API_KEY", "IBM_CLOUD_API_KEY", "WATSONX_APIKEY"],
+};
+
+/** Conventional base-URL variables, read after RCS_BRAIN_<ID>_BASE_URL and <ID>_BASE_URL. */
+const CONVENTIONAL_BASE_URL_NAMES: Record<string, string[]> = {
+  watsonx: ["WATSONX_URL"],
 };
 
 function envSlug(providerId: string): string {
@@ -266,7 +274,8 @@ export function environmentCredentials(): CachedCredential[] {
       process.env[`${envSlug(providerId)}_MODEL`]?.trim();
     const baseUrlOverride =
       process.env[`RCS_BRAIN_${envSlug(providerId)}_BASE_URL`]?.trim() ||
-      process.env[`${envSlug(providerId)}_BASE_URL`]?.trim();
+      process.env[`${envSlug(providerId)}_BASE_URL`]?.trim() ||
+      (CONVENTIONAL_BASE_URL_NAMES[providerId] ?? []).map(name => process.env[name]?.trim()).find(Boolean);
 
     // A provider that needs an account-scoped base URL is not callable without one.
     if (provider.requiresBaseUrl && !baseUrlOverride) continue;

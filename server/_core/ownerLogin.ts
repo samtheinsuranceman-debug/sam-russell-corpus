@@ -94,7 +94,16 @@ export async function verifyOwnerCredentials(email: string, password: string, en
   return emailMatches && passwordMatches;
 }
 
-/** The entrance passcode: any well-formed email, one shared passcode. */
+/** Addresses that only the owner sign-in may use. */
+export function isReservedOwnerEmail(email: string, env = ENV): boolean {
+  const e = (email ?? "").trim().toLowerCase();
+  if (!e) return false;
+  const owner = (env.ownerEmail ?? "").trim().toLowerCase();
+  const fromProcess = (process.env.OWNER_EMAIL ?? "").trim().toLowerCase();
+  return (Boolean(owner) && e === owner) || (Boolean(fromProcess) && e === fromProcess);
+}
+
+/** The entrance passcode: any well-formed email except the owner's, one shared passcode. */
 export async function verifyGuestPasscode(email: string, passcode: string, env = ENV): Promise<boolean> {
   if (!isGuestLoginConfigured(env)) return false;
   const emailOk = isPlausibleEmail(email);
@@ -239,6 +248,15 @@ export function registerOwnerLoginRoutes(app: Express) {
       return;
     }
     if (!acknowledgementsOk(req, res)) return;
+
+    // The owner signs in with the password and code, never the shared
+    // passcode: an owner address typed here would otherwise pass every
+    // email-based owner check.
+    if (isReservedOwnerEmail(email)) {
+      console.warn("[GuestLogin] refused an owner address from", key);
+      res.status(401).json({ error: "That passcode is not correct." });
+      return;
+    }
 
     const ok = await verifyGuestPasscode(email, passcode);
     if (!ok) {

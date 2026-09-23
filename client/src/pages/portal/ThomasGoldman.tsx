@@ -12,6 +12,7 @@
  */
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AppShell } from "@/components/AppShell";
+import { Link } from "wouter";
 import AIStackPanel, { AIStackBadge } from "@/components/AIStackPanel";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -75,6 +76,7 @@ const DEPTHS: Array<{ id: Depth; label: string; blurb: string; icon: typeof Targ
 
 export default function ThomasGoldman() {
   const [turns, setTurns] = useState<Turn[]>([]);
+  const genomeMap = trpc.genomeIntake.myMap.useQuery(undefined, { refetchOnWindowFocus: false, retry: false });
   const [input, setInput] = useState("");
   const [depth, setDepth] = useState<Depth>("deeper");
   const [summary, setSummary] = useState<string>("");
@@ -255,6 +257,14 @@ export default function ThomasGoldman() {
                   </>
                 )}
               </p>
+            </div>
+          )}
+
+          {/* The Wealth Genome map, when this household has one: he reads it as background. */}
+          {genomeMap.data && (
+            <div className="flex flex-wrap items-center gap-2 px-4 sm:px-5 py-2 border-b border-[#1e3a5f]/40 shrink-0 text-[11.5px] text-slate-400">
+              <span>{ADVISOR_NAME} can see your Wealth Genome map — tendencies and money bands only, as background, never the basis of a recommendation.</span>
+              <Link href="/portal/wealth-genome" className="text-amber-300 hover:underline">See the map</Link>
             </div>
           )}
 

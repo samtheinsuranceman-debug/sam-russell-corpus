@@ -1,5 +1,5 @@
 // ============================================================
-// VIDEO GENERATION ROUTER — owner and admins only.
+// VIDEO GENERATION ROUTER — the owner's session only (every job is billed).
 //
 // A thin door onto server/videoGen.ts (Runway, Luma): which are keyed,
 // start a job, read a job. No page of its own; the owner's tools call it.
@@ -7,24 +7,24 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { protectedProcedure, router } from "./_core/trpc";
-import { isOwnerEmailAddress } from "./ownerGuard";
+import { isOwnerSession } from "./ownerGuard";
 import { ChinaPolicyError } from "@shared/aiProviders";
 import { createVideo, LUMA_MODELS, RUNWAY_IMAGE_MODELS, RUNWAY_TEXT_MODELS, videoGenConfigured, videoJob } from "./videoGen";
 
-const ownerOrAdmin = protectedProcedure.use(async ({ ctx, next }) => {
-  if (ctx.user.role === "admin" || isOwnerEmailAddress(ctx.user.email)) return next();
+const ownerOnly = protectedProcedure.use(async ({ ctx, next }) => {
+  if (isOwnerSession(ctx.user)) return next();
   throw new TRPCError({ code: "FORBIDDEN", message: "Video generation is for the site owner." });
 });
 
 const provider = z.enum(["runway", "luma"]);
 
 export const videoGenRouter = router({
-  status: ownerOrAdmin.query(() => ({
+  status: ownerOnly.query(() => ({
     configured: videoGenConfigured(),
     models: { runway: { text: [...RUNWAY_TEXT_MODELS], image: [...RUNWAY_IMAGE_MODELS] }, luma: [...LUMA_MODELS] },
   })),
 
-  create: ownerOrAdmin
+  create: ownerOnly
     .input(z.object({
       provider,
       prompt: z.string().min(3).max(2000),
@@ -44,7 +44,7 @@ export const videoGenRouter = router({
       }
     }),
 
-  job: ownerOrAdmin
+  job: ownerOnly
     .input(z.object({ provider, id: z.string().min(4).max(100) }))
     .query(async ({ input }) => {
       try {

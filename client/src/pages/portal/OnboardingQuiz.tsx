@@ -57,12 +57,12 @@ const OnboardingQuiz: React.FC = () => {
   const calculateResults = () => {
     const score = Math.min(100, Math.max(20, answers.income / 10000 + (answers.loanBalance < 50000 ? 20 : 0)));
     const calculators: Calculator[] = [
-      { name: 'Debt Repayment Planner', reason: 'High student loans need strategic payoff', link: '/calculators/debt' },
-      { name: 'Retirement Forecast', reason: 'Long-term planning is critical', link: '/calculators/retirement' },
-      ...(answers.priorities.includes('Tax Optimization') ? [{ name: 'Tax Strategy Analyzer', reason: 'Optimize your tax burden', link: '/calculators/tax' }] : []),
-      ...(answers.priorities.includes('Real Estate') ? [{ name: 'Property Investment ROI', reason: 'Evaluate real estate opportunities', link: '/calculators/real-estate' }] : []),
-      ...(answers.dualPhysician ? [{ name: 'Dual Income Planner', reason: 'Maximize dual-physician finances', link: '/calculators/dual-income' }] : []),
-      ...(answers.income > 200000 ? [{ name: 'Wealth Accelerator', reason: 'Grow high income effectively', link: '/calculators/wealth' }] : [])
+      { name: 'Debt Repayment Planner', reason: 'High student loans need strategic payoff', link: '/portal/forgiveness' },
+      { name: 'Retirement Forecast', reason: 'Long-term planning is critical', link: '/portal/retirement-projection' },
+      ...(answers.priorities.includes('Tax Optimization') ? [{ name: 'Tax Strategy Analyzer', reason: 'Optimize your tax burden', link: '/portal/tax-optimizer' }] : []),
+      ...(answers.priorities.includes('Real Estate') ? [{ name: 'Property Investment ROI', reason: 'Evaluate real estate opportunities', link: '/portal/real-estate' }] : []),
+      ...(answers.dualPhysician ? [{ name: 'Dual Income Planner', reason: 'Maximize dual-physician finances', link: '/portal/household-wealth' }] : []),
+      ...(answers.income > 200000 ? [{ name: 'Wealth Accelerator', reason: 'Grow high income effectively', link: '/portal/wealth-dashboard' }] : [])
     ].slice(0, 10);
     const actions = [
       'Review loan repayment options',
