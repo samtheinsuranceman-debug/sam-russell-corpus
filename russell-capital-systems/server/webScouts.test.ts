@@ -63,6 +63,17 @@ describe("web scouts", () => {
     expect(denied).toMatchObject({ ok: false, error: "You.com 401" });
   });
 
+  it("sends a dashboard key to Nimble /v2 as a bearer token, and a user:pass credential to the legacy endpoint as Basic", async () => {
+    const seen: { url: string; auth: string }[] = [];
+    const f = (async (url: string, init: any) => { seen.push({ url, auth: init.headers.authorization }); return jsonResponse(200, {}); }) as any;
+    process.env.NIMBLE_API_KEY = "a".repeat(64);
+    await nimbleSearch("q", 3, f);
+    process.env.NIMBLE_API_KEY = "user:pass";
+    await nimbleSearch("q", 3, f);
+    expect(seen[0]).toEqual({ url: "https://sdk.nimbleway.com/v2/serp", auth: `Bearer ${"a".repeat(64)}` });
+    expect(seen[1]).toEqual({ url: "https://api.webit.live/api/v1/realtime/serp", auth: `Basic ${Buffer.from("user:pass").toString("base64")}` });
+  });
+
   it("never puts the key in a result or error", async () => {
     process.env.NIMBLE_API_KEY = "super-secret-value";
     const a = await nimbleSearch("q", 3, (async () => jsonResponse(500, {})) as any);
