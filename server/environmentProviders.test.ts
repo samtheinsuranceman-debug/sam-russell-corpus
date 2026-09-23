@@ -10,7 +10,7 @@
  * never be reported when the variable is empty or absent.
  */
 import { beforeEach, afterEach, describe, expect, it } from "vitest";
-import { environmentCredentials, environmentProviderIds } from "./providerRegistry";
+import { environmentCredentials, environmentProviderIds, testEnvironmentKeys } from "./providerRegistry";
 import { getProvider } from "@shared/aiProviders";
 
 const TOUCHED = [
@@ -18,6 +18,7 @@ const TOUCHED = [
   "OPENAI_API_KEY",
   "PERPLEXITY_API_KEY",
   "GROQ_API_KEY",
+  "MISTRAL_API_KEY",
   "ANTHROPIC_MODEL",
   "OPENAI_BASE_URL",
 ];
@@ -119,6 +120,28 @@ describe("environmentCredentials", () => {
     for (const cred of environmentCredentials()) {
       expect(cred.priority).toBeGreaterThan(VAULT_DEFAULT_PRIORITY);
     }
+  });
+
+  it("tests every environment key through the injected tester and reports the variable name, never the key", async () => {
+    process.env.ANTHROPIC_API_KEY = "sk-ant-secret-value-1234567890";
+    process.env.MISTRAL_API_KEY = "mistral-secret-value-1234567890";
+
+    const seen: string[] = [];
+    const results = await testEnvironmentKeys(async opts => {
+      seen.push(opts.providerId);
+      if (opts.providerId === "mistral") return { ok: false, kind: "auth", message: "401 from Mistral: invalid key" };
+      return { ok: true, model: opts.model ?? "m", latencyMs: 42, reply: "pong" };
+    });
+
+    expect(seen.sort()).toEqual(["anthropic", "mistral"]);
+    const anthropic = results.find(r => r.providerId === "anthropic")!;
+    expect(anthropic.ok).toBe(true);
+    expect(anthropic.envName).toBe("ANTHROPIC_API_KEY");
+    expect(anthropic.latencyMs).toBe(42);
+    const mistral = results.find(r => r.providerId === "mistral")!;
+    expect(mistral.ok).toBe(false);
+    expect(mistral.message).toMatch(/invalid key/);
+    expect(JSON.stringify(results)).not.toMatch(/secret-value/);
   });
 
   it("names only providers that actually exist in the catalogue", () => {
