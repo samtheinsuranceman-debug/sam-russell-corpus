@@ -13,7 +13,14 @@
  * takes an afternoon. Provider error bodies frequently contain the request
  * payload, so they are never surfaced verbatim to the browser.
  */
-import { getProvider, type ProviderDefinition } from "@shared/aiProviders";
+import {
+  CHINA_POLICY_MESSAGE,
+  getProvider,
+  isBannedModel,
+  isBannedProvider,
+  providerPolicyViolation,
+  type ProviderDefinition,
+} from "@shared/aiProviders";
 
 export type ChatMessage = { role: "system" | "user" | "assistant"; content: string };
 
@@ -358,7 +365,43 @@ async function callGoogle(o: ProviderCallOptions): Promise<ProviderCallResult> {
 
 // ─── Entry point ─────────────────────────────────────────────────────────────
 
+/**
+ * The owner's rule, enforced at the one place every request leaves from: no
+ * China-linked provider, base URL or model id is ever sent, whatever the
+ * catalogue, the vault, an environment variable or a caller asked for.
+ * Returns the offending value, or null when the call is clean.
+ */
+export function chinaPolicyViolation(o: Pick<ProviderCallOptions, "provider" | "model" | "baseUrlOverride">): string | null {
+  const onProvider = providerPolicyViolation({ ...o.provider, defaultModel: "", suggestedModels: [] });
+  if (onProvider) return onProvider;
+  if (isBannedProvider(o.baseUrlOverride)) return `base URL: "${o.baseUrlOverride}"`;
+  if (isBannedModel(o.model)) return `model: "${o.model}"`;
+  return null;
+}
+
+function policyError(providerId: string, violation: string): ProviderError {
+  return new ProviderError({
+    kind: "bad_request",
+    providerId,
+    message: `${CHINA_POLICY_MESSAGE} (${violation})`,
+    userMessage: `${CHINA_POLICY_MESSAGE}. ${violation} is refused on this platform.`,
+  });
+}
+
 export async function callProvider(o: ProviderCallOptions): Promise<ProviderCallResult> {
+  const violation = chinaPolicyViolation(o);
+  if (violation) throw policyError(o.provider.id, violation);
+  const result = await dispatch(o);
+  // An aggregator can answer with a different model than the one asked for
+  // (a fallback, an alias, a router). If what answered is China-linked, the
+  // answer is discarded rather than shown.
+  if (isBannedModel(result.model)) {
+    throw policyError(o.provider.id, `answering model: "${result.model}"`);
+  }
+  return result;
+}
+
+async function dispatch(o: ProviderCallOptions): Promise<ProviderCallResult> {
   switch (o.provider.wireFormat) {
     case "anthropic": return callAnthropic(o);
     case "google-generative": return callGoogle(o);

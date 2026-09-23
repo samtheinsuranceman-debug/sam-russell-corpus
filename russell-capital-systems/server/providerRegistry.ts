@@ -19,7 +19,16 @@
 import { and, asc, eq } from "drizzle-orm";
 import { customProviders, providerCredentials } from "../drizzle/schema";
 import { decryptSecret, isVaultConfigured } from "./_core/secretVault";
-import { buildCustomProvider, getProvider, isCustomProviderId, PROVIDERS, type ProviderDefinition } from "@shared/aiProviders";
+import {
+  CHINA_POLICY_MESSAGE,
+  getProvider,
+  isBannedModel,
+  isBannedProvider,
+  isCustomProviderId,
+  PROVIDERS,
+  tryBuildCustomProvider,
+  type ProviderDefinition,
+} from "@shared/aiProviders";
 import {
   ProviderError,
   callProvider,
@@ -61,7 +70,24 @@ async function loadCustomProviders(): Promise<Map<string, ProviderDefinition>> {
   const db = await getDb();
   if (!db) return new Map();
   const rows = await db.select().from(customProviders);
-  return new Map(rows.map(r => [r.slug, buildCustomProvider(r)]));
+  // A China-linked endpoint is never registered, even one stored before the rule widened.
+  const map = new Map<string, ProviderDefinition>();
+  for (const r of rows) {
+    const def = tryBuildCustomProvider(r);
+    if (def) map.set(r.slug, def);
+  }
+  return map;
+}
+
+/**
+ * Owner's rule at the registry: a credential whose model or base URL is
+ * China-linked is not loaded into the chain, whether it came from the vault
+ * or from an environment variable. Returns the reason, or null when clean.
+ */
+export function credentialPolicyViolation(c: { model: string; baseUrlOverride: string | null }): string | null {
+  if (isBannedModel(c.model)) return `model "${c.model}"`;
+  if (isBannedProvider(c.baseUrlOverride)) return `base URL "${c.baseUrlOverride}"`;
+  return null;
 }
 
 /** Drop the cache. Called after any credential change. */
@@ -93,11 +119,17 @@ async function loadCredentials(): Promise<CachedCredential[]> {
   for (const row of rows) {
     const provider = resolveProvider(row.providerId);
     if (!provider) continue;
+    const model = row.modelOverride || provider.defaultModel;
+    const refused = credentialPolicyViolation({ model, baseUrlOverride: row.baseUrlOverride });
+    if (refused) {
+      console.error(`[Providers] ${row.providerId} skipped: ${CHINA_POLICY_MESSAGE} (${refused}). Change it in the AI Connector.`);
+      continue;
+    }
     try {
       loaded.push({
         providerId: row.providerId,
         apiKey: decryptSecret(row.encryptedKey, row.providerId),
-        model: row.modelOverride || provider.defaultModel,
+        model,
         baseUrlOverride: row.baseUrlOverride,
         priority: row.priority,
       });
@@ -238,6 +270,12 @@ export function environmentCredentials(): CachedCredential[] {
 
     // A provider that needs an account-scoped base URL is not callable without one.
     if (provider.requiresBaseUrl && !baseUrlOverride) continue;
+
+    const refused = credentialPolicyViolation({ model: modelOverride || provider.defaultModel, baseUrlOverride: baseUrlOverride || null });
+    if (refused) {
+      console.error(`[Providers] ${providerId} from the environment skipped: ${CHINA_POLICY_MESSAGE} (${refused}).`);
+      continue;
+    }
 
     found.push({
       providerId,
@@ -484,7 +522,7 @@ export async function providerStatus(): Promise<
   const customRows = db ? await db.select().from(customProviders) : [];
   const allProviders = [
     ...PROVIDERS.filter(p => p.id !== "forge"),
-    ...customRows.map(buildCustomProvider),
+    ...customRows.map(tryBuildCustomProvider).filter((p): p is ProviderDefinition => p !== null),
   ];
 
   return allProviders.map(p => {
