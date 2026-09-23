@@ -12,6 +12,7 @@ import { createHash, createHmac, timingSafeEqual } from "node:crypto";
 import type { ClientFactFinder } from "@shared/clientFactFinder";
 import { currentRules } from "@shared/taxRules";
 import { recordEvent } from "./ledger";
+import { isSessionSecret, legacySessionKeyForVerifyOnly, purposeKey } from "./_core/purposeKeys";
 
 export type AdvicePayload = {
   question: string;
@@ -34,8 +35,29 @@ export const STANDARD_DISCLAIMERS = [
   "Every figure referenced comes from the client's own Financial Assessment; nothing was invented.",
 ];
 
+/**
+ * ADVICE_SIGNING_KEY when set (and not merely a copy of JWT_SECRET), else a
+ * purpose key derived from JWT_SECRET. Never JWT_SECRET itself: the signed
+ * payload carries the client's own question, and session cookies are
+ * HMAC-SHA256 under JWT_SECRET (see _core/purposeKeys.ts). Empty only when
+ * neither secret is configured (records are then marked "unsigned").
+ */
 export function adviceSigningKey(env: NodeJS.ProcessEnv = process.env): string {
-  return env.ADVICE_SIGNING_KEY || env.JWT_SECRET || "";
+  const dedicated = env.ADVICE_SIGNING_KEY;
+  if (dedicated && !isSessionSecret(dedicated, env)) return dedicated;
+  if (env.JWT_SECRET) return purposeKey("advice-signing", env);
+  return "";
+}
+
+/**
+ * Keys that only VERIFY records signed before key separation (advice and
+ * document provenance were keyed with JWT_SECRET directly when
+ * ADVICE_SIGNING_KEY was unset). Never sign with these.
+ * TODO(2027-09-30): drop once pre-separation records are re-signed or retired.
+ */
+export function legacyAdviceVerifyKeys(env: NodeJS.ProcessEnv = process.env): string[] {
+  const legacy = legacySessionKeyForVerifyOnly(env);
+  return legacy && legacy !== adviceSigningKey(env) ? [legacy] : [];
 }
 
 function stable(v: unknown): unknown {
@@ -97,11 +119,13 @@ export function buildSignedAdvice(input: Omit<AdvicePayload, "at" | "rulesVersio
   return { payload, signature: signAdvice(payload, s), alg: "HMAC-SHA256", keyId: keyIdFor(s) };
 }
 
-export function verifyAdvice(value: unknown, secret = adviceSigningKey()): { ok: boolean; reason: string } {
+export function verifyAdvice(value: unknown, secret = adviceSigningKey(), legacyKeys: string[] = secret === adviceSigningKey() ? legacyAdviceVerifyKeys() : []): { ok: boolean; reason: string } {
   const v = value as Partial<SignedAdvice> | null;
   if (!v || typeof v !== "object" || !v.payload || typeof v.signature !== "string") return { ok: false, reason: "not a signed advice record" };
-  const s = secret || "unsigned";
-  if (v.keyId && v.keyId !== keyIdFor(s)) return { ok: false, reason: "signed with a different key" };
+  const current = secret || "unsigned";
+  // Pick the key by keyId: the current key, or a pre-separation key (verify only).
+  const s = !v.keyId || v.keyId === keyIdFor(current) ? current : legacyKeys.find((k) => keyIdFor(k) === v.keyId);
+  if (!s) return { ok: false, reason: "signed with a different key" };
   const expected = signAdvice(v.payload as AdvicePayload, s);
   const a = Buffer.from(expected, "hex"), b = Buffer.from(v.signature, "hex");
   if (a.length !== b.length || !timingSafeEqual(a, b)) return { ok: false, reason: "signature does not match the payload" };
