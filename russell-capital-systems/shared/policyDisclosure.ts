@@ -31,6 +31,7 @@ export const LIFE_POLICY_PATHS: readonly string[] = [
   "/portal/iul-engine",
   "/portal/iul-projection",
   "/portal/iul-historical",
+  "/portal/lookback-integrity",
   "/portal/iul-vs-roth",
   "/portal/policy-cost-lab",
   "/portal/policy-review",

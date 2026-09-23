@@ -204,6 +204,7 @@ const EducationHub = lazy(() => import("./pages/portal/EducationHub"));
 const AffiliateLinkManager = lazy(() => import("./pages/portal/AffiliateLinkManager"));
 const HiddenMaterial = lazy(() => import("./pages/portal/HiddenMaterial"));
 const IULHistoricalPerformance = lazy(() => import("./pages/portal/IULHistoricalPerformance"));
+const LookbackIntegrity = lazy(() => import("./pages/portal/LookbackIntegrity"));
 const IndexStrategyComparison = lazy(() => import("./pages/portal/IndexStrategyComparison"));
 const RetirementIncomeProjection = lazy(() => import("./pages/portal/RetirementIncomeProjection"));
 const TaxAdvantagedGrowth = lazy(() => import("./pages/portal/TaxAdvantagedGrowth"));
@@ -702,6 +703,7 @@ function Router() {
 
       {/* NAIC Compliant Analysis Pages */}
       <Route path="/portal/iul-historical" component={gated(IULHistoricalPerformance, "/portal/iul-historical")} />
+      <Route path="/portal/lookback-integrity" component={gated(LookbackIntegrity, "/portal/lookback-integrity")} />
       <Route path="/portal/index-strategies" component={gated(IndexStrategyComparison, "/portal/index-strategies")} />
       <Route path="/portal/retirement-projection" component={gated(RetirementIncomeProjection, "/portal/retirement-projection")} />
       <Route path="/portal/tax-advantaged-growth" component={gated(TaxAdvantagedGrowth, "/portal/tax-advantaged-growth")} />

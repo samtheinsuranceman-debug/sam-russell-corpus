@@ -267,6 +267,7 @@ export const ROUTE_MANIFEST: readonly string[] = [
   "/portal/liquidity-routes",
   "/portal/long-term-care",
   "/portal/long-term-care-hybrid",
+  "/portal/lookback-integrity",
   "/portal/map",
   "/portal/market-data",
   "/portal/market-pulse",

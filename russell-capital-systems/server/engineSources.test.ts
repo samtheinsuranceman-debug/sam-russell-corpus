@@ -13,6 +13,7 @@ import {
 } from "../shared/engineSources";
 import { CALCULATORS } from "../shared/calculatorCatalog";
 import { placeholderCohortSize } from "../shared/retirementDNA";
+import { assumed, ruled, sourced } from "../shared/sourcing";
 
 describe("normalizeSources", () => {
   it("accepts a string, a label/url object, a name/entity object, arrays and records", () => {
@@ -37,6 +38,17 @@ describe("normalizeSources", () => {
     expect(normalizeSources({ label: "" })).toEqual([]);
   });
 
+  it("prints Sourced records (shared/sourcing.ts): sources as sources, assumptions as assumptions, defects out loud", () => {
+    expect(normalizeSources(sourced("S&P 500 price returns", "ChartRow, S&P 500 Returns by Year", "2026-09-14", { url: "https://chartrow.com/sp500/returns", n: 32 })))
+      .toEqual([{ label: "S&P 500 price returns: ChartRow, S&P 500 Returns by Year", asOf: "2026-09-14", kind: "sourced", url: "https://chartrow.com/sp500/returns", note: "n = 32" }]);
+    expect(normalizeSources(ruled(0.9, "26 U.S.C. § 7702", "2026-01-01"))).toEqual([{ label: "26 U.S.C. § 7702", asOf: "2026-01-01", kind: "rule" }]);
+    expect(normalizeSources([assumed(80, "An 80th-percentile flag is our convention.")]))
+      .toEqual([{ label: "We assumed: An 80th-percentile flag is our convention.", kind: "assumption" }]);
+    const [bad] = normalizeSources(sourced("A rate", "internal", "2026-01-01"));
+    expect(bad!.kind).toBe("sourced");
+    expect(bad!.defect).toMatch(/names no document/);
+  });
+
   it("de-duplicates by label", () => {
     expect(uniqueSources([{ label: "A", url: "https://a" }, { label: "A" }, { label: "B" }])).toHaveLength(2);
   });
@@ -50,6 +62,14 @@ describe("engine source loaders", () => {
       expect(sources!.length, `${engine} exports an empty source list`).toBeGreaterThan(0);
       for (const s of sources!) expect(s.label.length, `${engine} has a source with no label`).toBeGreaterThan(3);
     }
+  });
+
+  it("prints the look-back integrity engine's assumptions apart from its sources", async () => {
+    const refs = (await loadEngineSources("shared/lookbackIntegrity.ts"))!;
+    expect(refs.some(r => r.kind === "sourced" && /FLM-1491AO\.10/.test(r.label))).toBe(true);
+    expect(refs.some(r => r.kind === "assumption" && r.label.startsWith("We assumed"))).toBe(true);
+    expect(refs.every(r => !r.defect)).toBe(true);
+    expect(engineForPath("/portal/lookback-integrity")).toBe("shared/lookbackIntegrity.ts");
   });
 
   it("returns null for an engine with no loader, so the footer can say so honestly", async () => {
