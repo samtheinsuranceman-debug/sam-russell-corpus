@@ -8,6 +8,7 @@ import { NAICDisclaimer } from "@/components/NAICDisclaimer";
 import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/_core/hooks/useAuth";
+import { mulberry32 } from "@shared/macro/random";
 import {
   Activity,
   AlertTriangle,
@@ -75,12 +76,17 @@ const DEFAULT_PORTFOLIO: AssetClass[] = [
   { id: "cash", name: "Cash & Equivalents", targetPct: 5, currentPct: 5.0, currentValue: 50000, drift: 0.0, color: "#94a3b8", category: "Cash", riskScore: 1, liquidity: "Very High", yield: 5.1, expenseRatio: 0.00, ytdReturn: 2.5, volatility: 0.5, sharpeRatio: 1.2 },
 ];
 
-const HISTORICAL_DRIFT_DATA = Array.from({ length: 12 }, (_, i) => ({
+// Fixed illustrative series (sample data, not a real account's history).
+const SAMPLE_DRIFT_PCT = [1.4, 2.1, 3.3, 4.6, 1.2, 1.9, 2.8, 3.9, 5.1, 1.3, 2.2, 3.0];
+const SAMPLE_VALUE_OFFSET = [-4000, 6000, -2000, 8000, 1000, -7000, 5000, 3000, -5000, 9000, -1000, 4000];
+const HISTORICAL_DRIFT_DATA = SAMPLE_DRIFT_PCT.map((drift, i) => ({
   month: `Month ${i + 1}`,
-  drift: Math.random() * 5 + 1,
+  drift,
   rebalanced: i === 3 || i === 8,
-  portfolioValue: 900000 + (i * 10000) + (Math.random() * 20000 - 10000),
+  portfolioValue: 900000 + i * 10000 + SAMPLE_VALUE_OFFSET[i],
 }));
+
+let driftSimulationRun = 0;
 
 const TAX_LOTS = [
   { id: "lot1", asset: "US Large Cap Equity", dateAcquired: "2020-05-12", shares: 1500, costBasis: 150000, currentValue: 280000, unrealizedGain: 130000, term: "Long" },
@@ -178,9 +184,12 @@ export default function PortfolioDriftMonitor() {
 
   const simulateDrift = () => {
     setIsSimulating(true);
+    // Seeded, reproducible what-if: run N always produces the same drift.
+    driftSimulationRun += 1;
+    const rng = mulberry32(driftSimulationRun);
     setTimeout(() => {
       setPortfolio(prev => prev.map((a) => {
-        const randomDrift = (Math.random() - 0.5) * (a.volatility / 2);
+        const randomDrift = (rng() - 0.5) * (a.volatility / 2);
         const newPct = Math.max(0, a.targetPct + randomDrift);
         return { 
           ...a, 
@@ -190,8 +199,8 @@ export default function PortfolioDriftMonitor() {
         };
       }));
       setIsSimulating(false);
-      toast.info("Portfolio drift simulated based on asset volatility");
-      logActivity({ action: "Simulated Portfolio Drift", details: "Random market movements applied" }).catch(console.error);
+      toast.info(`Hypothetical drift simulated from asset volatility (seed ${driftSimulationRun})`);
+      logActivity({ action: "Simulated Portfolio Drift", details: `Seeded hypothetical market movements applied (seed ${driftSimulationRun})` }).catch(console.error);
     }, 600);
   };
 
@@ -358,6 +367,10 @@ export default function PortfolioDriftMonitor() {
         {/* ═══ CONSUMER OUTCOME BLOCKS — Flagship Tier ═══ */}
         {/* Related Calculators Toggle */}
         <RelatedCalculators currentPage="PortfolioDriftMonitor" />
+
+        <div className="px-4 py-3 rounded-lg border border-amber-500/40 bg-amber-500/10 text-amber-300 text-sm font-semibold">
+          Sample data — not real records. The portfolio, drift history, tax lots and rebalance history on this page are a fixed illustrative portfolio, not a client account. "Simulate drift" applies a seeded hypothetical move.
+        </div>
 
         <ExecutiveSummary
           pageTitle="Portfolio Drift Monitor"

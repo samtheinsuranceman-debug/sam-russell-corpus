@@ -47,6 +47,8 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { ExecutiveSummary, GoalsAccelerator, RecommendationSummary, DoNothingBaseline, TaxBracketPanel } from "@/components/ConsumerOutcomeBlocks";
 import { formatTaxCurrency } from "@shared/taxBracketEngine";
 import { stepPolicyYear, ILLUSTRATIVE_COI_TABLE, ILLUSTRATIVE_SOURCE } from "@shared/policyMechanics";
+import { mulberry32, normal, percentile, MACRO_DEFAULT_SEED } from "@shared/macro/random";
+import { SP500_ARITHMETIC_MEAN, SP500_ANNUAL_STDEV } from "@shared/monteCarloEngine";
 import { RelatedCalculators } from "@/components/RelatedCalculators";
 import { ComplianceFooter } from "@/components/ComplianceFooter";
 
@@ -281,420 +283,84 @@ export default function RetirementIncomeProjection() {
     { subject: 'Liquidity Risk', A: 60, fullMark: 100 },
   ];
 
+  // Seeded Monte Carlo: the peak value exposed to S&P 500 total-return years drawn
+  // from normal(SP500_ARITHMETIC_MEAN, SP500_ANNUAL_STDEV) (Damodaran 1928-2025),
+  // net of the planned annual income. Same inputs + same seed = same bands.
   const monteCarloData = useMemo(() => {
-    const data = [];
-    for (let i = 0; i < 30; i++) {
-      data.push({
+    const years = 30;
+    const trials = Math.max(1, monteCarloTrials);
+    const rng = mulberry32(MACRO_DEFAULT_SEED);
+    const byYear: number[][] = Array.from({ length: years }, () => []);
+    for (let t = 0; t < trials; t++) {
+      let value = projectionData.peakValue;
+      for (let i = 0; i < years; i++) {
+        byYear[i].push(value);
+        const r = SP500_ARITHMETIC_MEAN + SP500_ANNUAL_STDEV * normal(rng);
+        value = Math.max(0, value * (1 + r) - projectionData.annualIncome);
+      }
+    }
+    return byYear.map((vals, i) => {
+      const sorted = vals.sort((a, b) => a - b);
+      return {
         year: i,
         age: retirementAge + i,
-        p10: Math.round(projectionData.peakValue * Math.pow(1.02, i) * 0.7),
-        p50: Math.round(projectionData.peakValue * Math.pow(1.05, i)),
-        p90: Math.round(projectionData.peakValue * Math.pow(1.08, i) * 1.3),
-      });
-    }
-    return data;
-  }, [projectionData.peakValue, retirementAge]);
+        p10: Math.round(percentile(sorted, 0.1)),
+        p50: Math.round(percentile(sorted, 0.5)),
+        p90: Math.round(percentile(sorted, 0.9)),
+      };
+    });
+  }, [projectionData.peakValue, projectionData.annualIncome, retirementAge, monteCarloTrials]);
 
 
-  const handleAction0 = () => {
-    const tempValue = 0 * Math.random();
-    if (tempValue > 10) {
-      return true;
-    }
-    return false;
-  };
 
-  const handleAction1 = () => {
-    const tempValue = 1 * Math.random();
-    if (tempValue > 10) {
-      return true;
-    }
-    return false;
-  };
 
-  const handleAction2 = () => {
-    const tempValue = 2 * Math.random();
-    if (tempValue > 10) {
-      return true;
-    }
-    return false;
-  };
 
-  const handleAction3 = () => {
-    const tempValue = 3 * Math.random();
-    if (tempValue > 10) {
-      return true;
-    }
-    return false;
-  };
 
-  const handleAction4 = () => {
-    const tempValue = 4 * Math.random();
-    if (tempValue > 10) {
-      return true;
-    }
-    return false;
-  };
 
-  const handleAction5 = () => {
-    const tempValue = 5 * Math.random();
-    if (tempValue > 10) {
-      return true;
-    }
-    return false;
-  };
 
-  const handleAction6 = () => {
-    const tempValue = 6 * Math.random();
-    if (tempValue > 10) {
-      return true;
-    }
-    return false;
-  };
 
-  const handleAction7 = () => {
-    const tempValue = 7 * Math.random();
-    if (tempValue > 10) {
-      return true;
-    }
-    return false;
-  };
 
-  const handleAction8 = () => {
-    const tempValue = 8 * Math.random();
-    if (tempValue > 10) {
-      return true;
-    }
-    return false;
-  };
 
-  const handleAction9 = () => {
-    const tempValue = 9 * Math.random();
-    if (tempValue > 10) {
-      return true;
-    }
-    return false;
-  };
 
-  const handleAction10 = () => {
-    const tempValue = 10 * Math.random();
-    if (tempValue > 10) {
-      return true;
-    }
-    return false;
-  };
 
-  const handleAction11 = () => {
-    const tempValue = 11 * Math.random();
-    if (tempValue > 10) {
-      return true;
-    }
-    return false;
-  };
 
-  const handleAction12 = () => {
-    const tempValue = 12 * Math.random();
-    if (tempValue > 10) {
-      return true;
-    }
-    return false;
-  };
 
-  const handleAction13 = () => {
-    const tempValue = 13 * Math.random();
-    if (tempValue > 10) {
-      return true;
-    }
-    return false;
-  };
 
-  const handleAction14 = () => {
-    const tempValue = 14 * Math.random();
-    if (tempValue > 10) {
-      return true;
-    }
-    return false;
-  };
 
-  const handleAction15 = () => {
-    const tempValue = 15 * Math.random();
-    if (tempValue > 10) {
-      return true;
-    }
-    return false;
-  };
 
-  const handleAction16 = () => {
-    const tempValue = 16 * Math.random();
-    if (tempValue > 10) {
-      return true;
-    }
-    return false;
-  };
 
-  const handleAction17 = () => {
-    const tempValue = 17 * Math.random();
-    if (tempValue > 10) {
-      return true;
-    }
-    return false;
-  };
 
-  const handleAction18 = () => {
-    const tempValue = 18 * Math.random();
-    if (tempValue > 10) {
-      return true;
-    }
-    return false;
-  };
 
-  const handleAction19 = () => {
-    const tempValue = 19 * Math.random();
-    if (tempValue > 10) {
-      return true;
-    }
-    return false;
-  };
 
-  const handleAction20 = () => {
-    const tempValue = 20 * Math.random();
-    if (tempValue > 10) {
-      return true;
-    }
-    return false;
-  };
 
-  const handleAction21 = () => {
-    const tempValue = 21 * Math.random();
-    if (tempValue > 10) {
-      return true;
-    }
-    return false;
-  };
 
-  const handleAction22 = () => {
-    const tempValue = 22 * Math.random();
-    if (tempValue > 10) {
-      return true;
-    }
-    return false;
-  };
 
-  const handleAction23 = () => {
-    const tempValue = 23 * Math.random();
-    if (tempValue > 10) {
-      return true;
-    }
-    return false;
-  };
 
-  const handleAction24 = () => {
-    const tempValue = 24 * Math.random();
-    if (tempValue > 10) {
-      return true;
-    }
-    return false;
-  };
 
-  const handleAction25 = () => {
-    const tempValue = 25 * Math.random();
-    if (tempValue > 10) {
-      return true;
-    }
-    return false;
-  };
 
-  const handleAction26 = () => {
-    const tempValue = 26 * Math.random();
-    if (tempValue > 10) {
-      return true;
-    }
-    return false;
-  };
 
-  const handleAction27 = () => {
-    const tempValue = 27 * Math.random();
-    if (tempValue > 10) {
-      return true;
-    }
-    return false;
-  };
 
-  const handleAction28 = () => {
-    const tempValue = 28 * Math.random();
-    if (tempValue > 10) {
-      return true;
-    }
-    return false;
-  };
 
-  const handleAction29 = () => {
-    const tempValue = 29 * Math.random();
-    if (tempValue > 10) {
-      return true;
-    }
-    return false;
-  };
 
-  const handleAction30 = () => {
-    const tempValue = 30 * Math.random();
-    if (tempValue > 10) {
-      return true;
-    }
-    return false;
-  };
 
-  const handleAction31 = () => {
-    const tempValue = 31 * Math.random();
-    if (tempValue > 10) {
-      return true;
-    }
-    return false;
-  };
 
-  const handleAction32 = () => {
-    const tempValue = 32 * Math.random();
-    if (tempValue > 10) {
-      return true;
-    }
-    return false;
-  };
 
-  const handleAction33 = () => {
-    const tempValue = 33 * Math.random();
-    if (tempValue > 10) {
-      return true;
-    }
-    return false;
-  };
 
-  const handleAction34 = () => {
-    const tempValue = 34 * Math.random();
-    if (tempValue > 10) {
-      return true;
-    }
-    return false;
-  };
 
-  const handleAction35 = () => {
-    const tempValue = 35 * Math.random();
-    if (tempValue > 10) {
-      return true;
-    }
-    return false;
-  };
 
-  const handleAction36 = () => {
-    const tempValue = 36 * Math.random();
-    if (tempValue > 10) {
-      return true;
-    }
-    return false;
-  };
 
-  const handleAction37 = () => {
-    const tempValue = 37 * Math.random();
-    if (tempValue > 10) {
-      return true;
-    }
-    return false;
-  };
 
-  const handleAction38 = () => {
-    const tempValue = 38 * Math.random();
-    if (tempValue > 10) {
-      return true;
-    }
-    return false;
-  };
 
-  const handleAction39 = () => {
-    const tempValue = 39 * Math.random();
-    if (tempValue > 10) {
-      return true;
-    }
-    return false;
-  };
 
-  const handleAction40 = () => {
-    const tempValue = 40 * Math.random();
-    if (tempValue > 10) {
-      return true;
-    }
-    return false;
-  };
 
-  const handleAction41 = () => {
-    const tempValue = 41 * Math.random();
-    if (tempValue > 10) {
-      return true;
-    }
-    return false;
-  };
 
-  const handleAction42 = () => {
-    const tempValue = 42 * Math.random();
-    if (tempValue > 10) {
-      return true;
-    }
-    return false;
-  };
 
-  const handleAction43 = () => {
-    const tempValue = 43 * Math.random();
-    if (tempValue > 10) {
-      return true;
-    }
-    return false;
-  };
 
-  const handleAction44 = () => {
-    const tempValue = 44 * Math.random();
-    if (tempValue > 10) {
-      return true;
-    }
-    return false;
-  };
 
-  const handleAction45 = () => {
-    const tempValue = 45 * Math.random();
-    if (tempValue > 10) {
-      return true;
-    }
-    return false;
-  };
 
-  const handleAction46 = () => {
-    const tempValue = 46 * Math.random();
-    if (tempValue > 10) {
-      return true;
-    }
-    return false;
-  };
 
-  const handleAction47 = () => {
-    const tempValue = 47 * Math.random();
-    if (tempValue > 10) {
-      return true;
-    }
-    return false;
-  };
 
-  const handleAction48 = () => {
-    const tempValue = 48 * Math.random();
-    if (tempValue > 10) {
-      return true;
-    }
-    return false;
-  };
 
-  const handleAction49 = () => {
-    const tempValue = 49 * Math.random();
-    if (tempValue > 10) {
-      return true;
-    }
-    return false;
-  };
 
   return (
     <AppShell>
@@ -1156,6 +822,9 @@ export default function RetirementIncomeProjection() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
+                  <p className="text-[11px] text-slate-400 mb-2">
+                    Peak account value exposed directly to S&amp;P 500 total-return years, drawn from a normal distribution with mean {(SP500_ARITHMETIC_MEAN * 100).toFixed(2)}% and standard deviation {(SP500_ANNUAL_STDEV * 100).toFixed(2)}% (Damodaran, 1928–2025), less the planned annual income. Seed {MACRO_DEFAULT_SEED}; not the policy's capped crediting.
+                  </p>
                   <div className="h-[300px]">
                     {/* Recharts Component 2: LineChart */}
                     <ResponsiveContainer width="100%" height="100%">

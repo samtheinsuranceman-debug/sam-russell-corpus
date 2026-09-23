@@ -35,15 +35,11 @@ import {
   ComposedChart, Legend
 } from "recharts";
 
-const generateMockData = (count: number) => {
-  return Array.from({ length: count }).map((_, i) => ({
-    id: `item-${i}`,
-    name: `Item ${i}`,
-    value: Math.floor(Math.random() * 1000),
-    status: Math.random() > 0.5 ? 'Active' : 'Inactive',
-    date: new Date(Date.now() - Math.floor(Math.random() * 10000000000)).toISOString().split('T')[0],
-  }));
-};
+// The Data Explorer tables have no data source yet. They start empty rather than
+// filled with generated rows.
+type ExplorerRow = { id: string; name: string; value: number; status: string; date: string };
+
+const SAMPLE_BANNER = "Sample data — not real records. These figures are fixed placeholders; no portal analytics are connected to this page yet.";
 
 const MOCK_VISITORS = [
   { name: "Mon", visitors: 120, returning: 80, new: 40 },
@@ -86,12 +82,12 @@ const MOCK_COMPOSED = [
   { name: 'Jun', uv: 1400, pv: 680, amt: 1700 },
 ];
 
-const MOCK_TABLE_DATA_1 = generateMockData(15);
-const MOCK_TABLE_DATA_2 = generateMockData(12);
-const MOCK_TABLE_DATA_3 = generateMockData(10);
-const MOCK_TABLE_DATA_4 = generateMockData(8);
-const MOCK_TABLE_DATA_5 = generateMockData(20);
-const MOCK_TABLE_DATA_6 = generateMockData(5);
+const MOCK_TABLE_DATA_1: ExplorerRow[] = [];
+const MOCK_TABLE_DATA_2: ExplorerRow[] = [];
+const MOCK_TABLE_DATA_3: ExplorerRow[] = [];
+const MOCK_TABLE_DATA_4: ExplorerRow[] = [];
+const MOCK_TABLE_DATA_5: ExplorerRow[] = [];
+const MOCK_TABLE_DATA_6: ExplorerRow[] = [];
 
 export default function WorkspaceBranding() {
   const { user } = useAuth();
@@ -265,6 +261,7 @@ export default function WorkspaceBranding() {
               </td>
             </tr>
           ))}
+          {filteredTableData1.length === 0 && (<tr><td colSpan={99} className="px-6 py-8 text-center text-[#7a95b8]">No records yet.</td></tr>)}
         </tbody>
       </table>
     </div>
@@ -294,6 +291,7 @@ export default function WorkspaceBranding() {
               </td>
             </tr>
           ))}
+          {MOCK_TABLE_DATA_2.length === 0 && (<tr><td colSpan={99} className="px-6 py-8 text-center text-[#7a95b8]">No metrics recorded yet.</td></tr>)}
         </tbody>
       </table>
     </div>
@@ -324,6 +322,7 @@ export default function WorkspaceBranding() {
               </td>
             </tr>
           ))}
+          {MOCK_TABLE_DATA_3.length === 0 && (<tr><td colSpan={99} className="px-6 py-8 text-center text-[#7a95b8]">No team activity recorded yet.</td></tr>)}
         </tbody>
       </table>
     </div>
@@ -353,6 +352,7 @@ export default function WorkspaceBranding() {
               </td>
             </tr>
           ))}
+          {MOCK_TABLE_DATA_4.length === 0 && (<tr><td colSpan={99} className="px-6 py-8 text-center text-[#7a95b8]">No integrations connected.</td></tr>)}
         </tbody>
       </table>
     </div>
@@ -381,6 +381,7 @@ export default function WorkspaceBranding() {
               <td className="px-6 py-4">{row.date}</td>
             </tr>
           ))}
+          {MOCK_TABLE_DATA_5.length === 0 && (<tr><td colSpan={99} className="px-6 py-8 text-center text-[#7a95b8]">No documents uploaded.</td></tr>)}
         </tbody>
       </table>
     </div>
@@ -406,6 +407,7 @@ export default function WorkspaceBranding() {
               <td className="px-6 py-4 text-green-400">0.01%</td>
             </tr>
           ))}
+          {MOCK_TABLE_DATA_6.length === 0 && (<tr><td colSpan={99} className="px-6 py-8 text-center text-[#7a95b8]">No API usage recorded yet.</td></tr>)}
         </tbody>
       </table>
     </div>
@@ -474,6 +476,7 @@ export default function WorkspaceBranding() {
         </div>
 
         {/* Stats Row */}
+        <div className="px-4 py-3 rounded-lg border border-amber-500/40 bg-amber-500/10 text-amber-300 text-sm font-semibold">{SAMPLE_BANNER}</div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           <div className="rc-card bg-[#0d1a2e] border border-[#12233e] rounded-2xl p-5 hover:border-[#1e3a5f] transition-colors group">
             <div className="flex items-center justify-between mb-4">
@@ -858,6 +861,7 @@ export default function WorkspaceBranding() {
                         Portal Analytics
                       </h2>
                       <p className="text-sm text-[#7a95b8] mt-1">Track client engagement and portal usage over time.</p>
+                      <div className="mt-3"><div className="px-4 py-3 rounded-lg border border-amber-500/40 bg-amber-500/10 text-amber-300 text-sm font-semibold">{SAMPLE_BANNER}</div></div>
                     </div>
                     <div className="flex gap-2">
                       <select 
@@ -978,6 +982,7 @@ export default function WorkspaceBranding() {
                         Performance Metrics
                       </h2>
                       <p className="text-sm text-[#7a95b8] mt-1">Detailed analysis of portal performance and user experience.</p>
+                      <div className="mt-3"><div className="px-4 py-3 rounded-lg border border-amber-500/40 bg-amber-500/10 text-amber-300 text-sm font-semibold">{SAMPLE_BANNER}</div></div>
                     </div>
                   </div>
 

@@ -75,43 +75,72 @@ const STATUS_STYLES: Record<string, { bg: string; label: string; text: string }>
 
 const COLORS = ["#f87171", "#fbbf24", "#34d399", "#60a5fa", "#34d399", "#f472b6", "#38bdf8", "#4ade80", "#facc15", "#f87171"];
 
-const generateTrendData = () => {
-  return Array.from({ length: 12 }).map((_, i) => ({
-    month: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][i],
-    alerts: Math.floor(Math.random() * 50) + 10,
-    resolved: Math.floor(Math.random() * 40) + 5,
-    drift: (Math.random() * 5 + 1).toFixed(2)
+// Every chart below is computed from the workspace's real rebalance_alerts rows.
+type AlertRow = { assetClass: string; targetPct: string | number; currentPct: string | number; driftPct: string | number; status: string; createdAt: string | Date; resolvedAt?: string | Date | null };
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const absDrift = (a: AlertRow) => Math.abs(Number(a.driftPct) || 0);
+
+const generateTrendData = (rows: AlertRow[]) => {
+  const now = new Date();
+  return Array.from({ length: 12 }).map((_, i) => {
+    const d = new Date(now.getFullYear(), now.getMonth() - (11 - i), 1);
+    const sameMonth = (v?: string | Date | null) => {
+      if (!v) return false;
+      const t = new Date(v);
+      return t.getFullYear() === d.getFullYear() && t.getMonth() === d.getMonth();
+    };
+    const created = rows.filter((a) => sameMonth(a.createdAt));
+    return {
+      month: `${MONTHS[d.getMonth()]} ${String(d.getFullYear()).slice(2)}`,
+      alerts: created.length,
+      resolved: rows.filter((a) => sameMonth(a.resolvedAt)).length,
+      drift: created.length ? (created.reduce((s, a) => s + absDrift(a), 0) / created.length).toFixed(2) : "0.00",
+    };
+  });
+};
+
+const generateRiskData = (rows: AlertRow[]) => {
+  const byClass = new Map<string, { target: number; current: number; n: number }>();
+  for (const a of rows) {
+    const e = byClass.get(a.assetClass) ?? { target: 0, current: 0, n: 0 };
+    e.target += Number(a.targetPct) || 0;
+    e.current += Number(a.currentPct) || 0;
+    e.n += 1;
+    byClass.set(a.assetClass, e);
+  }
+  return Array.from(byClass.entries()).slice(0, 8).map(([subject, e]) => ({
+    subject,
+    A: Number((e.current / e.n).toFixed(2)),
+    B: Number((e.target / e.n).toFixed(2)),
   }));
 };
 
-const generateRiskData = () => {
-  return [
-    { subject: 'Equities', A: 120, B: 110, fullMark: 150 },
-    { subject: 'Fixed Income', A: 98, B: 130, fullMark: 150 },
-    { subject: 'Alternatives', A: 86, B: 130, fullMark: 150 },
-    { subject: 'Cash', A: 99, B: 100, fullMark: 150 },
-    { subject: 'Real Estate', A: 85, B: 90, fullMark: 150 },
-    { subject: 'Commodities', A: 65, B: 85, fullMark: 150 },
+const generateDriftDistribution = (rows: AlertRow[]) => {
+  const bins = [
+    { range: '0-2%', lo: 0, hi: 2 },
+    { range: '2-5%', lo: 2, hi: 5 },
+    { range: '5-10%', lo: 5, hi: 10 },
+    { range: '10-15%', lo: 10, hi: 15 },
+    { range: '>15%', lo: 15, hi: Infinity },
   ];
+  return bins.map((b) => ({ range: b.range, count: rows.filter((a) => absDrift(a) >= b.lo && absDrift(a) < b.hi).length }));
 };
 
-const generateDriftDistribution = () => {
-  return [
-    { range: '0-2%', count: 45 },
-    { range: '2-5%', count: 30 },
-    { range: '5-10%', count: 15 },
-    { range: '10-15%', count: 8 },
-    { range: '>15%', count: 2 },
-  ];
-};
-
-const generateClientImpact = () => {
-  return Array.from({ length: 7 }).map((_, i) => ({
-    day: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'][i],
-    high: Math.floor(Math.random() * 20),
-    medium: Math.floor(Math.random() * 30),
-    low: Math.floor(Math.random() * 50),
-  }));
+const generateClientImpact = (rows: AlertRow[]) => {
+  const today = new Date();
+  return Array.from({ length: 7 }).map((_, i) => {
+    const d = new Date(today.getFullYear(), today.getMonth(), today.getDate() - (6 - i));
+    const day = rows.filter((a) => {
+      const t = new Date(a.createdAt);
+      return t.getFullYear() === d.getFullYear() && t.getMonth() === d.getMonth() && t.getDate() === d.getDate();
+    });
+    return {
+      day: d.toLocaleDateString(undefined, { weekday: 'short' }),
+      high: day.filter((a) => absDrift(a) > 10).length,
+      medium: day.filter((a) => absDrift(a) >= 5 && absDrift(a) <= 10).length,
+      low: day.filter((a) => absDrift(a) < 5).length,
+    };
+  });
 };
 
 export default function RebalanceAlerts() {
@@ -153,6 +182,8 @@ export default function RebalanceAlerts() {
     statusFilter === "ALL" ? {} : { status: statusFilter as any }
   );
   
+  // Unfiltered list for the analytics charts (the table above follows the status filter).
+  const { data: allAlerts } = trpc.rebalance.alerts.useQuery({});
   const { data: dashboardStats } = trpc.dashboard.stats.useQuery();
   const { data: clientData } = trpc.clients.list.useQuery();
   const { data: marketData } = trpc.marketData.overview.useQuery();
@@ -341,10 +372,11 @@ export default function RebalanceAlerts() {
     return Array.from(classes);
   }, [alerts]);
 
-  const trendData = useMemo(() => generateTrendData(), []);
-  const riskData = useMemo(() => generateRiskData(), []);
-  const distributionData = useMemo(() => generateDriftDistribution(), []);
-  const impactData = useMemo(() => generateClientImpact(), []);
+  const alertRows = (allAlerts ?? []) as AlertRow[];
+  const trendData = useMemo(() => generateTrendData(alertRows), [allAlerts]);
+  const riskData = useMemo(() => generateRiskData(alertRows), [allAlerts]);
+  const distributionData = useMemo(() => generateDriftDistribution(alertRows), [allAlerts]);
+  const impactData = useMemo(() => generateClientImpact(alertRows), [allAlerts]);
 
   const isLoading = !alerts;
   const isSelectedAll = alerts?.length > 0 && alerts.every((a: any) => selectedRows[a.id]);
@@ -742,13 +774,13 @@ export default function RebalanceAlerts() {
                   <Shield className="h-5 w-5 text-emerald-400" />
                   Risk Exposure Analysis
                 </h3>
-                <p className="text-xs text-[#7a95b8] mb-4">Target vs Current allocation variance</p>
+                <p className="text-xs text-[#7a95b8] mb-4">Average target vs current allocation (%) per asset class, from your alerts{riskData.length === 0 ? " — no alerts yet" : ""}</p>
                 <div className="flex-1 w-full">
                   <ResponsiveContainer width="100%" height="100%">
                     <RadarChart cx="50%" cy="50%" outerRadius="70%" data={riskData}>
                       <PolarGrid stroke="#12233e" />
                       <PolarAngleAxis dataKey="subject" tick={{ fill: '#7a95b8', fontSize: 11 }} />
-                      <PolarRadiusAxis angle={30} domain={[0, 150]} tick={false} axisLine={false} />
+                      <PolarRadiusAxis angle={30} domain={[0, 'auto']} tick={false} axisLine={false} />
                       <Radar name="Target Model" dataKey="B" stroke="#34d399" fill="#34d399" fillOpacity={0.3} />
                       <Radar name="Current Actual" dataKey="A" stroke="#60a5fa" fill="#60a5fa" fillOpacity={0.4} />
                       <Legend wrapperStyle={{ fontSize: '12px' }} />
@@ -775,7 +807,7 @@ export default function RebalanceAlerts() {
                         cursor={{ fill: '#12233e', opacity: 0.4 }}
                         contentStyle={{ backgroundColor: '#0a1526', borderColor: '#12233e', color: '#fff', borderRadius: '8px' }}
                       />
-                      <Bar dataKey="count" name="Number of Accounts" fill="#fbbf24" radius={[4, 4, 0, 0]}>
+                      <Bar dataKey="count" name="Number of Alerts" fill="#fbbf24" radius={[4, 4, 0, 0]}>
                         {distributionData.map((entry, index) => (
                           <Cell key={`cell-${index}`} fill={
                             index === 0 ? '#34d399' : 

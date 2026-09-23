@@ -1,6 +1,7 @@
 // @ts-nocheck
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { trpc } from "@/lib/trpc";
+import { describeUserAgent } from "@shared/userAgent";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { AppShell } from "@/components/AppShell";
 import { PageInsights } from "@/components/PageInsights";
@@ -146,6 +147,13 @@ function Badge({ children, variant = "default", onClick }: { children: React.Rea
 }
 
 
+/** Session state of a recorded login: every trial_logins row is a successful sign-in. */
+function loginSessionState(l: { loggedOutAt?: string | Date | null; expiresAt?: string | Date | null }): string {
+  if (l.loggedOutAt) return "Logged out";
+  if (l.expiresAt && new Date(l.expiresAt).getTime() < Date.now()) return "Expired";
+  return "Active";
+}
+
 export default function OwnerWarRoom() {
   const { user } = useAuth();
   
@@ -156,7 +164,6 @@ export default function OwnerWarRoom() {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [selectedMetric, setSelectedMetric] = useState<string | null>(null);
   const [showAdvanced, setShowAdvanced] = useState(false);
-  const [activeChartData, setActiveChartData] = useState<any[]>([]);
   const [tablePage, setTablePage] = useState(1);
   const [sortConfig, setSortConfig] = useState<{key: string, direction: 'asc'|'desc'} | null>(null);
   
@@ -200,6 +207,12 @@ export default function OwnerWarRoom() {
   });
   
   const { data: topPages, refetch: refetchTopPages } = trpc.ownerAnalytics.topPages.useQuery();
+
+  // Real per-bucket activity from page_activity_logs and trial_logins.
+  const timelineRange = timeRange as "24h" | "7d" | "30d" | "12m";
+  const { data: activityTimeline, refetch: refetchTimeline } = trpc.ownerAnalytics.activityTimeline.useQuery({ range: timelineRange });
+  const activeChartData = activityTimeline ?? [];
+  const hasActivity = activeChartData.some((d) => d.visitors > 0 || d.logins > 0);
   
   const { data: recentLogins, refetch: refetchLogins } = trpc.ownerAnalytics.recentLogins.useQuery();
   
@@ -240,21 +253,9 @@ export default function OwnerWarRoom() {
       refetchLogins();
       refetchFunnel();
       refetchIps();
+      refetchTimeline();
     }
-  }, [isRefreshing, refetchSummary, refetchTopPages, refetchLogins, refetchFunnel, refetchIps]);
-
-  useEffect(() => {
-    const dataPoints = timeRange === "24h" ? 24 : timeRange === "7d" ? 7 : timeRange === "30d" ? 30 : 12;
-    const mockData = Array.from({ length: dataPoints }).map((_, i) => ({
-      name: timeRange === "24h" ? `${i}:00` : timeRange === "7d" ? `Day ${i+1}` : `Point ${i+1}`,
-      visitors: Math.floor(Math.random() * 1000) + 500,
-      signups: Math.floor(Math.random() * 100) + 10,
-      revenue: Math.floor(Math.random() * 5000) + 1000,
-      errors: Math.floor(Math.random() * 20),
-      active: Math.floor(Math.random() * 300) + 100,
-    }));
-    setActiveChartData(mockData);
-  }, [timeRange]);
+  }, [isRefreshing, refetchSummary, refetchTopPages, refetchLogins, refetchFunnel, refetchIps, refetchTimeline]);
 
   const userDistributionData = useMemo(() => {
     if (!summary) return [];
@@ -268,13 +269,16 @@ export default function OwnerWarRoom() {
 
   const topPagesData = useMemo(() => {
     if (!topPages) return [];
-    return topPages.slice(0, 8).map((p) => ({
-      name: p.pageTitle || p.pagePath,
-      visits: Number(p.visits),
-      users: Number(p.uniqueUsers),
-      bounceRate: Math.floor(Math.random() * 40) + 20,
-      avgTime: Math.floor(Math.random() * 300) + 60,
-    }));
+    return topPages.slice(0, 8).map((p) => {
+      const visits = Number(p.visits);
+      return {
+        name: p.pageTitle || p.pagePath,
+        visits,
+        users: Number(p.uniqueUsers),
+        // Average recorded time on page: total logged seconds / visits.
+        avgTime: visits > 0 ? Math.round(Number(p.totalSeconds ?? 0) / visits) : 0,
+      };
+    });
   }, [topPages]);
 
   const filteredLogins = useMemo(() => {
@@ -313,14 +317,12 @@ export default function OwnerWarRoom() {
       toast.error("No data to export");
       return;
     }
-    const headers = ["Email", "IP", "Tier", "Time", "Status", "Device", "Location"];
+    const headers = ["Email", "IP", "Tier", "Time", "Session", "Device", "OS", "Browser"];
     const csvContent = [
       headers.join(","),
       ...filteredLogins.map((l) => {
-        const status = Math.random() > 0.1 ? "Success" : "Failed";
-        const device = ["Desktop", "Mobile", "Tablet"][Math.floor(Math.random() * 3)];
-        const location = ["US", "UK", "CA", "AU", "DE"][Math.floor(Math.random() * 5)];
-        return `${l.email},${l.ipAddress},${l.accessTier},${new Date(l.createdAt).toLocaleString()},${status},${device},${location}`;
+        const ua = describeUserAgent(l.userAgent);
+        return `${l.email},${l.ipAddress},${l.accessTier},${new Date(l.createdAt).toLocaleString()},${loginSessionState(l)},${ua.device},${ua.os},${ua.browser}`;
       })
     ].join("\n");
     
@@ -450,16 +452,15 @@ export default function OwnerWarRoom() {
                     <TrendingUp className="w-5 h-5 text-[#34d399]" />
                     Growth Trends
                   </h2>
-                  <select 
-                    className="bg-[#0d1a2e] border border-[#12233e] text-[#c8d8ec] text-xs rounded-md px-2 py-1 outline-none"
-                    onChange={(e) => toast.info(`Metric changed to ${e.target.value}`)}
-                  >
-                    <option value="users">Active Users</option>
-                    <option value="revenue">Revenue</option>
-                    <option value="sessions">Sessions</option>
-                  </select>
+                  <span className="text-[10px] text-[#7a95b8]">page_activity_logs · trial_logins (UTC)</span>
                 </div>
-                <div className="h-[300px] w-full">
+                <div className="h-[300px] w-full relative">
+                  {!hasActivity && (
+                    <div className="absolute inset-0 z-10 flex flex-col items-center justify-center text-center text-[#7a95b8] pointer-events-none">
+                      <p className="text-sm font-medium">No recorded activity in this range yet</p>
+                      <p className="text-xs mt-1 opacity-70">Page views and logins appear here as they are logged.</p>
+                    </div>
+                  )}
                   <ResponsiveContainer width="100%" height="100%">
                     <AreaChart data={activeChartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                       <defs>
@@ -480,8 +481,9 @@ export default function OwnerWarRoom() {
                         itemStyle={{ color: "#fff" }}
                       />
                       <Legend iconType="circle" wrapperStyle={{ fontSize: '12px', color: '#7a95b8' }} />
-                      <Area type="monotone" dataKey="visitors" stroke="#3b82f6" fillOpacity={1} fill="url(#colorVisitors)" name="Total Visitors" />
-                      <Area type="monotone" dataKey="active" stroke="#22c55e" fillOpacity={1} fill="url(#colorActive)" name="Active Users" />
+                      <Area type="monotone" dataKey="visitors" stroke="#3b82f6" fillOpacity={1} fill="url(#colorVisitors)" name="Page Views" />
+                      <Area type="monotone" dataKey="active" stroke="#22c55e" fillOpacity={1} fill="url(#colorActive)" name="Distinct Users" />
+                      <Area type="monotone" dataKey="logins" stroke="#f0c040" fillOpacity={0} name="Logins" />
                     </AreaChart>
                   </ResponsiveContainer>
                 </div>
@@ -497,6 +499,7 @@ export default function OwnerWarRoom() {
                     <RefreshCw className="w-4 h-4" />
                   </button>
                 </div>
+                <div className="mb-4 px-3 py-2 rounded-md border border-[#f0c040]/40 bg-[#f0c040]/10 text-[#f0c040] text-xs font-semibold">Sample data — not real records. Fixed illustration; no performance scoring is connected.</div>
                 <div className="h-[300px] w-full">
                   <ResponsiveContainer width="100%" height="100%">
                     <RadarChart cx="50%" cy="50%" outerRadius="80%" data={radarData}>
@@ -552,7 +555,6 @@ export default function OwnerWarRoom() {
                         <Legend wrapperStyle={{ fontSize: '12px', color: '#7a95b8', paddingTop: '20px' }} />
                         <Bar yAxisId="left" dataKey="visits" name="Total Visits" fill="#3b82f6" radius={[4, 4, 0, 0]} barSize={20} />
                         <Bar yAxisId="left" dataKey="users" name="Unique Users" fill="#22c55e" radius={[4, 4, 0, 0]} barSize={20} />
-                        <Line yAxisId="right" type="monotone" dataKey="bounceRate" name="Bounce Rate %" stroke="#ef4444" strokeWidth={2} dot={{ r: 4 }} />
                       </ComposedChart>
                     </ResponsiveContainer>
                   </div>
@@ -574,9 +576,6 @@ export default function OwnerWarRoom() {
                           <th className="text-right py-4 px-5 font-semibold cursor-pointer hover:text-white transition-colors" onClick={() => handleSort('avgTime')}>
                             Avg Time {sortConfig?.key === 'avgTime' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
                           </th>
-                          <th className="text-right py-4 px-5 font-semibold cursor-pointer hover:text-white transition-colors" onClick={() => handleSort('bounceRate')}>
-                            Bounce Rate {sortConfig?.key === 'bounceRate' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
-                          </th>
                           <th className="text-center py-4 px-5 font-semibold">Action</th>
                         </tr>
                       </thead>
@@ -590,11 +589,6 @@ export default function OwnerWarRoom() {
                             <td className="py-4 px-5 text-right text-[#c8d8ec] font-mono">{Number(p.visits).toLocaleString()}</td>
                             <td className="py-4 px-5 text-right text-[#c8d8ec] font-mono">{Number(p.users).toLocaleString()}</td>
                             <td className="py-4 px-5 text-right text-[#7a95b8]">{Math.floor(p.avgTime / 60)}m {p.avgTime % 60}s</td>
-                            <td className="py-4 px-5 text-right">
-                              <span className={`px-2 py-1 rounded-full text-xs ${p.bounceRate > 50 ? 'bg-[#ef4444]/10 text-[#ef4444]' : 'bg-[#22c55e]/10 text-[#22c55e]'}`}>
-                                {p.bounceRate}%
-                              </span>
-                            </td>
                             <td className="py-4 px-5 text-center">
                               <button className="p-1.5 text-[#7a95b8] hover:text-white hover:bg-[#3b82f6]/20 rounded-md transition-colors" onClick={() => toast.info(`Viewing details for ${p.name}`)}>
                                 <Eye className="w-4 h-4" />
@@ -604,7 +598,7 @@ export default function OwnerWarRoom() {
                         ))}
                         {topPagesData.length === 0 && (
                           <tr>
-                            <td colSpan={6} className="py-16 text-center text-[#7a95b8]">
+                            <td colSpan={5} className="py-16 text-center text-[#7a95b8]">
                               <FileText className="w-10 h-10 mx-auto mb-3 opacity-30" />
                               <p className="text-lg">No page activity found</p>
                               <p className="text-sm mt-1 opacity-70">Check back later when users have interacted with the platform.</p>
@@ -687,10 +681,10 @@ export default function OwnerWarRoom() {
                       </thead>
                       <tbody>
                         {paginatedLogins.map((l: any, i: number) => {
-                          const isSuccess = Math.random() > 0.1;
-                          const isSuspicious = Math.random() > 0.95;
+                          const ua = describeUserAgent(l.userAgent);
+                          const sessionState = loginSessionState(l);
                           return (
-                            <tr key={i} className={`border-b border-[#12233e]/50 hover:bg-[#12233e]/50 transition-colors ${isSuspicious ? 'bg-[#ef4444]/5' : ''}`}>
+                            <tr key={i} className="border-b border-[#12233e]/50 hover:bg-[#12233e]/50 transition-colors">
                               <td className="py-4 px-5">
                                 <div className="flex items-center gap-3">
                                   <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold ${
@@ -703,8 +697,8 @@ export default function OwnerWarRoom() {
                                   <div>
                                     <p className="text-white font-medium text-sm">{l.email}</p>
                                     <p className="text-[#7a95b8] text-xs flex items-center gap-1 mt-0.5">
-                                      {Math.random() > 0.5 ? <Monitor className="w-3 h-3" /> : <Smartphone className="w-3 h-3" />}
-                                      {Math.random() > 0.5 ? 'Windows' : 'macOS'} • Chrome
+                                      {ua.device === "Mobile" ? <Smartphone className="w-3 h-3" /> : <Monitor className="w-3 h-3" />}
+                                      {ua.os} • {ua.browser}
                                     </p>
                                   </div>
                                 </div>
@@ -713,7 +707,6 @@ export default function OwnerWarRoom() {
                                 <div className="flex items-center gap-2">
                                   <Globe className="w-3.5 h-3.5 text-[#7a95b8]" />
                                   <span className="text-[#c8d8ec] font-mono text-xs">{l.ipAddress}</span>
-                                  {isSuspicious && <AlertTriangle className="w-3.5 h-3.5 text-[#ef4444]" title="Suspicious IP" />}
                                 </div>
                               </td>
                               <td className="py-4 px-5">
@@ -731,13 +724,13 @@ export default function OwnerWarRoom() {
                                 })}
                               </td>
                               <td className="py-4 px-5 text-center">
-                                {isSuccess ? (
+                                {sessionState === "Active" ? (
                                   <span className="inline-flex items-center gap-1 text-[#22c55e] text-xs font-medium bg-[#22c55e]/10 px-2 py-1 rounded-md">
-                                    <CheckCircle className="w-3 h-3" /> Success
+                                    <CheckCircle className="w-3 h-3" /> Active
                                   </span>
                                 ) : (
-                                  <span className="inline-flex items-center gap-1 text-[#ef4444] text-xs font-medium bg-[#ef4444]/10 px-2 py-1 rounded-md">
-                                    <AlertTriangle className="w-3 h-3" /> Failed
+                                  <span className="inline-flex items-center gap-1 text-[#7a95b8] text-xs font-medium bg-[#7a95b8]/10 px-2 py-1 rounded-md">
+                                    {sessionState}
                                   </span>
                                 )}
                               </td>
@@ -879,17 +872,17 @@ export default function OwnerWarRoom() {
                       <div className="grid grid-cols-2 gap-2 mt-auto pt-4 border-t border-[#12233e]/50">
                         <div>
                           <p className="text-[10px] text-[#7a95b8] uppercase tracking-wider mb-1">Total Logins</p>
-                          <p className="text-sm text-[#c8d8ec] font-semibold">{ip.loginCount || Math.floor(Math.random() * 500) + 50}</p>
+                          <p className="text-sm text-[#c8d8ec] font-semibold">{Number(ip.loginCount ?? 0).toLocaleString()}</p>
                         </div>
                         <div>
                           <p className="text-[10px] text-[#7a95b8] uppercase tracking-wider mb-1">Last Seen</p>
                           <p className="text-sm text-[#c8d8ec]">{new Date(ip.lastUsedAt).toLocaleDateString()}</p>
                         </div>
                         <div className="col-span-2 mt-2">
-                          <p className="text-[10px] text-[#7a95b8] uppercase tracking-wider mb-1">Location</p>
+                          <p className="text-[10px] text-[#7a95b8] uppercase tracking-wider mb-1">Label</p>
                           <p className="text-sm text-[#c8d8ec] flex items-center gap-1">
-                            <Map className="w-3 h-3" /> 
-                            {['New York, US', 'London, UK', 'Toronto, CA', 'Sydney, AU', 'Berlin, DE'][Math.floor(Math.random() * 5)]}
+                            <Map className="w-3 h-3" />
+                            {ip.label || "No label set (location is not recorded)"}
                           </p>
                         </div>
                       </div>
@@ -912,24 +905,14 @@ export default function OwnerWarRoom() {
                     <HeartPulse className="w-5 h-5 text-[#ef4444]" />
                     System Resources
                   </h2>
-                  <Badge variant="success">All Systems Operational</Badge>
                 </div>
+                <div className="mb-4 px-3 py-2 rounded-md border border-[#f0c040]/40 bg-[#f0c040]/10 text-[#f0c040] text-xs font-semibold">Sample data — not real records. Resource bars, alerts and infrastructure below are fixed placeholders until host metrics are connected.</div>
                 
                 {/* Chart 4 */}
-                <div className="h-[250px] w-full mb-6">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={activeChartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#12233e" vertical={false} />
-                      <XAxis dataKey="name" stroke="#7a95b8" fontSize={10} tickLine={false} axisLine={false} />
-                      <YAxis stroke="#7a95b8" fontSize={10} tickLine={false} axisLine={false} />
-                      <RTooltip
-                        contentStyle={{ background: "#0d1a2e", border: "1px solid #12233e", borderRadius: 8, color: "#fff", fontSize: 12 }}
-                      />
-                      <Legend wrapperStyle={{ fontSize: '12px', color: '#7a95b8' }} />
-                      <Line type="monotone" dataKey="errors" name="Error Rate" stroke="#ef4444" strokeWidth={2} dot={false} activeDot={{ r: 6 }} />
-                      <Line type="monotone" dataKey="active" name="CPU Load" stroke="#f0c040" strokeWidth={2} dot={false} activeDot={{ r: 6 }} />
-                    </LineChart>
-                  </ResponsiveContainer>
+                <div className="h-[250px] w-full mb-6 flex flex-col items-center justify-center text-center text-[#7a95b8] border border-dashed border-[#12233e] rounded-lg">
+                  <HeartPulse className="w-8 h-8 mb-3 opacity-30" />
+                  <p className="text-sm font-medium">No error-rate or CPU telemetry connected</p>
+                  <p className="text-xs mt-1 opacity-70 max-w-sm">Error rate and CPU load over time will chart here once host metrics (Railway) are wired to this dashboard.</p>
                 </div>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-[#12233e]">
@@ -1085,7 +1068,7 @@ export default function OwnerWarRoom() {
           
           <div className="flex flex-wrap items-center gap-3 relative z-10 mt-4 md:mt-0">
             <div className="flex items-center bg-[#060d19] border border-[#12233e] rounded-lg p-1">
-              {["24h", "7d", "30d", "All"].map((range) => (
+              {["24h", "7d", "30d", "12m"].map((range) => (
                 <button
                   key={range}
                   onClick={() => handleTimeRangeChange(range)}

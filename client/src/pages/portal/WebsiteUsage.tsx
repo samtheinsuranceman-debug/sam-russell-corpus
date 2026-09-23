@@ -98,66 +98,15 @@ function formatDate(d: Date | string | null | undefined): string {
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d', '#ffc658', '#8dd1e1', '#a4de6c', '#d0ed57'];
 
-/* ─── Dummy Data Generators for Visualizations ─── */
-const generateTrafficData = () => Array.from({ length: 30 }, (_, i) => ({
-  date: `Day ${i + 1}`,
-  visitors: Math.floor(Math.random() * 500) + 100,
-  pageviews: Math.floor(Math.random() * 1500) + 300,
-  bounces: Math.floor(Math.random() * 200) + 50,
-}));
-
-const generateDeviceData = () => [
-  { name: 'Desktop', value: 400 },
-  { name: 'Mobile', value: 300 },
-  { name: 'Tablet', value: 100 },
-  { name: 'Unknown', value: 50 },
-];
-
-const generatePagePerformanceData = () => Array.from({ length: 10 }, (_, i) => ({
-  page: `/page-${i + 1}`,
-  loadTime: Math.random() * 2 + 0.5,
-  interactionTime: Math.random() * 3 + 1,
-  renderTime: Math.random() * 1 + 0.2,
-}));
-
-const generateUserEngagementData = () => Array.from({ length: 24 }, (_, i) => ({
-  hour: `${i}:00`,
-  activeUsers: Math.floor(Math.random() * 100) + 10,
-  avgSessionLength: Math.floor(Math.random() * 300) + 60,
-}));
-
-const generateSecurityEventsData = () => Array.from({ length: 7 }, (_, i) => ({
-  day: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'][i],
-  logins: Math.floor(Math.random() * 1000) + 500,
-  failedLogins: Math.floor(Math.random() * 50) + 5,
-  passwordResets: Math.floor(Math.random() * 20) + 2,
-}));
-
-const generateGeographicData = () => [
-  { region: 'North America', users: 1500, sessions: 4500 },
-  { region: 'Europe', users: 800, sessions: 2100 },
-  { region: 'Asia', users: 600, sessions: 1500 },
-  { region: 'South America', users: 300, sessions: 800 },
-  { region: 'Oceania', users: 150, sessions: 400 },
-  { region: 'Africa', users: 100, sessions: 250 },
-];
-
-const generateBrowserData = () => [
-  { name: 'Chrome', value: 65 },
-  { name: 'Safari', value: 20 },
-  { name: 'Firefox', value: 8 },
-  { name: 'Edge', value: 5 },
-  { name: 'Other', value: 2 },
-];
-
-const generateFeatureUsageData = () => [
-  { feature: 'Dashboard', usage: 85, fullMark: 100 },
-  { feature: 'Reports', usage: 60, fullMark: 100 },
-  { feature: 'Settings', usage: 30, fullMark: 100 },
-  { feature: 'Profile', usage: 45, fullMark: 100 },
-  { feature: 'Billing', usage: 20, fullMark: 100 },
-  { feature: 'Support', usage: 15, fullMark: 100 },
-];
+/* Every chart on this page is computed on the server from recorded sessions and
+   page views (websiteUsage.getAnalytics). What is not recorded shows as empty. */
+function UsageEmpty({ text }: { text: string }) {
+  return (
+    <div className="h-full w-full flex items-center justify-center text-center text-sm text-slate-400 border border-dashed border-slate-700 rounded-lg px-6">
+      {text}
+    </div>
+  );
+}
 
 /* ─── Password Gate ─── */
 function PasswordGate({ onUnlock }: { onUnlock: (pw: string) => void }) {
@@ -350,14 +299,27 @@ export default function WebsiteUsage() {
     }
   }, [password]);
 
-  const trafficData = useMemo(() => generateTrafficData(), [refreshKey, dateRange]);
-  const deviceData = useMemo(() => generateDeviceData(), [refreshKey]);
-  const performanceData = useMemo(() => generatePagePerformanceData(), [refreshKey]);
-  const engagementData = useMemo(() => generateUserEngagementData(), [refreshKey]);
-  const securityData = useMemo(() => generateSecurityEventsData(), [refreshKey]);
-  const geoData = useMemo(() => generateGeographicData(), [refreshKey]);
-  const browserData = useMemo(() => generateBrowserData(), [refreshKey]);
-  const featureData = useMemo(() => generateFeatureUsageData(), [refreshKey]);
+  // The server keeps a rolling window of up to 90 days; longer ranges use all 90.
+  const analyticsDays = dateRange === "24h" ? 1 : dateRange === "7d" ? 7 : dateRange === "30d" ? 30 : 90;
+  const { data: usage, refetch: refetchUsage } = trpc.websiteUsage.getAnalytics.useQuery(
+    { password: password || "", days: analyticsDays },
+    { enabled: !!password }
+  );
+  useEffect(() => { if (refreshKey > 0) refetchUsage(); }, [refreshKey, refetchUsage]);
+  const trafficData = usage?.traffic ?? [];
+  const deviceData = usage?.devices ?? [];
+  const engagementData = usage?.hourly ?? [];
+  const securityData = usage?.weekdayLogins ?? [];
+  const browserData = usage?.browsers ?? [];
+  const topPagesData = usage?.topPages ?? [];
+  const liveSessions = usage?.activeSessions ?? [];
+  // Share of recorded page views per top page, from real page_activity_logs rows.
+  const featureData = useMemo(() => {
+    const top = topPagesData.slice(0, 6);
+    const total = top.reduce((a, p) => a + p.views, 0);
+    return top.map((p) => ({ feature: p.page, usage: total ? Math.round((p.views / total) * 100) : 0, fullMark: 100 }));
+  }, [topPagesData]);
+  const hasTraffic = trafficData.some((d) => d.sessions > 0 || d.pageviews > 0);
 
   const filteredUsers = useMemo(() => {
     if (!users) return [];
@@ -375,6 +337,11 @@ export default function WebsiteUsage() {
       result.sort((a, b) => sortOrder === "asc" ? a.userName.localeCompare(b.userName) : b.userName.localeCompare(a.userName));
     } else if (sortBy === "id") {
       result.sort((a, b) => sortOrder === "asc" ? a.userId - b.userId : b.userId - a.userId);
+    } else if (sortBy === "activity") {
+      result.sort((a, b) => sortOrder === "asc" ? (a.sessionCount ?? 0) - (b.sessionCount ?? 0) : (b.sessionCount ?? 0) - (a.sessionCount ?? 0));
+    } else if (sortBy === "recent") {
+      const t = (v: string | null | undefined) => (v ? new Date(v).getTime() : 0);
+      result.sort((a, b) => sortOrder === "asc" ? t(a.lastLoginAt) - t(b.lastLoginAt) : t(b.lastLoginAt) - t(a.lastLoginAt));
     }
     
     return result;
@@ -619,12 +586,21 @@ export default function WebsiteUsage() {
             {/* Summary KPI Cards */}
             {summary && (
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-                <KPICard title="Total Users" value={summary.totalUsers} icon={<Users />} trend="+12%" trendUp={true} color="blue" />
-                <KPICard title="Total Sessions" value={summary.totalSessions} icon={<Activity />} trend="+8%" trendUp={true} color="green" />
-                <KPICard title="Active Now" value={summary.activeSessions} icon={<Eye />} trend="+2" trendUp={true} color="emerald" pulse={true} />
-                <KPICard title="Avg Duration" value={formatDuration(summary.totalDurationSecs / Math.max(1, summary.totalSessions))} icon={<Timer />} trend="-5%" trendUp={false} color="purple" />
-                <KPICard title="Signatures" value={summary.totalSignatures} icon={<FileText />} trend="+15%" trendUp={true} color="amber" />
-                <KPICard title="Bounce Rate" value="42%" icon={<TrendingDown />} trend="-2%" trendUp={true} color="rose" />
+                <KPICard title="Total Users" value={summary.totalUsers} icon={<Users />} color="blue" />
+                <KPICard title="Total Sessions" value={summary.totalSessions} icon={<Activity />} color="green" />
+                <KPICard title="Active Now" value={summary.activeSessions} icon={<Eye />} color="emerald" pulse={true} />
+                <KPICard title="Avg Duration" value={formatDuration(summary.totalDurationSecs / Math.max(1, summary.totalSessions))} icon={<Timer />} color="purple" />
+                <KPICard title="Signatures" value={summary.totalSignatures} icon={<FileText />} color="amber" />
+                <KPICard
+                  title="Single-page Sessions"
+                  value={(() => {
+                    const sess = trafficData.reduce((a, d) => a + d.sessions, 0);
+                    const single = trafficData.reduce((a, d) => a + d.singlePageSessions, 0);
+                    return sess ? `${Math.round((single / sess) * 100)}%` : "—";
+                  })()}
+                  icon={<TrendingDown />}
+                  color="rose"
+                />
               </div>
             )}
 
@@ -640,7 +616,7 @@ export default function WebsiteUsage() {
                           <Activity className="h-5 w-5 text-blue-400" />
                           Traffic Overview
                         </CardTitle>
-                        <CardDescription className="text-slate-400">Visitors and pageviews over time</CardDescription>
+                        <CardDescription className="text-slate-400">Distinct users and page views per day (UTC), from recorded sessions{!hasTraffic ? " — nothing recorded in this range yet" : ""}</CardDescription>
                       </div>
                       <div className="flex items-center gap-2 bg-slate-800/50 p-1 rounded-md">
                         <Button variant="ghost" size="sm" className={`h-7 px-2 text-xs ${chartType === 'area' ? 'bg-slate-700 text-white' : 'text-slate-400'}`} onClick={() => setChartType('area')}>Area</Button>
@@ -680,7 +656,7 @@ export default function WebsiteUsage() {
                                 <Bar dataKey="visitors" name="Unique Visitors" fill="#3b82f6" radius={[4, 4, 0, 0]} />
                               </>
                             )}
-                            <Line type="monotone" dataKey="bounces" name="Bounces" stroke="#f43f5e" strokeWidth={2} dot={{ r: 3 }} />
+                            <Line type="monotone" dataKey="singlePageSessions" name="Single-page sessions" stroke="#f43f5e" strokeWidth={2} dot={{ r: 3 }} />
                           </ComposedChart>
                         </ResponsiveContainer>
                       </div>
@@ -745,7 +721,7 @@ export default function WebsiteUsage() {
                           <Eye className="h-5 w-5 text-emerald-400" />
                           Live Activity Stream
                         </CardTitle>
-                        <CardDescription className="text-slate-400">Real-time user sessions</CardDescription>
+                        <CardDescription className="text-slate-400">Sessions currently marked active</CardDescription>
                       </div>
                       <Badge variant="outline" className="bg-emerald-500/10 text-emerald-400 border-emerald-500/30 animate-pulse">
                         LIVE
@@ -757,36 +733,40 @@ export default function WebsiteUsage() {
                           <TableHeader className="bg-slate-900/80 sticky top-0 z-10 backdrop-blur-sm">
                             <TableRow className="border-slate-800 hover:bg-transparent">
                               <TableHead className="text-slate-400 font-medium">User</TableHead>
-                              <TableHead className="text-slate-400 font-medium">Location</TableHead>
+                              <TableHead className="text-slate-400 font-medium">Signed in</TableHead>
                               <TableHead className="text-slate-400 font-medium text-right">Duration</TableHead>
                             </TableRow>
                           </TableHeader>
                           <TableBody>
-                            {Array.from({ length: 8 }).map((_, i) => (
-                              <TableRow key={i} className="border-slate-800/50 hover:bg-slate-800/50 transition-colors">
+                            {liveSessions.length === 0 && (
+                              <TableRow className="border-slate-800/50">
+                                <TableCell colSpan={3} className="text-center text-sm text-slate-400 py-10">No active sessions right now.</TableCell>
+                              </TableRow>
+                            )}
+                            {liveSessions.map((sess) => (
+                              <TableRow key={sess.sessionId} className="border-slate-800/50 hover:bg-slate-800/50 transition-colors">
                                 <TableCell>
                                   <div className="flex items-center gap-3">
                                     <div className="relative">
                                       <Avatar className="h-8 w-8 border border-slate-700">
-                                        <AvatarFallback className="bg-slate-800 text-xs">U{i+1}</AvatarFallback>
+                                        <AvatarFallback className="bg-slate-800 text-xs">{sess.userName.substring(0, 2).toUpperCase()}</AvatarFallback>
                                       </Avatar>
                                       <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 border-2 border-slate-900 rounded-full"></span>
                                     </div>
                                     <div>
-                                      <div className="font-medium text-slate-200 text-sm">User {Math.floor(Math.random() * 1000)}</div>
-                                      <div className="text-xs text-slate-500">Viewing: Dashboard</div>
+                                      <div className="font-medium text-slate-200 text-sm">{sess.userName}</div>
+                                      <div className="text-xs text-slate-500">Viewing: {sess.currentPage ?? "—"}</div>
                                     </div>
                                   </div>
                                 </TableCell>
                                 <TableCell>
                                   <div className="flex items-center gap-1.5 text-slate-400 text-sm">
-                                    <MapPin className="h-3.5 w-3.5" />
-                                    {['New York', 'London', 'Tokyo', 'Sydney', 'Paris'][i % 5]}
+                                    {new Date(sess.loginAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                                   </div>
                                 </TableCell>
                                 <TableCell className="text-right">
                                   <span className="text-emerald-400 font-mono text-sm">
-                                    {Math.floor(Math.random() * 15) + 1}m {Math.floor(Math.random() * 60)}s
+                                    {Math.floor(sess.durationSecs / 60)}m {sess.durationSecs % 60}s
                                   </span>
                                 </TableCell>
                               </TableRow>
@@ -804,7 +784,7 @@ export default function WebsiteUsage() {
                         <Layers className="h-5 w-5 text-amber-400" />
                         Feature Utilization
                       </CardTitle>
-                      <CardDescription className="text-slate-400">Which platform areas are most active</CardDescription>
+                      <CardDescription className="text-slate-400">Share of page views across the most-visited pages</CardDescription>
                     </CardHeader>
                     <CardContent>
                       <div className="h-[300px] w-full">
@@ -920,11 +900,11 @@ export default function WebsiteUsage() {
                                 </TableCell>
                                 <TableCell className="text-center">
                                   <Badge variant="outline" className="bg-slate-800 text-slate-300 border-slate-700">
-                                    {Math.floor(Math.random() * 50) + 1}
+                                    {u.sessionCount ?? 0}
                                   </Badge>
                                 </TableCell>
                                 <TableCell className="text-center">
-                                  {Math.random() > 0.8 ? (
+                                  {(u.activeSessions ?? 0) > 0 ? (
                                     <Badge variant="outline" className="bg-green-500/10 text-green-400 border-green-500/30">Active</Badge>
                                   ) : (
                                     <Badge variant="outline" className="bg-slate-800 text-slate-500 border-slate-700">Offline</Badge>
@@ -960,7 +940,7 @@ export default function WebsiteUsage() {
                                     {u.userName.substring(0, 2).toUpperCase()}
                                   </AvatarFallback>
                                 </Avatar>
-                                {Math.random() > 0.8 && (
+                                {(u.activeSessions ?? 0) > 0 && (
                                   <span className="flex h-3 w-3 relative">
                                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                                     <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
@@ -975,11 +955,11 @@ export default function WebsiteUsage() {
                               <div className="mt-4 pt-4 border-t border-slate-800/50 grid grid-cols-2 gap-2 text-center">
                                 <div>
                                   <div className="text-xs text-slate-500 mb-1">Sessions</div>
-                                  <div className="font-medium text-slate-300">{Math.floor(Math.random() * 50) + 1}</div>
+                                  <div className="font-medium text-slate-300">{u.sessionCount ?? 0}</div>
                                 </div>
                                 <div>
                                   <div className="text-xs text-slate-500 mb-1">Last Seen</div>
-                                  <div className="font-medium text-slate-300 text-xs mt-1">{Math.floor(Math.random() * 24) + 1}h ago</div>
+                                  <div className="font-medium text-slate-300 text-xs mt-1">{u.lastLoginAt ? new Date(u.lastLoginAt).toLocaleString() : "—"}</div>
                                 </div>
                               </div>
                             </CardContent>
@@ -1073,21 +1053,26 @@ export default function WebsiteUsage() {
                           <TableHead className="text-slate-400 text-right">Views</TableHead>
                           <TableHead className="text-slate-400 text-right">Unique Visitors</TableHead>
                           <TableHead className="text-slate-400 text-right">Avg. Time</TableHead>
-                          <TableHead className="text-slate-400 text-right">Bounce Rate</TableHead>
+                          <TableHead className="text-slate-400 text-right" title="Share of sessions visiting this page that viewed only one page">Single-page sessions</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                        {['/dashboard', '/portfolio', '/documents', '/settings', '/profile', '/reports'].map((path, i) => (
-                          <TableRow key={path} className="border-slate-800/50 hover:bg-slate-800/30">
+                        {topPagesData.length === 0 && (
+                          <TableRow className="border-slate-800/50">
+                            <TableCell colSpan={5} className="text-center text-sm text-slate-400 py-8">No page views recorded in this range yet.</TableCell>
+                          </TableRow>
+                        )}
+                        {topPagesData.map((p) => (
+                          <TableRow key={p.page} className="border-slate-800/50 hover:bg-slate-800/30">
                             <TableCell className="font-medium text-blue-400 flex items-center gap-2">
-                              <LinkIcon className="h-3 w-3" /> {path}
+                              <LinkIcon className="h-3 w-3" /> {p.page}
                             </TableCell>
-                            <TableCell className="text-right text-slate-300">{Math.floor(10000 / (i + 1))}</TableCell>
-                            <TableCell className="text-right text-slate-300">{Math.floor(4000 / (i + 1))}</TableCell>
-                            <TableCell className="text-right text-slate-300">{Math.floor(180 - i * 20)}s</TableCell>
+                            <TableCell className="text-right text-slate-300">{p.views}</TableCell>
+                            <TableCell className="text-right text-slate-300">{p.uniqueVisitors}</TableCell>
+                            <TableCell className="text-right text-slate-300">{p.avgSeconds}s</TableCell>
                             <TableCell className="text-right">
-                              <span className={`px-2 py-1 rounded text-xs ${i > 3 ? 'bg-red-500/10 text-red-400' : 'bg-green-500/10 text-green-400'}`}>
-                                {20 + i * 8}%
+                              <span className={`px-2 py-1 rounded text-xs ${p.singlePageSessionShare > 50 ? 'bg-red-500/10 text-red-400' : 'bg-green-500/10 text-green-400'}`}>
+                                {p.singlePageSessionShare}%
                               </span>
                             </TableCell>
                           </TableRow>
@@ -1112,21 +1097,7 @@ export default function WebsiteUsage() {
                     </CardHeader>
                     <CardContent>
                       <div className="h-[350px] w-full">
-                        <ResponsiveContainer width="100%" height="100%">
-                          <BarChart data={geoData} layout="vertical" margin={{ top: 5, right: 30, left: 40, bottom: 5 }}>
-                            <CartesianGrid strokeDasharray="3 3" stroke="#334155" horizontal={true} vertical={false} />
-                            <XAxis type="number" stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} />
-                            <YAxis dataKey="region" type="category" stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} />
-                            <Tooltip 
-                              contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155' }}
-                              itemStyle={{ color: '#f8fafc' }}
-                              cursor={{ fill: '#1e293b' }}
-                            />
-                            <Legend />
-                            <Bar dataKey="users" name="Users" fill="#14b8a6" radius={[0, 4, 4, 0]} barSize={15} />
-                            <Bar dataKey="sessions" name="Sessions" fill="#0ea5e9" radius={[0, 4, 4, 0]} barSize={15} />
-                          </BarChart>
-                        </ResponsiveContainer>
+                        <UsageEmpty text="Location is not recorded for sessions, so there is no regional breakdown to show." />
                       </div>
                     </CardContent>
                   </Card>
@@ -1170,30 +1141,16 @@ export default function WebsiteUsage() {
                   </CardHeader>
                   <CardContent>
                     <div className="h-[400px] w-full">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <LineChart data={performanceData} margin={{ top: 20, right: 30, left: 20, bottom: 10 }}>
-                          <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} />
-                          <XAxis dataKey="page" stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} />
-                          <YAxis stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} label={{ value: 'Seconds', angle: -90, position: 'insideLeft', fill: '#94a3b8' }} />
-                          <Tooltip 
-                            contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155' }}
-                            itemStyle={{ color: '#f8fafc' }}
-                          />
-                          <Legend />
-                          <Line type="monotone" dataKey="loadTime" name="Load Time" stroke="#eab308" strokeWidth={3} dot={{ r: 4 }} activeDot={{ r: 6 }} />
-                          <Line type="monotone" dataKey="interactionTime" name="Time to Interactive" stroke="#3b82f6" strokeWidth={2} strokeDasharray="5 5" />
-                          <Line type="monotone" dataKey="renderTime" name="First Contentful Paint" stroke="#10b981" strokeWidth={2} />
-                        </LineChart>
-                      </ResponsiveContainer>
+                      <UsageEmpty text="Page-load timings (load time, time to interactive, first contentful paint) are not collected. Real Core Web Vitals will chart here once browser timing is reported." />
                     </div>
                   </CardContent>
                 </Card>
 
                 {/* Data Table 5: System Resources */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <ResourceCard title="CPU Usage" value="42%" icon={<Cpu />} status="normal" />
-                  <ResourceCard title="Memory" value="12.4 GB" max="16 GB" icon={<Server />} status="warning" />
-                  <ResourceCard title="Storage" value="456 GB" max="1 TB" icon={<HardDrive />} status="normal" />
+                  <ResourceCard title="CPU Usage" value="Not connected" icon={<Cpu />} status="normal" />
+                  <ResourceCard title="Memory" value="Not connected" icon={<Server />} status="normal" />
+                  <ResourceCard title="Storage" value="Not connected" icon={<HardDrive />} status="normal" />
                 </div>
               </div>
             )}
@@ -1208,7 +1165,7 @@ export default function WebsiteUsage() {
                         <ShieldAlert className="h-5 w-5 text-red-400" />
                         Security Events Log
                       </CardTitle>
-                      <CardDescription className="text-slate-400">Authentication attempts and anomalies</CardDescription>
+                      <CardDescription className="text-slate-400">Sign-ins recorded in the last 7 days by weekday (UTC). Failed attempts and password resets are not logged.</CardDescription>
                     </div>
                     <Badge variant="outline" className="bg-red-500/10 text-red-400 border-red-500/30">
                       Protected View
@@ -1233,8 +1190,7 @@ export default function WebsiteUsage() {
                           />
                           <Legend />
                           <Area type="monotone" dataKey="logins" name="Successful Logins" stroke="#10b981" fill="#10b981" fillOpacity={0.1} strokeWidth={2} />
-                          <Area type="monotone" dataKey="failedLogins" name="Failed Attempts" stroke="#ef4444" fill="url(#colorFailed)" strokeWidth={2} />
-                          <Line type="monotone" dataKey="passwordResets" name="Password Resets" stroke="#f59e0b" strokeWidth={2} />
+
                         </AreaChart>
                       </ResponsiveContainer>
                     </div>
@@ -1260,30 +1216,11 @@ export default function WebsiteUsage() {
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                        {Array.from({ length: 6 }).map((_, i) => {
-                          const isError = i === 2 || i === 5;
-                          return (
-                            <TableRow key={i} className="border-slate-800/50 hover:bg-slate-800/30">
-                              <TableCell className="text-slate-300 text-sm">
-                                {new Date(Date.now() - i * 3600000).toLocaleString()}
-                              </TableCell>
-                              <TableCell>
-                                <div className="flex items-center gap-2 text-sm">
-                                  {isError ? <ShieldAlert className="h-4 w-4 text-red-400" /> : <ShieldCheck className="h-4 w-4 text-green-400" />}
-                                  <span className="text-slate-200">{isError ? 'Failed Login Attempt' : 'Compliance Document Signed'}</span>
-                                </div>
-                              </TableCell>
-                              <TableCell className="text-slate-400 text-sm font-mono">
-                                192.168.1.{100 + i}
-                              </TableCell>
-                              <TableCell>
-                                <Badge variant="outline" className={isError ? "bg-red-500/10 text-red-400 border-red-500/30" : "bg-green-500/10 text-green-400 border-green-500/30"}>
-                                  {isError ? 'Blocked' : 'Success'}
-                                </Badge>
-                              </TableCell>
-                            </TableRow>
-                          );
-                        })}
+                        <TableRow className="border-slate-800/50">
+                          <TableCell colSpan={4} className="text-center text-sm text-slate-400 py-8">
+                            No security audit events are recorded yet. Per-user sessions and signed documents are in each user's audit log.
+                          </TableCell>
+                        </TableRow>
                       </TableBody>
                     </Table>
                   </CardContent>
@@ -1425,13 +1362,15 @@ function KPICard({ title, value, icon, trend, trendUp, color, pulse = false }: a
             {React.cloneElement(icon, { className: "h-4 w-4" })}
           </div>
         </div>
-        <div className="mt-4 flex items-center text-xs">
-          <span className={`flex items-center font-medium ${trendUp ? 'text-green-400' : 'text-red-400'}`}>
-            {trendUp ? <TrendingUp className="h-3 w-3 mr-1" /> : <TrendingDown className="h-3 w-3 mr-1" />}
-            {trend}
-          </span>
-          <span className="text-slate-500 ml-2">vs last period</span>
-        </div>
+        {trend && (
+          <div className="mt-4 flex items-center text-xs">
+            <span className={`flex items-center font-medium ${trendUp ? 'text-green-400' : 'text-red-400'}`}>
+              {trendUp ? <TrendingUp className="h-3 w-3 mr-1" /> : <TrendingDown className="h-3 w-3 mr-1" />}
+              {trend}
+            </span>
+            <span className="text-slate-500 ml-2">vs last period</span>
+          </div>
+        )}
       </CardContent>
     </Card>
   );
@@ -1485,6 +1424,9 @@ function UserDetailView({ password, userId, userName, userEmail, onBack }: {
 
   const { data: signatures } =
     trpc.websiteUsage.getUserSignatures.useQuery({ password, userId });
+
+  const { data: pageViews } =
+    trpc.websiteUsage.getUserPageActivity.useQuery({ password, userId });
 
   const { data: sessionActivity } =
     trpc.websiteUsage.getSessionActivity.useQuery(
@@ -1565,8 +1507,8 @@ function UserDetailView({ password, userId, userName, userEmail, onBack }: {
               <MousePointerClick className="h-6 w-6" />
             </div>
             <div>
-              <div className="text-2xl font-bold text-white">{Math.floor(Math.random() * 500) + 50}</div>
-              <div className="text-xs text-slate-400 font-medium">Interactions</div>
+              <div className="text-2xl font-bold text-white">{pageViews?.length ?? 0}</div>
+              <div className="text-xs text-slate-400 font-medium">Page Views</div>
             </div>
           </CardContent>
         </Card>
