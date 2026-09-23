@@ -91,27 +91,16 @@ interface SyncLog {
   message: string;
 }
 
-const generateSyncLogs = (count: number): SyncLog[] => {
-  return Array.from({ length: count }).map((_, i) => ({
-    id: `log-${i}`,
-    integrationId: ["slack", "hubspot", "webhooks", "salesforce", "plaid"][Math.floor(Math.random() * 5)],
-    timestamp: new Date(Date.now() - Math.random() * 10000000000).toISOString(),
-    status: Math.random() > 0.8 ? (Math.random() > 0.5 ? "error" : "warning") : "success",
-    recordsProcessed: Math.floor(Math.random() * 1000),
-    durationMs: Math.floor(Math.random() * 5000),
-    message: ["Sync completed successfully", "Connection timeout", "Rate limit exceeded", "Partial sync completed"][Math.floor(Math.random() * 4)],
-  }));
-};
 
-const INTEGRATIONS: IntegrationConfig[] = [{ id: "slack", name: "Slack", description: "Send notifications, alerts, and reports directly to your Slack channels. Get real-time updates on client activity, compliance events, and team performance.", icon: MessageSquare, color: "bg-[#4A154B]", connected: true, category: "communication", status: "active", lastSync: "2 mins ago", dataSynced: 15420, apiCalls: 3450, healthScore: 98 },
+const INTEGRATIONS: IntegrationConfig[] = [{ id: "slack", name: "Slack", description: "Send notifications, alerts, and reports directly to your Slack channels. Get real-time updates on client activity, compliance events, and team performance.", icon: MessageSquare, color: "bg-[#4A154B]", connected: false, category: "communication", status: "inactive" },
 ,
-  { id: "hubspot", name: "HubSpot", description: "Sync client data, track deals, and automate marketing workflows. Two-way sync keeps your CRM and advisory platform aligned.", icon: Globe, color: "bg-[#FF7A59]", connected: true, category: "crm", status: "active", lastSync: "15 mins ago", dataSynced: 45200, apiCalls: 12500, healthScore: 95 },
+  { id: "hubspot", name: "HubSpot", description: "Sync client data, track deals, and automate marketing workflows. Two-way sync keeps your CRM and advisory platform aligned.", icon: Globe, color: "bg-[#FF7A59]", connected: false, category: "crm", status: "inactive" },
 ,
-  { id: "webhooks", name: "Webhooks", description: "Send real-time event data to any external system. Configure custom endpoints for client events, compliance triggers, and workflow automation.", icon: Webhook, color: "bg-[#6366f1]", connected: true, category: "developer", status: "active", lastSync: "Just now", dataSynced: 8900, apiCalls: 4500, healthScore: 100 },
+  { id: "webhooks", name: "Webhooks", description: "Send real-time event data to any external system. Configure custom endpoints for client events, compliance triggers, and workflow automation.", icon: Webhook, color: "bg-[#6366f1]", connected: false, category: "developer", status: "inactive" },
 ,
-  { id: "salesforce", name: "Salesforce", description: "Enterprise CRM integration for complex advisory teams. Sync accounts, contacts, opportunities, and custom objects.", icon: Cloud, color: "bg-[#00A1E0]", connected: false, category: "crm", status: "inactive", healthScore: 0 },
+  { id: "salesforce", name: "Salesforce", description: "Enterprise CRM integration for complex advisory teams. Sync accounts, contacts, opportunities, and custom objects.", icon: Cloud, color: "bg-[#00A1E0]", connected: false, category: "crm", status: "inactive" },
 ,
-  { id: "plaid", name: "Plaid", description: "Connect client bank accounts, track transactions, and verify identity securely. Automated portfolio and cash flow analysis.", icon: Database, color: "bg-[#111111]", connected: false, category: "finance", status: "inactive", healthScore: 0 }
+  { id: "plaid", name: "Plaid", description: "Connect client bank accounts, track transactions, and verify identity securely. Automated portfolio and cash flow analysis.", icon: Database, color: "bg-[#111111]", connected: false, category: "finance", status: "inactive" }
 ];
 
 function IntegrationCard({ integration, onToggle }: { integration: IntegrationConfig, onToggle: (id: string, state: boolean) => void }) {
@@ -155,26 +144,8 @@ function IntegrationCard({ integration, onToggle }: { integration: IntegrationCo
         <p className="text-sm text-slate-400 mb-4 leading-relaxed flex-grow">{integration.description}</p>
         
         {isConnected && (
-          <div className="grid grid-cols-2 gap-2 mb-4 p-3 bg-[#0f2942]/50 rounded-lg border border-[#1a3a5c]/30">
-            <div>
-              <div className="text-[10px] text-slate-500 uppercase tracking-wider">Health Score</div>
-              <div className="flex items-center gap-1.5">
-                <div className="w-full bg-slate-800 rounded-full h-1.5 mt-1">
-                  <div 
-                    className={`h-1.5 rounded-full ${integration.healthScore! > 90 ? 'bg-emerald-500' : integration.healthScore! > 70 ? 'bg-yellow-500' : 'bg-red-500'}`} 
-                    style={{ width: `${integration.healthScore}%` }}
-                  />
-                </div>
-                <span className="text-xs text-slate-300 font-medium">{integration.healthScore}%</span>
-              </div>
-            </div>
-            <div>
-              <div className="text-[10px] text-slate-500 uppercase tracking-wider">Last Sync</div>
-              <div className="text-xs text-slate-300 mt-0.5 flex items-center gap-1">
-                <Clock size={10} className="text-slate-400" />
-                {integration.lastSync}
-              </div>
-            </div>
+          <div className="mb-4 p-3 bg-[#0f2942]/50 rounded-lg border border-[#1a3a5c]/30 text-xs text-slate-300">
+            Server key configured. Delivery health is not measured here.
           </div>
         )}
 
@@ -209,8 +180,8 @@ function IntegrationCard({ integration, onToggle }: { integration: IntegrationCo
 }
 
 function SlackConfig() {
-  const [workspaceUrl, setWorkspaceUrl] = useState("russell-capital.slack.com");
-  const [defaultChannel, setDefaultChannel] = useState("#advisory-alerts");
+  const [workspaceUrl, setWorkspaceUrl] = useState("");
+  const [defaultChannel, setDefaultChannel] = useState("");
   const [events, setEvents] = useState<Record<string, boolean>>({
     "new_client": true,
     "compliance_alert": true,
@@ -258,7 +229,8 @@ function SlackConfig() {
               <Key className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={16} />
               <Input 
                 type="password"
-                value="xoxb-EXAMPLE-PLACEHOLDER" 
+                value=""
+                placeholder="Set SLACK_WEBHOOK_URL on the server"
                 readOnly
                 className="pl-9 bg-[#0a1929] border-[#1a3a5c] text-slate-200 font-mono text-sm" 
               />
@@ -308,7 +280,7 @@ function SlackConfig() {
   );
 }
 
-function HubSpotConfig() {
+function HubSpotConfig({ configured, lastSync }: { configured: boolean; lastSync: string | null }) {
   const [syncSettings, setSyncSettings] = useState<Record<string, boolean>>({
     "sync_contacts": true,
     "sync_deals": true,
@@ -332,7 +304,8 @@ function HubSpotConfig() {
               <Key className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={16} />
               <Input 
                 type="password" 
-                value="pat-na1-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" 
+                value=""
+                placeholder={configured ? "Configured on the server (HUBSPOT_ACCESS_TOKEN)" : "Not set — add HUBSPOT_ACCESS_TOKEN on the server"}
                 readOnly
                 className="pl-9 bg-[#0a1929] border-[#1a3a5c] text-slate-200 font-mono text-sm" 
               />
@@ -343,7 +316,8 @@ function HubSpotConfig() {
             <div className="relative mt-1.5">
               <Database className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={16} />
               <Input 
-                value="12345678" 
+                value=""
+                placeholder="Not recorded"
                 readOnly
                 className="pl-9 bg-[#0a1929] border-[#1a3a5c] text-slate-200" 
               />
@@ -357,15 +331,15 @@ function HubSpotConfig() {
             <div className="space-y-2">
               <div className="flex justify-between text-xs">
                 <span className="text-slate-400">Status</span>
-                <span className="text-emerald-400 font-medium flex items-center gap-1"><CheckCircle2 size={12}/> Connected & Syncing</span>
+                {configured ? (
+                  <span className="text-emerald-400 font-medium flex items-center gap-1"><CheckCircle2 size={12}/> Access token configured</span>
+                ) : (
+                  <span className="text-slate-400 font-medium flex items-center gap-1"><XCircle size={12}/> Not connected</span>
+                )}
               </div>
               <div className="flex justify-between text-xs">
                 <span className="text-slate-400">Last Sync</span>
-                <span className="text-slate-300">Today, 10:42 AM</span>
-              </div>
-              <div className="flex justify-between text-xs">
-                <span className="text-slate-400">API Usage (24h)</span>
-                <span className="text-slate-300">4,250 / 500,000</span>
+                <span className="text-slate-300">{lastSync ? new Date(lastSync).toLocaleString() : "Never"}</span>
               </div>
             </div>
             <Button size="sm" variant="outline" className="w-full mt-3 border-[#FF7A59]/30 text-[#FF7A59] hover:bg-[#FF7A59]/10">
@@ -412,10 +386,8 @@ function HubSpotConfig() {
 }
 
 function WebhooksConfig() {
-  const [endpoints, setEndpoints] = useState<WebhookEndpoint[]>([
-    { id: "wh-1", url: "https://api.internal-system.com/webhooks/russell", events: ["client.created", "strategy.saved"], active: true, secret: "whsec_abcdef123456", createdAt: "2023-10-15T08:00:00Z", lastFired: "2023-10-25T14:32:00Z", successRate: 99.8 },
-    { id: "wh-2", url: "https://zapier.com/hooks/catch/123456/abcdef/", events: ["compliance.alert"], active: true, secret: "whsec_zapier789012", createdAt: "2023-10-18T09:15:00Z", lastFired: "2023-10-24T11:05:00Z", successRate: 100 },
-  ]);
+  // No endpoints are stored for this page; it starts empty rather than with examples.
+  const [endpoints, setEndpoints] = useState<WebhookEndpoint[]>([]);
 
   const availableEvents = [
     "client.created", "client.updated", "client.deleted", 
@@ -434,7 +406,7 @@ function WebhooksConfig() {
         url: "", 
         events: [], 
         active: true, 
-        secret: `whsec_${Math.random().toString(36).substring(2, 15)}`,
+        secret: `whsec_${crypto.randomUUID().replace(/-/g, "")}`,
         createdAt: new Date().toISOString(),
         successRate: 0
       }
@@ -716,139 +688,42 @@ function DataSyncTable({ logs }: { logs: SyncLog[] }) {
 }
 
 function ApiUsageTable() {
-  const usageData = [
-    { endpoint: "/api/v1/clients", method: "GET", calls: 45200, avgLatency: 124, errorRate: 0.1 },
-    { endpoint: "/api/v1/clients", method: "POST", calls: 1250, avgLatency: 342, errorRate: 1.2 },
-    { endpoint: "/api/v1/strategies", method: "GET", calls: 28400, avgLatency: 215, errorRate: 0.5 },
-    { endpoint: "/api/v1/webhooks/trigger", method: "POST", calls: 8900, avgLatency: 85, errorRate: 0.0 },
-    { endpoint: "/api/v1/compliance/check", method: "POST", calls: 5600, avgLatency: 540, errorRate: 2.4 },
-  ];
-
   return (
     <div className="space-y-4">
       <h3 className="text-lg font-medium text-white">API Endpoint Usage</h3>
-      <div className="bg-[#0a1929]/60 border border-[#1a3a5c]/40 rounded-xl overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm text-left">
-            <thead className="text-xs text-slate-400 bg-[#0f2942]/80 uppercase border-b border-[#1a3a5c]/40">
-              <tr>
-                <th className="px-4 py-3 font-medium">Endpoint</th>
-                <th className="px-4 py-3 font-medium">Method</th>
-                <th className="px-4 py-3 font-medium text-right">Total Calls (30d)</th>
-                <th className="px-4 py-3 font-medium text-right">Avg Latency</th>
-                <th className="px-4 py-3 font-medium text-right">Error Rate</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-[#1a3a5c]/30">
-              {usageData.map((row, i) => (
-                <tr key={i} className="hover:bg-[#1a3a5c]/20 transition-colors">
-                  <td className="px-4 py-3 text-slate-300 font-mono text-xs">{row.endpoint}</td>
-                  <td className="px-4 py-3">
-                    <Badge className={`text-[10px] py-0 ${
-                      row.method === 'GET' ? 'bg-blue-500/10 text-blue-400 border-blue-500/20' : 
-                      row.method === 'POST' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 
-                      'bg-slate-500/10 text-slate-400 border-slate-500/20'
-                    }`}>
-                      {row.method}
-                    </Badge>
-                  </td>
-                  <td className="px-4 py-3 text-slate-300 font-mono text-xs text-right">{row.calls.toLocaleString()}</td>
-                  <td className="px-4 py-3 text-slate-400 text-xs text-right">{row.avgLatency}ms</td>
-                  <td className="px-4 py-3 text-right">
-                    <span className={`text-xs ${row.errorRate > 1 ? 'text-red-400' : 'text-emerald-400'}`}>
-                      {row.errorRate}%
-                    </span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+      <div className="bg-[#0a1929]/60 border border-[#1a3a5c]/40 rounded-xl p-6 text-sm text-slate-400 text-center">
+        API usage is not metered yet. Per-endpoint call counts, latency and error rates will appear here once request logging is in place.
       </div>
     </div>
   );
 }
+
 
 function ApiKeysTable() {
-  const keys = [
-    { id: "key_1", name: "Production App Sync", prefix: "pk_live_...", created: "2023-05-12", lastUsed: "2 mins ago", status: "active" },
-    { id: "key_2", name: "Zapier Integration", prefix: "pk_live_...", created: "2023-08-24", lastUsed: "1 hour ago", status: "active" },
-    { id: "key_3", name: "Legacy Dashboard", prefix: "pk_live_...", created: "2022-11-05", lastUsed: "45 days ago", status: "inactive" },
-    { id: "key_4", name: "Staging Testing", prefix: "pk_test_...", created: "2023-10-01", lastUsed: "5 mins ago", status: "active" },
-  ];
-
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h3 className="text-lg font-medium text-white">API Keys</h3>
-        <Button size="sm" className="bg-indigo-600 hover:bg-indigo-700 text-white">
-          <Plus size={14} className="mr-1.5" /> Generate New Key
-        </Button>
-      </div>
-      
-      <div className="bg-[#0a1929]/60 border border-[#1a3a5c]/40 rounded-xl overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm text-left">
-            <thead className="text-xs text-slate-400 bg-[#0f2942]/80 uppercase border-b border-[#1a3a5c]/40">
-              <tr>
-                <th className="px-4 py-3 font-medium">Name</th>
-                <th className="px-4 py-3 font-medium">Key Prefix</th>
-                <th className="px-4 py-3 font-medium">Created</th>
-                <th className="px-4 py-3 font-medium">Last Used</th>
-                <th className="px-4 py-3 font-medium">Status</th>
-                <th className="px-4 py-3 font-medium text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-[#1a3a5c]/30">
-              {keys.map((key) => (
-                <tr key={key.id} className="hover:bg-[#1a3a5c]/20 transition-colors">
-                  <td className="px-4 py-3 text-slate-200 font-medium">{key.name}</td>
-                  <td className="px-4 py-3 text-slate-400 font-mono text-xs">{key.prefix}</td>
-                  <td className="px-4 py-3 text-slate-400 text-xs">{key.created}</td>
-                  <td className="px-4 py-3 text-slate-400 text-xs">{key.lastUsed}</td>
-                  <td className="px-4 py-3">
-                    <Badge variant="outline" className={`text-[10px] py-0 ${
-                      key.status === 'active' ? 'text-emerald-400 border-emerald-500/30' : 'text-slate-500 border-slate-700'
-                    }`}>
-                      {key.status}
-                    </Badge>
-                  </td>
-                  <td className="px-4 py-3 text-right">
-                    <div className="flex items-center justify-end gap-2">
-                      <Button variant="ghost" size="sm" className="h-7 w-7 p-0 text-slate-400 hover:text-white">
-                        <Edit2 size={14} />
-                      </Button>
-                      <Button variant="ghost" size="sm" className="h-7 w-7 p-0 text-red-400 hover:text-red-300 hover:bg-red-500/10">
-                        <Trash2 size={14} />
-                      </Button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+      <h3 className="text-lg font-medium text-white">API Keys</h3>
+      <div className="bg-[#0a1929]/60 border border-[#1a3a5c]/40 rounded-xl p-6 text-sm text-slate-400 text-center">
+        No API keys have been issued. Keys you generate will be listed here.
       </div>
     </div>
   );
 }
 
-function ErrorLogsTable() {
-  const errors = [
-    { id: 1, time: "10:42 AM", service: "HubSpot", error: "Rate limit exceeded (429)", resolution: "Auto-retrying in 5m" },
-    { id: 2, time: "09:15 AM", service: "Webhook #2", error: "Connection timeout (504)", resolution: "Failed after 3 retries" },
-    { id: 3, time: "Yesterday", service: "Salesforce", error: "Invalid credentials (401)", resolution: "Requires manual auth" },
-    { id: 4, time: "Yesterday", service: "Slack", error: "Channel not found", resolution: "Updated default channel" },
-  ];
 
+function ErrorLogsTable({ logs = [] }: { logs?: SyncLog[] }) {
+  const errors = logs.filter((l) => l.status !== "success");
   return (
     <div className="bg-[#0a1929]/60 border border-[#1a3a5c]/40 rounded-xl overflow-hidden">
       <div className="p-4 border-b border-[#1a3a5c]/40 flex items-center justify-between bg-[#0f2942]/30">
         <h3 className="text-sm font-medium text-white flex items-center gap-2">
           <AlertTriangle size={16} className="text-red-400" /> Recent Integration Errors
         </h3>
-        <Badge className="bg-red-500/10 text-red-400 border-red-500/20">{errors.length} Unresolved</Badge>
+        <Badge className="bg-red-500/10 text-red-400 border-red-500/20">{errors.length}</Badge>
       </div>
+      {errors.length === 0 ? (
+        <div className="p-6 text-sm text-slate-400 text-center">No integration errors recorded.</div>
+      ) : (
       <div className="overflow-x-auto">
         <table className="w-full text-sm text-left">
           <thead className="text-xs text-slate-400 bg-[#0f2942]/50 uppercase border-b border-[#1a3a5c]/40">
@@ -856,24 +731,24 @@ function ErrorLogsTable() {
               <th className="px-4 py-2 font-medium">Time</th>
               <th className="px-4 py-2 font-medium">Service</th>
               <th className="px-4 py-2 font-medium">Error Details</th>
-              <th className="px-4 py-2 font-medium">Status/Resolution</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-[#1a3a5c]/30">
             {errors.map((err) => (
               <tr key={err.id} className="hover:bg-[#1a3a5c]/20 transition-colors">
-                <td className="px-4 py-3 text-slate-400 text-xs whitespace-nowrap">{err.time}</td>
-                <td className="px-4 py-3 text-slate-200 font-medium text-xs">{err.service}</td>
-                <td className="px-4 py-3 text-red-400 font-mono text-xs">{err.error}</td>
-                <td className="px-4 py-3 text-slate-400 text-xs">{err.resolution}</td>
+                <td className="px-4 py-3 text-slate-400 text-xs whitespace-nowrap">{new Date(err.timestamp).toLocaleString()}</td>
+                <td className="px-4 py-3 text-slate-200 font-medium text-xs capitalize">{err.integrationId}</td>
+                <td className="px-4 py-3 text-red-400 font-mono text-xs">{err.message}</td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+      )}
     </div>
   );
 }
+
 
 function DataMappingTable() {
   const mappings = [
@@ -933,7 +808,17 @@ function DataMappingTable() {
 export default function Integrations() {
   const { user } = useAuth();
   const [activeTab, setActiveTab] = useState("overview");
-  const [integrations, setIntegrations] = useState(INTEGRATIONS);
+  // Connection state comes from the server: an integration is connected only
+  // when its key is configured. Nothing is toggled on locally.
+  const integrationsStatusQuery = trpc.integrations.status.useQuery(undefined, { staleTime: 60_000 });
+  const hubspotHistoryQuery = trpc.hubspot.syncHistory.useQuery(undefined, { staleTime: 60_000 });
+  const hubspotSettingsQuery = trpc.hubspot.getSettings.useQuery(undefined, { staleTime: 60_000 });
+  const integrations = useMemo(() => {
+    const configured = new Set(
+      (integrationsStatusQuery.data?.integrations ?? []).filter((i: any) => i.configured).map((i: any) => i.id)
+    );
+    return INTEGRATIONS.map((i) => configured.has(i.id) ? { ...i, connected: true, status: "active" as const } : i);
+  }, [integrationsStatusQuery.data]);
   const [searchQuery, setSearchQuery] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("all");
   
@@ -945,12 +830,10 @@ export default function Integrations() {
   
 
   const handleToggleIntegration = useCallback((id: string, state: boolean) => {
-    setIntegrations(prev => prev.map((i) => i.id === id ? { ...i, connected: state } : i));
-    if (state) {
-      toast.success(`${integrations.find((i) => i.id === id)?.name} connected successfully`);
-    } else {
-      toast.info(`${integrations.find((i) => i.id === id)?.name} disconnected`);
-    }
+    const name = integrations.find((i) => i.id === id)?.name ?? id;
+    toast.info(state
+      ? `${name} connects when its key is added to the server environment. Nothing was changed.`
+      : `${name} disconnects when its key is removed from the server environment. Nothing was changed.`);
   }, [integrations]);
 
   const filteredIntegrations = useMemo(() => {
@@ -979,28 +862,6 @@ export default function Integrations() {
     { name: "Not Connected", value: integrations.filter((i) => !i.connected).length },
   ], [integrations]);
 
-  const apiUsageData = useMemo(() => Array.from({ length: 14 }).map((_, i) => {
-    const date = new Date();
-    date.setDate(date.getDate() - (13 - i));
-    return {
-      date: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-      calls: Math.floor(Math.random() * 5000) + 1000,
-      errors: Math.floor(Math.random() * 100),
-      latency: Math.floor(Math.random() * 200) + 50
-    };
-  }), []);
-
-  const dataVolumeData = useMemo(() => Array.from({ length: 7 }).map((_, i) => {
-    const date = new Date();
-    date.setDate(date.getDate() - (6 - i));
-    return {
-      name: date.toLocaleDateString('en-US', { weekday: 'short' }),
-      hubspot: Math.floor(Math.random() * 1000) + 500,
-      slack: Math.floor(Math.random() * 500) + 100,
-      webhooks: Math.floor(Math.random() * 2000) + 1000,
-    };
-  }), []);
-
   const healthData = useMemo(() => integrations.filter((i) => i.connected).map((i) => ({
     subject: i.name,
     A: i.healthScore || 0,
@@ -1008,7 +869,17 @@ export default function Integrations() {
   })), [integrations]);
 
   const COLORS = ["#22c55e", "#3b82f6", "#f0c040", "#34d399", "#ef4444", "#ec4899"];
-  const syncLogs = useMemo(() => generateSyncLogs(50), []);
+  const syncLogs: SyncLog[] = useMemo(() => (hubspotHistoryQuery.data ?? []).map((h: any) => ({
+    id: String(h.id),
+    integrationId: "hubspot",
+    timestamp: new Date(h.syncedAt).toISOString(),
+    status: h.status === "SUCCESS" ? "success" : h.status === "FAILED" ? "error" : "warning",
+    recordsProcessed: h.status === "SUCCESS" ? 1 : 0,
+    durationMs: 0,
+    message: h.errorMessage || `${h.direction ?? ""} ${h.objectType ?? ""} ${String(h.status ?? "").toLowerCase()}`.trim(),
+  })), [hubspotHistoryQuery.data]);
+  const syncErrorCount = syncLogs.filter((l) => l.status === "error").length;
+  const recordsSynced = syncLogs.filter((l) => l.status === "success").length;
 
   return (
     <AppShell>
@@ -1063,7 +934,7 @@ export default function Integrations() {
               </div>
               <div>
                 <p className="text-sm text-slate-400">API Calls (30d)</p>
-                <p className="text-2xl font-bold text-white">142.5k</p>
+                <p className="text-sm font-medium text-slate-400 mt-1">Not metered</p>
               </div>
             </CardContent>
           </Card>
@@ -1074,7 +945,7 @@ export default function Integrations() {
               </div>
               <div>
                 <p className="text-sm text-slate-400">Records Synced</p>
-                <p className="text-2xl font-bold text-white">845k</p>
+                <p className="text-2xl font-bold text-white">{recordsSynced}</p>
               </div>
             </CardContent>
           </Card>
@@ -1085,7 +956,7 @@ export default function Integrations() {
               </div>
               <div>
                 <p className="text-sm text-slate-400">Sync Errors</p>
-                <p className="text-2xl font-bold text-white">12</p>
+                <p className="text-2xl font-bold text-white">{syncErrorCount}</p>
               </div>
             </CardContent>
           </Card>
@@ -1200,22 +1071,7 @@ export default function Integrations() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <ResponsiveContainer width="100%" height={300}>
-                    <ComposedChart data={apiUsageData} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#1a3a5c" vertical={false} />
-                      <XAxis dataKey="date" stroke="#64748b" fontSize={12} tickLine={false} axisLine={false} />
-                      <YAxis yAxisId="left" stroke="#64748b" fontSize={12} tickLine={false} axisLine={false} />
-                      <YAxis yAxisId="right" orientation="right" stroke="#64748b" fontSize={12} tickLine={false} axisLine={false} />
-                      <RTooltip 
-                        contentStyle={{ background: "#0b1628", border: "1px solid #1a3a5c", borderRadius: 8, color: "#fff" }}
-                        itemStyle={{ color: "#fff" }}
-                      />
-                      <Legend wrapperStyle={{ fontSize: '12px', paddingTop: '10px' }} />
-                      <Bar yAxisId="left" dataKey="calls" name="API Calls" fill="#3b82f6" radius={[4, 4, 0, 0]} barSize={20} />
-                      <Line yAxisId="right" type="monotone" dataKey="latency" name="Avg Latency (ms)" stroke="#f59e0b" strokeWidth={2} dot={{ r: 3, fill: "#f59e0b" }} />
-                      <Area yAxisId="left" type="monotone" dataKey="errors" name="Errors" fill="#ef4444" stroke="#ef4444" fillOpacity={0.3} />
-                    </ComposedChart>
-                  </ResponsiveContainer>
+                  <div className="flex items-center justify-center text-center text-sm text-slate-400 px-6" style={{ height: 300 }}>API usage is not metered yet, so no call volume is shown.</div>
                 </CardContent>
               </Card>
 
@@ -1257,32 +1113,7 @@ export default function Integrations() {
                   <CardTitle className="text-white text-base">Data Volume by App (7 Days)</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <ResponsiveContainer width="100%" height={250}>
-                    <AreaChart data={dataVolumeData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                      <defs>
-                        <linearGradient id="colorHubspot" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#FF7A59" stopOpacity={0.3}/>
-                          <stop offset="95%" stopColor="#FF7A59" stopOpacity={0}/>
-                        </linearGradient>
-                        <linearGradient id="colorSlack" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#4A154B" stopOpacity={0.3}/>
-                          <stop offset="95%" stopColor="#4A154B" stopOpacity={0}/>
-                        </linearGradient>
-                        <linearGradient id="colorWebhooks" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#6366f1" stopOpacity={0.3}/>
-                          <stop offset="95%" stopColor="#6366f1" stopOpacity={0}/>
-                        </linearGradient>
-                      </defs>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#1a3a5c" vertical={false} />
-                      <XAxis dataKey="name" stroke="#64748b" fontSize={12} tickLine={false} axisLine={false} />
-                      <YAxis stroke="#64748b" fontSize={12} tickLine={false} axisLine={false} />
-                      <RTooltip contentStyle={{ background: "#0b1628", border: "1px solid #1a3a5c", borderRadius: 8, color: "#fff" }} />
-                      <Legend wrapperStyle={{ fontSize: '12px' }} />
-                      <Area type="monotone" dataKey="hubspot" name="HubSpot" stroke="#FF7A59" fillOpacity={1} fill="url(#colorHubspot)" />
-                      <Area type="monotone" dataKey="slack" name="Slack" stroke="#4A154B" fillOpacity={1} fill="url(#colorSlack)" />
-                      <Area type="monotone" dataKey="webhooks" name="Webhooks" stroke="#6366f1" fillOpacity={1} fill="url(#colorWebhooks)" />
-                    </AreaChart>
-                  </ResponsiveContainer>
+                  <div className="flex items-center justify-center text-center text-sm text-slate-400 px-6" style={{ height: 250 }}>Per-app data volume is not tracked yet.</div>
                 </CardContent>
               </Card>
 
@@ -1291,15 +1122,7 @@ export default function Integrations() {
                   <CardTitle className="text-white text-base">Integration Health Scores</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <ResponsiveContainer width="100%" height={250}>
-                    <RadarChart cx="50%" cy="50%" outerRadius="80%" data={healthData.length > 0 ? healthData : [{subject: "None", A: 0, fullMark: 100}]}>
-                      <PolarGrid stroke="#1a3a5c" />
-                      <PolarAngleAxis dataKey="subject" tick={{ fill: '#94a3b8', fontSize: 12 }} />
-                      <PolarRadiusAxis angle={30} domain={[0, 100]} tick={{ fill: '#64748b', fontSize: 10 }} />
-                      <Radar name="Health Score" dataKey="A" stroke="#22c55e" fill="#22c55e" fillOpacity={0.4} />
-                      <RTooltip contentStyle={{ background: "#0b1628", border: "1px solid #1a3a5c", borderRadius: 8, color: "#fff" }} />
-                    </RadarChart>
-                  </ResponsiveContainer>
+                  <div className="flex items-center justify-center text-center text-sm text-slate-400 px-6" style={{ height: 250 }}>Integration health is not measured. Connection status is shown on each app card.</div>
                 </CardContent>
               </Card>
             </div>
@@ -1317,7 +1140,7 @@ export default function Integrations() {
               </div>
               <div className="space-y-6">
                 <ApiUsageTable />
-                <ErrorLogsTable />
+                <ErrorLogsTable logs={syncLogs} />
               </div>
             </div>
           </TabsContent>
@@ -1356,7 +1179,7 @@ export default function Integrations() {
                 </div>
               </CardHeader>
               <CardContent className="pt-6">
-                <HubSpotConfig />
+                <HubSpotConfig configured={integrationsStatusQuery.data?.live?.hubspot === true} lastSync={hubspotSettingsQuery.data?.lastSyncAt ?? null} />
               </CardContent>
             </Card>
           </TabsContent>

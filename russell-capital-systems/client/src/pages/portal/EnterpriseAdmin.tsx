@@ -67,16 +67,6 @@ const DEFAULT_FLAGS = [
 ];
 
 /* ─── System Health (simulated) ──────────────────────────────────────────── */
-const HEALTH_SERVICES = [
-  { name: "API Server", status: "operational" as const, latency: 42, uptime: 99.97 },
-  { name: "Database", status: "operational" as const, latency: 8, uptime: 99.99 },
-  { name: "AI Engine", status: "operational" as const, latency: 320, uptime: 99.85 },
-  { name: "File Storage (S3)", status: "operational" as const, latency: 15, uptime: 99.99 },
-  { name: "Email Service", status: "operational" as const, latency: 180, uptime: 99.90 },
-  { name: "OAuth Provider", status: "operational" as const, latency: 55, uptime: 99.95 },
-  { name: "Stripe Payments", status: "operational" as const, latency: 95, uptime: 99.98 },
-  { name: "CDN", status: "operational" as const, latency: 12, uptime: 99.99 },
-];
 
 const STATUS_COLORS = {
   operational: { bg: "bg-emerald-500/10", text: "text-emerald-400", dot: "#22c55e", label: "Operational" },
@@ -224,10 +214,7 @@ export default function EnterpriseAdmin() {
   }, [auditData]);
 
   const seatData = useMemo(() => {
-    if (!metrics) return [
-      { name: "Active", value: 45, color: "#22c55e" },
-      { name: "Available", value: 55, color: "#1a3050" }
-    ];
+    if (!metrics) return [];
     return [
       { name: "Active", value: metrics.activeMembers, color: "#22c55e" },
       { name: "Available", value: Math.max(0, metrics.seats - metrics.activeMembers), color: "#1a3050" },
@@ -235,58 +222,13 @@ export default function EnterpriseAdmin() {
   }, [metrics]);
 
   const platformHealthData = useMemo(() => {
-    if (!metrics) return [
-      { name: "Clients", value: 1250 },
-      { name: "Deals", value: 340 },
-      { name: "Pipeline ($K)", value: 45000 }
-    ];
+    if (!metrics) return [];
     return [
       { name: "Clients", value: metrics.clientCount },
       { name: "Deals", value: metrics.dealCount },
       { name: "Pipeline ($K)", value: Math.round(metrics.pipelineValue / 1000) },
     ];
   }, [metrics]);
-
-  const revenueTrendData = useMemo(() => {
-    return Array.from({ length: 12 }).map((_, i) => ({
-      month: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][i],
-      revenue: Math.floor(Math.random() * 50000) + 50000,
-      target: Math.floor(Math.random() * 10000) + 90000,
-      expenses: Math.floor(Math.random() * 20000) + 30000
-    }));
-  }, []);
-
-  const userGrowthData = useMemo(() => {
-    let current = 100;
-    return Array.from({ length: 30 }).map((_, i) => {
-      current += Math.floor(Math.random() * 5);
-      return {
-        day: `Day ${i+1}`,
-        users: current,
-        active: Math.floor(current * (0.6 + Math.random() * 0.3))
-      };
-    });
-  }, []);
-
-  const systemPerformanceData = useMemo(() => {
-    return Array.from({ length: 24 }).map((_, i) => ({
-      hour: `${i}:00`,
-      cpu: Math.floor(Math.random() * 40) + 20,
-      memory: Math.floor(Math.random() * 30) + 40,
-      latency: Math.floor(Math.random() * 100) + 50
-    }));
-  }, []);
-
-  const featureUsageData = useMemo(() => {
-    return [
-      { subject: 'AI Tools', A: 120, B: 110, fullMark: 150 },
-      { subject: 'Reporting', A: 98, B: 130, fullMark: 150 },
-      { subject: 'CRM Sync', A: 86, B: 130, fullMark: 150 },
-      { subject: 'Client Portal', A: 99, B: 100, fullMark: 150 },
-      { subject: 'Billing', A: 85, B: 90, fullMark: 150 },
-      { subject: 'Docs', A: 65, B: 85, fullMark: 150 },
-    ];
-  }, []);
 
   const filteredAuditLogs = useMemo(() => {
     if (!auditData?.logs) return [];
@@ -319,26 +261,25 @@ export default function EnterpriseAdmin() {
     return logs;
   }, [auditData, auditSearch, auditFilter, sortConfig]);
 
-  const mockUsers = useMemo(() => {
-    return Array.from({ length: 15 }).map((_, i) => ({
-      id: `usr_${i}`,
-      name: `User ${i + 1}`,
-      email: `user${i + 1}@example.com`,
-      role: i === 0 ? 'admin' : i < 3 ? 'manager' : 'member',
-      status: Math.random() > 0.2 ? 'active' : 'inactive',
-      lastLogin: new Date(Date.now() - Math.random() * 10000000000).toISOString(),
-      department: ['Sales', 'Support', 'Engineering', 'Marketing'][Math.floor(Math.random() * 4)]
-    }));
-  }, []);
+  // Real workspace members. Fields the membership record does not hold
+  // (department, last login) are shown as not recorded.
+  const membersQuery = trpc.team.members.useQuery(undefined, { staleTime: 60_000 });
+  const workspaceUsers = useMemo(() => {
+    return (membersQuery.data ?? []).map((m: any) => {
+      const name = m.userName || [m.userFirstName, m.userLastName].filter(Boolean).join(" ") || m.userEmail || `User #${m.userId}`;
+      return {
+        id: String(m.id),
+        name,
+        email: m.userEmail ?? "",
+        role: String(m.role ?? "member").toLowerCase(),
+        status: m.status === "ACTIVE" ? "active" : "inactive",
+        department: "—",
+      };
+    });
+  }, [membersQuery.data]);
 
-  const systemAlerts = useMemo(() => {
-    return [
-      { id: 'al_1', type: 'warning', message: 'High CPU usage detected on Worker Node 3', time: '10 mins ago' },
-      { id: 'al_2', type: 'error', message: 'Failed to sync with HubSpot API (Rate limit exceeded)', time: '25 mins ago' },
-      { id: 'al_3', type: 'info', message: 'Database backup completed successfully', time: '1 hour ago' },
-      { id: 'al_4', type: 'warning', message: 'Storage capacity reaching 85%', time: '3 hours ago' },
-    ];
-  }, []);
+  // No infrastructure alerting feed is connected, so there are no system alerts to list.
+  const systemAlerts: { id: string; type: string; message: string; time: string }[] = [];
 
   if (user?.role !== "admin") {
     return (
@@ -548,30 +489,7 @@ export default function EnterpriseAdmin() {
                   </select>
                 </div>
                 <div className="flex-1 min-h-[300px]">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <AreaChart data={revenueTrendData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
-                      <defs>
-                        <linearGradient id="colorRev" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3}/>
-                          <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
-                        </linearGradient>
-                        <linearGradient id="colorTarget" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#22c55e" stopOpacity={0.3}/>
-                          <stop offset="95%" stopColor="#22c55e" stopOpacity={0}/>
-                        </linearGradient>
-                      </defs>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#12233e" vertical={false} />
-                      <XAxis dataKey="month" stroke="#7a95b8" fontSize={12} tickLine={false} axisLine={false} />
-                      <YAxis stroke="#7a95b8" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(val) => `$${val/1000}k`} />
-                      <RTooltip 
-                        contentStyle={{ backgroundColor: '#0f1e35', borderColor: '#12233e', color: '#fff' }}
-                        itemStyle={{ color: '#fff' }}
-                      />
-                      <Legend />
-                      <Area type="monotone" dataKey="revenue" stroke="#3b82f6" fillOpacity={1} fill="url(#colorRev)" name="Actual Revenue" />
-                      <Area type="monotone" dataKey="target" stroke="#22c55e" fillOpacity={1} fill="url(#colorTarget)" name="Target Revenue" />
-                    </AreaChart>
-                  </ResponsiveContainer>
+                  <div className="h-full flex items-center justify-center text-center text-sm text-[#7a95b8] px-6">No revenue feed is connected to this dashboard, so no revenue trend is shown.</div>
                 </div>
               </div>
 
@@ -587,17 +505,7 @@ export default function EnterpriseAdmin() {
                   </button>
                 </div>
                 <div className="flex-1 min-h-[300px] flex items-center justify-center">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <RadarChart cx="50%" cy="50%" outerRadius="80%" data={featureUsageData}>
-                      <PolarGrid stroke="#12233e" />
-                      <PolarAngleAxis dataKey="subject" tick={{ fill: '#7a95b8', fontSize: 12 }} />
-                      <PolarRadiusAxis angle={30} domain={[0, 150]} tick={{ fill: '#7a95b8', fontSize: 10 }} />
-                      <Radar name="Current Month" dataKey="A" stroke="#34d399" fill="#34d399" fillOpacity={0.5} />
-                      <Radar name="Previous Month" dataKey="B" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.3} />
-                      <Legend />
-                      <RTooltip contentStyle={{ backgroundColor: '#0f1e35', borderColor: '#12233e', color: '#fff' }} />
-                    </RadarChart>
-                  </ResponsiveContainer>
+                  <div className="h-full flex items-center justify-center text-center text-sm text-[#7a95b8] px-6">Feature usage is not tracked yet. Adoption by feature will appear here once usage events are recorded.</div>
                 </div>
               </div>
             </div>
@@ -611,6 +519,9 @@ export default function EnterpriseAdmin() {
                   <h3 className="text-white font-semibold">Seat Allocation</h3>
                 </div>
                 <div className="h-[250px]">
+                  {seatData.length === 0 ? (
+                    <div className="h-full flex items-center justify-center text-center text-sm text-[#7a95b8] px-6">Seat data unavailable.</div>
+                  ) : (
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
                       <Pie
@@ -631,11 +542,12 @@ export default function EnterpriseAdmin() {
                       <Legend verticalAlign="bottom" height={36} iconType="circle" />
                     </PieChart>
                   </ResponsiveContainer>
+                  )}
                 </div>
                 <div className="mt-4 p-3 rounded-lg bg-[#12233e]/50 border border-[#12233e] flex items-center justify-between">
                   <div>
                     <div className="text-xs text-[#7a95b8]">Total Seats</div>
-                    <div className="text-lg font-bold text-white">{metrics?.seats ?? 100}</div>
+                    <div className="text-lg font-bold text-white">{metrics?.seats ?? "—"}</div>
                   </div>
                   <button className="rc-btn rc-btn-primary text-xs py-1 px-3">
                     Add Seats
@@ -656,17 +568,7 @@ export default function EnterpriseAdmin() {
                   </div>
                 </div>
                 <div className="h-[250px]">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <ComposedChart data={userGrowthData} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#12233e" vertical={false} />
-                      <XAxis dataKey="day" stroke="#7a95b8" fontSize={10} tickLine={false} axisLine={false} tickFormatter={(val) => val.replace('Day ', '')} />
-                      <YAxis stroke="#7a95b8" fontSize={10} tickLine={false} axisLine={false} />
-                      <RTooltip contentStyle={{ backgroundColor: '#0f1e35', borderColor: '#12233e', color: '#fff' }} />
-                      <Legend />
-                      <Bar dataKey="users" name="Total Users" fill="#1a3050" radius={[4, 4, 0, 0]} />
-                      <Line type="monotone" dataKey="active" name="Active Users" stroke="#f0c040" strokeWidth={2} dot={{ r: 3, fill: '#f0c040' }} activeDot={{ r: 5 }} />
-                    </ComposedChart>
-                  </ResponsiveContainer>
+                  <div className="h-full flex items-center justify-center text-center text-sm text-[#7a95b8] px-6">User growth history is not stored yet. Current members are listed on the Users tab.</div>
                 </div>
               </div>
             </div>
@@ -769,7 +671,10 @@ export default function EnterpriseAdmin() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-[#12233e]">
-                    {mockUsers.map((u) => (
+                    {workspaceUsers.length === 0 && (
+                      <tr><td colSpan={5} className="py-6 px-6 text-center text-sm text-[#7a95b8]">{membersQuery.isLoading ? "Loading members…" : "No workspace members found."}</td></tr>
+                    )}
+                    {workspaceUsers.map((u) => (
                       <tr key={u.id} className="hover:bg-white/[0.02] transition-colors group">
                         <td className="py-4 px-6">
                           <div className="flex items-center gap-3">
@@ -811,14 +716,7 @@ export default function EnterpriseAdmin() {
               </div>
               
               <div className="p-4 border-t border-[#12233e] flex items-center justify-between bg-[#0f1e35]/50">
-                <div className="text-sm text-[#7a95b8]">Showing 1 to 15 of 45 users</div>
-                <div className="flex gap-1">
-                  <button className="px-3 py-1 rounded border border-[#12233e] text-[#7a95b8] hover:bg-white/5 disabled:opacity-50" disabled>Prev</button>
-                  <button className="px-3 py-1 rounded bg-[#3b82f6] text-white">1</button>
-                  <button className="px-3 py-1 rounded border border-[#12233e] text-[#7a95b8] hover:bg-white/5">2</button>
-                  <button className="px-3 py-1 rounded border border-[#12233e] text-[#7a95b8] hover:bg-white/5">3</button>
-                  <button className="px-3 py-1 rounded border border-[#12233e] text-[#7a95b8] hover:bg-white/5">Next</button>
-                </div>
+                <div className="text-sm text-[#7a95b8]">{workspaceUsers.length} member{workspaceUsers.length === 1 ? "" : "s"}</div>
               </div>
             </div>
           </div>
@@ -871,16 +769,7 @@ export default function EnterpriseAdmin() {
                   </div>
                 </div>
                 <div className="flex-1 min-h-[300px]">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={systemPerformanceData} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#12233e" vertical={false} />
-                      <XAxis dataKey="hour" stroke="#7a95b8" fontSize={10} tickLine={false} axisLine={false} />
-                      <YAxis stroke="#7a95b8" fontSize={10} tickLine={false} axisLine={false} domain={[0, 100]} tickFormatter={(val) => `${val}%`} />
-                      <RTooltip contentStyle={{ backgroundColor: '#0f1e35', borderColor: '#12233e', color: '#fff' }} />
-                      <Line type="monotone" dataKey="cpu" stroke="#3b82f6" strokeWidth={2} dot={false} activeDot={{ r: 4 }} />
-                      <Line type="monotone" dataKey="memory" stroke="#34d399" strokeWidth={2} dot={false} activeDot={{ r: 4 }} />
-                    </LineChart>
-                  </ResponsiveContainer>
+                  <div className="h-full flex items-center justify-center text-center text-sm text-[#7a95b8] px-6">No resource monitoring is connected. CPU and memory figures are not shown rather than estimated.</div>
                 </div>
               </div>
 
@@ -891,21 +780,9 @@ export default function EnterpriseAdmin() {
                   <h3 className="text-white font-semibold">Services Status</h3>
                 </div>
                 <div className="flex-1 overflow-y-auto pr-2 space-y-3">
-                  {HEALTH_SERVICES.map((service, i) => (
-                    <div key={i} className="p-3 rounded-lg bg-[#0f1e35] border border-[#12233e] flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className={`w-2 h-2 rounded-full ${STATUS_COLORS[service.status].dot} shadow-[0_0_8px_${STATUS_COLORS[service.status].dot}]`} />
-                        <div>
-                          <div className="text-sm font-medium text-white">{service.name}</div>
-                          <div className="text-xs text-[#7a95b8]">{service.uptime}% uptime</div>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <div className={`text-sm font-medium ${service.latency > 200 ? "text-amber-400" : "text-white"}`}>{service.latency}ms</div>
-                        <div className="text-[10px] text-[#7a95b8] uppercase">Latency</div>
-                      </div>
-                    </div>
-                  ))}
+                  <div className="p-3 rounded-lg bg-[#0f1e35] border border-[#12233e] text-sm text-[#7a95b8]">
+                    No uptime or latency monitoring is connected, so service status is not shown here.
+                  </div>
                 </div>
               </div>
             </div>
@@ -1043,8 +920,8 @@ export default function EnterpriseAdmin() {
                               <table className="w-full text-sm">
                                 <tbody>
                                   <tr><td className="py-1 text-[#7a95b8] w-24">Event ID</td><td className="py-1 text-white font-mono text-xs">{log.id}</td></tr>
-                                  <tr><td className="py-1 text-[#7a95b8]">IP Address</td><td className="py-1 text-white font-mono text-xs">192.168.1.{Math.floor(Math.random()*255)}</td></tr>
-                                  <tr><td className="py-1 text-[#7a95b8]">User Agent</td><td className="py-1 text-white text-xs truncate max-w-[200px]">Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)...</td></tr>
+                                  <tr><td className="py-1 text-[#7a95b8]">IP Address</td><td className="py-1 text-white font-mono text-xs">{typeof log.metadata?.ip === "string" ? log.metadata.ip : "Not recorded"}</td></tr>
+                                  <tr><td className="py-1 text-[#7a95b8]">User Agent</td><td className="py-1 text-white text-xs truncate max-w-[200px]">{typeof log.metadata?.userAgent === "string" ? log.metadata.userAgent : "Not recorded"}</td></tr>
                                 </tbody>
                               </table>
                             </div>

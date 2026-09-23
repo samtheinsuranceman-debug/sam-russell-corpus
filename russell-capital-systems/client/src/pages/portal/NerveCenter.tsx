@@ -219,7 +219,7 @@ function FortuneCookie() {
     "The client who ghosted you is about to inherit $500K. Follow up today.",
     "Your next closed deal will come from the tool you use least.",
   ];
-  const [fortune] = useState(() => fortunes[Math.floor(Math.random() * fortunes.length)]);
+  const [fortune] = useState(() => fortunes[Math.floor(Math.random() * fortunes.length)]); // decorative
 
   return (
     <button
@@ -370,7 +370,7 @@ function DailyDungeonPreview() {
     { name: "Speed Quote Challenge", desc: "Generate 5 accurate quotes in 3 minutes", reward: "200 XP", difficulty: "EASY", color: "text-emerald-400" },
   ];
 
-  const [todayDungeon] = useState(() => dungeons[Math.floor(Math.random() * dungeons.length)]);
+  const [todayDungeon] = useState(() => dungeons[Math.floor(Math.random() * dungeons.length)]); // decorative
 
   return (
     <div className="rounded-xl bg-gradient-to-br from-red-900/20 via-[#0f1e35] to-emerald-900/20 border border-red-500/20 p-4">

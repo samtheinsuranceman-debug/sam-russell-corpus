@@ -221,13 +221,6 @@ const CATEGORY_COLORS = {
   debt: "#f43f5e"
 };
 
-const generateTrendData = () => {
-  return Array.from({ length: 12 }, (_, i) => ({
-    month: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][i],
-    score: 60 + Math.random() * 30 + (i * 1.5),
-    benchmark: 75,
-  }));
-};
 
 const generateCategoryData = (vitals: VitalSign[]) => {
   const categories = { liquidity: 0, growth: 0, protection: 0, debt: 0 };
@@ -337,7 +330,6 @@ export default function FinancialVitalsScorecard() {
     category: v.category
   })), [vitals]);
 
-  const trendData = useMemo(() => generateTrendData(), []);
   const categoryData = useMemo(() => generateCategoryData(vitals), [vitals]);
   const peerData = useMemo(() => generatePeerComparison(), []);
   const impactData = useMemo(() => generateActionImpactData(), []);
@@ -867,23 +859,11 @@ export default function FinancialVitalsScorecard() {
             </Select>
           </div>
           <div className="flex-1 min-h-0">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={trendData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                <defs>
-                  <linearGradient id="colorScore" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#22c55e" stopOpacity={0.3}/>
-                    <stop offset="95%" stopColor="#22c55e" stopOpacity={0}/>
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#12233e" vertical={false} />
-                <XAxis dataKey="month" tick={{ fill: "#7a95b8", fontSize: 10 }} axisLine={false} tickLine={false} />
-                <YAxis domain={[0, 100]} tick={{ fill: "#7a95b8", fontSize: 10 }} axisLine={false} tickLine={false} />
-                <Tooltip contentStyle={{ backgroundColor: '#060d19', borderColor: '#12233e', color: '#c8d8ec', borderRadius: '8px', fontSize: '12px' }} />
-                <Area type="monotone" dataKey="score" stroke="#22c55e" strokeWidth={2} fillOpacity={1} fill="url(#colorScore)" name="Health Score" />
-                <Line type="monotone" dataKey="benchmark" stroke="#7a95b8" strokeWidth={1} strokeDasharray="5 5" dot={false} name="Benchmark" />
-                <Legend wrapperStyle={{ fontSize: '12px' }} />
-              </AreaChart>
-            </ResponsiveContainer>
+            {/* No score history is stored yet, so no trend is drawn. */}
+            <div className="h-full flex flex-col items-center justify-center text-center px-6">
+              <p className="text-sm text-[#c8d8ec]">No score history yet</p>
+              <p className="text-xs text-[#7a95b8] mt-1">Each saved review will add a point here, so the trend reflects this client's real scores over time.</p>
+            </div>
           </div>
         </div>
 
