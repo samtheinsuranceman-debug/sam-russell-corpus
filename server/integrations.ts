@@ -70,6 +70,10 @@ export const INTEGRATIONS: Integration[] = [
   { id: "cloudflare", name: "Cloudflare", category: "hosting", mode: "runtime", purpose: "DNS and edge", envKeys: ["CLOUDFLARE_API_TOKEN"], wiredTo: "domainRedirect helpers" },
   { id: "github", name: "GitHub", category: "hosting", mode: "runtime", purpose: "Source, Pages homepage, deploys", envKeys: ["GITHUB_TOKEN"], wiredTo: "release tooling" },
   { id: "railway", name: "Railway", category: "hosting", mode: "runtime", purpose: "The full app and its MySQL", envKeys: ["RAILWAY_PUBLIC_DOMAIN"], wiredTo: "PUBLIC_BASE_URL on the host" },
+  // ── Image generation (server/imageGenerator.ts), tried in this order; Chinese models refused ──
+  { id: "replicate", name: "Replicate (Flux by Black Forest Labs)", category: "ai", mode: "runtime", purpose: "Image generation: Flux schnell, 1.1 Pro, Kontext for photos", envKeys: ["REPLICATE_API_KEY"], optionalKeys: ["REPLICATE_API_TOKEN", "REPLICATE_IMAGE_MODEL"], docs: "https://replicate.com/docs/reference/http", wiredTo: "AI avatar twins, vault.generateImage" },
+  { id: "fal", name: "fal.ai (Flux)", category: "ai", mode: "runtime", purpose: "Image generation, second in line", envKeys: ["FAL_KEY"], optionalKeys: ["FAL_API_KEY", "FAL_IMAGE_MODEL"], docs: "https://fal.ai/docs", wiredTo: "AI avatar twins, vault.generateImage" },
+  { id: "stability", name: "Stability AI", category: "ai", mode: "runtime", purpose: "Image generation (Stable Image Core / Ultra), third in line", envKeys: ["STABILITY_API_KEY"], optionalKeys: ["STABILITY_IMAGE_MODEL"], docs: "https://platform.stability.ai/docs/api-reference", wiredTo: "AI avatar twins, vault.generateImage" },
 ];
 
 export function isConfigured(i: Integration, env: NodeJS.ProcessEnv = process.env): boolean {
