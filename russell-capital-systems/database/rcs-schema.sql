@@ -1,6 +1,6 @@
 -- Russell Capital Systems — complete database schema
 -- Generated from drizzle/schema.ts by scripts/export_schema_sql.sh; do not hand-edit.
--- Tables: 174
+-- Tables: 175
 -- Import: mysql -u USER -p DBNAME < database/rcs-schema.sql   (or phpMyAdmin → Import)
 -- The database itself must already exist (create it in cPanel → MySQL Databases).
 
@@ -108,6 +108,17 @@ CREATE TABLE `allocation_targets` (
 	`createdAt` timestamp NOT NULL DEFAULT (now()),
 	`updatedAt` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,
 	CONSTRAINT `allocation_targets_id` PRIMARY KEY(`id`)
+);
+CREATE TABLE `arrival_skin_history` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`userId` int NOT NULL,
+	`sessionCount` int NOT NULL DEFAULT 0,
+	`recent` json NOT NULL,
+	`lastSkinId` varchar(64),
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	`updatedAt` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,
+	CONSTRAINT `arrival_skin_history_id` PRIMARY KEY(`id`),
+	CONSTRAINT `arrival_skin_history_user` UNIQUE(`userId`)
 );
 CREATE TABLE `audit_logs` (
 	`id` int AUTO_INCREMENT NOT NULL,

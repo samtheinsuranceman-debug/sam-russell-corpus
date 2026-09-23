@@ -3407,6 +3407,22 @@ export const macroFactorScores = mysqlTable("macro_factor_scores", {
   updatedAt:    timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });
 
+// ─── Arrival skins (RCS-AUDIO-SKINS-VALUE.md §2) ─────────────────────────────
+// One row per user: how many arrivals so far and the recent skin ids (most recent
+// last, capped at roster + window), so the next pick can avoid the last 7 and
+// finish the rotation before any repeat. See shared/arrivalSkins.ts.
+export const arrivalSkinHistory = mysqlTable("arrival_skin_history", {
+  id:           int("id").autoincrement().primaryKey(),
+  userId:       int("userId").notNull(),
+  sessionCount: int("sessionCount").default(0).notNull(),
+  recent:       json("recent").$type<string[]>().notNull(),
+  lastSkinId:   varchar("lastSkinId", { length: 64 }),
+  createdAt:    timestamp("createdAt").defaultNow().notNull(),
+  updatedAt:    timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (t) => ({
+  byUser: uniqueIndex("arrival_skin_history_user").on(t.userId),
+}));
+export type ArrivalSkinHistoryRow = typeof arrivalSkinHistory.$inferSelect;
 // ─── Wealth Genome intake (first build) ──────────────────────────────────────
 // Three tables, one rule: raw answers die, the map stays.
 //   genome_intake_sessions  the consent record (who, when, which version of the

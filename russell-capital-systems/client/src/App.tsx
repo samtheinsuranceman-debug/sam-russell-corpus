@@ -20,6 +20,7 @@ import { OnboardingTour } from "./components/OnboardingTour";
 import { AchievementUnlockOverlay } from "./components/AchievementUnlockOverlay";
 import { PetEvolutionOverlay } from "./components/PetEvolutionOverlay";
 import { SiteMapProvider } from "./contexts/SiteMapContext";
+import { ArrivalSoundProvider } from "./contexts/ArrivalSoundContext";
 import { PredictiveProvider } from "./contexts/PredictiveContext";
 // Global overlays load after first paint: their engines (chainEngine/ultraEngine, the advisor
 // chain aiAdvisor → branding → compositeMind → nlpBrain, and the calculator catalogue via
@@ -1076,9 +1077,12 @@ function App() {
             <SiteMapProvider>
               {/* One macro scenario state for every calculator; the app shell's predictive footer shows it */}
               <PredictiveProvider>
-                <MainLandmark>
-                  <Router />
-                </MainLandmark>
+                {/* Arrival sound: idle until a household chooses "Enter with sound" on the arrival field (flag default off) */}
+                <ArrivalSoundProvider>
+                  <MainLandmark>
+                    <Router />
+                  </MainLandmark>
+                </ArrivalSoundProvider>
                 {/* The login site map: every page, clickable, visited pages glow green; closes only from its X */}
                 <Suspense fallback={null}><SiteMapOverlay /></Suspense>
                 {/* Samuel Goldman speaks after the second page open */}
