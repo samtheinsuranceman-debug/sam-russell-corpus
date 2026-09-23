@@ -3406,3 +3406,85 @@ export const macroFactorScores = mysqlTable("macro_factor_scores", {
   lastScoredAsOf: varchar("lastScoredAsOf", { length: 10 }),
   updatedAt:    timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });
+
+// ─── Arrival skins (RCS-AUDIO-SKINS-VALUE.md §2) ─────────────────────────────
+// One row per user: how many arrivals so far and the recent skin ids (most recent
+// last, capped at roster + window), so the next pick can avoid the last 7 and
+// finish the rotation before any repeat. See shared/arrivalSkins.ts.
+export const arrivalSkinHistory = mysqlTable("arrival_skin_history", {
+  id:           int("id").autoincrement().primaryKey(),
+  userId:       int("userId").notNull(),
+  sessionCount: int("sessionCount").default(0).notNull(),
+  recent:       json("recent").$type<string[]>().notNull(),
+  lastSkinId:   varchar("lastSkinId", { length: 64 }),
+  createdAt:    timestamp("createdAt").defaultNow().notNull(),
+  updatedAt:    timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (t) => ({
+  byUser: uniqueIndex("arrival_skin_history_user").on(t.userId),
+}));
+export type ArrivalSkinHistoryRow = typeof arrivalSkinHistory.$inferSelect;
+// ─── Wealth Genome intake (first build) ──────────────────────────────────────
+// Three tables, one rule: raw answers die, the map stays.
+//   genome_intake_sessions  the consent record (who, when, which version of the
+//                           consent text, the text itself, each acknowledgement,
+//                           withdrawal) and each cluster's yes/no. No answers.
+//   genome_raw_answers      the "destroy"-class answers (how a person thinks and
+//                           feels), each with an expiry. Deleted at close and by
+//                           the sweep (server/genomeIntakeDb.ts) unless a legal
+//                           hold is set. Money answers never land here: they go
+//                           to the household's fact-finder record.
+//   genome_maps             the kept map: pattern axes and approximate money bands
+//                           only. One row per user (own household).
+// Migration: drizzle/migrations/0083_genome_intake.sql. The tables also create
+// themselves on first use (CREATE TABLE IF NOT EXISTS), like whisperer_*.
+export const genomeIntakeSessions = mysqlTable("genome_intake_sessions", {
+  id:             int("id").autoincrement().primaryKey(),
+  userId:         int("userId").notNull(),
+  consentVersion: varchar("consentVersion", { length: 64 }).notNull(),
+  consentedAt:    timestamp("consentedAt").notNull(),
+  // Consent evidence, after Doctor Buddy's hipaa_consents: the exact text shown and each acknowledgement.
+  consentTextSnapshot: text("consentTextSnapshot").notNull(),
+  adult18Plus:    boolean("adult18Plus").default(false).notNull(),
+  ackNotDiagnosis: boolean("ackNotDiagnosis").default(false).notNull(),
+  ackDestroyKeep: boolean("ackDestroyKeep").default(false).notNull(),
+  withdrawnAt:    timestamp("withdrawnAt"),
+  status:         mysqlEnum("status", ["open", "closed", "abandoned"]).default("open").notNull(),
+  mindDecision:   mysqlEnum("mindDecision", ["pending", "accepted", "declined"]).default("pending").notNull(),
+  moneyDecision:  mysqlEnum("moneyDecision", ["pending", "accepted", "declined"]).default("pending").notNull(),
+  preview:        boolean("preview").default(false).notNull(),
+  // Legal hold: while set, this session's raw answers are not deleted (close, sweep or ceiling).
+  legalHold:      boolean("legalHold").default(false).notNull(),
+  expiresAt:      timestamp("expiresAt").notNull(),
+  closedAt:       timestamp("closedAt"),
+  createdAt:      timestamp("createdAt").defaultNow().notNull(),
+}, (t) => ({
+  byUser: index("genome_intake_sessions_user").on(t.userId),
+  byExpiry: index("genome_intake_sessions_expiry").on(t.status, t.expiresAt),
+}));
+export type GenomeIntakeSessionRow = typeof genomeIntakeSessions.$inferSelect;
+
+export const genomeRawAnswers = mysqlTable("genome_raw_answers", {
+  id:         int("id").autoincrement().primaryKey(),
+  sessionId:  int("sessionId").notNull(),
+  userId:     int("userId").notNull(),
+  questionId: varchar("questionId", { length: 64 }).notNull(),
+  answer:     json("answer").notNull(),
+  legalHold:  boolean("legalHold").default(false).notNull(),
+  expiresAt:  timestamp("expiresAt").notNull(),
+  createdAt:  timestamp("createdAt").defaultNow().notNull(),
+}, (t) => ({
+  bySessionQuestion: uniqueIndex("genome_raw_answers_session_question").on(t.sessionId, t.questionId),
+  byExpiry: index("genome_raw_answers_expiry").on(t.expiresAt),
+  byCreated: index("genome_raw_answers_created").on(t.createdAt),
+}));
+export type GenomeRawAnswerRow = typeof genomeRawAnswers.$inferSelect;
+
+export const genomeMaps = mysqlTable("genome_maps", {
+  id:             int("id").autoincrement().primaryKey(),
+  userId:         int("userId").notNull(),
+  map:            json("map").notNull(),
+  consentVersion: varchar("consentVersion", { length: 64 }).notNull(),
+  createdAt:      timestamp("createdAt").defaultNow().notNull(),
+  updatedAt:      timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (t) => ({ byUser: uniqueIndex("genome_maps_user").on(t.userId) }));
+export type GenomeMapRow = typeof genomeMaps.$inferSelect;

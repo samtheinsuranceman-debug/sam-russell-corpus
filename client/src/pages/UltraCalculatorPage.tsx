@@ -75,6 +75,10 @@ export default function UltraCalculatorPage() {
     { years: 10, goal: "Full passive-income phase." },
   ]);
   const [result, setResult] = useState<UltraResult | null>(null);
+  // The pre-filled household is invented for illustration. Until the visitor edits it, every
+  // figure computed from it is labelled "Hypothetical example" next to the numbers.
+  const isExample = profile === DEFAULT_PROFILE;
+  const [resultIsExample, setResultIsExample] = useState(false);
   const [spoken, setSpoken] = useState("");
   const [goalsText, setGoalsText] = useState("");
 
@@ -126,6 +130,7 @@ export default function UltraCalculatorPage() {
   const run = () => {
     saveProfileForAdvisor();
     setResult(runUltraScenario(profile, modules, windows));
+    setResultIsExample(isExample);
   };
 
   const applyWindowPreset = (len: number, count: number) => {
@@ -160,6 +165,11 @@ export default function UltraCalculatorPage() {
         {/* ── CLIENT PROFILE ── */}
         <section className="mt-8 rounded-2xl border border-slate-800 bg-slate-900/60 p-6">
           <h2 className="text-lg font-semibold text-amber-400">1 · The household</h2>
+          {isExample && (
+            <p className="mt-2 inline-block rounded-md border border-amber-400/40 bg-amber-500/10 px-2 py-1 text-xs font-medium text-amber-200">
+              Hypothetical example: these figures describe an invented household, not a real client. Replace them with your own.
+            </p>
+          )}
           <div className="mt-4 grid gap-4 sm:grid-cols-3 lg:grid-cols-4">
             <Num label="Client age" value={profile.clientAge} onChange={(v) => set("clientAge", v)} />
             <Num label="Spouse age" value={profile.spouseAge ?? 0} onChange={(v) => set("spouseAge", v)} />
@@ -224,6 +234,7 @@ export default function UltraCalculatorPage() {
             </label>
           </div>
           <p className="mt-3 text-xs text-slate-500">
+            {isExample && <span className="font-semibold text-amber-300">Hypothetical example · </span>}
             Estimated current net cash: <span className={netCashEstimate >= 0 ? "text-emerald-400" : "text-red-400"}>{fmt(netCashEstimate)}/yr</span> ·
             Home equity: <span className="text-amber-300">{fmt(homeEquity)}</span>
           </p>
@@ -421,6 +432,9 @@ export default function UltraCalculatorPage() {
         {result && (
           <section className="mt-6 rounded-2xl border border-amber-500/40 bg-slate-900/70 p-6">
             <h2 className="text-lg font-semibold text-amber-400">4 · The chained projection</h2>
+            {resultIsExample && (
+              <p className="mt-1 text-xs font-medium text-amber-200">Hypothetical example: computed from the invented household above, not from real figures.</p>
+            )}
             <OutputWhy runKey={result.windows?.length ?? 1} />
             <div className="mt-4 grid gap-4 md:grid-cols-3">
               {result.windows.map((w) => (

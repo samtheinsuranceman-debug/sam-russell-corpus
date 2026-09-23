@@ -12,7 +12,6 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import { EntrainmentProvider } from "./contexts/EntrainmentEngine";
 import ComplianceGate from "./components/ComplianceGate";
 import ManagedAuthGuard from "./components/ManagedAuthGuard";
-import ChainDock from "./components/ChainDock";
 import { PolicyDisclosureSlot } from "./components/PolicyDisclosureLine";
 import EntranceGate from "./components/EntranceGate";
 import { SkipToContent, FocusRingStyles } from "@/components/AccessibilityHelpers";
@@ -21,13 +20,20 @@ import { GlobalHooks } from "./components/GlobalHooks";
 import { OnboardingTour } from "./components/OnboardingTour";
 import { AchievementUnlockOverlay } from "./components/AchievementUnlockOverlay";
 import { PetEvolutionOverlay } from "./components/PetEvolutionOverlay";
-import VoiceAdvisor from "./components/VoiceAdvisor";
 import { SiteMapProvider } from "./contexts/SiteMapContext";
+import { ArrivalSoundProvider } from "./contexts/ArrivalSoundContext";
 import { PredictiveProvider } from "./contexts/PredictiveContext";
-import SiteMapOverlay from "./components/SiteMapOverlay";
-import AdvisorNudge from "./components/AdvisorNudge";
+// Global overlays load after first paint: their engines (chainEngine/ultraEngine, the advisor
+// chain aiAdvisor → branding → compositeMind → nlpBrain, and the calculator catalogue via
+// siteMapTree) used to ride in the entry bundle of every page, public ones included.
+const ChainDock = lazy(() => import("./components/ChainDock"));
+const VoiceAdvisor = lazy(() => import("./components/VoiceAdvisor"));
+const SiteMapOverlay = lazy(() => import("./components/SiteMapOverlay"));
+const AdvisorNudge = lazy(() => import("./components/AdvisorNudge"));
 const SiteMapPage = lazy(() => import("./pages/portal/SiteMapPage"));
 const SamuelGoldman = lazy(() => import("./pages/portal/SamuelGoldman"));
+const GenomeIntake = lazy(() => import("./pages/portal/GenomeIntake"));
+const ColdStartOverlay = lazy(() => import("./components/firstLogin/ColdStartOverlay"));
 const SourcesPage = lazy(() => import("./pages/portal/Sources"));
 
 // Public pages — lazy-loaded to reduce initial bundle
@@ -512,11 +518,24 @@ function gated(Component: React.ComponentType<any>, returnPath: string) {
           <PolicyDisclosureSlot>
             <Component {...props} />
           </PolicyDisclosureSlot>
-          <ChainDock />
+          <Suspense fallback={null}><ChainDock /></Suspense>
         </ComplianceGate>
       </ManagedAuthGuard>
     );
   };
+}
+
+/**
+ * The <main id="main-content"> landmark the skip link targets, for every page outside the portal.
+ * Portal pages render inside AppShell, which has its own <main id="main-content">; signed out, the
+ * ManagedAuthGuard wall is the <main>. /onboarding is gated and renders the same way.
+ */
+const OWN_MAIN_PREFIXES = ["/portal", "/onboarding"];
+function MainLandmark({ children }: { children: React.ReactNode }) {
+  const [location] = useLocation();
+  const ownsMain = OWN_MAIN_PREFIXES.some((p) => location === p || location.startsWith(`${p}/`));
+  if (ownsMain) return <>{children}</>;
+  return <main id="main-content" tabIndex={-1} className="outline-none">{children}</main>;
 }
 
 /** The homepage behind the entrance: sign in (or the owner opens it with PUBLIC_HOMEPAGE=1), then the website. */
@@ -560,8 +579,9 @@ function Router() {
       <Route path="/for" component={SpecialtyIndexPage} />
       <Route path="/for/:slug" component={SpecialtyPage} />
 
-      {/* Onboarding — accessible without auth or compliance */}
-      <Route path="/onboarding" component={Onboarding} />
+      {/* Onboarding — the wizard reads the dashboard and creates a client record (login-only
+          procedures), so a signed-out visitor gets the sign-in wall, not a 401 redirect loop. */}
+      <Route path="/onboarding" component={gated(Onboarding, "/onboarding")} />
       <Route path="/portal/onboarding" component={gated(Onboarding, "/portal/onboarding")} />
       <Route path="/portal/welcome" component={gated(OnboardingWizard, "/portal/welcome")} />
 
@@ -914,6 +934,7 @@ function Router() {
       {/* Site map + the hive front door (22 Sep 2026) */}
       <Route path="/portal/map" component={gated(SiteMapPage, "/portal/map")} />
       <Route path="/portal/samuel-goldman" component={gated(SamuelGoldman, "/portal/samuel-goldman")} />
+      <Route path="/portal/genome-intake" component={gated(GenomeIntake, "/portal/genome-intake")} />
       <Route path="/portal/sources" component={gated(SourcesPage, "/portal/sources")} />
       {/* ─── PR-3b: pages ported from russell-capital-app ─── */}
       <Route path="/portal/retirement-advantage" component={gated(RetirementAdvantage, "/portal/retirement-advantage")} />
@@ -1060,16 +1081,23 @@ function App() {
             <SiteMapProvider>
               {/* One macro scenario state for every calculator; the app shell's predictive footer shows it */}
               <PredictiveProvider>
-                <Router />
+                {/* Arrival sound: idle until a household chooses "Enter with sound" on the arrival field (flag default off) */}
+                <ArrivalSoundProvider>
+                  <MainLandmark>
+                    <Router />
+                  </MainLandmark>
+                </ArrivalSoundProvider>
                 {/* The login site map: every page, clickable, visited pages glow green; closes only from its X */}
-                <SiteMapOverlay />
+                <Suspense fallback={null}><SiteMapOverlay /></Suspense>
                 {/* Samuel Goldman speaks after the second page open */}
-                <AdvisorNudge />
+                <Suspense fallback={null}><AdvisorNudge /></Suspense>
+                {/* First login after the Door: cream field, the stills, then START HERE (owner preview until GENOME_INTAKE_LIVE) */}
+                <Suspense fallback={null}><ColdStartOverlay /></Suspense>
               </PredictiveProvider>
             </SiteMapProvider>
             {/* The every-page AI voice advisor — speak on any page, the AI
                 answers in context of that page and the saved profile. */}
-            <VoiceAdvisor />
+            <Suspense fallback={null}><VoiceAdvisor /></Suspense>
             <Suspense fallback={null}><ExitRating /></Suspense>
             <TrialTimer />
           </TooltipProvider>

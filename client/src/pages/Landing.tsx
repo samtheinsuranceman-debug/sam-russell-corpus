@@ -135,7 +135,7 @@ export default function Landing() {
   ];
 
   return (
-    <div id="main-content" tabIndex={-1} className="rc-homepage rc-homepage-type-scale relative min-h-screen bg-transparent text-[#c8d8ec] outline-none">
+    <div className="rc-homepage rc-homepage-type-scale relative min-h-screen bg-transparent text-[#c8d8ec] outline-none">
       {/* ── NAV ── */}
       <nav className="rc-concept16-nav fixed inset-x-0 top-0 z-50" aria-label="Public navigation">
         <div className="container pt-4">

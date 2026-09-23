@@ -12,10 +12,21 @@ import { Link } from "wouter";
 import PageBackdrop from "../components/PageBackdrop";
 import { EngineWhyFooter } from "@/components/rooms/Reveal";
 import {
-  CALCULATOR_COUNT, CATEGORY_ORDER, CATEGORY_LABELS, CATEGORY_BLURBS,
-  searchCalculators, categoryCounts, featured,
+  CALCULATORS, CATEGORY_ORDER, CATEGORY_LABELS, CATEGORY_BLURBS,
+  searchCalculators, featured,
   type CalculatorCategory, type CalculatorEntry,
 } from "@shared/calculatorCatalog";
+import { NOT_IN_NAVIGATION } from "@shared/hiddenRoutes";
+
+// Routes the owner has hidden (shared/hiddenRoutes.ts) are not advertised on this public page.
+const listed = (c: CalculatorEntry) => !(c.path in NOT_IN_NAVIGATION);
+const LISTED = CALCULATORS.filter(listed);
+const LISTED_COUNT = LISTED.length;
+function listedCounts(): Array<{ category: CalculatorCategory; label: string; count: number }> {
+  return CATEGORY_ORDER.map((category) => ({
+    category, label: CATEGORY_LABELS[category], count: LISTED.filter((c) => c.category === category).length,
+  }));
+}
 
 function Card({ c, big = false }: { c: CalculatorEntry; big?: boolean }) {
   return (
@@ -51,8 +62,8 @@ const MassiveCalculatorsPage: React.FC = () => {
   const [search, setSearch] = useState("");
   const [only, setOnly] = useState<CalculatorCategory | "all">("all");
 
-  const counts = useMemo(() => categoryCounts(), []);
-  const hits = useMemo(() => searchCalculators(search), [search]);
+  const counts = useMemo(() => listedCounts(), []);
+  const hits = useMemo(() => searchCalculators(search).filter(listed), [search]);
   const searching = search.trim().length > 0;
 
   const visible = useMemo(
@@ -85,7 +96,7 @@ const MassiveCalculatorsPage: React.FC = () => {
             The Calculators
           </h1>
           <p className="mt-3 max-w-[62ch] text-[15px] leading-relaxed text-slate-300">
-            {CALCULATOR_COUNT} instruments across {CATEGORY_ORDER.length} rooms. Every one of them shares your
+            {LISTED_COUNT} instruments across {CATEGORY_ORDER.length} rooms. Every one of them shares your
             numbers with every other through the Interop Engine, so a figure entered once is never entered twice —
             and the AI reads the same engines you do, which is why it can tell you where a number came from.
           </p>
@@ -131,7 +142,7 @@ const MassiveCalculatorsPage: React.FC = () => {
                   ? "border-emerald-400/60 bg-emerald-400/15 text-emerald-200"
                   : "border-white/15 text-slate-300 hover:border-white/30"}`}
             >
-              Everything <span className="tabular-nums opacity-60">{CALCULATOR_COUNT}</span>
+              Everything <span className="tabular-nums opacity-60">{LISTED_COUNT}</span>
             </button>
             {counts.map(({ category, label, count }) => (
               <button
@@ -154,7 +165,7 @@ const MassiveCalculatorsPage: React.FC = () => {
           <section className="mt-12">
             <h2 className="text-[11px] uppercase tracking-[0.28em] text-emerald-300/70">Most used</h2>
             <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-              {featured().map((c) => <Card key={c.path} c={c} big />)}
+              {featured().filter(listed).map((c) => <Card key={c.path} c={c} big />)}
             </div>
           </section>
         )}

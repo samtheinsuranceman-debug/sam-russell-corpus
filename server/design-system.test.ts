@@ -27,7 +27,8 @@ describe("unified visual system", () => {
     expect(shell).toContain('className="rc-portal-theme min-h-screen relative"');
     expect(css).toContain(".rc-portal-theme {");
     expect(css).toContain("--primary: oklch(0.67 0.22 160)");
-    expect(css).toContain("linear-gradient(135deg, #059669, #10b981 58%, #34d399)");
+    // Darker emerald stops so white button text keeps >= 4.5:1 (WCAG AA).
+    expect(css).toContain("linear-gradient(135deg, #065f46, #047857 58%, #047857)");
     expect(css).not.toMatch(/#7c3aed|#8b5cf6|#a78bfa|violet|purple/i);
     expect(landing).not.toContain("rc-portal-theme");
   });

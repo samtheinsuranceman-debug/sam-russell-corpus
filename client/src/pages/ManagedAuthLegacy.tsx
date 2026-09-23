@@ -1,5 +1,6 @@
 import { startLogin } from "@/const";
 import { ArrowLeft, ArrowRight, ShieldCheck } from "lucide-react";
+import { PUBLIC_HOME_FALLBACK, useHomepageOpen } from "@/hooks/useHomepageOpen";
 
 const routeCopy: Record<string, { label: string; title: string; body: string }> = {
   "/register": {
@@ -26,9 +27,10 @@ const routeCopy: Record<string, { label: string; title: string; body: string }> 
 
 export default function ManagedAuthLegacy() {
   const copy = routeCopy[window.location.pathname] ?? routeCopy["/register"];
+  const homeOpen = useHomepageOpen();
 
   return (
-    <main className="relative min-h-screen grid place-items-center bg-[#04100c] px-6 py-16 text-emerald-50">
+    <div className="relative min-h-screen grid place-items-center bg-[#04100c] px-6 py-16 text-emerald-50">
       {/* The boulevard's two text-free edges, one per side on wide screens; the seam sits behind the card. */}
       <img src="/rcs-city-boulevard.webp" alt="Rain-washed boulevard at night lined with lamps, trees and green banners" className="absolute inset-y-0 left-0 h-full w-full object-cover object-center brightness-[.6] saturate-[1.1] md:w-1/2" loading="lazy" decoding="async" />
       <img src="/rcs-city-boulevard-r.webp" alt="" aria-hidden="true" className="absolute inset-y-0 right-0 hidden h-full w-1/2 object-cover object-center brightness-[.6] saturate-[1.1] md:block" loading="lazy" decoding="async" />
@@ -43,14 +45,15 @@ export default function ManagedAuthLegacy() {
         <button
           type="button"
           onClick={() => startLogin("/portal/dashboard")}
-          className="mt-8 flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-500 px-5 py-3 font-semibold text-white shadow-lg shadow-emerald-950/40 transition duration-200 hover:bg-emerald-400 active:scale-[0.97]"
+          className="mt-8 flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-700 px-5 py-3 font-semibold text-white shadow-lg shadow-emerald-950/40 transition duration-200 hover:bg-emerald-800 active:scale-[0.97]"
         >
           Continue to secure sign in <ArrowRight className="h-5 w-5" />
         </button>
-        <a href="/" className="mt-5 flex items-center justify-center gap-2 text-sm text-emerald-200/55 hover:text-emerald-100">
-          <ArrowLeft className="h-4 w-4" /> Return to homepage
+        {/* While the homepage is gated, "/" bounces a signed-out visitor to /login. */}
+        <a href={homeOpen ? "/" : PUBLIC_HOME_FALLBACK.href} className="mt-5 flex items-center justify-center gap-2 text-sm text-emerald-200/70 hover:text-emerald-100">
+          <ArrowLeft className="h-4 w-4" /> {homeOpen ? "Return to homepage" : PUBLIC_HOME_FALLBACK.label}
         </a>
       </section>
-    </main>
+    </div>
   );
 }
