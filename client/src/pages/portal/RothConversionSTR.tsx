@@ -33,7 +33,7 @@ import { DataFeedInline } from "@/components/DataFeedBadge";
 import { trpc as trpcClient } from "@/lib/trpc";
 
 import { ExecutiveSummary, GoalsAccelerator, RecommendationSummary, DoNothingBaseline, TaxBracketPanel } from "@/components/ConsumerOutcomeBlocks";
-import { formatTaxCurrency } from "@shared/taxBracketEngine";
+import { formatTaxCurrency, federalMarginalRateFor } from "@shared/taxBracketEngine";
 import { RelatedCalculators } from "@/components/RelatedCalculators";
 import { ComplianceFooter } from "@/components/ComplianceFooter";
 import { apiFetch, apiUrl } from "@/lib/api";
@@ -288,15 +288,12 @@ export default function RothConversionSTR() {
     const c = clients.find((cl) => cl.id === Number(form.clientId));
     if (!c) return;
     const inc = Number(c.income ?? 0);
-    const inferBracket = (income: number): string => {
-      if (income >= 731200) return "0.37";
-      if (income >= 487450) return "0.35";
-      if (income >= 383900) return "0.32";
-      if (income >= 201050) return "0.24";
-      if (income >= 94300) return "0.22";
-      if (income >= 23200) return "0.12";
-      return "0.10";
-    };
+    // 2026 bracket from the versioned table (taxBracketEngine / taxRules; IRS
+    // Rev. Proc. 2025-32 as amended by OBBBA), after the standard deduction.
+    // Joint when the client record has no filing status, as the old 2024
+    // joint-threshold ladder assumed.
+    const inferBracket = (income: number): string =>
+      federalMarginalRateFor(income, (c as any).filingStatus ?? "joint").toFixed(2);
     setForm((p) => ({
       ...p,
       age: String(c.age ?? ""),
