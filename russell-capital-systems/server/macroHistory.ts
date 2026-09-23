@@ -29,12 +29,15 @@ import {
   backtestFactor,
   transformSeries,
   coverageYears,
+  treasuryStorageManifest,
+  globalStorageManifest,
   type FactorVerdict,
   type Indicator,
   type SeriesMeta,
   type MonthlyPoint,
 } from "@shared/macro";
 import { getText, parseFredCsv, type FetchLike } from "./macroConnectors";
+import { parseSdmxCsv, parseImfSdmxJson, parseFiscalData } from "./macroConnectorsExpansion";
 
 // ─── Series keys → URLs ───────────────────────────────────────────────────────
 
@@ -53,15 +56,56 @@ export function seriesSpec(series: string): SeriesSpec | null {
       return null;
     case "fiscaldata":
       if (key === "avg_interest_rates") return { series, sourceId: "fiscaldata-debt", url: "https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v2/accounting/od/avg_interest_rates?filter=security_desc:eq:Total%20Marketable&sort=record_date&page[size]=10000", parse: parseFiscalAvgRates };
+      if (key === "debt_to_penny") return { series, sourceId: "fiscaldata-debt", url: "https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v2/accounting/od/debt_to_penny?sort=record_date&page[size]=10000", parse: t => parseFiscalData(t, "tot_pub_debt_out_amt", "us-debt-to-penny", "fiscaldata-debt").map(o => ({ asOf: o.asOf, value: o.value / 1e9 })) };
+      if (key === "auctions") return { series, sourceId: "fiscaldata-debt", url: "https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v1/accounting/od/auctions_query?filter=security_type:eq:Note,security_term:eq:10-Year&sort=-auction_date&page[size]=1000", parse: parseAuctionBidToCover };
       return null;
-    case "worldbank":
-      return { series, sourceId: "wb-wdi-api", url: `https://api.worldbank.org/v2/country/WLD/indicator/${encodeURIComponent(key)}?format=json&per_page=200`, parse: parseWorldBankSeries };
+    case "worldbank": {
+      // "worldbank:<INDICATOR>" is the world aggregate; "worldbank:<INDICATOR>:<ISO3>" a country.
+      const [ind, iso3] = rest;
+      return { series, sourceId: "wb-wdi-api", url: `https://api.worldbank.org/v2/country/${encodeURIComponent(iso3 ?? "WLD")}/indicator/${encodeURIComponent(ind)}?format=json&per_page=200`, parse: parseWorldBankSeries };
+    }
     case "tic":
       if (rest[0] === "history") return { series, sourceId: "us-tic-mfh", url: "https://ticdata.treasury.gov/Publish/mfhhis01.txt", parse: t => parseTicHistory(t, rest.slice(1).join(":")) };
       return null;
+    case "bis": {
+      // "bis:cbpol:<CC>" — central-bank policy rates, daily, SDMX CSV, 1946+ for the longest.
+      if (rest[0] === "cbpol" && rest[1]) return { series, sourceId: "bis-stats-api", url: `https://stats.bis.org/api/v2/data/dataflow/BIS/WS_CBPOL/1.0/D.${encodeURIComponent(rest[1])}?format=csv`, parse: t => parseSdmxCsv(t, series, "bis-stats-api").map(o => ({ asOf: o.asOf, value: o.value })) };
+      return null;
+    }
+    case "imf": {
+      // "imf:ifs:<INDICATOR>:<CC>" — IFS monthly, SDMX JSON, 1948+; "imf:weo:<INDICATOR>:<ISO3>" — WEO annual, DataMapper JSON, 1980+.
+      if (rest[0] === "ifs" && rest[1] && rest[2]) return { series, sourceId: "imf-ifs", url: `https://dataservices.imf.org/REST/SDMX_JSON.svc/CompactData/IFS/M.${encodeURIComponent(rest[2])}.${encodeURIComponent(rest[1])}`, parse: t => parseImfSdmxJson(t, series).map(o => ({ asOf: o.asOf, value: o.value })) };
+      if (rest[0] === "weo" && rest[1] && rest[2]) return { series, sourceId: "imf-weo", url: `https://www.imf.org/external/datamapper/api/v1/${encodeURIComponent(rest[1])}/${encodeURIComponent(rest[2])}`, parse: t => parseImfDatamapperSeries(t, rest[1], rest[2]) };
+      return null;
+    }
     default:
       return null;
   }
+}
+
+/** IMF DataMapper: { values: { <INDICATOR>: { <ISO3>: { "1980": v, … } } } }, annual, dated to year end. Projection years beyond today are kept and flagged by asOf > today downstream. */
+export function parseImfDatamapperSeries(json: string, indicator: string, iso3: string): MonthlyPoint[] {
+  const data = JSON.parse(json) as { values?: Record<string, Record<string, Record<string, number | null>>> };
+  const years = data.values?.[indicator]?.[iso3] ?? {};
+  return Object.entries(years)
+    .filter(([y, v]) => /^\d{4}$/.test(y) && v !== null && Number.isFinite(Number(v)))
+    .map(([y, v]) => ({ asOf: `${y}-12-31`, value: Number(v) }))
+    .sort((a, b) => (a.asOf < b.asOf ? -1 : 1));
+}
+
+/** Fiscal Data auctions: { data: [ { auction_date, bid_to_cover_ratio, … } ] } → monthly mean bid-to-cover, dated to the last auction in the month. */
+export function parseAuctionBidToCover(json: string): MonthlyPoint[] {
+  const data = JSON.parse(json) as { data?: Array<Record<string, string>> };
+  const byMonth = new Map<string, { sum: number; n: number; last: string }>();
+  for (const r of data.data ?? []) {
+    const d = (r.auction_date ?? "").slice(0, 10);
+    const v = Number(r.bid_to_cover_ratio);
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(d) || !Number.isFinite(v) || v <= 0) continue;
+    const k = d.slice(0, 7);
+    const cur = byMonth.get(k) ?? { sum: 0, n: 0, last: d };
+    byMonth.set(k, { sum: cur.sum + v, n: cur.n + 1, last: d > cur.last ? d : cur.last });
+  }
+  return Array.from(byMonth.values()).map(m => ({ asOf: m.last, value: Math.round((m.sum / m.n) * 1000) / 1000 })).sort((a, b) => (a.asOf < b.asOf ? -1 : 1));
 }
 
 // ─── Parsers ──────────────────────────────────────────────────────────────────
@@ -225,6 +269,12 @@ export function historyManifest(): Array<{ indicatorId: string; series: string; 
     if (seen.has(t.series)) continue;
     seen.add(t.series);
     rows.push({ indicatorId: t.indicatorId, series: t.series, sourceId: t.sourceId, min: t.min, max: t.max, publishedFrom: t.publishedFrom });
+  }
+  // The Treasury pool (fifty series) and the twenty-five countries' series, deduplicated against the factors' keys.
+  for (const t of [...treasuryStorageManifest(), ...globalStorageManifest()]) {
+    if (seen.has(t.series)) continue;
+    seen.add(t.series);
+    rows.push(t);
   }
   return rows;
 }

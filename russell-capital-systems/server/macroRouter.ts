@@ -62,7 +62,10 @@ import { LEDGER_CONNECTORS, requireStatementCitation, requireOutcomeCitation } f
 import { runHistoryRefresh, backtestAllFactors, loadSeriesMeta, factorSeries, historyManifest } from "./macroHistory";
 import { storeVerdicts, loadFactorScores, logFactorForecasts, scoreMaturedForecasts } from "./macroScoring";
 import { buildMacroBrief, setBriefExtras, type BriefExtras } from "./macroContext";
+import { dryUpFromStore, archaeologyFromStore, globalFromStore, poolSnapshot, TREASURY_STATIC } from "./macroTreasury";
+import { TREASURY_POOL_SERIES, LIQUIDITY_PLAYBOOK, liquidityDryUp, predictionGrid, COUNTRIES, FLOW_INDICATORS, COUNTRY_FLOW_EPISODES, globalStorageManifest, treasuryStorageManifest } from "@shared/macro";
 import { MACRO_FACTORS, HOUSEHOLD_FACTORS, ALL_FACTORS, FACTOR_BY_ID, accuracyLine, factorSignal, applyFactorVerdicts, HOUSEHOLD_SIGNALS, HOUSEHOLD_IDEAS, collegeCostProjection, relativeWealth, type FactorVerdict } from "@shared/macro";
+import { projectionHorizon, projectionReport, NO_EVIDENCE, type ProjectionEvidence } from "@shared/macro";
 
 /** Core (six) plus the twenty-five-domain free tier plus the ledger offices (W8). */
 export const ALL_CONNECTORS = [...CONNECTORS, ...EXPANSION_CONNECTORS, ...LEDGER_CONNECTORS];
@@ -310,7 +313,7 @@ export async function runMacroRefresh(opts: { only?: string[] } = {}) {
   } catch (e) {
     console.warn("[macro] forecast log failed:", (e as Error).message);
   }
-  return {
+  const out = {
     today: run.today,
     okCount: run.results.filter(r => r.ok).length,
     failCount: run.results.filter(r => !r.ok).length,
@@ -324,6 +327,55 @@ export async function runMacroRefresh(opts: { only?: string[] } = {}) {
     scoring: w8.scoring ?? null,
     w8Errors: w8.errors,
   };
+  // New history or verdicts: the projection's evidence is recounted on the next ask (A22).
+  projectionEvidenceCache = null;
+  return out;
+}
+
+/**
+ * What the projection engine may claim: counted from the stored backtests,
+ * the archaeology and the pool; nothing measured → `NO_EVIDENCE`, and the
+ * projection says so.
+ */
+/**
+ * Production port (A22): the portal-wide PredictiveProvider asks for the
+ * projection on every page, and the evidence only changes when the daily cron
+ * stores new history, so it is memoised for `PROJECTION_EVIDENCE_TTL_MS`.
+ */
+const PROJECTION_EVIDENCE_TTL_MS = 10 * 60_000;
+let projectionEvidenceCache: { at: number; value: Promise<ProjectionEvidence> } | null = null;
+function projectionEvidenceFromStore(): Promise<ProjectionEvidence> {
+  const now = Date.now();
+  if (projectionEvidenceCache && now - projectionEvidenceCache.at < PROJECTION_EVIDENCE_TTL_MS) return projectionEvidenceCache.value;
+  const value = computeProjectionEvidence();
+  projectionEvidenceCache = { at: now, value };
+  return value;
+}
+
+async function computeProjectionEvidence(): Promise<ProjectionEvidence> {
+  const ev: ProjectionEvidence = { ...NO_EVIDENCE, pendingFactors: ALL_FACTORS.length };
+  try {
+    const { getDb } = await import("./db");
+    const db = await getDb();
+    if (!db) return ev;
+    const scores = await loadFactorScores(db);
+    const signal = scores.filter(s => s.verdict === "signal");
+    ev.signalFactors = signal.length;
+    ev.contextFactors = scores.filter(s => s.verdict === "context").length;
+    ev.pendingFactors = Math.max(0, ALL_FACTORS.length - ev.signalFactors - ev.contextFactors);
+    ev.longestSignalHorizonMonths = signal.reduce((m, s) => Math.max(m, FACTOR_BY_ID.get(s.indicatorId)?.factor?.horizonMonths ?? 0), 0);
+    const meta = await loadSeriesMeta(db);
+    ev.storedCoverageYears = meta.reduce((m, x) => Math.max(m, x.points > 0 ? x.coverageYears : 0), 0);
+    const dry = await dryUpFromStore(db, today());
+    ev.dryUpRegime = dry.result.coverage > 0 ? dry.result.regime : null;
+    if (dry.result.coverage > 0) {
+      const arch = await archaeologyFromStore(db, today());
+      ev.measuredLeads = arch.patterns?.leads?.length ?? 0;
+    }
+  } catch {
+    /* no db or no history: the projection runs on NO_EVIDENCE */
+  }
+  return ev;
 }
 
 const togglesSchema = z.object({
@@ -549,6 +601,48 @@ export const macroRouter = router({
     };
   }),
 
+  /** The Treasury pool: the daily watch, the dry-up indicator, the archaeology over stored history, the prediction grid. Public. */
+  treasuryPool: publicProcedure.input(z.object({ archaeology: z.boolean().default(true) }).optional()).query(async ({ input }) => {
+    const asOf = today();
+    let db: Awaited<ReturnType<typeof import("./db").getDb>> = null;
+    try {
+      db = await (await import("./db")).getDb();
+    } catch {
+      db = null;
+    }
+    if (!db) {
+      const empty = liquidityDryUp({ foreignHoldings3mPct: null, fedTreasuries3mPct: null, reverseRepoUsdBn: null, termPremium3mPp: null, tenYear3mBp: null, dollar3mPct: null, bidToCoverDeviation: null, deficit3mPct: null }, asOf);
+      return {
+        asOf,
+        series: TREASURY_POOL_SERIES.map(s => ({ ...s, latest: null, change3m: null, meta: null, points: 0 })),
+        dryUp: empty,
+        archaeology: null,
+        grid: predictionGrid([], new Map()),
+        hypotheses: TREASURY_STATIC.hypotheses,
+        episodes: TREASURY_STATIC.episodes,
+        playbook: LIQUIDITY_PLAYBOOK,
+        manifest: treasuryStorageManifest().length,
+        note: "No database in this process: the pool is shown from its definitions; every reading, verdict and grid cell is pending the first stored history.",
+      };
+    }
+    const [series, dry, arch] = await Promise.all([poolSnapshot(db), dryUpFromStore(db, asOf), input?.archaeology === false ? Promise.resolve(null) : archaeologyFromStore(db, asOf)]);
+    return { asOf, series, dryUp: dry.result, dryUpReading: dry.reading, archaeology: arch, grid: arch?.grid ?? predictionGrid([], new Map()), hypotheses: TREASURY_STATIC.hypotheses, episodes: TREASURY_STATIC.episodes, playbook: LIQUIDITY_PLAYBOOK, manifest: treasuryStorageManifest().length, note: null };
+  }),
+
+  /** The twenty-five countries: readings, the flow calculus, the episodes. Public. */
+  globalTreasuries: publicProcedure.query(async () => {
+    const asOf = today();
+    let db: Awaited<ReturnType<typeof import("./db").getDb>> = null;
+    try {
+      db = await (await import("./db")).getDb();
+    } catch {
+      db = null;
+    }
+    if (!db) return { asOf, countries: COUNTRIES.map(c => ({ iso3: c.iso3, name: c.name, why: c.why, readings: null, result: null, stored: null })), indicators: FLOW_INDICATORS, episodes: COUNTRY_FLOW_EPISODES, manifest: globalStorageManifest().length, method: ["No database in this process: countries are listed from their definitions; readings and the calculus are pending the first stored history."] };
+    const g = await globalFromStore(db, asOf);
+    return { ...g, countries: g.countries.map(c => ({ ...c, why: COUNTRIES.find(x => x.iso3 === c.iso3)?.why ?? "" })), manifest: globalStorageManifest().length };
+  }),
+
   /** The total college package for a child, with the loan and the opportunity cost. Public: it is arithmetic on published baselines. */
   collegeCost: publicProcedure
     .input(z.object({
@@ -591,6 +685,30 @@ export const macroRouter = router({
   adjustments: publicProcedure
     .input(z.object({ toggles: togglesSchema, full: z.boolean().default(false) }))
     .query(({ input }) => macroAdjustments(input.toggles, { runs: input.full ? 10_000 : 2000 })),
+
+  /**
+   * The projection horizon: how far the platform projects the toggled
+   * scenario into a calculator with confidence, year by year. Public:
+   * every calculator calls it when its toggle is on (and once, neutral, to
+   * show how far the measured state reaches).
+   */
+  projection: publicProcedure
+    .input(z.object({ toggles: togglesSchema.default({}), years: z.number().int().min(1).max(60).default(30), full: z.boolean().default(false) }))
+    .query(async ({ input }) => {
+      const adj = macroAdjustments(input.toggles, { runs: input.full ? 10_000 : 2000 });
+      const ev = await projectionEvidenceFromStore();
+      return projectionHorizon(adj, ev, input.years, today());
+    }),
+
+  /** The projection report for a calculator: the confidence table, the reasoning and the references, as markdown. Public. */
+  projectionReport: publicProcedure
+    .input(z.object({ toggles: togglesSchema.default({}), years: z.number().int().min(1).max(60).default(30), calculator: z.string().max(120).optional(), baseAssumptions: z.record(z.string(), z.union([z.number(), z.string()])).optional() }))
+    .query(async ({ input }) => {
+      const adj = macroAdjustments(input.toggles, { runs: 10_000 });
+      const ev = await projectionEvidenceFromStore();
+      const h = projectionHorizon(adj, ev, input.years, today());
+      return { horizon: h, markdown: projectionReport(h, { calculator: input.calculator, baseAssumptions: input.baseAssumptions }) };
+    }),
 
   /** The brief Thomas reads, for display on the page. */
   brief: publicProcedure.query(async () => {
