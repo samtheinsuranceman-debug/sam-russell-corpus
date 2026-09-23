@@ -227,7 +227,7 @@ const IUC4009 =
 const PL_ILLUSTRATION =
   'Pacific Horizon ECV IUL illustration, form ICC21 P21IUL / S22ECV, run 16 September 2026, account table and Maximum Illustrated Rates page';
 const MN_ILLUSTRATION =
-  'Minnesota Life Balanced Growth Accumulator III illustration, Case ID 29335303, prepared 15 September 2026';
+  'Minnesota Life Balanced Growth Accumulator III illustration, one client case (de-identified), prepared 15 September 2026';
 
 /**
  * Verified shapes only.

@@ -72,7 +72,7 @@
  */
 
 /**
- * Facts established by the three Corrales illustrations run 16 September 2026.
+ * Facts established by the three illustrations of one client case (de-identified) run 16 September 2026.
  *
  * These are the four things the description page and the account-choices guide
  * did NOT contain, now partly closed. What is still missing is listed below and

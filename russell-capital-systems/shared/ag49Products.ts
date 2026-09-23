@@ -85,7 +85,7 @@ export const AG49_PRODUCTS: readonly Ag49Product[] = [
     illustratedRate: 0.0662,
     allocation: 1.0,
     disclosureUrl:
-      "Minnesota Life Balanced Growth Accumulator III illustration, Case ID 29335303, prepared 15 September 2026 — account table and AG 49 statement",
+      "Minnesota Life Balanced Growth Accumulator III illustration, one client case (de-identified), prepared 15 September 2026 — account table and AG 49 statement",
     effectiveDate: "2026",
     readOn: "2026-09-19",
     note:
