@@ -805,15 +805,15 @@ export const withdrawalRouter = router({
 
   markRead: protectedProcedure.input(z.object({
     triggerId: z.number(),
-  })).mutation(async ({ input }) => {
-    await markTriggerRead(input.triggerId);
+  })).mutation(async ({ ctx, input }) => {
+    await markTriggerRead(input.triggerId, ctx.user.id);
     return { success: true };
   }),
 
   markClicked: protectedProcedure.input(z.object({
     triggerId: z.number(),
-  })).mutation(async ({ input }) => {
-    await markTriggerClicked(input.triggerId);
+  })).mutation(async ({ ctx, input }) => {
+    await markTriggerClicked(input.triggerId, ctx.user.id);
     return { success: true };
   }),
 

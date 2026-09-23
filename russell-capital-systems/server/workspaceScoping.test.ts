@@ -79,6 +79,14 @@ function seed() {
       { id: 42, clientId: 6, workspaceId: OTHER_WS, goalTitle: "Other goal", priority: "must_have" },
     ],
     client_session_ratings: [],
+    withdrawal_triggers: [
+      { id: 61, userId: 7, isRead: false },
+      { id: 62, userId: 8, isRead: false },
+    ],
+    household_fact_finders: [
+      { id: 71, clientId: 6, workspaceId: OTHER_WS, spouseName: "Other Spouse" },
+    ],
+    client_properties: [],
     calendar_events: [
       { id: 51, userId: 7, workspaceId: OWN_WS, googleEventId: "own-google-id", title: "Own meeting" },
       { id: 52, userId: 8, workspaceId: OTHER_WS, googleEventId: "other-google-id", title: "Other meeting" },
@@ -225,5 +233,33 @@ describe("gamification.initScore (H-3)", () => {
   it("refuses another workspace's client and writes nothing", async () => {
     await expect(caller().gamification.initScore({ clientId: 6 })).rejects.toMatchObject({ code: "NOT_FOUND" });
     expect(inserts("client_scores")).toEqual([]);
+  });
+});
+
+describe("slides.batchGenerate (review B-1)", () => {
+  it("refuses another workspace's client before any model is called", async () => {
+    await expect(caller().slides.batchGenerate({ clientIds: [6], topic: "Plan" })).rejects.toMatchObject({ code: "NOT_FOUND" });
+    await expect(caller().slides.batchGenerate({ clientIds: [5, 6], topic: "Plan" })).rejects.toMatchObject({ code: "NOT_FOUND" });
+    expect(invokeLLM).not.toHaveBeenCalled();
+    expect(inserts("saved_slide_decks")).toEqual([]);
+  });
+});
+
+describe("withdrawal.markRead / markClicked (review S-1)", () => {
+  it("only touch the caller's own trigger", async () => {
+    await caller().withdrawal.markRead({ triggerId: 62 });
+    await caller().withdrawal.markClicked({ triggerId: 62 });
+    expect(fake.tables.withdrawal_triggers!.find(t => t.id === 62)).toEqual({ id: 62, userId: 8, isRead: false });
+    await caller().withdrawal.markRead({ triggerId: 61 });
+    expect(fake.tables.withdrawal_triggers!.find(t => t.id === 61)).toMatchObject({ isRead: true });
+  });
+});
+
+describe("willWriter (H-4)", () => {
+  it("never returns another workspace's client or household", async () => {
+    await expect(caller().willWriter.getFamilyContext({ clientId: 6 })).rejects.toMatchObject({ code: "NOT_FOUND" });
+    await expect(caller().willWriter.generate({ clientId: 6, tone: "formal" })).rejects.toMatchObject({ code: "NOT_FOUND" });
+    expect(invokeLLM).not.toHaveBeenCalled();
+    await expect(caller().willWriter.getFamilyContext({ clientId: 5 })).resolves.toMatchObject({ clientName: "Own Client" });
   });
 });

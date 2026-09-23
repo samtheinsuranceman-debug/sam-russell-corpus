@@ -3,7 +3,7 @@
  * need to see which rows a query really touches. Tables are plain arrays of
  * rows keyed by column name. WHERE and JOIN conditions are rendered by
  * drizzle's own MySQL dialect and evaluated here; only `and` of `=`
- * comparisons (column = value, column = column) is understood, and anything
+ * comparisons (column = value, column = column) and `column in (…)` is understood, and anything
  * else throws, so a test can never pass on a condition it did not evaluate.
  *
  * Use: vi.mock("drizzle-orm/mysql2", () => ({ drizzle: () => fake.db })) and
@@ -14,22 +14,26 @@ import { MySqlDialect } from "drizzle-orm/mysql-core";
 
 type Row = Record<string, unknown>;
 type Combo = Record<string, Row>;
-type Atom = { table: string; column: string; value?: unknown; otherTable?: string; otherColumn?: string };
+type Atom = { table: string; column: string; value?: unknown; values?: unknown[]; otherTable?: string; otherColumn?: string };
 
 const dialect = new MySqlDialect();
 
 function atoms(cond: SQL | undefined): Atom[] {
   if (!cond) return [];
   const { sql, params } = dialect.sqlToQuery(cond);
-  if (/\bor\b|\bnot\b|\bin\b|\blike\b|<|>/i.test(sql.replace(/`[^`]*`/g, ""))) {
+  if (/\bor\b|\bnot\b|\blike\b|<|>/i.test(sql.replace(/`[^`]*`/g, ""))) {
     throw new Error(`fakeMysqlDb: unsupported condition ${sql}`);
   }
   const out: Atom[] = [];
   let p = 0;
-  const re = /`(\w+)`\.`(\w+)` = (?:\?|`(\w+)`\.`(\w+)`)/g;
+  const re = /`(\w+)`\.`(\w+)` (?:= (?:\?|`(\w+)`\.`(\w+)`)|in \(((?:\?, )*\?)\))/g;
   let m: RegExpExecArray | null;
   while ((m = re.exec(sql))) {
-    if (m[3]) out.push({ table: m[1]!, column: m[2]!, otherTable: m[3], otherColumn: m[4] });
+    if (m[5]) {
+      const n = m[5].split(",").length;
+      out.push({ table: m[1]!, column: m[2]!, values: params.slice(p, p + n) });
+      p += n;
+    } else if (m[3]) out.push({ table: m[1]!, column: m[2]!, otherTable: m[3], otherColumn: m[4] });
     else out.push({ table: m[1]!, column: m[2]!, value: params[p++] });
   }
   const leftover = sql.replace(re, "").replace(/[()\s]|and/g, "");
@@ -51,8 +55,9 @@ function holds(combo: Combo, list: Atom[], strict = true): boolean {
       if (!other && strict) throw new Error(`fakeMysqlDb: condition on \`${a.otherTable}\`, which is not in the query`);
       return other ? left === other[a.otherColumn!] : true;
     }
-    const right = a.value instanceof Date ? a.value.getTime() : a.value;
-    return (left instanceof Date ? left.getTime() : left) === right;
+    const norm = (v: unknown) => (v instanceof Date ? v.getTime() : v);
+    if (a.values) return a.values.map(norm).includes(norm(left));
+    return norm(left) === norm(a.value);
   });
 }
 
