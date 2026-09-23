@@ -780,8 +780,10 @@ export const PROVIDERS: ProviderDefinition[] = [
     wireFormat: "openai-compatible",
     baseUrl: "https://api.edenai.run",
     chatPath: "/v3/chat/completions",
-    defaultModel: "mistral/mistral-large",
-    suggestedModels: ["mistral/mistral-large", "openai/gpt-4", "anthropic/claude-sonnet-4-5"],
+    // Eden's model list (GET /v3/models, read 23 Sep 2026) no longer has
+    // "mistral/mistral-large"; these ids are on it.
+    defaultModel: "mistral/mistral-medium-latest",
+    suggestedModels: ["mistral/mistral-medium-latest", "mistral/mistral-small-latest", "openai/gpt-4o-mini", "anthropic/claude-haiku-4-5"],
     keyPattern: ALNUM,
     keyHint: "A long alphanumeric string",
     consoleUrl: "https://app.edenai.run",
