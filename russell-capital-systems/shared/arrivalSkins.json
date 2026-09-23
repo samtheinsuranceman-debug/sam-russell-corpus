@@ -1,0 +1,96 @@
+{
+  "version": 1,
+  "about": "Return skins for the signed-in arrival field (RCS-AUDIO-SKINS-VALUE.md section 2). Each skin is a background family, a filament colour, an ink colour, an optional still set and one C-major voicing. Every colour below is taken from RCS-FIRST-LOGIN-MANAGER.json (synesthesia_palette.key_to_field and colors_hd); no colour is invented. Stills are empty until real photographs are uploaded to the firm's storage and served as /files/{key}. The target roster is 30; recycle after the full rotation.",
+  "recentWindow": 7,
+  "houseVoicing": ["C4", "E4", "G4"],
+  "skins": [
+    {
+      "id": "c-major-cream",
+      "name": "Cream field, mint filament",
+      "family": "cream_field",
+      "field": "#F4EFE6",
+      "filament": "#B8FFCE",
+      "ink": "#1C1A17",
+      "voicing": ["C4", "E4", "G4"],
+      "stills": [],
+      "source": "synesthesia_palette.key_to_field.C_major"
+    },
+    {
+      "id": "a-minor-sage",
+      "name": "Warm wall, sage filament",
+      "family": "warm_wall",
+      "field": "#E8D7C3",
+      "filament": "#7C9A82",
+      "ink": "#2A3340",
+      "voicing": ["A3", "C4", "E4"],
+      "stills": [],
+      "source": "synesthesia_palette.key_to_field.A_minor"
+    },
+    {
+      "id": "g-major-gold",
+      "name": "Morning paper, gold filament",
+      "family": "morning_paper",
+      "field": "#F7F1E3",
+      "filament": "#E6B84D",
+      "ink": "#1C1A17",
+      "voicing": ["G3", "B3", "D4"],
+      "stills": [],
+      "source": "synesthesia_palette.key_to_field.G_major"
+    },
+    {
+      "id": "daylight-glass-mint",
+      "name": "Daylight glass, mint filament",
+      "family": "daylight_glass",
+      "field": "#C9D7E0",
+      "filament": "#B8FFCE",
+      "ink": "#1C1A17",
+      "voicing": ["E4", "G4", "C5"],
+      "stills": [],
+      "source": "colors_hd: daylight_glass field, mint accent, C_major ink"
+    },
+    {
+      "id": "cream-cyan",
+      "name": "Cream field, cyan filament",
+      "family": "cream_field",
+      "field": "#F4EFE6",
+      "filament": "#3EE0FF",
+      "ink": "#1C1A17",
+      "voicing": ["G3", "C4", "E4"],
+      "stills": [],
+      "source": "colors_hd: cream_paper field, cyan accent, C_major ink"
+    },
+    {
+      "id": "paper-lime",
+      "name": "Paper field, lime filament",
+      "family": "paper",
+      "field": "#F3E6D4",
+      "filament": "#5CFF9A",
+      "ink": "#1C1A17",
+      "voicing": ["F3", "A3", "C4"],
+      "stills": [],
+      "source": "colors_hd: wound.paper field, lime accent, C_major ink"
+    },
+    {
+      "id": "warm-wall-gold",
+      "name": "Warm wall, gold filament",
+      "family": "warm_wall",
+      "field": "#E8D7C3",
+      "filament": "#E6B84D",
+      "ink": "#2A3340",
+      "voicing": ["D4", "F4", "A4"],
+      "stills": [],
+      "source": "colors_hd: warm_wall field, gold accent, A_minor ink"
+    },
+    {
+      "id": "glass-sage",
+      "name": "Daylight glass, sage filament",
+      "family": "daylight_glass",
+      "field": "#C9D7E0",
+      "filament": "#7C9A82",
+      "ink": "#2A3340",
+      "voicing": ["E4", "G4", "B4"],
+      "stills": [],
+      "source": "colors_hd: daylight_glass field, sage accent, A_minor ink"
+    }
+  ]
+}
