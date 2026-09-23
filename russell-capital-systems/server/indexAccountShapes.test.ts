@@ -91,7 +91,7 @@ describe('index account shapes', () => {
     expect(down.ok && down.segmentCredited).toBe(0);
   });
 
-  it('reproduces the Corrales account exactly, and shows why it still cannot be illustrated', () => {
+  it('reproduces the de-identified client account exactly, and shows why it still cannot be illustrated', () => {
     // Balanced Indexed Account 2: S&P 500, 2-year segment, uncapped, 110%
     // participation, 2.50% segment spread. On a 20% movement across the segment:
     //   20% × 110% = 22%, less 2.50% = 19.50% credited over two years.

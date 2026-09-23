@@ -162,7 +162,7 @@ export function realYears(
  *
  * ## What the uploaded documents do NOT contain
  *
- * The three Corrales illustrations all ran **Design A**: every Enhanced
+ * The three illustrations of one client case (de-identified) all ran **Design A**: every Enhanced
  * Performance Factor Rider Credit and Charge column is zero for all thirty years.
  * So the uploaded set establishes the mechanism and the design names, and does
  * NOT establish the performance factors.
@@ -188,7 +188,7 @@ export const EPFR_DESIGNS: readonly EpfrDesign[] = [
     label: 'Classic (Design A)',
     annualChargePct: 0,
     performanceFactor: 1,
-    sourceNote: 'No rider PF benefit and no cost. Stated in the illustration; the three uploaded Corrales illustrations all ran this design.',
+    sourceNote: 'No rider PF benefit and no cost. Stated in the illustration; the three uploaded illustrations of one client case (de-identified) all ran this design.',
   },
   {
     key: 'performance',
@@ -218,7 +218,7 @@ export class MissingPerformanceFactorError extends Error {
     super(
       `Refused to run the ${design} design without a performance factor. The uploaded ` +
         'Pacific Life documents establish the rider mechanism and the design names but ' +
-        'contain no factors — all three Corrales illustrations ran Design A, whose EPFR ' +
+        'contain no factors — all three illustrations of that client case ran Design A, whose EPFR ' +
         'credit and charge columns are zero for every year. Supply performanceFactor from ' +
         'a Design B or C illustration, or run Classic.',
     );
