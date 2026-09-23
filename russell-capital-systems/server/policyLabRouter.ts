@@ -12,7 +12,9 @@
 import { z } from "zod";
 import { publicProcedure, router } from "./_core/trpc";
 import {
+  COMPLETE_BASELINES,
   MUTUAL_A_BASELINE,
+  MUTUAL_B_BASELINE,
   PENDING_BASELINES,
   MULTI_INDEX_BLEND,
   type CostBaseline,
@@ -65,27 +67,28 @@ function coiCoverage(b: CostBaseline) {
 export const policyLabRouter = router({
   /** What each of the three companies is known to charge, and what is still absent. */
   carriers: publicProcedure.query(() => {
-    const cov = coiCoverage(MUTUAL_A_BASELINE);
     return {
-      complete: [
-        {
-          carrierId: MUTUAL_A_BASELINE.carrierId,
-          label: MUTUAL_A_BASELINE.carrierLabel,
-          product: MUTUAL_A_BASELINE.product,
-          source: MUTUAL_A_BASELINE.source,
-          creditingTarget: MUTUAL_A_BASELINE.creditingTarget,
-          percentOfPremiumByYear: MUTUAL_A_BASELINE.percentOfPremiumByYear,
-          perPolicyMonthly: MUTUAL_A_BASELINE.perPolicyMonthly,
-          perThousandAnnual: MUTUAL_A_BASELINE.perThousandAnnual,
-          perThousandYears: MUTUAL_A_BASELINE.perThousandYears,
-          indexedStrategyPctOfAv: MUTUAL_A_BASELINE.indexedStrategyPctOfAv,
-          indexedStrategyFromYear: MUTUAL_A_BASELINE.indexedStrategyFromYear,
-          surrenderPerThousandByYear: MUTUAL_A_BASELINE.surrenderPerThousandByYear,
-          coi: { ...cov, rows: MUTUAL_A_BASELINE.coiPerThousandByAge },
-          derivedFrom: MUTUAL_A_BASELINE.derivedFrom,
-          caveats: MUTUAL_A_BASELINE.caveats,
-        },
-      ],
+      // A first (the page's default basis), then B, each read off its own
+      // cost summary.
+      complete: COMPLETE_BASELINES.map((b) => ({
+        carrierId: b.carrierId,
+        label: b.carrierLabel,
+        product: b.product,
+        source: b.source,
+        creditingTarget: b.creditingTarget,
+        percentOfPremiumByYear: b.percentOfPremiumByYear,
+        perPolicyMonthly: b.perPolicyMonthly,
+        perThousandAnnual: b.perThousandAnnual,
+        perThousandYears: b.perThousandYears,
+        indexedStrategyPctOfAv: b.indexedStrategyPctOfAv,
+        indexedStrategyFromYear: b.indexedStrategyFromYear,
+        bonusInterestPctOfCashValue: b.bonusInterestPctOfCashValue ?? null,
+        bonusInterestFromYear: b.bonusInterestFromYear ?? null,
+        surrenderPerThousandByYear: b.surrenderPerThousandByYear,
+        coi: { ...coiCoverage(b), rows: b.coiPerThousandByAge },
+        derivedFrom: b.derivedFrom,
+        caveats: b.caveats,
+      })),
       pending: PENDING_BASELINES.map((p) => ({
         carrierId: p.carrierId,
         label: p.carrierLabel,
@@ -115,11 +118,14 @@ export const policyLabRouter = router({
         premiumYears: z.number().min(1).max(40).default(5),
         years: z.number().min(5).max(60).default(30),
         creditedRatePct: z.number().min(0).max(12).default(6.75),
+        /** Which carrier's cost summary drives the charges. */
+        carrierId: z.enum(["mutual-a", "mutual-b"]).default("mutual-a"),
       })
     )
     .query(({ input }) => {
-      const charges = chargesFromBaseline(MUTUAL_A_BASELINE);
-      const cov = coiCoverage(MUTUAL_A_BASELINE);
+      const baseline = input.carrierId === "mutual-b" ? MUTUAL_B_BASELINE : MUTUAL_A_BASELINE;
+      const charges = chargesFromBaseline(baseline);
+      const cov = coiCoverage(baseline);
       const result = runPolicyMechanics({
         issueAge: input.issueAge,
         faceAmount: input.faceAmount,
@@ -146,9 +152,9 @@ export const policyLabRouter = router({
       return {
         ...result,
         basis: {
-          carrier: MUTUAL_A_BASELINE.carrierLabel,
-          product: MUTUAL_A_BASELINE.product,
-          source: MUTUAL_A_BASELINE.source,
+          carrier: baseline.carrierLabel,
+          product: baseline.product,
+          source: baseline.source,
           coiCoverage: cov,
           /**
            * The curve was read off one case. Running outside its age range, or
