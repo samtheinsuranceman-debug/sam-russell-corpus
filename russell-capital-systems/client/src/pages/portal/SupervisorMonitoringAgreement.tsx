@@ -36,24 +36,25 @@ import { toast } from "sonner";
 import { Progress } from "@/components/ui/progress";
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell, AreaChart, Area, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar } from "recharts";
 
-const generateMockData = () => {
-  return Array.from({ length: 12 }).map((_, i) => ({
-    name: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][i],
-    value: Math.floor(Math.random() * 1000) + 500,
-    uv: Math.floor(Math.random() * 500) + 100,
-    pv: Math.floor(Math.random() * 800) + 200,
-    amt: Math.floor(Math.random() * 1200) + 300,
-  }));
-};
+// No monitored-activity feed is wired to this page yet. Charts and tables show
+// an honest empty state instead of generated or placeholder records.
+const NO_DATA_TEXT = "No monitored activity recorded yet. Logins, page views and supervisor actions will appear here once activity logging is connected to this agreement.";
 
-const generateActivityData = () => {
-  return Array.from({ length: 7 }).map((_, i) => ({
-    day: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'][i],
-    logins: Math.floor(Math.random() * 20) + 5,
-    views: Math.floor(Math.random() * 100) + 20,
-    actions: Math.floor(Math.random() * 50) + 10,
-  }));
-};
+function EmptyChart({ text = NO_DATA_TEXT }: { text?: string }) {
+  return (
+    <div className="h-full w-full flex items-center justify-center text-center text-sm text-[#7a95b8] border border-dashed border-[#12233e] rounded-lg px-6">
+      {text}
+    </div>
+  );
+}
+
+function EmptyRow({ text = "No records yet." }: { text?: string }) {
+  return (
+    <tr>
+      <td colSpan={99} className="py-8 text-center text-sm text-[#7a95b8]">{text}</td>
+    </tr>
+  );
+}
 
 const COLORS = ['#22c55e', '#3b82f6', '#f59e0b', '#ef4444', '#10b981', '#ec4899'];
 
@@ -68,10 +69,6 @@ export default function SupervisorMonitoringAgreement() {
   const [signing, setSigning] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState("overview");
-  const [chartData, setChartData] = useState<any[]>([]);
-  const [activityData, setActivityData] = useState<any[]>([]);
-  const [radarData, setRadarData] = useState<any[]>([]);
-  const [pieData, setPieData] = useState<any[]>([]);
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
   const [showDetails, setShowDetails] = useState(false);
   
@@ -88,30 +85,8 @@ export default function SupervisorMonitoringAgreement() {
   }, []);
 
   const handleRefresh = useCallback(() => {
-    setChartData(generateMockData());
-    setActivityData(generateActivityData());
-    toast.success("Data refreshed successfully");
-  }, []);
-
-  useEffect(() => {
-    setChartData(generateMockData());
-    setActivityData(generateActivityData());
-    
-    setRadarData([
-      { subject: 'Compliance', A: 120, B: 110, fullMark: 150 },
-      { subject: 'Security', A: 98, B: 130, fullMark: 150 },
-      { subject: 'Privacy', A: 86, B: 130, fullMark: 150 },
-      { subject: 'Monitoring', A: 99, B: 100, fullMark: 150 },
-      { subject: 'Access', A: 85, B: 90, fullMark: 150 },
-      { subject: 'Audit', A: 65, B: 85, fullMark: 150 },
-    ]);
-    
-    setPieData([
-      { name: 'Compliant', value: 400 },
-      { name: 'Pending', value: 300 },
-      { name: 'Under Review', value: 300 },
-      { name: 'Action Needed', value: 200 },
-    ]);
+    agreementStatus.refetch?.();
+    toast.success("Agreement status refreshed");
   }, []);
 
   const agreementStatus = trpc.agency.checkAgreementStatus.useQuery();
@@ -194,35 +169,12 @@ export default function SupervisorMonitoringAgreement() {
   };
 
   const mockTablesData = {
-    recentActivity: [
-      { id: 1, action: "Login", time: "2 mins ago", ip: "192.168.1.1", status: "Success" },
-      { id: 2, action: "View Client", time: "15 mins ago", ip: "192.168.1.1", status: "Success" },
-      { id: 3, action: "Update Note", time: "1 hour ago", ip: "192.168.1.1", status: "Success" },
-      { id: 4, action: "Export Data", time: "2 hours ago", ip: "192.168.1.1", status: "Warning" },
-      { id: 5, action: "Failed Login", time: "1 day ago", ip: "10.0.0.5", status: "Failed" },
-    ],
-    complianceChecks: [
-      { id: 1, check: "Data Privacy Training", date: "2023-10-15", result: "Pass", expiry: "2024-10-15" },
-      { id: 2, check: "Security Audit", date: "2023-11-02", result: "Pass", expiry: "2024-05-02" },
-      { id: 3, check: "Access Review", date: "2024-01-20", result: "Pass", expiry: "2024-07-20" },
-      { id: 4, check: "Policy Acknowledgment", date: "2023-08-10", result: "Pass", expiry: "2024-08-10" },
-    ],
-    supervisorLogs: [
-      { id: 1, supervisor: status?.supervisorName || "Admin", action: "Review Account", date: "2024-02-15", notes: "Routine check" },
-      { id: 2, supervisor: status?.supervisorName || "Admin", action: "Approve Access", date: "2024-01-10", notes: "Initial setup" },
-      { id: 3, supervisor: "System", action: "Automated Scan", date: "2024-02-20", notes: "No issues found" },
-    ],
-    teamMembers: [
-      { id: 1, name: "John Doe", role: "Agent", status: "Active", lastActive: "Today" },
-      { id: 2, name: "Jane Smith", role: "Agent", status: "Active", lastActive: "Yesterday" },
-      { id: 3, name: "Mike Johnson", role: "Trainee", status: "Pending", lastActive: "Never" },
-      { id: 4, name: "Sarah Williams", role: "Agent", status: "Active", lastActive: "Today" },
-    ],
-    systemAlerts: [
-      { id: 1, severity: "Low", message: "New login from recognized device", time: "2024-02-21 08:30" },
-      { id: 2, severity: "Medium", message: "Unusual export volume detected", time: "2024-02-20 14:15" },
-      { id: 3, severity: "Info", message: "System maintenance scheduled", time: "2024-02-19 10:00" },
-    ],
+    recentActivity: [] as { id: number; action: string; time: string; ip: string; status: string }[],
+    complianceChecks: [] as { id: number; check: string; date: string; result: string; expiry: string }[],
+    supervisorLogs: [] as { id: number; supervisor: string; action: string; date: string; notes: string }[],
+    teamMembers: [] as { id: number; name: string; role: string; status: string; lastActive: string }[],
+    systemAlerts: [] as { id: number; severity: string; message: string; time: string }[],
+    // Policy description of the default agent role, not read from account settings.
     accessPermissions: [
       { id: 1, resource: "Client Records", level: "Read/Write", condition: "Supervised" },
       { id: 2, resource: "Financial Data", level: "Read Only", condition: "Restricted" },
@@ -354,30 +306,7 @@ export default function SupervisorMonitoringAgreement() {
                     </select>
                   </div>
                   <div className="h-[300px] w-full">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <AreaChart data={chartData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-                        <defs>
-                          <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.8}/>
-                            <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
-                          </linearGradient>
-                          <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="#22c55e" stopOpacity={0.8}/>
-                            <stop offset="95%" stopColor="#22c55e" stopOpacity={0}/>
-                          </linearGradient>
-                        </defs>
-                        <XAxis dataKey="name" stroke="#7a95b8" fontSize={12} tickLine={false} axisLine={false} />
-                        <YAxis stroke="#7a95b8" fontSize={12} tickLine={false} axisLine={false} />
-                        <CartesianGrid strokeDasharray="3 3" stroke="#12233e" vertical={false} />
-                        <Tooltip 
-                          contentStyle={{ backgroundColor: '#0d1a2e', borderColor: '#12233e', color: '#fff', borderRadius: '8px' }}
-                          itemStyle={{ color: '#c8d8ec' }}
-                        />
-                        <Legend iconType="circle" wrapperStyle={{ paddingTop: '20px' }} />
-                        <Area type="monotone" dataKey="uv" name="Client Views" stroke="#3b82f6" fillOpacity={1} fill="url(#colorUv)" />
-                        <Area type="monotone" dataKey="pv" name="Actions Taken" stroke="#22c55e" fillOpacity={1} fill="url(#colorPv)" />
-                      </AreaChart>
-                    </ResponsiveContainer>
+                    <EmptyChart />
                   </div>
                 </div>
 
@@ -393,21 +322,7 @@ export default function SupervisorMonitoringAgreement() {
                     </button>
                   </div>
                   <div className="h-[300px] w-full">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <BarChart data={activityData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="#12233e" vertical={false} />
-                        <XAxis dataKey="day" stroke="#7a95b8" fontSize={12} tickLine={false} axisLine={false} />
-                        <YAxis stroke="#7a95b8" fontSize={12} tickLine={false} axisLine={false} />
-                        <Tooltip 
-                          cursor={{ fill: '#12233e', opacity: 0.4 }}
-                          contentStyle={{ backgroundColor: '#0d1a2e', borderColor: '#12233e', color: '#fff', borderRadius: '8px' }}
-                        />
-                        <Legend iconType="circle" wrapperStyle={{ paddingTop: '20px' }} />
-                        <Bar dataKey="logins" name="Logins" fill="#10b981" radius={[4, 4, 0, 0]} />
-                        <Bar dataKey="views" name="Page Views" fill="#f59e0b" radius={[4, 4, 0, 0]} />
-                        <Bar dataKey="actions" name="Updates" fill="#ec4899" radius={[4, 4, 0, 0]} />
-                      </BarChart>
-                    </ResponsiveContainer>
+                    <EmptyChart />
                   </div>
                 </div>
               </div>
@@ -453,6 +368,7 @@ export default function SupervisorMonitoringAgreement() {
                           </td>
                         </tr>
                       ))}
+                      {mockTablesData.recentActivity.length === 0 && <EmptyRow text="No monitored activity recorded yet." />}
                     </tbody>
                   </table>
                 </div>
@@ -469,19 +385,9 @@ export default function SupervisorMonitoringAgreement() {
                     <RadarIcon className="w-5 h-5 text-[#10b981]" />
                     Compliance Score
                   </h3>
-                  <p className="text-sm text-[#7a95b8] w-full mb-4">Your current compliance metrics vs team average</p>
+                  <p className="text-sm text-[#7a95b8] w-full mb-4">Your compliance metrics vs team average</p>
                   <div className="h-[280px] w-full">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <RadarChart cx="50%" cy="50%" outerRadius="70%" data={radarData}>
-                        <PolarGrid stroke="#12233e" />
-                        <PolarAngleAxis dataKey="subject" tick={{ fill: '#7a95b8', fontSize: 11 }} />
-                        <PolarRadiusAxis angle={30} domain={[0, 150]} tick={false} axisLine={false} />
-                        <Radar name="You" dataKey="A" stroke="#10b981" fill="#10b981" fillOpacity={0.5} />
-                        <Radar name="Team Avg" dataKey="B" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.3} />
-                        <Legend wrapperStyle={{ fontSize: '12px', paddingTop: '10px' }} />
-                        <Tooltip contentStyle={{ backgroundColor: '#0d1a2e', borderColor: '#12233e', color: '#fff', borderRadius: '8px' }} />
-                      </RadarChart>
-                    </ResponsiveContainer>
+                    <EmptyChart text="No compliance scoring is connected. Scores will appear here once compliance checks are recorded." />
                   </div>
                 </div>
 
@@ -493,25 +399,7 @@ export default function SupervisorMonitoringAgreement() {
                   </h3>
                   <p className="text-sm text-[#7a95b8] w-full mb-4">Distribution of compliance tasks</p>
                   <div className="h-[280px] w-full">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <PieChart>
-                        <Pie
-                          data={pieData}
-                          cx="50%"
-                          cy="50%"
-                          innerRadius={60}
-                          outerRadius={80}
-                          paddingAngle={5}
-                          dataKey="value"
-                        >
-                          {pieData.map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                          ))}
-                        </Pie>
-                        <Tooltip contentStyle={{ backgroundColor: '#0d1a2e', borderColor: '#12233e', color: '#fff', borderRadius: '8px' }} />
-                        <Legend wrapperStyle={{ fontSize: '12px' }} />
-                      </PieChart>
-                    </ResponsiveContainer>
+                    <EmptyChart text="No compliance tasks recorded." />
                   </div>
                 </div>
 
@@ -584,6 +472,7 @@ export default function SupervisorMonitoringAgreement() {
                           </td>
                         </tr>
                       ))}
+                      {mockTablesData.complianceChecks.length === 0 && <EmptyRow text="No compliance checks on record." />}
                     </tbody>
                   </table>
                 </div>
@@ -606,19 +495,7 @@ export default function SupervisorMonitoringAgreement() {
                   </div>
                 </div>
                 <div className="h-[300px] w-full">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={chartData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#12233e" vertical={false} />
-                      <XAxis dataKey="name" stroke="#7a95b8" fontSize={12} tickLine={false} axisLine={false} />
-                      <YAxis stroke="#7a95b8" fontSize={12} tickLine={false} axisLine={false} />
-                      <Tooltip 
-                        contentStyle={{ backgroundColor: '#0d1a2e', borderColor: '#12233e', color: '#fff', borderRadius: '8px' }}
-                      />
-                      <Legend wrapperStyle={{ paddingTop: '20px' }} />
-                      <Line type="monotone" dataKey="amt" name="Total Events" stroke="#ef4444" strokeWidth={2} dot={{ r: 4, fill: '#0d1a2e', strokeWidth: 2 }} activeDot={{ r: 6 }} />
-                      <Line type="monotone" dataKey="pv" name="Supervised Actions" stroke="#f59e0b" strokeWidth={2} dot={false} />
-                    </LineChart>
-                  </ResponsiveContainer>
+                  <EmptyChart />
                 </div>
               </div>
 
@@ -646,6 +523,7 @@ export default function SupervisorMonitoringAgreement() {
                             <td className="py-3 px-4 text-sm text-[#7a95b8] italic">{row.notes}</td>
                           </tr>
                         ))}
+                        {mockTablesData.supervisorLogs.length === 0 && <EmptyRow text="No supervisor access recorded yet." />}
                       </tbody>
                     </table>
                   </div>
@@ -682,6 +560,7 @@ export default function SupervisorMonitoringAgreement() {
                             <td className="py-3 px-4 text-sm text-white">{row.message}</td>
                           </tr>
                         ))}
+                        {mockTablesData.systemAlerts.length === 0 && <EmptyRow text="No alerts recorded." />}
                       </tbody>
                     </table>
                   </div>
@@ -984,6 +863,7 @@ export default function SupervisorMonitoringAgreement() {
                         </td>
                       </tr>
                     ))}
+                    {mockTablesData.teamMembers.length === 0 && <EmptyRow text="No team members to show." />}
                   </tbody>
                 </table>
               </div>

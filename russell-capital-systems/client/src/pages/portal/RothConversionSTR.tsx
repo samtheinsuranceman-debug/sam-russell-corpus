@@ -26,6 +26,7 @@ import { useStrategy } from "@/contexts/StrategyContext";
 import { StrategyFlowBanner } from "@/components/StrategyFlowBanner";
 import { MonteCarloChart } from "@/components/MonteCarloChart";
 import { runMonteCarlo, MONTE_CARLO_PRESETS, SP500_ANNUAL_STDEV } from "@shared/monteCarloEngine";
+import { mulberry32, normal, MACRO_DEFAULT_SEED } from "@shared/macro/random";
 import { GuidedModeToggle } from "@/components/GuidedWizard";
 import { ReportGenerator, type ReportSection } from "@/components/ReportGenerator";
 import { ExportToSlides } from "@/components/ExportToSlides";
@@ -638,6 +639,7 @@ export default function RothConversionSTR() {
     const years = result.iulProjection.length;
     const SIMS = 200; // per cell
     const rows: { returnRate: number; cells: { vol: number; value: number; isBase: boolean }[] }[] = [];
+    const rng = mulberry32(MACRO_DEFAULT_SEED); // seeded: same inputs, same grid
     for (const ret of returnRates) {
       const cells: { vol: number; value: number; isBase: boolean }[] = [];
       for (const vol of volatilities) {
@@ -646,9 +648,7 @@ export default function RothConversionSTR() {
           let av = 0;
           for (let y = 0; y < years; y++) {
             const premium = result.iulProjection[y].premium;
-            const u1 = Math.random();
-            const u2 = Math.random();
-            const z = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+            const z = normal(rng);
             const randomReturn = Math.max(0, ret + vol * z); // floor at 0%, the IUL floor
             av = stepPolicyYear({
               accountValue: av,
@@ -696,15 +696,14 @@ export default function RothConversionSTR() {
     const percentiles = [10, 25, 50, 75, 90];
 
     const allPaths: number[][] = [];
+    const rng = mulberry32(MACRO_DEFAULT_SEED); // seeded: same inputs, same bands
     for (let s = 0; s < SIMS; s++) {
       const path: number[] = [];
       let accountValue = 0;
       for (let y = 0; y < years; y++) {
         const row = result.iulProjection[y];
         const premium = row.premium;
-        const u1 = Math.random();
-        const u2 = Math.random();
-        const z = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+        const z = normal(rng);
         const randomReturn = Math.max(0, baseReturn + VOLATILITY * z); // Floor at 0% (IUL floor)
         accountValue = stepPolicyYear({
           accountValue,

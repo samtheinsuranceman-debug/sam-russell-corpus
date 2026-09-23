@@ -241,20 +241,32 @@ export default function StaleDigest() {
   const staleClients = useMemo(() => previewQuery.data?.staleClients ?? [], [previewQuery.data]);
   
   const enrichedClients = useMemo(() => {
-    return staleClients.map((c, i) => ({
-      ...c,
-      id: c.id || `client-${i}`,
-      wealthTier: i % 3 === 0 ? "Platinum" : i % 2 === 0 ? "Gold" : "Silver",
-      riskProfile: i % 4 === 0 ? "Aggressive" : i % 3 === 0 ? "Moderate" : "Conservative",
-      portfolioSize: Math.floor(Math.random() * 5000000) + 100000,
-      engagementScore: Math.floor(Math.random() * 100),
-      lastContactMethod: i % 3 === 0 ? "Email" : i % 2 === 0 ? "Phone" : "Meeting",
-      region: i % 4 === 0 ? "North" : i % 3 === 0 ? "South" : i % 2 === 0 ? "East" : "West",
-      clientType: i % 5 === 0 ? "Corporate" : "Individual",
-      aum: Math.floor(Math.random() * 10000000) + 500000,
-      ytdReturn: (Math.random() * 20 - 5).toFixed(2),
-      nextAction: i % 3 === 0 ? "Schedule Review" : i % 2 === 0 ? "Send Update" : "Call",
-    }));
+    // Every field comes from the client's own record or is computed from it.
+    // Nothing is invented: a value the record does not hold shows as unknown.
+    const num = (v: unknown) => (v === null || v === undefined || v === "" ? null : Number(v));
+    return staleClients.map((c: any, i) => {
+      const netWorth = num(c.totalNetWorth);
+      const accounts = [c.iraBalance, c.rothBalance, c.taxableAssets, c.k401Balance].map(num).filter((v): v is number => v !== null);
+      const investable = accounts.length ? accounts.reduce((s, v) => s + v, 0) : null;
+      const aumValue = investable ?? netWorth;
+      const risk = c.riskTolerance ? String(c.riskTolerance).replace("_", " ") : null;
+      return {
+        ...c,
+        id: c.id || `client-${i}`,
+        wealthTier: netWorth === null ? "Unrated" : netWorth >= 5_000_000 ? "Platinum" : netWorth >= 1_000_000 ? "Gold" : "Silver",
+        riskProfile: risk ? risk.charAt(0).toUpperCase() + risk.slice(1) : "Not set",
+        portfolioSize: aumValue ?? 0,
+        // Contact-recency score: 100 minus days since last contact, floored at 0.
+        engagementScore: Math.max(0, 100 - c.daysSinceContact),
+        lastContactMethod: null as string | null,
+        region: c.state || "Unknown",
+        clientType: "Not recorded",
+        aum: aumValue ?? 0,
+        aumKnown: aumValue !== null,
+        ytdReturn: null as string | null,
+        nextAction: c.daysSinceContact >= 90 ? "Call" : c.daysSinceContact >= 60 ? "Schedule Review" : "Send Update",
+      };
+    });
   }, [staleClients]);
 
   const filteredClients = useMemo(() => {
@@ -348,40 +360,17 @@ export default function StaleDigest() {
     return Object.entries(regions).map(([name, value]) => ({ name, value }));
   }, [enrichedClients]);
 
-  const engagementTrendData = useMemo(() => {
-    const data = [];
-    let baseScore = 75;
-    for (let i = 6; i >= 0; i--) {
-      const d = new Date();
-      d.setMonth(d.getMonth() - i);
-      baseScore = baseScore + (Math.random() * 10 - 5);
-      data.push({
-        month: d.toLocaleString('default', { month: 'short' }),
-        score: Math.max(0, Math.min(100, Math.round(baseScore))),
-        target: 80
-      });
-    }
-    return data;
-  }, []);
 
   const riskAumData = useMemo(() => {
-    return [
-      { name: 'Aggressive', aum: 15.2, clients: 12 },
-      { name: 'Moderate', aum: 28.5, clients: 34 },
-      { name: 'Conservative', aum: 42.1, clients: 28 }
-    ];
-  }, []);
+    const byRisk: Record<string, { name: string; aum: number; clients: number }> = {};
+    enrichedClients.forEach((c) => {
+      const e = (byRisk[c.riskProfile] ??= { name: c.riskProfile, aum: 0, clients: 0 });
+      e.aum += c.aum;
+      e.clients += 1;
+    });
+    return Object.values(byRisk).map((e) => ({ ...e, aum: parseFloat((e.aum / 1_000_000).toFixed(2)) }));
+  }, [enrichedClients]);
 
-  const contactMethodData = useMemo(() => {
-    return [
-      { subject: 'Email', A: 120, B: 110, fullMark: 150 },
-      { subject: 'Phone', A: 98, B: 130, fullMark: 150 },
-      { subject: 'Meeting', A: 86, B: 130, fullMark: 150 },
-      { subject: 'Event', A: 99, B: 100, fullMark: 150 },
-      { subject: 'Portal', A: 85, B: 90, fullMark: 150 },
-      { subject: 'Mail', A: 65, B: 85, fullMark: 150 },
-    ];
-  }, []);
 
   const handleExportCSV = useCallback(() => {
     if (!filteredClients.length) return;
@@ -775,23 +764,10 @@ export default function StaleDigest() {
                   </select>
                 </div>
                 <div className="flex-1 min-h-[300px]">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <AreaChart data={engagementTrendData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                      <defs>
-                        <linearGradient id="colorScore" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3}/>
-                          <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
-                        </linearGradient>
-                      </defs>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#12233e" vertical={false} />
-                      <XAxis dataKey="month" stroke="#7a95b8" fontSize={12} tickLine={false} axisLine={false} />
-                      <YAxis stroke="#7a95b8" fontSize={12} tickLine={false} axisLine={false} domain={[0, 100]} />
-                      <RTooltip content={<CustomTooltip />} />
-                      <Legend verticalAlign="top" height={36} iconType="circle" />
-                      <Area type="monotone" dataKey="score" name="Avg Score" stroke="#3b82f6" strokeWidth={3} fillOpacity={1} fill="url(#colorScore)" />
-                      <Line type="dashed" dataKey="target" name="Target" stroke="#7a95b8" strokeWidth={2} strokeDasharray="5 5" dot={false} />
-                    </AreaChart>
-                  </ResponsiveContainer>
+                  <div className="h-full min-h-[300px] flex flex-col items-center justify-center text-center text-[#7a95b8] border border-dashed border-[#12233e] rounded-lg px-6">
+                    <p className="text-sm font-medium text-white">No engagement history recorded yet</p>
+                    <p className="text-xs mt-1">Monthly engagement is not stored, so a trend will appear here once snapshots are kept.</p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -840,7 +816,7 @@ export default function StaleDigest() {
                             <span className="text-rose-400 font-medium">{client.days}d</span>
                           </td>
                           <td className="py-3 px-4 text-right text-[#c8d8ec]">
-                            ${((fullClient?.aum || 0) / 1000).toFixed(0)}k
+                            {fullClient?.aumKnown ? `$${((fullClient?.aum || 0) / 1000).toFixed(0)}k` : "—"}
                           </td>
                           <td className="py-3 px-4 text-center">
                             <button className="p-1.5 rounded-md bg-[#12233e] text-[#c8d8ec] hover:bg-[#22c55e] hover:text-white transition-colors">
@@ -1063,7 +1039,7 @@ export default function StaleDigest() {
                             onClick={() => handleSort('engagementScore')}
                           >
                             <div className="flex items-center justify-center gap-1">
-                              Health {sortConfig.key === 'engagementScore' && (sortConfig.direction === 'asc' ? <ChevronUp size={12} /> : <ChevronDown size={12} />)}
+                              Recency {sortConfig.key === 'engagementScore' && (sortConfig.direction === 'asc' ? <ChevronUp size={12} /> : <ChevronDown size={12} />)}
                             </div>
                           </th>
                           <th className="px-4 py-4"></th>
@@ -1097,13 +1073,13 @@ export default function StaleDigest() {
                                 </span>
                               </td>
                               <td className="px-4 py-4 text-[#c8d8ec]">
-                                ${(c.aum / 1000000).toFixed(2)}M
+                                {c.aumKnown ? `$${(c.aum / 1000000).toFixed(2)}M` : "—"}
                               </td>
                               <td className="px-4 py-4">
                                 <div className="text-[#c8d8ec]">
                                   {c.lastContact ? new Date(c.lastContact).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : "—"}
                                 </div>
-                                <div className="text-xs text-[#7a95b8] mt-1">via {c.lastContactMethod}</div>
+                                {c.lastContactMethod && <div className="text-xs text-[#7a95b8] mt-1">via {c.lastContactMethod}</div>}
                               </td>
                               <td className="px-4 py-4 text-center">
                                 <span className={`rc-badge ${
@@ -1153,7 +1129,7 @@ export default function StaleDigest() {
                                         <div className="flex justify-between"><span className="text-[#7a95b8]">Risk Profile:</span> <span className="text-[#c8d8ec]">{c.riskProfile}</span></div>
                                         <div className="flex justify-between"><span className="text-[#7a95b8]">Region:</span> <span className="text-[#c8d8ec]">{c.region}</span></div>
                                         <div className="flex justify-between"><span className="text-[#7a95b8]">Client Type:</span> <span className="text-[#c8d8ec]">{c.clientType}</span></div>
-                                        <div className="flex justify-between"><span className="text-[#7a95b8]">YTD Return:</span> <span className={Number(c.ytdReturn) > 0 ? "text-emerald-400" : "text-rose-400"}>{c.ytdReturn}%</span></div>
+                                        <div className="flex justify-between"><span className="text-[#7a95b8]">YTD Return:</span> <span className="text-[#7a95b8]">{c.ytdReturn === null ? "Not tracked" : `${c.ytdReturn}%`}</span></div>
                                       </div>
                                     </div>
                                     <div>
@@ -1241,17 +1217,10 @@ export default function StaleDigest() {
                   </h3>
                 </div>
                 <div className="flex-1 min-h-[300px]">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <RadarChart cx="50%" cy="50%" outerRadius="80%" data={contactMethodData}>
-                      <PolarGrid stroke="#12233e" />
-                      <PolarAngleAxis dataKey="subject" tick={{ fill: '#7a95b8', fontSize: 12 }} />
-                      <PolarRadiusAxis angle={30} domain={[0, 150]} tick={false} axisLine={false} />
-                      <Radar name="Successful Contacts" dataKey="A" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.5} />
-                      <Radar name="Attempted Contacts" dataKey="B" stroke="#7a95b8" fill="#7a95b8" fillOpacity={0.2} />
-                      <Legend />
-                      <RTooltip content={<CustomTooltip />} />
-                    </RadarChart>
-                  </ResponsiveContainer>
+                  <div className="h-full min-h-[300px] flex flex-col items-center justify-center text-center text-[#7a95b8] border border-dashed border-[#12233e] rounded-lg px-6">
+                    <p className="text-sm font-medium text-white">No contact-method data recorded</p>
+                    <p className="text-xs mt-1">Notes and activity entries do not record the channel used, so contact efficacy by method cannot be shown.</p>
+                  </div>
                 </div>
               </div>
               
