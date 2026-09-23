@@ -233,10 +233,17 @@ describe("HTTP routes", () => {
   it("rejects a wrong passcode with 401, a bad email with 400, and never grants admin", async () => {
     expect((await guest({ email: "dr.smith@hospital.org", password: "wrong", acknowledgements: ACK }, "10.0.1.3")).status).toBe(401);
     expect((await guest({ email: "nope", password: GUEST_PASSCODE, acknowledgements: ACK }, "10.0.1.4")).status).toBe(400);
-    const res = await guest({ email: TEST_EMAIL, password: GUEST_PASSCODE, acknowledgements: ACK }, "10.0.1.5");
+    const res = await guest({ email: "dr.smith@hospital.org", password: GUEST_PASSCODE, acknowledgements: ACK }, "10.0.1.5");
     expect(res.status).toBe(200);
     expect(upserts[0]).toMatchObject({ role: "user" });
     expect(upserts[0]!.openId).not.toBe("owner");
+  });
+
+  it("refuses the owner's address at the passcode entrance, with no session and no user row", async () => {
+    const res = await guest({ email: TEST_EMAIL.toUpperCase(), password: GUEST_PASSCODE, acknowledgements: ACK }, "10.0.1.7");
+    expect(res.status).toBe(401);
+    expect(res.headers.get("set-cookie")).toBeNull();
+    expect(upserts).toHaveLength(0);
   });
 
   it("returns 404 when the passcode entrance is not configured", async () => {

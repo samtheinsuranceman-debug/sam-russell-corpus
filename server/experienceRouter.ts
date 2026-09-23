@@ -383,25 +383,34 @@ export const experienceRouter = router({
 // WILL WRITER ROUTER
 // ═══════════════════════════════════════════════════════════════════════════════
 
+/**
+ * The client, household fact finder and properties for a will, read only from
+ * the caller's own workspace. A client in another workspace answers NOT_FOUND
+ * and nothing about it reaches the page or the model.
+ */
+async function loadWillSources(userId: number, clientId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("DB unavailable");
+  const { getWorkspaceByOwnerId } = await import("./db");
+  const ws = await getWorkspaceByOwnerId(userId);
+  if (!ws) throw new TRPCError({ code: "NOT_FOUND", message: "Client not found in your workspace" });
+  const clientRows = await db.select().from(clients)
+    .where(and(eq(clients.id, clientId), eq(clients.workspaceId, ws.id))).limit(1);
+  if (clientRows.length === 0) throw new TRPCError({ code: "NOT_FOUND", message: "Client not found in your workspace" });
+  const hhRows = await db.select().from(householdFactFinders)
+    .where(and(eq(householdFactFinders.clientId, clientId), eq(householdFactFinders.workspaceId, ws.id))).limit(1);
+  const props = await db.select().from(clientProperties)
+    .where(and(eq(clientProperties.clientId, clientId), eq(clientProperties.workspaceId, ws.id)));
+  return { db, client: clientRows[0], hh: hhRows[0] ?? null, props };
+}
+
 export const willWriterRouter = router({
   // ─── Get Family Context for Will ──────────────────────────────────────────
   getFamilyContext: protectedProcedure.input(z.object({
     clientId: z.number(),
   })).query(async ({ ctx, input }) => {
-    const db = await getDb();
-    if (!db) throw new Error("DB unavailable");
-
-    // Get client data
-    const clientRows = await db.select().from(clients).where(eq(clients.id, input.clientId)).limit(1);
-    if (clientRows.length === 0) throw new Error("Client not found");
-    const client = clientRows[0];
-
-    // Get household fact finder
-    const hhRows = await db.select().from(householdFactFinders).where(eq(householdFactFinders.clientId, input.clientId)).limit(1);
-    const hh = hhRows[0] ?? null;
-
-    // Get properties
-    const props = await db.select().from(clientProperties).where(eq(clientProperties.clientId, input.clientId));
+    // Client, household fact finder and properties: caller's workspace only.
+    const { client, hh, props } = await loadWillSources(ctx.user.id, input.clientId);
 
     // Build family context
     const context: WillFamilyContext = {
@@ -470,20 +479,8 @@ export const willWriterRouter = router({
     })).optional(),
     finalWishes: z.string().optional(),
   })).mutation(async ({ ctx, input }) => {
-    const db = await getDb();
-    if (!db) throw new Error("DB unavailable");
-
-    // Get client data
-    const clientRows = await db.select().from(clients).where(eq(clients.id, input.clientId)).limit(1);
-    if (clientRows.length === 0) throw new Error("Client not found");
-    const client = clientRows[0];
-
-    // Get household fact finder for family data
-    const hhRows = await db.select().from(householdFactFinders).where(eq(householdFactFinders.clientId, input.clientId)).limit(1);
-    const hh = hhRows[0] ?? null;
-
-    // Get properties
-    const props = await db.select().from(clientProperties).where(eq(clientProperties.clientId, input.clientId));
+    // Client, household fact finder and properties: caller's workspace only.
+    const { db, client, hh, props } = await loadWillSources(ctx.user.id, input.clientId);
 
     const clientName = client.name || `${client.firstName ?? ""} ${client.lastName ?? ""}`.trim();
     const spouseName = client.spouseName ?? hh?.spouseName;
@@ -808,15 +805,15 @@ export const withdrawalRouter = router({
 
   markRead: protectedProcedure.input(z.object({
     triggerId: z.number(),
-  })).mutation(async ({ input }) => {
-    await markTriggerRead(input.triggerId);
+  })).mutation(async ({ ctx, input }) => {
+    await markTriggerRead(input.triggerId, ctx.user.id);
     return { success: true };
   }),
 
   markClicked: protectedProcedure.input(z.object({
     triggerId: z.number(),
-  })).mutation(async ({ input }) => {
-    await markTriggerClicked(input.triggerId);
+  })).mutation(async ({ ctx, input }) => {
+    await markTriggerClicked(input.triggerId, ctx.user.id);
     return { success: true };
   }),
 
@@ -1049,9 +1046,11 @@ export const dealScoringRouter = router({
 
   history: protectedProcedure
     .input(z.object({ dealId: z.number() }))
-    .query(async ({ input }) => {
-      const { getDealScoreHistory } = await import("./db");
-      return getDealScoreHistory(input.dealId);
+    .query(async ({ ctx, input }) => {
+      const { getDealScoreHistory, getWorkspaceByOwnerId } = await import("./db");
+      const ws = await getWorkspaceByOwnerId(ctx.user.id);
+      if (!ws) return [];
+      return getDealScoreHistory(input.dealId, ws.id);
     }),
 
   allScores: protectedProcedure.query(async ({ ctx }) => {
