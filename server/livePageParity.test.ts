@@ -6,7 +6,9 @@
 // it fails if docs/mirror/index.html is stale relative to the template.
 // ============================================================
 import { describe, expect, it } from "vitest";
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, mkdtempSync, readFileSync, rmSync } from "node:fs";
+import { execFileSync } from "node:child_process";
+import os from "node:os";
 import path from "node:path";
 import manifesto from "../shared/homeManifesto.json";
 
@@ -89,5 +91,23 @@ describe("live page ↔ React homepage parity", () => {
     // and the embedded manifesto is the current one
     expect(read(built)).toContain(manifesto.claims[manifesto.claims.length - 1].name);
     expect(read(built)).toContain(manifesto.slogan.slice(0, 40));
+  });
+
+  // The check above normalizes away the embedded manifesto and images, so a mirror built
+  // from an older homeManifesto.json (or older pictures) still passed it. This one builds
+  // the mirror with the same code path as `pnpm live:build` / scripts/release.sh and
+  // requires the committed file to be byte-for-byte identical.
+  it("docs/mirror/index.html is byte-for-byte what live/build_live_homepage.py produces now", () => {
+    const built = path.join(REPO, "docs/mirror/index.html");
+    expect(existsSync(built), "docs/mirror/index.html exists — run `pnpm live:build` and commit it").toBe(true);
+    const dir = mkdtempSync(path.join(os.tmpdir(), "rcs-mirror-"));
+    try {
+      const fresh = path.join(dir, "index.html");
+      execFileSync("python3", [path.join(APP, "live/build_live_homepage.py"), fresh], { stdio: "pipe" });
+      const same = read(fresh) === read(built);
+      expect(same, "docs/mirror/index.html is stale — run `pnpm live:build` and commit the result").toBe(true);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
   });
 });
