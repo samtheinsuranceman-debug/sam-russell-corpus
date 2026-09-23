@@ -19,7 +19,6 @@ const ALL_PAGES: NavItem[] = [
   // Clients & CRM
   { path: "/portal/clients", label: "Client Directory", section: "Clients & CRM" },
   { path: "/portal/client-files", label: "Client Files", section: "Clients & CRM" },
-  { path: "/portal/client-self-service", label: "Self-Service Portal", section: "Clients & CRM" },
   { path: "/portal/client-portal-config", label: "Portal Settings", section: "Clients & CRM" },
   { path: "/portal/client-onboarding", label: "Client Onboarding", section: "Clients & CRM" },
   { path: "/portal/client-onboarding-auto", label: "Onboarding Automation", section: "Clients & CRM" },
@@ -125,7 +124,6 @@ const ALL_PAGES: NavItem[] = [
   // Sales & Presentations
   { path: "/portal/recommendations", label: "Score Boosters", section: "Sales & Presentations" },
   { path: "/portal/sales-story", label: "Sales Story Builder", section: "Sales & Presentations" },
-  { path: "/portal/lead-generator", label: "Lead Generator", section: "Sales & Presentations" },
   { path: "/portal/referral-tracking", label: "Referral Tracking", section: "Sales & Presentations" },
   { path: "/portal/engagement-score", label: "Engagement Score", section: "Sales & Presentations" },
   { path: "/portal/leaderboard", label: "Leaderboard", section: "Sales & Presentations" },
@@ -141,7 +139,6 @@ const ALL_PAGES: NavItem[] = [
   { path: "/portal/stale-digest", label: "Stale Digest", section: "Market & Analytics" },
   // Compliance & Legal
   { path: "/portal/compliance", label: "Compliance Center", section: "Compliance & Legal" },
-  { path: "/portal/compliance-monitoring", label: "Compliance Monitor", section: "Compliance & Legal" },
   { path: "/portal/compliance-audit", label: "Audit Center", section: "Compliance & Legal" },
   { path: "/portal/compliance-alerts", label: "Alerts", section: "Compliance & Legal" },
   { path: "/portal/compliance-reports", label: "Reports", section: "Compliance & Legal" },
@@ -160,7 +157,6 @@ const ALL_PAGES: NavItem[] = [
   { path: "/portal/agent-tutorial", label: "Agent Tutorial", section: "Administration" },
   { path: "/portal/agency-tutorial", label: "Agency Tutorial", section: "Administration" },
   { path: "/portal/billing", label: "Billing", section: "Administration" },
-  { path: "/portal/enterprise", label: "Enterprise", section: "Administration" },
   { path: "/portal/knowledge", label: "Knowledge Base", section: "Administration" },
   { path: "/portal/branding", label: "Branding", section: "Administration" },
   { path: "/portal/webhooks", label: "Webhooks", section: "Administration" },

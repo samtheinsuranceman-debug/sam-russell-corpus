@@ -12,7 +12,6 @@ const LAB_TOOLS: { path: string; label: string }[] = [
   { path: "/portal/1031-exchange", label: "1031 Exchange" },
   { path: "/portal/529-advanced", label: "529 Advanced" },
   { path: "/portal/aca-subsidy", label: "Aca Subsidy" },
-  { path: "/portal/admin", label: "Admin" },
   { path: "/portal/admin/health", label: "Health" },
   { path: "/portal/advisor-income-calculator", label: "Advisor Income Calculator" },
   { path: "/portal/affiliate-links", label: "Affiliate Links" },

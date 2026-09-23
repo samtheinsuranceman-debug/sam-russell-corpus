@@ -1582,6 +1582,7 @@ export default function CarrierSettings() {
 
       <PageInsights pageId="carrier-settings" />
       <NAICDisclaimer variant="footer" showsProjections showsHistoricalData />
+      <p className="mt-6 text-xs text-slate-500">Source: Comdex and financial-strength ratings from shared/carrierRatings.ts, read from each carrier's own published ratings; rate history and recommendation share appear once real quotes are recorded.</p>
     </div>
   );
 }

@@ -193,6 +193,7 @@ const InteropEnginePage: React.FC = () => {
           </Link>
         </div>
       </div>
+      <p className="mt-6 text-xs text-slate-500">Source: tool counts come from the platform's own calculator catalogue (shared/calculatorCatalog.ts).</p>
     </div>
   );
 };

@@ -1,3 +1,4 @@
+import { NOT_IN_NAVIGATION } from "../shared/hiddenRoutes";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
@@ -59,10 +60,6 @@ describe("organized portal navigation", () => {
    * is asserted below: every entry must still be a real route, or it is a
    * stale excuse for a page that no longer exists.
    */
-  const NOT_IN_NAVIGATION: Record<string, string> = {
-    "/portal/interior":
-      "The design-system reference. It shows the shared primitives against sample content for whoever is building screens, and has nothing on it a client would want. Reachable by anyone who types the URL; not advertised.",
-  };
 
   it("makes every static portal route discoverable through primary or secondary navigation", () => {
     const undiscoverable = [...routes]
