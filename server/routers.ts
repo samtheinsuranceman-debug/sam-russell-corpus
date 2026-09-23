@@ -1644,7 +1644,13 @@ Keep it personal, specific with dollar amounts, and actionable. Use their actual
       if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
       const { clients: clientsTable } = await import("../drizzle/schema");
       const { inArray } = await import("drizzle-orm");
-      const allClients = await db.select().from(clientsTable).where(inArray(clientsTable.id, input.clientIds));
+      // Only clients in the caller's own workspace; any other id answers NOT_FOUND before a model is called.
+      const requestedIds = Array.from(new Set(input.clientIds));
+      const allClients = await db.select().from(clientsTable)
+        .where(and(inArray(clientsTable.id, requestedIds), eq(clientsTable.workspaceId, ws.id)));
+      if (allClients.length !== requestedIds.length) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Client not found in your workspace" });
+      }
 
       const results: Array<{ clientId: number; clientName: string; slides: any[]; savedId?: number; pptxUrl?: string }> = [];
 
