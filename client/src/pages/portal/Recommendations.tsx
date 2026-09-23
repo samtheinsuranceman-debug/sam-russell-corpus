@@ -80,7 +80,8 @@ function generateRecommendations(data: any): Recommendation[] {
         "Reduces future Required Minimum Distributions (RMDs)",
         "Creates tax-free income in retirement",
         "Protects against future tax rate increases",
-        "Best done before age 72 when RMDs begin"
+        // RMD start age: SECURE 2.0 § 107 — https://www.irs.gov/retirement-plans/plan-participant-employee/retirement-topics-required-minimum-distributions-rmds (read 23 Sep 2026)
+        "Best done before RMDs begin — at 73, or 75 if born in 1960 or later (SECURE 2.0 § 107)"
       ],
       tabLink: "/portal/roth-conversion",
       tabName: "Roth Conversion STR",
@@ -280,7 +281,9 @@ function generateRecommendations(data: any): Recommendation[] {
   recs.push({
     id: "max-contributions",
     title: "Maximize Retirement Account Contributions",
-    description: `Contribute the max to your 401(k) ($${age >= 50 ? "30,500" : "23,500"}/yr) and IRA ($${age >= 50 ? "8,000" : "7,000"}/yr)`,
+    // 2026 limits: 401(k) $24,500 + $8,000 catch-up at 50+; IRA $7,500 + $1,100 catch-up at 50+.
+    // Per IRS Notice 2025-67, https://www.irs.gov/pub/irs-drop/n-25-67.pdf, and https://www.irs.gov/newsroom/401k-limit-increases-to-24500-for-2026-ira-limit-increases-to-7500 (read 23 Sep 2026). Were 2025 figures ($23,500/$30,500, $7,000/$8,000).
+    description: `Contribute the max to your 401(k) ($${age >= 50 ? "32,500" : "24,500"}/yr) and IRA ($${age >= 50 ? "8,600" : "7,500"}/yr)`,
     scoreBoost: 5,
     category: "growth",
     icon: TrendingUp,

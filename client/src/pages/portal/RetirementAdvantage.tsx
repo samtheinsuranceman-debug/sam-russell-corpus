@@ -103,10 +103,13 @@ const ADVANTAGES: Advantage[] = [
     score: 9,
     summary: "IUL cash value is never subject to Required Minimum Distributions, giving retirees complete control over when and how much income they take — unlike IRAs and 401(k)s that force taxable withdrawals starting at age 73.",
     details: "The SECURE Act 2.0 pushed RMD age to 73 (and 75 by 2033), but the fundamental problem remains: the government forces you to withdraw money and pay taxes on it whether you need it or not. These forced distributions can push retirees into higher tax brackets, trigger Medicare IRMAA surcharges, and make up to 85% of Social Security benefits taxable. IUL completely sidesteps this entire framework.",
-    purchasingPower: "Avoiding RMDs means avoiding the tax cascade: higher bracket + IRMAA surcharges + Social Security taxation. A retiree with $1M in traditional IRA faces $36,500 in forced RMDs at 73 — potentially costing $12,000+ in taxes and surcharges they wouldn't otherwise owe.",
+    // RMD at 73 on $1M: ÷ 26.5 = $37,736; at 74 on $1.8M: ÷ 25.5 = $70,588 (Uniform Lifetime Table,
+    // Treas. Reg. § 1.401(a)(9)-9(c), https://www.ecfr.gov/current/title-26/chapter-I/subchapter-A/part-1/subject-group-ECFR6f8c3724b50e44d/section-1.401(a)(9)-9, read 23 Sep 2026).
+    // Were $36,500 and $66,000, both ÷ 27.4 (the age-72 divisor).
+    purchasingPower: "Avoiding RMDs means avoiding the tax cascade: higher bracket + IRMAA surcharges + Social Security taxation. A retiree with $1M in traditional IRA faces $37,700 in forced RMDs at 73 — potentially costing $12,000+ in taxes and surcharges they wouldn't otherwise owe.",
     flexibility: "Total control over distribution timing. Take nothing during high-income years, take more during low-income years. Coordinate with Social Security claiming strategy, Roth conversions, and capital gains harvesting without RMD interference.",
     usefulness: "Essential for anyone with $500K+ in traditional retirement accounts who wants to avoid the RMD tax trap. Particularly valuable for those who don't need the income but are forced to take it.",
-    example: "Robert and Linda Park, ages 74 and 71, have $1.8M in IRAs generating $66,000 in forced RMDs. This pushes them into the 24% bracket and triggers $4,800/year in IRMAA surcharges. Their $600K IUL provides $45K/year with zero tax impact and zero effect on their Medicare premiums.",
+    example: "Robert and Linda Park, ages 74 and 71, have $1.8M in IRAs generating $70,600 in forced RMDs. This pushes them into the 24% bracket and triggers $4,800/year in IRMAA surcharges. Their $600K IUL provides $45K/year with zero tax impact and zero effect on their Medicare premiums.",
     irsCode: "IRC §401(a)(9) (RMD Rules — IUL exempt), IRC §72(e) (Life Insurance Distribution Rules)",
     stressTestData: [
       { year: 1, traditional: 100000, iul: 100000 },
@@ -127,7 +130,10 @@ const ADVANTAGES: Advantage[] = [
     details: "Life insurance death benefits are one of the few remaining truly tax-free transfers in the U.S. tax code. A properly structured IUL provides both living benefits (tax-free income) and a death benefit that can be 3-10x the total premiums paid. When placed in an Irrevocable Life Insurance Trust (ILIT), the death benefit also avoids estate taxes, creating a double tax shield.",
     purchasingPower: "A $1M death benefit in an ILIT is worth $1M to heirs. A $1M traditional IRA might be worth only $600K-$700K after income taxes. The IUL effectively provides 40-65% more purchasing power to the next generation.",
     flexibility: "The death benefit can be structured as level, increasing, or decreasing. It can fund buy-sell agreements, replace pension income for a surviving spouse, equalize inheritance among children, or pay estate taxes without forcing asset liquidation.",
-    usefulness: "Indispensable for estate planning, especially for estates above the federal exemption ($13.61M in 2024, but potentially dropping to ~$7M in 2026 when TCJA sunsets). Also critical for business succession planning.",
+    // 2026 basic exclusion $15,000,000, indexed, no sunset: P.L. 119-21 § 70106 amending IRC § 2010(c)(3)
+    // (https://www.congress.gov/119/plaws/publ21/PLAW-119publ21.pdf) and Rev. Proc. 2025-32
+    // (https://www.irs.gov/pub/irs-drop/rp-25-32.pdf), read 23 Sep 2026. Was "$13.61M in 2024 … ~$7M in 2026".
+    usefulness: "Indispensable for estate planning, especially for estates above the federal exemption ($15M per person in 2026, indexed for inflation and made permanent by P.L. 119-21 — no scheduled sunset). Also critical for business succession planning.",
     example: "James Whitfield, age 65, business owner with $8M estate. His $2M IUL death benefit in an ILIT will pay the estimated $800K estate tax bill without forcing his children to sell the family business. Meanwhile, he draws $75K/year tax-free from the cash value during retirement.",
     irsCode: "IRC §101(a) (Tax-Free Death Benefits), IRC §2042 (ILIT Estate Tax Exclusion)",
     stressTestData: [

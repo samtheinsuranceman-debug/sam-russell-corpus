@@ -1,4 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
+import { requiredMinimumDistribution, rmdStartAgeForAge } from "@shared/uniformLifetimeTable";
 
 // ─── Round 64: Carrier Ratings Service ───
 describe("Round 64 — Carrier Ratings Enrichment Service", () => {
@@ -247,7 +248,7 @@ describe("Round 66 — Enhanced Client Portal with Scorecard & Income Timeline",
       const ssIncome = yr >= 67 ? 36000 : 0;
       const rothIncome = yr >= retirementAge ? Math.round(rothBalance * 0.04) : 0;
       const iulIncome = yr >= retirementAge ? Math.round(lifeInsuranceCv * 0.06) : 0;
-      const iraIncome = yr >= 72 ? Math.round(iraBalance / (90 - yr + 1)) : 0;
+      const iraIncome = Math.round(requiredMinimumDistribution(yr, iraBalance, rmdStartAgeForAge(age, 2026)));
       return { age: yr, socialSecurity: ssIncome, rothDistributions: rothIncome, iulLoans: iulIncome, iraRmd: iraIncome, total: ssIncome + rothIncome + iulIncome + iraIncome };
     });
 
@@ -266,13 +267,16 @@ describe("Round 66 — Enhanced Client Portal with Scorecard & Income Timeline",
     // At age 67, SS kicks in
     const at67 = incomeTimeline.find(r => r.age === 67)!;
     expect(at67.socialSecurity).toBe(36000);
-    // IRA RMD doesn't start until 72, so at 67 it's just SS + Roth + IUL
+    // Age 45 in 2026 → born 1981 → RMDs start at 75 (SECURE 2.0 § 107), so at 67 it's just SS + Roth + IUL
     expect(at67.total).toBe(36000 + 8000 + 30000); // 74000
 
-    // At age 72, IRA RMD kicks in
-    const at72 = incomeTimeline.find(r => r.age === 72)!;
-    expect(at72.iraRmd).toBe(Math.round(300000 / (90 - 72 + 1))); // 300000 / 19 = 15789
-    expect(at72.iraRmd).toBeGreaterThan(0);
+    // Nothing at 72 or 74 under current law
+    expect(incomeTimeline.find(r => r.age === 72)!.iraRmd).toBe(0);
+    expect(incomeTimeline.find(r => r.age === 74)!.iraRmd).toBe(0);
+
+    // At 75 the RMD is balance ÷ 24.6 (Uniform Lifetime Table, Treas. Reg. § 1.401(a)(9)-9(c))
+    const at75 = incomeTimeline.find(r => r.age === 75)!;
+    expect(at75.iraRmd).toBe(Math.round(300000 / 24.6)); // 12195
   });
 
   it("should handle zero balances gracefully in income timeline", () => {
@@ -287,7 +291,7 @@ describe("Round 66 — Enhanced Client Portal with Scorecard & Income Timeline",
       const ssIncome = yr >= 67 ? 36000 : 0;
       const rothIncome = yr >= retirementAge ? Math.round(rothBalance * 0.04) : 0;
       const iulIncome = yr >= retirementAge ? Math.round(lifeInsuranceCv * 0.06) : 0;
-      const iraIncome = yr >= 72 ? Math.round(iraBalance / (90 - yr + 1)) : 0;
+      const iraIncome = Math.round(requiredMinimumDistribution(yr, iraBalance, rmdStartAgeForAge(age, 2026)));
       return { age: yr, socialSecurity: ssIncome, rothDistributions: rothIncome, iulLoans: iulIncome, iraRmd: iraIncome, total: ssIncome + rothIncome + iulIncome + iraIncome };
     });
 

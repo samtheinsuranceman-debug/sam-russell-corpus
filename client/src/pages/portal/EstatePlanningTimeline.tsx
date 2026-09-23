@@ -14,7 +14,7 @@ export default function EstatePlanningTimeline() {
     { age: '30s', description: 'Build wealth: Purchase life insurance, establish a trust for growing assets, and review power of attorney (POA).', icon: <DollarSign className="w-6 h-6 text-amber-400" /> },
     { age: '40s', description: 'Family planning: Update healthcare directives, audit beneficiary designations, and consider digital asset inventory.', icon: <TrendingUp className="w-6 h-6 text-amber-400" /> },
     { age: '50s', description: 'Peak earning: Perform estate plan stress tests for events like divorce or disability, and track annual gifting.', icon: <Target className="w-6 h-6 text-amber-400" /> },
-    { age: '60s', description: 'Retirement preparation: Review TCJA sunset implications for 2025/2026, and ensure compliance with IRC sections.', icon: <Calendar className="w-6 h-6 text-amber-400" /> },
+    { age: '60s', description: 'Retirement preparation: Review use of the $15M-per-person exemption (2026, made permanent by P.L. 119-21), and ensure compliance with IRC sections.', icon: <Calendar className="w-6 h-6 text-amber-400" /> },
     { age: '70s', description: 'Legacy building: Update trusts and wills, conduct 50-year estate plan evolution, and verify HIPAA authorizations.', icon: <Percent className="w-6 h-6 text-amber-400" /> },
     { age: '80s+', description: 'Final reviews: Focus on state-specific requirements, SECURE Act rules, and comprehensive estate/gift/GST tax planning.', icon: <ArrowRight className="w-6 h-6 text-amber-400" /> },
   ], []);
@@ -41,13 +41,17 @@ export default function EstatePlanningTimeline() {
     { code: 'SECURE Act Beneficiary Rules', description: 'Updated rules for inherited IRAs and retirement accounts.', icon: <Calendar className="w-6 h-6 text-amber-400" /> },
   ], []);
 
+  // Annual gift tax exclusion per donee, IRC § 2503(b): Rev. Proc. 2019-44 (2020), 2020-45 (2021), 2021-45 (2022),
+  // 2022-38 (2023), 2023-34 (2024), 2024-40 (2025), 2025-32 (2026, https://www.irs.gov/pub/irs-drop/rp-25-32.pdf);
+  // read 23 Sep 2026. Were 15,000 / 15,500 / 16,000 / 16,500 / 17,000 / 17,500 with a "TCJA sunset impact" note.
   const giftingData = useMemo(() => [
     { year: 2020, amount: 15000 },
-    { year: 2021, amount: 15500 },
+    { year: 2021, amount: 15000 },
     { year: 2022, amount: 16000 },
-    { year: 2023, amount: 16500 },
-    { year: 2024, amount: 17000 },
-    { year: 2025, amount: 17500 }, // TCJA sunset impact
+    { year: 2023, amount: 17000 },
+    { year: 2024, amount: 18000 },
+    { year: 2025, amount: 19000 },
+    { year: 2026, amount: 19000 },
   ], []);
 
   const estateEvolutionData = useMemo(() => [
@@ -139,12 +143,12 @@ export default function EstatePlanningTimeline() {
         </ul>
       </section>
       
-      {/* TCJA Sunset Countdown Section */}
+      {/* Was "TCJA Sunset Countdown (2025/2026)". P.L. 119-21 made the TCJA exemption and rates permanent — P.L. 119-21 § 70106 amending IRC § 2010(c)(3), https://www.congress.gov/119/plaws/publ21/PLAW-119publ21.pdf; Rev. Proc. 2025-32, https://www.irs.gov/pub/irs-drop/rp-25-32.pdf (read 23 Sep 2026). */}
       <section className="mb-12">
         <h2 className="text-2xl font-semibold mb-4 flex items-center text-amber-400">
-          <Percent className="mr-2" /> TCJA Sunset Countdown (2025/2026)
+          <Percent className="mr-2" /> Exemption Planning Under Current Law
         </h2>
-        <p className="bg-[#0d1526] p-4 rounded-lg shadow-lg">Prepare for potential tax changes in 2025/2026 by maximizing gifting and estate exemptions under IRC 2010-2704 before sunset.</p>
+        <p className="bg-[#0d1526] p-4 rounded-lg shadow-lg">Current law (P.L. 119-21, July 2025): the estate and gift exemption is $15M per person in 2026, indexed, with no scheduled sunset. Plan gifting under IRC §§ 2010–2704 against that figure; treat a lower exemption only as a "what if Congress changes it" scenario.</p>
         <input
           type="number"
           value={selectedYear}

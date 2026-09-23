@@ -553,7 +553,9 @@ export default function CryptoCurrencyCorner() {
                     <NumberInput value={form.strAppreciationRate} onChange={(v) => setForm(f => ({ ...f, strAppreciationRate: v }))}  />
                   </div>
                   <div>
-                    <Label className="text-xs">1st Year Depreciation %</Label>
+                    {/* Share of the purchase price written off in year one = cost-segregated short-life share × the bonus rate.
+                        Bonus rate is 100% for property acquired after 19 Jan 2025 — P.L. 119-21 § 70301 amending IRC § 168(k) (https://www.congress.gov/119/plaws/publ21/PLAW-119publ21.pdf); IRS Notice 2026-11 (https://www.irs.gov/pub/irs-drop/n-26-11.pdf), read 23 Sep 2026. */}
+                    <Label className="text-xs">1st Year Depreciation (cost-seg share of price; bonus is 100%)</Label>
                     <NumberInput value={form.strFirstYearDepreciation} onChange={(v) => setForm(f => ({ ...f, strFirstYearDepreciation: v }))}  />
                   </div>
                   <div>
@@ -851,7 +853,7 @@ export default function CryptoCurrencyCorner() {
                       <Bar dataKey="depreciationOffset" name="Depreciation Offset" fill="#a855f7" radius={[2, 2, 0, 0]} />
                     </BarChart>
                   </ResponsiveContainer>
-                  <p className="text-xs text-muted-foreground mt-2">New STR purchases every {form.strPurchaseEveryYears} years provide 40% first-year depreciation to offset crypto capital gains during bull cycle profit-taking years.</p>
+                  <p className="text-xs text-muted-foreground mt-2">New STR purchases every {form.strPurchaseEveryYears} years provide {Math.round(form.strFirstYearDepreciation * 100)}% of the price as first-year depreciation (the cost-segregated share, deducted in full at the 100% bonus rate under P.L. 119-21) to offset crypto capital gains during bull cycle profit-taking years.</p>
                 </CardContent>
               </Card>
             </>
@@ -942,7 +944,7 @@ export default function CryptoCurrencyCorner() {
                       <p><span className="font-semibold text-yellow-400">Precious Metals:</span> Allocate excess profits to gold ({form.pctToGold}%) and silver ({form.pctToSilver}%) as a hedge.</p>
                     </div>
                     <div className="space-y-2">
-                      <p><span className="font-semibold text-blue-400">Real Estate:</span> Purchase a ${fmt(form.strPurchasePrice)} STR every {form.strPurchaseEveryYears} years with 30% down. Use 40% first-year depreciation to offset crypto capital gains.</p>
+                      <p><span className="font-semibold text-blue-400">Real Estate:</span> Purchase a ${fmt(form.strPurchasePrice)} STR every {form.strPurchaseEveryYears} years with 30% down. Write off {Math.round(form.strFirstYearDepreciation * 100)}% of the price in year one (cost segregation at 100% bonus depreciation) to offset crypto capital gains.</p>
                       <p><span className="font-semibold text-emerald-400">Funding Stack:</span> Crypto profits → IUL 90% loan → HELOC for remaining down payment.</p>
                       <p><span className="font-semibold text-red-400">Rental Income:</span> 20% gross annual income reinvested into next bear cycle DCA and mortgage paydown ({form.pctToMortgagePaydown}%).</p>
                     </div>

@@ -443,8 +443,9 @@ function IncomeTimelineTab({ incomeTimeline, primaryColor, accentColor }: any) {
               </tbody>
             </table>
           </div>
+          {/* RMD start age: SECURE 2.0 § 107 — https://www.irs.gov/retirement-plans/plan-participant-employee/retirement-topics-required-minimum-distributions-rmds (read 23 Sep 2026) */}
           <p className="text-[10px] text-muted-foreground mt-3">
-            Projections are estimates based on current account balances and standard assumptions. Social Security begins at age 67. IRA RMDs begin at age 72. Actual results will vary.
+            Projections are estimates based on current account balances and standard assumptions. Social Security begins at age 67. IRA RMDs begin at age 73, or 75 if born in 1960 or later (SECURE 2.0 § 107). Actual results will vary.
           </p>
         </CardContent>
       </Card>

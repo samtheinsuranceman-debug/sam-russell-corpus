@@ -1475,7 +1475,7 @@ const PAGE_SUBTABS: Record<string, string[]> = {
   "/portal/dashboard": ["Workspace Overview", "Clients", "AUM Growth", "Strategy Trend", "Deal Pipeline", "Asset Allocation", "Goal Tracking", "Activity Feed"],
   "/portal/social-security": ["Claiming", "Breakeven", "Scenarios", "Taxation", "Projection", "Earnings", "Survivor", "WEP/GPO", "Bridge"],
   "/portal/tax-waterfall": ["Waterfall", "Brackets", "Scenarios", "Breakdown", "Roth Analysis", "Tax Bomb", "IRMAA", "Lifetime Heatmap", "Cap Gains", "Withdrawal Order"],
-  "/portal/estate-tax": ["Overview", "Assets", "Deductions", "ILIT", "Gifting", "Sunset", "Projections", "Insurance"],
+  "/portal/estate-tax": ["Overview", "Assets", "Deductions", "ILIT", "Gifting", "2026 Law", "Projections", "Insurance"],
   "/portal/mortgage-killer": ["Fact Finder", "Current Plan", "Recommended", "Savings", "Scenarios", "Amortization", "Details"],
   "/portal/household-wealth": ["Fact Finder", "Policies", "Mortgage", "Real Estate", "Recapture", "Summary"],
   "/portal/hot-income": ["Year Summaries", "Overview", "Tax Calculator", "Projection", "Tax Benefits", "Beneficiary"],
