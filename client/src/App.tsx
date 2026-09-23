@@ -160,6 +160,8 @@ const TimeMachineCalculator = lazy(() => import("./pages/portal/TimeMachineCalcu
 const IllustrationCompare = lazy(() => import("./pages/portal/IllustrationCompare"));
 const PremiumFinancing = lazy(() => import("./pages/portal/PremiumFinancing"));
 const PolicyLoans = lazy(() => import("./pages/portal/PolicyLoans"));
+const EarlyCashValue = lazy(() => import("./pages/portal/EarlyCashValue"));
+const CreditLineSequencing = lazy(() => import("./pages/portal/CreditLineSequencing"));
 const PolicyCostLab = lazy(() => import("./pages/portal/PolicyCostLab"));
 const CarrierRatings = lazy(() => import("./pages/portal/CarrierRatings"));
 const TaxWaterfall = lazy(() => import("./pages/portal/TaxWaterfall"));
@@ -611,6 +613,8 @@ function Router() {
       <Route path="/portal/illustration-compare" component={gated(IllustrationCompare, "/portal/illustration-compare")} />
       <Route path="/portal/premium-financing" component={gated(PremiumFinancing, "/portal/premium-financing")} />
       <Route path="/portal/policy-loans" component={gated(PolicyLoans, "/portal/policy-loans")} />
+      <Route path="/portal/early-cash-value" component={gated(EarlyCashValue, "/portal/early-cash-value")} />
+      <Route path="/portal/credit-line-sequencing" component={gated(CreditLineSequencing, "/portal/credit-line-sequencing")} />
       <Route path="/portal/policy-cost-lab" component={gated(PolicyCostLab, "/portal/policy-cost-lab")} />
       <Route path="/portal/carrier-ratings" component={gated(CarrierRatings, "/portal/carrier-ratings")} />
       <Route path="/portal/tax-waterfall" component={gated(TaxWaterfall, "/portal/tax-waterfall")} />
