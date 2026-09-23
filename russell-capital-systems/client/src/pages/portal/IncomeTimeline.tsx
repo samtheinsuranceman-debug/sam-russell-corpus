@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { AppShell } from "@/components/AppShell";
 import { NumberInput } from "@/components/NumberInput";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
@@ -46,7 +45,7 @@ import {
 import { toast } from "sonner";
 import { NAICDisclaimer } from "@/components/NAICDisclaimer";
 import { ExportToSlides } from "@/components/ExportToSlides";
-import { ExecutiveSummary, GoalsAccelerator, RecommendationSummary, DoNothingBaseline, TaxBracketPanel } from "@/components/ConsumerOutcomeBlocks";
+import { ExecutiveSummary, GoalsAccelerator, TaxBracketPanel } from "@/components/ConsumerOutcomeBlocks";
 import { formatTaxCurrency } from "@shared/taxBracketEngine";
 import { RelatedCalculators } from "@/components/RelatedCalculators";
 import { ComplianceFooter } from "@/components/ComplianceFooter";
@@ -82,41 +81,6 @@ function CustomTooltip({ active, payload, label }: any) {
       <p className="font-semibold text-sm mb-2 pb-2 border-b border-border">Age {label}</p>
       <div className="space-y-1.5">
 
-        {/* ═══ CONSUMER OUTCOME BLOCKS — Flagship Tier ═══ */}
-        {/* Related Calculators Toggle */}
-        <RelatedCalculators currentPage="IncomeTimeline" />
-
-        <ExecutiveSummary
-          pageTitle="Income Timeline"
-          whatItDoes="This retirement income tool provides institutional-grade analysis of your financial situation, modeling multiple scenarios and projecting outcomes based on your specific inputs. It transforms complex retirement income concepts into clear, actionable insights with dollar-quantified recommendations."
-          opportunities="Most retirees leave significant income on the table by not optimizing the sequence, timing, and tax treatment of their various income sources."
-          intent="To give you the same caliber of retirement income analysis that institutional investors and ultra-high-net-worth families receive — now accessible to every client."
-          takeaway="Understanding your retirement income options with precise dollar amounts empowers you to make confident decisions that compound into significant wealth over time."
-          callToAction="Enter your numbers and see exactly how retirement income strategies can improve your financial outcome."
-          followUpQuestions={[
-            "How does this retirement income strategy interact with my other financial plans?",
-            "What\'s the single biggest retirement income opportunity I\'m currently missing?",
-            "How would my results change if I started this strategy 5 years earlier?",
-          ]}
-        />
-        <GoalsAccelerator pageName="Income Timeline" pageContext="Income Timeline — retirement income modeling with projections and scenario analysis" />
-        <TaxBracketPanel grossIncome={clientData?.annualIncome || 150000} filingStatus={clientData?.filingStatus || "single"} stateCode={clientData?.state || "TX"} />
-        <RecommendationSummary
-          headline="This retirement income strategy can significantly improve your financial outcome"
-          detail="Based on your profile, implementing the recommended retirement income approach could generate substantial savings and growth over your planning horizon."
-          dollarBenefit={420000}
-          timeHorizon="20 years"
-          confidence="high"
-          nextStep="Review with your advisor"
-        />
-        <DoNothingBaseline
-          metrics={[
-            { label: "Monthly Retirement Income", doNothing: 6500, recommended: 9200, format: "currency" },
-            { label: "Income Tax Efficiency", doNothing: 45, recommended: 78, format: "percent" },
-            { label: "Income Longevity", doNothing: 22, recommended: 35, format: "years" },
-          ]}
-          summary="Without taking action on retirement income, you leave significant value on the table that compounds into a major opportunity cost over time."
-        />
         {payload.map((entry: any, i: number) => (
           <div key={i} className="flex items-center justify-between gap-4">
             <div className="flex items-center gap-1.5">
@@ -147,12 +111,7 @@ export default function IncomeTimeline() {
   const { data: clientData } = useClientData();
 
   const calcMut = trpc.incomeTimeline.calculate.useMutation();
-  const saveScenarioMut = trpc.scenarios.saveScenario.useMutation();
-  const { data: riskProfile } = trpc.riskProfile.getProfile.useQuery(undefined, {
-    enabled: !!user
-  });
-  const { data: marketData } = trpc.marketData.getLatestRates.useQuery();
-  const { data: savedStrategies } = trpc.savedStrategies.list.useQuery();
+  const saveScenarioMut = trpc.scenarios.save.useMutation();
 
   useEffect(() => {
     if (clientData) {
@@ -209,11 +168,14 @@ export default function IncomeTimeline() {
   const handleSaveScenario = () => {
     saveScenarioMut.mutate({
       name: `Income Timeline - Age ${retirementAge}`,
-      data: {
+      clientId: clientData?.clientId || undefined,
+      inputs: {
         currentAge, retirementAge, endAge, targetIncome, inflationRate, sources
-      }
+      },
+      projectionData: calcMut.data ?? null,
     }, {
-      onSuccess: () => toast.success("Scenario saved successfully")
+      onSuccess: () => toast.success("Scenario saved successfully"),
+      onError: (err) => toast.error(err.message || "Could not save the scenario"),
     });
   };
 
@@ -1023,61 +985,29 @@ export default function IncomeTimeline() {
             </div>
           </CardContent>
         </Card>
+
+        {/* Related Calculators Toggle */}
+        <RelatedCalculators currentPage="IncomeTimeline" />
+
+        <ExecutiveSummary
+          pageTitle="Income Timeline"
+          whatItDoes="This retirement income tool provides institutional-grade analysis of your financial situation, modeling multiple scenarios and projecting outcomes based on your specific inputs. It transforms complex retirement income concepts into clear, actionable insights with dollar-quantified recommendations."
+          opportunities="Most retirees leave significant income on the table by not optimizing the sequence, timing, and tax treatment of their various income sources."
+          intent="To give you the same caliber of retirement income analysis that institutional investors and ultra-high-net-worth families receive — now accessible to every client."
+          takeaway="Understanding your retirement income options with precise dollar amounts empowers you to make confident decisions that compound into significant wealth over time."
+          callToAction="Enter your numbers and see exactly how retirement income strategies can improve your financial outcome."
+          followUpQuestions={[
+            "How does this retirement income strategy interact with my other financial plans?",
+            "What\'s the single biggest retirement income opportunity I\'m currently missing?",
+            "How would my results change if I started this strategy 5 years earlier?",
+          ]}
+        />
+        <GoalsAccelerator pageName="Income Timeline" pageContext="Income Timeline — retirement income modeling with projections and scenario analysis" />
+        {clientData?.annualIncome ? (
+          <TaxBracketPanel grossIncome={clientData.annualIncome} filingStatus={clientData.filingStatus} stateCode={clientData.state || undefined} />
+        ) : null}
       </div>
       
-      {/* Empty divs to pad lines */}
-      <div className="hidden">
-        <p>Padding line 1</p>
-        <p>Padding line 2</p>
-        <p>Padding line 3</p>
-        <p>Padding line 4</p>
-        <p>Padding line 5</p>
-        <p>Padding line 6</p>
-        <p>Padding line 7</p>
-        <p>Padding line 8</p>
-        <p>Padding line 9</p>
-        <p>Padding line 10</p>
-        <p>Padding line 11</p>
-        <p>Padding line 12</p>
-        <p>Padding line 13</p>
-        <p>Padding line 14</p>
-        <p>Padding line 15</p>
-        <p>Padding line 16</p>
-        <p>Padding line 17</p>
-        <p>Padding line 18</p>
-        <p>Padding line 19</p>
-        <p>Padding line 20</p>
-        <p>Padding line 21</p>
-        <p>Padding line 22</p>
-        <p>Padding line 23</p>
-        <p>Padding line 24</p>
-        <p>Padding line 25</p>
-        <p>Padding line 26</p>
-        <p>Padding line 27</p>
-        <p>Padding line 28</p>
-        <p>Padding line 29</p>
-        <p>Padding line 30</p>
-        <p>Padding line 31</p>
-        <p>Padding line 32</p>
-        <p>Padding line 33</p>
-        <p>Padding line 34</p>
-        <p>Padding line 35</p>
-        <p>Padding line 36</p>
-        <p>Padding line 37</p>
-        <p>Padding line 38</p>
-        <p>Padding line 39</p>
-        <p>Padding line 40</p>
-        <p>Padding line 41</p>
-        <p>Padding line 42</p>
-        <p>Padding line 43</p>
-        <p>Padding line 44</p>
-        <p>Padding line 45</p>
-        <p>Padding line 46</p>
-        <p>Padding line 47</p>
-        <p>Padding line 48</p>
-        <p>Padding line 49</p>
-        <p>Padding line 50</p>
-      </div>
     
         <PageInsights pageId="income-timeline" />
         <ComplianceFooter pageName="IncomeTimeline" showsIUL showsAnnuity showsTax showsEstate showsProjections showsPolicyLoans />

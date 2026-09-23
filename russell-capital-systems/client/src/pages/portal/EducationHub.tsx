@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { AppShell } from "@/components/AppShell";
 import { useState, useMemo } from "react";
 import {
@@ -19,7 +18,7 @@ import {
   ExternalLink,
   Download,
   BarChart3,
-  PieChart,
+  PieChart as PieChartIcon,
 } from "lucide-react";
 import { NAICDisclaimer } from "@/components/NAICDisclaimer";
 import { ExportToSlides } from "@/components/ExportToSlides";
@@ -28,10 +27,9 @@ import { toast } from "sonner";
 import { Progress } from "@/components/ui/progress";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
-  PieChart as RechartsPieChartIcon, Pie, Cell
+  PieChart as RechartsPieChart, Pie, Cell
 } from "recharts";
 import { useAuth } from "@/_core/hooks/useAuth";
-import { trpc } from "@/lib/trpc";
 
 interface EducationContent {
   id: number;
@@ -54,7 +52,6 @@ const EDUCATION_CONTENT: EducationContent[] = [{
     icon: Zap, tags: ["solar", "tax credits", "depreciation", "cost segregation"],
     featured: true,
   },
-,
   {
     id: 2, title: "Mega Backdoor Roth: The Ultimate Guide",
     description: "Step-by-step walkthrough of the Mega Backdoor Roth strategy, allowing up to $69,000 in annual Roth contributions through after-tax 401(k) conversions.",
@@ -62,14 +59,12 @@ const EDUCATION_CONTENT: EducationContent[] = [{
     icon: Landmark, tags: ["roth", "mega backdoor", "401k", "conversion"],
     featured: true,
   },
-,
   {
     id: 3, title: "Crypto DCA: Dollar Cost Averaging Explained",
     description: "Understand how dollar-cost averaging into Bitcoin and digital assets can reduce volatility risk while building long-term wealth.",
     category: "Crypto & Digital Assets", difficulty: "beginner", duration: "8 min", type: "article",
     icon: Coins, tags: ["crypto", "bitcoin", "dca", "digital assets"],
   },
-,
   {
     id: 4, title: "IUL vs. Traditional Life Insurance",
     description: "Compare Indexed Universal Life (IUL) policies against traditional whole life and term life insurance. Understand cash value accumulation, tax-free loans, and death benefit structures.",
@@ -77,7 +72,6 @@ const EDUCATION_CONTENT: EducationContent[] = [{
     icon: Shield, tags: ["iul", "life insurance", "cash value", "tax-free"],
     featured: true,
   },
-,
   {
     id: 5, title: "Real Estate Leverage & 1031 Exchanges",
     description: "How to use real estate equity for tax-deferred exchanges and leverage strategies to build generational wealth.",
@@ -106,11 +100,6 @@ const CHART_COLORS = ['#22c55e', '#f0c040', '#3b82f6', '#ef4444', '#a855f7'];
 
 export default function EducationHub() {
   const { user } = useAuth();
-  const trpc1 = trpc.clients.list.useQuery();
-  const trpc2 = trpc.notes.getAll.useQuery();
-  const trpc3 = trpc.activity.getAll.useQuery();
-  const trpc4 = trpc.dashboard.stats.useQuery();
-  const trpc5 = trpc.pipeline.getDeals.useQuery();
 
   const [state1, setState1] = useState(0);
   const [state2, setState2] = useState(0);
