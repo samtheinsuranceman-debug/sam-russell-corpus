@@ -10,8 +10,12 @@
 //   You.com  GET  https://api.you.com/v1/search?query=…   (Bearer + X-API-Key)
 //            falls back to https://ydc-index.io/v1/search
 //            override: YOU_SEARCH_URL
-//   Nimble   POST https://api.webit.live/api/v1/realtime/serp   (Basic)
+//   Nimble   POST https://sdk.nimbleway.com/v2/serp   (Bearer; dashboard API keys)
+//            legacy: POST https://api.webit.live/api/v1/realtime/serp (Basic; "user:pass" credentials)
 //            override: NIMBLE_SERP_URL
+//            (docs.nimbleway.com/api-reference/introduction, read 23 Sep 2026; a live call on
+//            Railway confirmed the dashboard key authenticates on /v2 with Bearer and is
+//            refused by the legacy endpoint)
 // ============================================================
 
 export type ScoutId = "you" | "nimble";
@@ -29,7 +33,8 @@ export type ScoutAnswer = {
 type FetchLike = typeof fetch;
 
 const YOU_URLS = ["https://api.you.com/v1/search", "https://ydc-index.io/v1/search"];
-const NIMBLE_URL = "https://api.webit.live/api/v1/realtime/serp";
+const NIMBLE_URL = "https://sdk.nimbleway.com/v2/serp";
+const NIMBLE_LEGACY_URL = "https://api.webit.live/api/v1/realtime/serp";
 
 const envKey = (names: string[]): string | null => {
   for (const n of names) {
@@ -137,10 +142,22 @@ export async function nimbleSearch(query: string, count = 8, f: FetchLike = fetc
   return timed("nimble", async () => {
     const key = nimbleKey();
     if (!key) throw new Error("NIMBLE_API_KEY is not set");
-    const res = await f(process.env.NIMBLE_SERP_URL?.trim() || NIMBLE_URL, {
+    // A dashboard API key is a bearer token for /v2; a "user:pass" credential
+    // belongs to the legacy Web API, which takes Basic.
+    const legacy = key.includes(":");
+    const url = process.env.NIMBLE_SERP_URL?.trim() || (legacy ? NIMBLE_LEGACY_URL : NIMBLE_URL);
+    const res = await f(url, {
       method: "POST",
-      headers: { authorization: `Basic ${nimbleBasic(key)}`, "content-type": "application/json", accept: "application/json" },
-      body: JSON.stringify({ query, search_engine: "google_search", parse: true, num_results: count }),
+      headers: {
+        authorization: legacy ? `Basic ${nimbleBasic(key)}` : `Bearer ${key}`,
+        "content-type": "application/json",
+        accept: "application/json",
+      },
+      body: JSON.stringify(
+        legacy
+          ? { query, search_engine: "google_search", parse: true, num_results: count }
+          : { query, search_engine: "google_search", country: "US", locale: "en" },
+      ),
       signal: withTimeout(45_000),
     });
     if (!res.ok) throw new Error(`Nimble ${res.status}`);
