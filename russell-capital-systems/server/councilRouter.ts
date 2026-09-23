@@ -9,13 +9,19 @@
  *   • the owner — OWNER_OPEN_ID, users.role "admin", or the owner e-mail
  *     (ownerGuard.ts);
  *   • an advisor — an e-mail listed in COUNCIL_ADVISOR_EMAILS (comma
- *     separated), or an ACTIVE membership as ADVISOR or ADMIN in a workspace
- *     the person does not own. Every signed-in user owns an automatic
- *     workspace of their own, so owning one proves nothing.
+ *     separated), which only the owner can set on the host.
+ *
+ * Workspace memberships do NOT grant advisor status: every signed-in user is
+ * SUPER_ADMIN of an automatic workspace and can invite others as ADVISOR, so a
+ * membership is something households can grant each other. Memberships only
+ * narrow what an advisor already on the list can see.
+ *
+ * Staff may force the council on any question by choosing a forcing room in
+ * council.ask; that is deliberate (they carry the cost guard like everyone).
  */
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import { and, eq, inArray, ne } from "drizzle-orm";
+import { and, eq, inArray } from "drizzle-orm";
 import { memberships, workspaces } from "../drizzle/schema";
 import { protectedProcedure, router } from "./_core/trpc";
 import { isOwnerEmailAddress, normalizeEmail } from "./ownerGuard";
@@ -32,25 +38,24 @@ function advisorEmails(): string[] {
     .filter(Boolean);
 }
 
-/** Staff workspaces for a user: ADVISOR/ADMIN memberships in workspaces someone else owns. */
-async function staffWorkspaceIds(userId: number): Promise<number[]> {
+/** An advisor's scope: workspaces they own, plus ACTIVE ADVISOR/ADMIN/SUPER_ADMIN memberships. Scope only, never a grant. */
+async function advisorWorkspaceIds(userId: number): Promise<number[]> {
   try {
     const { getDb } = await import("./db");
     const db = await getDb();
     if (!db) return [];
-    const rows = await db
+    const owned = await db.select({ workspaceId: workspaces.id }).from(workspaces).where(eq(workspaces.ownerId, userId));
+    const member = await db
       .select({ workspaceId: memberships.workspaceId })
       .from(memberships)
-      .innerJoin(workspaces, eq(workspaces.id, memberships.workspaceId))
       .where(
         and(
           eq(memberships.userId, userId),
           eq(memberships.status, "ACTIVE"),
-          inArray(memberships.role, ["ADVISOR", "ADMIN"]),
-          ne(workspaces.ownerId, userId),
+          inArray(memberships.role, ["SUPER_ADMIN", "ADVISOR", "ADMIN"]),
         ),
       );
-    return Array.from(new Set(rows.map(r => r.workspaceId)));
+    return Array.from(new Set([...owned, ...member].map(r => r.workspaceId)));
   } catch (e) {
     console.warn("[council] membership lookup failed:", String(e).slice(0, 120));
     return [];
@@ -64,10 +69,9 @@ export async function councilAccess(user: AccessUser | null | undefined): Promis
   if ((ownerOpenId && user.openId === ownerOpenId) || user.role === "admin" || isOwnerEmailAddress(user.email ?? "")) {
     return { level: "owner" };
   }
-  const workspaceIds = await staffWorkspaceIds(user.id);
   const listed = user.email ? advisorEmails().includes(normalizeEmail(user.email)) : false;
-  if (listed || workspaceIds.length > 0) return { level: "advisor", workspaceIds };
-  return { level: "household" };
+  if (!listed) return { level: "household" };
+  return { level: "advisor", workspaceIds: await advisorWorkspaceIds(user.id) };
 }
 
 const FORBIDDEN = "The council is for advisors and the owner. Your advisor's answer already reflects it where it applies.";
