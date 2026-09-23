@@ -36,49 +36,7 @@ export const ALLOWLIST: ReadonlyArray<{ file: string; reason: string }> = [];
  * list must end empty. An entry whose file no longer has an unmarked Math.random fails
  * the "pending list is current" test below, so a finished file cannot linger here.
  */
-export const PENDING_OTHER_BRANCHES: readonly string[] = [
-  "client/src/pages/portal/ComplianceAlerts.tsx",
-  "client/src/pages/portal/ComplianceAuditCenter.tsx",
-  "client/src/pages/portal/ComplianceAuditTrail.tsx",
-  "client/src/pages/portal/ComplianceExport.tsx",
-  "client/src/pages/portal/ComplianceMonitoringDashboard.tsx",
-  "client/src/pages/portal/ComplianceReportGenerator.tsx",
-  "client/src/pages/portal/DigitalEstatePlanner.tsx",
-  "client/src/pages/portal/EnterpriseAdmin.tsx",
-  "client/src/pages/portal/EstateDocumentGenerator.tsx",
-  "client/src/pages/portal/FinancialVitalsScorecard.tsx",
-  "client/src/pages/portal/HouseholdWealth.tsx",
-  "client/src/pages/portal/HubSpotSync.tsx",
-  "client/src/pages/portal/IncomeTimeline.tsx",
-  "client/src/pages/portal/IndexBacktester.tsx",
-  "client/src/pages/portal/InfinityBankingConcept.tsx",
-  "client/src/pages/portal/Integrations.tsx",
-  "client/src/pages/portal/LeadGenerator.tsx",
-  "client/src/pages/portal/NaturalLanguageQuery.tsx",
-  "client/src/pages/portal/NerveCenter.tsx",
-  "client/src/pages/portal/OwnerOversight.tsx",
-  "client/src/pages/portal/OwnerWarRoom.tsx",
-  "client/src/pages/portal/PortfolioDriftMonitor.tsx",
-  "client/src/pages/portal/PresentationBuilder.tsx",
-  "client/src/pages/portal/RealEstateMogul.tsx",
-  "client/src/pages/portal/RebalanceAlerts.tsx",
-  "client/src/pages/portal/RetirementIncomeProjection.tsx",
-  "client/src/pages/portal/RothConversionSTR.tsx",
-  "client/src/pages/portal/RussellNumber.tsx",
-  "client/src/pages/portal/RussellWrapped.tsx",
-  "client/src/pages/portal/SalesStoryBuilder.tsx",
-  "client/src/pages/portal/ScenarioAdjustments.tsx",
-  "client/src/pages/portal/SlackIntegration.tsx",
-  "client/src/pages/portal/SocialNarcotic.tsx",
-  "client/src/pages/portal/StaleDigest.tsx",
-  "client/src/pages/portal/StrategyCompare.tsx",
-  "client/src/pages/portal/SupervisorMonitoringAgreement.tsx",
-  "client/src/pages/portal/TeamManagement.tsx",
-  "client/src/pages/portal/VoicePlanBuilder.tsx",
-  "client/src/pages/portal/Webhooks.tsx",
-  "client/src/pages/portal/WebsiteUsage.tsx",
-  "client/src/pages/portal/WorkspaceBranding.tsx",
-];
+export const PENDING_OTHER_BRANCHES: readonly string[] = [];
 
 function sourceFiles(dir: string): string[] {
   const out: string[] = [];
