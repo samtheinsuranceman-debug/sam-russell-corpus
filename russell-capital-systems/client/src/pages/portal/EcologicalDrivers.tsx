@@ -128,7 +128,10 @@ const FACTORS: RetirementFactor[] = [{
     bgColor: "bg-yellow-500/10",
     borderColor: "border-yellow-500/30",
     description: "The IRS offers powerful incentives that most retirees never use. IRC §7702 allows life insurance cash values to grow tax-free. Policy loans under IRC §72(e) are not taxable income. Meanwhile, traditional 401(k)/IRA withdrawals are taxed as ordinary income, RMDs force taxable distributions, and capital gains erode portfolio returns. Over 30 years, taxes can consume 25-40% of retirement wealth.",
-    realWorldExample: "David and Patricia Morgan had $2M in traditional IRAs. At age 72, RMDs forced them to withdraw $78K/year — pushing them into the 24% bracket and triggering Medicare IRMAA surcharges of $4,200/year. Over 20 years, they paid $624K in federal taxes and $84K in IRMAA penalties on money they didn't even need to spend. Their effective tax rate on retirement income was 35%.",
+    // First RMD at 73 on $2M: $2,000,000 ÷ 26.5 = $75,472 (Uniform Lifetime Table, Treas. Reg. § 1.401(a)(9)-9(c),
+    // https://www.ecfr.gov/current/title-26/chapter-I/subchapter-A/part-1/subject-group-ECFR6f8c3724b50e44d/section-1.401(a)(9)-9,
+    // read 23 Sep 2026). Was "age 72 … $78K", the pre-2022 table's age-72 divisor (25.6) and the pre-SECURE 2.0 start age.
+    realWorldExample: "David and Patricia Morgan had $2M in traditional IRAs. At age 73, RMDs forced them to withdraw $75K/year — pushing them into the 24% bracket and triggering Medicare IRMAA surcharges of $4,200/year. Over 20 years, they paid $624K in federal taxes and $84K in IRMAA penalties on money they didn't even need to spend. Their effective tax rate on retirement income was 35%.",
     exampleClient: "David & Patricia Morgan",
     traditionalOutcome: "RMDs forced $624K in taxes over 20 years plus $84K in IRMAA surcharges. Total tax drag: $708K.",
     iulSolution: "IUL cash value grows tax-free under IRC §7702. Policy loans are not reported as income (IRC §72(e)), so they don't trigger RMDs, don't increase MAGI, and don't cause IRMAA surcharges. A properly structured IUL can provide $80K+/year in tax-free income via policy loans — the equivalent of $120K pre-tax from a traditional IRA.",

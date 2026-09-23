@@ -120,7 +120,9 @@ export default function STRStrategy() {
 
     // Cost Segregation
     costSegStudyCost: 8000,
-    bonusDepreciationPct: 0.60, // 2026 rate (was 100% through 2022, phasing down)
+    // 100% bonus depreciation, permanent, for property acquired after 19 Jan 2025 — P.L. 119-21 § 70301 amending IRC § 168(k) (https://www.congress.gov/119/plaws/publ21/PLAW-119publ21.pdf); IRS Notice 2026-11 (https://www.irs.gov/pub/irs-drop/n-26-11.pdf), read 23 Sep 2026.
+    // Was 0.60 under the TCJA phase-down that P.L. 119-21 repealed.
+    bonusDepreciationPct: 1.00,
     buildingPct: 0.80, // % of property that's depreciable (excl. land)
 
     // Acquisition Strategy
@@ -448,10 +450,11 @@ export default function STRStrategy() {
                 <h3 className="text-sm font-bold text-amber-300">2. Bonus Depreciation</h3>
               </div>
               <p className="text-xs text-gray-300">
-                Under IRC §168(k), the reclassified short-life components qualify for bonus depreciation — currently 60% in 2026
-                (was 100% through 2022, phasing down 20% per year). This creates a massive year-1 deduction.
+                {/* P.L. 119-21 § 70301 amending IRC § 168(k) (https://www.congress.gov/119/plaws/publ21/PLAW-119publ21.pdf); IRS Notice 2026-11 (https://www.irs.gov/pub/irs-drop/n-26-11.pdf), read 23 Sep 2026. Was "60% in 2026, phasing down 20% per year". */}
+                Under IRC §168(k), the reclassified short-life components qualify for bonus depreciation — 100% for property
+                acquired after 19 January 2025, made permanent by P.L. 119-21 (July 2025). This creates a large year-1 deduction.
               </p>
-              <div className="text-[10px] text-gray-500 mt-2">IRC §168(k), Tax Cuts and Jobs Act §13201</div>
+              <div className="text-[10px] text-gray-500 mt-2">IRC §168(k), as amended by P.L. 119-21 §70301; IRS Notice 2026-11</div>
             </div>
             <div className="bg-white/5 rounded-xl p-4 border border-orange-500/10">
               <div className="flex items-center gap-2 mb-2">
@@ -564,7 +567,7 @@ export default function STRStrategy() {
                 </h3>
                 <div className="space-y-3">
                   <InputField label="Cost Seg Study Cost" value={inputs.costSegStudyCost} onChange={(v: number) => updateInput("costSegStudyCost", v)} />
-                  <PctField label="Bonus Depreciation Rate (2026)" value={inputs.bonusDepreciationPct} onChange={(v: number) => updateInput("bonusDepreciationPct", v)} tooltip="60% in 2026, was 100% in 2022" />
+                  <PctField label="Bonus Depreciation Rate (2026)" value={inputs.bonusDepreciationPct} onChange={(v: number) => updateInput("bonusDepreciationPct", v)} tooltip="100% for property acquired after 19 Jan 2025 (P.L. 119-21, permanent); a 40% election exists for the first tax year" />
                   <PctField label="Depreciable % (excl. land)" value={inputs.buildingPct} onChange={(v: number) => updateInput("buildingPct", v)} />
                 </div>
               </div>
@@ -726,15 +729,17 @@ export default function STRStrategy() {
 
             {/* Bonus Depreciation Phase-Down Schedule */}
             <div className="bg-white/5 border border-white/10 rounded-xl p-6">
-              <h3 className="text-sm font-bold text-white mb-4">Bonus Depreciation Phase-Down Schedule (IRC §168(k))</h3>
+              {/* Bonus rates by acquisition date: TCJA phase-down 2023–2024; P.L. 119-21 restores 100%, permanently,
+                  for property acquired after 19 Jan 2025 — P.L. 119-21 § 70301 amending IRC § 168(k) (https://www.congress.gov/119/plaws/publ21/PLAW-119publ21.pdf); IRS Notice 2026-11 (https://www.irs.gov/pub/irs-drop/n-26-11.pdf), read 23 Sep 2026. The old table ran 2026 at 20% and 2027+ at 0%. */}
+              <h3 className="text-sm font-bold text-white mb-4">Bonus Depreciation by Year (IRC §168(k))</h3>
               <div className="grid grid-cols-6 gap-3">
                 {[
                   { year: "2022", pct: 100, status: "past" },
                   { year: "2023", pct: 80, status: "past" },
                   { year: "2024", pct: 60, status: "past" },
-                  { year: "2025", pct: 40, status: "past" },
-                  { year: "2026", pct: 20, status: "current" },
-                  { year: "2027+", pct: 0, status: "future" },
+                  { year: "2025*", pct: 100, status: "past" },
+                  { year: "2026", pct: 100, status: "current" },
+                  { year: "2027+", pct: 100, status: "future" },
                 ].map((item) => (
                   <div key={item.year} className={`rounded-lg p-3 text-center border ${item.status === "current" ? "bg-orange-500/20 border-orange-500/30" : item.status === "past" ? "bg-white/5 border-white/10" : "bg-red-500/10 border-red-500/20"}`}>
                     <div className="text-xs font-bold text-white">{item.year}</div>
@@ -745,9 +750,9 @@ export default function STRStrategy() {
               </div>
               <div className="mt-3 bg-amber-500/10 border border-amber-500/20 rounded-lg p-3">
                 <p className="text-xs text-amber-200">
-                  <strong>Act Now:</strong> Bonus depreciation is phasing down 20% per year. In 2026, you get 60% bonus depreciation.
-                  By 2027, it drops to 0% unless Congress extends it. Every year you wait costs you 20% of the accelerated deduction.
-                  On a $500K property, that's ~{fmtFull(inputs.propertyValue * inputs.buildingPct * 0.35 * 0.20)} less in year-1 deductions per year of delay.
+                  <strong>Current law:</strong> P.L. 119-21 (July 2025) ended the phase-down. Property acquired after 19 January 2025
+                  gets 100% bonus depreciation, with no scheduled expiry. *Property acquired before 20 January 2025 and placed in
+                  service in 2025 stays at 40%. Timing no longer changes the rate; it changes only which tax year takes the deduction.
                 </p>
               </div>
             </div>

@@ -3,6 +3,10 @@ import { NumberInput } from "@/components/NumberInput";
 import { useState, useMemo, useCallback, useEffect } from "react";
 
 import { trpc } from "@/lib/trpc";
+import { federalTaxOnTaxable, federalMarginalRateFor } from "@shared/taxBracketEngine";
+import { TAX_RULES_2026 } from "@shared/taxRules";
+import { uniformLifetimeDivisor, FIRST_RMD_DIVISOR_AT_73 } from "@shared/uniformLifetimeTable";
+import { IRMAA_2026 } from "@shared/irmaa";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { BarChart, LineChart, PieChart, AreaChart, RadarChart, ComposedChart, ResponsiveContainer, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Bar, Line, Pie, Cell, Area, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis } from "recharts";
 
@@ -54,14 +58,9 @@ const calculateCompoundInterest = (principal: number, rate: number, times: numbe
   return principal * Math.pow(1 + rate / times, times * years);
 };
 
-const calculateRMD = (age: number, balance: number) => {
-  const divisors: Record<number, number> = {
-    73: 26.5, 74: 25.5, 75: 24.6, 76: 23.7, 77: 22.9, 78: 22.0, 79: 21.1, 80: 20.2,
-    81: 19.4, 82: 18.5, 83: 17.7, 84: 16.8, 85: 16.0, 86: 15.2, 87: 14.4, 88: 13.7,
-    89: 12.9, 90: 12.2, 91: 11.5, 92: 10.8, 93: 10.1, 94: 9.5, 95: 8.9, 96: 8.4
-  };
-  return balance / (divisors[age] || 27.4);
-};
+// Uniform Lifetime Table, Treas. Reg. § 1.401(a)(9)-9(c) (shared/uniformLifetimeTable.ts). Replaces a local
+// copy that stopped at 96 and fell back to 27.4 (the age-72 divisor) for any age outside it.
+const calculateRMD = (age: number, balance: number) => balance / uniformLifetimeDivisor(age);
 
 const generateYearlyData = (startAge: number, endAge: number, initialBalance: number, growthRate: number) => {
   let currentBalance = initialBalance;
@@ -78,27 +77,13 @@ const generateYearlyData = (startAge: number, endAge: number, initialBalance: nu
   return data;
 };
 
-const advancedTaxCalculation = (income: number, status: 'single' | 'married') => {
-  let tax = 0;
-  if (status === 'married') {
-    if (income > 731200) tax = (income - 731200) * 0.37 + 193654;
-    else if (income > 487450) tax = (income - 487450) * 0.35 + 108341;
-    else if (income > 383900) tax = (income - 383900) * 0.32 + 75205;
-    else if (income > 201050) tax = (income - 201050) * 0.24 + 31321;
-    else if (income > 94300) tax = (income - 94300) * 0.22 + 7836;
-    else if (income > 23200) tax = (income - 23200) * 0.12 + 2320;
-    else tax = income * 0.10;
-  } else {
-    if (income > 609350) tax = (income - 609350) * 0.37 + 183647;
-    else if (income > 243725) tax = (income - 243725) * 0.35 + 55678;
-    else if (income > 191950) tax = (income - 191950) * 0.32 + 39110;
-    else if (income > 100525) tax = (income - 100525) * 0.24 + 17168;
-    else if (income > 47150) tax = (income - 47150) * 0.22 + 5425;
-    else if (income > 11600) tax = (income - 11600) * 0.12 + 1160;
-    else tax = income * 0.10;
-  }
-  return Math.round(tax);
-};
+// Federal tax on taxable income from the current-year shared table (shared/taxRules.ts).
+const advancedTaxCalculation = (income: number, status: 'single' | 'married') =>
+  Math.round(federalTaxOnTaxable(income, status === 'married' ? 'joint' : 'single'));
+
+// Story marginal rate: the current-year single-filer rate on gross income from the
+// shared table, with this story's floor of 24% (the firm's framing, not a tax figure).
+const storyTaxRatePct = (grossIncome: number) => Math.max(24, Math.round(federalMarginalRateFor(grossIncome, 'single') * 100));
 
 
 
@@ -581,15 +566,17 @@ export default function SalesStoryBuilder() {
   }, []);
 
   const slides: SlideData[] = useMemo(() => {
-    const taxRate = annualIncome > 578125 ? 37 : annualIncome > 231250 ? 35 : annualIncome > 182100 ? 32 : 24;
+    const taxRate = storyTaxRatePct(annualIncome);
     const effectiveRate = Math.round(taxRate * 0.72);
     const annualTax = Math.round(annualIncome * effectiveRate / 100);
     const iulPremium = Math.round(annualIncome * 0.12);
     const iulCashValue20 = Math.round(iulPremium * 20 * 1.55);
     const taxFreeIncome = Math.round(iulCashValue20 * 0.065);
-    const rmdAt72 = Math.round(retirement401k * Math.pow(1.07, 72 - clientAge) / 27.4);
-    const rmdTax = Math.round(rmdAt72 * taxRate / 100);
-    const estateExemption = 13610000;
+    // First RMD (age 73) = year-end balance at 72 ÷ the age-73 Uniform Lifetime divisor, 26.5
+    // (Treas. Reg. § 1.401(a)(9)-9(c); shared/uniformLifetimeTable.ts). Was ÷ 27.4, the age-72 divisor.
+    const firstRmdAt73 = Math.round(retirement401k * Math.pow(1.07, 72 - clientAge) / FIRST_RMD_DIVISOR_AT_73);
+    const rmdTax = Math.round(firstRmdAt73 * taxRate / 100);
+    const estateExemption = TAX_RULES_2026.estateBasicExclusion; // shared/taxRules.ts
     const estateTax = Math.max(0, Math.round((estateValue * Math.pow(1.06, 85 - clientAge) - estateExemption) * 0.40));
 
     if (selectedTemplate === "iul-value") {
@@ -665,7 +652,7 @@ export default function SalesStoryBuilder() {
               </div>
               <div className="p-6 rounded-xl bg-red-500/10 border border-red-500/20">
                 <div className="text-sm text-red-300 mb-1">Forced Annual RMD at 73</div>
-                <div className="text-3xl font-bold text-red-400">{fmt(rmdAt72)}</div>
+                <div className="text-3xl font-bold text-red-400">{fmt(firstRmdAt73)}</div>
                 <div className="text-sm text-red-300 mt-2">
                   Tax on RMD at {taxRate}%: <span className="font-bold">{fmt(rmdTax)}/year</span>
                 </div>
@@ -674,7 +661,7 @@ export default function SalesStoryBuilder() {
                 <div className="flex items-start gap-2">
                   <AlertTriangle className="h-5 w-5 text-amber-400 mt-0.5 shrink-0" />
                   <div className="text-sm text-amber-200">
-                    RMDs increase every year. By age 80, your forced distribution could exceed {fmt(Math.round(rmdAt72 * 1.5))}/year — 
+                    RMDs increase every year. By age 80, your forced distribution could exceed {fmt(Math.round(firstRmdAt73 * 1.5))}/year — 
                     potentially pushing you into the {Math.min(taxRate + 5, 37)}% bracket and triggering IRMAA Medicare surcharges.
                   </div>
                 </div>
@@ -908,12 +895,12 @@ export default function SalesStoryBuilder() {
           <div className="space-y-3">
             <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20">
               <div className="text-sm text-red-300">First Year RMD (Age 73)</div>
-              <div className="text-3xl font-bold text-red-400">{fmt(rmdAt72)}</div>
+              <div className="text-3xl font-bold text-red-400">{fmt(firstRmdAt73)}</div>
               <div className="text-sm text-red-300">Tax owed: {fmt(rmdTax)} at {taxRate}%</div>
             </div>
             <div className="p-3 rounded-lg bg-amber-500/10 border border-amber-500/20 text-sm">
               <AlertTriangle className="h-4 w-4 inline mr-1 text-amber-400" />
-              RMDs may also trigger: IRMAA Medicare surcharges ({fmt(Math.round(rmdAt72 > 206000 ? 5000 : 0))}/yr), Social Security taxation (up to 85%), and higher state taxes.
+              RMDs may also trigger: IRMAA Medicare surcharges ({fmt(Math.round(firstRmdAt73 > IRMAA_2026.married[0]!.maxMagi ? 5000 : 0))}/yr), Social Security taxation (up to 85%), and higher state taxes.
             </div>
           </div>
         )},
@@ -1036,7 +1023,7 @@ export default function SalesStoryBuilder() {
   const taxProjectionData = Array.from({ length: 5 }).map((_, i) => {
     const year = i * 5;
     const projected401k = Math.round(retirement401k * Math.pow(1.07, year));
-    const taxRate = annualIncome > 578125 ? 37 : annualIncome > 231250 ? 35 : annualIncome > 182100 ? 32 : 24;
+    const taxRate = storyTaxRatePct(annualIncome);
     return {
       year: `Year ${year}`,
       balance: projected401k,

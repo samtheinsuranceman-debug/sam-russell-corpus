@@ -19,6 +19,13 @@
  * - Scenario comparison: runs all 5 strategies and shows optimal
  */
 
+import {
+  HELOC_RATE_DEFAULT_PCT,
+  HELOC_RATE_DEFAULT_SOURCE,
+  MYGA_RATE_DEFAULT_PCT,
+  MYGA_RATE_DEFAULT_SOURCES,
+} from "./marketRateDefaults";
+
 /* ─── TAX DEPLOYMENT OPTIONS ─── */
 export type TaxDeploymentOption =
   | "payback_heloc"          // Pay back HELOC principal only
@@ -31,7 +38,7 @@ export type TaxDeploymentOption =
 export interface MYGAWaterfallInput {
   /** Initial MYGA premium */
   mygaPremium: number;
-  /** MYGA guaranteed annual rate (e.g. 7 = 7%) */
+  /** MYGA guaranteed annual rate, compounding (e.g. 6.3 = 6.3%) */
   mygaRate: number;
   /** MYGA term in years (default 5) */
   mygaTerm: number;
@@ -72,7 +79,7 @@ export interface MYGAWaterfallInput {
   homeValue: number;
   /** Current mortgage balance */
   mortgageBalance: number;
-  /** HELOC interest rate (e.g. 8.5 = 8.5%) */
+  /** HELOC interest rate (e.g. 7.09 = 7.09%) */
   helocRate: number;
   /** HELOC max LTV (e.g. 0.80 = 80%) */
   helocMaxLtv: number;
@@ -255,26 +262,26 @@ const TRANCHE_COLORS = [
 // here: a named, dated source, or an assumption the firm chose and says it
 // chose. None of these objects is read by the arithmetic.
 
-/** mygaRate default 7 (percent). A dated 5-year MYGA rate table built from the CANNEX feed. */
-const MYGA_RATE_SOURCE = {
+/** mygaRate default MYGA_RATE_DEFAULT_PCT (6.3, compounding). Was 7, above every listed compounding rate. */
+const MYGA_RATE_REFERENCE_SOURCE = {
   label: "AnnuityRatesHQ, 5-Year MYGA Rates full rate table (CANNEX feed, $100,000 premium, 118 rates across 59 carriers): top rate 6.45%, market average 5.16%, median 5.20%",
   url: "https://annuityrateshq.com/myga/rates/5-year",
   asOf: "table as of 2026-09-18, read 2026-09-23",
-  note: "The 7% default is above every 5-year rate in this table (top 6.45%). Not changed; flagged for review.",
+  note: "Reference only: the 6.3% default sits between this table's market average and its top rate.",
 };
 
-/** helocRate default 8.5 (percent). */
-const HELOC_RATE_SOURCE = {
+/** helocRate default HELOC_RATE_DEFAULT_PCT (7.09). Was 8.5. */
+const HELOC_RATE_REFERENCE_SOURCE = {
   label: "Bankrate Monitor National Index, Home Equity Line of Credit rate (BRMHELOC01, via FRED): 7.29% for the week of 2026-09-02, surveyed at 80% combined loan-to-value",
   url: "https://fred.stlouisfed.org/series/BRMHELOC01",
   asOf: "2026-09-02 observation, read 2026-09-23",
-  note: "The 8.5% default is 1.21 points above this national average. Not changed; flagged for review.",
+  note: "Reference only: a second national HELOC average, 0.2 points above the Curinos figure the default uses.",
 };
 const PRIME_RATE_SOURCE = {
   label: "Board of Governors of the Federal Reserve System, H.15 Selected Interest Rates, Bank Prime Loan Rate (DPRIME, via FRED): 6.75% on 2026-09-02",
   url: "https://fred.stlouisfed.org/series/DPRIME",
   asOf: "2026-09-02 observation, read 2026-09-23",
-  note: "The 8.5% HELOC default equals prime plus 1.75 points; that margin is the firm's assumption.",
+  note: "Reference only: the 7.09% HELOC default is prime plus 0.34 points at this reading.",
 };
 
 /** bankLoanRate default 7 (percent). Loans against an annuity are usually priced at SOFR plus a spread. */
@@ -323,7 +330,7 @@ const MYGA_WATERFALL_ASSUMPTIONS = [
 export function getDefaultInput(): MYGAWaterfallInput {
   return {
     mygaPremium: 500000,
-    mygaRate: 7,
+    mygaRate: MYGA_RATE_DEFAULT_PCT,
     mygaTerm: 5,
     bankLtv: 0.70,
     bankLoanRate: 7,
@@ -341,7 +348,7 @@ export function getDefaultInput(): MYGAWaterfallInput {
     stateTaxRate: 5,
     homeValue: 0,
     mortgageBalance: 0,
-    helocRate: 8.5,
+    helocRate: HELOC_RATE_DEFAULT_PCT,
     helocMaxLtv: 0.80,
     taxDeployment: "optimal_blend",
   };
@@ -1009,8 +1016,10 @@ export function runScenarioComparison(baseInput: MYGAWaterfallInput): ScenarioCo
 
 /** Every source and declared assumption behind the typed-in numbers in this engine, for the page to print. */
 export const MYGA_WATERFALL_SOURCES: readonly { label: string; url?: string; asOf?: string; note?: string }[] = [
-  MYGA_RATE_SOURCE,
-  HELOC_RATE_SOURCE,
+  ...MYGA_RATE_DEFAULT_SOURCES,
+  MYGA_RATE_REFERENCE_SOURCE,
+  HELOC_RATE_DEFAULT_SOURCE,
+  HELOC_RATE_REFERENCE_SOURCE,
   PRIME_RATE_SOURCE,
   SOFR_SOURCE,
   FEDERAL_BRACKET_SOURCE,

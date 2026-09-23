@@ -3,6 +3,7 @@
 // ============================================================
 import { Link } from "wouter";
 import PageBackdrop from "@/components/PageBackdrop";
+import EngineSourcesFooter from "@/components/EngineSourcesFooter";
 import { trpc } from "@/lib/trpc";
 import { CAREER_PATHS, FAMILY_LABEL, trainingYears, type Family } from "@shared/careerEngine";
 import { ArrowRight, Stethoscope } from "lucide-react";
@@ -33,6 +34,7 @@ export default function SpecialtyIndexPage() {
             </div>
           </section>
         ))}
+        <EngineSourcesFooter path="/for" />
       </div>
     </div>
   );

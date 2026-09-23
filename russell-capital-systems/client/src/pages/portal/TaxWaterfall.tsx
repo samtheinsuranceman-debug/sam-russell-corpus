@@ -22,7 +22,10 @@ import { NAICDisclaimer } from "@/components/NAICDisclaimer";
 import { useClientData, FactFinderBadge } from "@/contexts/ClientDataContext";
 import { PlatformEnhancements } from "@/components/PlatformEnhancements";
 import { ExecutiveSummary, GoalsAccelerator, RecommendationSummary, DoNothingBaseline, TaxBracketPanel } from "@/components/ConsumerOutcomeBlocks";
-import { formatTaxCurrency } from "@shared/taxBracketEngine";
+import { IRMAA_2026, PART_B_STANDARD_MONTHLY_2026, irmaaTierIndex, type IrmaaFiling } from "@shared/irmaa";
+import { formatTaxCurrency, federalBrackets } from "@shared/taxBracketEngine";
+import { LTCG_THRESHOLDS_2026, ltcgBrackets2026 } from "@shared/taxRules";
+import { uniformLifetimeDivisor } from "@shared/uniformLifetimeTable";
 import { RelatedCalculators } from "@/components/RelatedCalculators";
 import { ComplianceFooter } from "@/components/ComplianceFooter";
 
@@ -154,15 +157,17 @@ export default function TaxWaterfall() {
       const rmdAge = 73;
       let rmd = 0;
       if (a >= rmdAge) {
-        const divisor = Math.max(1, 27.4 - (a - 72) * 0.9);
+        // Uniform Lifetime Table divisor, Treas. Reg. § 1.401(a)(9)-9(c) (shared/uniformLifetimeTable.ts),
+        // replacing a linear 27.4 − 0.9/yr approximation that ran well below the table after the late 70s.
+        const divisor = uniformLifetimeDivisor(a);
         rmd = Math.round(projectedBalance / divisor);
       }
       const baseIncome = result.taxableIncome - (income.iraDistributions || 0);
       const totalWithRmd = baseIncome + rmd;
-      const brackets = filingStatus === "married"
-        ? [22000, 89450, 190750, 364200, 462500, 693750]
-        : [11000, 44725, 95375, 182100, 231250, 578125];
-      const rates = [0.10, 0.12, 0.22, 0.24, 0.32, 0.35, 0.37];
+      // Current-year thresholds and rates from shared/taxRules.ts (via the bracket engine).
+      const table = federalBrackets(filingStatus === "married" ? "joint" : filingStatus);
+      const brackets = table.slice(0, -1).map((b) => b.max);
+      const rates = table.map((b) => b.rate);
       let bracket = "10%";
       for (let i = 0; i < brackets.length; i++) {
         if (totalWithRmd > brackets[i]) bracket = `${(rates[i + 1] * 100).toFixed(0)}%`;
@@ -180,31 +185,26 @@ export default function TaxWaterfall() {
   const irmaaData = useMemo(() => {
     if (!result) return { currentTier: "", surcharge: 0, tiers: [] as any[] };
     const magi = result.adjustedGrossIncome;
-    const tiers = filingStatus === "married" ? [
-      { threshold: 0, partB: 174.70, partD: 0, label: "Standard" },
-      { threshold: 206000, partB: 244.60, partD: 12.90, label: "Tier 1" },
-      { threshold: 258000, partB: 349.40, partD: 33.30, label: "Tier 2" },
-      { threshold: 322000, partB: 454.20, partD: 53.80, label: "Tier 3" },
-      { threshold: 386000, partB: 559.00, partD: 74.20, label: "Tier 4" },
-      { threshold: 750000, partB: 594.00, partD: 81.00, label: "Tier 5" },
-    ] : [
-      { threshold: 0, partB: 174.70, partD: 0, label: "Standard" },
-      { threshold: 103000, partB: 244.60, partD: 12.90, label: "Tier 1" },
-      { threshold: 129000, partB: 349.40, partD: 33.30, label: "Tier 2" },
-      { threshold: 161000, partB: 454.20, partD: 53.80, label: "Tier 3" },
-      { threshold: 193000, partB: 559.00, partD: 74.20, label: "Tier 4" },
-      { threshold: 500000, partB: 594.00, partD: 81.00, label: "Tier 5" },
-    ];
-    let currentTier = tiers[0];
-    for (const t of tiers) {
-      if (magi > t.threshold) currentTier = t;
-    }
-    const annualSurcharge = (currentTier.partB - 174.70 + currentTier.partD) * 12;
-    const projections = tiers.map((t) => ({
+    // 2026 IRMAA (2024 MAGI) from shared/irmaa.ts — SSA POMS HI 01101.031, read
+    // 2026-09-23. partB is the monthly total (standard $202.90 + IRMAA); partD
+    // is the monthly IRMAA. Replaces a 2024 table (standard $174.70, joint
+    // tiers from $206,000) that also put the tier edges on the wrong side.
+    const irmaaFiling: IrmaaFiling = filingStatus === "married" ? "married" : "single";
+    const table = IRMAA_2026[irmaaFiling];
+    const tiers = table.map((t, i) => ({
+      threshold: i === 0 ? 0 : table[i - 1]!.maxMagi,
+      partB: PART_B_STANDARD_MONTHLY_2026 + t.partBMonthly,
+      partD: t.partDMonthly,
+      label: t.tier === 1 ? "Standard" : `Tier ${t.tier}`,
+    }));
+    const currentIdx = irmaaTierIndex(magi, irmaaFiling);
+    const currentTier = tiers[currentIdx]!;
+    const annualSurcharge = (currentTier.partB - PART_B_STANDARD_MONTHLY_2026 + currentTier.partD) * 12;
+    const projections = tiers.map((t, i) => ({
       ...t,
       annualCost: (t.partB + t.partD) * 12,
-      surcharge: (t.partB - 174.70 + t.partD) * 12,
-      active: magi > t.threshold,
+      surcharge: (t.partB - PART_B_STANDARD_MONTHLY_2026 + t.partD) * 12,
+      active: i <= currentIdx,
     }));
     return { currentTier: currentTier.label, surcharge: Math.round(annualSurcharge), tiers: projections, magi };
   }, [result, filingStatus]);
@@ -235,12 +235,13 @@ export default function TaxWaterfall() {
     return data;
   }, [result, age, income, iulTaxFreeIncome]);
 
+  const cgFilingKey = filingStatus === "married" ? "joint" : filingStatus;
   const capGainsData = useMemo(() => {
     if (!result) return [];
     const ordinaryIncome = result.taxableIncome - (income.capitalGains || 0);
-    const ltcgBrackets = filingStatus === "married"
-      ? [{ limit: 89250, rate: 0 }, { limit: 553850, rate: 0.15 }, { limit: Infinity, rate: 0.20 }]
-      : [{ limit: 44625, rate: 0 }, { limit: 492300, rate: 0.15 }, { limit: Infinity, rate: 0.20 }];
+    // 2026 0% / 15% / 20% breakpoints, Rev. Proc. 2025-32 §4.03 (shared/taxRules.ts), replacing the 2023 table
+    // (Rev. Proc. 2022-38: $44,625 / $492,300 single, $89,250 / $553,850 joint); head of household now uses its own row.
+    const ltcgBrackets = ltcgBrackets2026(cgFilingKey);
     const data = [];
     const maxGains = Math.max(500000, (income.capitalGains || 25000) * 4);
     for (let gains = 0; gains <= maxGains; gains += 10000) {
@@ -1075,7 +1076,7 @@ export default function TaxWaterfall() {
                     <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-3">
                       <div className="p-3 rounded-lg bg-blue-500/10">
                         <p className="text-xs text-blue-400">0% CG Bracket Space</p>
-                        <p className="text-lg font-bold">{fmt(Math.max(0, (filingStatus === 'married' ? 89250 : 44625) - (result?.taxableIncome || 0) + (income.capitalGains || 0)))}</p>
+                        <p className="text-lg font-bold">{fmt(Math.max(0, LTCG_THRESHOLDS_2026[cgFilingKey].zeroUpTo /* Rev. Proc. 2025-32 §4.03 */ - (result?.taxableIncome || 0) + (income.capitalGains || 0)))}</p>
                         <p className="text-xs text-muted-foreground">Gains taxed at 0%</p>
                       </div>
                       <div className="p-3 rounded-lg bg-emerald-500/10">

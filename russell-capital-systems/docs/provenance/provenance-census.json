@@ -1,27 +1,27 @@
 {
-  "tree": "d360a2f",
+  "tree": "c0b5128",
   "summary": {
-    "engines": 97,
-    "enginesFromCatalogue": 37,
+    "engines": 98,
+    "enginesFromCatalogue": 40,
     "enginesFromMemoryBank": 89,
     "enginesMissingOnDisk": [],
     "counts": {
       "enginesWithZeroSources": 0,
       "numericEnginesWithZeroSources": 0,
       "enginesWithHardCodedYearsOlderThan2025": 50,
-      "enginesWithUnseededRandomness": 1,
-      "pagesImportingAnEngineWithNoProvenanceOnPage": 82,
-      "pagesImportingAnEngine": 120,
-      "enginesThatSimulate": 21,
-      "enginesOnALiveFeed": 9,
-      "enginesImportedByNoPageAndNoRouter": 10,
-      "enginesWithoutShellSources": 1
+      "enginesWithUnseededRandomness": 0,
+      "pagesImportingAnEngineWithNoProvenanceOnPage": 35,
+      "pagesImportingAnEngine": 132,
+      "enginesThatSimulate": 22,
+      "enginesOnALiveFeed": 10,
+      "enginesImportedByNoPageAndNoRouter": 8,
+      "enginesWithoutShellSources": 0
     },
     "lists": {
       "enginesWithZeroSources": [],
       "numericEnginesWithZeroSources": [],
       "enginesWithHardCodedYearsOlderThan2025": [
-        "server/outsideForces.ts (2019, 2023)",
+        "server/outsideForces.ts (2019, 2024)",
         "shared/ag49Validator.ts (2015, 2020, 2023)",
         "shared/altCredit/deployment.ts (2014, 2015, 2019, 2022, 2023, 2024)",
         "shared/altCredit/lenders.ts (2004, 2006, 2012, 2013, 2017, 2018, 2019, 2021)",
@@ -30,7 +30,7 @@
         "shared/balancedIndexedAccount.ts (2019, 2020, 2021, 2022, 2023, 2024)",
         "shared/careerEngine.ts (2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024)",
         "shared/carrierRatings.ts (2020, 2021, 2022)",
-        "shared/creditingWindows.ts (2000, 2007, 2020)",
+        "shared/creditingWindows.ts (2000, 2001, 2002, 2007, 2008, 2020)",
         "shared/cryptoCycleEngine.ts (2011, 2012, 2013, 2015, 2016, 2017, 2018, 2020, 2021, 2022, 2024)",
         "shared/earlyCashValue.ts (2020)",
         "shared/erosion.ts (2015)",
@@ -72,9 +72,7 @@
         "shared/wealthGenomeFactors.ts (2008, 2020, 2022)",
         "shared/zipEngine.ts (2000, 2008, 2015)"
       ],
-      "enginesWithUnseededRandomness": [
-        "shared/chainEngine.ts"
-      ],
+      "enginesWithUnseededRandomness": [],
       "pagesImportingAnEngineWithNoProvenanceOnPage": [
         "client/src/components/ChainDock.tsx",
         "client/src/components/ComplianceGate.tsx",
@@ -91,9 +89,7 @@
         "client/src/components/rooms/RoomTheme.tsx",
         "client/src/pages/Login.tsx",
         "client/src/pages/MassiveCalculatorsPage.tsx",
-        "client/src/pages/SpecialtyIndexPage.tsx",
         "client/src/pages/TrialLogin.tsx",
-        "client/src/pages/portal/AIFinancialAdvisor.tsx",
         "client/src/pages/portal/AIPolicyReviewGap.tsx",
         "client/src/pages/portal/AdvisorIncomeCalculator.tsx",
         "client/src/pages/portal/AiStrategyRecommender.tsx",
@@ -101,79 +97,30 @@
         "client/src/pages/portal/AnnuityMemory.tsx",
         "client/src/pages/portal/AtheneGuaranteedIncome.tsx",
         "client/src/pages/portal/AxonicSP500.tsx",
-        "client/src/pages/portal/BeneficiaryOptimization.tsx",
         "client/src/pages/portal/BulkGeneration.tsx",
-        "client/src/pages/portal/BusinessOwnerPlanning.tsx",
         "client/src/pages/portal/CarrierComparison.tsx",
-        "client/src/pages/portal/ChainBuilder.tsx",
-        "client/src/pages/portal/CharitableGivingOptimizer.tsx",
-        "client/src/pages/portal/ClientPortfolioDashboard.tsx",
-        "client/src/pages/portal/ClientSnapshotMap.tsx",
         "client/src/pages/portal/CompetitiveAnalysis.tsx",
         "client/src/pages/portal/Controls.tsx",
-        "client/src/pages/portal/CryptoCurrencyCorner.tsx",
-        "client/src/pages/portal/EstateFlowChart.tsx",
-        "client/src/pages/portal/EstateTax.tsx",
         "client/src/pages/portal/FIACollateralStrategy.tsx",
         "client/src/pages/portal/FIATop10.tsx",
         "client/src/pages/portal/GrowthAnnuities.tsx",
-        "client/src/pages/portal/HotIncome.tsx",
-        "client/src/pages/portal/HouseRecyclingStrategy.tsx",
-        "client/src/pages/portal/HouseholdWealth.tsx",
-        "client/src/pages/portal/IULvsRoth.tsx",
-        "client/src/pages/portal/IbbotsonCharts.tsx",
-        "client/src/pages/portal/IllustrationCompare.tsx",
         "client/src/pages/portal/IncomeAnnuityTop10.tsx",
-        "client/src/pages/portal/IncomeGapAnalyzer.tsx",
-        "client/src/pages/portal/IncomeTimeline.tsx",
-        "client/src/pages/portal/InflationAnalysis.tsx",
-        "client/src/pages/portal/MarketScenarioStressTest.tsx",
-        "client/src/pages/portal/MechanismDetail.tsx",
-        "client/src/pages/portal/MedicareIRMAA.tsx",
-        "client/src/pages/portal/MultiGenWealthTransfer.tsx",
-        "client/src/pages/portal/MultiScenarioPlayZone.tsx",
         "client/src/pages/portal/PatentShowcase.tsx",
-        "client/src/pages/portal/PolicyReview.tsx",
-        "client/src/pages/portal/PortfolioDriftMonitor.tsx",
-        "client/src/pages/portal/PredictiveAnalytics.tsx",
-        "client/src/pages/portal/QuickQuote.tsx",
-        "client/src/pages/portal/RealEstateMogul.tsx",
-        "client/src/pages/portal/Recommendations.tsx",
-        "client/src/pages/portal/RetirementGuardrails.tsx",
-        "client/src/pages/portal/ReverseHeloc.tsx",
-        "client/src/pages/portal/SavedScenariosHub.tsx",
-        "client/src/pages/portal/ScenarioAdjustments.tsx",
-        "client/src/pages/portal/ScenarioSideBySide.tsx",
-        "client/src/pages/portal/SocialSecurityOptimizer.tsx",
         "client/src/pages/portal/Sphere.tsx",
         "client/src/pages/portal/StrategyCompare.tsx",
-        "client/src/pages/portal/StrategyLab.tsx",
-        "client/src/pages/portal/SuccessionPlanningWizard.tsx",
-        "client/src/pages/portal/TaxAdvantagedGrowth.tsx",
-        "client/src/pages/portal/TaxLossHarvestingScanner.tsx",
-        "client/src/pages/portal/TaxOpportunityDetector.tsx",
-        "client/src/pages/portal/TaxReturnUpload.tsx",
-        "client/src/pages/portal/ThomasGoldman.tsx",
-        "client/src/pages/portal/TimeMachineAG49.tsx",
-        "client/src/pages/portal/TimeMachineCalculator.tsx",
-        "client/src/pages/portal/TimeMachineMethod.tsx",
-        "client/src/pages/portal/WithdrawalSequencing.tsx"
+        "client/src/pages/portal/ThomasGoldman.tsx"
       ],
       "enginesImportedByNoPageAndNoRouter": [
         "server/outsideForces.ts",
         "shared/ag49Validator.ts",
-        "shared/earlyCashValue.ts",
         "shared/historicalShocks.ts",
         "shared/livingRiskProfile.ts",
-        "shared/lookbackIntegrity.ts",
         "shared/nlpBrain.ts",
         "shared/regulatorySandbox.ts",
         "shared/retirementDNA.ts",
         "shared/wholeLifeBanking.ts"
       ],
-      "enginesWithoutShellSources": [
-        "server/outsideForces.ts"
-      ]
+      "enginesWithoutShellSources": []
     }
   },
   "rows": [
@@ -215,6 +162,7 @@
         "Major foreign holders of Treasury securities, monthly",
         "Median age of first-time buyers; first-time buyer share of purchases",
         "Monthly chartbook on credit availability and first-time buyers",
+        "OMB and St. Louis Fed via FRED",
         "Ratings and outlooks on U.S. Treasury debt",
         "S&P CoreLogic Case-Shiller Home Price Indices",
         "S&P Dow Jones Indices",
@@ -227,7 +175,6 @@
         "Treasury via FRED",
         "Treasury's own financing plan",
         "Treasury's own ledger",
-        "Treasury/BEA via FRED",
         "U.S. Census Bureau",
         "U.S. Treasury",
         "U.S. Treasury market via the Federal Reserve",
@@ -338,10 +285,10 @@
       "provenancePages": [],
       "hardCodedYears": [
         2019,
-        2023
+        2024
       ],
       "numericConstants": 3,
-      "shellSourced": false
+      "shellSourced": true
     },
     {
       "engine": "shared/accessControl.ts",
@@ -1095,7 +1042,7 @@
     {
       "engine": "shared/calculatorCatalog.ts",
       "exists": true,
-      "lines": 497,
+      "lines": 508,
       "cataloguePages": [],
       "memoryGroups": [
         "instruments"
@@ -1140,7 +1087,7 @@
       "provenanceOnPage": false,
       "provenancePages": [],
       "hardCodedYears": [],
-      "numericConstants": 3,
+      "numericConstants": 5,
       "shellSourced": false
     },
     {
@@ -1214,6 +1161,7 @@
       "liveFeed": [],
       "provenanceOnPage": true,
       "provenancePages": [
+        "client/src/pages/SpecialtyIndexPage.tsx",
         "client/src/pages/SpecialtyPage.tsx"
       ],
       "hardCodedYears": [
@@ -1244,7 +1192,7 @@
     {
       "engine": "shared/carrierRatings.ts",
       "exists": true,
-      "lines": 274,
+      "lines": 292,
       "cataloguePages": [],
       "memoryGroups": [
         "insurance-mechanics"
@@ -1259,6 +1207,7 @@
         "AM Best, 'Guide to Best's Financial Strength Ratings': A++ and A+ Superior; A and A- Excellent",
         "Assumption: surplus ratios, years in business, total assets, policyholder surplus and Comdex scores for the nine placeholder carriers are",
         "Comdex Ranking (VitalSigns, EbixExchange), as explained in 'Understanding an Insurance Carrier's Ratings and Comdex' (Gateway Financial Group):",
+        "Ebix publishes the Comdex number, not band names. The bands in COMDEX_BANDS follow from the percentile definition: 90-100 Excellent",
         "Fitch Ratings, Rating Definitions, Insurer Financial Strength: 'AA' Very Strong, 'A' Strong",
         "Moody's, 'Rating Symbols and Definitions': long-term obligations Aa high quality, A upper-medium grade; insurance financial strength",
         "S&P Global Ratings, 'S&P Global Ratings Definitions', Insurer Financial Strength Ratings: 'AA' very strong, 'A' strong financial security characteristics",
@@ -1305,7 +1254,7 @@
     {
       "engine": "shared/chainEngine.ts",
       "exists": true,
-      "lines": 512,
+      "lines": 525,
       "cataloguePages": [],
       "memoryGroups": [
         "journeys"
@@ -1328,7 +1277,7 @@
       "lookback": [],
       "simulation": {
         "seeded": true,
-        "unseededRandom": true,
+        "unseededRandom": false,
         "runs": [],
         "seeds": [],
         "bootstrapBlock": null,
@@ -1339,8 +1288,10 @@
         ]
       },
       "liveFeed": [],
-      "provenanceOnPage": false,
-      "provenancePages": [],
+      "provenanceOnPage": true,
+      "provenancePages": [
+        "client/src/pages/portal/ChainBuilder.tsx"
+      ],
       "hardCodedYears": [],
       "numericConstants": 26,
       "shellSourced": false
@@ -1404,6 +1355,7 @@
       "liveFeed": [],
       "provenanceOnPage": true,
       "provenancePages": [
+        "client/src/pages/portal/AIFinancialAdvisor.tsx",
         "client/src/pages/portal/FinancialAssessment.tsx",
         "client/src/pages/portal/PlanLedger.tsx"
       ],
@@ -1500,9 +1452,56 @@
       "shellSourced": false
     },
     {
+      "engine": "shared/creditLineSequencingEngine.ts",
+      "exists": true,
+      "lines": 498,
+      "cataloguePages": [
+        "/portal/credit-line-sequencing"
+      ],
+      "memoryGroups": [],
+      "pages": [
+        "client/src/components/engines/CreditLineSequencingView.tsx"
+      ],
+      "serverImporters": [],
+      "sources": [
+        "Approval policies here are community-reported. A denial still costs an inquiry. Confirm with each issuer first.",
+        "Conventional front/back-end underwriting norm (CFPB / Fannie Mae guidance); used as the ceiling for adding revolving lines.",
+        "export CREDIT_LINE_SEQUENCING_SOURCES",
+        "myFICO: a hard inquiry typically costs fewer than five points; used as the upper bound."
+      ],
+      "sourceFields": [
+        "source",
+        "asOf",
+        "*_SOURCE",
+        "RULES_VERSION",
+        "verified:",
+        "note:"
+      ],
+      "sourceExports": [
+        "CREDIT_LINE_SEQUENCING_SOURCES"
+      ],
+      "lookback": [],
+      "simulation": {
+        "seeded": null,
+        "unseededRandom": false,
+        "runs": [],
+        "seeds": [],
+        "bootstrapBlock": null,
+        "markers": []
+      },
+      "liveFeed": [],
+      "provenanceOnPage": true,
+      "provenancePages": [
+        "client/src/components/engines/CreditLineSequencingView.tsx"
+      ],
+      "hardCodedYears": [],
+      "numericConstants": 89,
+      "shellSourced": true
+    },
+    {
       "engine": "shared/creditingWindows.ts",
       "exists": true,
-      "lines": 112,
+      "lines": 114,
       "cataloguePages": [],
       "memoryGroups": [
         "markets"
@@ -1512,12 +1511,14 @@
         "server/partnerApi.ts"
       ],
       "sources": [
-        "./ibbotsonModel"
+        "./ibbotsonModel",
+        "Beginning at the top of the market in 2000, the first of three consecutive losing years — the first such run since 1939–41."
       ],
       "sourceFields": [],
       "sourceExports": [],
       "lookback": [
         "since 1929",
+        "since 1939",
         "since 2020"
       ],
       "simulation": {
@@ -1533,17 +1534,20 @@
       "provenancePages": [],
       "hardCodedYears": [
         2000,
+        2001,
+        2002,
         2007,
+        2008,
         2020,
         2025
       ],
-      "numericConstants": 8,
+      "numericConstants": 9,
       "shellSourced": false
     },
     {
       "engine": "shared/cryptoCycleEngine.ts",
       "exists": true,
-      "lines": 810,
+      "lines": 816,
       "cataloguePages": [],
       "memoryGroups": [
         "crypto"
@@ -1554,14 +1558,14 @@
       ],
       "sources": [
         "CoinGecko Research, 'Bitcoin Halving Price History': price at the first three halvings (about $12, about $650, about $8,727)",
+        "Cycle 1 was corrected on 2026-09-23 from $1,177 on 2013-11-29, which matched no publication, to Paybis's $1,163 on 2013-11-30",
         "Freddie Mac, Primary Mortgage Market Survey, 30-Year Fixed Rate Mortgage Average (MORTGAGE30US), via FRED: 6.66% for the week of 2026-08-27",
         "IRS Publication 946, 'How To Depreciate Property': residential rental property is recovered straight line over 27.5 years",
         "IRS Rev. Proc. 2025-32, section 4.01, 2026 tax rate tables: top marginal rate 37%",
         "The engine's 6.5% is a round figure 0.16 points under the latest survey reading, and the survey prices owner-occupied loans;",
-        "and IG cites Bloomberg for about $58,076 in late June. The cycle-4 bear market may not be over, so bearATL and bearDurationMonths 12",
-        "bullATH 1177 on 2013-11-29 matches no publication found: Bitstamp printed $1,163 on Nov 30, CoinGecko $1,127 on Nov 30 and CoinMarketCap $1,156.10 in Decembe…",
         "export CRYPTO_CYCLE_SOURCES",
         "https://fred.stlouisfed.org/series/MORTGAGE30US",
+        "https://investinglive.com/Cryptocurrency/bitcoin-is-testing-the-low-for-2026-and-lowest-level-going-back-to-september-2024-20260630/",
         "https://pages.stern.nyu.edu/~adamodar/New_Home_Page/datafile/histretSP.html",
         "https://paybis.com/blog/bitcoin-crash-history/",
         "https://www.bitcoin.com/get-started/bitcoin/basics/bitcoin-price-history/",
@@ -1611,7 +1615,7 @@
         2024,
         2025
       ],
-      "numericConstants": 159,
+      "numericConstants": 168,
       "shellSourced": true
     },
     {
@@ -1656,6 +1660,7 @@
       "provenanceOnPage": true,
       "provenancePages": [
         "client/src/pages/portal/InfiniteBanking.tsx",
+        "client/src/pages/portal/MechanismDetail.tsx",
         "client/src/pages/portal/Mechanisms.tsx",
         "client/src/pages/portal/Thresholds.tsx"
       ],
@@ -1820,23 +1825,32 @@
     {
       "engine": "shared/earlyCashValue.ts",
       "exists": true,
-      "lines": 240,
-      "cataloguePages": [],
+      "lines": 251,
+      "cataloguePages": [
+        "/portal/early-cash-value"
+      ],
       "memoryGroups": [
         "insurance-mechanics"
       ],
-      "pages": [],
+      "pages": [
+        "client/src/components/engines/EarlyCashValueView.tsx"
+      ],
       "serverImporters": [],
       "sources": [
         "Nationwide Indexed UL Accumulator II 2020 illustration, Form ICC18-NWLA-538, prepared 29 Jan 2026, Table of Surrender Charges",
         "Nationwide Indexed UL Accumulator II 2020 illustration, Form ICC18-NWLA-538, prepared 29 Jan 2026, Table of Surrender Charges, Adjusted column — Surrender Va…",
-        "Surrender charge figures are transcribed from a Nationwide Indexed UL Accumulator II 2020 illustration"
+        "Surrender charge figures are transcribed from a Nationwide Indexed UL Accumulator II 2020 illustration",
+        "export EARLY_CASH_VALUE_SOURCES"
       ],
       "sourceFields": [
         "source",
-        "asOf"
+        "asOf",
+        "*_SOURCE",
+        "note:"
       ],
-      "sourceExports": [],
+      "sourceExports": [
+        "EARLY_CASH_VALUE_SOURCES"
+      ],
       "lookback": [],
       "simulation": {
         "seeded": null,
@@ -1847,13 +1861,15 @@
         "markers": []
       },
       "liveFeed": [],
-      "provenanceOnPage": false,
-      "provenancePages": [],
+      "provenanceOnPage": true,
+      "provenancePages": [
+        "client/src/components/engines/EarlyCashValueView.tsx"
+      ],
       "hardCodedYears": [
         2020
       ],
-      "numericConstants": 23,
-      "shellSourced": false
+      "numericConstants": 26,
+      "shellSourced": true
     },
     {
       "engine": "shared/erosion.ts",
@@ -1957,7 +1973,7 @@
     {
       "engine": "shared/fiaCollateralEngine.ts",
       "exists": true,
-      "lines": 667,
+      "lines": 669,
       "cataloguePages": [],
       "memoryGroups": [
         "crypto"
@@ -1980,7 +1996,9 @@
         "athene-ascent-pro",
         "athene-pe-plus"
       ],
-      "sourceFields": [],
+      "sourceFields": [
+        "*_SOURCE"
+      ],
       "sourceExports": [],
       "lookback": [],
       "simulation": {
@@ -1995,7 +2013,7 @@
       "provenanceOnPage": false,
       "provenancePages": [],
       "hardCodedYears": [],
-      "numericConstants": 42,
+      "numericConstants": 41,
       "shellSourced": false
     },
     {
@@ -2309,7 +2327,7 @@
     {
       "engine": "shared/historicalShocks.ts",
       "exists": true,
-      "lines": 244,
+      "lines": 245,
       "cataloguePages": [],
       "memoryGroups": [
         "inflation-erosion"
@@ -2318,12 +2336,14 @@
       "serverImporters": [],
       "sources": [
         "-11.85% (2001), -21.97% (2002), -36.55% (2008); in 2022 the S&P 500 returned -18.04% and the 10-year Treasury bond -17.83%",
+        "2000 to 2002 was the first such run since 1939-41, not the only one in the series. 2008 lost 36.55% with dividends (38.3% on price in",
         "Assumption: the default index is the S&P 500 ('SP500'), chosen by the firm because it is the only index series held here that carries a stated source; no ext…",
         "Aswath Damodaran, NYU Stern, 'Historical Returns on Stocks, Bonds and Bills: 1928-2025': S&P 500 including dividends -9.03% (2000),",
         "Federal Reserve History, 'Oil Shock of 1973-74' (Michael Corbett): OAPEC embargo from October 19, 1973; production cuts nearly quadrupled",
         "Federal Reserve History, 'Stock Market Crash of 1987' (Bernhardt and Eckblad): on October 19, 1987 the Dow Jones Industrial Average fell 22.6%,",
         "Index changes run through each window: RAW_INDEX_RETURNS in shared/indexCreditingData.ts, S&P 500 calendar-year price return",
         "LPL Financial, Weekly Market Commentary, March 22, 2021: the S&P 500 fell 33.9% from the February 19, 2020 peak to the March 23, 2020 low",
+        "Three consecutive losing years — the first such run since 1939–41.",
         "export HISTORICAL_SHOCKS_SOURCES",
         "https://pages.stern.nyu.edu/~adamodar/New_Home_Page/datafile/histretSP.html",
         "https://www.federalreservehistory.org/essays/oil-shock-of-1973-74",
@@ -2343,7 +2363,8 @@
       "lookback": [
         "1928–2025",
         "1994–2025",
-        "2000–2002"
+        "2000–2002",
+        "since 1939"
       ],
       "simulation": {
         "seeded": false,
@@ -2371,7 +2392,7 @@
         2023,
         2025
       ],
-      "numericConstants": 78,
+      "numericConstants": 81,
       "shellSourced": true
     },
     {
@@ -2424,7 +2445,7 @@
     {
       "engine": "shared/householdWealth.ts",
       "exists": true,
-      "lines": 1029,
+      "lines": 1031,
       "cataloguePages": [],
       "memoryGroups": [
         "real-estate"
@@ -2434,23 +2455,22 @@
       ],
       "serverImporters": [],
       "sources": [
+        "./irc7702",
         "6.25% is a real declared 5-year rate near the top of the market, about 1.1 points above the market average; compounding it for 40 to 50 years assumes it can …",
         "AG 49-A caps the illustrated rate at the lesser of the benchmark index account lookback average and 145% of the insurer's net investment earnings rate, per c…",
-        "Assumption: IUL growth = 7.5% a year (GROWTH_RATE), chosen by the firm as an illustration rate; see the NAIC AG 49-A note, the carrier's filed maximum govern…",
         "Assumption: surrender charge starts at 9% of account value in year 1 and falls by 1 point a year to zero in year 10, chosen by the firm as a generic schedule…",
         "Bankrate Monitor National Index, Home Equity Line of Credit rate (BRMHELOC01, via FRED): 7.29% for the week of 2026-09-02",
         "Board of Governors of the Federal Reserve System, H.15 Selected Interest Rates, Bank Prime Loan Rate (DPRIME, via FRED): 6.75% on 2026-09-02",
         "NAIC, Actuarial Guideline XLIX-A, The Application of the Life Illustrations Model Regulation to Policies with Index-Based Interest, Section 4 (illustrated sc…",
-        "The 8.5% HELOC default equals prime plus 1.75 points; that margin is the firm's assumption.",
-        "The 8.5% default is 1.21 points above this national average, and the 6% fallback used for the grandchildren's HELOC tracker is 1.29 points below it. Not chan…",
+        "Reference only: a second national HELOC average, 0.2 points above the Curinos figure the default uses.",
+        "Reference only: the 7.09% HELOC default is prime plus 0.34 points at this reading.",
         "U.S. Federal Housing Finance Agency, All-Transactions House Price Index for the United States (USSTHPI, via FRED): 60.04 in 1975 Q1 to 719.87 in 2026 Q2, a c…",
         "export HOUSEHOLD_WEALTH_SOURCES",
         "https://annuityrateshq.com/myga/rates/5-year",
         "https://content.naic.org/sites/default/files/inline-files/AG%2049A%28posted%29.pdf",
         "https://fred.stlouisfed.org/series/BRMHELOC01",
         "https://fred.stlouisfed.org/series/DPRIME",
-        "https://fred.stlouisfed.org/series/USSTHPI",
-        "https://www.law.cornell.edu/uscode/text/26/7702"
+        "https://fred.stlouisfed.org/series/USSTHPI"
       ],
       "sourceFields": [
         "source",
@@ -2472,18 +2492,20 @@
         "markers": []
       },
       "liveFeed": [],
-      "provenanceOnPage": false,
-      "provenancePages": [],
+      "provenanceOnPage": true,
+      "provenancePages": [
+        "client/src/pages/portal/HouseholdWealth.tsx"
+      ],
       "hardCodedYears": [
         2020
       ],
-      "numericConstants": 71,
+      "numericConstants": 60,
       "shellSourced": true
     },
     {
       "engine": "shared/ibbotsonModel.ts",
       "exists": true,
-      "lines": 415,
+      "lines": 452,
       "cataloguePages": [],
       "memoryGroups": [
         "markets"
@@ -2503,14 +2525,30 @@
         "server/partnerApi.ts"
       ],
       "sources": [
-        "Based on Ibbotson SBBI historical data. Research-based estimates only — not guaranteed.",
-        "Projections are based on Roger Ibbotson's historical S&P 500 data (SBBI) and",
-        "current cap rates, and other factors. The 7.5% cap rate reflects the NAIC"
+        "Based on historical S&P 500 total returns (S&P Dow Jones Indices / Ibbotson SBBI). Research-based estimates only — not guaranteed.",
+        "Ibbotson SBBI large-company stocks for years before the S&P 500) and",
+        "Projections are based on historical S&P 500 total returns (S&P Dow Jones Indices;",
+        "S&P Dow Jones Indices, S&P 500 total return (the index's publisher; before 1957 the S&P 90 Composite, as carried in Morningstar's Ibbotson SBBI yearbooks)",
+        "Slickcharts, S&P 500 Total Returns by Year Since 1926 (year-by-year compilation of the same series): -8.42% (1929), -24.90% (1930), -43.34% (1931), 52.62% (1…",
+        "export IBBOTSON_MODEL_SOURCES",
+        "https://pages.stern.nyu.edu/~adamodar/New_Home_Page/datafile/histretSP.html",
+        "https://www.slickcharts.com/sp500/returns",
+        "https://www.spglobal.com/spdji/en/commentary/article/us-equities-market-attributes/",
+        "https://www.spglobal.com/spdji/en/indices/equity/sp-500/"
       ],
-      "sourceFields": [],
-      "sourceExports": [],
+      "sourceFields": [
+        "asOf",
+        "*_SOURCE",
+        "url:",
+        "note:"
+      ],
+      "sourceExports": [
+        "IBBOTSON_MODEL_SOURCES"
+      ],
       "lookback": [
+        "1929–1931",
         "1929–2025",
+        "2022–2024",
         "IBBOTSON_DEFAULT_START_YEAR = 2005",
         "IBBOTSON_END_YEAR = 2025",
         "IBBOTSON_START_YEAR = 1929",
@@ -2529,9 +2567,12 @@
       "provenancePages": [
         "client/src/components/IbbotsonCredibilityOverlay.tsx",
         "client/src/pages/portal/IULHistoricalPerformance.tsx",
+        "client/src/pages/portal/IULvsRoth.tsx",
         "client/src/pages/portal/MortgageKiller.tsx",
         "client/src/pages/portal/PolicyLoans.tsx",
-        "client/src/pages/portal/PremiumFinancing.tsx"
+        "client/src/pages/portal/PremiumFinancing.tsx",
+        "client/src/pages/portal/RealEstateMogul.tsx",
+        "client/src/pages/portal/TaxAdvantagedGrowth.tsx"
       ],
       "hardCodedYears": [
         2000,
@@ -2561,8 +2602,8 @@
         2024,
         2025
       ],
-      "numericConstants": 225,
-      "shellSourced": false
+      "numericConstants": 260,
+      "shellSourced": true
     },
     {
       "engine": "shared/incomeForLife.ts",
@@ -2642,6 +2683,8 @@
         "markets"
       ],
       "pages": [
+        "client/src/pages/portal/IULHistoricalPerformance.tsx",
+        "client/src/pages/portal/LookbackIntegrity.tsx",
         "client/src/pages/portal/ThomasGoldman.tsx"
       ],
       "serverImporters": [
@@ -2713,8 +2756,11 @@
         "markers": []
       },
       "liveFeed": [],
-      "provenanceOnPage": false,
-      "provenancePages": [],
+      "provenanceOnPage": true,
+      "provenancePages": [
+        "client/src/pages/portal/IULHistoricalPerformance.tsx",
+        "client/src/pages/portal/LookbackIntegrity.tsx"
+      ],
       "hardCodedYears": [
         2000,
         2001,
@@ -2827,7 +2873,7 @@
     {
       "engine": "shared/irc7702.ts",
       "exists": true,
-      "lines": 140,
+      "lines": 165,
       "cataloguePages": [],
       "memoryGroups": [
         "insurance-mechanics"
@@ -2838,10 +2884,17 @@
       ],
       "sources": [
         "26 U.S.C. 7702(d)(2)",
+        "export IRC_7702_CORRIDOR_SOURCE",
+        "https://www.law.cornell.edu/uscode/text/26/7702",
         "server/irc7702.test.ts"
       ],
-      "sourceFields": [],
-      "sourceExports": [],
+      "sourceFields": [
+        "asOf",
+        "url:"
+      ],
+      "sourceExports": [
+        "IRC_7702_CORRIDOR_SOURCE"
+      ],
       "lookback": [],
       "simulation": {
         "seeded": null,
@@ -2855,7 +2908,7 @@
       "provenanceOnPage": false,
       "provenancePages": [],
       "hardCodedYears": [],
-      "numericConstants": 1,
+      "numericConstants": 3,
       "shellSourced": false
     },
     {
@@ -3229,42 +3282,66 @@
     {
       "engine": "shared/lookbackIntegrity.ts",
       "exists": true,
-      "lines": 220,
-      "cataloguePages": [],
+      "lines": 461,
+      "cataloguePages": [
+        "/portal/lookback-integrity"
+      ],
       "memoryGroups": [
         "insurance-mechanics"
       ],
-      "pages": [],
+      "pages": [
+        "client/src/components/LookbackIntegrityBadge.tsx",
+        "client/src/pages/portal/IULHistoricalPerformance.tsx",
+        "client/src/pages/portal/LookbackIntegrity.tsx"
+      ],
       "serverImporters": [],
       "sources": [
+        "ChartRow, S&P 500 Returns by Year",
         "Figures are Nationwide's own published look-backs from the Accumulator II 2020 rate guide",
         "Nationwide's best 20-year allocation",
-        "Nationwide's strongest allocation"
+        "Nationwide's strongest allocation",
+        "Nationwide, Accumulator II 2020 IUL rate guide, FLM-1491AO.10 (02/25)",
+        "Nationwide, Accumulator II 2020 IUL rate guide, FLM-1491AO.10 (02/25), index disclosures",
+        "S&P 500 calendar-year price returns, 1994-2025 (total return less dividend)",
+        "export LOOKBACK_INTEGRITY_SOURCES",
+        "https://chartrow.com/sp500/returns"
       ],
-      "sourceFields": [],
-      "sourceExports": [],
+      "sourceFields": [
+        "*_SOURCE",
+        "url:"
+      ],
+      "sourceExports": [
+        "LOOKBACK_INTEGRITY_SOURCES"
+      ],
       "lookback": [
+        "1994–2025",
         "2006–2025"
       ],
       "simulation": {
-        "seeded": null,
+        "seeded": false,
         "unseededRandom": false,
         "runs": [],
         "seeds": [],
         "bootstrapBlock": null,
-        "markers": []
+        "markers": [
+          "percentile"
+        ]
       },
       "liveFeed": [],
-      "provenanceOnPage": false,
-      "provenancePages": [],
+      "provenanceOnPage": true,
+      "provenancePages": [
+        "client/src/components/LookbackIntegrityBadge.tsx",
+        "client/src/pages/portal/IULHistoricalPerformance.tsx",
+        "client/src/pages/portal/LookbackIntegrity.tsx"
+      ],
       "hardCodedYears": [
         2006,
         2020,
         2022,
         2025
       ],
-      "numericConstants": 6,
-      "shellSourced": false
+      "numericConstants": 17,
+      "shellSourced": true
     },
     {
       "engine": "shared/ltcEngine.ts",
@@ -3379,8 +3456,10 @@
         ]
       },
       "liveFeed": [],
-      "provenanceOnPage": false,
-      "provenancePages": [],
+      "provenanceOnPage": true,
+      "provenancePages": [
+        "client/src/pages/portal/ChainBuilder.tsx"
+      ],
       "hardCodedYears": [
         2010,
         2019,
@@ -3544,6 +3623,7 @@
       "liveFeed": [],
       "provenanceOnPage": true,
       "provenancePages": [
+        "client/src/pages/portal/MechanismDetail.tsx",
         "client/src/pages/portal/Mechanisms.tsx"
       ],
       "hardCodedYears": [],
@@ -3589,7 +3669,7 @@
     {
       "engine": "shared/monteCarloEngine.ts",
       "exists": true,
-      "lines": 305,
+      "lines": 321,
       "cataloguePages": [],
       "memoryGroups": [
         "markets"
@@ -3597,12 +3677,15 @@
       "pages": [
         "client/src/components/MonteCarloChart.tsx",
         "client/src/components/PlatformEnhancements.tsx",
+        "client/src/pages/ClientPortalView.tsx",
         "client/src/pages/portal/MortgageKiller.tsx",
         "client/src/pages/portal/PremiumFinancing.tsx",
-        "client/src/pages/portal/RothConversionSTR.tsx"
+        "client/src/pages/portal/RothConversionSTR.tsx",
+        "client/src/pages/portal/StrategyCompare.tsx"
       ],
       "serverImporters": [
-        "server/partnerApi.ts"
+        "server/partnerApi.ts",
+        "server/rothPdfReport.ts"
       ],
       "sources": [
         "Assumption: aggressive growth = 12% return and 22% volatility, chosen by the firm to sit above the S&P 500 row on both return and risk; no external source",
@@ -3613,8 +3696,7 @@
         "export MONTE_CARLO_SOURCES",
         "https://fred.stlouisfed.org/series/CPIAUCSL",
         "https://pages.stern.nyu.edu/~adamodar/New_Home_Page/datafile/histretSP.html",
-        "https://www.minneapolisfed.org/about-us/monetary-policy/inflation-calculator/consumer-price-index-1913-",
-        "in the same table, so the preset understates the spread of S&P 500 outcomes. realEstate.expectedReturn 0.04 is close to the 4.20% geometric average."
+        "https://www.minneapolisfed.org/about-us/monetary-policy/inflation-calculator/consumer-price-index-1913-"
       ],
       "sourceFields": [
         "asOf",
@@ -3649,6 +3731,7 @@
       "provenanceOnPage": true,
       "provenancePages": [
         "client/src/components/PlatformEnhancements.tsx",
+        "client/src/pages/ClientPortalView.tsx",
         "client/src/pages/portal/MortgageKiller.tsx",
         "client/src/pages/portal/PremiumFinancing.tsx",
         "client/src/pages/portal/RothConversionSTR.tsx"
@@ -3656,13 +3739,13 @@
       "hardCodedYears": [
         2025
       ],
-      "numericConstants": 69,
+      "numericConstants": 70,
       "shellSourced": true
     },
     {
       "engine": "shared/mortgageKiller.ts",
       "exists": true,
-      "lines": 848,
+      "lines": 872,
       "cataloguePages": [
         "/portal/mortgage-killer"
       ],
@@ -3680,13 +3763,13 @@
       ],
       "sources": [
         "6.25% is a real declared rate near the top of the market, about 1.1 points above the market average; it is not a typical rate.",
-        "Assumption: IUL credit rate = 7.5% a year (iulCreditRate default), chosen by the firm as an illustration rate; see the NAIC AG 49-A note, the carrier's filed…",
+        "As first typed the rates fell after age 85 (1.8% at 86 to 90, 0.8% at 91 to 95, 0 after), which no mortality table does. No source was found for the curve, s…",
         "Bankrate Monitor National Index, Home Equity Line of Credit rate (BRMHELOC01, via FRED): 7.29% for the week of 2026-09-02",
         "Board of Governors of the Federal Reserve System, H.15 Selected Interest Rates, Bank Prime Loan Rate (DPRIME, via FRED): 6.75% on 2026-09-02",
         "Freddie Mac, Primary Mortgage Market Survey, 30-Year Fixed Rate Mortgage Average in the United States (MORTGAGE30US, via FRED): 6.66% for the week ending 202…",
-        "HELOCs are usually priced as prime plus a margin; the 8.5% default equals prime plus 1.75 points, and that margin is the firm's assumption.",
+        "HELOCs are usually priced as prime plus a margin; the 7.09% default is prime plus 0.34 points at this reading.",
         "NAIC, Actuarial Guideline XLIX-A, The Application of the Life Illustrations Model Regulation to Policies with Index-Based Interest, Section 4 (illustrated sc…",
-        "The default HELOC rate here is 8.5%, 1.21 points above this national average. Not changed; flagged for review.",
+        "Reference only: a second national HELOC average, 0.2 points above the Curinos figure the 7.09% default uses.",
         "U.S. Federal Housing Finance Agency, All-Transactions House Price Index for the United States (USSTHPI, via FRED): 60.04 in 1975 Q1 to 719.87 in 2026 Q2, a c…",
         "export MORTGAGE_KILLER_SOURCES",
         "https://annuityrateshq.com/myga/rates/5-year",
@@ -3723,7 +3806,7 @@
       "hardCodedYears": [
         2020
       ],
-      "numericConstants": 78,
+      "numericConstants": 77,
       "shellSourced": true
     },
     {
@@ -3783,7 +3866,7 @@
     {
       "engine": "shared/multiPropertyMyga.ts",
       "exists": true,
-      "lines": 498,
+      "lines": 477,
       "cataloguePages": [],
       "memoryGroups": [
         "real-estate"
@@ -3793,13 +3876,9 @@
       ],
       "serverImporters": [],
       "sources": [
-        "Centers for Medicare & Medicaid Services, 2025 Medicare Parts A & B Premiums and Deductibles fact sheet, Part B and Part D income-related monthly adjustment …",
-        "Internal Revenue Service, Rev. Proc. 2025-32, Section 4.01, 2026 tax rate tables: 24% applies to joint taxable income over $211,400 and 32% over $403,550",
-        "Social Security Administration, POMS HI 01101.020, IRMAA Sliding Scale Tables, current table based on 2024 MAGI (the 2026 premium year): surcharges begin abo…",
+        "Internal Revenue Service, 2026 tax inflation adjustments (Rev. Proc. 2025-32 as amended by OBBBA), married filing jointly: 10% to $24,800; 12% to $100,800; 2…",
         "export MULTI_PROPERTY_MYGA_SOURCES",
-        "https://secure.ssa.gov/poms.nsf/lnx/0601101020",
-        "https://www.cms.gov/newsroom/fact-sheets/2025-medicare-parts-b-premiums-and-deductibles",
-        "https://www.irs.gov/pub/irs-drop/rp-25-32.pdf"
+        "https://www.irs.gov/newsroom/irs-releases-tax-inflation-adjustments-for-tax-year-2026-including-amendments-from-the-one-big-beautiful-bill"
       ],
       "sourceFields": [
         "asOf",
@@ -3819,14 +3898,16 @@
         "bootstrapBlock": null,
         "markers": []
       },
-      "liveFeed": [],
+      "liveFeed": [
+        "taxRules"
+      ],
       "provenanceOnPage": false,
       "provenancePages": [],
       "hardCodedYears": [
         2024,
         2025
       ],
-      "numericConstants": 76,
+      "numericConstants": 12,
       "shellSourced": true
     },
     {
@@ -3952,7 +4033,7 @@
     {
       "engine": "shared/mygaWaterfall.ts",
       "exists": true,
-      "lines": 1021,
+      "lines": 1030,
       "cataloguePages": [],
       "memoryGroups": [
         "annuity"
@@ -3967,9 +4048,9 @@
         "Board of Governors of the Federal Reserve System, H.15 Selected Interest Rates, Bank Prime Loan Rate (DPRIME, via FRED): 6.75% on 2026-09-02",
         "Federal Reserve Bank of New York, Secured Overnight Financing Rate (SOFR, via FRED): 3.62% on 2026-09-11",
         "Internal Revenue Service, Rev. Proc. 2025-32, Section 4.01, 2026 tax rate tables: 32% applies to taxable income over $201,775 (single) and over $403,550 (mar…",
+        "Reference only: a second national HELOC average, 0.2 points above the Curinos figure the default uses.",
+        "Reference only: the 7.09% HELOC default is prime plus 0.34 points at this reading.",
         "The 7% bank loan default equals SOFR plus about 3.4 points; the spread is the firm's assumption.",
-        "The 8.5% HELOC default equals prime plus 1.75 points; that margin is the firm's assumption.",
-        "The 8.5% default is 1.21 points above this national average. Not changed; flagged for review.",
         "export MYGA_WATERFALL_SOURCES",
         "https://annuityrateshq.com/myga/rates/5-year",
         "https://fred.stlouisfed.org/series/BRMHELOC01",
@@ -4001,12 +4082,13 @@
       "liveFeed": [],
       "provenanceOnPage": true,
       "provenancePages": [
+        "client/src/pages/portal/ClientPortfolioDashboard.tsx",
         "client/src/pages/portal/MYGAFixedRate.tsx"
       ],
       "hardCodedYears": [
         2025
       ],
-      "numericConstants": 38,
+      "numericConstants": 36,
       "shellSourced": true
     },
     {
@@ -4250,8 +4332,8 @@
         "Pacific Life",
         "RATES NOT IN THE DOCUMENT. This illustration runs 'Policy Distributions 0' — no loans are illustrated — so no loan rate table is populated. The same gap appe…",
         "Securian / Minnesota Life",
-        "Securian / Minnesota Life Balanced Growth Accumulator III illustration, Case ID 29335303 — fixed loan charged 4.00% constant, credited 3.00% years 1-10 and 4…",
-        "Securian / Minnesota Life Balanced Growth Accumulator III illustration, Case ID 29335303, for M. Corrales age 65 Preferred Non-Tobacco",
+        "Securian / Minnesota Life Balanced Growth Accumulator III illustration, one client case (de-identified) — fixed loan charged 4.00% constant, credited 3.00% y…",
+        "Securian / Minnesota Life Balanced Growth Accumulator III illustration, one client case (de-identified): issue age 65, Preferred Non-Tobacco",
         "Securian: fixed 4.00% charged against 3.00% then 4.00% credited; indexed 4.75% into a separate loan account; variable capped 1.5% above the fixed account rate.",
         "Variable interest rate loan: varies with the Moody's Corporate Bond Yield Average, capped at 1.5% above the current fixed account crediting rate",
         "Variable: the loan amount REMAINS in your current fixed or indexed accounts. This is the true participating loan here. Charged rate floats with Moody's, capp…",
@@ -4286,7 +4368,7 @@
         2022,
         2025
       ],
-      "numericConstants": 76,
+      "numericConstants": 72,
       "shellSourced": true
     },
     {
@@ -4829,7 +4911,7 @@
     {
       "engine": "shared/reverseHeloc.ts",
       "exists": true,
-      "lines": 787,
+      "lines": 790,
       "cataloguePages": [],
       "memoryGroups": [
         "mortgage"
@@ -4843,7 +4925,7 @@
         "IRS, Rev. Proc. 2025-32, section 2.01: seven individual rates, top rate 37%, made permanent by P.L. 119-21 section 70101",
         "NAIC, Actuarial Guideline XLIX-A (policies with index-based interest sold on or after December 14, 2020): section 4 limits the illustrated indexed credit rat…",
         "Tax Foundation, State Individual Income Tax Rates and Brackets, 2026: Virginia top rate 5.75% over $17,000 of taxable income",
-        "The 8.5% HELOC default is prime plus 1.75 points at this reading.",
+        "The 7.09% HELOC default is prime plus 0.34 points at this reading.",
         "export REVERSE_HELOC_SOURCES",
         "https://content.naic.org/sites/default/files/inline-files/AG%2049A%28posted%29.pdf",
         "https://fred.stlouisfed.org/series/DPRIME",
@@ -4870,13 +4952,15 @@
         "markers": []
       },
       "liveFeed": [],
-      "provenanceOnPage": false,
-      "provenancePages": [],
+      "provenanceOnPage": true,
+      "provenancePages": [
+        "client/src/pages/portal/ReverseHeloc.tsx"
+      ],
       "hardCodedYears": [
         2020,
         2025
       ],
-      "numericConstants": 38,
+      "numericConstants": 37,
       "shellSourced": true
     },
     {
@@ -4988,6 +5072,7 @@
       "liveFeed": [],
       "provenanceOnPage": true,
       "provenancePages": [
+        "client/src/pages/portal/MechanismDetail.tsx",
         "client/src/pages/portal/Mechanisms.tsx"
       ],
       "hardCodedYears": [
@@ -5262,7 +5347,7 @@
     {
       "engine": "shared/taxBracketEngine.ts",
       "exists": true,
-      "lines": 695,
+      "lines": 766,
       "cataloguePages": [
         "/portal/tax-waterfall",
         "/portal/tax-brackets"
@@ -5272,6 +5357,7 @@
       ],
       "pages": [
         "client/src/components/ConsumerOutcomeBlocks.tsx",
+        "client/src/components/OilGasToggle.tsx",
         "client/src/pages/portal/AIPolicyReviewGap.tsx",
         "client/src/pages/portal/AdvisorIncomeCalculator.tsx",
         "client/src/pages/portal/AiStrategyRecommender.tsx",
@@ -5283,8 +5369,10 @@
         "client/src/pages/portal/BulkGeneration.tsx",
         "client/src/pages/portal/BusinessOwnerPlanning.tsx",
         "client/src/pages/portal/CarrierComparison.tsx",
+        "client/src/pages/portal/CharitableGivingDashboard.tsx",
         "client/src/pages/portal/CharitableGivingOptimizer.tsx",
         "client/src/pages/portal/ClientSnapshotMap.tsx",
+        "client/src/pages/portal/ComboDetail.tsx",
         "client/src/pages/portal/CompetitiveAnalysis.tsx",
         "client/src/pages/portal/CryptoCurrencyCorner.tsx",
         "client/src/pages/portal/EstateFlowChart.tsx",
@@ -5326,9 +5414,11 @@
         "client/src/pages/portal/RetirementIncomeProjection.tsx",
         "client/src/pages/portal/ReverseHeloc.tsx",
         "client/src/pages/portal/RothConversionSTR.tsx",
+        "client/src/pages/portal/SalesStoryBuilder.tsx",
         "client/src/pages/portal/SavedScenariosHub.tsx",
         "client/src/pages/portal/ScenarioAdjustments.tsx",
         "client/src/pages/portal/ScenarioSideBySide.tsx",
+        "client/src/pages/portal/SecretDetail.tsx",
         "client/src/pages/portal/SocialSecurityOptimizer.tsx",
         "client/src/pages/portal/StrategyCompare.tsx",
         "client/src/pages/portal/StrategyLab.tsx",
@@ -5349,8 +5439,11 @@
       ],
       "sources": [
         "Assumption: bracket and standard deduction inflation in the dynamic projection = 2.5% a year (bracketInflationRate default), chosen by the firm as a round lo…",
+        "IRS Rev. Proc. 2025-32 (tax year 2026 brackets and standard deduction)",
         "IRS, Rev. Proc. 2025-32 (tax year 2026): section 2.01 (the seven rates 10%, 12%, 22%, 24%, 32%, 35%, 37% made permanent by P.L. 119-21 section 70101), sectio…",
-        "Tax Foundation, State Individual Income Tax Rates and Brackets, 2026 (rates as of January 1, 2026; top marginal rate per state, single filer)",
+        "Tax Foundation, 2026 State Income Tax Rates and Brackets (table: State Individual Income Tax Rates and Brackets, as of January 1, 2026; top marginal rate per…",
+        "export FEDERAL_RATES_SOURCE",
+        "export STATE_TAX_RATES_SOURCE",
         "export TAX_BRACKET_SOURCES",
         "https://taxfoundation.org/data/all/state/state-income-tax-rates-2026/",
         "https://www.irs.gov/pub/irs-drop/rp-25-32.pdf"
@@ -5362,6 +5455,8 @@
         "note:"
       ],
       "sourceExports": [
+        "FEDERAL_RATES_SOURCE",
+        "STATE_TAX_RATES_SOURCE",
         "TAX_BRACKET_SOURCES"
       ],
       "lookback": [],
@@ -5378,26 +5473,73 @@
       ],
       "provenanceOnPage": true,
       "provenancePages": [
+        "client/src/components/OilGasToggle.tsx",
         "client/src/pages/portal/AthenePEPlus15.tsx",
+        "client/src/pages/portal/BeneficiaryOptimization.tsx",
+        "client/src/pages/portal/BusinessOwnerPlanning.tsx",
+        "client/src/pages/portal/CharitableGivingDashboard.tsx",
+        "client/src/pages/portal/CharitableGivingOptimizer.tsx",
+        "client/src/pages/portal/ClientSnapshotMap.tsx",
+        "client/src/pages/portal/ComboDetail.tsx",
+        "client/src/pages/portal/CryptoCurrencyCorner.tsx",
+        "client/src/pages/portal/EstateFlowChart.tsx",
+        "client/src/pages/portal/EstateTax.tsx",
         "client/src/pages/portal/ExistingAnnuities.tsx",
         "client/src/pages/portal/GoalsBasedPlanning.tsx",
+        "client/src/pages/portal/HotIncome.tsx",
+        "client/src/pages/portal/HouseRecyclingStrategy.tsx",
+        "client/src/pages/portal/HouseholdWealth.tsx",
         "client/src/pages/portal/IULHistoricalPerformance.tsx",
+        "client/src/pages/portal/IULvsRoth.tsx",
+        "client/src/pages/portal/IbbotsonCharts.tsx",
+        "client/src/pages/portal/IllustrationCompare.tsx",
+        "client/src/pages/portal/IncomeGapAnalyzer.tsx",
+        "client/src/pages/portal/IncomeTimeline.tsx",
         "client/src/pages/portal/IndexBacktester.tsx",
         "client/src/pages/portal/IndexStrategyComparison.tsx",
+        "client/src/pages/portal/InflationAnalysis.tsx",
         "client/src/pages/portal/LifetimeGuaranteedIncome.tsx",
         "client/src/pages/portal/MYGAFixedRate.tsx",
+        "client/src/pages/portal/MarketScenarioStressTest.tsx",
+        "client/src/pages/portal/MedicareIRMAA.tsx",
         "client/src/pages/portal/MortgageKiller.tsx",
+        "client/src/pages/portal/MultiGenWealthTransfer.tsx",
+        "client/src/pages/portal/MultiScenarioPlayZone.tsx",
         "client/src/pages/portal/PolicyLoans.tsx",
+        "client/src/pages/portal/PolicyReview.tsx",
+        "client/src/pages/portal/PortfolioDriftMonitor.tsx",
+        "client/src/pages/portal/PredictiveAnalytics.tsx",
         "client/src/pages/portal/PremiumFinancing.tsx",
+        "client/src/pages/portal/QuickQuote.tsx",
+        "client/src/pages/portal/RealEstateMogul.tsx",
+        "client/src/pages/portal/Recommendations.tsx",
+        "client/src/pages/portal/RetirementGuardrails.tsx",
         "client/src/pages/portal/RetirementIncomeProjection.tsx",
+        "client/src/pages/portal/ReverseHeloc.tsx",
         "client/src/pages/portal/RothConversionSTR.tsx",
+        "client/src/pages/portal/SalesStoryBuilder.tsx",
+        "client/src/pages/portal/SavedScenariosHub.tsx",
+        "client/src/pages/portal/ScenarioAdjustments.tsx",
+        "client/src/pages/portal/ScenarioSideBySide.tsx",
+        "client/src/pages/portal/SecretDetail.tsx",
+        "client/src/pages/portal/SocialSecurityOptimizer.tsx",
+        "client/src/pages/portal/StrategyLab.tsx",
+        "client/src/pages/portal/SuccessionPlanningWizard.tsx",
+        "client/src/pages/portal/TaxAdvantagedGrowth.tsx",
         "client/src/pages/portal/TaxBracketVisualizer.tsx",
-        "client/src/pages/portal/TaxWaterfall.tsx"
+        "client/src/pages/portal/TaxLossHarvestingScanner.tsx",
+        "client/src/pages/portal/TaxOpportunityDetector.tsx",
+        "client/src/pages/portal/TaxReturnUpload.tsx",
+        "client/src/pages/portal/TaxWaterfall.tsx",
+        "client/src/pages/portal/TimeMachineAG49.tsx",
+        "client/src/pages/portal/TimeMachineCalculator.tsx",
+        "client/src/pages/portal/TimeMachineMethod.tsx",
+        "client/src/pages/portal/WithdrawalSequencing.tsx"
       ],
       "hardCodedYears": [
         2025
       ],
-      "numericConstants": 99,
+      "numericConstants": 67,
       "shellSourced": true
     },
     {
@@ -5477,17 +5619,32 @@
     {
       "engine": "shared/taxRules.ts",
       "exists": true,
-      "lines": 296,
+      "lines": 341,
       "cataloguePages": [],
       "memoryGroups": [
         "tax-engines"
       ],
-      "pages": [],
+      "pages": [
+        "client/src/pages/portal/BeneficiaryOptimization.tsx",
+        "client/src/pages/portal/BusinessOwnerPlanning.tsx",
+        "client/src/pages/portal/DynastyTrustPlanner.tsx",
+        "client/src/pages/portal/EstateFlowChart.tsx",
+        "client/src/pages/portal/EstatePlanningSimulator.tsx",
+        "client/src/pages/portal/IULvsRoth.tsx",
+        "client/src/pages/portal/MultiGenWealthTransfer.tsx",
+        "client/src/pages/portal/PredictiveAnalytics.tsx",
+        "client/src/pages/portal/SalesStoryBuilder.tsx",
+        "client/src/pages/portal/TaxBracketVisualizer.tsx",
+        "client/src/pages/portal/TaxOpportunityDetector.tsx",
+        "client/src/pages/portal/TaxReturnUpload.tsx",
+        "client/src/pages/portal/TaxWaterfall.tsx"
+      ],
       "serverImporters": [
         "server/advice.ts",
         "server/controlsRouter.ts",
         "server/erosionRouter.ts",
         "server/forgivenessRouter.ts",
+        "server/routers.ts",
         "server/sourcesRouter.ts",
         "server/taxScheduleRouter.ts"
       ],
@@ -5495,7 +5652,9 @@
         "Rev. Proc. 2024-40 (brackets); One Big Beautiful Bill Act, P.L. 119-21 (standard deduction, SALT, estate); IRS Notice 2024-80 (retirement limits)",
         "Rev. Proc. 2025-32 (brackets, standard deduction, AMT, estate); IRS Notice 2025-67 (retirement limits); OBBBA §70120 (SALT, indexed)",
         "SSA 2025 COLA fact sheet (ssa.gov/news/press/factsheets/colafacts2025.pdf, Oct 2024); additional Medicare thresholds IRC §3101(b)(2)",
-        "SSA 2026 COLA fact sheet (ssa.gov/news/en/cola/factsheets/2026.html, Oct 2025; fetched 22 Sep 2026); SSA OACT contribution and benefit base (ssa.gov/oact/col…"
+        "SSA 2026 COLA fact sheet (ssa.gov/news/en/cola/factsheets/2026.html, Oct 2025; fetched 22 Sep 2026); SSA OACT contribution and benefit base (ssa.gov/oact/col…",
+        "https://www.irs.gov/newsroom/irs-releases-tax-inflation-adjustments-for-tax-year-2026-including-amendments-from-the-one-big-beautiful-bill",
+        "https://www.irs.gov/pub/irs-drop/rp-25-32.pdf"
       ],
       "sourceFields": [
         "source"
@@ -5511,13 +5670,27 @@
         "markers": []
       },
       "liveFeed": [],
-      "provenanceOnPage": false,
-      "provenancePages": [],
+      "provenanceOnPage": true,
+      "provenancePages": [
+        "client/src/pages/portal/BeneficiaryOptimization.tsx",
+        "client/src/pages/portal/BusinessOwnerPlanning.tsx",
+        "client/src/pages/portal/DynastyTrustPlanner.tsx",
+        "client/src/pages/portal/EstateFlowChart.tsx",
+        "client/src/pages/portal/EstatePlanningSimulator.tsx",
+        "client/src/pages/portal/IULvsRoth.tsx",
+        "client/src/pages/portal/MultiGenWealthTransfer.tsx",
+        "client/src/pages/portal/PredictiveAnalytics.tsx",
+        "client/src/pages/portal/SalesStoryBuilder.tsx",
+        "client/src/pages/portal/TaxBracketVisualizer.tsx",
+        "client/src/pages/portal/TaxOpportunityDetector.tsx",
+        "client/src/pages/portal/TaxReturnUpload.tsx",
+        "client/src/pages/portal/TaxWaterfall.tsx"
+      ],
       "hardCodedYears": [
         2024,
         2025
       ],
-      "numericConstants": 155,
+      "numericConstants": 172,
       "shellSourced": false
     },
     {
@@ -5850,7 +6023,8 @@
       "liveFeed": [],
       "provenanceOnPage": true,
       "provenancePages": [
-        "client/src/pages/UltraCalculatorPage.tsx"
+        "client/src/pages/UltraCalculatorPage.tsx",
+        "client/src/pages/portal/ChainBuilder.tsx"
       ],
       "hardCodedYears": [],
       "numericConstants": 5,

@@ -27,6 +27,7 @@ import { ExportToSlides } from "@/components/ExportToSlides";
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, Legend, PieChart, Pie, Cell, LineChart, Line, AreaChart, Area, ComposedChart, Scatter } from "recharts";
 import { ExecutiveSummary, GoalsAccelerator, RecommendationSummary, DoNothingBaseline, TaxBracketPanel } from "@/components/ConsumerOutcomeBlocks";
 import { formatTaxCurrency } from "@shared/taxBracketEngine";
+import { rulesForYear, filingKeyFromLabel } from "@shared/taxRules";
 import { RelatedCalculators } from "@/components/RelatedCalculators";
 import { ComplianceFooter } from "@/components/ComplianceFooter";
 
@@ -232,15 +233,14 @@ export default function TaxReturnUpload() {
 
   const taxBracketData = useMemo(() => {
     if (!extraction) return [];
-    const brackets = [
-      { rate: "10%", threshold: 11000, cumulative: 1100 },
-      { rate: "12%", threshold: 44725, cumulative: 5147 },
-      { rate: "22%", threshold: 95375, cumulative: 16290 },
-      { rate: "24%", threshold: 182100, cumulative: 37104 },
-      { rate: "32%", threshold: 231250, cumulative: 52832 },
-      { rate: "35%", threshold: 578125, cumulative: 174238 },
-      { rate: "37%", threshold: 1000000, cumulative: 330332 }
-    ];
+    // The return's own year and filing status, from the versioned tables in
+    // shared/taxRules.ts (years before the earliest rule set use that set).
+    // The open-ended 37% row is drawn to $1,000,000.
+    const rules = rulesForYear(Number(extraction.taxYear) || new Date().getFullYear());
+    const brackets = rules.brackets[filingKeyFromLabel(extraction.filingStatus)].map((b) => ({
+      rate: `${Math.round(b.rate * 100)}%`,
+      threshold: b.upTo ?? 1_000_000,
+    }));
     
     let currentIncome = simulationMode ? simulatedAgi : extraction.taxableIncome;
     
@@ -929,12 +929,20 @@ export default function TaxReturnUpload() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="tcja">Current (TCJA)</SelectItem>
-                      <SelectItem value="sunset">Post-2025 Sunset</SelectItem>
+                      <SelectItem value="tcja">Current law (P.L. 119-21)</SelectItem>
+                      {/* Was "Post-2025 Sunset". Current law has no sunset: P.L. 119-21 (One Big Beautiful Bill Act,
+                          4 Jul 2025) §70101 made the TCJA rates and brackets permanent (IRC §1(j)). This option is a
+                          what-if only, not a scheduled change. */}
+                      <SelectItem value="hypothetical_higher_rates">Hypothetical: what if Congress raises rates</SelectItem>
                       <SelectItem value="proposed">Proposed Changes</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
+                {taxRegime === "hypothetical_higher_rates" && (
+                  <p className="text-xs text-amber-400">
+                    Hypothetical only. Current law (P.L. 119-21) made today's rates permanent; there is no scheduled sunset. This models a future act of Congress that has not happened.
+                  </p>
+                )}
               </div>
 
               <Button 

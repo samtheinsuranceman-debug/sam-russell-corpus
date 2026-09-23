@@ -55,6 +55,8 @@ const PATH_LABELS: Record<string, string> = {
   "index-strategies": "Index Strategies",
   "income-timeline": "Income Timeline",
   "policy-loans": "Policy Loans",
+  "early-cash-value": "Early Cash Value",
+  "credit-line-sequencing": "Credit-Line Sequencing",
   "premium-financing": "Premium Financing",
   "index-backtester": "Index Backtester",
   // Calculators — Time Machine

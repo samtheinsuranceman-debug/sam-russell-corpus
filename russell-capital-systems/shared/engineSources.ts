@@ -15,10 +15,16 @@
  * in plain words rather than hiding it — the provenance census counts those,
  * and the list is meant to shrink to nothing.
  *
+ * Routes outside the catalogue, or pages that carry their own statutory
+ * figures, get their entry in shared/pageSources.ts; `sourcePlanForPath`
+ * merges the catalogue engine with that entry for the footer.
+ *
  * Adding an engine: export a `*_SOURCE` or `*_SOURCES` constant from it and
  * add one loader line below. The census test checks the loader resolves.
  */
 import { CALCULATORS } from "./calculatorCatalog";
+import { sourceDefect, type SourceKind, type Sourced } from "./sourcing";
+import { ROUTE_SOURCES } from "./pageSources";
 
 export type SourceRef = {
   label: string;
@@ -26,6 +32,13 @@ export type SourceRef = {
   /** When the figure was read or which edition it is. */
   asOf?: string;
   note?: string;
+  /**
+   * Set when the engine exported `Sourced` records (shared/sourcing.ts). An
+   * "assumption" renders as "we assumed", never as a source.
+   */
+  kind?: SourceKind;
+  /** Why a `Sourced` record is not defensible, when it is not. Rendered, never hidden. */
+  defect?: string;
 };
 
 type Loader = () => Promise<unknown>;
@@ -44,8 +57,10 @@ export const ENGINE_SOURCE_LOADERS: Record<string, Loader> = {
   "shared/clientFactFinder.ts": () => import("./clientFactFinder").then(m => m.CLIENT_FACT_FINDER_SOURCES),
   "shared/compositeMind.ts": () => import("./compositeMind").then(m => m.COMPOSITE_MIND_SOURCES),
   "shared/creditCardSourcing.ts": () => import("./creditCardSourcing").then(m => m.CARD_SOURCES),
+  "shared/creditLineSequencingEngine.ts": () => import("./creditLineSequencingEngine").then(m => m.CREDIT_LINE_SEQUENCING_SOURCES),
   "shared/cryptoCycleEngine.ts": () => import("./cryptoCycleEngine").then(m => m.CRYPTO_CYCLE_SOURCES),
   "shared/cycleEngine.ts": () => import("./cycleEngine").then(m => m.CYCLE_ENGINE_SOURCES),
+  "shared/earlyCashValue.ts": () => import("./earlyCashValue").then(m => m.EARLY_CASH_VALUE_SOURCES),
   "shared/erosion.ts": () => import("./erosion").then(m => m.EROSION_SOURCES),
   "shared/firewall.ts": () => import("./firewall").then(m => m.FIREWALL_SOURCES),
   "shared/forgiveness.ts": () => import("./forgiveness").then(m => m.FORGIVENESS_ENGINE_SOURCES),
@@ -53,12 +68,15 @@ export const ENGINE_SOURCE_LOADERS: Record<string, Loader> = {
   "shared/historicalShocks.ts": () => import("./historicalShocks").then(m => m.HISTORICAL_SHOCKS_SOURCES),
   "shared/householdGenome.ts": () => import("./householdGenome").then(m => m.HOUSEHOLD_GENOME_SOURCES),
   "shared/householdWealth.ts": () => import("./householdWealth").then(m => m.HOUSEHOLD_WEALTH_SOURCES),
+  "shared/ibbotsonModel.ts": () => import("./ibbotsonModel").then(m => m.IBBOTSON_MODEL_SOURCES),
   "shared/incomeForLife.ts": () => import("./incomeForLife").then(m => m.INCOME_SOURCES),
   "shared/indexCreditingData.ts": () => import("./indexCreditingData").then(m => m.INDEX_RETURN_SOURCES),
   "shared/inheritanceEngine.ts": () => import("./inheritanceEngine").then(m => m.INHERITANCE_SOURCES),
+  "shared/irmaa.ts": () => import("./irmaa").then(m => m.IRMAA_SOURCES),
   "shared/iulLinks.ts": () => import("./iulLinks").then(m => m.IUL_LINK_SOURCES),
   "shared/liquidityRoutes.ts": () => import("./liquidityRoutes").then(m => m.LIQUIDITY_ROUTES_SOURCES),
   "shared/longevityEngine.ts": () => import("./longevityEngine").then(m => m.LONGEVITY_SOURCES),
+  "shared/lookbackIntegrity.ts": () => import("./lookbackIntegrity").then(m => m.LOOKBACK_INTEGRITY_SOURCES),
   "shared/ltcEngine.ts": () => import("./ltcEngine").then(m => m.LTC_SOURCES),
   "shared/macroEngine.ts": () => import("./macroEngine").then(m => m.MACRO_SOURCES),
   "shared/mechanismDossiers.ts": () => import("./mechanismDossiers").then(m => m.MECHANISM_DOSSIERS_SOURCES),
@@ -88,9 +106,12 @@ export const ENGINE_SOURCE_LOADERS: Record<string, Loader> = {
   "shared/taxHistory.ts": () => import("./taxHistory").then(m => m.TAX_HISTORY_SOURCES),
   "shared/taxSchedule.ts": () => import("./taxSchedule").then(m => m.TAX_SCHEDULE_SOURCES),
   "shared/thresholds.ts": () => import("./thresholds").then(m => m.THRESHOLDS_SOURCES),
+  "shared/timeMachineEngine.ts": () => import("./timeMachineEngine").then(m => m.TIME_MACHINE_SOURCES),
   "shared/ultraEngine.ts": () => import("./ultraEngine").then(m => m.ULTRA_ENGINE_SOURCES),
   "shared/wealthGenomeFactors.ts": () => import("./wealthGenomeFactors").then(m => m.WEALTH_GENOME_FACTORS_SOURCES),
   "shared/zipEngine.ts": () => import("./zipEngine").then(m => m.ZIP_SOURCES),
+  // Server engine: its figures come live from FRED; the shell-safe source list lives in shared.
+  "server/outsideForces.ts": () => import("./outsideForcesSources").then(m => m.OUTSIDE_FORCES_SOURCES),
   "shared/macro/index.ts": () => import("./macro/sources").then(m => m.CORE_SOURCES),
   "shared/macro/sources.ts": () => import("./macro/sources").then(m => m.CORE_SOURCES),
 };
@@ -98,17 +119,106 @@ export const ENGINE_SOURCE_LOADERS: Record<string, Loader> = {
 /** The engines whose sources the shell can show. Exported for the census. */
 export const ENGINES_WITH_SOURCE_LOADERS: readonly string[] = Object.keys(ENGINE_SOURCE_LOADERS).sort();
 
-/** The engine behind a route, from the catalogue. Query strings and trailing slashes are ignored. */
-export function engineForPath(path: string): string | null {
-  const clean = path.split("?")[0]!.replace(/\/+$/, "") || "/";
-  const entry = CALCULATORS.find(c => c.path === clean);
-  return entry?.engine ?? null;
+function cleanPath(path: string): string {
+  return path.split("?")[0]!.split("#")[0]!.replace(/\/+$/, "") || "/";
 }
+
+/**
+ * The route pattern in shared/pageSources.ts that a concrete path matches,
+ * e.g. "/portal/mechanism/iul" → "/portal/mechanism/:slug". Exact keys win
+ * over patterns; `null` when no entry matches.
+ */
+export function routeSourcesKeyForPath(path: string): string | null {
+  const clean = cleanPath(path);
+  if (ROUTE_SOURCES[clean]) return clean;
+  const segs = clean.split("/");
+  for (const key of Object.keys(ROUTE_SOURCES)) {
+    if (!key.includes(":")) continue;
+    const ks = key.split("/");
+    if (ks.length === segs.length && ks.every((k, i) => k.startsWith(":") ? segs[i]!.length > 0 : k === segs[i])) return key;
+  }
+  return null;
+}
+
+/** The engine behind a route: the catalogue's, else the first engine shared/pageSources.ts names. Query strings and trailing slashes are ignored. */
+export function engineForPath(path: string): string | null {
+  const clean = cleanPath(path);
+  const entry = CALCULATORS.find(c => c.path === clean);
+  if (entry?.engine) return entry.engine;
+  const key = routeSourcesKeyForPath(clean);
+  return key ? ROUTE_SOURCES[key]!.engines?.[0] ?? null : null;
+}
+
+export type SourcePlan = {
+  /** Engines whose source lists the footer loads (catalogue engine first). */
+  engines: string[];
+  /** Figures the page carries itself, from shared/pageSources.ts. */
+  pageSources: SourceRef[];
+};
+
+/**
+ * Everything the footer prints for a route: the catalogue engine, the
+ * engines and page-level sources shared/pageSources.ts adds. `null` when the
+ * route has none of them.
+ */
+export function sourcePlanForPath(path: string): SourcePlan | null {
+  const clean = cleanPath(path);
+  const engines: string[] = [];
+  const entry = CALCULATORS.find(c => c.path === clean);
+  if (entry?.engine) engines.push(entry.engine);
+  const key = routeSourcesKeyForPath(clean);
+  const route = key ? ROUTE_SOURCES[key]! : null;
+  for (const e of route?.engines ?? []) if (!engines.includes(e)) engines.push(e);
+  const pageSources = [...(route?.sources ?? [])];
+  if (engines.length === 0 && pageSources.length === 0) return null;
+  return { engines, pageSources };
+}
+
+/**
+ * Route patterns (as App.tsx declares them) whose footer prints a source
+ * list through shared/pageSources.ts: every engine named has a loader, or the
+ * page carries its own sources. Exported for the census.
+ */
+export const ROUTES_WITH_SHELL_SOURCES: readonly string[] = Object.entries(ROUTE_SOURCES)
+  .filter(([, r]) => (r.sources?.length ?? 0) > 0 || ((r.engines?.length ?? 0) > 0 && r.engines!.every(e => e in ENGINE_SOURCE_LOADERS)))
+  .map(([k]) => k)
+  .sort();
 
 /** The catalogue entry behind a route, when there is one. */
 export function catalogueEntryForPath(path: string) {
-  const clean = path.split("?")[0]!.replace(/\/+$/, "") || "/";
+  const clean = cleanPath(path);
   return CALCULATORS.find(c => c.path === clean) ?? null;
+}
+
+const SOURCE_KINDS: readonly string[] = ["sourced", "rule", "input", "derived", "assumption"];
+
+/** A `Sourced<T>` record from shared/sourcing.ts: value, kind, source, asOf. */
+function isSourcedRecord(v: unknown): v is Sourced<unknown> {
+  if (typeof v !== "object" || v === null) return false;
+  const r = v as Record<string, unknown>;
+  return "value" in r && typeof r.kind === "string" && SOURCE_KINDS.includes(r.kind) && "source" in r && "asOf" in r;
+}
+
+/**
+ * A `Sourced` record as a footer line. Defensible records print their source;
+ * an assumption prints as "We assumed"; anything else prints its defect, so a
+ * source that fails `sourceDefect` is reported on the page rather than dropped.
+ */
+function fromSourcedRecord(s: Sourced<unknown>): SourceRef {
+  const what = typeof s.value === "string" ? s.value : "";
+  const n = typeof s.n === "number" && Number.isFinite(s.n) ? `n = ${s.n}` : "";
+  if (s.kind === "assumption") {
+    return { label: `We assumed: ${s.note || what || String(s.value)}`, kind: "assumption" };
+  }
+  const defect = sourceDefect(s);
+  if (defect !== null) {
+    return { label: what || String(s.value), kind: s.kind, defect };
+  }
+  const ref: SourceRef = { label: what ? `${what}: ${s.source}` : s.source, asOf: s.asOf, kind: s.kind };
+  if (s.url) ref.url = s.url;
+  const note = [s.note ?? "", n].filter(Boolean).join("; ");
+  if (note) ref.note = note;
+  return ref;
 }
 
 function isRef(v: unknown): v is { label?: unknown; name?: unknown; url?: unknown; asOf?: unknown; note?: unknown; entity?: unknown; verifiedOn?: unknown } {
@@ -118,8 +228,10 @@ function isRef(v: unknown): v is { label?: unknown; name?: unknown; url?: unknow
 /**
  * Turn whatever an engine exports into a flat list of `SourceRef`.
  *
- * Accepts a string, a {label|name, url?, asOf?, note?, entity?} object, an
- * array of either, or a record whose values are either (nested one level).
+ * Accepts a string, a {label|name, url?, asOf?, note?, entity?} object, a
+ * `Sourced<T>` record from shared/sourcing.ts (assumptions and defects kept
+ * visible, see fromSourcedRecord), an array of any of these, or a record whose
+ * values are any of these (nested one level).
  * Unknown shapes contribute nothing, never a throw: the footer must render
  * on every page.
  */
@@ -127,6 +239,7 @@ export function normalizeSources(value: unknown, depth = 0): SourceRef[] {
   if (value == null || depth > 2) return [];
   if (typeof value === "string") return value.trim() ? [{ label: value.trim() }] : [];
   if (Array.isArray(value)) return value.flatMap(v => normalizeSources(v, depth + 1));
+  if (isSourcedRecord(value)) return [fromSourcedRecord(value)];
   if (isRef(value)) {
     let label = typeof value.label === "string" ? value.label : typeof value.name === "string" ? value.name : "";
     if (!label) {

@@ -232,6 +232,17 @@ export function compareEarlyCashValue(input: EcvInput): EcvComparison {
   };
 }
 
+/**
+ * The engine's sources in the shell's shape (shared/engineSources.ts). Both
+ * schedules come from the same carrier illustration; the rider's own cost is
+ * listed as what it is, an unverified placeholder.
+ */
+export const EARLY_CASH_VALUE_SOURCES: readonly { label: string; asOf: string; note: string }[] = [
+  { label: UNADJUSTED_EXAMPLE.source + " (Unadjusted column: loans, partial surrenders, lapse, 1035 exchanges)", asOf: UNADJUSTED_EXAMPLE.asOf, note: "Transcribed from the carrier illustration; specific to that policy's face amount and insured." },
+  { label: ADJUSTED_WITH_RIDER.source, asOf: ADJUSTED_WITH_RIDER.asOf, note: "Adjusted schedule applies only to a full surrender that is not a 1035 exchange." },
+  { label: `Surrender Value Enhancement Rider annual cost (default ${getDefaultEcvInput().riderAnnualCostPct}% of account value)`, asOf: "2026-01-29", note: "Unverified placeholder for shape only: the illustration does not print the rider's rate." },
+];
+
 export const ECV_DISCLOSURE =
   "Surrender charge figures are transcribed from a Nationwide Indexed UL Accumulator II 2020 illustration " +
   "(Form ICC18-NWLA-538, prepared 29 January 2026) and are specific to that policy's face amount and insured. " +

@@ -35,7 +35,17 @@ import { ExportToSlides } from "@/components/ExportToSlides";
 import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { ExecutiveSummary, GoalsAccelerator, RecommendationSummary, DoNothingBaseline, TaxBracketPanel } from "@/components/ConsumerOutcomeBlocks";
-import { formatTaxCurrency } from "@shared/taxBracketEngine";
+import { formatTaxCurrency, federalBrackets, federalStandardDeduction, federalTaxOnTaxable, federalMarginalRateOnTaxable } from "@shared/taxBracketEngine";
+import { IRMAA_2026 } from "@shared/irmaa";
+import { uniformLifetimeDivisor } from "@shared/uniformLifetimeTable";
+
+// Current-law figures for this married-filing-jointly household, read from the
+// shared tables (shared/taxRules.ts, shared/irmaa.ts) instead of a typed copy.
+const JOINT_STANDARD_DEDUCTION = federalStandardDeduction("joint");
+/** Gross ordinary income that fills the joint 12% bracket, after the standard deduction. */
+const JOINT_12_PCT_TOP_GROSS = federalBrackets("joint").find((b) => b.rate === 0.12)!.max + JOINT_STANDARD_DEDUCTION;
+/** First IRMAA threshold (tier 1 upper edge), joint. */
+const IRMAA_FIRST_THRESHOLD_JOINT = IRMAA_2026.married[0]!.maxMagi;
 import { RelatedCalculators } from "@/components/RelatedCalculators";
 import { ComplianceFooter } from "@/components/ComplianceFooter";
 import { PageInsights } from "@/components/PageInsights";
@@ -221,7 +231,10 @@ export default function WithdrawalSequencing() {
 
       let rmdRequired = 0;
       if (age >= rmdAge && balances.traditional > 0) {
-        const divisor = Math.max(1, 27.4 - (age - rmdAge) * 0.5);
+        // Uniform Lifetime Table divisor for the owner's age, Treas. Reg. § 1.401(a)(9)-9(c)
+        // (shared/uniformLifetimeTable.ts). Was 27.4 − 0.5/yr from the start age, which started at the
+        // age-72 divisor and shrank too slowly (age 90: 18.9 versus the table's 12.2).
+        const divisor = uniformLifetimeDivisor(age);
         rmdRequired = Math.round(balances.traditional / divisor);
       }
 
@@ -266,7 +279,9 @@ export default function WithdrawalSequencing() {
         strategyDesc = age < rmdAge ? "Fill Low Brackets" : "RMD + Tax-Free";
         
         if (age < rmdAge && remaining > 0 && balances.traditional > 0) {
-          const bracketLimit = taxRegime === "sunset" ? 44537 : 89075; // 22% bracket top
+          // Top of the lowest brackets to fill. Current law: the joint 12% bracket from the shared
+          // table, in gross terms. "sunset" is this page's hypothetical pre-2018-rates scenario, not a published table.
+          const bracketLimit = taxRegime === "sunset" ? 44537 : JOINT_12_PCT_TOP_GROSS;
           const bracketFill = Math.min(remaining, Math.max(0, bracketLimit - totalTaxable));
           
           if (bracketFill > 0) {
@@ -340,6 +355,8 @@ export default function WithdrawalSequencing() {
       let marginalRate = 0;
       
       if (taxRegime === "sunset") {
+        // Hypothetical scenario: pre-2018 rate structure (10/15/25/28/33/39.6) on this page's own
+        // illustrative thresholds. Not a published table; the TCJA rates were made permanent by P.L. 119-21.
         if (totalTaxable <= 22000) { taxesPaid = Math.round(totalTaxable * 0.10); marginalRate = 10; }
         else if (totalTaxable <= 89075) { taxesPaid = Math.round(2200 + (totalTaxable - 22000) * 0.15); marginalRate = 15; }
         else if (totalTaxable <= 170050) { taxesPaid = Math.round(12261 + (totalTaxable - 89075) * 0.25); marginalRate = 25; }
@@ -347,16 +364,14 @@ export default function WithdrawalSequencing() {
         else if (totalTaxable <= 539900) { taxesPaid = Math.round(45357 + (totalTaxable - 215950) * 0.33); marginalRate = 33; }
         else { taxesPaid = Math.round(152260 + (totalTaxable - 539900) * 0.396); marginalRate = 39.6; }
       } else {
-        if (totalTaxable <= 22000) { taxesPaid = Math.round(totalTaxable * 0.10); marginalRate = 10; }
-        else if (totalTaxable <= 89075) { taxesPaid = Math.round(2200 + (totalTaxable - 22000) * 0.12); marginalRate = 12; }
-        else if (totalTaxable <= 170050) { taxesPaid = Math.round(10294 + (totalTaxable - 89075) * 0.22); marginalRate = 22; }
-        else if (totalTaxable <= 215950) { taxesPaid = Math.round(28108 + (totalTaxable - 170050) * 0.24); marginalRate = 24; }
-        else if (totalTaxable <= 539900) { taxesPaid = Math.round(39124 + (totalTaxable - 215950) * 0.32); marginalRate = 32; }
-        else { taxesPaid = Math.round(142790 + (totalTaxable - 539900) * 0.35); marginalRate = 35; }
+        // Current law: the shared joint table after the joint standard deduction.
+        const taxableAfterDeduction = Math.max(0, totalTaxable - JOINT_STANDARD_DEDUCTION);
+        taxesPaid = Math.round(federalTaxOnTaxable(taxableAfterDeduction, "joint"));
+        marginalRate = Math.round(federalMarginalRateOnTaxable(taxableAfterDeduction, "joint") * 100);
       }
 
       const effectiveRate = inflatedNeed > 0 ? Math.round((taxesPaid / inflatedNeed) * 100) : 0;
-      const irmaaTriggered = totalTaxable > 206000;
+      const irmaaTriggered = totalTaxable > IRMAA_FIRST_THRESHOLD_JOINT;
 
       balances = {
         ...balances,
@@ -637,8 +652,8 @@ export default function WithdrawalSequencing() {
                       <SelectValue placeholder="Select tax regime" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="current">Current TCJA Rates</SelectItem>
-                      <SelectItem value="sunset">2026 Sunset Rates</SelectItem>
+                      <SelectItem value="current">Current Law Rates</SelectItem>
+                      <SelectItem value="sunset">Pre-2018 Rates (hypothetical)</SelectItem>
                       <SelectItem value="high">High Tax Environment</SelectItem>
                     </SelectContent>
                   </Select>
@@ -1064,8 +1079,8 @@ export default function WithdrawalSequencing() {
                           <h4 className="font-medium text-sm text-primary mb-1">Tax Policy Impact</h4>
                           <p className="text-xs text-muted-foreground">
                             {taxRegime === 'sunset' 
-                              ? `The 2026 TCJA sunset increases tax liability significantly. The marginal rate jumps to ${results[0]?.marginalRate}% early in retirement.`
-                              : `Assuming current tax brackets remain permanent. If TCJA sunsets, lifetime taxes could increase by 15-25%.`}
+                              ? `Hypothetical: a return to pre-2018 rates would raise tax liability. The marginal rate reaches ${results[0]?.marginalRate}% early in retirement.`
+                              : `Using current-law brackets (made permanent by P.L. 119-21). Future legislation could still change them.`}
                           </p>
                         </div>
                       </div>

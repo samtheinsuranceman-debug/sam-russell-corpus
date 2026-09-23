@@ -11,9 +11,12 @@
  *
  * ─── OWNER'S STANDING RULES ─────────────────────────────────────────────────
  *
- *   • DeepSeek is not part of this platform (owner's rule, 2026-09-06). It is
- *     not listed here, not suggested as a model on any other provider, and
- *     the registry refuses a custom endpoint that points at it.
+ *   • No China-linked AI (owner's rule: DeepSeek 2026-09-06, every Chinese
+ *     lab and host 2026-09-22, anything related to China 2026-09-23, Taiwan
+ *     suspect). None is listed here or suggested as a model on any other
+ *     provider; the catalogue is checked against BANNED_PROVIDER_PATTERN when
+ *     this module loads; and every call path refuses a China-linked model id,
+ *     provider or base URL at runtime with CHINA_POLICY_MESSAGE.
  *   • Providers hosted outside the United States carry a `caution` so the
  *     data-handling question is asked before client data flows.
  *
@@ -132,7 +135,8 @@ export const PROVIDERS: ProviderDefinition[] = [
     baseUrl: "https://api.perplexity.ai",
     chatPath: "/chat/completions",
     defaultModel: "sonar-pro",
-    suggestedModels: ["sonar-pro", "sonar", "sonar-reasoning-pro"],
+    // sonar-reasoning-pro is left out: Perplexity built its reasoning line on DeepSeek-R1.
+    suggestedModels: ["sonar-pro", "sonar"],
     keyPattern: /^pplx-[A-Za-z0-9]{20,}$/,
     keyHint: "Starts with pplx-",
     consoleUrl: "https://www.perplexity.ai/settings/api",
@@ -726,17 +730,18 @@ export const PROVIDERS: ProviderDefinition[] = [
   },
   {
     id: "arcee",
-    name: "Arcee AI (Conductor)",
+    name: "Arcee AI (Trinity)",
     country: "United States",
     wireFormat: "openai-compatible",
-    baseUrl: "https://models.arcee.ai",
+    baseUrl: "https://api.arcee.ai/api",
     chatPath: "/v1/chat/completions",
-    defaultModel: "auto",
-    suggestedModels: ["auto"],
+    defaultModel: "trinity-large-thinking",
+    suggestedModels: ["trinity-large-thinking"],
     keyPattern: ALNUM,
     keyHint: "A long alphanumeric string",
-    consoleUrl: "https://conductor.arcee.ai",
-    role: "Conductor routes each prompt to the cheapest model that can answer it well; a cost-control brain.",
+    consoleUrl: "https://chat.arcee.ai",
+    role: "Trinity, Arcee's own US-trained open-weight family; a strong reasoning brain at a low per-token price.",
+    caution: "Conductor's \"auto\" router is not used: it routes to Arcee models distilled from DeepSeek-V3 or built on Qwen. Keep the model on Trinity.",
   },
   {
     id: "wandb",
@@ -912,22 +917,136 @@ export const PROVIDERS: ProviderDefinition[] = [
 export const BRAIN_PROVIDERS: ProviderDefinition[] = PROVIDERS.filter(p => p.id !== "forge");
 
 /**
- * Owner's standing rule: DeepSeek is not part of this platform. Any endpoint
- * or model that names it is refused at the registry.
+ * ─── OWNER'S STANDING RULE: NO CHINA-LINKED AI ──────────────────────────────
+ *
+ * 2026-09-06: DeepSeek out. 2026-09-22: widened to every Chinese AI system and
+ * every Chinese host. 2026-09-23: widened again to anything connected to the
+ * Chinese government or related to China at all, with Taiwan-based labs
+ * treated as suspect. The rule covers provider ids, provider names, base
+ * URLs, chat paths and model ids — including OpenRouter-style `vendor/model`
+ * ids, Hugging Face org prefixes, and open-weight Chinese models served by an
+ * American host (Groq, Together, Fireworks, Venice, Featherless and every
+ * other aggregator carry them).
+ *
+ * Each term is written so it does not catch an ordinary word or a legitimate
+ * US/EU name: `\b` guards the short ones ("glm", "kimi", "ernie"), "step-"
+ * only matches StepFun's numbered model shapes (a chain's "step-1" is not a
+ * model), "spark" only in iFlytek's model shapes, "yuan" only as Inspur's
+ * numbered model (the currency is fine), and a TLD only at the end of a host.
+ * The guard test (server/chinaAiBan.test.ts) proves both directions.
  */
-/**
- * Owner's standing rule (2026-09-06, widened 2026-09-22): no Chinese AI system
- * on this platform, and nothing that resolves to a Chinese host. Any provider,
- * model name, base URL or chat path that names one is refused at the registry,
- * including custom endpoints. Open-weight Chinese models served by other hosts
- * are not suggested either.
- */
-export const BANNED_PROVIDER_PATTERN =
-  /deepseek|moonshot|\bkimi|qwen|dashscope|aliyun|alibaba|zhipu|bigmodel|z\.ai|\bglm|minimax|baidu|qianfan|ernie|01\.ai|baichuan|stepfun|siliconflow|sensetime|iflytek|tencent|hunyuan|bytedance|doubao|volcengine|\.cn(?:[\/:]|$)/i;
+const BANNED_TERMS: readonly string[] = [
+  // DeepSeek (and its derivatives: Perplexity's R1-1776 and the sonar-reasoning line built on R1)
+  String.raw`deepseek`, String.raw`\br1-1776`, String.raw`sonar-reasoning`,
+  // Moonshot AI / Kimi
+  String.raw`moonshot`, String.raw`\bkimi`,
+  // Zhipu / Z.ai / GLM / ChatGLM / Tsinghua (THUDM)
+  String.raw`zhipu`, String.raw`\bglm`, String.raw`chatglm`, String.raw`codegeex`, String.raw`\bcog(?:vlm|view|agent|video)`,
+  String.raw`\bthudm`, String.raw`\bzai-org`, String.raw`\bz[.-]ai\b`, String.raw`bigmodel`,
+  // Alibaba / Qwen / Tongyi / DashScope / Ant Group
+  String.raw`qwen`, String.raw`\bqwq(?:-|\b)`, String.raw`\bqvq-`, String.raw`alibaba`, String.raw`dashscope`, String.raw`tongyi`,
+  String.raw`aliyun`, String.raw`\bbailian`, String.raw`inclusionai`,
+  // MiniMax
+  String.raw`minimax`, String.raw`\babab[\d.]`,
+  // Baichuan
+  String.raw`baichuan`,
+  // 01.AI / Yi
+  String.raw`\b01[.-]ai\b`, String.raw`lingyiwanwu`, String.raw`\byi-(?:\d|large|lightning|medium|spark|vision|coder|chat)`,
+  // Baidu / ERNIE / Wenxin / Qianfan
+  String.raw`\bernie`, String.raw`baidu`, String.raw`wenxin`, String.raw`qianfan`,
+  // Tencent / Hunyuan
+  String.raw`hunyuan`, String.raw`tencent`,
+  // ByteDance / Doubao / Volcengine Ark / Seed
+  String.raw`doubao`, String.raw`bytedance`, String.raw`volcengine`, String.raw`volces`, String.raw`\bark\.cn`, String.raw`\bseed-oss`, String.raw`\bui-tars`,
+  // StepFun
+  String.raw`stepfun`, String.raw`\bstep-?[123](?:\.\d+)?(?:[vo]\b|-(?:\d+k|mini|flash|turbo|vision|v|o))`, String.raw`\bstep3\b`, String.raw`\bstep-(?:r1|audio)`,
+  // Shanghai AI Lab / InternLM
+  String.raw`\bintern(?:lm|vl)`, String.raw`shanghai[\s_-]*ai[\s_-]*lab`,
+  // SenseTime / SenseNova
+  String.raw`sensetime`, String.raw`sensenova`, String.raw`sensechat`,
+  // iFlytek / Spark (Xinghuo) — only the model and API shapes, never the bare word
+  String.raw`iflytek`, String.raw`xfyun`, String.raw`xf-yun`, String.raw`xinghuo`,
+  // "spark" only as a whole id or after a vendor slash or quote, so Meta's "Muse Spark 1.2" is not caught
+  String.raw`(?:^|[\/"'])spark[-_]?(?:lite|pro|max|ultra|desk|api|v?\d)`,
+  // Inspur / Yuan — the model, not the currency
+  String.raw`inspur`, String.raw`ieityuan`, String.raw`\byuan-?\d`,
+  // Other PRC labs, clouds and model hosts
+  String.raw`siliconflow`, String.raw`meituan`, String.raw`longcat`, String.raw`xiaomi`, String.raw`kwaipilot`, String.raw`kuaishou`,
+  String.raw`openbmb`, String.raw`minicpm`, String.raw`skywork`, String.raw`kunlun`, String.raw`\brednote`, String.raw`xiaohongshu`,
+  String.raw`dots-studio`, String.raw`\bdots[.-]?(?:llm|ocr|vlm|\d)`, String.raw`huawei`, String.raw`\bpangu`, String.raw`\bbaai\b`, String.raw`\bbge-(?:m3|large|base|small|reranker)`,
+  // Arcee's small models distilled from DeepSeek-V3 or built on Qwen (Trinity and AFM are its own, US-trained)
+  String.raw`\bvirtuoso-(?:small|medium|large|lite)`, String.raw`\barcee-blitz`, String.raw`\bmaestro-reasoning`,
+  // Taiwan-based labs (suspect under the rule)
+  String.raw`\btaide\b`, String.raw`mediatek`, String.raw`taiwan-llm`, String.raw`foxbrain`,
+  // Hosts: any PRC, Hong Kong, Macau or Taiwan TLD, and PRC cloud regions (AWS China, Alibaba, Volcengine)
+  // (a host inside a URL, so a dotted key such as "fx.cap.CN" is not taken for one)
+  String.raw`\/\/[^\/\s?#]*\.(?:cn|hk|mo|tw)(?=[\/:?#]|$)`,
+  String.raw`\bcn-(?:north|northwest|east|south|beijing|shanghai|hangzhou|shenzhen|guangzhou|chengdu|qingdao|zhangjiakou)`,
+];
 
-export function isBannedProvider(value: string): boolean {
+export const BANNED_PROVIDER_PATTERN = new RegExp(BANNED_TERMS.join("|"), "i");
+
+/** The one sentence every refusal carries, server and browser alike. */
+export const CHINA_POLICY_MESSAGE = "Blocked by firm policy: no China-linked AI models";
+
+/** True when a provider id, name, base URL, chat path or model id is China-linked. */
+export function isBannedProvider(value: string | null | undefined): boolean {
   return BANNED_PROVIDER_PATTERN.test(value ?? "");
 }
+
+/**
+ * Router pseudo-models ("auto", Arcee's "auto-tool", every "openrouter/…"
+ * router such as auto, free, fusion and pareto-code, and Sakana's Fugu
+ * orchestrator) pick the model after the request leaves us, and every one of
+ * them can land on a Chinese model. A model id has to name the model.
+ */
+export const ROUTER_MODEL_PATTERN = /^(?:[a-z0-9._-]+\/)?auto(?:-[a-z0-9-]+)?$|^~?openrouter\/|^sakana\/fugu/i;
+
+/** True when a model id may not be sent to any provider on this platform. */
+export function isBannedModel(model: string | null | undefined): boolean {
+  const m = (model ?? "").trim();
+  return isBannedProvider(m) || ROUTER_MODEL_PATTERN.test(m);
+}
+
+export class ChinaPolicyError extends Error {
+  readonly value: string;
+  constructor(value: string, where?: string) {
+    super(`${CHINA_POLICY_MESSAGE}${where ? ` (${where}: "${value}")` : ` ("${value}")`}.`);
+    this.name = "ChinaPolicyError";
+    this.value = value;
+  }
+}
+
+/** Throw when a model id is China-linked or a router that could pick one. */
+export function assertModelAllowed(model: string | null | undefined, where = "model"): void {
+  if (model && isBannedModel(model)) throw new ChinaPolicyError(model, where);
+}
+
+/** Throw when a base URL, host, provider id or name is China-linked. */
+export function assertEndpointAllowed(value: string | null | undefined, where = "endpoint"): void {
+  if (value && isBannedProvider(value)) throw new ChinaPolicyError(value, where);
+}
+
+/** The first China-linked field on a provider definition, or null when it is clean. */
+export function providerPolicyViolation(p: Pick<ProviderDefinition, "id" | "name" | "baseUrl" | "chatPath" | "defaultModel" | "suggestedModels">): string | null {
+  for (const [field, value] of [["id", p.id], ["name", p.name], ["baseUrl", p.baseUrl], ["chatPath", p.chatPath]] as const) {
+    if (isBannedProvider(value)) return `${field}: "${value}"`;
+  }
+  for (const m of [p.defaultModel, ...p.suggestedModels]) {
+    if (isBannedModel(m)) return `model: "${m}"`;
+  }
+  return null;
+}
+
+/** The registry's gate: a China-linked provider is never registered. */
+export function assertProviderAllowed(p: ProviderDefinition): void {
+  const violation = providerPolicyViolation(p);
+  if (violation) throw new ChinaPolicyError(violation.replace(/^[a-zA-Z]+: "|"$/g, ""), `provider ${p.id} ${violation.split(":")[0]}`);
+}
+
+// The catalogue is checked when this module loads, so a China-linked entry
+// added to PROVIDERS stops the server (and the test suite) before it can serve.
+for (const p of PROVIDERS) assertProviderAllowed(p);
 
 export function getProvider(id: string): ProviderDefinition | undefined {
   return PROVIDERS.find(p => p.id === id);
@@ -962,7 +1081,7 @@ export function buildCustomProvider(row: {
       ? row.wireFormat
       : "openai-compatible";
 
-  return {
+  const definition: ProviderDefinition = {
     id: row.slug,
     name: row.name,
     country: "Not specified",
@@ -976,6 +1095,22 @@ export function buildCustomProvider(row: {
     consoleUrl: "",
     role: row.note || "Custom endpoint added by the owner.",
   };
+  // Refuse to register a China-linked endpoint, whatever route it came in by.
+  assertProviderAllowed(definition);
+  return definition;
+}
+
+/** buildCustomProvider for stored rows: a row saved before the rule widened is skipped, not served. */
+export function tryBuildCustomProvider(row: Parameters<typeof buildCustomProvider>[0]): ProviderDefinition | null {
+  try {
+    return buildCustomProvider(row);
+  } catch (e) {
+    if (e instanceof ChinaPolicyError) {
+      console.error(`[Providers] Custom provider ${row.slug} refused. ${e.message}`);
+      return null;
+    }
+    throw e;
+  }
 }
 
 /** Sanity-check a custom endpoint before spending a request on it. */
@@ -991,7 +1126,7 @@ export function validateCustomEndpoint(baseUrl: string, chatPath: string): { ok:
   }
 
   if (isBannedProvider(baseUrl) || isBannedProvider(chatPath)) {
-    return { ok: false, reason: "That provider is excluded from this platform by the owner's standing rule." };
+    return { ok: false, reason: `${CHINA_POLICY_MESSAGE}.` };
   }
 
   const host = parsed.hostname.toLowerCase();

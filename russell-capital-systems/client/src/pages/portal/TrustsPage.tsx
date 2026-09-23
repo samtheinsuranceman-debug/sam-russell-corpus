@@ -111,7 +111,8 @@ const TRUST_TYPES: TrustType[] = [
       "Provides estate liquidity without increasing taxable estate",
     ],
     useCases: [
-      "High-net-worth individuals with estates exceeding the federal exemption ($13.61M in 2024)",
+      // Estate and GST exemption $15M per person in 2026, indexed, no sunset: P.L. 119-21 § 70106 amending IRC § 2010(c)(3), https://www.congress.gov/119/plaws/publ21/PLAW-119publ21.pdf; Rev. Proc. 2025-32, https://www.irs.gov/pub/irs-drop/rp-25-32.pdf (read 23 Sep 2026). Was $13.61M (2024).
+      "High-net-worth individuals with estates exceeding the federal exemption ($15M per person in 2026)",
       "Business owners needing liquidity for buy-sell agreements",
       "Parents wanting to maximize tax-free inheritance for children",
       "Individuals seeking creditor and divorce protection for life insurance",
@@ -122,7 +123,7 @@ const TRUST_TYPES: TrustType[] = [
       "Private split-dollar arrangements",
       "Private premium financing",
       "Gift of income-producing assets to trust",
-      "Lifetime exemption gifts ($13.61M per person in 2024)",
+      "Lifetime exemption gifts ($15M per person in 2026)",
     ],
     keyRequirements: [
       "Trust must be irrevocable — grantor cannot modify or revoke",
@@ -245,7 +246,7 @@ const TRUST_TYPES: TrustType[] = [
     ],
     fundingMethods: [
       "Annual exclusion gifts ($18K per beneficiary)",
-      "Lifetime exemption gifts ($13.61M per grantor)",
+      "Lifetime exemption gifts ($15M per grantor in 2026)",
       "Loans or sales to the trust (installment sales)",
       "Gift of income-producing assets",
     ],
@@ -347,7 +348,7 @@ const TRUST_TYPES: TrustType[] = [
     irsCodes: [
       { code: "IRC §2611", title: "Generation-Skipping Transfer", relevance: "Defines what constitutes a generation-skipping transfer. The Dynasty Trust uses GST exemption to shield distributions from the 40% GST tax." },
       { code: "IRC §2612", title: "Direct Skip / Taxable Distribution", relevance: "Distinguishes between direct skips, taxable distributions, and taxable terminations. Proper trust structure avoids triggering these events." },
-      { code: "IRC §2642", title: "GST Exemption Allocation", relevance: "Allows allocation of GST exemption ($13.61M per person in 2024) to the trust, making all future distributions GST-tax-free regardless of how many generations benefit." },
+      { code: "IRC §2642", title: "GST Exemption Allocation", relevance: "Allows allocation of GST exemption ($15M per person in 2026) to the trust, making all future distributions GST-tax-free regardless of how many generations benefit." },
       { code: "IRC §2042", title: "Incidents of Ownership", relevance: "Life insurance owned by the Dynasty Trust is excluded from every generation's taxable estate." },
       { code: "IRC §2503(b)", title: "Annual Gift Exclusion", relevance: "Annual contributions to fund premiums qualify for gift tax exclusion through Crummey notices." },
     ],
@@ -369,7 +370,7 @@ const TRUST_TYPES: TrustType[] = [
       "Estate plans focused on creating a lasting family financial institution",
     ],
     fundingMethods: [
-      "GST exemption allocation ($13.61M per person)",
+      "GST exemption allocation ($15M per person in 2026)",
       "Annual exclusion gifts with Crummey notices",
       "Lifetime exemption gifts",
       "Sale of assets to the trust (installment sale or SCIN)",

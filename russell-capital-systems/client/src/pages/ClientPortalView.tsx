@@ -10,6 +10,7 @@ import {
   Target, Wallet, Activity,
 } from "lucide-react";
 import { useState, useMemo } from "react";
+import { SP500_ARITHMETIC_MEAN, SP500_ANNUAL_STDEV } from "@shared/monteCarloEngine";
 
 const CATEGORY_LABELS: Record<string, string> = {
   TAX_RETURN: "Tax Return",
@@ -144,8 +145,10 @@ function MonteCarloSummary({ iulProjection, primaryColor }: { iulProjection: any
   const mcData = useMemo(() => {
     if (!iulProjection || iulProjection.length === 0) return null;
     const SIMS = 300;
-    const VOL = 0.15;
-    const AVG_RETURN = 0.10;
+    // A normal draw is centred on the arithmetic mean, not the 10% geometric average.
+    // S&P 500 arithmetic mean 11.86% and SD 19.40%, Damodaran histretSP 1928-2025 (read 2026-09-23); see shared/monteCarloEngine.ts
+    const VOL = SP500_ANNUAL_STDEV;
+    const AVG_RETURN = SP500_ARITHMETIC_MEAN;
     const LOAD_FEE = 0.06;
     const COI_RATE = 0.05;
     const years = iulProjection.length;
@@ -195,7 +198,7 @@ function MonteCarloSummary({ iulProjection, primaryColor }: { iulProjection: any
     <div>
       <h4 className="text-sm font-medium mb-2 flex items-center gap-2">
         <BarChart3 className="h-4 w-4 text-emerald-400" /> Monte Carlo Analysis
-        <span className="text-xs text-muted-foreground font-normal">(300 simulations, 15% volatility)</span>
+        <span className="text-xs text-muted-foreground font-normal">(300 simulations, 19.4% volatility)</span>
       </h4>
       <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
         {items.map((item) => (
@@ -206,7 +209,7 @@ function MonteCarloSummary({ iulProjection, primaryColor }: { iulProjection: any
         ))}
       </div>
       <div className="mt-2 p-2 rounded bg-muted/20 border border-border/20 text-[10px] text-muted-foreground">
-        Monte Carlo simulation models {iulProjection.length}-year IUL outcomes using 15% annual volatility (historical S&P 500). The IUL floor of 0% prevents negative returns. Base case uses a fixed 10% return: <strong style={{ color: primaryColor }}>{fmt(mcData.actual)}</strong>.
+        Monte Carlo simulation models {iulProjection.length}-year IUL outcomes from S&P 500 draws at the historical 11.86% arithmetic mean and 19.4% annual volatility. Source: NYU Stern (Damodaran), S&P 500 annual returns including dividends, 1928–2025, read Sep 23, 2026. The IUL floor of 0% prevents negative returns. Base case uses a fixed 10% return: <strong style={{ color: primaryColor }}>{fmt(mcData.actual)}</strong>.
       </div>
     </div>
   );
@@ -440,8 +443,9 @@ function IncomeTimelineTab({ incomeTimeline, primaryColor, accentColor }: any) {
               </tbody>
             </table>
           </div>
+          {/* RMD start age: SECURE 2.0 § 107 — https://www.irs.gov/retirement-plans/plan-participant-employee/retirement-topics-required-minimum-distributions-rmds (read 23 Sep 2026) */}
           <p className="text-[10px] text-muted-foreground mt-3">
-            Projections are estimates based on current account balances and standard assumptions. Social Security begins at age 67. IRA RMDs begin at age 72. Actual results will vary.
+            Projections are estimates based on current account balances and standard assumptions. Social Security begins at age 67. IRA RMDs begin at age 73, or 75 if born in 1960 or later (SECURE 2.0 § 107). Actual results will vary.
           </p>
         </CardContent>
       </Card>

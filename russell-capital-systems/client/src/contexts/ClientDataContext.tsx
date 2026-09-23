@@ -1,3 +1,4 @@
+import { HELOC_RATE_DEFAULT_PCT } from "@shared/marketRateDefaults";
 import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from "react";
 import { assessmentToClientData } from "@shared/assessmentBridge";
 import { trpc } from "@/lib/trpc";
@@ -239,7 +240,7 @@ export function ClientDataProvider({ children: childrenProp }: { children: React
       mortgageYearsLeft: ff?.primaryMortgageYearsLeft ?? 25,
       totalMortgageInterest: n(ff?.primaryTotalInterest ?? 0),
       otherDebt: 0,
-      helocRate: n(ff?.helocRate ?? 8.5),
+      helocRate: n(ff?.helocRate ?? HELOC_RATE_DEFAULT_PCT), // Curinos national average, 2026-09-21
       helocMaxLtv: n(ff?.helocMaxLtv ?? 80),
       retirementAge: notesData.retirementAge ?? 65,
       annualIncomeNeeded: notesData.annualIncomeNeeded ?? 150000,
