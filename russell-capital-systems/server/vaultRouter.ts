@@ -1016,4 +1016,52 @@ export const vaultRouter = router({
   auditLog: ownerProcedure
     .input(z.object({ limit: z.number().min(1).max(500).default(100) }).optional())
     .query(async ({ input }) => recentAudit(input?.limit ?? 100)),
+
+  // ─── Image generation ────────────────────────────────────────────────────
+
+  /**
+   * Which image providers are keyed on the host (Replicate, fal, Stability,
+   * OpenAI), in the order they are tried, with their models. Never a key.
+   */
+  imageProviders: ownerProcedure.query(async () => {
+    const { imageProviderStatus, ASPECT_RATIOS } = await import("./imageGenerator");
+    const { isStorageConfigured } = await import("./storage");
+    return { providers: imageProviderStatus(), aspectRatios: ASPECT_RATIOS, storageConfigured: isStorageConfigured() };
+  }),
+
+  /**
+   * Generate one image and store it in the firm's bucket; returns its /files/
+   * URL. Owner door only: every call is billed. Keys come from the host
+   * environment, so the vault need not be unlocked. A China-linked model id
+   * is refused before anything is sent.
+   */
+  generateImage: ownerProcedure
+    .input(
+      z.object({
+        prompt: z.string().trim().min(1).max(4000),
+        aspectRatio: z.enum(["1:1", "16:9", "9:16", "4:3", "3:4", "3:2", "2:3"]).default("1:1"),
+        provider: z.enum(["replicate", "fal", "stability", "openai"]).optional(),
+        model: z.string().trim().min(1).max(200).optional(),
+      }).refine(v => !v.model || v.provider, { message: "Name the provider when naming a model.", path: ["model"] }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { generateImage, imageErrorMessage, ImageGenerationError } = await import("./imageGenerator");
+      if (input.model && isBannedModel(input.model)) {
+        throw new TRPCError({ code: "BAD_REQUEST", message: `${CHINA_POLICY_MESSAGE}. "${input.model}" is refused on this platform.` });
+      }
+      try {
+        const image = await generateImage({ ...input, keyPrefix: `owner/${ctx.user.id}` });
+        await audit({
+          action: "image_generated",
+          providerId: image.provider,
+          actorEmail: ctx.user.email ?? undefined,
+          detail: `${image.model} → ${image.key}`.slice(0, 500),
+          ipAddress: clientIp(ctx.req),
+        });
+        return image;
+      } catch (e) {
+        const notConfigured = e instanceof ImageGenerationError && e.kind === "not_configured";
+        throw new TRPCError({ code: notConfigured ? "PRECONDITION_FAILED" : "BAD_REQUEST", message: imageErrorMessage(e) });
+      }
+    }),
 });

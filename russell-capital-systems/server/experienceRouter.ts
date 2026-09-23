@@ -7,6 +7,7 @@ import { adminProcedure, protectedProcedure, publicProcedure, router } from "./_
 import { invokeLLM } from "./_core/llm";
 import { TRPCError } from "@trpc/server";
 import { storagePut } from "./storage";
+import { generateImage, imageErrorMessage, isImageGenerationConfigured, sniffImageType, ImageGenerationError } from "./imageGenerator";
 import { notifyOwner } from "./_core/notification";
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -314,14 +315,52 @@ export const experienceRouter = router({
     style: z.enum(["professional", "warrior", "mystic", "futuristic", "royal"]).default("professional"),
     isSpouse: z.boolean().default(false),
   })).mutation(async ({ ctx, input }) => {
-    // No image-generation provider is wired: the hosted image service the
-    // platform shipped with was removed on 23 Sep 2026. Uploading a photo
-    // (uploadAvatarPhoto) still works when file storage is configured.
-    void ctx; void input;
-    throw new TRPCError({
-      code: "PRECONDITION_FAILED",
-      message: "AI avatar generation is not configured on this host.",
-    });
+    // The photo is restyled by the first keyed image provider (server/imageGenerator.ts):
+    // Flux Kontext on Replicate or fal, Stable Image Ultra, or gpt-image-1.
+    if (!isImageGenerationConfigured()) {
+      throw new TRPCError({
+        code: "PRECONDITION_FAILED",
+        message: "AI avatar generation is not configured on this host (set REPLICATE_API_TOKEN, FAL_KEY, STABILITY_API_KEY or OPENAI_API_KEY).",
+      });
+    }
+    const photo = Buffer.from(input.imageBase64, "base64");
+    const photoType = sniffImageType(photo);
+    if (!photoType) throw new TRPCError({ code: "BAD_REQUEST", message: "Upload a JPEG, PNG or WebP photo." });
+    if (photo.length > 10 * 1024 * 1024) throw new TRPCError({ code: "BAD_REQUEST", message: "The photo is larger than 10MB." });
+
+    const stylePrompts: Record<string, string> = {
+      professional: "a polished, sophisticated executive portrait in a luxury office setting, wearing a tailored suit, dramatic lighting, oil painting style, rich colors",
+      warrior: "an epic fantasy warrior portrait with golden armor, glowing sword, dramatic battlefield background, cinematic lighting, digital art masterpiece",
+      mystic: "a mystical sorcerer portrait with glowing runes, ethereal energy swirling around, cosmic background with stars and nebulae, fantasy art style",
+      futuristic: "a cyberpunk tech mogul portrait with holographic displays, neon city background, sleek futuristic attire, blade runner aesthetic",
+      royal: "a regal royal portrait in a grand palace, wearing a crown and royal robes, golden throne, renaissance painting style, dramatic chiaroscuro lighting",
+    };
+    const prompt = `Turn the person in this photo into ${stylePrompts[input.style]}. Keep their face and likeness recognisable. The subject should look powerful, confident, and successful, like a high-end character portrait from a AAA video game. Ultra detailed.`;
+
+    try {
+      const image = await generateImage({
+        prompt,
+        aspectRatio: "1:1",
+        reference: { data: photo, contentType: photoType },
+        keyPrefix: `avatars/${ctx.user.id}`,
+      });
+      // Store the avatar URL on the user's XP profile
+      const db = await getDb();
+      if (db) {
+        const { userXpProfiles } = await import("../drizzle/schema");
+        const field = input.isSpouse ? "spouseAvatarUrl" : "avatarUrl";
+        await db.update(userXpProfiles)
+          .set({ [field]: image.url })
+          .where(eq(userXpProfiles.userId, ctx.user.id));
+      }
+      return { avatarUrl: image.url, style: input.style };
+    } catch (error) {
+      const notConfigured = error instanceof ImageGenerationError && error.kind === "not_configured";
+      throw new TRPCError({
+        code: notConfigured ? "PRECONDITION_FAILED" : "INTERNAL_SERVER_ERROR",
+        message: `Avatar generation failed: ${imageErrorMessage(error)}`,
+      });
+    }
   }),
 });
 
