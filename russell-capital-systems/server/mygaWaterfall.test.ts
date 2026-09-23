@@ -5,6 +5,7 @@ import {
   type MYGAWaterfallInput,
   type MYGAWaterfallResult,
 } from "../shared/mygaWaterfall";
+import { HELOC_RATE_DEFAULT_PCT, MYGA_RATE_DEFAULT_PCT } from "../shared/marketRateDefaults";
 
 /* ─── Helper ─── */
 function run(overrides: Partial<MYGAWaterfallInput> = {}): MYGAWaterfallResult {
@@ -18,7 +19,12 @@ describe("getDefaultInput", () => {
   it("returns valid defaults", () => {
     const d = getDefaultInput();
     expect(d.mygaPremium).toBe(500000);
-    expect(d.mygaRate).toBe(7);
+    // 6.3% compounding: top 5-year MYGA rate, Sep 2026 (see MYGA_RATE_DEFAULT_SOURCES). Was 7%.
+    expect(d.mygaRate).toBe(6.3);
+    expect(d.mygaRate).toBe(MYGA_RATE_DEFAULT_PCT);
+    // 7.09%: Curinos national average HELOC rate, 2026-09-21. Was 8.5%.
+    expect(d.helocRate).toBe(7.09);
+    expect(d.helocRate).toBe(HELOC_RATE_DEFAULT_PCT);
     expect(d.mygaTerm).toBe(5);
     expect(d.bankLtv).toBe(0.70);
     expect(d.bankLoanRate).toBe(7);
@@ -73,19 +79,19 @@ describe("runMYGAWaterfall — projection structure", () => {
    3. MYGA Interest Calculation
    ═══════════════════════════════════════════════════════════════ */
 describe("runMYGAWaterfall — MYGA interest", () => {
-  it("MYGA earns 7% compound interest in year 1", () => {
+  it("MYGA earns the default 6.3% compound interest in year 1", () => {
     const r = run();
     const y1 = r.projection[0];
     expect(y1.mygaStartValue).toBe(500000);
-    expect(y1.mygaInterestEarned).toBe(35000); // 500k * 7%
-    expect(y1.mygaEndValue).toBe(535000);
+    expect(y1.mygaInterestEarned).toBe(31500); // 500k * 6.3%
+    expect(y1.mygaEndValue).toBe(531500);
   });
 
   it("MYGA compounds correctly over 5 years", () => {
     const r = run();
     const y5 = r.projection[4];
-    // 500000 * (1.07)^5 = 701,275.87
-    expect(y5.mygaEndValue).toBeCloseTo(701276, -2);
+    // 500000 * (1.063)^5 = 678,635.3
+    expect(y5.mygaEndValue).toBeCloseTo(678635, -2);
   });
 
   it("total MYGA interest earned is positive and grows", () => {
@@ -325,8 +331,12 @@ describe("runMYGAWaterfall — MYGA rollover cascade", () => {
     expect(r.cycles[2].mygaRolloverIn).toBeCloseTo(expectedRollover, -1);
   });
 
-  it("each cycle start value is higher than previous", () => {
-    const r = run();
+  it("each cycle start value is higher than previous at a 7% MYGA rate", () => {
+    // Not an invariant: it depends on the MYGA rate. At 7% each maturity
+    // clears the loan and still leaves more than the last cycle started with;
+    // at the 6.3% default the first rollover (about $489,700) is below the
+    // $500,000 opening premium. Pinned to 7% to test the cascade itself.
+    const r = run({ mygaRate: 7 });
     for (let i = 1; i < r.cycles.length; i++) {
       expect(r.cycles[i].mygaCycleStartValue).toBeGreaterThan(r.cycles[i - 1].mygaCycleStartValue);
     }
@@ -510,6 +520,7 @@ describe("runMYGAWaterfall — tax savings reinvestment", () => {
    15. Scenario Comparison with Tax Reinvestment
    ═══════════════════════════════════════════════════════════════ */
 import { runScenarioComparison } from "../shared/mygaWaterfall";
+import { HELOC_RATE_DEFAULT_PCT, MYGA_RATE_DEFAULT_PCT } from "../shared/marketRateDefaults";
 
 describe("runScenarioComparison — tax reinvestment in ranking", () => {
   it("returns 5 scenarios sorted by totalValue descending", () => {

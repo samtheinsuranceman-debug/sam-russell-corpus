@@ -6,6 +6,8 @@
  * comparison framework with standardized metrics.
  */
 
+import { cashValueCorridorPct } from "./irc7702"; // 26 U.S.C. 7702(d)(2), https://www.law.cornell.edu/uscode/text/26/7702, read 2026-09-23
+
 export interface CarrierIULProduct {
   carrier: string;
   productName: string;
@@ -117,8 +119,9 @@ export function compareCarriers(input: IULComparisonInput): IULComparisonResult 
         : 1;
       const surrenderValue = cashValue * surrenderPct;
 
-      // Death benefit (greater of face amount or cash value * corridor)
-      const corridorFactor = age < 40 ? 2.5 : age < 60 ? 1.5 : 1.2;
+      // Death benefit (greater of face amount or cash value * corridor): IRC 7702(d)(2)
+      // applicable percentage at the attained age, not a step table.
+      const corridorFactor = cashValueCorridorPct(age) / 100;
       const db = Math.max(input.deathBenefit, cashValue * corridorFactor);
 
       projections.push({

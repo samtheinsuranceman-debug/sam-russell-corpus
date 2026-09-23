@@ -1,4 +1,5 @@
 // @ts-nocheck
+import { HELOC_RATE_DEFAULT } from "@shared/marketRateDefaults"; // 7.09%, Curinos national average HELOC rate, 2026-09-21
 import { createContext, useContext, useState, useCallback, type ReactNode } from "react";
 
 /**
@@ -308,7 +309,7 @@ export const DATA_FLOW_LINKS: DataFlowLink[] = [
     to: "tax-waterfall",
     label: "HELOC Interest → Tax Deductions",
     description: "HELOC interest payments may be tax-deductible, feeding into your tax optimization waterfall.",
-    mapData: (src: MortgageKillerResult) => ({ helocDeduction: src.helocAmount * 0.085, source: "Mortgage Killer HELOC" }),
+    mapData: (src: MortgageKillerResult) => ({ helocDeduction: src.helocAmount * HELOC_RATE_DEFAULT, source: "Mortgage Killer HELOC" }),
   },
   {
     from: "iul-projection",
@@ -480,7 +481,7 @@ export const DATA_FLOW_LINKS: DataFlowLink[] = [
     to: "dynamic-tax",
     label: "Interest Deduction → Bracket Impact",
     description: "Mortgage interest deductions affect year-over-year bracket positioning.",
-    mapData: (src: MortgageKillerResult) => ({ interestDeduction: src.originalBalance * 0.065, helocDeduction: src.helocAmount * 0.085 }),
+    mapData: (src: MortgageKillerResult) => ({ interestDeduction: src.originalBalance * 0.065, helocDeduction: src.helocAmount * HELOC_RATE_DEFAULT }),
   },
 ];
 
@@ -629,7 +630,7 @@ function generate20YearProjection(strategyType: StrategyType, data: any): Compar
         row.equityBuilt = annualEquity * y;
         row.cashValue = d.iulCashValue * (y / 20) * (1 + y * 0.015);
         row.deathBenefit = d.iulDeathBenefit;
-        row.taxSavings = d.helocUsed ? d.helocAmount * 0.085 * 0.32 : 0;
+        row.taxSavings = d.helocUsed ? d.helocAmount * HELOC_RATE_DEFAULT * 0.32 : 0;
         row.opportunityCost = d.totalOpportunityCost * (y / 20);
         row.netPositive = row.interestSaved + row.taxSavings + row.cashValue * 0.05;
         break;
