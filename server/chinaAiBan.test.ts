@@ -16,6 +16,11 @@
  *   3. No source file in shared/, server/ or client/src/ wires one in: a banned
  *      model id or provider base URL on a model/provider/endpoint line, or a
  *      banned `vendor/model` id anywhere.
+ *   4. Manus (Butterfly Effect) is gone for good: no file in client/ (public
+ *      assets included), server/, shared/, scripts/ or the build and package
+ *      configuration names it, its Forge gateway, its `__manus__` runtime
+ *      folder or its Butterfly Effect hosts, and the gateway variables are not
+ *      read anywhere.
  *
  * No test here touches the network.
  */
@@ -80,6 +85,9 @@ const MUST_MATCH = [
   "Skywork/Skywork-R1V3", "rednote-hilab/dots.llm1.inst", "dots-studio/dots-3-note-preview", "BAAI/bge-m3", "bge-m3", "huawei/pangu-pro",
   // Arcee models distilled from DeepSeek-V3 or built on Qwen
   "arcee-ai/virtuoso-large", "virtuoso-medium", "arcee-blitz",
+  // Manus / Butterfly Effect (China-origin agent platform) and its hosted pieces
+  "manus", "Manus", "Manus AI", "https://forge.manus.im", "forge.manus.im/v1/chat/completions", "vite-plugin-manus-runtime",
+  "/__manus__/debug-collector.js", "https://forge.butterfly-effect.dev", "3000-abc.us2.manus.computer", "manus-built-in",
   // Taiwan (suspect)
   "taide/TAIDE-LX-7B", "MediaTek-Research/Breeze-7B-Instruct", "yentinglin/Taiwan-LLM-13B", "foxbrain",
   // Hosts
@@ -112,7 +120,7 @@ const MUST_NOT_MATCH = [
   "inception", "mercury-2", "aleph-alpha", "pharia-1-llm-7b-control", "swiss-ai/apertus-v1.5-70b", "thinkingmachines/inkling", "poolside/laguna-s-2.1",
   // ordinary words that share letters with a banned term
   "step-1", "step-3", "step-by-step", "Apache Spark", "sparkline", "structuredNotes", "Bernie", "yuan", "Chinese yuan", "algorithm", "glamour",
-  "kimono", "https://www.cnn.com", "https://example.com/cn/", "https://example.co", "https://api.example.com/v1",
+  "kimono", "manuscript", "Manuscripts", "forge", "Forge Anchor", "https://www.cnn.com", "https://example.com/cn/", "https://example.co", "https://api.example.com/v1",
 ];
 
 describe("the pattern", () => {
@@ -381,5 +389,119 @@ describe("no source file wires in a China-linked model or provider", () => {
       );
     });
     expect(hits).toHaveLength(probe.length);
+  });
+});
+
+// ─── Consolidated from the other suites (the ban is proved here, once) ─────
+
+describe("consolidated catalogue and endpoint checks", () => {
+  it("no provider in the catalogue is China-linked by id, name, base URL, model or country", () => {
+    for (const p of PROVIDERS) {
+      for (const v of [p.id, p.name, p.baseUrl, ...p.suggestedModels]) expect(isBannedProvider(v), `${p.id}: ${v}`).toBe(false);
+      expect(p.country, p.id).not.toMatch(/china|hong kong|macau/i);
+    }
+    for (const gone of ["deepseek", "moonshot", "qwen", "zhipu", "minimax", "qianfan"]) {
+      expect(getProvider(gone), gone).toBeUndefined();
+      expect(isBannedProvider(gone), gone).toBe(true);
+    }
+  });
+
+  it("custom endpoints on a banned lab or a .cn host are refused; an allied one is accepted", () => {
+    for (const [base, path] of [
+      ["https://api.deepseek.com", "/chat/completions"],
+      ["https://api.moonshot.ai", "/v1/chat/completions"],
+      ["https://dashscope-intl.aliyuncs.com", "/compatible-mode/v1/chat/completions"],
+      ["https://api.example.cn", "/v1/chat/completions"],
+      ["https://example.cn:443", "/v1/chat/completions"],
+    ]) expect(validateCustomEndpoint(base, path).ok, base).toBe(false);
+    expect(validateCustomEndpoint("https://api.crusoe.ai", "/v1/chat/completions").ok).toBe(true);
+  });
+
+  it("the ultraAI panel carries no banned key, host or provider id", () => {
+    const src = readFileSync(resolve(root, "server/ultraAI.ts"), "utf-8");
+    for (const lit of src.match(/"[^"\n]{2,200}"/g) ?? []) expect(isBannedProvider(lit.slice(1, -1)), lit).toBe(false);
+    expect(src).not.toMatch(/DEEPSEEK_API_KEY|api\.deepseek\.com/);
+  });
+});
+
+// ─── 4. Manus stays out ──────────────────────────────────────────────────────
+
+/** The Manus names: the product, its gateway host, its runtime folder and its parent company's hosts. */
+const MANUS_PATTERN = /\bmanus(?![a-z])|__manus__|forge\.manus|butterfly-effect/i;
+/** The variables the Manus gateway, OAuth and runtime were configured through. */
+const MANUS_ENV_PATTERN = /BUILT_IN_FORGE_API_(?:URL|KEY)|RCS_ALLOW_FORGE_GATEWAY|OAUTH_SERVER_URL|VITE_OAUTH_PORTAL_URL|VITE_FRONTEND_FORGE_API_(?:URL|KEY)/;
+const MANUS_ROOTS = ["client", "server", "shared", "scripts"];
+const MANUS_ROOT_FILES = [
+  "package.json", "pnpm-lock.yaml", "pnpm-workspace.yaml", "vite.config.ts", "vitest.config.ts", "tsconfig.json",
+  "drizzle.config.ts", "components.json", ".gitignore", ".npmrc",
+];
+const MANUS_TEXT_EXTS = new Set([".ts", ".tsx", ".js", ".mjs", ".cjs", ".json", ".html", ".css", ".py", ".sh", ".yaml", ".yml", ".webmanifest", ".txt", ".svg"]);
+/** This file and the ban's own definition necessarily name what they ban. */
+const MANUS_EXEMPT = new Set(["server/chinaAiBan.test.ts", "shared/aiProviders.ts"]);
+
+function walkAll(dir: string, out: string[] = []): string[] {
+  for (const name of readdirSync(dir)) {
+    if (name === "node_modules" || name === "dist") continue;
+    const full = resolve(dir, name);
+    if (statSync(full).isDirectory()) walkAll(full, out);
+    else out.push(full);
+  }
+  return out;
+}
+
+function manusOffences(): string[] {
+  const found: string[] = [];
+  const files: string[] = [];
+  for (const r of MANUS_ROOTS) files.push(...walkAll(resolve(root, r)));
+  for (const f of MANUS_ROOT_FILES) {
+    try { if (statSync(resolve(root, f)).isFile()) files.push(resolve(root, f)); } catch { /* not present */ }
+  }
+  for (const file of files) {
+    const rel = file.slice(root.length + 1);
+    if (MANUS_EXEMPT.has(rel)) continue;
+    if (MANUS_PATTERN.test(rel)) { found.push(`${rel}: path`); continue; }
+    const ext = extname(rel).toLowerCase();
+    if (!MANUS_TEXT_EXTS.has(ext) && !MANUS_ROOT_FILES.includes(rel)) continue;
+    readFileSync(file, "utf-8").split("\n").forEach((line, i) => {
+      if (MANUS_PATTERN.test(line) || MANUS_ENV_PATTERN.test(line)) found.push(`${rel}:${i + 1}: ${line.trim().slice(0, 120)}`);
+    });
+  }
+  return found;
+}
+
+describe("Manus (Butterfly Effect) is removed and cannot come back", () => {
+  it("is refused by the ban pattern by name, gateway host, runtime folder and parent-company host", () => {
+    for (const v of ["manus", "forge.manus.im", "__manus__", "vite-plugin-manus-runtime", "forge.butterfly-effect.dev"]) {
+      expect(isBannedProvider(v), v).toBe(true);
+    }
+    expect(isBannedProvider("manuscript")).toBe(false);
+  });
+
+  it("no file in client/, server/, shared/, scripts/ or the package and build config names it or reads its variables", () => {
+    expect(manusOffences()).toEqual([]);
+  });
+
+  it("the runtime folder, the vite runtime plugin and the gateway modules are gone", () => {
+    const gone = [
+      "client/public/__manus__", "client/src/components/ManusDialog.tsx", "server/_core/types/manusTypes.ts",
+      "server/_core/oauth.ts", "server/_core/heartbeat.ts", "server/_core/dataApi.ts", "server/_core/map.ts",
+      "server/_core/imageGeneration.ts", "server/_core/voiceTranscription.ts",
+    ];
+    for (const g of gone) expect(() => statSync(resolve(root, g)), g).toThrow();
+    const pkg = JSON.parse(readFileSync(resolve(root, "package.json"), "utf-8")) as Record<string, Record<string, string> | undefined>;
+    const deps = { ...pkg.dependencies, ...pkg.devDependencies, ...pkg.optionalDependencies };
+    expect(Object.keys(deps).filter(d => MANUS_PATTERN.test(d))).toEqual([]);
+  });
+
+  it("would catch a reintroduction (the walker is not vacuous)", () => {
+    const probe = [
+      `import { vitePluginManusRuntime } from "vite-plugin-manus-runtime";`,
+      `<script src="/__manus__/debug-collector.js"></script>`,
+      `const url = "https://forge.manus.im/v1/chat/completions";`,
+      `const key = process.env.BUILT_IN_FORGE_API_KEY;`,
+      `const MAPS = "https://forge.butterfly-effect.dev/v1/maps/proxy";`,
+    ];
+    expect(probe.filter(l => MANUS_PATTERN.test(l) || MANUS_ENV_PATTERN.test(l))).toHaveLength(probe.length);
+    expect(MANUS_PATTERN.test("A manuscript of the plan")).toBe(false);
   });
 });

@@ -163,8 +163,8 @@ async function loadCredentials(): Promise<CachedCredential[]> {
  *   • A vault entry ALWAYS wins. If a key was typed into the AI Connector, it
  *     is the one the owner meant, and an ambient environment variable does not
  *     get to silently override it.
- *   • These sit BELOW every vault key in the chain and above the gateway, so
- *     they are a floor, not a ceiling.
+ *   • These sit BELOW every vault key in the chain, so they are a floor, not a
+ *     ceiling.
  *
  * The model is the provider's default unless <ID>_MODEL is set — so switching
  * Claude to a different model is an environment change, not a code change.
@@ -255,7 +255,6 @@ export function environmentCredentials(): CachedCredential[] {
   let priority = 5000;
 
   for (const provider of PROVIDERS) {
-    if (provider.id === "forge") continue;
     const providerId = provider.id;
     const envName = environmentKeyNames(providerId).find(name => process.env[name]?.trim());
     const key = envName ? process.env[envName]?.trim() : undefined;
@@ -331,35 +330,6 @@ export async function testEnvironmentKeys(
   );
 }
 
-/**
- * The built-in gateway, kept as a last resort. It reads its credentials from
- * the environment rather than the vault, since the hosting platform supplies
- * them and they are not Sam's to rotate.
- */
-/**
- * The built-in gateway (the Manus Forge) is OFF unless the operator opts in
- * with RCS_ALLOW_FORGE_GATEWAY=1. Owner's rule of 22 Sep 2026 (board D32):
- * Manus is China-origin and is not the platform's last resort. With no opt-in
- * the chain is vault keys, then environment keys, and then it stops.
- */
-export function forgeGatewayEnabled(): boolean {
-  return process.env.RCS_ALLOW_FORGE_GATEWAY === "1" && Boolean(process.env.BUILT_IN_FORGE_API_KEY?.trim());
-}
-
-function gatewayFallback(): CachedCredential | null {
-  if (!forgeGatewayEnabled()) return null;
-  const key = process.env.BUILT_IN_FORGE_API_KEY?.trim();
-  const url = process.env.BUILT_IN_FORGE_API_URL?.trim();
-  if (!key) return null;
-  return {
-    providerId: "forge",
-    apiKey: key,
-    model: process.env.FORGE_MODEL?.trim() || "gemini-2.5-flash",
-    baseUrlOverride: url || "https://forge.manus.im",
-    priority: 9999,
-  };
-}
-
 export type CompletionRequest = {
   messages: ChatMessage[];
   maxTokens?: number;
@@ -394,8 +364,6 @@ export class NoProviderAvailableError extends Error {
  */
 export async function completeChat(req: CompletionRequest): Promise<CompletionResult> {
   const credentials = await loadCredentials();
-  const fallback = gatewayFallback();
-
   let chain = [...credentials];
 
   // Environment keys fill the gaps the vault has not covered. A vault entry for
@@ -403,8 +371,6 @@ export async function completeChat(req: CompletionRequest): Promise<CompletionRe
   for (const envCred of environmentCredentials()) {
     if (!chain.some(c => c.providerId === envCred.providerId)) chain.push(envCred);
   }
-
-  if (fallback && !chain.some(c => c.providerId === "forge")) chain.push(fallback);
 
   if (req.preferProvider) {
     const preferred = chain.find(c => c.providerId === req.preferProvider);
@@ -521,7 +487,7 @@ export async function providerStatus(): Promise<
 
   const customRows = db ? await db.select().from(customProviders) : [];
   const allProviders = [
-    ...PROVIDERS.filter(p => p.id !== "forge"),
+    ...PROVIDERS,
     ...customRows.map(tryBuildCustomProvider).filter((p): p is ProviderDefinition => p !== null),
   ];
 
@@ -555,10 +521,9 @@ export async function liveProviderIds(): Promise<string[]> {
 /**
  * The one call every advisor surface should make.
  *
- * Walks the Brain Hub chain (vault keys → Railway environment keys → the
- * built-in gateway only when RCS_ALLOW_FORGE_GATEWAY=1). If no brain answers
- * it throws NoProviderAvailableError with every attempt listed; it no longer
- * slides into the Manus Forge behind the caller's back (board D32, 22 Sep 2026).
+ * Walks the Brain Hub chain (vault keys, then Railway environment keys). If no
+ * brain answers it throws NoProviderAvailableError with every attempt listed.
+ * There is no hosted gateway behind the chain.
  * Returns { text, providerId, model, attempted } so a call site swaps one
  * import and nothing else.
  */

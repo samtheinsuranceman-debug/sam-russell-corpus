@@ -88,7 +88,7 @@ function createOwnerContext(): { ctx: TrpcContext } {
     openId: process.env.OWNER_OPEN_ID || "owner-open-id",
     email: "owner@russellcapital.com",
     name: "Owner",
-    loginMethod: "manus",
+    loginMethod: "owner-password",
     role: "admin",
     createdAt: new Date(),
     updatedAt: new Date(),

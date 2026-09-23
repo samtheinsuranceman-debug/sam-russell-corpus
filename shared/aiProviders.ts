@@ -894,27 +894,10 @@ export const PROVIDERS: ProviderDefinition[] = [
     caution: "Set the Base URL override to https://<your-workspace>/serving-endpoints before this brain can be called.",
     requiresBaseUrl: true,
   },
-
-  // ─── Internal: the gateway the platform shipped with ────────────────────
-  {
-    id: "forge",
-    name: "Built-in Gateway",
-    country: "Managed",
-    wireFormat: "openai-compatible",
-    baseUrl: "",
-    chatPath: "/v1/chat/completions",
-    defaultModel: "gemini-2.5-flash",
-    suggestedModels: ["gemini-2.5-flash"],
-    keyPattern: /.+/,
-    keyHint: "Configured by the hosting environment",
-    consoleUrl: "",
-    role: "The gateway the platform shipped with. Kept as a last-resort fallback so the advisor still answers if every other provider is down.",
-    caution: "Routes to a fast, non-flagship model with a minimal reasoning budget. Adequate as a fallback; not what should be answering a strategy question.",
-  },
 ];
 
-/** The fifty-five brains the owner can wire — everything except the internal gateway. */
-export const BRAIN_PROVIDERS: ProviderDefinition[] = PROVIDERS.filter(p => p.id !== "forge");
+/** The brains the owner can wire. There is no internal gateway entry. */
+export const BRAIN_PROVIDERS: ProviderDefinition[] = PROVIDERS;
 
 /**
  * ─── OWNER'S STANDING RULE: NO CHINA-LINKED AI ──────────────────────────────
@@ -922,7 +905,9 @@ export const BRAIN_PROVIDERS: ProviderDefinition[] = PROVIDERS.filter(p => p.id 
  * 2026-09-06: DeepSeek out. 2026-09-22: widened to every Chinese AI system and
  * every Chinese host. 2026-09-23: widened again to anything connected to the
  * Chinese government or related to China at all, with Taiwan-based labs
- * treated as suspect. The rule covers provider ids, provider names, base
+ * treated as suspect. 2026-09-23 also: Manus (Butterfly Effect) and its
+ * hosted gateway, OAuth, storage and runtime removed and banned by name.
+ * The rule covers provider ids, provider names, base
  * URLs, chat paths and model ids — including OpenRouter-style `vendor/model`
  * ids, Hugging Face org prefixes, and open-weight Chinese models served by an
  * American host (Groq, Together, Fireworks, Venice, Featherless and every
@@ -976,6 +961,9 @@ const BANNED_TERMS: readonly string[] = [
   String.raw`dots-studio`, String.raw`\bdots[.-]?(?:llm|ocr|vlm|\d)`, String.raw`huawei`, String.raw`\bpangu`, String.raw`\bbaai\b`, String.raw`\bbge-(?:m3|large|base|small|reranker)`,
   // Arcee's small models distilled from DeepSeek-V3 or built on Qwen (Trinity and AFM are its own, US-trained)
   String.raw`\bvirtuoso-(?:small|medium|large|lite)`, String.raw`\barcee-blitz`, String.raw`\bmaestro-reasoning`,
+  // Manus (Butterfly Effect): China-origin agent platform, its Forge gateway, runtime and debug collector.
+  // "manus" only as a whole word, so "manuscript" is not caught.
+  String.raw`\bmanus(?![a-z])`, String.raw`__manus__`, String.raw`forge\.manus`, String.raw`butterfly-effect`,
   // Taiwan-based labs (suspect under the rule)
   String.raw`\btaide\b`, String.raw`mediatek`, String.raw`taiwan-llm`, String.raw`foxbrain`,
   // Hosts: any PRC, Hong Kong, Macau or Taiwan TLD, and PRC cloud regions (AWS China, Alibaba, Volcengine)

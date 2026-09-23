@@ -15,7 +15,6 @@
 //     OPENROUTER_API_KEY     (OpenRouter — routes to many models)
 //     MISTRAL_API_KEY        (Mistral)
 //     GROQ_API_KEY           (Groq)
-//     BUILT_IN_FORGE_API_KEY (Manus — the built-in Forge gateway)
 //     ELEVENLABS_API_KEY + ELEVENLABS_VOICE_ID  (voice output)
 //     AIRDNA_API_KEY / MASHVISOR_API_KEY / AIRROI_API_KEY / PRICELABS_API_KEY /
 //     EXPEDIA_RAPID_API_KEY / BEYOND_API_TOKEN  (short-term rental sources; optional)
@@ -40,8 +39,8 @@ import { synthesize } from "./speech";
 import { brainComplete } from "./providerRegistry";
 import { assertEndpointAllowed, assertModelAllowed } from "@shared/aiProviders";
 
-// Owner's standing rule (2026-09-06): DeepSeek is not part of this platform and
-// must not be added back as a provider, a panel voice, or an OpenRouter route.
+// Owner's standing rule: no China-linked AI (BANNED_PROVIDER_PATTERN in
+// shared/aiProviders.ts) as a provider, a panel voice, or an OpenRouter route.
 type ProviderId = "claude" | "chatgpt" | "grok" | "gemini" | "perplexity" | "openrouter" | "mistral" | "groq" | "cohere" | "together";
 
 export type Provider = {

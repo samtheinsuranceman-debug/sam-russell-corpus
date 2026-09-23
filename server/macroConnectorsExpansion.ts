@@ -265,7 +265,6 @@ export const STATEMENT_SPECS: StatementSpec[] = [
   { sourceId: "ambest-actions", indicatorId: "ambest-downgrades-30d", url: "https://news.ambest.com/rss/pressreleases.aspx", speaker: "AM Best", channel: "Rating action", category: "regulatory-rule", keywords: /downgrade|under review|negative|withdraw/i, severity: "warning" },
   { sourceId: "gao", indicatorId: "us-net-interest-mts", url: "https://www.gao.gov/rss/reports.xml", speaker: "Government Accountability Office", channel: "Report", category: "fiscal-forecast", keywords: /debt|fiscal|Treasury|deficit|Social Security|Medicare/i },
   { sourceId: "wef-davos", indicatorId: "wef-top-risk-rank-geoeconomic", url: "https://www.weforum.org/feeds/press.rss", speaker: "World Economic Forum", channel: "Press release", category: "consensus-forecast", keywords: /risk|outlook|economists|growth|recession|geoeconomic/i },
-  { sourceId: "cn-politburo-readouts", indicatorId: "cn-politburo-tone", url: "https://english.news.cn/rss/china.xml", speaker: "CCP Politburo (via Xinhua)", channel: "Readout", category: "growth-target", keywords: /Politburo|economic work|Central Economic Work Conference|growth target|Xi Jinping.*econom/i },
 ];
 
 function statementConnector(spec: StatementSpec): Connector {

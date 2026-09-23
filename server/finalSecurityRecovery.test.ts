@@ -9,7 +9,7 @@ describe("final recovered security and provenance guardrails", () => {
     expect(source).toContain("PUBLIC_ASSET_KEYS");
     expect(source).toContain("sdk.authenticateRequest(req)");
     expect(source).toContain("portalTokenCanAccessStorageKey");
-    expect(source).not.toContain("forgeResp.text()");
+    expect(source).toContain("storageGetSignedUrl");
   });
 
   it("binds anonymous video engagement to a bounded share token", () => {
@@ -29,13 +29,11 @@ describe("final recovered security and provenance guardrails", () => {
     expect(db).toContain("portalTokenCanAccessStorageKey");
   });
 
-  it("keeps Data API calls abortable, bounded, transient-only, and redacted", () => {
-    const source = read("server/_core/dataApi.ts");
-    expect(source).toContain("AbortController");
-    expect(source).toContain("MAX_RESPONSE_BYTES");
-    expect(source).toContain("TRANSIENT_STATUSES");
-    expect(source).not.toContain("response.statusText");
-    expect(source).not.toContain("detail ?");
+  it("carries no hosted data proxy: the managed Data API transport is gone", () => {
+    expect(() => read("server/_core/dataApi.ts")).toThrow();
+    for (const f of ["server/dataFeedService.ts", "server/carrierRatingsService.ts", "server/routers.ts"]) {
+      expect(read(f)).not.toContain("callDataApi");
+    }
   });
 
   it("sanitizes outbound email HTML and removes the retired reset-code mailer", () => {

@@ -1,32 +1,22 @@
 /**
  * Google Calendar Sync Service
- * Uses MCP CLI to interact with Google Calendar API.
- * Falls back to local DB storage when MCP is unavailable.
+ *
+ * No calendar connector is wired. The previous transport shelled out to a
+ * hosting-vendor command-line tool that no longer exists on this host (and
+ * was removed on 23 Sep 2026), so every call now fails with a clear
+ * "not configured" error and callers keep their local DB copy of meetings.
  */
-import { exec } from "child_process";
-import { promisify } from "util";
 
-const execAsync = promisify(exec);
-
-const MCP_SERVER = "google-calendar";
-
-async function mcpCall(toolName: string, input: Record<string, any>): Promise<any> {
-  try {
-    const inputStr = JSON.stringify(input).replace(/'/g, "'\\''");
-    const { stdout } = await execAsync(
-      `manus-mcp-cli tool call ${toolName} --server ${MCP_SERVER} --input '${inputStr}'`,
-      { timeout: 30_000 }
-    );
-    // Parse the MCP response
-    try {
-      return JSON.parse(stdout);
-    } catch {
-      return { raw: stdout.trim() };
-    }
-  } catch (error: any) {
-    console.error(`[CalendarSync] MCP call failed: ${toolName}`, error.message);
-    throw new Error(`Calendar sync unavailable: ${error.message}`);
+export class CalendarNotConfiguredError extends Error {
+  constructor() {
+    super("Calendar sync is not configured on this host.");
+    this.name = "CalendarNotConfiguredError";
   }
+}
+
+async function mcpCall(toolName: string, _input: Record<string, any>): Promise<any> {
+  void toolName;
+  throw new CalendarNotConfiguredError();
 }
 
 export interface CalendarEvent {

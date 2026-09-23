@@ -59,8 +59,7 @@ export const GLOBAL_POLICY: Indicator[] = [
   I({ id: "fao-food-price-index", name: "FAO Food Price Index", domain: "un", direction: "risk-up", weight: 0.5, sourceIds: ["fao-fpi"], unit: "index", cadence: "monthly", awareness: "visible", rationale: "Food-driven unrest and inflation." }),
   I({ id: "unhcr-displaced", name: "Forcibly displaced, global", domain: "un", direction: "risk-up", weight: 0.3, sourceIds: ["unhcr-data"], unit: "millions", cadence: "annual", awareness: "structural", rationale: "Conflict's slow measure." }),
   // 14. China party-state
-  I({ id: "cn-gdp-target-gap", name: "China GDP outturn minus Work Report target", domain: "china-party", direction: "risk-up", weight: 0.5, sourceIds: ["cn-gov-work-report", "cn-nbs"], unit: "pp", cadence: "annual", awareness: "latent", rationale: "The years the target was missed are the tell." }),
-  I({ id: "cn-politburo-tone", name: "Politburo economic readout tone (coded)", domain: "china-party", direction: "risk-up", weight: 0.4, sourceIds: ["cn-politburo-readouts", "csis-interpret-china"], unit: "index", cadence: "quarterly", awareness: "structural", rationale: "The top-line economic line, four times a year." }),
+  I({ id: "cn-politburo-tone", name: "Politburo economic readout tone (coded)", domain: "china-party", direction: "risk-up", weight: 0.4, sourceIds: ["csis-interpret-china"], unit: "index", cadence: "quarterly", awareness: "structural", rationale: "The top-line economic line, four times a year." }),
   // 15. Food
   I({ id: "food-export-restrictions-active", name: "Active food and fertilizer export restrictions", domain: "food", direction: "risk-up", weight: 0.4, sourceIds: ["ifpri-export-restrictions"], unit: "count", cadence: "weekly", awareness: "structural", rationale: "2008 and 2022 price spikes were amplified by bans." }),
   I({ id: "enso-oni", name: "Oceanic Niño Index", domain: "food", direction: "risk-up", weight: 0.3, sourceIds: ["noaa-enso"], unit: "°C anomaly", cadence: "monthly", awareness: "latent", rationale: "Harvests, hydro, hurricanes." }),
@@ -81,7 +80,7 @@ export const GLOBAL_POLICY: Indicator[] = [
   // 22. Minerals
   I({ id: "ember-china-coal-share", name: "China coal share of generation", domain: "minerals", direction: "risk-up", weight: 0.2, sourceIds: ["ember"], unit: "%", cadence: "monthly", awareness: "latent", rationale: "Energy-security posture." }),
   // 23. Demographics
-  I({ id: "cn-births", name: "China births", domain: "demographics", direction: "risk-up", weight: 0.3, sourceIds: ["cn-nbs-births"], unit: "millions", cadence: "annual", awareness: "structural", rationale: "The long-run reason for the diversionary-war hypothesis, and against it." }),
+  I({ id: "cn-births", name: "China births", domain: "demographics", direction: "risk-up", weight: 0.3, sourceIds: ["un-wpp"], unit: "millions", cadence: "annual", awareness: "structural", rationale: "The long-run reason for the diversionary-war hypothesis, and against it." }),
   // 24. Catastrophe
   I({ id: "nhc-active-storms", name: "Active Atlantic tropical cyclones", domain: "catastrophe", direction: "risk-up", weight: 0.3, sourceIds: ["nhc-hurricanes"], unit: "count", cadence: "daily", awareness: "visible", rationale: "Insurer loss season, live." }),
   I({ id: "ambest-downgrades-30d", name: "A.M. Best downgrades, 30-day", domain: "catastrophe", direction: "risk-up", weight: 0.4, sourceIds: ["ambest-actions"], unit: "count", cadence: "daily", awareness: "structural", rationale: "The carriers in the rate-sheet table." }),

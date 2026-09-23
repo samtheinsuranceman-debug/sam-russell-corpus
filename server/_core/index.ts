@@ -3,7 +3,6 @@ import express from "express";
 import { createServer } from "http";
 import net from "net";
 import { createExpressMiddleware } from "@trpc/server/adapters/express";
-import { registerOAuthRoutes } from "./oauth";
 import { registerOwnerLoginRoutes } from "./ownerLogin";
 import { registerRoomVideoRoutes } from "./roomVideos";
 import { registerStorageProxy } from "./storageProxy";
@@ -122,7 +121,6 @@ async function startServer() {
     }
   });
   registerStorageProxy(app);
-  registerOAuthRoutes(app);
   registerOwnerLoginRoutes(app);
   registerRoomVideoRoutes(app);
   // Unsubscribe link, inbound SMS (STOP/START/HELP), external-cron follow-ups

@@ -174,7 +174,7 @@ function LiquidationTab() {
       <Card className="border-emerald-400/15 bg-[#0b1410]/80">
         <CardHeader>
           <CardTitle className="text-yellow-100">Holdings as measured</CardTitle>
-          <CardDescription className="text-emerald-100/70">TIC Table 5, {snapshot.holdings.asOf} (source us-tic-mfh) · MOF Japan {snapshot.japan.reservesAsOf} · SAFE {snapshot.china.fxReservesAsOf}</CardDescription>
+          <CardDescription className="text-emerald-100/70">TIC Table 5, {snapshot.holdings.asOf} (source us-tic-mfh) · MOF Japan {snapshot.japan.reservesAsOf}</CardDescription>
         </CardHeader>
         <CardContent className="grid gap-3 text-sm sm:grid-cols-3 lg:grid-cols-6">
           <Kpi label="Japan" value={bn(snapshot.holdings.japan)} sub={`peak ${bn(snapshot.holdings.japanPeak)} (Nov 2021)`} />
@@ -182,7 +182,7 @@ function LiquidationTab() {
           <Kpi label="All foreign" value={bn(snapshot.holdings.totalForeign)} sub={`record ${bn(snapshot.holdings.totalForeignPeak)} (Feb 2026)`} />
           <Kpi label="Japan reserves" value={bn(snapshot.japan.reservesTotal)} sub={`foreign securities ${snapshot.japan.foreignSecuritiesChange} bn in Aug`} />
           <Kpi label="Aug intervention" value={`¥${snapshot.japan.interventionYenTn} tn`} sub={`$${snapshot.japan.interventionUsdBn} bn, record`} />
-          <Kpi label="China gold" value={`${snapshot.china.goldTonnes.toFixed(0)} t`} sub={`${snapshot.china.goldStreakMonths} straight months of buying`} />
+          <Kpi label="China, 3 months" value={`${snapshot.china.ticThreeMonthChange > 0 ? "+" : "−"}$${Math.abs(snapshot.china.ticThreeMonthChange)} bn`} sub={`TIC, to ${snapshot.china.ticAsOf}`} />
         </CardContent>
       </Card>
 

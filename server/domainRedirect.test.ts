@@ -6,8 +6,6 @@ import { describe, expect, it } from "vitest";
  * with a 301 status. Allowed through without redirect:
  *   - canonical domain (www.russellcapitalsystems.com)
  *   - localhost / 127.* / empty host
- *   - *.manus.computer (dev preview proxy)
- *   - *.manus.space (published site)
  *   - 169.254.* (link-local)
  *   - NODE_ENV === "development"
  */
@@ -25,8 +23,6 @@ function domainRedirectMiddleware(
     normalizedHost === "localhost" ||
     normalizedHost.startsWith("127.") ||
     normalizedHost === "" ||
-    normalizedHost.includes("manus.computer") ||
-    normalizedHost.includes("manus.space") ||
     normalizedHost.startsWith("169.254.") ||
     nodeEnv === "development"
   ) {
@@ -102,12 +98,8 @@ describe("Canonical Domain Redirect Middleware", () => {
     expect(domainRedirectMiddleware("", "/").redirect).toBe(false);
   });
 
-  it("does NOT redirect *.manus.computer (dev preview proxy)", () => {
-    expect(domainRedirectMiddleware("3000-abc123.us2.manus.computer", "/portal/dashboard").redirect).toBe(false);
-  });
-
-  it("does NOT redirect *.manus.space (published site)", () => {
-    expect(domainRedirectMiddleware("russellcap-llwzv8yr.manus.space", "/portal/dashboard").redirect).toBe(false);
+  it("redirects the retired hosting vendor's preview and published hosts like any other", () => {
+    expect(domainRedirectMiddleware("3000-abc123.us2.preview-host.example", "/portal/dashboard").redirect).toBe(true);
   });
 
   it("does NOT redirect 169.254.* (link-local)", () => {

@@ -118,9 +118,10 @@ describe("OAuth Redirect with returnPath", () => {
     expect(decoded.returnPath).toBe("/portal/clients");
   });
 
-  it("registerOAuthRoutes is exported from oauth module", async () => {
-    const oauth = await import("./_core/oauth");
-    expect(typeof oauth.registerOAuthRoutes).toBe("function");
+  it("sign-in is the site's own routes: the external OAuth callback module is gone", async () => {
+    const own = await import("./_core/ownerLogin");
+    expect(typeof own.registerOwnerLoginRoutes).toBe("function");
+    await expect(import("./_core/" + "oauth")).rejects.toThrow();
   });
 });
 
