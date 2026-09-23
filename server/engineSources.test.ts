@@ -3,14 +3,20 @@
  * source list, and the normaliser handles every shape the engines export.
  */
 import { describe, expect, it } from "vitest";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import {
   ENGINE_SOURCE_LOADERS,
   ENGINES_WITH_SOURCE_LOADERS,
+  ROUTES_WITH_SHELL_SOURCES,
   engineForPath,
   loadEngineSources,
   normalizeSources,
+  routeSourcesKeyForPath,
+  sourcePlanForPath,
   uniqueSources,
 } from "../shared/engineSources";
+import { ROUTE_SOURCES } from "../shared/pageSources";
 import { CALCULATORS } from "../shared/calculatorCatalog";
 import { placeholderCohortSize } from "../shared/retirementDNA";
 import { assumed, ruled, sourced } from "../shared/sourcing";
@@ -92,6 +98,46 @@ describe("engineForPath", () => {
     expect(engineForPath("/portal/not-a-real-page")).toBeNull();
     expect(engineForPath("/portal/outside-forces")).toBe("server/outsideForces.ts");
     expect(ENGINES_WITH_SOURCE_LOADERS).toContain(engineForPath("/portal/outside-forces"));
+  });
+});
+
+describe("routes mapped outside the catalogue", () => {
+  const app = readFileSync(join(__dirname, "..", "client/src/App.tsx"), "utf8");
+  const routerPaths = new Set(Array.from(app.matchAll(/<Route\s+path="([^"]+)"/g)).map(m => m[1]!));
+
+  it("every ROUTE_SOURCES key is a real route", () => {
+    for (const route of Object.keys(ROUTE_SOURCES)) expect(routerPaths.has(route), route).toBe(true);
+  });
+
+  it("every engine a route names has a loader, so the footer never names an unsourced engine", () => {
+    for (const [route, r] of Object.entries(ROUTE_SOURCES)) {
+      for (const e of r.engines ?? []) expect(ENGINE_SOURCE_LOADERS[e], `${route} → ${e}`).toBeDefined();
+      expect(ROUTES_WITH_SHELL_SOURCES, route).toContain(route);
+    }
+  });
+
+  it("every page source has a label, and a url or an explicit assumption", () => {
+    for (const [route, r] of Object.entries(ROUTE_SOURCES)) {
+      expect((r.engines?.length ?? 0) + (r.sources?.length ?? 0), route).toBeGreaterThan(0);
+      for (const s of r.sources ?? []) {
+        expect(s.label.length, route).toBeGreaterThan(10);
+        if (!s.url) expect(/^Assumption:|^Sample data:|^The |^Not sourced|^Not corrected yet:|^Computed by /.test(s.label), `${route}: ${s.label.slice(0, 60)}`).toBe(true);
+      }
+    }
+  });
+
+  it("matches router patterns and loads every engine's sources alongside the page's own", async () => {
+    expect(routeSourcesKeyForPath("/portal/mechanism/velocity")).toBe("/portal/mechanism/:slug");
+    expect(routeSourcesKeyForPath("/portal/mechanism")).toBeNull();
+    expect(sourcePlanForPath("/portal/mechanism/velocity?x=1")!.engines).toEqual(["shared/mechanismDossiers.ts", "shared/cycleEngine.ts"]);
+    expect(engineForPath("/portal/medicare-irmaa")).toBe("shared/taxBracketEngine.ts");
+    const plan = sourcePlanForPath("/portal/medicare-irmaa")!;
+    const loaded = await Promise.all(plan.engines.map(e => loadEngineSources(e)));
+    expect(loaded.every(s => s !== null)).toBe(true);
+    const sources = uniqueSources([...plan.pageSources, ...loaded.flatMap(s => s ?? [])]);
+    expect(sources.some(s => s.label.startsWith("IRS, Rev. Proc. 2025-32"))).toBe(true);
+    expect(sources.some(s => s.url === "https://www.cms.gov/newsroom/fact-sheets/2025-medicare-parts-b-premiums-and-deductibles")).toBe(true);
+    expect(sourcePlanForPath("/portal/not-a-real-page")).toBeNull();
   });
 });
 
