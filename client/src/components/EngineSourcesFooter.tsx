@@ -1,9 +1,11 @@
 /**
  * EngineSourcesFooter — "Where these numbers come from", on every catalogue page.
  *
- * Mounted by the app shell. For a route in the calculator catalogue, it names
- * the engine behind the page and lists that engine's own sources, with links
- * and as-of dates, loaded lazily from the engine module. An engine that has
+ * Mounted by the app shell. For a route in the calculator catalogue, or one
+ * shared/engineSources.ts maps to engines (ROUTE_ENGINES), it names the
+ * engines behind the page and lists their own sources, then the sources of
+ * figures the page types in itself (shared/pageSources.ts), with links and
+ * as-of dates, loaded lazily from the engine modules. An engine that has
  * not yet exported its sources gets an honest line saying so; the provenance
  * census tracks those and the list is meant to reach zero.
  *
@@ -11,24 +13,29 @@
  */
 import { useEffect, useState } from "react";
 import { BookOpen, ChevronDown, ChevronUp, ExternalLink } from "lucide-react";
-import { catalogueEntryForPath, loadEngineSources, uniqueSources, type SourceRef } from "@shared/engineSources";
+import { enginesForPath, loadRouteSources, pageSourcesForPath, type SourceRef } from "@shared/engineSources";
 
 export default function EngineSourcesFooter({ path }: { path: string }) {
-  const entry = catalogueEntryForPath(path);
-  const engine = entry?.engine ?? null;
+  const engines = enginesForPath(path);
+  const hasPageSources = pageSourcesForPath(path).length > 0;
+  const key = engines.join("|");
   const [open, setOpen] = useState(false);
-  const [sources, setSources] = useState<SourceRef[] | null | undefined>(undefined);
+  const [sources, setSources] = useState<SourceRef[] | undefined>(undefined);
+  const [missing, setMissing] = useState<string[]>([]);
 
   useEffect(() => {
     let live = true;
     setSources(undefined);
-    if (!open || !engine) return;
-    loadEngineSources(engine).then(s => { if (live) setSources(s === null ? null : uniqueSources(s)); });
+    setMissing([]);
+    if (!open) return;
+    loadRouteSources(path).then(r => { if (live) { setSources(r.sources); setMissing(r.missing); } });
     return () => { live = false; };
-  }, [open, engine]);
+  }, [open, path, key]);
 
-  if (!entry || !engine) return null;
-  const engineName = engine.replace(/^shared\//, "").replace(/\.ts$/, "");
+  if (engines.length === 0 && !hasPageSources) return null;
+  const engineName = engines.length
+    ? engines.map(e => e.replace(/^shared\//, "").replace(/\.ts$/, "")).join(", ")
+    : "this page";
 
   return (
     <section
@@ -44,21 +51,21 @@ export default function EngineSourcesFooter({ path }: { path: string }) {
       >
         <BookOpen className="h-4 w-4 text-amber-300" aria-hidden />
         <span className="text-sm font-semibold text-white">Where these numbers come from</span>
-        <span className="ml-1 text-xs text-slate-500">engine {engineName}</span>
+        <span className="ml-1 text-xs text-slate-500">{engines.length > 1 ? "engines" : engines.length ? "engine" : "sources for"} {engineName}</span>
         {open ? <ChevronUp className="ml-auto h-4 w-4 text-slate-400" aria-hidden /> : <ChevronDown className="ml-auto h-4 w-4 text-slate-400" aria-hidden />}
       </button>
 
       {open && (
         <div className="border-t border-[#1e3a5f]/40 px-5 py-4 text-sm">
           {sources === undefined && <p className="text-slate-400">Reading the engine's source list…</p>}
-          {sources === null && (
-            <p className="text-slate-300">
-              This engine's constants are typed into <code className="text-amber-300">{engine}</code> and it has not yet
+          {missing.map(m => (
+            <p key={m} className="mb-2 text-slate-300">
+              This engine's constants are typed into <code className="text-amber-300">{m}</code> and it has not yet
               exported a source list. It is on the provenance census, which the build checks; the list only shrinks.
-              Until it is sourced, treat every figure on this page as the firm's assumption, not a published fact.
+              Until it is sourced, treat its figures on this page as the firm's assumption, not a published fact.
             </p>
-          )}
-          {sources && sources.length === 0 && (
+          ))}
+          {sources && sources.length === 0 && missing.length === 0 && (
             <p className="text-slate-300">The engine exports a source list, but it is empty. Treat the figures as assumptions.</p>
           )}
           {sources && sources.length > 0 && (

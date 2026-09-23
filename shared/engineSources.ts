@@ -19,6 +19,7 @@
  * add one loader line below. The census test checks the loader resolves.
  */
 import { CALCULATORS } from "./calculatorCatalog";
+import { PAGE_SOURCES } from "./pageSources";
 
 export type SourceRef = {
   label: string;
@@ -56,6 +57,7 @@ export const ENGINE_SOURCE_LOADERS: Record<string, Loader> = {
   "shared/incomeForLife.ts": () => import("./incomeForLife").then(m => m.INCOME_SOURCES),
   "shared/indexCreditingData.ts": () => import("./indexCreditingData").then(m => m.INDEX_RETURN_SOURCES),
   "shared/inheritanceEngine.ts": () => import("./inheritanceEngine").then(m => m.INHERITANCE_SOURCES),
+  "shared/ibbotsonModel.ts": () => import("./ibbotsonModel").then(m => m.IBBOTSON_MODEL_SOURCES),
   "shared/iulLinks.ts": () => import("./iulLinks").then(m => m.IUL_LINK_SOURCES),
   "shared/liquidityRoutes.ts": () => import("./liquidityRoutes").then(m => m.LIQUIDITY_ROUTES_SOURCES),
   "shared/longevityEngine.ts": () => import("./longevityEngine").then(m => m.LONGEVITY_SOURCES),
@@ -88,6 +90,7 @@ export const ENGINE_SOURCE_LOADERS: Record<string, Loader> = {
   "shared/taxHistory.ts": () => import("./taxHistory").then(m => m.TAX_HISTORY_SOURCES),
   "shared/taxSchedule.ts": () => import("./taxSchedule").then(m => m.TAX_SCHEDULE_SOURCES),
   "shared/thresholds.ts": () => import("./thresholds").then(m => m.THRESHOLDS_SOURCES),
+  "shared/timeMachineEngine.ts": () => import("./timeMachineEngine").then(m => m.TIME_MACHINE_SOURCES),
   "shared/ultraEngine.ts": () => import("./ultraEngine").then(m => m.ULTRA_ENGINE_SOURCES),
   "shared/wealthGenomeFactors.ts": () => import("./wealthGenomeFactors").then(m => m.WEALTH_GENOME_FACTORS_SOURCES),
   "shared/zipEngine.ts": () => import("./zipEngine").then(m => m.ZIP_SOURCES),
@@ -98,11 +101,104 @@ export const ENGINE_SOURCE_LOADERS: Record<string, Loader> = {
 /** The engines whose sources the shell can show. Exported for the census. */
 export const ENGINES_WITH_SOURCE_LOADERS: readonly string[] = Object.keys(ENGINE_SOURCE_LOADERS).sort();
 
-/** The engine behind a route, from the catalogue. Query strings and trailing slashes are ignored. */
+/**
+ * Routes whose figures come from engines the catalogue does not name for
+ * them: pages outside the catalogue, and catalogue entries with no `engine`.
+ * Each engine listed must have a loader above (server/engineSources.test.ts
+ * checks), and must really produce figures on the page — importing a
+ * formatter from an engine does not count. Most portal pages list
+ * taxBracketEngine because they render the TaxBracketPanel
+ * (ConsumerOutcomeBlocks), which runs calculateTax on the client's income.
+ * Figures a page types in itself are sourced in shared/pageSources.ts.
+ * Keys use the router's own patterns (`:slug` matches one segment).
+ */
+export const ROUTE_ENGINES: Record<string, readonly string[]> = {
+  "/portal/hot-income": ["shared/taxBracketEngine.ts"],
+  "/portal/house-recycling": ["shared/taxBracketEngine.ts"],
+  "/portal/household-wealth": ["shared/householdWealth.ts", "shared/taxBracketEngine.ts"],
+  "/portal/iul-vs-roth": ["shared/ibbotsonModel.ts", "shared/taxBracketEngine.ts"],
+  "/portal/ibbotson-charts": ["shared/taxBracketEngine.ts"],
+  "/portal/illustration-compare": ["shared/taxBracketEngine.ts"],
+  "/portal/income-gap": ["shared/taxBracketEngine.ts"],
+  "/portal/income-timeline": ["shared/taxBracketEngine.ts"],
+  "/portal/inflation": ["shared/taxBracketEngine.ts"],
+  "/portal/market-stress-test": ["shared/taxBracketEngine.ts"],
+  "/portal/mechanism/:slug": ["shared/mechanismDossiers.ts", "shared/cycleEngine.ts"],
+  "/portal/medicare-irmaa": ["shared/taxBracketEngine.ts"],
+  "/portal/multi-gen-wealth": ["shared/taxBracketEngine.ts"],
+  "/portal/scenario-play": ["shared/taxBracketEngine.ts"],
+  "/portal/policy-review": ["shared/taxBracketEngine.ts"],
+  "/portal/portfolio-drift": ["shared/taxBracketEngine.ts"],
+  "/portal/predictive-analytics": ["shared/taxBracketEngine.ts"],
+  "/portal/quick-quote": ["shared/taxBracketEngine.ts"],
+  "/portal/real-estate-mogul": ["shared/ibbotsonModel.ts", "shared/taxBracketEngine.ts"],
+  "/portal/recommendations": ["shared/taxBracketEngine.ts"],
+  "/portal/retirement-guardrails": ["shared/taxBracketEngine.ts"],
+  "/portal/reverse-heloc": ["shared/reverseHeloc.ts", "shared/taxBracketEngine.ts"],
+  "/portal/saved-scenarios": ["shared/taxBracketEngine.ts"],
+  "/portal/scenarios": ["shared/taxBracketEngine.ts"],
+  "/portal/scenario-side-by-side": ["shared/taxBracketEngine.ts"],
+  "/portal/social-security": ["shared/taxBracketEngine.ts"],
+  "/portal/strategy": ["shared/taxBracketEngine.ts"],
+  "/portal/succession-planning": ["shared/taxBracketEngine.ts"],
+  "/portal/tax-advantaged-growth": ["shared/ibbotsonModel.ts", "shared/taxBracketEngine.ts"],
+  "/portal/tax-loss-harvesting": ["shared/taxBracketEngine.ts"],
+  "/portal/tax-opportunities": ["shared/taxBracketEngine.ts"],
+  "/portal/tax-return-upload": ["shared/taxBracketEngine.ts"],
+  "/portal/time-machine-ag49": ["shared/taxBracketEngine.ts"],
+  "/portal/time-machine-calculator": ["shared/timeMachineEngine.ts", "shared/taxBracketEngine.ts"],
+  "/portal/time-machine-method": ["shared/timeMachineEngine.ts", "shared/taxBracketEngine.ts"],
+  "/portal/withdrawal-sequencing": ["shared/taxBracketEngine.ts"],
+};
+
+function cleanPath(path: string): string {
+  return path.split("?")[0]!.split("#")[0]!.replace(/\/+$/, "") || "/";
+}
+
+/** Does a router pattern (`/portal/mechanism/:slug`) match a path? A pattern matches itself. */
+export function routeMatches(pattern: string, path: string): boolean {
+  const a = cleanPath(pattern).split("/");
+  const b = cleanPath(path).split("/");
+  if (a.length !== b.length) return false;
+  return a.every((seg, i) => (seg.startsWith(":") ? b[i]!.length > 0 : seg === b[i]));
+}
+
+/** The value in a route-keyed record whose key is the path, else the first pattern key that matches it. */
+export function lookupRoute<T>(table: Record<string, T>, path: string): T | undefined {
+  const clean = cleanPath(path);
+  if (Object.prototype.hasOwnProperty.call(table, clean)) return table[clean];
+  const key = Object.keys(table).find(k => k.includes(":") && routeMatches(k, clean));
+  return key === undefined ? undefined : table[key];
+}
+
+/** Every engine behind a route: the catalogue's engine first, then ROUTE_ENGINES, de-duplicated. */
+export function enginesForPath(path: string): string[] {
+  const out: string[] = [];
+  const cat = catalogueEntryForPath(path)?.engine;
+  if (cat) out.push(cat);
+  for (const e of lookupRoute(ROUTE_ENGINES, path) ?? []) if (!out.includes(e)) out.push(e);
+  return out;
+}
+
+/** The engine behind a route: the catalogue's, else the first ROUTE_ENGINES entry. Query strings and trailing slashes are ignored. */
 export function engineForPath(path: string): string | null {
-  const clean = path.split("?")[0]!.replace(/\/+$/, "") || "/";
-  const entry = CALCULATORS.find(c => c.path === clean);
-  return entry?.engine ?? null;
+  return enginesForPath(path)[0] ?? null;
+}
+
+/** Figures a page types in itself, sourced route by route (shared/pageSources.ts). */
+export function pageSourcesForPath(path: string): readonly SourceRef[] {
+  return lookupRoute(PAGE_SOURCES, path) ?? [];
+}
+
+/**
+ * The shell prints a source list for this route: it names at least one engine
+ * or page source, and every engine it names has a loader. The provenance
+ * census counts a routed page as printing a source when this is true.
+ */
+export function routeHasShellSources(path: string): boolean {
+  const engines = enginesForPath(path);
+  if (engines.length === 0 && pageSourcesForPath(path).length === 0) return false;
+  return engines.every(e => Object.prototype.hasOwnProperty.call(ENGINE_SOURCE_LOADERS, e));
 }
 
 /** The catalogue entry behind a route, when there is one. */
@@ -179,4 +275,22 @@ export function uniqueSources(refs: readonly SourceRef[]): SourceRef[] {
   const seen = new Map<string, SourceRef>();
   for (const r of refs) if (!seen.has(r.label)) seen.set(r.label, r);
   return Array.from(seen.values());
+}
+
+/**
+ * Everything the footer prints for a route: each engine's sources in turn,
+ * then the page's own, de-duplicated. `missing` names engines with no loader,
+ * so the footer can say so rather than hide it.
+ */
+export async function loadRouteSources(path: string): Promise<{ engines: string[]; missing: string[]; sources: SourceRef[] }> {
+  const engines = enginesForPath(path);
+  const missing: string[] = [];
+  const sources: SourceRef[] = [];
+  for (const e of engines) {
+    const s = await loadEngineSources(e);
+    if (s === null) missing.push(e);
+    else sources.push(...s);
+  }
+  sources.push(...pageSourcesForPath(path));
+  return { engines, missing, sources: uniqueSources(sources) };
 }

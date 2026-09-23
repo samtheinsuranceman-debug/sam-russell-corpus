@@ -503,3 +503,32 @@ export function generateTimeMachineOverlay(
     annualLoanAmount,
   );
 }
+
+/* ─── WHERE THESE NUMBERS COME FROM ─── */
+
+/**
+ * Sources and assumptions behind the Time Machine illustrations. The index
+ * histories are read from indexCreditingData.ts and sourced there; the
+ * crediting terms and the loan and surrender figures here are the firm's.
+ */
+export const TIME_MACHINE_SOURCES: readonly { label: string; url?: string; asOf?: string; note?: string }[] = [
+  {
+    label:
+      "Index histories: RAW_INDEX_RETURNS in shared/indexCreditingData.ts, S&P 500 calendar-year price return excluding dividends, 1994-2025, " +
+      "from ChartRow 'S&P 500 Returns by Year' and reconciled to a carrier's published 30-year average and cap-year count (INDEX_RETURN_SOURCES, verified 2026-09-14)",
+  },
+  {
+    label:
+      "Assumption: the caps, participation rates and spreads of the index options are anonymised terms ('Mutual Company A/B/C') with no source or as-of date " +
+      "in indexCreditingData.ts; real carrier terms are being collected under docs/carriers/. Treat the historical columns as the mechanics applied to those terms, not a carrier's result",
+  },
+  {
+    label:
+      "Assumption: the flat 'boring' rate (6% when no rate is given) is an input chosen by the firm; it is not a carrier's AG 49-A maximum illustrated rate, which each carrier sets by formula",
+    url: "https://content.naic.org/sites/default/files/committees-pending-action-actuarial-guideline-xlix-a-230224.pdf",
+    asOf: "read 2026-09-23",
+  },
+  { label: "Assumption: loan rate 5.0% and loan arbitrage spread 0.5% defaults (statedLoanRate, actualArbitrageSpread), chosen by the firm as round figures; the policy contract sets the real loan terms" },
+  { label: "Assumption: surrender value ratio rising from 50% in year 1 to 100% in year 15 (getSurrenderRatio), a simplified schedule chosen by the firm, not any carrier's surrender charges" },
+  { label: "Assumption: years after 2025 repeat the average of the historical years already used, or 6% when there are none; no external source" },
+];
