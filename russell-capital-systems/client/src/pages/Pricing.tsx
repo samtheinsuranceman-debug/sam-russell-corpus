@@ -1,4 +1,5 @@
 import { getLoginUrl } from "@/const";
+import { PUBLIC_HOME_FALLBACK, useHomepageOpen } from "@/hooks/useHomepageOpen";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { trpc } from "@/lib/trpc";
 import PageBackdrop from "@/components/PageBackdrop";
@@ -102,6 +103,7 @@ export default function Pricing() {
   const recordDisclosureMut = trpc.paymentCompliance.recordDisclosure.useMutation();
   const plansQuery = trpc.billing.plans.useQuery();
   const { isAuthenticated } = useAuth();
+  const homeOpen = useHomepageOpen(); // "/" bounces a signed-out visitor to /login while the homepage is gated
   const [, navigate] = useLocation();
 
   const checkoutMut = trpc.billing.createCheckout.useMutation({
@@ -173,8 +175,8 @@ export default function Pricing() {
       {/* Header */}
       <div className="relative z-10 border-b border-white/10">
         <div className="container py-4 flex items-center justify-between">
-          <Link href="/" className="inline-flex items-center gap-2 text-sm text-[#7a95b8] hover:text-white transition-colors">
-            <ArrowLeft size={14} /> Back to Home
+          <Link href={homeOpen ? "/" : PUBLIC_HOME_FALLBACK.href} className="inline-flex items-center gap-2 text-sm text-[#7a95b8] hover:text-white transition-colors">
+            <ArrowLeft size={14} /> {homeOpen ? "Back to Home" : PUBLIC_HOME_FALLBACK.label}
           </Link>
           {!isAuthenticated && (
             <Link href="/login" className="rc-btn rc-btn-secondary text-sm">

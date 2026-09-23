@@ -969,7 +969,11 @@ export const STRATEGY_COLORS: Record<StrategyType, string> = {
   "war-room": "red",
 };
 /** Map strategy type to its calculator page path */
-export const STRATEGY_PATHS: Record<StrategyType, string> = {
+/**
+ * Where each strategy's page lives. Strategies whose page the owner has hidden
+ * (shared/hiddenRoutes.ts: black-mirror, social) have no entry, so nothing links to them.
+ */
+export const STRATEGY_PATHS: Partial<Record<StrategyType, string>> = {
   "mortgage-killer": "/portal/mortgage-killer",
   "iul-projection": "/portal/iul-historical",
   "roth-conversion": "/portal/roth-conversion",
@@ -986,11 +990,9 @@ export const STRATEGY_PATHS: Record<StrategyType, string> = {
   "hot-income": "/portal/hot-income",
   "time-machine": "/portal/time-machine",
   "lifetime-income": "/portal/lifetime-income",
-  "black-mirror": "/portal/black-mirror",
   "endgame": "/portal/endgame",
   "dynamic-tax": "/portal/tax-waterfall",
   "advisor-income": "/portal/advisor-income-calculator",
   "live-copilot": "/portal/co-pilot",
-  "social-narcotic": "/portal/social",
   "war-room": "/portal/war-room",
 };

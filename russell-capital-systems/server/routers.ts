@@ -2615,6 +2615,8 @@ Keep it personal, specific with dollar amounts, and actionable. Use their actual
     // Public procedure for client-facing portal access (enhanced with portfolio + meetings)
     view: publicProcedure.input(z.object({ token: z.string() })).query(async ({ input }) => {
       assertShareToken(input.token, "client portal");
+      // A database outage must not look like a revoked link: 503, not "invalid or expired".
+      if (!(await getDb())) throw noDatabase();
       const tokenRow = await validatePortalToken(input.token);
       if (!tokenRow) throw new TRPCError({ code: "NOT_FOUND", message: "Invalid or expired portal link" });
       const data = await getClientPortalDataEnhanced(tokenRow.clientId, tokenRow.workspaceId);
@@ -9320,6 +9322,7 @@ If a field cannot be determined, use 0 for numbers and "unknown" for strings. Be
     // Public endpoint for client portal video viewing
     getByShareToken: publicProcedure.input(z.object({ token: z.string() })).query(async ({ input }) => {
       assertShareToken(input.token, "video");
+      if (!(await getDb())) throw noDatabase(); // outage = 503, not "video not found"
       const { getVideoProposalByShareToken, getVideoProposalChapters } = await import("./db");
       const proposal = await getVideoProposalByShareToken(input.token);
       if (!proposal || proposal.status !== "completed") throw new TRPCError({ code: "NOT_FOUND", message: "Video not found or not ready" });
