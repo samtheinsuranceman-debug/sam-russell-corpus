@@ -4,7 +4,7 @@
  * This module provides the core formulaic engine that powers the Time Machine Method
  * across all IUL calculators. It generates two side-by-side illustrations:
  *
- * 1. "Boring" Illustration — Standard AG 49-compliant flat crediting rate
+ * 1. "Boring" Illustration — Standard flat crediting rate (assumed)
  * 2. Historical Performance Illustration — Uses actual 30-year index crediting histories
  *    from the Index Backtester, with auto-sized account values to match credits dollar-for-dollar
  *

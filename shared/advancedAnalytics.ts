@@ -574,7 +574,7 @@ export function generateRecommendation(profile: OnboardingProfile): StrategyReco
   } else if (profile.iraBalance > 300000 && yearsToRetirement >= 10) {
     strategy = "Roth Conversion + IUL Strategy";
     description = "Strategic Roth conversions funded by IUL policy, creating dual tax-free income streams at retirement.";
-    keyBenefits = ["Tax-bracket-optimized conversions", "IUL cash value growth at AG 49 max illustrated rate (7.5%)", "Tax-free retirement income", "Death benefit protection"];
+    keyBenefits = ["Tax-bracket-optimized conversions", "IUL cash value growth at an assumed 7.5% crediting rate", "Tax-free retirement income", "Death benefit protection"];
     score = 85;
   } else if (profile.iraBalance > 100000) {
     strategy = "Accelerated Roth Conversion";

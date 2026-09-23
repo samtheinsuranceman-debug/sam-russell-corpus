@@ -1,10 +1,10 @@
 // @ts-nocheck
 /**
- * Time Machine Calculator — Unified AG 49 Compliant Calculator
+ * Time Machine Calculator — Unified Compounding Calculator
  *
  * This is the single entry point for the Time Machine concept.
  * It combines:
- *   1. AG 49 Compounding Calculator (how time turns 7.5% into 28-80% effective returns)
+ *   1. Compounding Calculator (how time turns an assumed 7.5% into 28-80% effective returns)
  *   2. Dual Illustration (Boring vs Historical 30-year performance)
  *   3. Generational Ownership Transfer (policy continues across lifetimes)
  *   4. Loan Arbitrage Analysis (5% loan rate, +0.5% positive arbitrage)
@@ -13,7 +13,7 @@
  *   YOUR PLAN (Client's Real Policy)  → Cool Blue/Silver (#60a5fa / #94a3b8)
  *   TIME MACHINE (Super-Sized Model)  → Warm Amber/Gold (#f59e0b / #fbbf24)
  *
- * DISCLAIMER: Every cursor hover explains the AG 49-compliant methodology.
+ * DISCLAIMER: Every cursor hover explains the methodology.
  */
 import { useCalculatorIntegration } from "@/hooks/useCalculatorIntegration";
 import { ClientSelectorBar } from "@/components/ClientSelectorBar";
@@ -84,9 +84,9 @@ const fmtM = (n: number) => {
   return fmt(n);
 };
 
-const AG49_RATE_DISCLAIMER = "Per NAIC Actuarial Guideline 49 (AG 49-A/B), the maximum hypothetical illustrated rate for IUL products is 7.5% — even though 30-year historical index averages are more than twice this number. We follow this rule. The Time Machine Method demonstrates what historical returns actually produced by using a hypothetical pre-existing account large enough that AG 49-compliant crediting rates (0-7.5%) generate the same dollar credits.";
+const AG49_RATE_DISCLAIMER = "The crediting rate is an assumption you set. This is a mechanic, not a carrier illustration; a carrier's own illustrated maximum is set per product under NAIC AG 49-A. The Time Machine Method shows what historical returns produced by using a hypothetical pre-existing account large enough that the assumed rate generates the same dollar credits.";
 
-const TOOLTIP_EXPLANATION = "This Time Machine value represents a hypothetical pre-existing account large enough that, when credited at AG 49-compliant rates (0-7.5%), it produces the same dollar interest credit that the actual historical index return would have generated. No AG 49 laws are violated — we illustrate compliant rates applied to a larger account, not non-compliant rates applied to your account.";
+const TOOLTIP_EXPLANATION = "This Time Machine value represents a hypothetical pre-existing account large enough that, when credited at the assumed crediting rate you set, it produces the same dollar interest credit that the actual historical index return would have generated. This is a mechanic, not a carrier illustration.";
 
 interface CompoundRow {
   year: number;
@@ -247,7 +247,7 @@ function AG49Badge() {
       <Tooltip>
         <TooltipTrigger asChild>
           <Badge variant="outline" className="text-[10px] border-amber-600/40 text-amber-400 bg-amber-950/20 cursor-help">
-            AG 49 MAX 7.5%
+            ASSUMED RATE
           </Badge>
         </TooltipTrigger>
         <TooltipContent side="top" className="max-w-md text-xs leading-relaxed">
@@ -457,7 +457,7 @@ export default function TimeMachineCalculator() {
                 <AG49Badge />
               </h1>
               <p className="text-sm text-muted-foreground">
-                See what AG 49-compliant rates actually produce over time — and what historical returns would have generated
+                See what an assumed crediting rate produces over time — and what historical returns would have generated
               </p>
             </div>
           </div>
@@ -588,7 +588,7 @@ export default function TimeMachineCalculator() {
                   <Slider
                     value={[creditRate]}
                     onValueChange={v => setCreditRate(v[0])}
-                    min={0.5} max={7.5} step={0.25}
+                    min={0.5} max={12} step={0.25}
                     className="flex-1"
                   />
                   <span className="text-sm font-mono text-amber-400 w-16 text-right">{fmtPct(creditRate)}</span>
@@ -731,7 +731,7 @@ export default function TimeMachineCalculator() {
                   <Slider
                     value={[boringRate]}
                     onValueChange={v => setBoringRate(v[0])}
-                    min={3} max={7.5} step={0.25}
+                    min={3} max={12} step={0.25}
                   />
                   <span className="text-xs text-blue-400 font-mono">{fmtPct(boringRate)}</span>
                 </div>
@@ -1126,7 +1126,7 @@ export default function TimeMachineCalculator() {
               <div className="p-4 rounded-lg bg-amber-950/20 border border-amber-600/30">
                 <p className="text-sm font-semibold text-amber-300 mb-2">Why This Works Within the Law</p>
                 <p className="text-xs text-amber-200/70 leading-relaxed">
-                  NAIC AG 49 limits the <em>illustrated rate</em> to 7.5%. We never violate this. Instead, we ask a different question:
+                  This engine is a mechanic, not an illustration: the crediting rate is an assumption you set. It asks a different question:
                   "How large would a pre-existing account need to be so that a 7.5% credit produces the same <em>dollar amount</em> as
                   a historical 28% return on a smaller account?" This is pure math — not an illustration. We're showing the
                   <em>economic equivalence</em> between time (compounding) and rate (historical performance). The Time Machine
