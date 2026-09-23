@@ -24,6 +24,8 @@ import { PlatformEnhancements } from "@/components/PlatformEnhancements";
 import { ExecutiveSummary, GoalsAccelerator, RecommendationSummary, DoNothingBaseline, TaxBracketPanel } from "@/components/ConsumerOutcomeBlocks";
 import { IRMAA_2026, PART_B_STANDARD_MONTHLY_2026, irmaaTierIndex, type IrmaaFiling } from "@shared/irmaa";
 import { formatTaxCurrency, federalBrackets } from "@shared/taxBracketEngine";
+import { LTCG_THRESHOLDS_2026, ltcgBrackets2026 } from "@shared/taxRules";
+import { uniformLifetimeDivisor } from "@shared/uniformLifetimeTable";
 import { RelatedCalculators } from "@/components/RelatedCalculators";
 import { ComplianceFooter } from "@/components/ComplianceFooter";
 
@@ -155,7 +157,9 @@ export default function TaxWaterfall() {
       const rmdAge = 73;
       let rmd = 0;
       if (a >= rmdAge) {
-        const divisor = Math.max(1, 27.4 - (a - 72) * 0.9);
+        // Uniform Lifetime Table divisor, Treas. Reg. § 1.401(a)(9)-9(c) (shared/uniformLifetimeTable.ts),
+        // replacing a linear 27.4 − 0.9/yr approximation that ran well below the table after the late 70s.
+        const divisor = uniformLifetimeDivisor(a);
         rmd = Math.round(projectedBalance / divisor);
       }
       const baseIncome = result.taxableIncome - (income.iraDistributions || 0);
@@ -231,12 +235,13 @@ export default function TaxWaterfall() {
     return data;
   }, [result, age, income, iulTaxFreeIncome]);
 
+  const cgFilingKey = filingStatus === "married" ? "joint" : filingStatus;
   const capGainsData = useMemo(() => {
     if (!result) return [];
     const ordinaryIncome = result.taxableIncome - (income.capitalGains || 0);
-    const ltcgBrackets = filingStatus === "married"
-      ? [{ limit: 89250, rate: 0 }, { limit: 553850, rate: 0.15 }, { limit: Infinity, rate: 0.20 }]
-      : [{ limit: 44625, rate: 0 }, { limit: 492300, rate: 0.15 }, { limit: Infinity, rate: 0.20 }];
+    // 2026 0% / 15% / 20% breakpoints, Rev. Proc. 2025-32 §4.03 (shared/taxRules.ts), replacing the 2023 table
+    // (Rev. Proc. 2022-38: $44,625 / $492,300 single, $89,250 / $553,850 joint); head of household now uses its own row.
+    const ltcgBrackets = ltcgBrackets2026(cgFilingKey);
     const data = [];
     const maxGains = Math.max(500000, (income.capitalGains || 25000) * 4);
     for (let gains = 0; gains <= maxGains; gains += 10000) {
@@ -1071,7 +1076,7 @@ export default function TaxWaterfall() {
                     <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-3">
                       <div className="p-3 rounded-lg bg-blue-500/10">
                         <p className="text-xs text-blue-400">0% CG Bracket Space</p>
-                        <p className="text-lg font-bold">{fmt(Math.max(0, (filingStatus === 'married' ? 89250 : 44625) - (result?.taxableIncome || 0) + (income.capitalGains || 0)))}</p>
+                        <p className="text-lg font-bold">{fmt(Math.max(0, LTCG_THRESHOLDS_2026[cgFilingKey].zeroUpTo /* Rev. Proc. 2025-32 §4.03 */ - (result?.taxableIncome || 0) + (income.capitalGains || 0)))}</p>
                         <p className="text-xs text-muted-foreground">Gains taxed at 0%</p>
                       </div>
                       <div className="p-3 rounded-lg bg-emerald-500/10">

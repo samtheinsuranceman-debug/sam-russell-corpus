@@ -77,6 +77,13 @@ const STANDARD_DEDUCTION = {
   head_of_household: federalStandardDeduction("hoh"),
 };
 
+// HSA limits for 2026: Rev. Proc. 2025-19 §2.01 — $4,400 self-only, $8,750 family; the age-55 catch-up is
+// $1,000 (IRC §223(b)(3)(B), not indexed). Replaces the stale "$4,300 / $8,550" (the 2025 figures, Rev. Proc. 2024-25).
+const HSA_2026 = { selfOnly: 4_400, family: 8_750, catchUp55: 1_000 };
+// Qualified charitable distribution limit for 2026: $111,000 (IRC §408(d)(8), indexed by SECURE 2.0 §307;
+// IRS Notice 2025-67). Replaces $105,000 (the 2024 figure).
+const QCD_LIMIT_2026 = 111_000;
+
 const COLORS = ['#22c55e', '#f0c040', '#3b82f6', '#ef4444', '#a855f7', '#ec4899', '#14b8a6', '#f97316'];
 
 export default function TaxOpportunityDetector() {
@@ -141,19 +148,25 @@ export default function TaxOpportunityDetector() {
   const medical = medicalExpenses || 0;
 
   const brackets = filingStatus === "married_filing_jointly" ? BRACKETS_MFJ : filingStatus === "single" ? BRACKETS_SINGLE : BRACKETS_HOH;
-  const currentBracket = brackets.find((b) => Number(income) >= b.min && Number(income) < b.max);
-  const marginalRate = currentBracket?.rate ?? 0.22;
-  const bracketRoom = currentBracket ? currentBracket.max - income : 0;
-  
+
+  // Standard deduction from the shared helpers (Rev. Proc. 2025-32 via shared/taxRules.ts).
   const stdDed = STANDARD_DEDUCTION[filingStatus as keyof typeof STANDARD_DEDUCTION] || 0;
   // SALT: the current-year cap and MAGI phase-down (shared/taxRules.ts), not the pre-2025 $10,000 cap.
   const saltDeduction = saltAllowed(state, income, filingKeyFromLabel(filingStatus.replace(/_/g, " ")), TAX_RULES_2026);
   const itemizedDeductions = mortgage + charitable + saltDeduction + Math.max(0, medical - (income * 0.075));
   // First IRMAA threshold (tier 1 upper edge) for this filing status, shared/irmaa.ts.
   const irmaaFirstThreshold = IRMAA_2026[filingStatus === "married_filing_jointly" ? "married" : "single"][0]!.maxMagi;
+  // The larger of the standard deduction and itemized deductions (never less than the standard deduction).
   const effectiveDeduction = Math.max(stdDed, itemizedDeductions);
   const taxableIncome = Math.max(0, income - effectiveDeduction);
-  
+
+  // The bracket tables (IRC §1, Rev. Proc. 2025-32 §4.01) apply to TAXABLE income, not gross
+  // income: finding the bracket from gross overstated the marginal rate and understated the
+  // room left in it. Bracket, marginal rate and bracket room all read taxable income.
+  const currentBracket = brackets.find((b) => taxableIncome >= b.min && taxableIncome < b.max);
+  const marginalRate = currentBracket?.rate ?? 0.22;
+  const bracketRoom = currentBracket ? currentBracket.max - taxableIncome : 0;
+
   const isItemizing = itemizedDeductions > stdDed;
 
   const handleDetect = useCallback(() => {
@@ -264,9 +277,9 @@ export default function TaxOpportunityDetector() {
     if (age >= 70.5 && charitable > 0 && iraBalance > 100000) {
       opps.push({
         id: "qcd", title: "Qualified Charitable Distribution (QCD)",
-        description: "Donate directly from IRA to charity (up to $105,000/yr). Satisfies RMD without increasing AGI. More tax-efficient than itemizing charitable deductions.",
-        estimatedSavings: `${fmt(Math.min(charitable, 105000) * marginalRate)}/yr`,
-        savingsValue: Math.min(charitable, 105000) * marginalRate,
+        description: `Donate directly from IRA to charity (up to ${fmt(QCD_LIMIT_2026)}/yr in 2026). Satisfies RMD without increasing AGI. More tax-efficient than itemizing charitable deductions.`,
+        estimatedSavings: `${fmt(Math.min(charitable, QCD_LIMIT_2026) * marginalRate)}/yr`,
+        savingsValue: Math.min(charitable, QCD_LIMIT_2026) * marginalRate,
         priority: "high", category: "Charitable", applicable: true,
         action: "Set up QCD from IRA to satisfy charitable giving and RMD simultaneously",
         reason: `Current charitable giving of ${fmt(charitable)} could be redirected through QCD`,
@@ -359,9 +372,9 @@ export default function TaxOpportunityDetector() {
     if (age < 65) {
       opps.push({
         id: "hsa", title: "HSA Triple Tax Advantage",
-        description: "If enrolled in a high-deductible health plan, maximize HSA contributions ($4,300 individual / $8,550 family in 2026). Tax-deductible, tax-free growth, and tax-free withdrawals for medical expenses.",
-        estimatedSavings: `${fmt(8550 * marginalRate)}/yr in tax savings`,
-        savingsValue: 8550 * marginalRate,
+        description: `If enrolled in a high-deductible health plan, maximize HSA contributions (${fmt(HSA_2026.selfOnly)} self-only / ${fmt(HSA_2026.family)} family in 2026, plus a ${fmt(HSA_2026.catchUp55)} catch-up at 55+). Tax-deductible, tax-free growth, and tax-free withdrawals for medical expenses.`,
+        estimatedSavings: `${fmt(HSA_2026.family * marginalRate)}/yr in tax savings`,
+        savingsValue: HSA_2026.family * marginalRate,
         priority: "medium", category: "Healthcare", applicable: true,
         action: "Verify HDHP enrollment and maximize HSA contributions",
         reason: "HSA is the only triple-tax-advantaged account available",

@@ -37,6 +37,7 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { ExecutiveSummary, GoalsAccelerator, RecommendationSummary, DoNothingBaseline, TaxBracketPanel } from "@/components/ConsumerOutcomeBlocks";
 import { formatTaxCurrency, federalBrackets, federalStandardDeduction, federalTaxOnTaxable, federalMarginalRateOnTaxable } from "@shared/taxBracketEngine";
 import { IRMAA_2026 } from "@shared/irmaa";
+import { uniformLifetimeDivisor } from "@shared/uniformLifetimeTable";
 
 // Current-law figures for this married-filing-jointly household, read from the
 // shared tables (shared/taxRules.ts, shared/irmaa.ts) instead of a typed copy.
@@ -230,7 +231,10 @@ export default function WithdrawalSequencing() {
 
       let rmdRequired = 0;
       if (age >= rmdAge && balances.traditional > 0) {
-        const divisor = Math.max(1, 27.4 - (age - rmdAge) * 0.5);
+        // Uniform Lifetime Table divisor for the owner's age, Treas. Reg. § 1.401(a)(9)-9(c)
+        // (shared/uniformLifetimeTable.ts). Was 27.4 − 0.5/yr from the start age, which started at the
+        // age-72 divisor and shrank too slowly (age 90: 18.9 versus the table's 12.2).
+        const divisor = uniformLifetimeDivisor(age);
         rmdRequired = Math.round(balances.traditional / divisor);
       }
 

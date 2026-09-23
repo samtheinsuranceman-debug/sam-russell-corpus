@@ -62,9 +62,6 @@ const ESTATE_RATE_SCHEDULE: SourceRef = {
   note: "Every exclusion since 2011 is above $1,000,000, so the tax on an estate above the exclusion is 40% of the excess; a flat 40% on the excess matches the schedule.",
 };
 
-const TCJA_SUNSET_SUPERSEDED =
-  "The page's '2026 sunset' figure of about $7,000,000 per person was the pre-2025 projection. P.L. 119-21 set the 2026 exclusion at $15,000,000, indexed, so no sunset occurs. Not changed; flagged for review.";
-
 const INHERITED_TEN_YEAR: SourceRef = {
   label: "26 U.S.C. §401(a)(9)(H), added by the SECURE Act (P.L. 116-94, 2019): most designated beneficiaries other than an eligible designated beneficiary must distribute an inherited account within 10 years of the owner's death (Cornell Legal Information Institute)",
   url: LII("401"),
@@ -85,18 +82,6 @@ const DAMODARAN_SP500: SourceRef = {
 
 /* ─── Shared references (portal pages HotIncome to WithdrawalSequencing) ─── */
 
-const IRS_TY2023_RATES: SourceRef = {
-  label: "IRS, Rev. Proc. 2022-38 (tax year 2023), section 3.01 tax rate tables: single 10% to $11,000, 12% to $44,725, 22% to $95,375, 24% to $182,100, 32% to $231,250, 35% to $578,125",
-  url: "https://www.irs.gov/pub/irs-drop/rp-22-38.pdf",
-  asOf: READ,
-};
-
-const IRS_TY2024_ITEMS: SourceRef = {
-  label: "IRS, IR-2023-208 and Rev. Proc. 2023-34 (tax year 2024): 37% above $609,350 single ($731,200 joint), 35% above $243,725 ($487,450 joint); estate basic exclusion $13,610,000; annual gift exclusion $18,000",
-  url: "https://www.irs.gov/newsroom/irs-provides-tax-inflation-adjustments-for-tax-year-2024",
-  asOf: READ,
-};
-
 const IRS_TY2025_RATES: SourceRef = {
   label: "IRS, Rev. Proc. 2024-40 (tax year 2025), section 2.01 tax rate tables: single 10% to $11,925, 12% to $48,475, 22% to $103,350, 24% to $197,300, 32% to $250,525, 35% to $626,350; basic exclusion $13,990,000; annual gift exclusion $19,000",
   url: "https://www.irs.gov/pub/irs-drop/rp-24-40.pdf",
@@ -108,12 +93,6 @@ const IRS_TY2026_ITEMS: SourceRef = {
   url: "https://www.irs.gov/newsroom/irs-releases-tax-inflation-adjustments-for-tax-year-2026-including-amendments-from-the-one-big-beautiful-bill",
   asOf: "released 2025-10-09, " + READ,
   note: "P.L. 119-21 made the 2018 rate structure permanent, so the 'TCJA sunset' that several pages still model no longer happens under current law.",
-};
-
-const IRS_2024_RETIREMENT_LIMITS: SourceRef = {
-  label: "IRS, IR-2023-203 (2024 limits): IRA $7,000 ($1,000 catch-up at 50); Roth IRA phase-out $146,000 to $161,000 single, $230,000 to $240,000 joint",
-  url: "https://www.irs.gov/newsroom/401k-limit-increases-to-23000-for-2024-ira-limit-rises-to-7000",
-  asOf: READ,
 };
 
 const IRS_2025_RETIREMENT_LIMITS: SourceRef = {
@@ -266,7 +245,7 @@ export const ROUTE_SOURCES: Record<string, RouteSources> = {
         label: "26 U.S.C. §168(k) as amended by P.L. 119-21 §70301: 100% bonus depreciation for qualified property acquired after January 19, 2025 (Cornell Legal Information Institute)",
         url: LII("168"),
         asOf: READ,
-        note: "The page's '40% first-year depreciation' is the pre-2025 phase-down rate, superseded for property acquired after January 19, 2025. Not changed; flagged for review.",
+        note: "The page applies the 100% bonus rate; its 40% default is the cost-segregated share of the purchase price written off in year one, an assumption chosen by the firm, not the bonus rate.",
       },
       { label: "Not sourced here: the spot figures typed into the page (bitcoin about $67,000 and a $126,200 high, a $2.5T market value, gold about $4,783 and silver about $72 an ounce in April 2026) carry no feed or dated source" },
     ],
@@ -288,20 +267,15 @@ export const ROUTE_SOURCES: Record<string, RouteSources> = {
   "/portal/mechanism/:slug/providers": { engines: ["shared/mechanismDossiers.ts", "shared/cycleEngine.ts"] },
   "/portal/mechanism/:slug/sequences": { engines: ["shared/mechanismDossiers.ts", "shared/cycleEngine.ts"] },
 
+  // The IRMAA tiers and the Part B standard premium are read from shared/irmaa.ts (2026 premium year).
   "/portal/medicare-irmaa": {
-    engines: ["shared/taxBracketEngine.ts"],
+    engines: ["shared/taxBracketEngine.ts", "shared/irmaa.ts"],
     sources: [
       {
-        label: "Centers for Medicare & Medicaid Services, 2025 Medicare Parts A & B Premiums and Deductibles fact sheet: Part B standard premium $185.00 a month; Part B and Part D income-related monthly adjustment amount tables",
-        url: "https://www.cms.gov/newsroom/fact-sheets/2025-medicare-parts-b-premiums-and-deductibles",
-        asOf: `2025 premium year, released 2024-11-08; ${READ}`,
-        note: "The page's income thresholds ($106,000 / $133,000 / $167,000 / $200,000 / $500,000 single; $212,000 / $266,000 / $334,000 / $400,000 / $750,000 joint) and the $185.00 base premium match. CMS Part B monthly adjustments are $74.00, $185.00, $295.90, $406.90, $443.90; the page has $70.90, $176.40, $281.90, $387.30, $422.00. CMS Part D monthly adjustments are $13.70, $35.30, $57.00, $78.60, $85.80; the page has $13.70, $35.50, $57.30, $79.00, $85.80. CMS puts MAGI of exactly $500,000 ($750,000 joint) in the top tier. The page's $36.78 Part D base premium is not in this fact sheet; Part D premiums vary by plan. Not changed; flagged for review.",
-      },
-      {
-        label: "Social Security Administration, POMS HI 01101.020, IRMAA Sliding Scale Tables: for the 2026 premium year surcharges begin above $109,000 (single) and $218,000 (joint)",
-        url: "https://secure.ssa.gov/poms.nsf/lnx/0601101020",
-        asOf: `POMS revision 2025-12-02; ${READ}`,
-        note: "The page carries the 2025 table; 2026 is the current premium year and its thresholds and amounts are higher.",
+        label: "Centers for Medicare & Medicaid Services, 2026 Medicare Part D Bid Information and Part D Premium Stabilization Demonstration Parameters fact sheet: Part D base beneficiary premium $38.99 a month for 2026",
+        url: "https://www.cms.gov/newsroom/fact-sheets/2026-medicare-part-d-bid-information-and-part-d-premium-stabilization-demonstration-parameters",
+        asOf: `released 2025-07-28; ${READ}`,
+        note: "The page's Part D base premium is $38.99 a month. Part D premiums vary by plan.",
       },
       { label: "Assumption: 3% inflation and a 24% tax rate as default inputs, chosen by the firm; no external source" },
       illustrativeBlock(200000),
@@ -318,14 +292,14 @@ export const ROUTE_SOURCES: Record<string, RouteSources> = {
       IRS_GIFT_FAQ,
       ESTATE_RATE_SCHEDULE,
       {
-        label: "Not corrected yet: the explanatory copy on the '2026 Sunset' tab ('$13.61M per person … sunsets on January 1, 2026, reverting the exemption to approximately $7M') and the gifting copy ('$18,000 per recipient in 2024') predate P.L. 119-21; the computed figures above them use the current rule set. Not changed; flagged for review.",
+        label: "Not corrected yet: the gifting copy ('$18,000 per recipient in 2024', and the $18,000 default gift) is the 2024 annual exclusion; for 2025 and 2026 it is $19,000. The computed figures use the current rule set. Not changed; flagged for review.",
       },
     ],
   },
 
   "/portal/estate-flow": {
     sources: [
-      { ...IRS_ESTATE_BY_YEAR, note: `The page's 2024 exclusion ($13,610,000 single, $27,220,000 married) matches. ${TCJA_SUNSET_SUPERSEDED}` },
+      { ...IRS_ESTATE_BY_YEAR, note: "The page's 2024 comparison exclusion ($13,610,000 single, $27,220,000 married) matches, and its 2026 column reads $15,000,000 per person from shared/taxRules.ts (P.L. 119-21; no sunset)." },
       ESTATE_RATE_SCHEDULE,
       { label: "Assumption: the state estate tax, probate and administration costs, and the per-beneficiary splits are the figures entered on the page or chosen by the firm as examples; no external source" },
     ],
@@ -333,7 +307,7 @@ export const ROUTE_SOURCES: Record<string, RouteSources> = {
 
   "/portal/beneficiary-optimization": {
     sources: [
-      { ...IRS_ESTATE_BY_YEAR, note: "The page tests estates against the 2024 exclusion of $13,610,000, which matches the IRS figure for 2024; the 2026 figure is $15,000,000. Not changed; flagged for review." },
+      { ...IRS_ESTATE_BY_YEAR, note: "The page tests estates against the 2026 exclusion of $15,000,000, read from shared/taxRules.ts." },
       ESTATE_RATE_SCHEDULE,
       INHERITED_TEN_YEAR,
     ],
@@ -342,7 +316,7 @@ export const ROUTE_SOURCES: Record<string, RouteSources> = {
   "/portal/multi-gen-wealth": {
     engines: ["shared/taxBracketEngine.ts"],
     sources: [
-      { ...IRS_ESTATE_BY_YEAR, note: `The page's current-law exclusion of $13,610,000 matches the IRS figure for 2024. ${TCJA_SUNSET_SUPERSEDED}` },
+      { ...IRS_ESTATE_BY_YEAR, note: "The page's current-law exclusion is the 2026 figure, $15,000,000 per person, read from shared/taxRules.ts. Its 'What if Congress halves the exemption' option is labelled a hypothetical, not scheduled law." },
       { ...IRS_GIFT_FAQ, note: "The page's '$18,000/person/year in 2024' matches; the figure for 2025 and 2026 is $19,000." },
       ESTATE_RATE_SCHEDULE,
       INHERITED_TEN_YEAR,
@@ -356,7 +330,7 @@ export const ROUTE_SOURCES: Record<string, RouteSources> = {
 
   "/portal/business-owner": {
     sources: [
-      { ...IRS_ESTATE_BY_YEAR, note: "The page's default exclusion of $13,610,000 is the IRS figure for 2024; the 2026 figure is $15,000,000. The slider lets the user set any amount. Not changed; flagged for review." },
+      { ...IRS_ESTATE_BY_YEAR, note: "The page's default exclusion is the 2026 figure, $15,000,000, read from shared/taxRules.ts. The slider lets the user set any amount." },
       ESTATE_RATE_SCHEDULE,
       { label: "Assumption: the succession-phase costs, executive-benefit costs and the term, whole life, universal life and indexed UL premiums and cash values in the funding table are illustrations chosen by the firm, not carrier quotes; no external source" },
     ],
@@ -373,7 +347,7 @@ export const ROUTE_SOURCES: Record<string, RouteSources> = {
         label: "Internal Revenue Service, Publication 590-B (2024): the maximum annual exclusion for qualified charitable distributions is $105,000; owner must be at least age 70½",
         url: "https://www.irs.gov/pub/irs-prior/p590b--2024.pdf",
         asOf: `tax year 2024; ${READ}`,
-        note: "The page's $105,000 is the 2024 figure. IRS Notice 2025-67 raises the limit to $111,000 for 2026. The page tests age 70, not 70½. Not changed; flagged for review.",
+        note: "The page uses $111,000, the 2026 limit (IRS Notice 2025-67); $105,000 was the 2024 figure. The page tests age 70, not 70½. Not changed; flagged for review.",
       },
       { label: "26 U.S.C. §1411: net investment income tax of 3.8% (Cornell Legal Information Institute)", url: LII("1411"), asOf: READ },
       { label: "26 U.S.C. §664(d)(1)(D) and (d)(2)(D): a charitable remainder trust's remainder must be worth at least 10% of the property placed in trust; the term may not exceed 20 years (Cornell Legal Information Institute)", url: LII("664"), asOf: READ },
@@ -398,13 +372,7 @@ export const ROUTE_SOURCES: Record<string, RouteSources> = {
   "/portal/iul-vs-roth": {
     engines: ["shared/ibbotsonModel.ts", "shared/taxBracketEngine.ts"],
     sources: [
-      {
-        label: "Internal Revenue Service, 'Amount of Roth IRA contributions that you can make for 2024': phase-out $146,000-$161,000 (single) and $230,000-$240,000 (married filing jointly); IR-2023-203: IRA limit $7,000 for 2024, plus $1,000 catch-up at 50",
-        url: "https://www.irs.gov/retirement-plans/plan-participant-employee/amount-of-roth-ira-contributions-that-you-can-make-for-2024",
-        asOf: `tax year 2024; ${READ}`,
-        note: "The page's Roth limits are the 2024 figures. For 2026 the IRA limit is $7,500 with a $1,100 catch-up (IRS Notice 2025-67). Not changed; flagged for review.",
-      },
-      IRS_2026_RETIREMENT_LIMITS,
+      { ...IRS_2026_RETIREMENT_LIMITS, note: "The page's IRA limit ($7,500; $8,600 at 50 and over) and Roth IRA phase-outs ($153,000 to $168,000 single, $242,000 to $252,000 married filing jointly, Notice 2025-67) are read from shared/taxRules.ts." },
       INHERITED_TEN_YEAR,
       { label: "Not sourced here: the chronic-illness 4% and 'often 10-20x first premium' figures are carrier-dependent illustrations. The historical S&P 500 series behind the IUL column is sourced by shared/ibbotsonModel.ts, listed above" },
       { label: "Assumption: 7.5% IUL crediting rate default, an assumed rate chosen by the firm, not a carrier illustration" },
@@ -500,7 +468,7 @@ export const ROUTE_SOURCES: Record<string, RouteSources> = {
   "/portal/scenario-play": {
     engines: ["shared/taxBracketEngine.ts"],
     sources: [
-      { ...UNIFORM_LIFETIME_TABLE, note: "The page divides by 27.4 for a first RMD at 73; 27.4 is the age-72 period, the age-73 period is 26.5. Not changed; flagged for review." },
+      { ...UNIFORM_LIFETIME_TABLE, note: "The page's first RMD at 73 divides by 26.5, the age-73 period (shared/uniformLifetimeTable.ts)." },
       RMD_AGE_STATUTE,
       { label: "Assumption: IUL income = 6.5% of cash value, Roth income = 4% of balance, and 6.7% more Social Security per year of delay past 62, all chosen by the firm; no external source. SSA's actual reductions and delayed credits depend on birth year (see the full-retirement-age table)" },
       SSA_FULL_RETIREMENT_AGE,
@@ -530,8 +498,7 @@ export const ROUTE_SOURCES: Record<string, RouteSources> = {
   "/portal/predictive-analytics": {
     engines: ["shared/taxBracketEngine.ts"],
     sources: [
-      { ...IRS_TY2024_ITEMS, note: "The estate insight uses the 2024 exclusion of $13,610,000; for 2026 it is $15,000,000 (IR-2025-103). Not changed; flagged for review." },
-      IRS_TY2026_ITEMS,
+      { ...IRS_TY2026_ITEMS, note: "The estate insight uses the 2026 exclusion of $15,000,000, read from shared/taxRules.ts. P.L. 119-21 made the 2018 rate structure permanent, so the 'TCJA sunset' no longer happens under current law." },
       ESTATE_RATE_SCHEDULE,
       { label: "Assumption: IUL income = 6.5% of cash value and the success probabilities shown are the firm's model outputs on assumed rates; no external source" },
       illustrativeBlock(200000),
@@ -563,7 +530,7 @@ export const ROUTE_SOURCES: Record<string, RouteSources> = {
     engines: ["shared/taxBracketEngine.ts"],
     sources: [
       CAPITAL_LOSS_LIMIT,
-      { ...RMD_AGE_STATUTE, note: "The page says RMDs begin at 72; since 2023 they begin at 73. Not changed; flagged for review." },
+      { ...RMD_AGE_STATUTE, note: "The page says RMDs begin at 73, or 75 for those born in 1960 or later (SECURE 2.0 Act section 107)." },
       { label: "Sample data: the action plan dates (2023-2024) and the risk metrics table are demonstration rows typed into the page, not a client's record" },
       illustrativeBlock(600000),
     ],
@@ -572,7 +539,7 @@ export const ROUTE_SOURCES: Record<string, RouteSources> = {
   "/portal/retirement-guardrails": {
     engines: ["shared/taxBracketEngine.ts"],
     sources: [
-      { ...UNIFORM_LIFETIME_TABLE, note: "The page approximates the table as 27.4 minus one per year from age 73; the published periods are 26.5 at 73, 25.5 at 74 and so on, and they shrink by less than one a year at older ages. Not changed; flagged for review." },
+      { ...UNIFORM_LIFETIME_TABLE, note: "The page divides by the table's period for each age (26.5 at 73, 20.2 at 80, 12.2 at 90), read from shared/uniformLifetimeTable.ts." },
       RMD_AGE_STATUTE,
       { label: "Assumption: a 4% initial withdrawal default and the guardrail percentages are inputs; the defaults are the firm's examples" },
       illustrativeBlock(420000),
@@ -667,13 +634,12 @@ export const ROUTE_SOURCES: Record<string, RouteSources> = {
   "/portal/tax-opportunities": {
     engines: ["shared/taxBracketEngine.ts"],
     sources: [
-      { ...IRS_TY2025_RATES, note: "The page's bracket table is the 2025 single table. The tax panel uses 2026." },
-      IRS_TY2026_ITEMS,
-      { ...SALT_STATUTE, note: "The page applies a $10,000 state and local tax cap; that was the 2018-2024 cap. Not changed; flagged for review." },
+      { ...IRS_TY2026_ITEMS, note: "The page's bracket table and standard deductions are the 2026 figures, read from shared/taxRules.ts; the bracket and the room left in it are found from taxable income (income less the larger of the standard and itemized deductions)." },
+      { ...SALT_STATUTE, note: "The page applies the 2026 cap of $40,400 with the phase-down above $505,000 of MAGI (floor $10,000), read from shared/taxRules.ts (P.L. 119-21 section 70120, indexed)." },
       MEDICAL_FLOOR,
-      { ...QCD_STATUTE, note: "The page's $105,000 is the 2024 indexed amount; the limit is indexed each year. Not changed; flagged for review." },
+      { ...QCD_STATUTE, note: "The page uses $111,000, the 2026 indexed limit (IRS Notice 2025-67)." },
       CAPITAL_LOSS_LIMIT,
-      { ...IRS_HSA_2026, note: "The page says '$4,300 individual / $8,550 family in 2026'; those are the 2025 limits. Not changed; flagged for review." },
+      { ...IRS_HSA_2026, note: "The page's $4,400 self-only / $8,750 family limits match; it adds the $1,000 catch-up at 55, which is statutory and not indexed (IRC section 223(b)(3))." },
       RMD_AGE_STATUTE,
       { label: "Assumption: RMDs estimated at 4% of the IRA balance, a round figure chosen by the firm; the actual first RMD is the balance divided by the Uniform Lifetime Table period (26.5 at 73, about 3.8%)" },
       illustrativeBlock(185000),
@@ -684,8 +650,8 @@ export const ROUTE_SOURCES: Record<string, RouteSources> = {
   "/portal/tax-return-upload": {
     engines: ["shared/taxBracketEngine.ts"],
     sources: [
-      { ...IRS_TY2023_RATES, note: "The page's bracket chart uses this 2023 single table (the $1,000,000 top is a chart limit, not a threshold). Figures extracted from the uploaded return are the client's own." },
-      IRS_TY2026_ITEMS,
+      { ...IRS_TY2025_RATES, note: "The page's bracket chart reads the return's own year and filing status from shared/taxRules.ts: the 2025 table (also used for returns before 2025) or the 2026 table below. The $1,000,000 top is a chart limit, not a threshold. Figures extracted from the uploaded return are the client's own." },
+      { ...IRS_TY2026_ITEMS, note: "The scenario simulator's 'What if Congress raises rates' option is labelled a hypothetical; under P.L. 119-21 there is no scheduled sunset." },
       illustrativeBlock(185000),
     ],
   },
@@ -712,7 +678,7 @@ export const ROUTE_SOURCES: Record<string, RouteSources> = {
   "/portal/time-machine-method": {
     engines: ["shared/timeMachineEngine.ts", "shared/taxBracketEngine.ts"],
     sources: [
-      { ...NAIC_AG49A, note: "The page says 'AG 49-B limits illustrated rates to the lesser of 6.5% or the Benchmark Index Account rate'. The guideline sets no fixed 6.5% ceiling; its limit is the formula above, product by product. Not changed; flagged for review." },
+      { ...NAIC_AG49A, note: "The page states the guideline's formula (no fixed percentage cap; each product's Benchmark Index Account limit is computed by formula). The crediting rate on the page is an assumption the user sets." },
       illustrativeBlock(200000),
       USER_INPUTS,
     ],
@@ -721,8 +687,9 @@ export const ROUTE_SOURCES: Record<string, RouteSources> = {
   "/portal/withdrawal-sequencing": {
     engines: ["shared/taxBracketEngine.ts"],
     sources: [
-      IRS_TY2026_ITEMS,
-      { label: "The page's 'current' bracket thresholds ($22,000 / $89,075 / $170,050 / $215,950) do not match any one IRS year: $22,000 is the 2023 joint 10% ceiling (Rev. Proc. 2022-38) and $89,075 / $170,050 / $215,950 are the 2022 single 22% / 24% / 32% ceilings. Its 'sunset' schedule (15% / 25% / 28%) models a reversion that P.L. 119-21 cancelled. Not changed; flagged for review", url: "https://www.irs.gov/pub/irs-drop/rp-22-38.pdf", asOf: READ },
+      { ...IRS_TY2026_ITEMS, note: "The page's current-law tax uses the 2026 joint table and standard deduction, read from shared/taxRules.ts." },
+      { label: "Assumption: the 'Pre-2018 Rates (hypothetical)' option applies 10% / 15% / 25% / 28% / 33% / 39.6% on the page's own thresholds ($22,000 / $89,075 / $170,050 / $215,950 / $539,900), which match no one IRS year; it is labelled a hypothetical, since P.L. 119-21 made the current rates permanent" },
+      { ...UNIFORM_LIFETIME_TABLE, note: "The page's RMDs divide by the table's period for each age, read from shared/uniformLifetimeTable.ts." },
       { ...RMD_AGE_STATUTE, note: "The page's RMD age default of 73 matches the statute." },
       illustrativeBlock(420000),
       USER_INPUTS,

@@ -53,7 +53,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { ExecutiveSummary, GoalsAccelerator, RecommendationSummary, DoNothingBaseline, TaxBracketPanel } from "@/components/ConsumerOutcomeBlocks";
 import { useClientData } from "@/contexts/ClientDataContext";
 import { formatTaxCurrency, federalBrackets } from "@shared/taxBracketEngine";
-import { TAX_RULES_2026 } from "@shared/taxRules";
+import { TAX_RULES_2026, ROTH_IRA_PHASE_OUT_2026 } from "@shared/taxRules";
 import { RelatedCalculators } from "@/components/RelatedCalculators";
 import { ComplianceFooter } from "@/components/ComplianceFooter";
 
@@ -68,10 +68,12 @@ const ROTH_LIMITS = {
   contributionUnder50: TAX_RULES_2026.retirement.ira,
   contributionOver50: TAX_RULES_2026.retirement.ira + TAX_RULES_2026.retirement.iraCatchUp,
   catchUpAge: 50,
-  incomePhaseOutSingleStart: 146000,
-  incomePhaseOutSingleEnd: 161000,
-  incomePhaseOutMarriedStart: 230000,
-  incomePhaseOutMarriedEnd: 240000,
+  // 2026 Roth IRA MAGI phase-outs (IRS Notice 2025-67), read from shared/taxRules.ts:
+  // $153,000–$168,000 single, $242,000–$252,000 joint. Replaces the 2024 ranges ($146K–$161K / $230K–$240K).
+  incomePhaseOutSingleStart: ROTH_IRA_PHASE_OUT_2026.single.start,
+  incomePhaseOutSingleEnd: ROTH_IRA_PHASE_OUT_2026.single.end,
+  incomePhaseOutMarriedStart: ROTH_IRA_PHASE_OUT_2026.joint.start,
+  incomePhaseOutMarriedEnd: ROTH_IRA_PHASE_OUT_2026.joint.end,
   earlyWithdrawalPenalty: 0.10,
   earlyWithdrawalAge: 59.5,
   fiveYearRule: 5,
