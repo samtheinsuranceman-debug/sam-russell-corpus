@@ -195,18 +195,19 @@ function VaultSetupRequired({ reason }: { reason: string | null }) {
         </p>
 
         <div className="space-y-2">
-          <p className="text-[13px] font-medium text-slate-300">1. Generate one</p>
-          <pre className="rounded-lg bg-[#060a12] border border-[#1e3a5f]/60 p-3 text-[12px] text-emerald-300 overflow-x-auto">
-node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
-          </pre>
+          <p className="text-[13px] font-medium text-slate-300">1. Choose a passcode</p>
+          <p className="text-[13px] text-slate-500 leading-relaxed">
+            Anything you like: a phrase, a sentence, a string of words. No format, no minimum. The server
+            stretches it into the encryption key. Longer is stronger, but nothing is required.
+          </p>
         </div>
 
         <div className="space-y-2">
           <p className="text-[13px] font-medium text-slate-300">2. Set it where the app runs</p>
           <p className="text-[13px] text-slate-500 leading-relaxed">
             On Railway: your service → <strong>Variables</strong> → New Variable →{" "}
-            <code className="text-amber-400">RCS_VAULT_KEY</code> = the value from step 1. The service
-            redeploys automatically.
+            <code className="text-amber-400">RCS_VAULT_KEY</code> = your passcode. The service redeploys
+            automatically.
           </p>
         </div>
 
