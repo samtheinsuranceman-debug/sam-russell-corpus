@@ -51,6 +51,8 @@ import { ExecutiveSummary, GoalsAccelerator, RecommendationSummary, DoNothingBas
 import { formatTaxCurrency } from "@shared/taxBracketEngine";
 import { RelatedCalculators } from "@/components/RelatedCalculators";
 import { ComplianceFooter } from "@/components/ComplianceFooter";
+import { useMacroScenario } from "@/components/MacroScenarioToggle";
+import { applyMacro } from "@shared/macro";
 import { HelocBeforeAfter } from "@/components/rooms/RoomVideoTile";
 
 const fmt = (n: number) => `$${Math.round(n).toLocaleString()}`;
@@ -129,6 +131,10 @@ export default function MortgageKiller() {
     interestReinvestYears: 20,
     clientAge: 45,
   });
+
+  // Global macro scenarios: the toggle panel on the Projection tab shifts the
+  // Monte Carlo return and volatility assumptions and shows its sources.
+  const macro = useMacroScenario();
 
   const [ibbotsonStartYear, setIbbotsonStartYear] = useState(IBBOTSON_DEFAULT_START_YEAR);
   const [useIbbotsonModel, setUseIbbotsonModel] = useState(true);
@@ -337,13 +343,13 @@ export default function MortgageKiller() {
       simulations: 1000,
       years: 30,
       initialValue: result.summary.totalInterestSaved,
-      ...MONTE_CARLO_PRESETS.iulModerate,
+      ...applyMacro({ ...MONTE_CARLO_PRESETS.iulModerate }, macro.adjustments),
       floorReturn: 0,
       capReturn: strategyParams.iulCreditRate,
       annualContribution: result.summary.annualIulPremium || 0,
       contributionGrowthRate: 0,
     });
-  }, [result, showMonteCarlo, strategyParams.iulCreditRate]);
+  }, [result, showMonteCarlo, strategyParams.iulCreditRate, macro.adjustments]);
 
   const [guidedMode, setGuidedMode] = useState(false);
 
@@ -1723,6 +1729,7 @@ export default function MortgageKiller() {
 
           {/* ─── TAB: 30-YEAR CASCADING PROJECTION ──────────────────────── */}
           <TabsContent value="projection" className="space-y-6 mt-6">
+            {macro.panel}
             {result && result.cascadingProjection && (
               <>
                 {/* Before-and-after videos, once the host has them */}
