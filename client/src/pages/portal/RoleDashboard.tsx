@@ -35,7 +35,7 @@ const SHORTCUTS: Record<IntakeRole, Array<{ label: string; path: string; blurb: 
     { label: "Financial Assessment", path: "/portal/financial-assessment", blurb: "Your written fact finder, filled by the conversation." },
     { label: "Calculator Chain", path: "/portal/chain", blurb: "See the whole plan run end to end." },
     { label: "My Journey", path: "/portal/my-journey", blurb: "Where you are, where the plan takes you." },
-    { label: "Income for Life", path: "/portal/income-for-life", blurb: "Contractual lifetime income as the base under everything else." },
+    { label: "Income for Life", path: "/portal/income-for-life", blurb: "The guaranteed floor under everything else." },
     { label: "Zip Engine", path: "/portal/zip-engine", blurb: "Your ZIP's price and rent history, any window." },
     { label: "AI Financial Advisor", path: "/portal/ai-advisor", blurb: "Ask in plain words; get plain answers." },
   ],
