@@ -118,7 +118,7 @@ const PROVIDERS: Provider[] = [
     id: "gemini", label: "Gemini", envKey: "GEMINI_API_KEY",
     call: async (apiKey, system, user) => {
       const res = await timedFetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${encodeURIComponent(apiKey)}`,
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(apiKey)}`,
         {
           method: "POST",
           headers: { "content-type": "application/json" },
