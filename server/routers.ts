@@ -130,6 +130,7 @@ import { ENV } from "./_core/env";
 import { sendInvitationEmail, sendStaleClientDigest, sendStrategyNotification, sendProjectionFollowUp, sendQuoteRequestNotification, sendDriftAlertEmail } from "./email";
 import { recommendCarriers, type CarrierRates, type RiskTolerance } from "@shared/carrierRecommendation";
 import { IUL_CARRIERS } from "@shared/iulCarriers";
+import { requiredMinimumDistribution, rmdStartAgeForAge } from "@shared/uniformLifetimeTable";
 import { dispatchWebhook, WEBHOOK_EVENTS } from "./webhookDispatch";
 import { generateBulkComparisonPdf, type BulkResult, type BulkSummary } from "./bulkComparisonPdf";
 import { getDb } from "./db";
@@ -2608,12 +2609,17 @@ Keep it personal, specific with dollar amounts, and actionable. Use their actual
       // Build income timeline
       const age = client.age ?? 45;
       const retirementAge = 65;
+      // IRA RMDs start at 73 (born 1951–1959) or 75 (born 1960+), SECURE 2.0 § 107, and are the
+      // balance ÷ the Uniform Lifetime Table divisor, Treas. Reg. § 1.401(a)(9)-9(c) — sources and read
+      // dates in shared/uniformLifetimeTable.ts. The balance is held at today's figure (no growth
+      // assumed). Was: from 72, balance ÷ (91 − age), which is not the IRS table.
+      const iraRmdStart = rmdStartAgeForAge(age);
       const incomeTimeline = Array.from({ length: 35 }, (_, i) => {
         const yr = age + i;
         const ssIncome = yr >= 67 ? 36000 : 0;
         const rothIncome = yr >= retirementAge ? Math.round(Number(client.rothBalance ?? 0) * 0.04) : 0;
         const iulIncome = yr >= retirementAge ? Math.round(Number(client.lifeInsuranceCv ?? 0) * 0.06) : 0;
-        const iraIncome = yr >= 72 ? Math.round(Number(client.iraBalance ?? 0) / (90 - yr + 1)) : 0;
+        const iraIncome = Math.round(requiredMinimumDistribution(yr, Number(client.iraBalance ?? 0), iraRmdStart));
         return { age: yr, socialSecurity: ssIncome, rothDistributions: rothIncome, iulLoans: iulIncome, iraRmd: iraIncome, total: ssIncome + rothIncome + iulIncome + iraIncome };
       });
 

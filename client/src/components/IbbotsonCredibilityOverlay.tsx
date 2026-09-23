@@ -52,7 +52,7 @@ export function IbbotsonCredibilityOverlay({
   const yearCount = endYear - startYear + 1;
 
   const handleCopyMethodology = () => {
-    const text = `Russell Capital Systems™ — Projection Methodology\n\nProjection: ${projectionLabel}\nData Source: Ibbotson SBBI (Stocks, Bonds, Bills, and Inflation)\nPeriod: ${startYear}–${endYear} (${yearCount} years)\nIndex: S&P 500 Total Return (incl. dividends)\nCap Rate: ${capRate}%  |  Floor: ${floorRate}%\nAvg Credited Rate: ${summary.averageCreditedRate.toFixed(2)}%\nCAGR: ${summary.cagr.toFixed(2)}%\nPositive Years: ${summary.positiveYears}/${yearCount} (${((summary.positiveYears / yearCount) * 100).toFixed(0)}%)\nWorst S&P Year: ${summary.worstSP500Year.year} (${summary.worstSP500Year.rate.toFixed(1)}%)\nBest Credited Year: ${summary.bestCreditedYear.year} (+${summary.bestCreditedYear.rate.toFixed(1)}%)\n\nSource: NYU Stern / Damodaran, Morningstar/CRSP Ibbotson dataset.\nRegulatory: Subject to NAIC AG 49-A / AG 49-B.`;
+    const text = `Russell Capital Systems™ — Projection Methodology\n\nProjection: ${projectionLabel}\nData Source: S&P 500 total returns — S&P Dow Jones Indices; Ibbotson SBBI large-company stocks before the S&P 500 (1957)\nPeriod: ${startYear}–${endYear} (${yearCount} years)\nIndex: S&P 500 Total Return (incl. dividends)\nCap Rate: ${capRate}%  |  Floor: ${floorRate}%\nAvg Credited Rate: ${summary.averageCreditedRate.toFixed(2)}%\nCAGR: ${summary.cagr.toFixed(2)}%\nPositive Years: ${summary.positiveYears}/${yearCount} (${((summary.positiveYears / yearCount) * 100).toFixed(0)}%)\nWorst S&P Year: ${summary.worstSP500Year.year} (${summary.worstSP500Year.rate.toFixed(1)}%)\nBest Credited Year: ${summary.bestCreditedYear.year} (+${summary.bestCreditedYear.rate.toFixed(1)}%)\n\nSource: S&P Dow Jones Indices published S&P 500 total returns; Ibbotson SBBI (Morningstar) for pre-1957 years.\nRegulatory: Subject to NAIC AG 49-A / AG 49-B.`;
     navigator.clipboard.writeText(text);
     toast.success("Methodology copied to clipboard");
   };
@@ -163,9 +163,9 @@ export function IbbotsonCredibilityOverlay({
               <div className="text-xs text-muted-foreground leading-relaxed space-y-2">
                 <p>
                   This projection uses <strong className="text-foreground">S&P 500 Total Return data</strong> (including
-                  reinvested dividends) from the Ibbotson SBBI dataset, originally compiled by
-                  <strong className="text-foreground"> Roger G. Ibbotson</strong> and Rex A. Sinquefield at the University
-                  of Chicago, now maintained by Morningstar/CRSP.
+                  reinvested dividends) as published by S&P Dow Jones Indices, with years before the S&P 500's 1957
+                  launch taken from the Ibbotson SBBI large-company stock series compiled by
+                  <strong className="text-foreground"> Roger G. Ibbotson</strong> and Rex A. Sinquefield.
                 </p>
                 <p>
                   Each year's market return is passed through the IUL crediting mechanism: returns above
@@ -188,8 +188,10 @@ export function IbbotsonCredibilityOverlay({
               <h4 className="font-semibold text-sm">Data Provenance</h4>
               <div className="space-y-1.5 text-xs text-muted-foreground">
                 {[
-                  { label: "Primary Source", value: "Ibbotson SBBI (Morningstar/CRSP)" },
-                  { label: "Secondary Source", value: "NYU Stern / Aswath Damodaran" },
+                  // Attribution checked 23 Sep 2026: shared/ibbotsonModel.ts matches S&P DJI's published total
+                  // returns (2008 −37.00%, 2024 +25.02%), not Damodaran's histretSP (−36.55%, +24.88%).
+                  { label: "Primary Source", value: "S&P Dow Jones Indices — S&P 500 total return" },
+                  { label: "Pre-1957 Years", value: "Ibbotson SBBI large-company stocks" },
                   { label: "Index", value: "S&P 500 Total Return (dividends reinvested)" },
                   { label: "Period", value: `${startYear}–${endYear} (${yearCount} years)` },
                   { label: "Cap Rate Applied", value: `${capRate}%` },

@@ -232,7 +232,8 @@ export default function CharitableGivingDashboard() {
               <h3 className="text-xl font-medium flex items-center text-emerald-400">
                 <Calendar className="mr-2" /> Section 408(d)(8) (QCD)
               </h3>
-              <p>Qualified distributions from IRAs for those 70.5+, up to $100,000/year.</p>
+              {/* 2026 QCD limit $111,000 per IRA owner, indexed (IRC § 408(d)(8)); IRS Notice 2025-67, https://www.irs.gov/pub/irs-drop/n-25-67.pdf (read 23 Sep 2026). Was $100,000, the pre-2024 unindexed figure. */}
+              <p>Qualified distributions from IRAs for those 70½+, up to $111,000/year per IRA owner (2026, indexed).</p>
             </div>
             <div className="md:col-span-2">
               <h3 className="text-xl font-medium flex items-center text-gold-400">

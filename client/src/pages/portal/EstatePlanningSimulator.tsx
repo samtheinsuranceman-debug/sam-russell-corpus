@@ -4,13 +4,16 @@ import React, { useState, useMemo } from 'react';
 import { Shield, Users, Home, DollarSign, TrendingUp, AlertTriangle, CheckCircle2, ArrowRight, Scale, FileText, Heart, Building2 } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend, PieChart, Pie, Cell, LineChart, Line, AreaChart, Area } from 'recharts';
 import { PageInsights } from "@/components/PageInsights";
+import { rulesForYear } from "@shared/taxRules";
 
 const EstatePlanningSimulator = () => {
   const [estateValue, setEstateValue] = useState(12500000); // Default estate value
   const [withTrust, setWithTrust] = useState(false); // Toggle for trust planning
 
   // Memoized calculations for performance
-  const currentExemption = useMemo(() => 13610000, []); // 2025 exemption
+  // 2026 basic exclusion $15,000,000 per person, indexed, no sunset — P.L. 119-21 § 70106 amending IRC § 2010(c)(3), https://www.congress.gov/119/plaws/publ21/PLAW-119publ21.pdf; Rev. Proc. 2025-32, https://www.irs.gov/pub/irs-drop/rp-25-32.pdf (read 23 Sep 2026).
+  // Was 13,610,000 (the 2024 figure) labelled "2025 exemption".
+  const currentExemption = useMemo(() => rulesForYear(2026).estateBasicExclusion, []);
   const taxableEstate = useMemo(() => Math.max(estateValue - currentExemption, 0), [estateValue, currentExemption]);
   const estateTaxRate = 0.40; // 40% tax rate
 
@@ -98,7 +101,7 @@ const EstatePlanningSimulator = () => {
             </tr>
             <tr className="border-t border-[#1e3a5f]">
               <td className="p-2">SLAT</td>
-              <td className="p-2">$6.8M per spouse</td>
+              <td className="p-2">Up to $15M per spouse (2026)</td>
               <td className="p-2">Gift tax exemption</td>
               <td className="p-2">Limited</td>
               <td className="p-2">Married couples</td>
@@ -157,17 +160,15 @@ const EstatePlanningSimulator = () => {
         </ResponsiveContainer>
       </div>
 
-      {/* Exemption Sunset Warning Section */}
-      <div className="mb-8 bg-yellow-900 p-4 rounded shadow flex items-center border-l-4 border-yellow-500">
-        <AlertTriangle className="mr-2 text-yellow-500" size={24} />
+      {/* Exemption under current law. The old "2025 Exemption Sunset Warning" ($13.61M → ~$7M in 2026) described a
+          sunset that P.L. 119-21 cancelled — P.L. 119-21 § 70106 amending IRC § 2010(c)(3), https://www.congress.gov/119/plaws/publ21/PLAW-119publ21.pdf; Rev. Proc. 2025-32, https://www.irs.gov/pub/irs-drop/rp-25-32.pdf (read 23 Sep 2026). The what-if below is a labelled scenario, not current law. */}
+      <div className="mb-8 bg-[#0d1526] p-4 rounded shadow flex items-center border-l-4 border-emerald-500">
+        <Scale className="mr-2 text-emerald-400" size={24} />
         <div>
-          <h2 className="font-bold text-yellow-300">2025 Exemption Sunset Warning</h2>
-          <p className="text-gray-200">Exemption of $13.61M sunsets to ~$7M in 2026</p>
-          <p className="text-gray-200">Impact: Additional $5.5M exposed to 40% tax = $2.2M tax hit</p>
-          <div className="bg-[#0d1526] h-4 rounded mt-2 relative">
-            <div className="bg-red-500 h-full w-3/4"></div> {/* Urgency meter */}
-            <span className="absolute top-0 left-1/2 transform -translate-x-1/2 mt-1 text-xs text-white">Urgency: High (75%)</span>
-          </div>
+          <h2 className="font-bold text-emerald-300">Estate Tax Exemption — Current Law</h2>
+          <p className="text-gray-200">$15M per person in 2026 ($30M for a married couple with portability), indexed for inflation and permanent under P.L. 119-21. There is no scheduled sunset.</p>
+          <p className="text-gray-400 text-sm mt-1">What if Congress lowers it? At a hypothetical $7.5M exemption, a {`$${(estateValue / 1e6).toFixed(1)}M`} estate would owe about {`$${(Math.max(estateValue - 7500000, 0) * 0.4 / 1e6).toFixed(2)}M`} at 40% — a scenario, not the law.</p>
+          <p className="text-gray-500 text-xs mt-1">Source: P.L. 119-21 § 70106 (IRC § 2010(c)(3)); Rev. Proc. 2025-32.</p>
         </div>
       </div>
 

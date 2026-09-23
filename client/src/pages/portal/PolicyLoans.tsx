@@ -794,7 +794,8 @@ export default function PolicyLoans() {
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs text-muted-foreground">
                             <div className="space-y-1.5">
                               <p className="flex items-center gap-1.5"><CheckCircle2 className="w-3 h-3 text-emerald-400" /> Policy loans are not taxable income events</p>
-                              <p className="flex items-center gap-1.5"><CheckCircle2 className="w-3 h-3 text-emerald-400" /> No contribution limits (unlike Roth IRA at $7,000/year)</p>
+                              {/* 2026 Roth IRA limit $7,500 (under 50): IRS Notice 2025-67, https://www.irs.gov/pub/irs-drop/n-25-67.pdf, and https://www.irs.gov/newsroom/401k-limit-increases-to-24500-for-2026-ira-limit-increases-to-7500 (read 23 Sep 2026). Was $7,000 (2024–2025). */}
+                              <p className="flex items-center gap-1.5"><CheckCircle2 className="w-3 h-3 text-emerald-400" /> No contribution limits (unlike Roth IRA at $7,500/year in 2026)</p>
                               <p className="flex items-center gap-1.5"><CheckCircle2 className="w-3 h-3 text-emerald-400" /> No early withdrawal penalties at any age</p>
                             </div>
                             <div className="space-y-1.5">

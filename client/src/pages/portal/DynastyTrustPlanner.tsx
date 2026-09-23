@@ -4,9 +4,13 @@ import React, { useState, useMemo } from 'react';
 import { Crown, Users, DollarSign, TrendingUp, Shield, CheckCircle2, Calendar, Target, ArrowRight, Building2, Heart, Scale } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend, BarChart, Bar, LineChart, Line } from 'recharts';
 import { PageInsights } from "@/components/PageInsights";
+import { rulesForYear } from "@shared/taxRules";
+// Federal estate/GST exemption: $15,000,000 per person in 2026, indexed, no sunset — P.L. 119-21 § 70106 amending IRC § 2010(c)(3), https://www.congress.gov/119/plaws/publ21/PLAW-119publ21.pdf; Rev. Proc. 2025-32, https://www.irs.gov/pub/irs-drop/rp-25-32.pdf (read 23 Sep 2026).
+// Replaces the 2024 figure, $13,610,000.
+const ESTATE_EXCLUSION_2026 = rulesForYear(2026).estateBasicExclusion;
 
 export default function DynastyTrustPlanner() {
-  const [initialFunding, setInitialFunding] = useState(13610000); // Default to $13,610,000
+  const [initialFunding, setInitialFunding] = useState(ESTATE_EXCLUSION_2026); // Default: the 2026 GST exemption, $15,000,000
 
   const growthRate = 0.08; // 8% annual growth
   const years = 150;
@@ -45,7 +49,7 @@ export default function DynastyTrustPlanner() {
             value={initialFunding}
             onChange={(e) => setInitialFunding(Number(e.target.value))}
             className="bg-[#0d1526] border-2 border-indigo-500 text-white px-4 py-2 rounded-md w-48 focus:outline-none focus:border-yellow-400"
-            placeholder="$13,610,000"
+            placeholder="$15,000,000"
           />
         </div>
       </header>
@@ -213,8 +217,9 @@ export default function DynastyTrustPlanner() {
         <h2 className="text-3xl font-bold text-yellow-400 mb-6">Funding Strategies</h2>
         <ul className="list-disc pl-8 space-y-2 text-lg">
           <li className="flex items-start">
-            <ArrowRight className="mr-2 mt-1" size={20} /> Direct gift ($13.61M GST exemption)
+            <ArrowRight className="mr-2 mt-1" size={20} /> Direct gift ($15M GST exemption, 2026)
           </li>
+          <li className="text-xs text-gray-400">Source: P.L. 119-21 § 70106 (IRC § 2010(c)(3)); Rev. Proc. 2025-32 — $15M per person for 2026, indexed, no sunset.</li>
           <li className="flex items-start">
             <Target className="mr-2 mt-1" size={20} /> IDGT sale (freeze value, remove appreciation)
           </li>

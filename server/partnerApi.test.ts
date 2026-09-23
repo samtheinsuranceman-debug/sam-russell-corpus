@@ -564,7 +564,10 @@ describe('the calculators', () => {
     // Worth pinning, because it is the opposite of what a toggle implies. A
     // 7.5% cap truncates every good year, so a window full of strong years
     // cannot run away — it just hits the cap more often. Across 97 years down
-    // to 6, the spread is a third of a point. If the number needs to be
+    // to 6, the spread is about 1.2 points, most of it the six-year Covid
+    // window (five of its six years hit the cap). It was a third of a point
+    // while 2025 was held as a 2% "YTD estimate"; the full-year 2025 total
+    // return is 17.88% (S&P Dow Jones Indices). If the number needs to be
     // higher, the cap is the lever, not the period.
     const rates = await Promise.all(
       ['full', 'thirty', 'dotcom', 'crisis', 'covid'].map((w) =>
@@ -572,7 +575,7 @@ describe('the calculators', () => {
       )
     );
     const spread = Math.max(...rates) - Math.min(...rates);
-    expect(spread).toBeLessThan(1);
+    expect(spread).toBeLessThan(1.5);
 
     // Raising the cap moves it far more than any window choice does.
     const higherCap = await fetch(`${base}/crediting?window=full&cap=12`, auth).then((x) => x.json());

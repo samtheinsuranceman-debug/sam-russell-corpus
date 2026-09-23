@@ -26,6 +26,10 @@ import { formatTaxCurrency } from "@shared/taxBracketEngine";
 import { RelatedCalculators } from "@/components/RelatedCalculators";
 import { ComplianceFooter } from "@/components/ComplianceFooter";
 
+// 2026 QCD limit under IRC § 408(d)(8), indexed: $111,000 per IRA owner (2024 was $105,000;
+// 2025 was $108,000). Per IRS Notice 2025-67, https://www.irs.gov/pub/irs-drop/n-25-67.pdf (read 23 Sep 2026).
+const QCD_LIMIT_2026 = 111000;
+
 const fmt = (n: number) => `$${Math.round(n).toLocaleString()}`;
 const fmtPct = (n: number) => `${(n * 100).toFixed(1)}%`;
 const COLORS = ["#22c55e", "#f0c040", "#3b82f6", "#10b981", "#ec4899", "#06b6d4", "#f97316", "#14b8a6"];
@@ -103,12 +107,12 @@ function computeStrategies(client: any, annualGiving: number): GivingStrategy[] 
       id: "qcd",
       name: "Qualified Charitable Distribution (QCD)",
       description: "Direct IRA distribution to charity (age 70½+). Satisfies RMD without increasing AGI.",
-      taxDeduction: age >= 70 ? Math.min(annualGiving, 105000) : 0,
-      netCost: age >= 70 ? Math.min(annualGiving, 105000) * (1 - taxRate) : annualGiving,
-      charityReceives: age >= 70 ? Math.min(annualGiving, 105000) : annualGiving,
+      taxDeduction: age >= 70 ? Math.min(annualGiving, QCD_LIMIT_2026) : 0,
+      netCost: age >= 70 ? Math.min(annualGiving, QCD_LIMIT_2026) * (1 - taxRate) : annualGiving,
+      charityReceives: age >= 70 ? Math.min(annualGiving, QCD_LIMIT_2026) : annualGiving,
       efficiency: age >= 70 ? Math.round((1 / (1 - taxRate)) * 100) : 100,
       bestFor: "Clients age 70½+ with traditional IRA balances and RMD obligations",
-      considerations: age >= 70 ? ["Up to $105,000/year (2024 limit, indexed for inflation)", "Satisfies Required Minimum Distribution", "Reduces AGI — may lower Medicare premiums and Social Security taxation", "Does NOT appear as income on tax return", "Most powerful strategy for retirees with IRA wealth"] : ["Not available until age 70½", "Plan ahead — this becomes the most powerful giving tool in retirement"],
+      considerations: age >= 70 ? [`Up to ${QCD_LIMIT_2026.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 })}/year per IRA owner (2026 limit, indexed for inflation)`, "Satisfies Required Minimum Distribution", "Reduces AGI — may lower Medicare premiums and Social Security taxation", "Does NOT appear as income on tax return", "Most powerful strategy for retirees with IRA wealth"] : ["Not available until age 70½", "Plan ahead — this becomes the most powerful giving tool in retirement"],
       complexityScore: 3,
       setupTimeDays: 10,
       minContribution: 100,

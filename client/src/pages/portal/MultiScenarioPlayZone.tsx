@@ -47,6 +47,7 @@ import {
 } from "recharts";
 import { ExecutiveSummary, GoalsAccelerator, RecommendationSummary, DoNothingBaseline, TaxBracketPanel } from "@/components/ConsumerOutcomeBlocks";
 import { formatTaxCurrency } from "@shared/taxBracketEngine";
+import { FIRST_RMD_DIVISOR_AT_73 } from "@shared/uniformLifetimeTable";
 import { RelatedCalculators } from "@/components/RelatedCalculators";
 import { ComplianceFooter } from "@/components/ComplianceFooter";
 
@@ -268,7 +269,10 @@ export default function MultiScenarioPlayZone() {
         ),
       );
 
-      const rmdAt73 = Math.round(iraReduced / 27.4);
+      // First-year RMD at 73: balance ÷ 26.5, Uniform Lifetime Table, Treas. Reg. § 1.401(a)(9)-9(c)
+      // (effective 2022; https://www.ecfr.gov/current/title-26/chapter-I/subchapter-A/part-1/subject-group-ECFR6f8c3724b50e44d/section-1.401(a)(9)-9,
+      // read 23 Sep 2026). Was ÷ 27.4, which is the current table's age-72 divisor.
+      const rmdAt73 = Math.round(iraReduced / FIRST_RMD_DIVISOR_AT_73);
       const rmdTax = Math.round((rmdAt73 * scenario.taxBracket) / 100);
 
       const mortgageSaved = scenario.useMortgageKiller

@@ -41,6 +41,7 @@ import { ExecutiveSummary, GoalsAccelerator, RecommendationSummary, DoNothingBas
 import { formatTaxCurrency } from "@shared/taxBracketEngine";
 import { RelatedCalculators } from "@/components/RelatedCalculators";
 import { ComplianceFooter } from "@/components/ComplianceFooter";
+import { rulesForYear } from "@shared/taxRules";
 
 const fmt = (n: number) => n >= 1000000 ? `$${(n / 1000000).toFixed(1)}M` : `$${Math.round(n).toLocaleString()}`;
 const fmtPct = (n: number) => `${n.toFixed(1)}%`;
@@ -85,7 +86,11 @@ function buildGenerations(client: any, growthRate: number, inflationRate: number
   const yearsToTransfer = Math.max(5, 85 - age);
   const realGrowth = growthRate - inflationRate;
   
-  const estateExemption = taxPolicy === 'sunset2025' ? 7000000 : 13610000;
+  // Current law: $15,000,000 per person in 2026, indexed, no sunset — P.L. 119-21 § 70106 amending IRC § 2010(c)(3), https://www.congress.gov/119/plaws/publ21/PLAW-119publ21.pdf; Rev. Proc. 2025-32, https://www.irs.gov/pub/irs-drop/rp-25-32.pdf (read 23 Sep 2026).
+  // 'sunset2025' is kept only as a labelled what-if (Congress halves the exemption), not a scheduled change.
+  // Was 13,610,000 (2024) vs 7,000,000 "2025 sunset".
+  const currentLawExemption = rulesForYear(2026).estateBasicExclusion;
+  const estateExemption = taxPolicy === 'sunset2025' ? currentLawExemption / 2 : currentLawExemption;
   const estateTaxRate = taxPolicy === 'aggressive' ? 0.45 : 0.40;
 
   const gen1Projected = totalAssets * Math.pow(1 + realGrowth / 100, yearsToTransfer);
@@ -499,8 +504,8 @@ export default function MultiGenWealthTransfer() {
             value={taxPolicy}
             onChange={(e) => setTaxPolicy(e.target.value as any)}
           >
-            <option value="current">Current Law (TCJA)</option>
-            <option value="sunset2025">2025 Sunset (Exemption Halved)</option>
+            <option value="current">Current Law (P.L. 119-21: $15M, no sunset)</option>
+            <option value="sunset2025">What if Congress halves the exemption ($7.5M)</option>
             <option value="aggressive">Aggressive Tax Regime</option>
           </select>
         </div>
@@ -1173,7 +1178,7 @@ export default function MultiGenWealthTransfer() {
                           </div>
                           <div className="p-4 bg-[#060d19] rounded-lg border border-[#12233e]">
                             <h4 className="font-medium text-white mb-2">Risk Alert</h4>
-                            <p className="text-sm text-[#c8d8ec]">The 2025 sunset of the TCJA estate tax exemption could expose an additional $6.8M of the estate to a 40% tax rate. Consider accelerating lifetime gifts.</p>
+                            <p className="text-sm text-[#c8d8ec]">Current law keeps the exemption at $15M per person (2026, indexed, no sunset). If a future Congress halved it, an additional $7.5M per person would be exposed to the 40% rate — a scenario to stress-test, not scheduled law.</p>
                           </div>
                         </div>
                       ) : (

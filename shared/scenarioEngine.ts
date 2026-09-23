@@ -22,8 +22,10 @@
  *     which party holds it, and both parties have raised and cut rates.
  *   - Nothing here predicts an election. `probability` is an input the advisor supplies
  *     and must defend, not a forecast this engine produces.
- *   - The scheduled TCJA individual-provision sunset is the one near-certain item and it
- *     is modeled separately, because it happens by default if Congress does nothing.
+ *   - There is no scheduled sunset any more. P.L. 119-21 (One Big Beautiful Bill Act,
+ *     4 July 2025) made the TCJA individual rates permanent (§ 70101), so "current law"
+ *     is the default and a return to pre-2018 rates is a what-if that would need a new
+ *     act of Congress. Source: P.L. 119-21, title VII, § 70101 et seq. (TCJA individual provisions made permanent), https://www.congress.gov/119/plaws/publ21/PLAW-119publ21.pdf; CRS R48611, https://www.congress.gov/crs-product/R48611 (read 23 Sep 2026).
  *
  * Presenting a tax scenario to a client as a political prediction is a bad idea twice
  * over: it is outside an advisor's competence, and it converts a planning conversation
@@ -185,15 +187,18 @@ export const LEGISLATIVE_SCENARIOS: readonly LegislativeScenario[] = [
     effectiveYear: 0,
     rationale: 'Baseline. Rates as enacted today, extended indefinitely. Useful as a comparison, not as a forecast.',
   },
+  // Was 'scheduled-sunset' (TCJA expiry in 2026, "the true default"). P.L. 119-21 § 70101 made the
+  // TCJA rates permanent — P.L. 119-21, title VII, § 70101 et seq. (TCJA individual provisions made permanent), https://www.congress.gov/119/plaws/publ21/PLAW-119publ21.pdf; CRS R48611, https://www.congress.gov/crs-product/R48611 (read 23 Sep 2026). Kept only as a labelled what-if.
+  // The +3 points is the old top-rate step (37% → 39.6%, rounded), an assumption the advisor can change.
   {
-    id: 'scheduled-sunset',
-    label: 'Scheduled sunset, no new legislation',
+    id: 'what-if-pre-tcja-rates',
+    label: 'What if Congress raises rates back to pre-2018 levels',
     ordinaryRateDelta: 0.03,
     capitalGainRateDelta: 0,
-    effectiveYear: 2026,
+    effectiveYear: 2027,
     rationale:
-      'The TCJA individual provisions carry a statutory expiration. This is what happens if ' +
-      'Congress does nothing at all, which makes it the true default rather than a prediction.',
+      'Not current law: P.L. 119-21 made the TCJA rates permanent, so nothing expires. This scenario ' +
+      'asks what happens if a future Congress restores the pre-2018 top rate. It is a stress test, not a default.',
   },
   {
     id: 'divided-government',

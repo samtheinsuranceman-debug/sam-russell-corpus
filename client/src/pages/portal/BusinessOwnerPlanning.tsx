@@ -48,6 +48,10 @@ import { ExecutiveSummary, GoalsAccelerator, RecommendationSummary, DoNothingBas
 import { formatTaxCurrency } from "@shared/taxBracketEngine";
 import { RelatedCalculators } from "@/components/RelatedCalculators";
 import { ComplianceFooter } from "@/components/ComplianceFooter";
+import { rulesForYear } from "@shared/taxRules";
+// Federal estate/GST exemption: $15,000,000 per person in 2026, indexed, no sunset — P.L. 119-21 § 70106 amending IRC § 2010(c)(3), https://www.congress.gov/119/plaws/publ21/PLAW-119publ21.pdf; Rev. Proc. 2025-32, https://www.irs.gov/pub/irs-drop/rp-25-32.pdf (read 23 Sep 2026).
+// Replaces the 2024 figure, $13,610,000.
+const ESTATE_EXCLUSION_2026 = rulesForYear(2026).estateBasicExclusion;
 
 const fmt = (n: number) => {
   if (n >= 1000000) return `$${(n / 1000000).toFixed(1)}M`;
@@ -89,7 +93,7 @@ export default function BusinessOwnerPlanning() {
   const [fundingMethod, setFundingMethod] = useState("life-insurance");
 
   const [estateTaxRate, setEstateTaxRate] = useState<number>(40);
-  const [exemptionAmount, setExemptionAmount] = useState<number>(13610000);
+  const [exemptionAmount, setExemptionAmount] = useState<number>(ESTATE_EXCLUSION_2026);
   const [spousalPortability, setSpousalPortability] = useState<boolean>(true);
 
   const [bonusPercentage, setBonusPercentage] = useState<number>(15);

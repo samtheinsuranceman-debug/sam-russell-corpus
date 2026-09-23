@@ -25,6 +25,7 @@ import {
 } from "recharts";
 import { ExecutiveSummary, GoalsAccelerator, RecommendationSummary, DoNothingBaseline, TaxBracketPanel } from "@/components/ConsumerOutcomeBlocks";
 import { formatTaxCurrency } from "@shared/taxBracketEngine";
+import { requiredMinimumDistribution, rmdStartAgeForAge } from "@shared/uniformLifetimeTable";
 import { RelatedCalculators } from "@/components/RelatedCalculators";
 import { ComplianceFooter } from "@/components/ComplianceFooter";
 
@@ -50,10 +51,15 @@ interface GuardrailResult {
   requiredMinimumDistribution: number;
 }
 
-function calculateRMD(age: number, balance: number): number {
-  if (age < 73) return 0;
-  const factor = Math.max(1.9, 27.4 - (age - 73));
-  return balance / factor;
+// RMD = balance ÷ Uniform Lifetime Table divisor (73 → 26.5, 80 → 20.2, 90 → 12.2),
+// Treas. Reg. § 1.401(a)(9)-9(c), effective 2022
+// (https://www.ecfr.gov/current/title-26/chapter-I/subchapter-A/part-1/subject-group-ECFR6f8c3724b50e44d/section-1.401(a)(9)-9, read 23 Sep 2026).
+// Start age 73 (born 1951–1959) or 75 (born 1960+), SECURE 2.0 § 107
+// (https://www.irs.gov/retirement-plans/plan-participant-employee/retirement-topics-required-minimum-distributions-rmds, read 23 Sep 2026).
+// Was 27.4 − (age − 73), floored at 1.9: 27.4 is the age-72 divisor, and a
+// one-point-a-year slope overstates the divisor at every later age.
+function calculateRMD(age: number, balance: number, startAge: number): number {
+  return requiredMinimumDistribution(age, balance, startAge);
 }
 
 function simulateGuardrails(params: {
@@ -102,6 +108,7 @@ function simulateGuardrails(params: {
     }
   };
 
+  const rmdStart = rmdStartAgeForAge(params.currentAge);
   for (let y = 0; y < years; y++) {
     const age = params.currentAge + y;
     const marketReturn = getReturn(y, params.marketScenario);
@@ -114,7 +121,7 @@ function simulateGuardrails(params: {
     
     let rmd = 0;
     if (params.includeRMDs) {
-      rmd = calculateRMD(age, portfolio);
+      rmd = calculateRMD(age, portfolio, rmdStart);
     }
     
     let portfolioWithdrawal = Math.max(0, withdrawal - ssIncome);
@@ -646,7 +653,7 @@ export default function RetirementGuardrails() {
 
                   <div className="space-y-4 pt-4 border-t border-slate-800">
                     <div className="flex items-center justify-between">
-                      <Label className="text-slate-300">Include RMDs (Age 73+)</Label>
+                      <Label className="text-slate-300">Include RMDs (from 73, or 75 if born 1960 or later)</Label>
                       <Switch checked={includeRMDs} onCheckedChange={setIncludeRMDs} />
                     </div>
                     
