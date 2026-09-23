@@ -915,3 +915,17 @@ export function precisionQuestion(statement: string): { patternId: string; quest
   if (/\b(they|them|people)\b/.test(s) && /\b(don't|do not|won't)\b/.test(s)) return { patternId: "mm-unspecified-noun", question: "Who specifically?" };
   return null;
 }
+
+/* ----------------------------------------------------------------
+   SOURCES the shell prints. The header names each block's source as a
+   comment; these are those same sources as objects. The documents are
+   reference files in this firm's own corpus, not public URLs.
+------------------------------------------------------------------- */
+export const NLP_BRAIN_SOURCES: readonly { label: string; url?: string; asOf?: string; note?: string }[] = [
+  { label: "Hall & Bodenhamer, the 51 meta-programs with the authors' own elicitation questions (pp. 216-219), as transcribed in nlp-knowledge/meta_programs/NLP_META_PROGRAMS_REFERENCE.md" },
+  { label: "Sourcebook of Magic, the 77 change patterns (Category 5, languaging; Category 6, meta-programs and cognitive distortions), as transcribed in nlp-knowledge/sourcebook_of_magic/SOURCEBOOK_OF_MAGIC_COMPLETE_REFERENCE.md" },
+  { label: "Coaching system reference: the ten application domains and the technique to domain map (coaching_system/references/nlp_domains.md)" },
+  { label: "Coaching system reference: the seven-phase emotional arc and the failure mode at each phase (coaching_system/references/emotional_arc.md)" },
+  { label: "Coaching system reference: buying-signal categories, weights, thresholds and clusters (coaching_system/references/buying_signals.md)" },
+  { label: "Assumption: a lead representational channel with a dominance below 0.34 is treated as weakly led, and the answer carries two channels; chosen by the firm, no external source" },
+];

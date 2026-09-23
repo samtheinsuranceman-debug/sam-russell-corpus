@@ -499,3 +499,27 @@ function generatePeerComparison(drivers: DriverScore[], inputs: EcologicalInputs
 // ── Export all archetypes for UI rendering ───────────────────────────────────
 export const ALL_ARCHETYPES = ARCHETYPES;
 export const ALL_DRIVER_META = DRIVER_META;
+
+// ── Sources the shell prints ────────────────────────────────────────────────
+
+/**
+ * Nothing in the DNA profile is read from an outside dataset yet. The weights
+ * and score maps are the firm's own, the percentiles are a stand-in until a
+ * real cohort dataset exists, and the cohort count is a deterministic
+ * placeholder. Each is declared here so the page never prints them as
+ * measured. The one outside reference is the hash that makes the placeholder
+ * deterministic.
+ */
+export const RETIREMENT_DNA_SOURCES: readonly { label: string; url?: string; asOf?: string; note?: string }[] = [
+  {
+    label: `Assumption: driver weights in the overall readiness score (${Object.values(DRIVER_META).map((d) => `${d.label} ${d.weight}`).join(", ")}); chosen by the firm, no external source`,
+  },
+  { label: "Assumption: the per-driver score maps (health 90/70/45/20, lifestyle replacement targets 0.7/0.85/1.0/1.2, the horizon and preparation steps, the penalties and bonuses) are the firm's own scoring rules; no external source" },
+  { label: "Assumption: percentiles are a stepped stand-in (score 90 or more reads as the 95th percentile, down to the 10th), not a query of cohort data; no external source" },
+  { label: "Placeholder, not a measured figure: cohort size is a deterministic 200 to 700 derived from the cohort label until a real peer dataset exists (provenance census D47)" },
+  {
+    label: "RFC 9923, The FNV Non-Cryptographic Hash Algorithm (Independent Submission, February 2026), section 5: the 32-bit FNV offset basis 2,166,136,261 and FNV prime 16,777,619 used by placeholderCohortSize",
+    url: "https://datatracker.ietf.org/doc/rfc9923/",
+    asOf: "read 2026-09-23",
+  },
+];

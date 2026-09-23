@@ -384,3 +384,32 @@ export const PROVIDER_COUNT = DOSSIERS.reduce((n, d) => n + d.providers.length, 
 
 export const PROVIDER_DISCLOSURE =
   'These lists name companies and link their own homepages. They carry no rates, no terms and no contact details, because those change weekly and a figure quoted from memory would be wrong by the time you read it. Where a company also appears in the verified lender directory, the link goes there and every field carries the source it was read from and the date. Inclusion is not endorsement, the lists are not exhaustive, and nothing here is a recommendation of a specific company.';
+
+// ─── Sources the shell prints ────────────────────────────────────────────────
+
+/**
+ * The providers' own homepages, as named in each dossier, and the statutes the
+ * mechanics name as governing a step. Built from DOSSIERS so the list moves
+ * with them. Rates and terms are not carried here (see the header); the
+ * dossiers' 1.34 and 1.18 uplift figures are cycleEngine's arithmetic, and its
+ * sources are printed on that engine's page.
+ */
+export const MECHANISM_DOSSIERS_SOURCES: readonly { label: string; url?: string; asOf?: string; note?: string }[] = (() => {
+  const seen = new Set<string>();
+  const out: { label: string; url?: string; asOf?: string; note?: string }[] = [];
+  for (const d of DOSSIERS) {
+    const mech = MECHANISMS.find((m) => m.id === d.id)?.name ?? d.id;
+    for (const p of d.providers) {
+      if (seen.has(p.homepage)) continue;
+      seen.add(p.homepage);
+      out.push({ label: `${p.name} (${mech}): ${p.what}`, url: p.homepage });
+    }
+    for (const s of d.mechanics) {
+      if (!s.governedBy || !/IRC|U\.S\.C|CFR|§/.test(s.governedBy) || seen.has(s.governedBy)) continue;
+      seen.add(s.governedBy);
+      out.push({ label: `${mech}, "${s.step}": ${s.governedBy}` });
+    }
+  }
+  out.push({ label: 'Assumption: every valueRating, frequencyRating and interop strength (1 to 10) is the firm\'s own editorial judgment; no external source' });
+  return out;
+})();

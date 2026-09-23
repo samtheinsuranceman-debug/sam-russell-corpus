@@ -697,3 +697,23 @@ function round3(n: number): number {
 function round4(n: number): number {
   return Math.round(n * 10000) / 10000;
 }
+
+// ─── Sources the shell prints ────────────────────────────────────────────────
+
+/**
+ * Every weight and band in this file is a design choice stated in its own
+ * comment, not an outside figure, so each is declared as an assumption. The
+ * factor weights are read from FACTORS so the list moves when they do. The
+ * one outside reference is the hash behind the shape's signature.
+ */
+export const WEALTH_GENOME_FACTORS_SOURCES: readonly { label: string; url?: string; asOf?: string; note?: string }[] = [
+  { label: `Assumption: base weights, a starting point before personalWeights() adjusts them (${FACTORS.map((f) => `${f.name} ${f.baseWeight}`).join(', ')}); chosen by the firm, no external source` },
+  { label: `Assumption: volatility bands as a fraction of radius (stable ${VOLATILITY_BAND.stable}, drifting ${VOLATILITY_BAND.drifting}, episodic ${VOLATILITY_BAND.episodic}) and re-ask intervals (stable ${REASK_AFTER_MONTHS.stable}, drifting ${REASK_AFTER_MONTHS.drifting}, episodic ${REASK_AFTER_MONTHS.episodic} months); chosen by the firm, no external source` },
+  { label: 'Assumption: personal weight adjustments (x1.15 to x1.4 up, x0.7 down) apply only to interactions with a reason stated beside them in personalWeights(), and a factor counts as known at a confidence of 0.3 or more; chosen by the firm, no external source' },
+  { label: 'Assumption: shape geometry (radius from score and weight, band widened by up to 0.25 as confidence falls, factors placed by a Fibonacci lattice) is a drawing rule, not a measurement; no external source' },
+  {
+    label: 'RFC 9923, The FNV Non-Cryptographic Hash Algorithm (Independent Submission, February 2026), section 5: the 32-bit FNV offset basis 2,166,136,261 and FNV prime 16,777,619 used by the shape signature',
+    url: 'https://datatracker.ietf.org/doc/rfc9923/',
+    asOf: 'read 2026-09-23',
+  },
+];

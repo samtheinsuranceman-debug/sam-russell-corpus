@@ -113,3 +113,19 @@ export function describeVerdict(v: FirewallVerdict): string {
   const head = v.decision === "allow" ? "Allowed" : v.decision === "hold" ? "Held for approval" : "Blocked";
   return `${head}: ${v.reasons.join("; ")}`;
 }
+
+/**
+ * Where the numbers in this file come from. The one typed-in literal is a unit
+ * conversion (hours to milliseconds for the reversal window); the two 24-hour
+ * defaults are the firm's own policy choices, and a client's policy can
+ * override either.
+ */
+export const FIREWALL_SOURCES: readonly { label: string; url?: string; asOf?: string; note?: string }[] = [
+  {
+    label: "NIST Special Publication 811, Guide to the SI, Chapter 5, Table 6: 1 h = 60 min = 3600 s, so one hour is 3,600,000 milliseconds (the 3_600_000 that converts the reversal window to a date)",
+    url: "https://www.nist.gov/pml/special-publication-811/nist-guide-si-chapter-5-units-outside-si",
+    asOf: "read 2026-09-23",
+  },
+  { label: "Assumption: first payment to a new payee is held for 24 hours by default, chosen by the firm because a day is long enough for a person to confirm a payee before money moves; no external source" },
+  { label: "Assumption: an executed movement can be reversed for 24 hours by default, chosen by the firm because it matches the new-payee hold and gives the client one full day to catch a mistake; no external source" },
+];

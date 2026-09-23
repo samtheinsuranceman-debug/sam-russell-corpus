@@ -249,3 +249,8 @@ export function compactWorkingMemoryWithKnowledge(signal: PersonSignal = {}): { 
   const base = compactWorkingMemory(signal);
   return { text: `${base.text}\n\n${memoryBankBlock(1)}`, reading: base.reading };
 }
+
+/** The composite mind is text and routing: it carries no figures to source. */
+export const COMPOSITE_MIND_SOURCES: readonly { label: string; url?: string; asOf?: string; note?: string }[] = [
+  { label: "This module carries no figures of its own; every number it shows comes from the engine named on the page." },
+];
