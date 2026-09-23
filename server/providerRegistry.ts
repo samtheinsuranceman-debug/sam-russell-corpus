@@ -23,6 +23,7 @@ import { buildCustomProvider, getProvider, isCustomProviderId, PROVIDERS, type P
 import {
   ProviderError,
   callProvider,
+  testProviderKey,
   type ChatMessage,
   type ProviderCallResult,
 } from "./aiProviderAdapters";
@@ -188,6 +189,22 @@ const CONVENTIONAL_ENV_NAMES: Record<string, string[]> = {
   ovhcloud: ["OVH_AI_ENDPOINTS_ACCESS_TOKEN"],
   ionos: ["IONOS_API_TOKEN"],
   upstage: ["UPSTAGE_API_KEY"],
+  // Tier 5, added 23 Sep 2026.
+  inception: ["INCEPTION_API_KEY"],
+  venice: ["VENICE_API_KEY"],
+  featherless: ["FEATHERLESS_API_KEY"],
+  parasail: ["PARASAIL_API_KEY"],
+  arcee: ["ARCEE_API_KEY", "ARCEE_TOKEN"],
+  wandb: ["WANDB_API_KEY"],
+  vultr: ["VULTR_INFERENCE_API_KEY"],
+  edenai: ["EDENAI_API_KEY", "EDEN_AI_API_KEY"],
+  sarvam: ["SARVAM_API_KEY"],
+  krutrim: ["KRUTRIM_API_KEY"],
+  "naver-clova": ["CLOVASTUDIO_API_KEY", "CLOVA_STUDIO_API_KEY"],
+  plamo: ["PLAMO_API_KEY"],
+  "aleph-alpha": ["ALEPH_ALPHA_API_KEY", "AA_TOKEN"],
+  publicai: ["PUBLICAI_API_KEY"],
+  databricks: ["DATABRICKS_TOKEN"],
 };
 
 function envSlug(providerId: string): string {
@@ -235,6 +252,43 @@ export function environmentCredentials(): CachedCredential[] {
 /** Which providers came from the environment — for the connector's status view. */
 export function environmentProviderIds(): string[] {
   return environmentCredentials().map(c => c.providerId);
+}
+
+export type EnvironmentKeyTest = {
+  providerId: string;
+  /** The variable that supplied the key (its name only; never its value). */
+  envName: string;
+  model: string;
+  ok: boolean;
+  message: string;
+  latencyMs?: number;
+};
+
+/**
+ * Test every key the hosting environment holds, one real call each.
+ *
+ * The vault's own "Test all" only covers keys typed into the vault; a key set
+ * on Railway was invisible to it, so the owner had no way to learn whether
+ * the seven variables on the service were alive without asking each vendor.
+ * The tester is injectable so the loop can be checked without the network.
+ */
+export async function testEnvironmentKeys(
+  tester: typeof testProviderKey = testProviderKey,
+): Promise<EnvironmentKeyTest[]> {
+  const credentials = environmentCredentials();
+  return Promise.all(
+    credentials.map(async c => {
+      const envName = environmentKeyNames(c.providerId).find(name => process.env[name]?.trim()) ?? "";
+      try {
+        const r = await tester({ providerId: c.providerId, apiKey: c.apiKey, model: c.model, baseUrlOverride: c.baseUrlOverride });
+        return r.ok
+          ? { providerId: c.providerId, envName, model: r.model, ok: true, message: `Answered in ${r.latencyMs}ms as ${r.model}`, latencyMs: r.latencyMs }
+          : { providerId: c.providerId, envName, model: c.model, ok: false, message: r.message.slice(0, 500) };
+      } catch (e) {
+        return { providerId: c.providerId, envName, model: c.model, ok: false, message: e instanceof Error ? e.message : "Test failed." };
+      }
+    }),
+  );
 }
 
 /**

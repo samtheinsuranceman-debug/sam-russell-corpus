@@ -56,7 +56,6 @@ function vaultProviderIdFor(entry: ModelEntry): string | null {
     xAI: "xai",
     Perplexity: "perplexity",
     "Mistral AI": "mistral",
-    DeepSeek: "deepseek",
     Cohere: "cohere",
   };
   return byProvider[entry.provider] ?? null;

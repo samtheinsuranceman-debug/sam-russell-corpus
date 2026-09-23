@@ -60,6 +60,7 @@ export const ROUTE_MANIFEST: readonly string[] = [
   "/portal/ai-assist",
   "/portal/ai-brain-hub",
   "/portal/thomas-goldman",
+  "/portal/macro-intelligence",
   "/portal/brain-hub",
   "/portal/ai-meeting-notes",
   "/portal/ai-policy-review",

@@ -657,6 +657,7 @@ const NAV_SECTIONS: NavSection[] = [
       { path: "/portal/ai-brain-hub", label: "AI Brain Hub", icon: ChevronRight, color: "cyan" },
       { path: "/portal/thomas-goldman", label: ADVISOR_NAME, icon: Sparkles, color: "gold" },
       { path: "/portal/brain-hub", label: "Brain Hub", icon: ChevronRight, color: "gold" },
+      { path: "/portal/macro-intelligence", label: "Global Macro Intelligence", icon: TrendingUp, color: "cyan" },
       { path: "/portal/ai-advisor", label: "AI Financial Advisor", icon: Sparkles, color: "purple" },
       { path: "/portal/whisperer", label: "AI Whisperer", icon: MessageCircle, color: "green" },
       { path: "/portal/advisor", label: "Advisor Dashboard", icon: MessageCircle, color: "green" },

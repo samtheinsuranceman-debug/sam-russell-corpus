@@ -4,6 +4,7 @@ import React, { useState, useMemo } from 'react';
 import { GraduationCap, DollarSign, TrendingUp, Shield, CheckCircle2, Calendar, Target, Users, BookOpen, Percent, ArrowRight, Award } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend, BarChart, Bar, ComposedChart, Line } from 'recharts';
 import { PageInsights } from "@/components/PageInsights";
+import { trpc } from "@/lib/trpc";
 
 export default function Education529Planner() {
   const [annualContribution, setAnnualContribution] = useState(5000);
@@ -12,6 +13,16 @@ export default function Education529Planner() {
   const [state, setState] = useState('California');
   const [superfundAmount, setSuperfundAmount] = useState(90000);
   const [inflationRate, setInflationRate] = useState(5.8);
+  // The platform's own college-cost estimate (macro household layer): today's four-year
+  // public in-state package and the forty-year tuition growth rate, both sourced and dated.
+  // Replaces the $100,000 / 5.8 % placeholders on one click; never overrides an edit silently.
+  const [platformSchool, setPlatformSchool] = useState('public-in-state');
+  const platformEstimate = trpc.macro.collegeCost.useQuery({ childAge: 18, school: platformSchool });
+  const usePlatformEstimate = () => {
+    if (!platformEstimate.data) return;
+    setCurrentCollegeCost(Math.round(platformEstimate.data.todayPackage));
+    setInflationRate(platformEstimate.data.input.tuitionGrowthPct);
+  };
 
   const states = [
     'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia',
@@ -166,7 +177,18 @@ export default function Education529Planner() {
       <section style={{ marginBottom: '40px' }}>
         <h2 style={{ color: '#00bfff' }}><Percent size={30} color="#ff8c00" /> College Cost Inflation Projector</h2>
         <p>Project future college costs based on an average inflation rate of 5.8%.</p>
-        <input type="number" placeholder="Current College Cost" onChange={(e) => setCurrentCollegeCost(Number(e.target.value))} style={{ padding: '10px', backgroundColor: '#333', color: '#fff', marginBottom: '10px' }} />
+        <input type="number" placeholder="Current College Cost" value={currentCollegeCost} onChange={(e) => setCurrentCollegeCost(Number(e.target.value))} style={{ padding: '10px', backgroundColor: '#333', color: '#fff', marginBottom: '10px' }} />
+        <div style={{ display: 'flex', gap: '8px', alignItems: 'center', marginBottom: '10px', flexWrap: 'wrap' }}>
+          <select value={platformSchool} onChange={(e) => setPlatformSchool(e.target.value)} style={{ padding: '8px', backgroundColor: '#333', color: '#fff' }}>
+            <option value="public-in-state">Public, in state</option>
+            <option value="public-out-of-state">Public, out of state</option>
+            <option value="private-nonprofit">Private nonprofit</option>
+          </select>
+          <button type="button" onClick={usePlatformEstimate} disabled={!platformEstimate.data} style={{ padding: '8px 12px', backgroundColor: '#b8860b', color: '#000', border: 'none', cursor: 'pointer' }}>
+            {platformEstimate.data ? `Use platform estimate: $${Math.round(platformEstimate.data.todayPackage).toLocaleString()} today, ${platformEstimate.data.input.tuitionGrowthPct}%/yr` : 'Loading platform estimate…'}
+          </button>
+          {platformEstimate.data && platformEstimate.data.unverified.length > 0 && <span style={{ fontSize: '11px', color: '#e0c060' }}>Baselines flagged VERIFY: re-enter from the College Board / Federal Student Aid release on review.</span>}
+        </div>
         <input type="number" placeholder="Years to College" onChange={(e) => setYearsToCollege(Number(e.target.value))} style={{ padding: '10px', backgroundColor: '#333', color: '#fff', marginBottom: '10px' }} />
         <input type="number" placeholder="Inflation Rate (%)" onChange={(e) => setInflationRate(Number(e.target.value))} style={{ padding: '10px', backgroundColor: '#333', color: '#fff', marginBottom: '10px' }} />
         <p>Projected Cost in {yearsToCollege} years: ${projectedCollegeCost}</p>

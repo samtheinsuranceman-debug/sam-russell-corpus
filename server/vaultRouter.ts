@@ -551,6 +551,24 @@ export const vaultRouter = router({
       return { success: true as const };
     }),
 
+  /**
+   * Test every key the hosting environment (Railway) holds, one real call
+   * each. Owner door only: these keys never enter the vault, so the vault
+   * does not need to be set up or unlocked to learn whether they are alive.
+   * Returns variable names and outcomes; never a key.
+   */
+  testEnvironment: ownerProcedure.mutation(async ({ ctx }) => {
+    const { testEnvironmentKeys } = await import("./providerRegistry");
+    const results = await testEnvironmentKeys();
+    await audit({
+      action: "key_tested",
+      actorEmail: ctx.user.email ?? undefined,
+      detail: `tested environment keys: ${results.filter(r => r.ok).length}/${results.length} ok`,
+      ipAddress: clientIp(ctx.req),
+    });
+    return results;
+  }),
+
   /** Test every stored key at once. */
   testAll: vaultProcedure.mutation(async ({ ctx }) => {
     const { getDb } = await import("./db");
