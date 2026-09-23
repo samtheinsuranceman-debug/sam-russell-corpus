@@ -142,7 +142,6 @@ export const PATH_AUDIENCE: Record<string, Audience> = {
   "/portal/ai-brain-hub": "owner",
   "/portal/lab": "owner",
   "/portal/nav-placeholder": "owner",
-  "/portal/interior": "owner",
 };
 
 /** The audience a menu entry is for, by the most specific rule. */
