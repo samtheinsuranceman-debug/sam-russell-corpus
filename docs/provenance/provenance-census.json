@@ -1,5 +1,5 @@
 {
-  "tree": "d360a2f",
+  "tree": "9ea1fc0",
   "summary": {
     "engines": 97,
     "enginesFromCatalogue": 37,
@@ -10,7 +10,7 @@
       "numericEnginesWithZeroSources": 0,
       "enginesWithHardCodedYearsOlderThan2025": 50,
       "enginesWithUnseededRandomness": 1,
-      "pagesImportingAnEngineWithNoProvenanceOnPage": 82,
+      "pagesImportingAnEngineWithNoProvenanceOnPage": 63,
       "pagesImportingAnEngine": 120,
       "enginesThatSimulate": 21,
       "enginesOnALiveFeed": 9,
@@ -91,9 +91,7 @@
         "client/src/components/rooms/RoomTheme.tsx",
         "client/src/pages/Login.tsx",
         "client/src/pages/MassiveCalculatorsPage.tsx",
-        "client/src/pages/SpecialtyIndexPage.tsx",
         "client/src/pages/TrialLogin.tsx",
-        "client/src/pages/portal/AIFinancialAdvisor.tsx",
         "client/src/pages/portal/AIPolicyReviewGap.tsx",
         "client/src/pages/portal/AdvisorIncomeCalculator.tsx",
         "client/src/pages/portal/AiStrategyRecommender.tsx",
@@ -101,36 +99,19 @@
         "client/src/pages/portal/AnnuityMemory.tsx",
         "client/src/pages/portal/AtheneGuaranteedIncome.tsx",
         "client/src/pages/portal/AxonicSP500.tsx",
-        "client/src/pages/portal/BeneficiaryOptimization.tsx",
         "client/src/pages/portal/BulkGeneration.tsx",
-        "client/src/pages/portal/BusinessOwnerPlanning.tsx",
         "client/src/pages/portal/CarrierComparison.tsx",
-        "client/src/pages/portal/ChainBuilder.tsx",
-        "client/src/pages/portal/CharitableGivingOptimizer.tsx",
-        "client/src/pages/portal/ClientPortfolioDashboard.tsx",
-        "client/src/pages/portal/ClientSnapshotMap.tsx",
         "client/src/pages/portal/CompetitiveAnalysis.tsx",
         "client/src/pages/portal/Controls.tsx",
-        "client/src/pages/portal/CryptoCurrencyCorner.tsx",
-        "client/src/pages/portal/EstateFlowChart.tsx",
-        "client/src/pages/portal/EstateTax.tsx",
         "client/src/pages/portal/FIACollateralStrategy.tsx",
         "client/src/pages/portal/FIATop10.tsx",
         "client/src/pages/portal/GrowthAnnuities.tsx",
-        "client/src/pages/portal/HotIncome.tsx",
         "client/src/pages/portal/HouseRecyclingStrategy.tsx",
-        "client/src/pages/portal/HouseholdWealth.tsx",
-        "client/src/pages/portal/IULvsRoth.tsx",
-        "client/src/pages/portal/IbbotsonCharts.tsx",
         "client/src/pages/portal/IllustrationCompare.tsx",
         "client/src/pages/portal/IncomeAnnuityTop10.tsx",
         "client/src/pages/portal/IncomeGapAnalyzer.tsx",
         "client/src/pages/portal/IncomeTimeline.tsx",
         "client/src/pages/portal/InflationAnalysis.tsx",
-        "client/src/pages/portal/MarketScenarioStressTest.tsx",
-        "client/src/pages/portal/MechanismDetail.tsx",
-        "client/src/pages/portal/MedicareIRMAA.tsx",
-        "client/src/pages/portal/MultiGenWealthTransfer.tsx",
         "client/src/pages/portal/MultiScenarioPlayZone.tsx",
         "client/src/pages/portal/PatentShowcase.tsx",
         "client/src/pages/portal/PolicyReview.tsx",
@@ -1214,6 +1195,7 @@
       "liveFeed": [],
       "provenanceOnPage": true,
       "provenancePages": [
+        "client/src/pages/SpecialtyIndexPage.tsx",
         "client/src/pages/SpecialtyPage.tsx"
       ],
       "hardCodedYears": [
@@ -1339,8 +1321,10 @@
         ]
       },
       "liveFeed": [],
-      "provenanceOnPage": false,
-      "provenancePages": [],
+      "provenanceOnPage": true,
+      "provenancePages": [
+        "client/src/pages/portal/ChainBuilder.tsx"
+      ],
       "hardCodedYears": [],
       "numericConstants": 26,
       "shellSourced": false
@@ -1404,6 +1388,7 @@
       "liveFeed": [],
       "provenanceOnPage": true,
       "provenancePages": [
+        "client/src/pages/portal/AIFinancialAdvisor.tsx",
         "client/src/pages/portal/FinancialAssessment.tsx",
         "client/src/pages/portal/PlanLedger.tsx"
       ],
@@ -1656,6 +1641,7 @@
       "provenanceOnPage": true,
       "provenancePages": [
         "client/src/pages/portal/InfiniteBanking.tsx",
+        "client/src/pages/portal/MechanismDetail.tsx",
         "client/src/pages/portal/Mechanisms.tsx",
         "client/src/pages/portal/Thresholds.tsx"
       ],
@@ -2436,7 +2422,6 @@
       "sources": [
         "6.25% is a real declared 5-year rate near the top of the market, about 1.1 points above the market average; compounding it for 40 to 50 years assumes it can …",
         "AG 49-A caps the illustrated rate at the lesser of the benchmark index account lookback average and 145% of the insurer's net investment earnings rate, per c…",
-        "Assumption: IUL growth = 7.5% a year (GROWTH_RATE), chosen by the firm as an illustration rate; see the NAIC AG 49-A note, the carrier's filed maximum govern…",
         "Assumption: surrender charge starts at 9% of account value in year 1 and falls by 1 point a year to zero in year 10, chosen by the firm as a generic schedule…",
         "Bankrate Monitor National Index, Home Equity Line of Credit rate (BRMHELOC01, via FRED): 7.29% for the week of 2026-09-02",
         "Board of Governors of the Federal Reserve System, H.15 Selected Interest Rates, Bank Prime Loan Rate (DPRIME, via FRED): 6.75% on 2026-09-02",
@@ -2472,8 +2457,10 @@
         "markers": []
       },
       "liveFeed": [],
-      "provenanceOnPage": false,
-      "provenancePages": [],
+      "provenanceOnPage": true,
+      "provenancePages": [
+        "client/src/pages/portal/HouseholdWealth.tsx"
+      ],
       "hardCodedYears": [
         2020
       ],
@@ -2504,8 +2491,7 @@
       ],
       "sources": [
         "Based on Ibbotson SBBI historical data. Research-based estimates only — not guaranteed.",
-        "Projections are based on Roger Ibbotson's historical S&P 500 data (SBBI) and",
-        "current cap rates, and other factors. The 7.5% cap rate reflects the NAIC"
+        "Projections are based on Roger Ibbotson's historical S&P 500 data (SBBI) and"
       ],
       "sourceFields": [],
       "sourceExports": [],
@@ -2529,6 +2515,7 @@
       "provenancePages": [
         "client/src/components/IbbotsonCredibilityOverlay.tsx",
         "client/src/pages/portal/IULHistoricalPerformance.tsx",
+        "client/src/pages/portal/IULvsRoth.tsx",
         "client/src/pages/portal/MortgageKiller.tsx",
         "client/src/pages/portal/PolicyLoans.tsx",
         "client/src/pages/portal/PremiumFinancing.tsx"
@@ -3379,8 +3366,10 @@
         ]
       },
       "liveFeed": [],
-      "provenanceOnPage": false,
-      "provenancePages": [],
+      "provenanceOnPage": true,
+      "provenancePages": [
+        "client/src/pages/portal/ChainBuilder.tsx"
+      ],
       "hardCodedYears": [
         2010,
         2019,
@@ -3544,6 +3533,7 @@
       "liveFeed": [],
       "provenanceOnPage": true,
       "provenancePages": [
+        "client/src/pages/portal/MechanismDetail.tsx",
         "client/src/pages/portal/Mechanisms.tsx"
       ],
       "hardCodedYears": [],
@@ -3680,7 +3670,6 @@
       ],
       "sources": [
         "6.25% is a real declared rate near the top of the market, about 1.1 points above the market average; it is not a typical rate.",
-        "Assumption: IUL credit rate = 7.5% a year (iulCreditRate default), chosen by the firm as an illustration rate; see the NAIC AG 49-A note, the carrier's filed…",
         "Bankrate Monitor National Index, Home Equity Line of Credit rate (BRMHELOC01, via FRED): 7.29% for the week of 2026-09-02",
         "Board of Governors of the Federal Reserve System, H.15 Selected Interest Rates, Bank Prime Loan Rate (DPRIME, via FRED): 6.75% on 2026-09-02",
         "Freddie Mac, Primary Mortgage Market Survey, 30-Year Fixed Rate Mortgage Average in the United States (MORTGAGE30US, via FRED): 6.66% for the week ending 202…",
@@ -4001,6 +3990,7 @@
       "liveFeed": [],
       "provenanceOnPage": true,
       "provenancePages": [
+        "client/src/pages/portal/ClientPortfolioDashboard.tsx",
         "client/src/pages/portal/MYGAFixedRate.tsx"
       ],
       "hardCodedYears": [
@@ -4250,8 +4240,8 @@
         "Pacific Life",
         "RATES NOT IN THE DOCUMENT. This illustration runs 'Policy Distributions 0' — no loans are illustrated — so no loan rate table is populated. The same gap appe…",
         "Securian / Minnesota Life",
-        "Securian / Minnesota Life Balanced Growth Accumulator III illustration, Case ID 29335303 — fixed loan charged 4.00% constant, credited 3.00% years 1-10 and 4…",
-        "Securian / Minnesota Life Balanced Growth Accumulator III illustration, Case ID 29335303, for M. Corrales age 65 Preferred Non-Tobacco",
+        "Securian / Minnesota Life Balanced Growth Accumulator III illustration, one client case (de-identified) — fixed loan charged 4.00% constant, credited 3.00% y…",
+        "Securian / Minnesota Life Balanced Growth Accumulator III illustration, one client case (de-identified): issue age 65, Preferred Non-Tobacco",
         "Securian: fixed 4.00% charged against 3.00% then 4.00% credited; indexed 4.75% into a separate loan account; variable capped 1.5% above the fixed account rate.",
         "Variable interest rate loan: varies with the Moody's Corporate Bond Yield Average, capped at 1.5% above the current fixed account crediting rate",
         "Variable: the loan amount REMAINS in your current fixed or indexed accounts. This is the true participating loan here. Charged rate floats with Moody's, capp…",
@@ -4286,7 +4276,7 @@
         2022,
         2025
       ],
-      "numericConstants": 76,
+      "numericConstants": 72,
       "shellSourced": true
     },
     {
@@ -4988,6 +4978,7 @@
       "liveFeed": [],
       "provenanceOnPage": true,
       "provenancePages": [
+        "client/src/pages/portal/MechanismDetail.tsx",
         "client/src/pages/portal/Mechanisms.tsx"
       ],
       "hardCodedYears": [
@@ -5379,14 +5370,28 @@
       "provenanceOnPage": true,
       "provenancePages": [
         "client/src/pages/portal/AthenePEPlus15.tsx",
+        "client/src/pages/portal/BeneficiaryOptimization.tsx",
+        "client/src/pages/portal/BusinessOwnerPlanning.tsx",
+        "client/src/pages/portal/CharitableGivingOptimizer.tsx",
+        "client/src/pages/portal/ClientSnapshotMap.tsx",
+        "client/src/pages/portal/CryptoCurrencyCorner.tsx",
+        "client/src/pages/portal/EstateFlowChart.tsx",
+        "client/src/pages/portal/EstateTax.tsx",
         "client/src/pages/portal/ExistingAnnuities.tsx",
         "client/src/pages/portal/GoalsBasedPlanning.tsx",
+        "client/src/pages/portal/HotIncome.tsx",
+        "client/src/pages/portal/HouseholdWealth.tsx",
         "client/src/pages/portal/IULHistoricalPerformance.tsx",
+        "client/src/pages/portal/IULvsRoth.tsx",
+        "client/src/pages/portal/IbbotsonCharts.tsx",
         "client/src/pages/portal/IndexBacktester.tsx",
         "client/src/pages/portal/IndexStrategyComparison.tsx",
         "client/src/pages/portal/LifetimeGuaranteedIncome.tsx",
         "client/src/pages/portal/MYGAFixedRate.tsx",
+        "client/src/pages/portal/MarketScenarioStressTest.tsx",
+        "client/src/pages/portal/MedicareIRMAA.tsx",
         "client/src/pages/portal/MortgageKiller.tsx",
+        "client/src/pages/portal/MultiGenWealthTransfer.tsx",
         "client/src/pages/portal/PolicyLoans.tsx",
         "client/src/pages/portal/PremiumFinancing.tsx",
         "client/src/pages/portal/RetirementIncomeProjection.tsx",
@@ -5850,7 +5855,8 @@
       "liveFeed": [],
       "provenanceOnPage": true,
       "provenancePages": [
-        "client/src/pages/UltraCalculatorPage.tsx"
+        "client/src/pages/UltraCalculatorPage.tsx",
+        "client/src/pages/portal/ChainBuilder.tsx"
       ],
       "hardCodedYears": [],
       "numericConstants": 5,

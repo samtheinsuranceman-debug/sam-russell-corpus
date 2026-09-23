@@ -15,10 +15,15 @@
  * in plain words rather than hiding it — the provenance census counts those,
  * and the list is meant to shrink to nothing.
  *
+ * Routes outside the catalogue, or pages that carry their own statutory
+ * figures, get their entry in shared/pageSources.ts; `sourcePlanForPath`
+ * merges the catalogue engine with that entry for the footer.
+ *
  * Adding an engine: export a `*_SOURCE` or `*_SOURCES` constant from it and
  * add one loader line below. The census test checks the loader resolves.
  */
 import { CALCULATORS } from "./calculatorCatalog";
+import { ROUTE_SOURCES } from "./pageSources";
 
 export type SourceRef = {
   label: string;
@@ -98,16 +103,74 @@ export const ENGINE_SOURCE_LOADERS: Record<string, Loader> = {
 /** The engines whose sources the shell can show. Exported for the census. */
 export const ENGINES_WITH_SOURCE_LOADERS: readonly string[] = Object.keys(ENGINE_SOURCE_LOADERS).sort();
 
-/** The engine behind a route, from the catalogue. Query strings and trailing slashes are ignored. */
-export function engineForPath(path: string): string | null {
-  const clean = path.split("?")[0]!.replace(/\/+$/, "") || "/";
-  const entry = CALCULATORS.find(c => c.path === clean);
-  return entry?.engine ?? null;
+function cleanPath(path: string): string {
+  return path.split("?")[0]!.split("#")[0]!.replace(/\/+$/, "") || "/";
 }
+
+/**
+ * The route pattern in shared/pageSources.ts that a concrete path matches,
+ * e.g. "/portal/mechanism/iul" → "/portal/mechanism/:slug". Exact keys win
+ * over patterns; `null` when no entry matches.
+ */
+export function routeSourcesKeyForPath(path: string): string | null {
+  const clean = cleanPath(path);
+  if (ROUTE_SOURCES[clean]) return clean;
+  const segs = clean.split("/");
+  for (const key of Object.keys(ROUTE_SOURCES)) {
+    if (!key.includes(":")) continue;
+    const ks = key.split("/");
+    if (ks.length === segs.length && ks.every((k, i) => k.startsWith(":") ? segs[i]!.length > 0 : k === segs[i])) return key;
+  }
+  return null;
+}
+
+/** The engine behind a route: the catalogue's, else the first engine shared/pageSources.ts names. Query strings and trailing slashes are ignored. */
+export function engineForPath(path: string): string | null {
+  const clean = cleanPath(path);
+  const entry = CALCULATORS.find(c => c.path === clean);
+  if (entry?.engine) return entry.engine;
+  const key = routeSourcesKeyForPath(clean);
+  return key ? ROUTE_SOURCES[key]!.engines?.[0] ?? null : null;
+}
+
+export type SourcePlan = {
+  /** Engines whose source lists the footer loads (catalogue engine first). */
+  engines: string[];
+  /** Figures the page carries itself, from shared/pageSources.ts. */
+  pageSources: SourceRef[];
+};
+
+/**
+ * Everything the footer prints for a route: the catalogue engine, the
+ * engines and page-level sources shared/pageSources.ts adds. `null` when the
+ * route has none of them.
+ */
+export function sourcePlanForPath(path: string): SourcePlan | null {
+  const clean = cleanPath(path);
+  const engines: string[] = [];
+  const entry = CALCULATORS.find(c => c.path === clean);
+  if (entry?.engine) engines.push(entry.engine);
+  const key = routeSourcesKeyForPath(clean);
+  const route = key ? ROUTE_SOURCES[key]! : null;
+  for (const e of route?.engines ?? []) if (!engines.includes(e)) engines.push(e);
+  const pageSources = [...(route?.sources ?? [])];
+  if (engines.length === 0 && pageSources.length === 0) return null;
+  return { engines, pageSources };
+}
+
+/**
+ * Route patterns (as App.tsx declares them) whose footer prints a source
+ * list through shared/pageSources.ts: every engine named has a loader, or the
+ * page carries its own sources. Exported for the census.
+ */
+export const ROUTES_WITH_SHELL_SOURCES: readonly string[] = Object.entries(ROUTE_SOURCES)
+  .filter(([, r]) => (r.sources?.length ?? 0) > 0 || ((r.engines?.length ?? 0) > 0 && r.engines!.every(e => e in ENGINE_SOURCE_LOADERS)))
+  .map(([k]) => k)
+  .sort();
 
 /** The catalogue entry behind a route, when there is one. */
 export function catalogueEntryForPath(path: string) {
-  const clean = path.split("?")[0]!.replace(/\/+$/, "") || "/";
+  const clean = cleanPath(path);
   return CALCULATORS.find(c => c.path === clean) ?? null;
 }
 
