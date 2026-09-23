@@ -20,6 +20,7 @@ import {
   type MYGAWaterfallResult,
   type WaterfallYearRow,
 } from "./mygaWaterfall";
+import { HELOC_RATE_DEFAULT_PCT, MYGA_RATE_DEFAULT_PCT } from "./marketRateDefaults";
 
 /* ─── TYPES ─── */
 
@@ -199,7 +200,7 @@ const MULTI_PROPERTY_ASSUMPTIONS = [
   { label: "Assumption: default property worth $500,000 with a $200,000 mortgage, entering in year 1, chosen by the firm as an example; no external source" },
   { label: "Assumption: default household income = $250,000, married filing jointly, chosen by the firm as an example; no external source" },
   { label: "Assumption: state income tax rate = 5%, chosen by the firm as a mid-range state rate; no external source" },
-  { label: "Assumption: MYGA rate 7%, 5-year term, bank advance 70% at 7%, oil and gas 12 years at 15% income with 80% then 8% deductions, 25-year projection, HELOC 8.5% up to 80% of home value; the same defaults as the single-property waterfall, chosen by the firm; see the MYGA waterfall sources for the market references and the flags on the 7% MYGA and 8.5% HELOC rates" },
+  { label: "Assumption: MYGA rate 6.3% compounding, 5-year term, bank advance 70% at 7%, oil and gas 12 years at 15% income with 80% then 8% deductions, 25-year projection, HELOC 7.09% up to 80% of home value; the same defaults as the single-property waterfall; the MYGA and HELOC rates are sourced market readings (see the MYGA waterfall sources), the rest chosen by the firm" },
 ];
 
 function getIrmaaBracket(magi: number, status: "single" | "married") {
@@ -217,7 +218,7 @@ export function createDefaultProperty(id: number): PropertyInput {
     label: `Property ${id}`,
     homeValue: 500000,
     mortgageBalance: 200000,
-    helocRate: 8.5,
+    helocRate: HELOC_RATE_DEFAULT_PCT,
     helocMaxLtv: 0.80,
     entryYear: 1,
     active: true,
@@ -233,7 +234,7 @@ export function getDefaultMultiPropertyInput(): MultiPropertyInput {
       stateTaxRate: 5,
       filingStatus: "married",
     },
-    mygaRate: 7,
+    mygaRate: MYGA_RATE_DEFAULT_PCT,
     mygaTerm: 5,
     bankLtv: 0.70,
     bankLoanRate: 7,

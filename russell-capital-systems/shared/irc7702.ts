@@ -96,9 +96,34 @@ export function applicablePercentage(attainedAge: number): number {
   return 100;
 }
 
+/**
+ * The cash value corridor percentage at an attained age: the minimum death
+ * benefit as a percentage of cash value that 26 U.S.C. 7702(d)(2) requires.
+ *
+ * Endpoints: 250 through age 40, 215 at 45, 185 at 50, 150 at 55, 130 at 60,
+ * 120 at 65, 115 at 70, 105 at 75 through 90, 100 at 95 and above, reduced by
+ * a ratable whole-point step each year between them (41 → 243, 42 → 236, …,
+ * 91 → 104, 92 → 103, 93 → 102, 94 → 101).
+ *
+ * Source: 26 U.S.C. 7702(d)(2), https://www.law.cornell.edu/uscode/text/26/7702
+ * (read 2026-09-23; see IRC_7702_CORRIDOR_SOURCE). This is the shared entry
+ * point for every engine that floors a death benefit at a multiple of cash
+ * value; none should hold its own flat 105% or step table.
+ */
+export function cashValueCorridorPct(attainedAge: number): number {
+  return applicablePercentage(attainedAge);
+}
+
+/** Where the corridor table comes from, in the shape `shared/engineSources.ts` reads. */
+export const IRC_7702_CORRIDOR_SOURCE = {
+  label: "26 U.S. Code Section 7702(d)(2), cash value corridor applicable percentages: 250% through attained age 40, 215% at 45, 185% at 50, 150% at 55, 130% at 60, 120% at 65, 115% at 70, 105% at 75 through 90, 100% at 95 and above, decreasing ratably each full year between (Cornell Legal Information Institute)",
+  url: "https://www.law.cornell.edu/uscode/text/26/7702",
+  asOf: "read 2026-09-23",
+} as const;
+
 /** The same figure as a multiplier, which is what the projection engine takes. */
 export function corridorFactor(attainedAge: number): number {
-  return applicablePercentage(attainedAge) / 100;
+  return cashValueCorridorPct(attainedAge) / 100;
 }
 
 /**

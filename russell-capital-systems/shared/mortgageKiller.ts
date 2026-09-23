@@ -14,6 +14,8 @@
  * Crediting rate: an assumption the visitor sets (default 7.5%); a mechanic, not an illustration
  */
 
+import { HELOC_RATE_DEFAULT, HELOC_RATE_DEFAULT_SOURCE } from "./marketRateDefaults";
+
 // ─── Types ───────────────────────────────────────────────────────────────────
 
 export interface MortgageKillerInput {
@@ -212,6 +214,12 @@ const MAX_PREMIUM_YEARS = 5;
 const HELOC_LTV_DEFAULT = 0.70;
 const LIFE_LOAN_PCT = 0.80;
 const MGA_RATE = 0.0625;
+/**
+ * The highest rate in the generic COI curve (ages 81-85), carried forward to
+ * every later age so the curve never falls. Not sourced: needs the carrier's
+ * real COI table. See projectIulPolicy.
+ */
+export const COI_RATE_CARRIED_FORWARD_MAX = 0.0220;
 
 // ─── Where these numbers come from ──────────────────────────────────────────
 // Every typed-in number in this file is listed here: either a named, dated
@@ -226,18 +234,18 @@ const HOME_APPRECIATION_SOURCE = {
   note: "The same index compounds to 3.36% a year over the 20 years to 2026 Q2 and 6.81% over the 10 years to 2026 Q2; 5% is the full-history figure, not a recent one.",
 };
 
-/** helocRate default 0.085. Compared with the Bankrate national HELOC average and the prime rate it is priced from. */
+/** helocRate default HELOC_RATE_DEFAULT (0.0709, was 0.085). Its source is HELOC_RATE_DEFAULT_SOURCE; Bankrate and prime are listed for comparison. */
 const HELOC_RATE_SOURCE = {
   label: "Bankrate Monitor National Index, Home Equity Line of Credit rate (BRMHELOC01, via FRED): 7.29% for the week of 2026-09-02",
   url: "https://fred.stlouisfed.org/series/BRMHELOC01",
   asOf: "2026-09-02 observation, read 2026-09-23",
-  note: "The default HELOC rate here is 8.5%, 1.21 points above this national average. Not changed; flagged for review.",
+  note: "Reference only: a second national HELOC average, 0.2 points above the Curinos figure the 7.09% default uses.",
 };
 const PRIME_RATE_SOURCE = {
   label: "Board of Governors of the Federal Reserve System, H.15 Selected Interest Rates, Bank Prime Loan Rate (DPRIME, via FRED): 6.75% on 2026-09-02",
   url: "https://fred.stlouisfed.org/series/DPRIME",
   asOf: "2026-09-02 observation, read 2026-09-23",
-  note: "HELOCs are usually priced as prime plus a margin; the 8.5% default equals prime plus 1.75 points, and that margin is the firm's assumption.",
+  note: "HELOCs are usually priced as prime plus a margin; the 7.09% default is prime plus 0.34 points at this reading.",
 };
 
 /** mortgageRate is typed in by the client; this is the market reference for it, not a literal in this file. */
@@ -274,7 +282,7 @@ const MORTGAGE_KILLER_ASSUMPTIONS = [
   { label: "Assumption: saved interest reinvested at 7% a year for 20 years (interestReinvestRate, interestReinvestYears defaults), chosen by the firm as a long-run balanced return; no external source" },
   { label: "Assumption: client age = 45 when none is entered (clientAge default), chosen by the firm as a mid-career default; no external source" },
   { label: "Assumption: IUL charges are 8% premium load in year 1 and 6% in later premium years, $120 per-policy charge a year, $7.78 per $1,000 of face for years 1 to 10, face = 10 times premium, net amount at risk on 1.5 times face; chosen by the firm as a generic illustration, not any carrier's filed charges; no external source" },
-  { label: "Assumption: cost of insurance rates of 0.08% (age 40 and under) rising to 2.2% (age 81 to 85), then 1.8% (86 to 90), 0.8% (91 to 95) and 0 after; chosen by the firm as a generic curve; no external source", note: "The rates fall after age 85, which no mortality table does. Not changed; flagged for review." },
+  { label: "Assumption: cost of insurance rates of 0.08% (age 40 and under) rising to 2.2% (age 81 to 85) and held at 2.2% at every later age; chosen by the firm as a generic curve; no external source", note: "As first typed the rates fell after age 85 (1.8% at 86 to 90, 0.8% at 91 to 95, 0 after), which no mortality table does. No source was found for the curve, so no new rates were invented: from age 86 the curve carries forward its maximum, 2.2% (COI_RATE_CARRIED_FORWARD_MAX). Real mortality keeps rising, so late-age cost is still understated. Needs the carrier's real COI table." },
   { label: "Assumption: 0.2% persistency credit on cash value from year 11, surrender charge of 37.6% of one premium in years 1 to 3 falling to zero by year 11, and 80% of each year's interest credit applied to principal after the premium years; chosen by the firm as a generic illustration; no external source" },
   { label: "Assumption: 30-year projection horizon, chosen by the firm because it matches the term of a standard mortgage; no external source" },
 ];
@@ -320,6 +328,24 @@ export function buildStandardAmortization(
 
 // ─── IUL Policy Projection (v4) ─────────────────────────────────────────────
 
+/**
+ * Annual cost of insurance rate per dollar of net amount at risk, by attained age.
+ *
+ * No carrier table or mortality table is behind these rates; they are the
+ * firm's generic curve (see MORTGAGE_KILLER_ASSUMPTIONS), traced in git to the
+ * original portal archive with no source. As first typed they FELL after age 85
+ * (1.8% at 86-90, 0.8% at 91-95, 0 after), which no mortality table does.
+ * Rather than invent replacement rates, the curve is clamped to be
+ * non-decreasing: every age above 85 carries forward the maximum, 2.2%
+ * (COI_RATE_CARRIED_FORWARD_MAX), the last band before the decline. This still
+ * UNDERSTATES late-age cost; it must be replaced by the carrier's real COI table.
+ */
+export function genericCoiRate(age: number): number {
+  return age <= 40 ? 0.0008 : age <= 50 ? 0.0012 : age <= 55 ? 0.0018 :
+    age <= 60 ? 0.0028 : age <= 65 ? 0.0042 : age <= 70 ? 0.0065 :
+    age <= 75 ? 0.0100 : age <= 80 ? 0.0160 : COI_RATE_CARRIED_FORWARD_MAX;
+}
+
 function projectIulPolicy(
   annualPremium: number,
   projectionYears: number,
@@ -348,10 +374,7 @@ function projectIulPolicy(
     const perPolicyCharge = 120;
     const perUnitCost = y <= 10 ? perUnitCharge : 0;
     const netAmountAtRisk = Math.max(0, specifiedAmount * 1.5 - cv);
-    const baseCOIRate = age <= 40 ? 0.0008 : age <= 50 ? 0.0012 : age <= 55 ? 0.0018 :
-      age <= 60 ? 0.0028 : age <= 65 ? 0.0042 : age <= 70 ? 0.0065 :
-      age <= 75 ? 0.0100 : age <= 80 ? 0.0160 : age <= 85 ? 0.0220 :
-      age <= 90 ? 0.0180 : age <= 95 ? 0.0080 : 0;
+    const baseCOIRate = genericCoiRate(age);
     const coiCharge = netAmountAtRisk * baseCOIRate;
     const conditionalCredit = y >= 11 ? cv * 0.002 : 0;
     const netPremium = premium - premiumLoad;
@@ -718,7 +741,7 @@ export function runMortgageKillerAnalysis(input: MortgageKillerInput): MortgageK
     otherInvestments = 0, cryptocurrency = 0,
     incomeAllocationPct = 0.20, iulCreditRate = 0.075,
     premiumYears = MAX_PREMIUM_YEARS,
-    helocRate = 0.085, helocLtvPct = HELOC_LTV_DEFAULT,
+    helocRate = HELOC_RATE_DEFAULT, helocLtvPct = HELOC_LTV_DEFAULT,
     policyLoanPct = LIFE_LOAN_PCT, policyLoanDragRate = 0.05,
     interestReinvestRate = 0.07, interestReinvestYears = 20, clientAge = 45,
   } = input;
@@ -838,6 +861,7 @@ export function runMortgageKillerAnalysis(input: MortgageKillerInput): MortgageK
 /** Every source and declared assumption behind the typed-in numbers in this engine, for the page to print. */
 export const MORTGAGE_KILLER_SOURCES: readonly { label: string; url?: string; asOf?: string; note?: string }[] = [
   HOME_APPRECIATION_SOURCE,
+  HELOC_RATE_DEFAULT_SOURCE,
   HELOC_RATE_SOURCE,
   PRIME_RATE_SOURCE,
   MORTGAGE_RATE_REFERENCE_SOURCE,
