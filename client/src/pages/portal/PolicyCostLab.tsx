@@ -325,10 +325,51 @@ export default function PolicyCostLab() {
           </div>
         )}
 
-        {/* Carriers still pending */}
-        {carriers.data && (
+        {/* The other carriers read off their own cost summary */}
+        {carriers.data && carriers.data.complete.length > 1 && (
           <div className={`${CARD} p-5`}>
-            <h2 className={H}>The other two companies</h2>
+            <h2 className={H}><Coins size={13} className="mr-1 inline" /> Also read off a cost summary</h2>
+            <div className="mt-3 space-y-4">
+              {carriers.data.complete.slice(1).map((c) => (
+                <div key={c.carrierId} className="rounded-xl border border-white/10 bg-black/20 p-4">
+                  <div className="text-sm font-semibold text-white">{c.label} — {c.product}</div>
+                  <p className="mt-1 text-[11px] text-slate-500">
+                    {c.source}. Interest credited to the {c.creditingTarget.replace("-", " ")}. Derived from one case:{" "}
+                    {c.derivedFrom.sex}, issue age {c.derivedFrom.issueAge}, {c.derivedFrom.riskClass},{" "}
+                    {$(c.derivedFrom.specifiedAmount)} specified amount, {$(c.derivedFrom.totalPremiumOutlay)} total outlay,{" "}
+                    {c.derivedFrom.definitionalTest}.
+                  </p>
+                  <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                    <Stat label="Percent of premium" value={`${c.percentOfPremiumByYear[0]}% yr 1, ${c.percentOfPremiumByYear[1]}% yrs 2–5`} />
+                    <Stat label="Per policy" value={`$${c.perPolicyMonthly}/month`} />
+                    <Stat label="Per $1,000 of face" value={`$${c.perThousandAnnual}/yr for ${c.perThousandYears} yrs, then nil`} />
+                    <Stat
+                      label={c.bonusInterestPctOfCashValue ? "Bonus interest credit" : "Indexed strategy"}
+                      value={
+                        c.bonusInterestPctOfCashValue
+                          ? `+${c.bonusInterestPctOfCashValue}% of cash value from yr ${c.bonusInterestFromYear}`
+                          : `${c.indexedStrategyPctOfAv}% of AV from yr ${c.indexedStrategyFromYear}`
+                      }
+                    />
+                  </div>
+                  <p className="mt-3 text-xs text-slate-400">
+                    Surrender charge ${c.surrenderPerThousandByYear[0]} per $1,000 of face in year 1, zero from year{" "}
+                    {c.surrenderPerThousandByYear.length}. Cost of insurance ${c.coi.rows[0]!.perThousand.toFixed(3)} per $1,000 at
+                    age {c.coi.fromAge}, ${c.coi.rows.find((r) => r.age === 73)?.perThousand.toFixed(3) ?? "—"} at 73.
+                  </p>
+                  <ul className="mt-2 space-y-1 text-[11px] leading-relaxed text-slate-500">
+                    {c.caveats.map((t, i) => <li key={i}>· {t}</li>)}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Carriers still pending */}
+        {carriers.data && carriers.data.pending.length > 0 && (
+          <div className={`${CARD} p-5`}>
+            <h2 className={H}>{carriers.data.pending.length === 1 ? "The other company" : "The other companies"}</h2>
             <div className="mt-3 grid gap-3 sm:grid-cols-2">
               {carriers.data.pending.map((c) => (
                 <div key={c.carrierId} className="rounded-xl border border-white/10 bg-black/20 p-3">
@@ -346,7 +387,7 @@ export default function PolicyCostLab() {
               ))}
             </div>
             <p className="mt-3 text-[11px] text-slate-500">
-              One Annual Cost Summary each closes them, the same way it closed Mutual Company A.
+              One cost summary closes it, the same way one closed Mutual Company A and one closed Mutual Company B.
             </p>
           </div>
         )}

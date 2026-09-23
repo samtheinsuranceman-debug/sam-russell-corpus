@@ -98,6 +98,13 @@ export interface CostBaseline {
   readonly surrenderPerThousandByYear: readonly number[];
   /** Cost of insurance per $1,000 of net amount at risk, by attained age. */
   readonly coiPerThousandByAge: readonly { readonly age: number; readonly perThousand: number }[];
+  /**
+   * A credit the carrier adds back as a percentage of cash value from a given
+   * year (Mutual Company B's "bonus interest credit"). Absent where the
+   * product has none.
+   */
+  readonly bonusInterestPctOfCashValue?: number;
+  readonly bonusInterestFromYear?: number;
   /** The case the figures were read from, de-identified. */
   readonly derivedFrom: {
     readonly sex: 'female' | 'male';
@@ -182,35 +189,127 @@ export const MUTUAL_A_BASELINE: CostBaseline = {
 };
 
 /**
- * Mutual Company B and C have no cost summary yet.
+ * Mutual Company B — read off its illustration's Charges Report, every figure.
  *
- * B's brochure names its charges — cost of insurance, cash extra, additional
- * agreements, premium, monthly policy, policy issue, transaction, index
- * segment, surrender — and gives not one rate. That is a complete taxonomy and
- * zero data, which is exactly the situation the cost summary resolves.
+ * B calls its cost summary "Your policy's current charges summary" (the
+ * Charges Report). Not every B illustration carries it; this one does, and
+ * every column was transcribed: premium charge, cost of insurance, policy issue
+ * charge, additional charges, bonus interest credit, additional policy credits,
+ * surrenders and loans, interest earned, cash value, surrender value, death
+ * benefit. The transcription roll-forwards to the printed cash value in every
+ * one of twenty years and reproduces the printed five-year and fifteen-year
+ * totals (server/costStructure.test.ts).
  *
- * The one thing recorded for B is where the interest lands, because the owner
- * states it and it is a structural fact rather than a rate: B credits to the
- * cash value where A credits to the accumulated value. Flagged as owner-stated
- * until an illustration confirms it.
+ * Case: female, issue age 64, preferred non-tobacco, level death benefit
+ * $2,918,696 (the minimum face for the premium), $300,000 a year for five
+ * years, Guideline Premium Test, not a MEC, half in a two-year S&P 500 account
+ * and half in a one-year volatility-controlled account, illustrated at 6.62%
+ * and 6.57%.
+ *
+ * Two structural facts the report settles:
+ *
+ *   • Interest lands on the CASH VALUE. The report's own definition: the
+ *     surrender value "is equal to the cash value less any surrender charges
+ *     and any policy loans". Recorded as owner-stated until now; confirmed.
+ *   • The surrender charge is again dollars per $1,000 of face, not a
+ *     percentage of value: $51.49 in year 1, falling about $1.73 a year to
+ *     $41.14 in year 7, then $37.35, $18.67 and zero from year 10.
+ *
+ * A second B illustration for the same sex, issue age and class (face
+ * $2,724,116, $280,000 a year) gives the same premium charge (8.0% then
+ * 6.5%), the same policy issue charge per $1,000 (6.793 against 6.790) and the
+ * same cost of insurance per $1,000 of net amount at risk to within one
+ * percent in each of its five years, so the figures below are the product's,
+ * not one case's arithmetic.
+ */
+export const MUTUAL_B_BASELINE: CostBaseline = {
+  carrierId: 'mutual-b',
+  carrierLabel: 'Mutual Company B',
+  product: 'Balanced Growth Accumulator III Indexed Universal Life',
+  source: 'Charges Report ("Your policy\'s current charges summary"), illustration run 4/8/2026',
+  creditingTarget: 'cash-value',
+  fromCostSummary: true,
+
+  // 8.00% of premium in year 1, 6.50% in years 2-5, printed as $24,000 then
+  // $19,500 on $300,000. The same two rates appear on the second case.
+  percentOfPremiumByYear: [8.0, 6.5, 6.5, 6.5, 6.5, 0],
+  // "Additional charges" is $60 a year in every year: the $5 monthly policy
+  // charge. No cash extra, transaction, agreement or index segment charge was
+  // levied on this case, so those remain named-but-unpriced.
+  perPolicyMonthly: 5,
+  // Policy issue charge: $19,818 a year for exactly ten years on a face of
+  // $2,918,696, which is $6.79 per $1,000. The report's own note: "This charge
+  // only applies for the first 10 years of the policy or for 10 years after
+  // face amount increases." The rate is age- and sex-dependent (a male 70 on
+  // the same product pays $8.44).
+  perThousandAnnual: 6.79,
+  perThousandYears: 10,
+  // No indexed strategy charge on this product; B does the opposite from
+  // year 11 and pays a bonus (below).
+  indexedStrategyPctOfAv: 0,
+  indexedStrategyFromYear: 0,
+  // Bonus interest credit from the eleventh anniversary: "calculated as a
+  // percentage of your policy's cash value". Observed 0.602-0.611% of the
+  // prior year-end cash value in every year 11-20 (0.567% of the current
+  // year-end value). Held as 0.60% of the prior year-end value.
+  bonusInterestPctOfCashValue: 0.6,
+  bonusInterestFromYear: 11,
+
+  // (cash value - surrender value) per $1,000 of face, years 1-10; zero after.
+  surrenderPerThousandByYear: [51.49, 49.75, 48.01, 46.28, 44.56, 42.84, 41.14, 37.35, 18.67, 0],
+
+  // Printed cost of insurance divided by (death benefit - year-end cash
+  // value), the same basis as Mutual Company A. Ages 64-73 rise as a mortality
+  // curve must. From year 11 the carrier's rate steps down (the same dollars
+  // on a smaller amount at risk), and from year 15 the amount at risk is small
+  // enough that the year-end basis swings the implied rate: see the caveats.
+  coiPerThousandByAge: [
+    { age: 64, perThousand: 2.592 }, { age: 65, perThousand: 3.466 },
+    { age: 66, perThousand: 3.869 }, { age: 67, perThousand: 4.381 },
+    { age: 68, perThousand: 4.962 }, { age: 69, perThousand: 5.642 },
+    { age: 70, perThousand: 6.263 }, { age: 71, perThousand: 7.180 },
+    { age: 72, perThousand: 7.992 }, { age: 73, perThousand: 9.094 },
+    { age: 74, perThousand: 8.058 }, { age: 75, perThousand: 9.417 },
+    { age: 76, perThousand: 10.557 }, { age: 77, perThousand: 14.319 },
+    { age: 78, perThousand: 19.805 }, { age: 79, perThousand: 19.825 },
+    { age: 80, perThousand: 14.240 }, { age: 81, perThousand: 16.660 },
+    { age: 82, perThousand: 19.987 }, { age: 83, perThousand: 23.544 },
+  ],
+
+  derivedFrom: {
+    sex: 'female',
+    issueAge: 64,
+    riskClass: 'preferred non-tobacco',
+    specifiedAmount: 2_918_696,
+    totalPremiumOutlay: 1_500_000,
+    deathBenefitOption: 'Level, at the minimum face for the premium; the corridor lifts it from year 16',
+    definitionalTest: 'GPT',
+  },
+
+  caveats: [
+    'The cost of insurance curve is for ONE sex, ONE issue age and ONE risk class. It is a real curve, not a universal one. A second case of the same sex, age and class reproduced it to within one percent, so it is the product\'s curve for that class.',
+    'The implied per-$1,000 rates use the year-end cash value against a level death benefit. Ages 64-73 rise monotonically. From age 74 the carrier charges fewer dollars on a shrinking amount at risk and the year-end basis overstates the swing, so ages 74-83 are recorded as observed and should be read as a band, not a curve.',
+    'The bonus interest credit is observed, not contractual: 0.60% of the prior year-end cash value from year 11 on this case. The report says only that it "may be credited" and is "a percentage of your policy\'s cash value".',
+    'No cash extra, transaction, agreement or index segment charge was levied on this case, so those four of B\'s nine named charges remain unpriced here.',
+    'A first-year premium charge of 8.00% against 6.50% thereafter is the ordinary shape for this product; both figures are printed and both recur on the second case.',
+  ],
+};
+
+/** Every carrier whose charge structure was read off its own cost summary. */
+export const COMPLETE_BASELINES: readonly CostBaseline[] = [MUTUAL_A_BASELINE, MUTUAL_B_BASELINE];
+
+/**
+ * Mutual Company C has no cost summary yet.
+ *
+ * B's brochure once stood here with a complete taxonomy and no rates; its
+ * Charges Report closed it (MUTUAL_B_BASELINE). C's structure is not held at
+ * all: one illustration carrying its charges summary resolves it the same way.
  */
 export const PENDING_BASELINES = [
   {
-    carrierId: 'mutual-b' as const,
-    carrierLabel: 'Mutual Company B',
-    creditingTarget: 'cash-value' as CreditingTarget,
-    creditingTargetSource: 'owner-stated, pending confirmation from a cost summary',
-    chargeNamesKnown: [
-      'Cost of Insurance', 'Cash Extra', 'Additional Agreements',
-      'Premium Charge', 'Monthly Policy Charge', 'Policy Issue Charge',
-      'Transaction Charge', 'Index Segment Charge', 'Surrender Charge',
-    ],
-    ratesKnown: [] as string[],
-  },
-  {
     carrierId: 'mutual-c' as const,
     carrierLabel: 'Mutual Company C',
-    creditingTarget: null,
+    creditingTarget: null as CreditingTarget | null,
     creditingTargetSource: 'not established',
     chargeNamesKnown: [] as string[],
     ratesKnown: [] as string[],

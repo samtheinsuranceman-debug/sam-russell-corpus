@@ -44,13 +44,42 @@ describe('the carrier basis reaches the page', () => {
     expect(a.caveats.join(' ')).toMatch(/ONE sex, ONE issue age and ONE risk class/);
   });
 
-  it('reports B and C as pending with their taxonomy and no rates', async () => {
+  it('serves Mutual Company B with the charges read off its Charges Report', async () => {
     const r = await caller.policyLab.carriers();
-    expect(r.pending).toHaveLength(2);
-    const b = r.pending.find((p) => p.carrierId === 'mutual-b')!;
-    expect(b.chargeNamesKnown.length).toBe(9);
-    expect(b.ratesKnown).toEqual([]);
+    expect(r.complete).toHaveLength(2);
+    const b = r.complete[1]!;
+    expect(b.label).toBe('Mutual Company B');
     expect(b.creditingTarget).toBe('cash-value');
+    expect(b.percentOfPremiumByYear.slice(0, 2)).toEqual([8.0, 6.5]);
+    expect(b.perPolicyMonthly).toBe(5);
+    expect(b.perThousandAnnual).toBeCloseTo(6.79, 2);
+    expect(b.perThousandYears).toBe(10);
+    expect(b.bonusInterestPctOfCashValue).toBe(0.6);
+    expect(b.bonusInterestFromYear).toBe(11);
+    expect(b.surrenderPerThousandByYear[0]).toBe(51.49);
+    expect(b.coi.fromAge).toBe(64);
+    expect(b.coi.toAge).toBe(83);
+    expect(b.source).toMatch(/Charges Report/);
+  });
+
+  it('reports only C as pending now that B has its cost summary', async () => {
+    const r = await caller.policyLab.carriers();
+    expect(r.pending).toHaveLength(1);
+    expect(r.pending[0]!.carrierId).toBe('mutual-c');
+    expect(r.pending.find((p) => p.carrierId === 'mutual-b')).toBeUndefined();
+  });
+
+  it('projects on B when asked, and names B as the basis', async () => {
+    const r = await caller.policyLab.project({
+      issueAge: 64, faceAmount: 2_918_696, annualPremium: 300_000,
+      premiumYears: 5, years: 10, creditedRatePct: 6.6, carrierId: 'mutual-b',
+    });
+    expect(r.basis.carrier).toBe('Mutual Company B');
+    expect(r.basis.source).toMatch(/Charges Report/);
+    // B's surrender charge falls every year from the first, unlike A's flat three.
+    const charges = r.years.map((y) => y.accountValue - y.surrenderValue);
+    expect(charges[0]).toBeGreaterThan(charges[1]!);
+    expect(charges[1]).toBeGreaterThan(charges[2]!);
   });
 });
 
