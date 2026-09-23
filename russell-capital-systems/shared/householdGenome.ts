@@ -633,3 +633,24 @@ export const PAIRING_DISCLOSURE =
   'without their consent is a tool one of them can use to win an argument. Nothing here is legal advice about property rights: ' +
   'whether an asset is separate or marital is a question of state law and of what has actually happened to it, and it belongs ' +
   'with an attorney.';
+
+// ─── Sources the shell prints ────────────────────────────────────────────────
+
+/**
+ * Nothing in this protocol is an outside figure. Every weight is a design
+ * choice stated in the comments above, and the shell prints each one as an
+ * assumption. The asset-class splits are built from ASSET_CLASSES so the list
+ * moves when they do. The factor weights come from wealthGenomeFactors.ts.
+ */
+export const HOUSEHOLD_GENOME_SOURCES: readonly { label: string; url?: string; asOf?: string; note?: string }[] = [
+  { label: 'Assumption: influence(A) = title x 0.50 + exposure x 0.25 + dependence x 0.25; title carries half because ownership is real, the rest follows who bears the loss and who relies on the money; chosen by the firm, no external source' },
+  ...ASSET_CLASSES.map((c) => ({
+    label: `Assumption: ${c.name}: title ${c.title}, exposure ${c.exposure}, dependence ${c.dependence}; chosen by the firm, no external source`,
+    note: c.why,
+  })),
+  { label: 'Assumption: a factor counts as read at a confidence of 0.3 or more, and a one-sided answer counts a quarter of a two-sided one in pairing confidence; chosen by the firm, no external source' },
+  { label: 'Assumption: pairing confidence verdicts change at 0.75, 0.45 and 0.2; chosen by the firm, no external source' },
+  { label: 'Assumption: on a pooled factor the better reading is lifted by a fifth of the gap (the two are correlated), and a reading from one partner only carries half its confidence; chosen by the firm, no external source' },
+  { label: 'Assumption: friction severity multiplies a weakest-link gap by 1.5 and an owner-rule gap by 0.6; chosen by the firm because a blend absorbs a difference and a weakest link does not; no external source' },
+  { label: 'Assumption: comfort weights (emotional durability 0.30, liquidity need 0.22, income durability 0.18, spending elasticity 0.15, cognitive durability 0.15) and appetite weights (time horizon 0.32, inflation exposure 0.20, longevity 0.18, tax posture 0.15, dependents 0.15); chosen by the firm, no external source' },
+];

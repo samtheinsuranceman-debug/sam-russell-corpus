@@ -38,6 +38,7 @@ import { CastBadge, useRoom } from "@/components/rooms/RoomTheme";
 import { EngineWhyFooter, QuestionWhy } from "@/components/rooms/Reveal";
 import { RoomVideoTile } from "@/components/rooms/RoomVideoTile";
 import PredictiveFooter from "@/components/PredictiveFooter";
+import EngineSourcesFooter from "@/components/EngineSourcesFooter";
 
 /* ═══════════════════════════════════════════════════════════════════
    COLOR-CODED NAVIGATION — Intuitive categories with visual coding
@@ -1675,6 +1676,8 @@ export function AppShell({ children, title: _title, subtitle: _subtitle }: { chi
           {children}
           {/* The predictive engine on every predictive calculator: forecast, scenarios, confidence horizon, citations. Off until opened. */}
           <PredictiveFooter path={location} />
+          {/* Where these numbers come from: the engine's own source list on every catalogue page. Off until opened. */}
+          <EngineSourcesFooter path={location} />
           {/* Every engine carries the reveal footer: the same idea, not a new one */}
           {room.theme === "theme9" && <EngineWhyFooter />}
         </main>

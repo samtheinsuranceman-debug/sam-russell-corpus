@@ -15,6 +15,7 @@
 
 import {
   runMYGAWaterfall,
+  MYGA_WATERFALL_SOURCES,
   type MYGAWaterfallInput,
   type MYGAWaterfallResult,
   type WaterfallYearRow,
@@ -166,6 +167,40 @@ const IRMAA_BRACKETS = {
     { maxMAGI: Infinity, partB: 422.00 * 12, partD: 85.80 * 12, tier: "Tier 5" },
   ],
 };
+
+/* ─── WHERE THESE NUMBERS COME FROM ─── */
+// The IRMAA table above, the defaults below, and the shared MYGA, oil and gas
+// and HELOC defaults (sourced in mygaWaterfall.ts) are listed here. None of
+// these objects is read by the arithmetic.
+
+/** IRMAA_BRACKETS: the 2025 table the code is labelled with. Thresholds match; several dollar amounts do not. */
+const IRMAA_2025_SOURCE = {
+  label: "Centers for Medicare & Medicaid Services, 2025 Medicare Parts A & B Premiums and Deductibles fact sheet, Part B and Part D income-related monthly adjustment amount tables",
+  url: "https://www.cms.gov/newsroom/fact-sheets/2025-medicare-parts-b-premiums-and-deductibles",
+  asOf: "2025 premium year, released 2024-11-08, read 2026-09-23",
+  note: "Income thresholds ($106,000/$133,000/$167,000/$200,000/$500,000 single; $212,000/$266,000/$334,000/$400,000/$750,000 joint) match the code. Part B monthly adjustments in CMS are $74.00, $185.00, $295.90, $406.90, $443.90; the code has $70.90, $176.40, $281.90, $387.30, $422.00. Part D monthly adjustments in CMS are $13.70, $35.30, $57.00, $78.60, $85.80; the code has $13.70, $35.50, $57.30, $79.00, $85.80. CMS puts MAGI of exactly $500,000 ($750,000 joint) in the top tier; the code puts it in tier 4. Not changed; flagged for review.",
+};
+const IRMAA_2026_SOURCE = {
+  label: "Social Security Administration, POMS HI 01101.020, IRMAA Sliding Scale Tables, current table based on 2024 MAGI (the 2026 premium year): surcharges begin above $109,000 (single) and $218,000 (joint)",
+  url: "https://secure.ssa.gov/poms.nsf/lnx/0601101020",
+  asOf: "POMS revision 2025-12-02, read 2026-09-23",
+  note: "The code carries the 2025 table; 2026 is the current premium year and its thresholds and amounts are higher.",
+};
+
+/** household.federalTaxRate default 32 (percent) against household.annualIncome default $250,000, married. */
+const FEDERAL_BRACKET_SOURCE = {
+  label: "Internal Revenue Service, Rev. Proc. 2025-32, Section 4.01, 2026 tax rate tables: 24% applies to joint taxable income over $211,400 and 32% over $403,550",
+  url: "https://www.irs.gov/pub/irs-drop/rp-25-32.pdf",
+  asOf: "tax year 2026, published 2025-10-09, read 2026-09-23",
+  note: "The default household is married with $250,000 of income, which falls in the 24% joint bracket for 2026, not the 32% default. Not changed; flagged for review.",
+};
+
+const MULTI_PROPERTY_ASSUMPTIONS = [
+  { label: "Assumption: default property worth $500,000 with a $200,000 mortgage, entering in year 1, chosen by the firm as an example; no external source" },
+  { label: "Assumption: default household income = $250,000, married filing jointly, chosen by the firm as an example; no external source" },
+  { label: "Assumption: state income tax rate = 5%, chosen by the firm as a mid-range state rate; no external source" },
+  { label: "Assumption: MYGA rate 7%, 5-year term, bank advance 70% at 7%, oil and gas 12 years at 15% income with 80% then 8% deductions, 25-year projection, HELOC 8.5% up to 80% of home value; the same defaults as the single-property waterfall, chosen by the firm; see the MYGA waterfall sources for the market references and the flags on the 7% MYGA and 8.5% HELOC rates" },
+];
 
 function getIrmaaBracket(magi: number, status: "single" | "married") {
   const brackets = IRMAA_BRACKETS[status];
@@ -449,3 +484,14 @@ export function runMultiPropertyMyga(input: MultiPropertyInput): MultiPropertyRe
     },
   };
 }
+
+/* ─── SOURCES ─── */
+
+/** Every source and declared assumption behind the typed-in numbers in this engine, for the page to print. */
+export const MULTI_PROPERTY_MYGA_SOURCES: readonly { label: string; url?: string; asOf?: string; note?: string }[] = [
+  IRMAA_2025_SOURCE,
+  IRMAA_2026_SOURCE,
+  FEDERAL_BRACKET_SOURCE,
+  ...MULTI_PROPERTY_ASSUMPTIONS,
+  ...MYGA_WATERFALL_SOURCES,
+];

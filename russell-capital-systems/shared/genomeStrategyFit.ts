@@ -351,3 +351,13 @@ export const FIT_DISCLOSURE =
   'Nothing here substitutes for your own attorney, CPA and a licensed professional in the relevant product line.';
 
 export { STRATEGIES };
+
+/**
+ * Where the typed-in numbers in this file come from. All three are the firm's
+ * own scoring choices; none is a market or regulatory figure. The factor
+ * weights themselves come from wealthGenomeFactors.ts.
+ */
+export const GENOME_STRATEGY_FIT_SOURCES: readonly { label: string; url?: string; asOf?: string; note?: string }[] = [
+  { label: "Assumption: a factor counts as answered at a confidence of 0.3 or more (ANSWERED_THRESHOLD), chosen by the firm because below that a reading is closer to a guess than an answer and should lower confidence instead of moving the fit; no external source" },
+  { label: "Assumption: a factor with no personal weight yet is weighted 0.5 (used twice, in the fit and in the list of questions still to ask), chosen by the firm because the midpoint neither inflates nor hides a factor nobody has weighed; no external source" },
+];

@@ -192,3 +192,23 @@ export function sandboxChanges(build: SandboxBuild) {
     build.rules
   );
 }
+
+/**
+ * Where the numbers in this file come from. The only typed-in figures are the
+ * 39.6% example in the validation message (as a fraction, 0.396), which is the
+ * top federal income tax rate the sandbox is most often asked to restore.
+ * Every other number a sandbox run uses comes from the real rule set in
+ * taxRules.ts, which carries its own sources.
+ */
+export const REGULATORY_SANDBOX_SOURCES: readonly { label: string; url?: string; asOf?: string; note?: string }[] = [
+  {
+    label: "IRS Rev. Proc. 2016-55, section 3.01, tax rate tables for 2017: the top bracket is 39.6% for every filing status (the 39.6 and 0.396 in the example)",
+    url: "https://www.irs.gov/pub/irs-drop/rp-16-55.pdf",
+    asOf: "2017 tax year, read 2026-09-23",
+  },
+  {
+    label: "IRS news release IR-2016-139 (Oct. 25, 2016): for tax year 2017 the 39.6 percent rate applies above $418,400 single and $470,700 married filing jointly",
+    url: "https://www.irs.gov/pub/irs-news/ir-16-139.pdf",
+    asOf: "read 2026-09-23",
+  },
+];

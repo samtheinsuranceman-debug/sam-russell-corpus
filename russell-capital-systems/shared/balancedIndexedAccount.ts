@@ -205,6 +205,19 @@ export const SEGMENT_ACCOUNTS: readonly SegmentTerms[] = [
   },
 ];
 
+/**
+ * The sources the shell prints for this engine, built from the account records
+ * above so the two cannot drift apart. A comparator that is not a carrier
+ * quote says so in its own `source` field, and that wording is kept.
+ */
+export const BALANCED_INDEXED_ACCOUNT_SOURCES: readonly { label: string; url?: string; asOf?: string; note?: string }[] = [
+  ...SEGMENT_ACCOUNTS.map((a) => ({
+    label: `${a.name}: ${a.source}`,
+    ...(a.note ? { note: a.note } : {}),
+  })),
+  { label: 'S&P 500 price-return series: audited and sourced in shared/sp500SeriesAudit.ts; this module supplies the crediting method, not the index figures' },
+];
+
 export interface SegmentResult {
   readonly startYear: number;
   readonly endYear: number;

@@ -67,3 +67,14 @@ export function modeDef(id: AdvisorMode): ModeDef {
 
 /** The five single modes, in the order the "all" answer and the PDF present them. */
 export const SINGLE_MODES: AdvisorMode[] = ["surface", "deeper", "integrated", "wiifm", "legal"];
+
+/**
+ * Where the two typed-in numbers in this file come from. Neither is a market
+ * or regulatory figure: one is a length limit the firm set, the other is an
+ * example printed in an empty input box.
+ */
+export const ADVISOR_MODES_SOURCES: readonly { label: string; url?: string; asOf?: string; note?: string }[] = [
+  { label: "Assumption: word limit for the \"All of the above\" answer = 1,200 words, chosen by the firm because it holds all five single answers in one reply, each written more tightly than it would be on its own; no external source" },
+  { label: "Assumption: the \"6.4%\" in the placeholder \"e.g. $620k mortgage at 6.4%\" is an illustrative example shown in an empty box, chosen by the firm because it shows the format of the answer wanted; it is not a quoted rate and feeds no calculation; no external source" },
+  { label: "Assumption: word limits for the other modes = 140, 320, 320, 360, 380 and 700, chosen by the firm because each keeps its answer readable in one sitting; no external source" },
+];

@@ -25,7 +25,7 @@
 // conversions and exclusions; "fund a tax-free account" routes the freed
 // cash to Roth, HSA and the policy; "exit / capital gains" routes the sale.
 // ============================================================
-import { computeTaxPicture, currentRules, type FilingKey, type TaxRuleSet } from "./taxRules";
+import { TAX_RULE_VERSIONS, computeTaxPicture, currentRules, type FilingKey, type TaxRuleSet } from "./taxRules";
 import { FAMILIES, FAMILY_BY_ID, type StrategyFamily } from "./taxStrategies";
 
 export type Goal = "lower_this_year" | "zero_federal_this_year" | "lower_lifetime" | "tax_free_retirement" | "capital_gain_event" | "estate" | "charity" | "real_estate" | "exit";
@@ -70,18 +70,21 @@ function marginalRate(rules: TaxRuleSet, filing: FilingKey, agi: number): number
 
 function tax(rules: TaxRuleSet, filing: FilingKey, agi: number): number { return computeTaxPicture({ filing, agi: Math.max(0, agi) }, rules).federalTax; }
 
+/** The schedule's stated assumptions, printed with every schedule and in its sources. */
+export const TAX_SCHEDULE_ASSUMPTIONS: readonly string[] = [
+  "Federal only; the 2026 rule set is used for every year with brackets held in today's dollars (the projection is in real terms).",
+  "Tax saved on a deduction = the amount × the marginal rate it displaces, computed by re-running the bracket engine; Roth conversion cost is the tax on the converted amount.",
+  "Oil and gas IDC is taken as 80% of the investment (the typical share; the actual invoice controls) and is capped by the §461(l) excess business loss limit and by risk capacity (low 0%, medium 10%, high 20% of income a year).",
+  "Cost segregation is sized at 25% of a property's purchase price in the year of purchase (typical reclassification share; a study sets the real number).",
+  "The state, AMT and the net investment income tax are named in the risks but not computed in this version.",
+];
+
 export function buildSchedule(p: ClientTaxProfile, now = new Date()): Schedule {
   const rules = currentRules(now);
   const startYear = now.getFullYear();
   const onceUsed = new Set<string>();
   const years: YearPlan[] = [];
-  const assumptions: string[] = [
-    "Federal only; the 2026 rule set is used for every year with brackets held in today's dollars (the projection is in real terms).",
-    "Tax saved on a deduction = the amount × the marginal rate it displaces, computed by re-running the bracket engine; Roth conversion cost is the tax on the converted amount.",
-    "Oil and gas IDC is taken as 80% of the investment (the typical share; the actual invoice controls) and is capped by the §461(l) excess business loss limit and by risk capacity (low 0%, medium 10%, high 20% of income a year).",
-    "Cost segregation is sized at 25% of a property's purchase price in the year of purchase (typical reclassification share; a study sets the real number).",
-    "The state, AMT and the net investment income tax are named in the risks but not computed in this version.",
-  ];
+  const assumptions: string[] = [...TAX_SCHEDULE_ASSUMPTIONS];
   let pretax = p.pretaxRetirement;
   const bracketCap = (filing: FilingKey) => bracketTop(rules, filing, p.targetBracket);
   const eblCap = p.filing === "joint" ? (FAMILY_BY_ID.excess_business_loss!.params.joint2026!.value as number) : (FAMILY_BY_ID.excess_business_loss!.params.single2026!.value as number);
@@ -178,3 +181,19 @@ export function buildSchedule(p: ClientTaxProfile, now = new Date()): Schedule {
 }
 
 export { FAMILIES };
+
+/**
+ * The sources the shell prints: the rule sets the brackets come from, every
+ * citation the strategy families carry, and the schedule's own assumptions.
+ * Built from those records so the list moves with them.
+ */
+export const TAX_SCHEDULE_SOURCES: readonly { label: string; url?: string; asOf?: string; note?: string }[] = (() => {
+  const seen = new Set<string>();
+  const out: { label: string; url?: string; asOf?: string; note?: string }[] = [];
+  const add = (label: string, note?: string) => { if (!seen.has(label)) { seen.add(label); out.push(note ? { label, note } : { label }); } };
+  for (const r of TAX_RULE_VERSIONS) add(`Tax rules ${r.taxYear}: ${r.source}`);
+  for (const f of FAMILIES) for (const c of f.citations) add(c, f.name);
+  for (const f of FAMILIES) for (const [k, prm] of Object.entries(f.params)) add(`${f.name}, ${k} = ${prm.value}${prm.unit ? ` ${prm.unit}` : ''}: ${prm.source}`, prm.verified ? 'verified against the source' : 'not yet verified against the source');
+  for (const a of TAX_SCHEDULE_ASSUMPTIONS) add(`Assumption: ${a}`);
+  return out;
+})();
