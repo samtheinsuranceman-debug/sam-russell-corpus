@@ -1010,6 +1010,12 @@ const BANNED_TERMS: readonly string[] = [
   String.raw`\bmultitalk`, String.raw`\binfini(?:te)?-?talk`,
   // Tencent ARC and Tencent AI Lab tools (PhotoMaker, IP-Adapter, GFPGAN, Real-ESRGAN) and InstantX's InstantID
   String.raw`\bphotomaker`, String.raw`\bip-?adapter`, String.raw`\bgfpgan`, String.raw`real-?esrgan`, String.raw`instantx`, String.raw`\binstant-?id\b`,
+  // Face-consistency tools and face models: ByteDance's InfiniteYou, UNO/UMO/USO and DreamO, Alibaba's ACE++ and EcomID,
+  // Tencent's InstantCharacter, StoryDiffusion, ConsistentID, SUPIR, and InsightFace (inswapper, antelopev2, buffalo_l),
+  // which the ID adapters use to read faces; fofr/consistent-character runs InstantID and IP-Adapter inside
+  String.raw`infinite-?you`, String.raw`ali-vilab`, String.raw`\bace[-_]?(?:plus|\+\+)`, String.raw`(?:^|\/)(?:uno|umo|uso)(?:[-\/]|$)`,
+  String.raw`\bdreamo\b`, String.raw`instant-?character`, String.raw`\becomid\b`, String.raw`story-?diffusion`, String.raw`consistent-?id\b`,
+  String.raw`consistent-character`, String.raw`\bsupir\b`, String.raw`insightface`, String.raw`inswapper`, String.raw`antelopev2`, String.raw`buffalo_l\b`,
   // Taiwan-based labs (suspect under the rule)
   String.raw`\btaide\b`, String.raw`mediatek`, String.raw`taiwan-llm`, String.raw`foxbrain`,
   // Hosts: any PRC, Hong Kong, Macau or Taiwan TLD, and PRC cloud regions (AWS China, Alibaba, Volcengine)
