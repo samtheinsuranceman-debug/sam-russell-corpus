@@ -25,7 +25,7 @@ import { verifyAdvice } from "./advice";
 import { FHIR_GRANTEE, importFromFhir } from "./healthBridge";
 import { fhirConfigured } from "./_core/fhir";
 import { TAX_FEED_GRANTEE, fetchTaxFeed, parseTranscriptText, taxFeedConfigured, taxRecordToSuggestions } from "./taxFeed";
-import { signProvenance } from "./provenance";
+import { verifyProvenance } from "./provenance";
 
 const scope = z.object({ clientId: z.number().int().positive().optional(), leadId: z.number().int().positive().optional() });
 type Ctx = { user: { id: number; openId: string; role: string; name?: string | null; email?: string | null } };
@@ -310,8 +310,8 @@ const provenanceRouter = router({
     const { ids } = await resolve(ctx, input);
     const p = await provenanceForDocument(input.documentId, ids.clientId!, ids.workspaceId!);
     if (!p) return { found: false as const };
-    const expected = signProvenance({ documentId: p.documentId, sha256: p.sha256, uploadedAt: p.signedAt.toISOString(), uploadedBy: p.uploadedByName ?? "" });
-    return { found: true as const, verified: expected === p.signature, sha256: p.sha256, version: p.version, signedAt: p.signedAt, consistency: p.consistency };
+    const verified = verifyProvenance({ documentId: p.documentId, sha256: p.sha256, uploadedAt: p.signedAt.toISOString(), uploadedBy: p.uploadedByName ?? "" }, p.signature ?? "");
+    return { found: true as const, verified, sha256: p.sha256, version: p.version, signedAt: p.signedAt, consistency: p.consistency };
   }),
 });
 
