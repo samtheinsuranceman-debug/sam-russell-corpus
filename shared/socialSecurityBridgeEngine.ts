@@ -174,7 +174,7 @@ export function calculateSSBridge(input: SSBridgeInput): SSBridgeResult {
     `Monthly benefit at ${optimal.claimAge}: $${optimal.monthlyBenefit.toLocaleString()} vs $${earlyStrategy.monthlyBenefit.toLocaleString()} at 62`,
     `Bridge funding needed: $${optimal.bridgeAmount.toLocaleString()} from IUL loans (tax-free under IRC §72(e))`,
     `Break-even age: ${optimal.breakEvenAge} — after this age, delayed claiming wins`,
-    `Tax efficiency: IUL bridge income is 100% tax-free vs up to 85% of SS being taxable`,
+    `Tax efficiency: IUL policy-loan bridge income is generally not taxable if the policy is not a MEC and stays in force, vs up to 85% of SS being taxable`,
   ];
 
   return {

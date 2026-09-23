@@ -1086,8 +1086,8 @@ export default function TaxWaterfall() {
                       </div>
                       <div className="p-3 rounded-lg bg-green-500/10">
                         <p className="text-xs text-green-400">IUL Advantage</p>
-                        <p className="text-lg font-bold">0% Tax</p>
-                        <p className="text-xs text-muted-foreground">Non-MEC policy loans kept in force are not taxed as capital gains or NIIT</p>
+                        <p className="text-lg font-bold">No income tax on loans*</p>
+                        <p className="text-xs text-muted-foreground">*Non-MEC policy loans kept in force are not taxed as capital gains or NIIT; loan interest accrues</p>
                       </div>
                     </div>
                   </CardContent>

@@ -189,6 +189,7 @@ export const BANNED: Rule[] = [
   { id: "health-claims", why: "R24: no health claims for a financial product", rx: /\blive longer\b|\bcortisol\b|\bhealth strategy\b|\blower (rates of )?depression\b|\blower mortality risk\b/ },
   { id: "demo-mode-disclaimers", why: "disclosures must always render", rx: /\bhide disclaimers\b|\bshow disclaimers\b/ },
   { id: "guaranteed-tax-free-sales", why: "R4/R7: unqualified guarantee plus tax claim in a sales comparison", rx: /\btax free (&|and) guaranteed\b|\bguaranteed (&|and) tax free\b|\bguaranteed tax free\b|\b100% (certainty|confidence|predictable)\b|\btaxable (&|and) (unreliable|unpredictable)\b/ },
+  { id: "zero-percent-tax", why: "R7/R11: a Roth conversion is taxable; 'tax-free' needs its condition, never '100%' or '0% tax'", rx: /\b100% tax free\b|(^|[^\d.])0% tax\b|\bzero tax (impact|liability|variability|engine|bill)\b|\btax burden \$0\b/ },
   { id: "refund-promise", why: "contradicts the non-refundable terms on /pricing", rx: /\brefund every penny\b|\bmoney back guarantee\b|\bwe guarantee them\b/ },
   { id: "divorce-proof-prompt", why: "R11: an absolute handed to the model", rx: /\bdivorce proof\b/, only: /^server\// },
 ];
@@ -353,6 +354,7 @@ describe("copy compliance: banned phrases", () => {
       "refund-promise": "we refund every penny. No questions asked",
       "divorce-proof-prompt": "hard to touch ('divorce-proof')",
       "guaranteed-tax-free-sales": "With $4,000/month guaranteed tax-free, here is exactly what you can plan for with 100% confidence",
+      "zero-percent-tax": "Roth converting at 0% tax liability… lifetime income that is 100% tax-free",
     };
     // Forms that slipped past the first version of this guard (C-B review S1).
     const alsoPlanted: Record<string, string[]> = {
@@ -360,6 +362,7 @@ describe("copy compliance: banned phrases", () => {
       "never-lose": ["you will never lose a dime", "your account can never go down", "you won't lose money", "you'll never{\" \"}lose money", "never lose your principal", "never lose a single dollar"],
       "policy-never-dies": ["The policy lives forever", "It never lapses, even at death", "your policy will never die"],
       "guaranteed-tax-free-sales": ["With $4,000/month guaranteed tax-free, plan with 100% confidence", "Current — Taxable & Unreliable", "Solar Strategy — Tax-Free & Guaranteed"],
+      "zero-percent-tax": ["0% tax — forever", "the entire income stream becomes 100% tax-free for life", "100% Tax Free", "with zero tax impact"],
       "mega-roth": ["the MegaRoth"],
       "guaranteed-growth": ["compounds at 6.25% guaranteed while the loan shrinks"],
       "guaranty-association": ["to stay within North Carolina's $250,000 guaranty limit per carrier", "Your state guaranty association protects you (§ 58-62-86)"],

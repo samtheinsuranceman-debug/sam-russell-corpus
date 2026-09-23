@@ -406,8 +406,8 @@ export default function LifetimeGuaranteedIncome() {
                       <h4 className="font-semibold text-amber-400 mb-1">Critical Tax Insight</h4>
                       <p className="text-sm text-muted-foreground">
                         This annuity uses <strong>qualified (IRA/401k) money</strong>, meaning every dollar of the {result ? fmt(result.taxableScenario.annualIncome) : "..."}/year 
-                        lifetime income is <strong className="text-red-400">fully taxable as ordinary income</strong>. By Roth converting these funds first through the 
-                        Solar Strategy, the entire income stream becomes <strong className="text-emerald-400">100% tax-free for life</strong>.
+                        lifetime income is <strong className="text-red-400">fully taxable as ordinary income</strong>. If these funds are converted to a Roth first (the conversion is taxable
+                        in the year it happens), the income stream can be paid as <strong className="text-emerald-400">qualified Roth distributions, free of income tax</strong> once age 59½ and the five-year rule are met.
                       </p>
                     </div>
                   </div>
@@ -658,7 +658,7 @@ export default function LifetimeGuaranteedIncome() {
                       className="h-full bg-gradient-to-r from-emerald-600 to-emerald-400 rounded-lg flex items-center justify-end pr-3"
                       style={{ width: "100%" }}
                     >
-                      <span className="text-xs font-bold text-white">100% Tax-Free</span>
+                      <span className="text-xs font-bold text-white">Qualified Roth: no income tax</span>
                     </div>
                   </div>
                 </div>
@@ -989,9 +989,8 @@ export default function LifetimeGuaranteedIncome() {
                   </h3>
                   <div className="space-y-3 text-sm text-muted-foreground">
                     <p>
-                      Beyond the raw numbers, tax-free income provides something priceless: <strong>certainty</strong>. 
-                      When you know exactly how much hits your bank account every month — with zero tax variability — 
-                      you can plan your retirement with complete confidence.
+                      Beyond the raw numbers, qualified Roth income is simpler to plan around: future income tax rates do not
+                      change it. The amount is set by the contract and is subject to the insurer's claims-paying ability.
                     </p>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
                       <div className="space-y-2">
