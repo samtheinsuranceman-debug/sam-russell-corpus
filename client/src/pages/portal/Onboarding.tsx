@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { AppShell } from "@/components/AppShell";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -74,15 +73,12 @@ const RISK_QUESTIONS = [
   { key: "growthVsIncome", label: "Do you prefer growth or income?", low: "Income only", high: "Growth only" },
 ];
 
-const GOAL_CATEGORIES = [{ value: "retirement", label: "Retirement", emoji: "🏖️" },
-,
+const GOAL_CATEGORIES = [
+  { value: "retirement", label: "Retirement", emoji: "🏖️" },
   { value: "travel", label: "Travel & Adventure", emoji: "✈️" },
-,
   { value: "education", label: "Education", emoji: "🎓" },
-,
   { value: "home_purchase", label: "Home Purchase", emoji: "🏡" },
-,
-  { value: "debt_free", label: "Debt Freedom", emoji: "🔓" }
+  { value: "debt_free", label: "Debt Freedom", emoji: "🔓" },
 ];
 
 const LEVEL_EMOJIS = ["🌱", "🧭", "🏗️", "♟️", "📈", "🏆", "🛡️", "🏰", "👑", "⭐"];
@@ -845,7 +841,7 @@ export default function ClientOnboardingWizard() {
                       <Input
                         placeholder={q.placeholder}
                         value={depthAnswers[q.id] || ""}
-                        onChange={(v) => setDepthAnswers(prev => ({ ...prev, [q.id]: e.target.value }))}
+                        onChange={(e) => setDepthAnswers(prev => ({ ...prev, [q.id]: e.target.value }))}
                       />
                     )}
                     {q.type === "number" && (
@@ -853,7 +849,7 @@ export default function ClientOnboardingWizard() {
                         type="number"
                         placeholder={q.placeholder}
                         value={depthAnswers[q.id] || ""}
-                        onChange={(v) => setDepthAnswers(prev => ({ ...prev, [q.id]: e.target.value }))}
+                        onChange={(e) => setDepthAnswers(prev => ({ ...prev, [q.id]: e.target.value }))}
                       />
                     )}
                     {q.type === "select" && q.options && (

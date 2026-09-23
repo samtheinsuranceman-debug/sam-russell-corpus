@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { useState, useMemo, useEffect } from "react";
 import { AppShell } from "@/components/AppShell";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
@@ -78,14 +77,15 @@ interface BatchResult {
   savedId?: number;
 }
 
+function clientDisplayName(c: { name: string; firstName: string | null; lastName: string | null }): string {
+  const parts = [c.firstName, c.lastName].filter(Boolean).join(" ");
+  return c.name || parts;
+}
+
 export default function BatchSlides() {
   const { user } = useAuth();
   
-  const { data: clients } = trpc.clients.list.useQuery();
-  const { data: recentBatches } = trpc.batchSchedule.list.useQuery();
-  const { data: slideTemplates } = trpc.slides.listTemplates.useQuery();
-  const { data: teamMembers } = trpc.team.members.useQuery();
-  const { data: complianceRules } = trpc.complianceTracking.getRules.useQuery();
+  const { data: clients, isLoading: clientsLoading } = trpc.clients.list.useQuery(undefined, { enabled: !!user });
   
   const [selectedClientIds, setSelectedClientIds] = useState<number[]>([]);
   const [topic, setTopic] = useState("");
@@ -110,7 +110,6 @@ export default function BatchSlides() {
   const [scheduleTime, setScheduleTime] = useState("");
   const [tags, setTags] = useState<string[]>([]);
   const [newTag, setNewTag] = useState("");
-  const [filterType, setFilterType] = useState("all");
   const [sortOrder, setSortOrder] = useState("nameAsc");
   const [viewMode, setViewMode] = useState("list");
   const [selectedBatchId, setSelectedBatchId] = useState<string | null>(null);
@@ -141,20 +140,20 @@ export default function BatchSlides() {
 
   const filteredClients = useMemo(() => {
     if (!clients) return [];
-    let filtered = clients.filter((c) => 
-      `${c.firstName} ${c.lastName}`.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      c.email?.toLowerCase().includes(searchQuery.toLowerCase())
+    const q = searchQuery.toLowerCase();
+    const filtered = clients.filter((c) =>
+      clientDisplayName(c).toLowerCase().includes(q) ||
+      c.email?.toLowerCase().includes(q)
     );
-    
-    if (filterType === "active") filtered = filtered.filter((c) => c.status === "active");
-    if (filterType === "prospect") filtered = filtered.filter((c) => c.status === "prospect");
-    
-    if (sortOrder === "nameAsc") filtered.sort((a, b) => a.lastName.localeCompare(b.lastName));
-    if (sortOrder === "nameDesc") filtered.sort((a, b) => b.lastName.localeCompare(a.lastName));
+
+    // Sort on last name when the record has one, otherwise on the full name.
+    const sortKey = (c: NonNullable<typeof clients>[number]) => (c.lastName || clientDisplayName(c)).toLowerCase();
+    if (sortOrder === "nameAsc") filtered.sort((a, b) => sortKey(a).localeCompare(sortKey(b)));
+    if (sortOrder === "nameDesc") filtered.sort((a, b) => sortKey(b).localeCompare(sortKey(a)));
     if (sortOrder === "recent") filtered.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
-    
+
     return filtered;
-  }, [clients, searchQuery, filterType, sortOrder]);
+  }, [clients, searchQuery, sortOrder]);
 
   const selectAll = () => {
     if (!filteredClients) return;
@@ -775,17 +774,6 @@ export default function BatchSlides() {
                       />
                     </div>
                     <div className="flex gap-2">
-                      <Select value={filterType} onValueChange={setFilterType}>
-                        <SelectTrigger className="w-full rc-input h-9 text-xs">
-                          <Filter className="h-3 w-3 mr-2" />
-                          <SelectValue placeholder="Filter by" />
-                        </SelectTrigger>
-                        <SelectContent className="bg-[#0d1a2e] border-[#12233e]">
-                          <SelectItem value="all" className="text-[#c8d8ec] focus:bg-[#12233e] focus:text-white">All Clients</SelectItem>
-                          <SelectItem value="active" className="text-[#c8d8ec] focus:bg-[#12233e] focus:text-white">Active Only</SelectItem>
-                          <SelectItem value="prospect" className="text-[#c8d8ec] focus:bg-[#12233e] focus:text-white">Prospects Only</SelectItem>
-                        </SelectContent>
-                      </Select>
                       <Select value={sortOrder} onValueChange={setSortOrder}>
                         <SelectTrigger className="w-full rc-input h-9 text-xs">
                           <ArrowRight className="h-3 w-3 mr-2" />
@@ -830,8 +818,7 @@ export default function BatchSlides() {
                         />
                         <div className="flex-1 min-w-0">
                           <p className="text-sm font-semibold text-white truncate flex items-center gap-2">
-                            {client.firstName} {client.lastName}
-                            {client.status === "active" && <Badge className="bg-blue-500/20 text-blue-400 text-[10px] px-1.5 py-0 h-4 border-none">Active</Badge>}
+                            {clientDisplayName(client)}
                           </p>
                           {client.email && (
                             <p className="text-xs text-[#7a95b8] truncate mt-0.5 flex items-center gap-1">

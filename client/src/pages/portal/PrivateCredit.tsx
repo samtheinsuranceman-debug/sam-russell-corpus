@@ -1,8 +1,7 @@
-// @ts-nocheck
 
 import React, { useState, useMemo } from 'react';
 import { Banknote, DollarSign, TrendingUp, Shield, CheckCircle2, AlertTriangle, Lock, Percent } from 'lucide-react';
-import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend, BarChart, Bar, ComposedChart, Line } from 'recharts';
+import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend, BarChart, Bar, ComposedChart, Line, LineChart } from 'recharts';
 import { PageInsights } from "@/components/PageInsights";
 
 const PrivateCredit = () => {
@@ -171,7 +170,7 @@ const PrivateCredit = () => {
         <p className="text-[#94a3b8]">Use the charts to drill down into specifics, such as LTV ratios for risk assessment.</p>
         <p className="text-[#94a3b8]">This comprehensive page covers all aspects of private credit in a dark-themed interface.</p>
       </div>
-      <PageInsights section="private-credit" />
+      <PageInsights pageId="private-credit" />
     </div>
   );
 };

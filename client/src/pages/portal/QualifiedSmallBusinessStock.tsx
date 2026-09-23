@@ -1,8 +1,7 @@
-// @ts-nocheck
 
 import React, { useState, useMemo } from 'react';
 import { Rocket, DollarSign, TrendingUp, Target, Calendar, Percent, ArrowRight, Shield, CheckCircle2, AlertTriangle, Building2, Star } from 'lucide-react';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend, AreaChart, Area, ComposedChart, Line, PieChart, Pie, Cell } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend, AreaChart, Area, ComposedChart, Line, LineChart, PieChart, Pie, Cell } from 'recharts';
 import { PageInsights } from "@/components/PageInsights";
 
 export default function QualifiedSmallBusinessStock() {
@@ -241,7 +240,7 @@ export default function QualifiedSmallBusinessStock() {
           <li><Shield size={18} /> PATH Act 2015: Expanded 100% exclusion.</li>
         </ul>
       </section>
-      <PageInsights section="qualified-small-business-stock" />
+      <PageInsights pageId="qualified-small-business-stock" />
     </div>
   );
 }
