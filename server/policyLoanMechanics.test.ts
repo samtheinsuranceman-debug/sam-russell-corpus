@@ -513,3 +513,28 @@ describe('the disclosure a page renders verbatim', () => {
     expect(LOAN_DISCLOSURE).toContain('Securian');
   });
 });
+
+describe('carrier sources carry no client identity', () => {
+  it('names the carrier, product, form and date, never a client or a case number', async () => {
+    const mod = await import('../shared/policyLoanMechanics');
+    const text = JSON.stringify([mod.CARRIER_LOAN_PROFILES, mod.POLICY_LOAN_SOURCES]);
+    expect(text).not.toMatch(/Case ID \d|case \d{6,}|\bfor [A-Z]\. [A-Z][a-z]+/);
+  });
+
+  it('no shared or server file carries a case number read off a client illustration', async () => {
+    const { readdirSync, readFileSync, statSync } = await import('node:fs');
+    const { join, resolve } = await import('node:path');
+    const root = resolve(__dirname, '..');
+    const hits: string[] = [];
+    const walk = (d: string) => {
+      for (const e of readdirSync(d)) {
+        const p = join(d, e);
+        if (statSync(p).isDirectory()) walk(p);
+        else if (/\.ts$/.test(e) && !/\.test\.ts$/.test(e) && readFileSync(p, 'utf8').match(/Case ID \d{5,}|29335303/)) hits.push(p.slice(root.length + 1));
+      }
+    };
+    walk(join(root, 'shared'));
+    walk(join(root, 'server'));
+    expect(hits).toEqual([]);
+  });
+});

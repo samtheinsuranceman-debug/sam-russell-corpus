@@ -630,7 +630,7 @@ export const SECURIAN_FIXED: LoanTerms = {
   chargedRatePct: 4.00,
   collateralCreditRatePct: 3.00,      // years 1-10; see SECURIAN_FIXED_LATE
   source:
-    'Securian / Minnesota Life Balanced Growth Accumulator III illustration, Case ID 29335303 — fixed loan charged 4.00% constant, credited 3.00% years 1-10 and 4.00% years 11+',
+    'Securian / Minnesota Life Balanced Growth Accumulator III illustration, one client case (de-identified) — fixed loan charged 4.00% constant, credited 3.00% years 1-10 and 4.00% years 11+',
   asOf: '2026-09-15',
 };
 
@@ -650,7 +650,7 @@ export const SECURIAN_INDEXED: LoanTerms = {
   label: 'Indexed loan',
   chargedRatePct: 4.75,
   source:
-    'Securian / Minnesota Life Balanced Growth Accumulator III illustration, Case ID 29335303 — indexed loan charged 4.75% constant, loan amount transferred into a separate Indexed Loan Account and credited at that account\'s performance',
+    'Securian / Minnesota Life Balanced Growth Accumulator III illustration, one client case (de-identified) — indexed loan charged 4.75% constant, loan amount transferred into a separate Indexed Loan Account and credited at that account\'s performance',
   asOf: '2026-09-15',
 };
 
@@ -669,7 +669,7 @@ export const SECURIAN_VARIABLE: LoanTerms = {
   chargedRatePct: 4.75,
   collateralCreditGuaranteedPct: 0,
   source:
-    "Securian / Minnesota Life Balanced Growth Accumulator III illustration, Case ID 29335303 — 'the loan amount remains in your current fixed or indexed accounts'; charged rate varies with the Moody's Corporate Bond Yield Average, capped at 1.5% above the current fixed account crediting rate. The 4.75% here is a placeholder at the indexed-loan rate: confirm the live Moody's-derived rate before quoting it.",
+    "Securian / Minnesota Life Balanced Growth Accumulator III illustration, one client case (de-identified) — 'the loan amount remains in your current fixed or indexed accounts'; charged rate varies with the Moody's Corporate Bond Yield Average, capped at 1.5% above the current fixed account crediting rate. The 4.75% here is a placeholder at the indexed-loan rate: confirm the live Moody's-derived rate before quoting it.",
   asOf: '2026-09-15',
 };
 
@@ -785,7 +785,7 @@ export const CARRIER_LOAN_PROFILES: readonly CarrierLoanProfile[] = [
       "Illustrated interest rate 4.50% years 1–52; guaranteed 1.00%.",
       "Carries SVER coverage and a year-8 conversion rider at no cost, surrender charges waived, no evidence of insurability.",
     ],
-    source: "Pacific Horizon ECV IUL illustration, Form Series ICC21 P21IUL, run 16 Sep 2026 for M. Corrales",
+    source: "Pacific Horizon ECV IUL illustration, Form Series ICC21 P21IUL, run 16 Sep 2026 for one client case (de-identified)",
     asOf: "2026-09-16",
   },
   {
@@ -806,7 +806,7 @@ export const CARRIER_LOAN_PROFILES: readonly CarrierLoanProfile[] = [
       "Growth floor 0% on the indexed accounts - there is no 2% floor.",
       "No clause in this illustration reserving the right to change which accounts are eligible for loans. It DOES reserve discretion over the growth cap: 'We reserve the right to [change it]' and 'may be changed at our discretion but cannot be less favorable to you than the policy's guarantees.' Different clause, same direction of travel.",
     ],
-    source: "Securian / Minnesota Life Balanced Growth Accumulator III illustration, Case ID 29335303, for M. Corrales age 65 Preferred Non-Tobacco",
+    source: "Securian / Minnesota Life Balanced Growth Accumulator III illustration, one client case (de-identified): issue age 65, Preferred Non-Tobacco",
     asOf: "2026-09-15",
   },
   {
