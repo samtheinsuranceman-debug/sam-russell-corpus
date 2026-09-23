@@ -6,7 +6,7 @@
  *   TIME MACHINE (Historical Model)   → Warm Amber/Gold (#f59e0b / #fbbf24)
  *
  * Every hover tooltip explains the methodology:
- * We show compliant crediting rates (0-7.5%) applied to a hypothetical
+ * We show an assumed crediting rate the visitor sets, applied to a hypothetical
  * pre-existing account large enough that the dollar credits match what
  * actual historical index returns would have produced.
  */
@@ -145,8 +145,8 @@ function TimeMachineChartTooltip({ active, payload, label, startYear, totalPremi
       <div className="mt-2 pt-2 border-t border-border/50">
         <p className="text-[9px] text-muted-foreground leading-tight">
           The Time Machine values represent a hypothetical pre-existing account credited at an assumed crediting rate
-          ({"\u2264"}7.5%) sized to match what actual {calYear} index returns would have produced.
-          No non-compliant rates are illustrated.
+          you set, sized to match what actual {calYear} index returns would have produced. This is a mechanic, not a
+          carrier illustration.
         </p>
       </div>
     </div>
@@ -541,7 +541,7 @@ export default function TimeMachineMethod() {
                   <Select value={String(boringRate)} onValueChange={v => setBoringRate(Number(v))}>
                     <SelectTrigger><SelectValue /></SelectTrigger>
                     <SelectContent>
-                      {[4.0, 4.5, 5.0, 5.5, 6.0, 6.25, 6.5, 7.0, 7.5].map((r) => (
+                      {[4.0, 4.5, 5.0, 5.5, 6.0, 6.25, 6.5, 7.0, 7.5, 8.0, 9.0, 10.0, 11.0, 12.0].map((r) => (
                         <SelectItem key={r} value={String(r)}>{r}%</SelectItem>
                       ))}
                     </SelectContent>
