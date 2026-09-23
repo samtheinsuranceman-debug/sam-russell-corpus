@@ -92,9 +92,11 @@ export function optimizeMultiCurrency(input: MultiCurrencyInput): MultiCurrencyR
       const baseVal = baseValues[i];
       const grown = baseVal * Math.pow(1 + asset.annualReturn, y);
 
-      // Currency fluctuation (random walk with drift)
-      const pair = input.currencyPairs.find(p => p.from === asset.currency);
-      const fxChange = pair ? (Math.random() - 0.5) * pair.volatility * 2 : 0;
+      // Currency fluctuation. The direction of an exchange rate is not forecast: the expected
+      // change of a zero-drift random walk is 0, so the central projection holds the rate flat.
+      // Currency risk is reported separately (currencyRiskExposure, the non-base share), never
+      // as a random draw that changes on every call.
+      const fxChange = 0;
       const unhedgedVal = grown * (1 + fxChange);
       const hedgedVal = grown; // Hedged = no currency impact
 
