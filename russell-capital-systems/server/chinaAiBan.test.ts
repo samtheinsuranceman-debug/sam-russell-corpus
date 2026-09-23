@@ -102,6 +102,10 @@ const MUST_MATCH = [
   // Hosts
   "https://api.example.cn", "https://example.cn:443", "https://llm.example.com.cn/v1", "https://ai.example.hk", "https://ai.example.tw/v1",
   "https://bedrock-runtime.cn-north-1.amazonaws.com.cn", "cn-beijing",
+  // face-consistency tools (added 23 Sep 2026)
+  "bytedance/infiniteyou", "fal-ai/infinite-you", "ali-vilab/ace-plus", "fal-ai/ace++", "fal-ai/uno", "fal-ai/dreamo",
+  "tencent/instant-character", "fal-ai/instant-character", "fal-ai/ecomid", "story-diffusion", "consistent-id", "fofr/consistent-character",
+  "supir", "insightface/inswapper_128", "antelopev2", "buffalo_l",
 ];
 
 /** Routers that choose the model after the request leaves: refused as model ids. */
@@ -139,6 +143,7 @@ const MUST_NOT_MATCH = [
   // ordinary words that share letters with a banned term
   "step-1", "step-3", "step-by-step", "Apache Spark", "sparkline", "structuredNotes", "Bernie", "yuan", "Chinese yuan", "algorithm", "glamour",
   "kimono", "manuscript", "Manuscripts", "forge", "Forge Anchor", "https://www.cnn.com", "https://example.com/cn/", "https://example.co", "https://api.example.com/v1",
+  "unobtrusive", "unordered", "insight", "insights", "Instant quote", "instant", "our story", "consistent", "consistently", "ace", "space", "Grace", "superior", "dream",
 ];
 
 describe("the pattern", () => {
