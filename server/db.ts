@@ -1708,10 +1708,11 @@ export async function getUnreadNotificationCount(workspaceId: number) {
   return result[0]?.cnt ?? 0;
 }
 
-export async function markNotificationRead(notificationId: number) {
+export async function markNotificationRead(notificationId: number, workspaceId: number) {
   const db = await getDb();
   if (!db) return;
-  await db.update(inAppNotifications).set({ read: true }).where(eq(inAppNotifications.id, notificationId));
+  await db.update(inAppNotifications).set({ read: true })
+    .where(and(eq(inAppNotifications.id, notificationId), eq(inAppNotifications.workspaceId, workspaceId)));
 }
 
 export async function markAllNotificationsRead(workspaceId: number) {
@@ -3308,17 +3309,18 @@ export async function createUserSession(data: {
   return rows[0];
 }
 
-export async function endUserSession(sessionId: number) {
+/** Ends one of the caller's own sessions; a session id belonging to someone else is left alone. */
+export async function endUserSession(sessionId: number, userId: number) {
   const db = await getDb();
   if (!db) return;
-  const rows = await db.select().from(userSessions).where(eq(userSessions.id, sessionId)).limit(1);
+  const rows = await db.select().from(userSessions).where(and(eq(userSessions.id, sessionId), eq(userSessions.userId, userId))).limit(1);
   if (!rows[0]) return;
   const loginAt = rows[0].loginAt;
   const now = new Date();
   const durationSecs = Math.round((now.getTime() - loginAt.getTime()) / 1000);
   await db.update(userSessions)
     .set({ isActive: false, logoutAt: now, durationSecs })
-    .where(eq(userSessions.id, sessionId));
+    .where(and(eq(userSessions.id, sessionId), eq(userSessions.userId, userId)));
 }
 
 export async function endUserSessionByUserId(userId: number) {
@@ -4079,11 +4081,18 @@ export async function getSlideComments(deckId: number) {
   return db.select().from(slideComments).where(eq(slideComments.deckId, deckId)).orderBy(slideComments.createdAt);
 }
 
-export async function resolveSlideComment(id: number) {
+/** Resolves a comment only when its deck belongs to `workspaceId`. Returns false when it does not. */
+export async function resolveSlideComment(id: number, workspaceId: number): Promise<boolean> {
   const db = await getDb();
-  if (!db) return;
-  const { slideComments } = await import("../drizzle/schema");
-  await db.update(slideComments).set({ resolved: true }).where(eq(slideComments.id, id));
+  if (!db) return false;
+  const { slideComments, savedSlideDecks } = await import("../drizzle/schema");
+  const [row] = await db.select({ id: slideComments.id }).from(slideComments)
+    .innerJoin(savedSlideDecks, eq(savedSlideDecks.id, slideComments.deckId))
+    .where(and(eq(slideComments.id, id), eq(savedSlideDecks.workspaceId, workspaceId)))
+    .limit(1);
+  if (!row) return false;
+  await db.update(slideComments).set({ resolved: true }).where(eq(slideComments.id, row.id));
+  return true;
 }
 
 export async function deleteSlideComment(id: number, userId: number) {
@@ -4094,13 +4103,21 @@ export async function deleteSlideComment(id: number, userId: number) {
 }
 
 // ─── Slide Shares ───────────────────────────────────────────────────────────
-export async function createSlideShare(data: { deckId: number; sharedByUserId: number; sharedWithEmail: string; permission?: "view" | "comment" | "edit" }) {
+export async function createSlideShare(data: { deckId: number; sharedByUserId: number; sharedWithEmail: string; permission?: "view" | "comment" | "edit"; expiresAt?: Date | null }) {
   const db = await getDb();
   if (!db) throw new Error("DB unavailable");
   const { slideShares } = await import("../drizzle/schema");
   const shareToken = randomBytes(24).toString("hex");
-  const [row] = await db.insert(slideShares).values({ ...data, shareToken, permission: data.permission || "comment" }).$returningId();
-  return { id: row.id, shareToken };
+  const [row] = await db.insert(slideShares).values({ ...data, expiresAt: data.expiresAt ?? null, shareToken, permission: data.permission || "comment" }).$returningId();
+  return { id: row.id, shareToken, expiresAt: data.expiresAt ?? null };
+}
+
+/** A share with no expiry lives until it is removed; one with an expiry stops working at that moment. */
+export function slideShareIsLive(share: { expiresAt?: Date | string | null }, now: Date = new Date()): boolean {
+  if (share.expiresAt == null) return true;
+  const at = share.expiresAt instanceof Date ? share.expiresAt : new Date(share.expiresAt);
+  if (Number.isNaN(at.getTime())) return false;
+  return at.getTime() > now.getTime();
 }
 
 export async function getSlideShares(deckId: number) {
@@ -4114,17 +4131,26 @@ export async function getSlideShareByToken(token: string) {
   const db = await getDb();
   if (!db) return null;
   const { slideShares } = await import("../drizzle/schema");
+  if (!token || token.length > 255) return null;
   const rows = await db.select().from(slideShares).where(eq(slideShares.shareToken, token)).limit(1);
   if (rows.length === 0) return null;
+  if (!slideShareIsLive(rows[0])) return null;
   await db.update(slideShares).set({ accessedAt: new Date() }).where(eq(slideShares.id, rows[0].id));
   return rows[0];
 }
 
-export async function deleteSlideShare(id: number) {
+/** Removes a share only when its deck belongs to `workspaceId`. Returns false when it does not. */
+export async function deleteSlideShare(id: number, workspaceId: number): Promise<boolean> {
   const db = await getDb();
-  if (!db) return;
-  const { slideShares } = await import("../drizzle/schema");
-  await db.delete(slideShares).where(eq(slideShares.id, id));
+  if (!db) return false;
+  const { slideShares, savedSlideDecks } = await import("../drizzle/schema");
+  const [row] = await db.select({ id: slideShares.id }).from(slideShares)
+    .innerJoin(savedSlideDecks, eq(savedSlideDecks.id, slideShares.deckId))
+    .where(and(eq(slideShares.id, id), eq(savedSlideDecks.workspaceId, workspaceId)))
+    .limit(1);
+  if (!row) return false;
+  await db.delete(slideShares).where(eq(slideShares.id, row.id));
+  return true;
 }
 
 // ─── Owner Analytics Helpers ────────────────────────────────────────────────
@@ -4590,10 +4616,22 @@ export async function getVideoProposalChapters(proposalId: number) {
     .orderBy(asc(videoProposalChapters.chapterIndex));
 }
 
-export async function updateVideoProposalChapter(id: number, data: Partial<typeof videoProposalChapters.$inferInsert>) {
+/**
+ * Updates a chapter only when its proposal belongs to `workspaceId` (and, when given,
+ * is `proposalId`). Returns false when the chapter is not the caller's.
+ */
+export async function updateVideoProposalChapter(id: number, workspaceId: number, data: Partial<typeof videoProposalChapters.$inferInsert>, proposalId?: number): Promise<boolean> {
   const db = await getDb();
   if (!db) throw new Error("DB unavailable");
-  await db.update(videoProposalChapters).set(data).where(eq(videoProposalChapters.id, id));
+  const conditions = [eq(videoProposalChapters.id, id), eq(videoProposals.workspaceId, workspaceId)];
+  if (proposalId !== undefined) conditions.push(eq(videoProposalChapters.proposalId, proposalId));
+  const [row] = await db.select({ id: videoProposalChapters.id }).from(videoProposalChapters)
+    .innerJoin(videoProposals, eq(videoProposals.id, videoProposalChapters.proposalId))
+    .where(and(...conditions))
+    .limit(1);
+  if (!row) return false;
+  await db.update(videoProposalChapters).set(data).where(eq(videoProposalChapters.id, row.id));
+  return true;
 }
 
 export async function deleteVideoProposalChapters(proposalId: number) {
@@ -4730,10 +4768,12 @@ export async function saveDealScore(data: {
   return result;
 }
 
-export async function getDealScoreHistory(dealId: number) {
+export async function getDealScoreHistory(dealId: number, workspaceId: number) {
   const db = await getDb();
   if (!db) return [];
-  return db.select().from(dealScores).where(eq(dealScores.dealId, dealId)).orderBy(desc(dealScores.scoredAt));
+  return db.select().from(dealScores)
+    .where(and(eq(dealScores.dealId, dealId), eq(dealScores.workspaceId, workspaceId)))
+    .orderBy(desc(dealScores.scoredAt));
 }
 
 export async function getWorkspaceDealScores(workspaceId: number) {
@@ -4852,13 +4892,25 @@ export async function getCalendarEventsByUser(userId: number, from?: Date, to?: 
   return db.select().from(calendarEvents).where(and(...conditions)).orderBy(asc(calendarEvents.startTime));
 }
 
-export async function getCalendarEventsByClient(clientId: number) {
+export async function getCalendarEventsByClient(clientId: number, workspaceId: number) {
   const db = await getDb();
   if (!db) return [];
-  return db.select().from(calendarEvents).where(eq(calendarEvents.clientId, clientId)).orderBy(desc(calendarEvents.startTime));
+  return db.select().from(calendarEvents)
+    .where(and(eq(calendarEvents.clientId, clientId), eq(calendarEvents.workspaceId, workspaceId)))
+    .orderBy(desc(calendarEvents.startTime));
 }
 
-export async function updateCalendarEventDb(id: number, data: Partial<{
+/** One local calendar event, only if it belongs to `workspaceId`. */
+export async function getCalendarEventForWorkspace(id: number, workspaceId: number) {
+  const db = await getDb();
+  if (!db) return null;
+  const [event] = await db.select().from(calendarEvents)
+    .where(and(eq(calendarEvents.id, id), eq(calendarEvents.workspaceId, workspaceId)))
+    .limit(1);
+  return event ?? null;
+}
+
+export async function updateCalendarEventDb(id: number, workspaceId: number, data: Partial<{
   title: string;
   description: string;
   startTime: Date;
@@ -4871,13 +4923,14 @@ export async function updateCalendarEventDb(id: number, data: Partial<{
 }>) {
   const db = await getDb();
   if (!db) throw new Error("DB unavailable");
-  await db.update(calendarEvents).set({ ...data, updatedAt: new Date() }).where(eq(calendarEvents.id, id));
+  await db.update(calendarEvents).set({ ...data, updatedAt: new Date() })
+    .where(and(eq(calendarEvents.id, id), eq(calendarEvents.workspaceId, workspaceId)));
 }
 
-export async function deleteCalendarEventDb(id: number) {
+export async function deleteCalendarEventDb(id: number, workspaceId: number) {
   const db = await getDb();
   if (!db) throw new Error("DB unavailable");
-  await db.delete(calendarEvents).where(eq(calendarEvents.id, id));
+  await db.delete(calendarEvents).where(and(eq(calendarEvents.id, id), eq(calendarEvents.workspaceId, workspaceId)));
 }
 
 export async function getCalendarEventByGoogleId(googleEventId: string) {
@@ -4921,12 +4974,12 @@ export async function saveCalendarEvent(data: {
 
 export async function getCalendarEvents(workspaceId: number, userId: number, clientId?: number) {
   if (clientId) {
-    return getCalendarEventsByClient(clientId);
+    return getCalendarEventsByClient(clientId, workspaceId);
   }
   return getCalendarEventsByUser(userId);
 }
 
-export async function updateCalendarEvent(id: number, data: Partial<{
+export async function updateCalendarEvent(id: number, workspaceId: number, data: Partial<{
   title?: string;
   description?: string;
   startTime?: string;
@@ -4934,11 +4987,11 @@ export async function updateCalendarEvent(id: number, data: Partial<{
   location?: string;
   status?: string;
 }>) {
-  return updateCalendarEventDb(id, data as any);
+  return updateCalendarEventDb(id, workspaceId, data as any);
 }
 
-export async function deleteCalendarEvent(id: number) {
-  return deleteCalendarEventDb(id);
+export async function deleteCalendarEvent(id: number, workspaceId: number) {
+  return deleteCalendarEventDb(id, workspaceId);
 }
 
 export async function saveReportExport(data: {
