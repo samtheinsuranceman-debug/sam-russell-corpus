@@ -108,7 +108,13 @@ export function useCalculatorIntegration(config: CalculatorIntegrationConfig) {
 
   const getFromStrategy = useCallback((type: StrategyType) => strategyResults[type], [strategyResults]);
 
-  const loadScenario = useCallback((scenario: { inputs?: unknown } | null | undefined) => scenario?.inputs ?? null, []);
+  const loadScenario = useCallback(
+    (scenario: { inputs?: unknown } | null | undefined): Record<string, unknown> | null => {
+      const inputs = scenario?.inputs;
+      return inputs && typeof inputs === "object" ? (inputs as Record<string, unknown>) : null;
+    },
+    [],
+  );
 
   return {
     // Client selector

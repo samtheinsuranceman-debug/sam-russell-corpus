@@ -967,7 +967,8 @@ export default function MYGAFixedRate() {
             if (typeof inputs.premium === "number") setPremium(inputs.premium);
             if (typeof inputs.rate === "number") setRate(inputs.rate);
             if (typeof inputs.years === "number") setYears(inputs.years);
-            if (typeof inputs.stateCode === "string") { setStateCode(inputs.stateCode); setPendingState(inputs.stateCode); }
+            const saved = inputs.stateCode;
+            if (typeof saved === "string" && US_STATES.some(st => st.code === saved)) { setStateCode(saved as StateCode); setPendingState(saved as StateCode); }
           }}
           isSaving={calcIntegration.isSaving}
           lastSavedAt={calcIntegration.lastSavedAt}

@@ -1,4 +1,4 @@
-# Provenance census — summary (tree `8011800`)
+# Provenance census — summary (tree `7b76390`)
 
 Every count below is computed from the tree; none is typed. `server/provenanceCensus.test.ts` fails the build if any list grows.
 
