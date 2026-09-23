@@ -32,6 +32,7 @@ import {
   ULTRA_DISCLOSURE,
 } from "./ultraEngine";
 import { defaultMacro, macroNarrative, macroPath, type MacroAssumptions, type MacroYear } from "./macroEngine";
+import { mulberry32, normal } from "./macro/random";
 
 // ── The calculators a chain can hold ──────────────────────────────────────────
 export type ChainCalculatorId =
@@ -133,8 +134,36 @@ export function defaultHandoff(): HandoffSpec {
   return { enabled: true, atYear: null, pctOfCashValue: 50, target: null };
 }
 
-export function newStep(calculator: ChainCalculatorId, years = 10, id = `${calculator}-${Math.random().toString(36).slice(2, 8)}`): ChainStep {
-  return { id, calculator, years, params: {}, handoff: defaultHandoff(), zip: null };
+/** Seed used for a step id when the caller passes none, so the same call always gives the same id. */
+export const CHAIN_STEP_ID_DEFAULT_SEED = 1;
+
+export type StepIdOptions = {
+  /** Seed for the id draw (mulberry32). Same seed and calculator → same id. */
+  seed?: number;
+  /** Ids already in the chain; the draw continues on the same seeded stream until it finds a free one. */
+  taken?: Iterable<string>;
+};
+
+/** FNV-1a over the calculator id, so two calculators on the same seed draw different ids. */
+function hashString(text: string): number {
+  let h = 0x811c9dc5;
+  for (let i = 0; i < text.length; i++) h = Math.imul(h ^ text.charCodeAt(i), 0x01000193);
+  return h >>> 0;
+}
+
+/** A step id drawn from the seeded PRNG: deterministic for a given calculator, seed and set of taken ids. */
+export function stepId(calculator: ChainCalculatorId, opts: StepIdOptions = {}): string {
+  const rng = mulberry32((hashString(calculator) ^ (opts.seed ?? CHAIN_STEP_ID_DEFAULT_SEED)) >>> 0);
+  const taken = new Set(opts.taken ?? []);
+  for (let attempt = 0; attempt < 1_000; attempt++) {
+    const id = `${calculator}-${Math.floor(rng() * 36 ** 6).toString(36).padStart(6, "0")}`;
+    if (!taken.has(id)) return id;
+  }
+  throw new Error("Could not draw a free step id.");
+}
+
+export function newStep(calculator: ChainCalculatorId, years = 10, id?: string, opts: StepIdOptions = {}): ChainStep {
+  return { id: id ?? stepId(calculator, opts), calculator, years, params: {}, handoff: defaultHandoff(), zip: null };
 }
 
 /** The module set for one step: everything off except investment growth and the step's own modules, with the step's parameters applied. */
@@ -340,23 +369,7 @@ export type ChainMonteCarloResult = {
   disclosure: string;
 };
 
-// Small, fast, seedable PRNG (Mulberry32) and a normal draw (Box–Muller).
-function mulberry32(seed: number) {
-  let a = seed >>> 0;
-  return () => {
-    a = (a + 0x6d2b79f5) >>> 0;
-    let t = a;
-    t = Math.imul(t ^ (t >>> 15), t | 1);
-    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
-function normal(rng: () => number): number {
-  let u = 0, v = 0;
-  while (u === 0) u = rng();
-  while (v === 0) v = rng();
-  return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
-}
+// Seeded PRNG (Mulberry32) and normal draw (Box–Muller) come from ./macro/random, shared with the macro engines.
 
 function percentile(sorted: Float64Array, q: number): number {
   const n = sorted.length;

@@ -91,6 +91,8 @@ export const ENGINE_SOURCE_LOADERS: Record<string, Loader> = {
   "shared/ultraEngine.ts": () => import("./ultraEngine").then(m => m.ULTRA_ENGINE_SOURCES),
   "shared/wealthGenomeFactors.ts": () => import("./wealthGenomeFactors").then(m => m.WEALTH_GENOME_FACTORS_SOURCES),
   "shared/zipEngine.ts": () => import("./zipEngine").then(m => m.ZIP_SOURCES),
+  // Server engine: its figures come live from FRED; the shell-safe source list lives in shared.
+  "server/outsideForces.ts": () => import("./outsideForcesSources").then(m => m.OUTSIDE_FORCES_SOURCES),
   "shared/macro/index.ts": () => import("./macro/sources").then(m => m.CORE_SOURCES),
   "shared/macro/sources.ts": () => import("./macro/sources").then(m => m.CORE_SOURCES),
 };

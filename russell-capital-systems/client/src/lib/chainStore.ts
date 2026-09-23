@@ -42,9 +42,12 @@ export function updateChain(fn: (s: ChainStore) => ChainStore): ChainStore {
 }
 
 export function addStep(calculator: ChainCalculatorId, years = 10, handoff?: Partial<ChainStep["handoff"]>): ChainStep {
-  const step = newStep(calculator, years);
-  if (handoff) step.handoff = { ...step.handoff, ...handoff };
-  updateChain((s) => ({ ...s, steps: [...s.steps, step] }));
+  let step!: ChainStep;
+  updateChain((s) => {
+    step = newStep(calculator, years, undefined, { seed: s.steps.length + 1, taken: s.steps.map((x) => x.id) });
+    if (handoff) step.handoff = { ...step.handoff, ...handoff };
+    return { ...s, steps: [...s.steps, step] };
+  });
   return step;
 }
 

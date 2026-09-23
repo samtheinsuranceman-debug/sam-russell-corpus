@@ -1,5 +1,5 @@
 {
-  "tree": "d360a2f",
+  "tree": "9ea1fc0",
   "summary": {
     "engines": 97,
     "enginesFromCatalogue": 37,
@@ -9,19 +9,19 @@
       "enginesWithZeroSources": 0,
       "numericEnginesWithZeroSources": 0,
       "enginesWithHardCodedYearsOlderThan2025": 50,
-      "enginesWithUnseededRandomness": 1,
+      "enginesWithUnseededRandomness": 0,
       "pagesImportingAnEngineWithNoProvenanceOnPage": 82,
       "pagesImportingAnEngine": 120,
       "enginesThatSimulate": 21,
       "enginesOnALiveFeed": 9,
       "enginesImportedByNoPageAndNoRouter": 10,
-      "enginesWithoutShellSources": 1
+      "enginesWithoutShellSources": 0
     },
     "lists": {
       "enginesWithZeroSources": [],
       "numericEnginesWithZeroSources": [],
       "enginesWithHardCodedYearsOlderThan2025": [
-        "server/outsideForces.ts (2019, 2023)",
+        "server/outsideForces.ts (2019, 2024)",
         "shared/ag49Validator.ts (2015, 2020, 2023)",
         "shared/altCredit/deployment.ts (2014, 2015, 2019, 2022, 2023, 2024)",
         "shared/altCredit/lenders.ts (2004, 2006, 2012, 2013, 2017, 2018, 2019, 2021)",
@@ -72,9 +72,7 @@
         "shared/wealthGenomeFactors.ts (2008, 2020, 2022)",
         "shared/zipEngine.ts (2000, 2008, 2015)"
       ],
-      "enginesWithUnseededRandomness": [
-        "shared/chainEngine.ts"
-      ],
+      "enginesWithUnseededRandomness": [],
       "pagesImportingAnEngineWithNoProvenanceOnPage": [
         "client/src/components/ChainDock.tsx",
         "client/src/components/ComplianceGate.tsx",
@@ -171,9 +169,7 @@
         "shared/retirementDNA.ts",
         "shared/wholeLifeBanking.ts"
       ],
-      "enginesWithoutShellSources": [
-        "server/outsideForces.ts"
-      ]
+      "enginesWithoutShellSources": []
     }
   },
   "rows": [
@@ -215,6 +211,7 @@
         "Major foreign holders of Treasury securities, monthly",
         "Median age of first-time buyers; first-time buyer share of purchases",
         "Monthly chartbook on credit availability and first-time buyers",
+        "OMB and St. Louis Fed via FRED",
         "Ratings and outlooks on U.S. Treasury debt",
         "S&P CoreLogic Case-Shiller Home Price Indices",
         "S&P Dow Jones Indices",
@@ -227,7 +224,6 @@
         "Treasury via FRED",
         "Treasury's own financing plan",
         "Treasury's own ledger",
-        "Treasury/BEA via FRED",
         "U.S. Census Bureau",
         "U.S. Treasury",
         "U.S. Treasury market via the Federal Reserve",
@@ -338,10 +334,10 @@
       "provenancePages": [],
       "hardCodedYears": [
         2019,
-        2023
+        2024
       ],
       "numericConstants": 3,
-      "shellSourced": false
+      "shellSourced": true
     },
     {
       "engine": "shared/accessControl.ts",
@@ -1305,7 +1301,7 @@
     {
       "engine": "shared/chainEngine.ts",
       "exists": true,
-      "lines": 512,
+      "lines": 525,
       "cataloguePages": [],
       "memoryGroups": [
         "journeys"
@@ -1328,7 +1324,7 @@
       "lookback": [],
       "simulation": {
         "seeded": true,
-        "unseededRandom": true,
+        "unseededRandom": false,
         "runs": [],
         "seeds": [],
         "bootstrapBlock": null,
@@ -2436,7 +2432,6 @@
       "sources": [
         "6.25% is a real declared 5-year rate near the top of the market, about 1.1 points above the market average; compounding it for 40 to 50 years assumes it can …",
         "AG 49-A caps the illustrated rate at the lesser of the benchmark index account lookback average and 145% of the insurer's net investment earnings rate, per c…",
-        "Assumption: IUL growth = 7.5% a year (GROWTH_RATE), chosen by the firm as an illustration rate; see the NAIC AG 49-A note, the carrier's filed maximum govern…",
         "Assumption: surrender charge starts at 9% of account value in year 1 and falls by 1 point a year to zero in year 10, chosen by the firm as a generic schedule…",
         "Bankrate Monitor National Index, Home Equity Line of Credit rate (BRMHELOC01, via FRED): 7.29% for the week of 2026-09-02",
         "Board of Governors of the Federal Reserve System, H.15 Selected Interest Rates, Bank Prime Loan Rate (DPRIME, via FRED): 6.75% on 2026-09-02",
@@ -2504,8 +2499,7 @@
       ],
       "sources": [
         "Based on Ibbotson SBBI historical data. Research-based estimates only — not guaranteed.",
-        "Projections are based on Roger Ibbotson's historical S&P 500 data (SBBI) and",
-        "current cap rates, and other factors. The 7.5% cap rate reflects the NAIC"
+        "Projections are based on Roger Ibbotson's historical S&P 500 data (SBBI) and"
       ],
       "sourceFields": [],
       "sourceExports": [],
@@ -3680,7 +3674,6 @@
       ],
       "sources": [
         "6.25% is a real declared rate near the top of the market, about 1.1 points above the market average; it is not a typical rate.",
-        "Assumption: IUL credit rate = 7.5% a year (iulCreditRate default), chosen by the firm as an illustration rate; see the NAIC AG 49-A note, the carrier's filed…",
         "Bankrate Monitor National Index, Home Equity Line of Credit rate (BRMHELOC01, via FRED): 7.29% for the week of 2026-09-02",
         "Board of Governors of the Federal Reserve System, H.15 Selected Interest Rates, Bank Prime Loan Rate (DPRIME, via FRED): 6.75% on 2026-09-02",
         "Freddie Mac, Primary Mortgage Market Survey, 30-Year Fixed Rate Mortgage Average in the United States (MORTGAGE30US, via FRED): 6.66% for the week ending 202…",
@@ -4250,8 +4243,8 @@
         "Pacific Life",
         "RATES NOT IN THE DOCUMENT. This illustration runs 'Policy Distributions 0' — no loans are illustrated — so no loan rate table is populated. The same gap appe…",
         "Securian / Minnesota Life",
-        "Securian / Minnesota Life Balanced Growth Accumulator III illustration, Case ID 29335303 — fixed loan charged 4.00% constant, credited 3.00% years 1-10 and 4…",
-        "Securian / Minnesota Life Balanced Growth Accumulator III illustration, Case ID 29335303, for M. Corrales age 65 Preferred Non-Tobacco",
+        "Securian / Minnesota Life Balanced Growth Accumulator III illustration, one client case (de-identified) — fixed loan charged 4.00% constant, credited 3.00% y…",
+        "Securian / Minnesota Life Balanced Growth Accumulator III illustration, one client case (de-identified): issue age 65, Preferred Non-Tobacco",
         "Securian: fixed 4.00% charged against 3.00% then 4.00% credited; indexed 4.75% into a separate loan account; variable capped 1.5% above the fixed account rate.",
         "Variable interest rate loan: varies with the Moody's Corporate Bond Yield Average, capped at 1.5% above the current fixed account crediting rate",
         "Variable: the loan amount REMAINS in your current fixed or indexed accounts. This is the true participating loan here. Charged rate floats with Moody's, capp…",
@@ -4286,7 +4279,7 @@
         2022,
         2025
       ],
-      "numericConstants": 76,
+      "numericConstants": 72,
       "shellSourced": true
     },
     {

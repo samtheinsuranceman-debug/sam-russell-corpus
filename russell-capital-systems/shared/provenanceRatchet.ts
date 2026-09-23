@@ -23,14 +23,14 @@ export const ZERO_SOURCE_ENGINES: readonly string[] = [
 
 ];
 
-/** Engines with Math.random() in a value path. chainEngine uses it for step ids only (cosmetic, D47). */
+/** Engines with Math.random() in a value path. Empty: chainEngine's step ids now come from the seeded mulberry32 stream. */
 export const UNSEEDED_RANDOM_ENGINES: readonly string[] = [
-  "shared/chainEngine.ts",
+
 ];
 
-/** Catalogue engines with no loader in shared/engineSources.ts, so the shell cannot print their sources yet. outsideForces is server code the shell cannot import. */
+/** Catalogue engines with no loader in shared/engineSources.ts, so the shell cannot print their sources yet. Empty: outsideForces loads its list from shared/outsideForcesSources.ts. */
 export const CATALOGUE_ENGINES_WITHOUT_SHELL_SOURCES: readonly string[] = [
-  "server/outsideForces.ts",
+
 ];
 
 /** Pages and components that import an engine and print no source, and whose route the shell does not cover. */

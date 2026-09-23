@@ -140,8 +140,8 @@ export const FORCES: ForceDef[] = [
     question: "What are a young worker's odds of owning a home, and how have they moved?",
     series: [
       { id: "RHORUSQ156N", label: "Homeownership rate, all households", unit: "%", kind: "points", publisher: "Census HVS via FRED" },
-      { id: "MSPUS", label: "Median sales price of houses sold", unit: "$", kind: "growth", publisher: "Census/HUD via FRED" },
-      { id: "MEHOINUSA672N", label: "Real median household income", unit: "$ (2023 dollars)", kind: "growth", publisher: "Census via FRED" },
+      { id: "MSPUS", label: "Median sales price of new houses sold", unit: "$", kind: "growth", publisher: "Census/HUD via FRED" },
+      { id: "MEHOINUSA672N", label: "Real median household income", unit: "$ (2024 C-CPI-U dollars)", kind: "growth", publisher: "Census via FRED" },
       { id: "MORTGAGE30US", label: "30-year fixed mortgage rate", unit: "%", kind: "points", publisher: "Freddie Mac via FRED" },
       { id: "CSUSHPINSA", label: "Case-Shiller national home price index", unit: "index", kind: "growth", publisher: "S&P DJI via FRED" },
     ],
@@ -167,8 +167,8 @@ export const FORCES: ForceDef[] = [
     title: "The federal balance sheet",
     question: "How much is owed, who holds it, and what do the default and stress gauges read?",
     series: [
-      { id: "GFDEGDQ188S", label: "Federal debt as a share of GDP", unit: "% of GDP", kind: "points", publisher: "Treasury/BEA via FRED" },
-      { id: "FDHBFIN", label: "Federal debt held by foreign and international investors", unit: "$ millions", kind: "growth", publisher: "Treasury via FRED" },
+      { id: "GFDEGDQ188S", label: "Federal debt as a share of GDP", unit: "% of GDP", kind: "points", publisher: "OMB and St. Louis Fed via FRED" },
+      { id: "FDHBFIN", label: "Federal debt held by foreign and international investors", unit: "$ billions", kind: "growth", publisher: "Treasury via FRED" },
       { id: "GFDEBTN", label: "Total public debt", unit: "$ millions", kind: "growth", publisher: "Treasury via FRED" },
       { id: "T10Y2Y", label: "10-year minus 2-year Treasury yield", unit: "% points", kind: "points", publisher: "Federal Reserve via FRED" },
       { id: "BAMLH0A0HYM2", label: "High-yield bond spread over Treasuries", unit: "%", kind: "points", publisher: "ICE BofA via FRED" },
