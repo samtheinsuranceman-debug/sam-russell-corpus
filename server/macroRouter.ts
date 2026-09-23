@@ -377,7 +377,8 @@ export const macroRouter = router({
       keys: {
         FRED_API_KEY: Boolean(process.env.FRED_API_KEY),
         EIA_API_KEY: Boolean(process.env.EIA_API_KEY),
-        COMTRADE_API_KEY: Boolean(process.env.COMTRADE_API_KEY),
+        // COMTRADEDEVELOPER_API_KEY is the name the owner gave it on Railway.
+        COMTRADE_API_KEY: Boolean(process.env.COMTRADE_API_KEY || process.env.COMTRADEDEVELOPER_API_KEY),
         CRON_SECRET: Boolean(process.env.CRON_SECRET),
       },
       health,

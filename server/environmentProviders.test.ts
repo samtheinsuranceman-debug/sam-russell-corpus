@@ -154,3 +154,40 @@ describe("environmentCredentials", () => {
     }
   });
 });
+
+describe("the owner's own Railway spellings", () => {
+  // Railway's dashboard cannot rename a variable, so the registry reads the
+  // names the owner typed as well as the conventional ones.
+  const ALIASES: Array<[string, string]> = [
+    ["arcee", "ACREE_API_KEY"],
+    ["inception", "INCEPTIONLABS_API_KEY"],
+    ["sarvam", "Savram_API_Key"],
+  ];
+
+  it("keys the brain from the alias when only the alias is set", async () => {
+    const { environmentKeyNames } = await import("./providerRegistry");
+    for (const [providerId, alias] of ALIASES) {
+      expect(environmentKeyNames(providerId), providerId).toContain(alias);
+      const before = process.env[alias];
+      process.env[alias] = "alias-key-value";
+      try {
+        const cred = environmentCredentials().find(c => c.providerId === providerId);
+        expect(cred?.apiKey, `${providerId} via ${alias}`).toBe("alias-key-value");
+      } finally {
+        if (before === undefined) delete process.env[alias];
+        else process.env[alias] = before;
+      }
+    }
+  });
+
+  it("prefers the conventional name when both are set", async () => {
+    const before = { ARCEE_API_KEY: process.env.ARCEE_API_KEY, ACREE_API_KEY: process.env.ACREE_API_KEY };
+    process.env.ARCEE_API_KEY = "conventional";
+    process.env.ACREE_API_KEY = "alias";
+    try {
+      expect(environmentCredentials().find(c => c.providerId === "arcee")?.apiKey).toBe("conventional");
+    } finally {
+      for (const [k, v] of Object.entries(before)) { if (v === undefined) delete process.env[k]; else process.env[k] = v; }
+    }
+  });
+});
