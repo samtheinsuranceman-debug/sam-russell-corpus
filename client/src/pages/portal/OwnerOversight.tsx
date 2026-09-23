@@ -54,28 +54,6 @@ import {
   Bar, Line, Pie, Cell, Area, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis
 } from "recharts";
 
-const generateMockData = (count: number, max: number = 100) => {
-  return Array.from({ length: count }, (_, i) => ({
-    name: `Item ${i + 1}`,
-    value: Math.floor(Math.random() * max),
-    value2: Math.floor(Math.random() * max),
-    value3: Math.floor(Math.random() * max),
-  }));
-};
-
-const generateTimeSeriesData = (days: number) => {
-  return Array.from({ length: days }, (_, i) => {
-    const date = new Date();
-    date.setDate(date.getDate() - (days - i - 1));
-    return {
-      date: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-      active: Math.floor(Math.random() * 50) + 10,
-      new: Math.floor(Math.random() * 20),
-      churn: Math.floor(Math.random() * 5),
-    };
-  });
-};
-
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d'];
 
 export default function OwnerOversight() {
@@ -248,17 +226,22 @@ export default function OwnerOversight() {
     return Object.entries(distribution).map(([name, value]) => ({ name, value }));
   }, [allTeams.data]);
 
-  const mockTimeSeriesData = useMemo(() => generateTimeSeriesData(parseInt(dateRange)), [dateRange]);
-  const mockRadarData = useMemo(() => [
-    { subject: 'Growth', A: 120, B: 110, fullMark: 150 },
-    { subject: 'Engagement', A: 98, B: 130, fullMark: 150 },
-    { subject: 'Retention', A: 86, B: 130, fullMark: 150 },
-    { subject: 'Compliance', A: 99, B: 100, fullMark: 150 },
-    { subject: 'Revenue', A: 85, B: 90, fullMark: 150 },
-    { subject: 'Satisfaction', A: 65, B: 85, fullMark: 150 },
-  ], []);
-
-  const mockPerformanceData = useMemo(() => generateMockData(7, 1000), []);
+  // Sessions per day for the selected team, from its real login sessions.
+  const teamSessionsByDay = useMemo(() => {
+    const days = 14;
+    const key = (d: Date) => d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    const buckets = new Map<string, { date: string; active: number }>();
+    for (let i = days - 1; i >= 0; i--) {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      buckets.set(key(d), { date: key(d), active: 0 });
+    }
+    (teamActivity.data?.sessions ?? []).forEach((sess: any) => {
+      const b = sess.loginAt ? buckets.get(key(new Date(sess.loginAt))) : undefined;
+      if (b) b.active++;
+    });
+    return Array.from(buckets.values());
+  }, [teamActivity.data]);
 
   if (!isOwner.data) {
     return (
@@ -499,30 +482,7 @@ export default function OwnerOversight() {
               </CardHeader>
               <CardContent>
                 <div className="h-[300px] w-full mt-4">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <AreaChart data={mockTimeSeriesData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-                      <defs>
-                        <linearGradient id="colorActive" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#0088FE" stopOpacity={0.8}/>
-                          <stop offset="95%" stopColor="#0088FE" stopOpacity={0}/>
-                        </linearGradient>
-                        <linearGradient id="colorNew" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#00C49F" stopOpacity={0.8}/>
-                          <stop offset="95%" stopColor="#00C49F" stopOpacity={0}/>
-                        </linearGradient>
-                      </defs>
-                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e5e7eb" />
-                      <XAxis dataKey="date" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#6b7280' }} dy={10} />
-                      <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#6b7280' }} dx={-10} />
-                      <Tooltip 
-                        contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
-                        cursor={{ stroke: '#9ca3af', strokeWidth: 1, strokeDasharray: '5 5' }}
-                      />
-                      <Legend iconType="circle" wrapperStyle={{ paddingTop: '20px' }} />
-                      <Area type="monotone" dataKey="active" name="Active Users" stroke="#0088FE" fillOpacity={1} fill="url(#colorActive)" />
-                      <Area type="monotone" dataKey="new" name="New Signups" stroke="#00C49F" fillOpacity={1} fill="url(#colorNew)" />
-                    </AreaChart>
-                  </ResponsiveContainer>
+                  <div className="h-full flex items-center justify-center text-center text-sm text-muted-foreground px-6">Platform growth history is not recorded yet, so no trend is shown.</div>
                 </div>
               </CardContent>
             </Card>
@@ -583,17 +543,7 @@ export default function OwnerOversight() {
               </CardHeader>
               <CardContent>
                 <div className="h-[300px] w-full mt-4">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <RadarChart cx="50%" cy="50%" outerRadius="80%" data={mockRadarData}>
-                      <PolarGrid stroke="#e5e7eb" />
-                      <PolarAngleAxis dataKey="subject" tick={{ fill: '#4b5563', fontSize: 12 }} />
-                      <PolarRadiusAxis angle={30} domain={[0, 150]} tick={false} axisLine={false} />
-                      <Radar name="Current Month" dataKey="A" stroke="#8884d8" fill="#8884d8" fillOpacity={0.6} />
-                      <Radar name="Previous Month" dataKey="B" stroke="#82ca9d" fill="#82ca9d" fillOpacity={0.6} />
-                      <Legend wrapperStyle={{ paddingTop: '20px' }} />
-                      <Tooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
-                    </RadarChart>
-                  </ResponsiveContainer>
+                  <div className="h-full flex items-center justify-center text-center text-sm text-muted-foreground px-6">No platform health scoring is recorded. Nothing is estimated here.</div>
                 </div>
               </CardContent>
             </Card>
@@ -621,22 +571,7 @@ export default function OwnerOversight() {
               </CardHeader>
               <CardContent>
                 <div className="h-[300px] w-full mt-4">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <ComposedChart data={mockPerformanceData} margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
-                      <CartesianGrid stroke="#f5f5f5" vertical={false} />
-                      <XAxis dataKey="name" scale="band" tick={{ fontSize: 12, fill: '#6b7280' }} axisLine={false} tickLine={false} />
-                      <YAxis yAxisId="left" tick={{ fontSize: 12, fill: '#6b7280' }} axisLine={false} tickLine={false} />
-                      <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 12, fill: '#6b7280' }} axisLine={false} tickLine={false} />
-                      <Tooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
-                      <Legend />
-                      {chartView === 'bar' ? (
-                        <Bar yAxisId="left" dataKey="value" name="Usage Count" barSize={20} fill="#413ea0" radius={[4, 4, 0, 0]} />
-                      ) : (
-                        <Line yAxisId="left" type="monotone" dataKey="value" name="Usage Count" stroke="#413ea0" strokeWidth={3} />
-                      )}
-                      <Line yAxisId="right" type="monotone" dataKey="value2" name="Success Rate %" stroke="#ff7300" strokeWidth={2} dot={{ r: 4 }} />
-                    </ComposedChart>
-                  </ResponsiveContainer>
+                  <div className="h-full flex items-center justify-center text-center text-sm text-muted-foreground px-6">Per-tool usage and success rates are not tracked yet.</div>
                 </div>
               </CardContent>
             </Card>
@@ -687,13 +622,10 @@ export default function OwnerOversight() {
                           <Badge variant="secondary" className="font-normal">{team.memberCount}</Badge>
                         </TableCell>
                         <TableCell className="text-center">
-                          <div className="flex items-center justify-center gap-2">
-                            <Progress value={85 + Math.random() * 15} className="w-16 h-2" />
-                            <span className="text-xs text-muted-foreground">High</span>
-                          </div>
+                          <span className="text-xs text-muted-foreground">Not tracked</span>
                         </TableCell>
-                        <TableCell className="text-right font-medium text-emerald-600">
-                          {Math.floor(800 + Math.random() * 200)} pts
+                        <TableCell className="text-right text-xs text-muted-foreground">
+                          Not tracked
                         </TableCell>
                       </TableRow>
                     ))}
@@ -978,7 +910,7 @@ export default function OwnerOversight() {
                         {/* Chart 5: Activity Trend (Bar Chart) */}
                         <div className="h-[200px] w-full">
                           <ResponsiveContainer width="100%" height="100%">
-                            <BarChart data={mockTimeSeriesData.slice(-14)} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                            <BarChart data={teamSessionsByDay} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e5e7eb" />
                               <XAxis dataKey="date" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#6b7280' }} dy={10} />
                               <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#6b7280' }} />

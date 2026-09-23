@@ -11,10 +11,10 @@ const InfinityBankingConcept: React.FC = () => {
   const [policyYears, setPolicyYears] = useState(50);
   const [dividendStrategy, setDividendStrategy] = useState('reinvest');
 
-  // Sample data for 50-year projection
+  // Illustrative straight-line shape only — not a carrier policy illustration.
   const projectionData = Array.from({ length: policyYears }, (_, i) => ({
     year: i + 1,
-    cashValue: 10000 + i * 5000 + Math.random() * 2000,
+    cashValue: 10000 + i * 5000,
     loanBalance: i < 10 ? 50000 - i * 5000 : 0,
     netWorth: 10000 + i * 8000,
   }));
@@ -28,7 +28,7 @@ const InfinityBankingConcept: React.FC = () => {
 
   const handleGenerateOutcome = () => {
     toast.success('Outcome Generated', {
-      description: `Projected cash value after ${policyYears} years: $${projectionData[policyYears - 1].cashValue.toLocaleString()}`,
+      description: `Illustrative (sample) cash value after ${policyYears} years: $${projectionData[policyYears - 1].cashValue.toLocaleString()}`,
     });
   };
 
@@ -112,6 +112,9 @@ const InfinityBankingConcept: React.FC = () => {
                 >
                   Generate Outcome
                 </button>
+              </div>
+              <div className="rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-sm text-amber-300">
+                Sample data — illustrative straight-line shape, not a policy illustration. Actual cash values come from a carrier in-force illustration.
               </div>
               <div className="h-80">
                 <ResponsiveContainer width="100%" height="100%">

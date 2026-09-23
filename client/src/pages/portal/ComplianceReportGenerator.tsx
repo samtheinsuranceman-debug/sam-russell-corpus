@@ -428,6 +428,7 @@ export default function ComplianceReportGenerator() {
   const [clientName, setClientName] = useState("John Doe");
   const [advisorName, setAdvisorName] = useState(user?.name || "Jane Smith");
   const [reportDate, setReportDate] = useState(new Date().toISOString().split('T')[0]);
+  const [reportId] = useState(() => `COMP-${crypto.randomUUID().slice(0, 8).toUpperCase()}`);
   const [productType, setProductType] = useState("iul");
   const [items, setItems] = useState<ComplianceItem[]>(() => {
     let initial: ComplianceItem[] = [];
@@ -1101,7 +1102,7 @@ export default function ComplianceReportGenerator() {
                 
                 <div className="mt-12 pt-8 border-t text-center text-sm text-muted-foreground">
                   <p>This report was generated automatically by Russell Capital Systems™ Compliance Engine.</p>
-                  <p className="mt-1">Report ID: COMP-{Math.random().toString(36).substring(2, 10).toUpperCase()} • Generated: {new Date().toLocaleString()}</p>
+                  <p className="mt-1">Report ID: {reportId} • Generated: {new Date().toLocaleString()}</p>
                 </div>
               </CardContent>
               <CardFooter className="bg-muted/20 border-t p-4 flex justify-between">
