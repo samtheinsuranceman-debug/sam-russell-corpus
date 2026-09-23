@@ -13,6 +13,8 @@
  * 6) Year-by-year waterfall shows compounding across ALL properties
  */
 
+import { IRMAA_SOURCE, irmaaTier } from "./irmaa";
+import { TAX_RULES_2026, federalTax } from "./taxRules";
 import {
   runMYGAWaterfall,
   MYGA_WATERFALL_SOURCES,
@@ -148,51 +150,24 @@ export interface IrmaaYearImpact {
   adjustedTier: string;
 }
 
-/* ─── IRMAA BRACKETS 2025 ─── */
-const IRMAA_BRACKETS = {
-  single: [
-    { maxMAGI: 106000, partB: 0, partD: 0, tier: "No surcharge" },
-    { maxMAGI: 133000, partB: 70.90 * 12, partD: 13.70 * 12, tier: "Tier 1" },
-    { maxMAGI: 167000, partB: 176.40 * 12, partD: 35.50 * 12, tier: "Tier 2" },
-    { maxMAGI: 200000, partB: 281.90 * 12, partD: 57.30 * 12, tier: "Tier 3" },
-    { maxMAGI: 500000, partB: 387.30 * 12, partD: 79.00 * 12, tier: "Tier 4" },
-    { maxMAGI: Infinity, partB: 422.00 * 12, partD: 85.80 * 12, tier: "Tier 5" },
-  ],
-  married: [
-    { maxMAGI: 212000, partB: 0, partD: 0, tier: "No surcharge" },
-    { maxMAGI: 266000, partB: 70.90 * 12, partD: 13.70 * 12, tier: "Tier 1" },
-    { maxMAGI: 334000, partB: 176.40 * 12, partD: 35.50 * 12, tier: "Tier 2" },
-    { maxMAGI: 400000, partB: 281.90 * 12, partD: 57.30 * 12, tier: "Tier 3" },
-    { maxMAGI: 750000, partB: 387.30 * 12, partD: 79.00 * 12, tier: "Tier 4" },
-    { maxMAGI: Infinity, partB: 422.00 * 12, partD: 85.80 * 12, tier: "Tier 5" },
-  ],
-};
+/* ─── IRMAA BRACKETS 2026 ─── */
+// The 2026 table (2024 MAGI) lives in shared/irmaa.ts, sourced to SSA POMS
+// HI 01101.031. Surcharges here are annual, per enrollee.
+function irmaaBracketLabel(tier: number): string {
+  return tier === 1 ? "No surcharge" : `Tier ${tier}`;
+}
 
 /* ─── WHERE THESE NUMBERS COME FROM ─── */
-// The IRMAA table above, the defaults below, and the shared MYGA, oil and gas
+// The IRMAA table (shared/irmaa.ts), the defaults below, and the shared MYGA, oil and gas
 // and HELOC defaults (sourced in mygaWaterfall.ts) are listed here. None of
 // these objects is read by the arithmetic.
 
-/** IRMAA_BRACKETS: the 2025 table the code is labelled with. Thresholds match; several dollar amounts do not. */
-const IRMAA_2025_SOURCE = {
-  label: "Centers for Medicare & Medicaid Services, 2025 Medicare Parts A & B Premiums and Deductibles fact sheet, Part B and Part D income-related monthly adjustment amount tables",
-  url: "https://www.cms.gov/newsroom/fact-sheets/2025-medicare-parts-b-premiums-and-deductibles",
-  asOf: "2025 premium year, released 2024-11-08, read 2026-09-23",
-  note: "Income thresholds ($106,000/$133,000/$167,000/$200,000/$500,000 single; $212,000/$266,000/$334,000/$400,000/$750,000 joint) match the code. Part B monthly adjustments in CMS are $74.00, $185.00, $295.90, $406.90, $443.90; the code has $70.90, $176.40, $281.90, $387.30, $422.00. Part D monthly adjustments in CMS are $13.70, $35.30, $57.00, $78.60, $85.80; the code has $13.70, $35.50, $57.30, $79.00, $85.80. CMS puts MAGI of exactly $500,000 ($750,000 joint) in the top tier; the code puts it in tier 4. Not changed; flagged for review.",
-};
-const IRMAA_2026_SOURCE = {
-  label: "Social Security Administration, POMS HI 01101.020, IRMAA Sliding Scale Tables, current table based on 2024 MAGI (the 2026 premium year): surcharges begin above $109,000 (single) and $218,000 (joint)",
-  url: "https://secure.ssa.gov/poms.nsf/lnx/0601101020",
-  asOf: "POMS revision 2025-12-02, read 2026-09-23",
-  note: "The code carries the 2025 table; 2026 is the current premium year and its thresholds and amounts are higher.",
-};
-
-/** household.federalTaxRate default 32 (percent) against household.annualIncome default $250,000, married. */
+/** household.federalTaxRate default: the 2026 joint marginal rate on the default $250,000 household. */
 const FEDERAL_BRACKET_SOURCE = {
-  label: "Internal Revenue Service, Rev. Proc. 2025-32, Section 4.01, 2026 tax rate tables: 24% applies to joint taxable income over $211,400 and 32% over $403,550",
-  url: "https://www.irs.gov/pub/irs-drop/rp-25-32.pdf",
-  asOf: "tax year 2026, published 2025-10-09, read 2026-09-23",
-  note: "The default household is married with $250,000 of income, which falls in the 24% joint bracket for 2026, not the 32% default. Not changed; flagged for review.",
+  label: "Internal Revenue Service, 2026 tax inflation adjustments (Rev. Proc. 2025-32 as amended by OBBBA), married filing jointly: 10% to $24,800; 12% to $100,800; 22% to $211,400; 24% to $403,550; 32% to $512,450; 35% to $768,700; 37% above",
+  url: "https://www.irs.gov/newsroom/irs-releases-tax-inflation-adjustments-for-tax-year-2026-including-amendments-from-the-one-big-beautiful-bill",
+  asOf: "tax year 2026, read 2026-09-23",
+  note: "The default household is married with $250,000 of income; less the $32,200 joint standard deduction that is $217,800 taxable, in the 24% bracket. The default rate is computed from shared/taxRules.ts, not typed.",
 };
 
 const MULTI_PROPERTY_ASSUMPTIONS = [
@@ -203,11 +178,15 @@ const MULTI_PROPERTY_ASSUMPTIONS = [
 ];
 
 function getIrmaaBracket(magi: number, status: "single" | "married") {
-  const brackets = IRMAA_BRACKETS[status];
-  for (const b of brackets) {
-    if (magi <= b.maxMAGI) return b;
-  }
-  return brackets[brackets.length - 1];
+  const t = irmaaTier(magi, status);
+  return { partB: t.partBMonthly * 12, partD: t.partDMonthly * 12, tier: irmaaBracketLabel(t.tier) };
+}
+
+/** The 2026 marginal federal rate (percent) for a household, from the versioned bracket table. */
+function defaultFederalRatePct(income: number, status: "single" | "married"): number {
+  const filing = status === "married" ? "joint" : "single";
+  const taxable = Math.max(0, income - TAX_RULES_2026.standardDeduction[filing]);
+  return Math.round(federalTax(taxable, filing, TAX_RULES_2026).marginalRate * 100);
 }
 
 /* ─── DEFAULT PROPERTY ─── */
@@ -229,7 +208,7 @@ export function getDefaultMultiPropertyInput(): MultiPropertyInput {
     properties: [createDefaultProperty(1)],
     household: {
       annualIncome: 250000,
-      federalTaxRate: 32,
+      federalTaxRate: defaultFederalRatePct(250000, "married"), // 24 for 2026 (FEDERAL_BRACKET_SOURCE)
       stateTaxRate: 5,
       filingStatus: "married",
     },
@@ -489,8 +468,7 @@ export function runMultiPropertyMyga(input: MultiPropertyInput): MultiPropertyRe
 
 /** Every source and declared assumption behind the typed-in numbers in this engine, for the page to print. */
 export const MULTI_PROPERTY_MYGA_SOURCES: readonly { label: string; url?: string; asOf?: string; note?: string }[] = [
-  IRMAA_2025_SOURCE,
-  IRMAA_2026_SOURCE,
+  IRMAA_SOURCE,
   FEDERAL_BRACKET_SOURCE,
   ...MULTI_PROPERTY_ASSUMPTIONS,
   ...MYGA_WATERFALL_SOURCES,

@@ -65,33 +65,32 @@ import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { ExecutiveSummary, GoalsAccelerator, RecommendationSummary, DoNothingBaseline, TaxBracketPanel } from "@/components/ConsumerOutcomeBlocks";
 import { formatTaxCurrency } from "@shared/taxBracketEngine";
+import { IRMAA_2026, PART_B_STANDARD_MONTHLY_2026, irmaaTierIndex, type IrmaaFiling } from "@shared/irmaa";
 import { RelatedCalculators } from "@/components/RelatedCalculators";
 import { ComplianceFooter } from "@/components/ComplianceFooter";
 
 const fmt = (n: number) => `$${n.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
 const fmtPct = (n: number) => `${(n * 100).toFixed(1)}%`;
 
-const IRMAA_BRACKETS_2025 = {
-  single: [
-    { maxMAGI: 106000, partBSurcharge: 0, partDSurcharge: 0, label: "No surcharge" },
-    { maxMAGI: 133000, partBSurcharge: 70.90 * 12, partDSurcharge: 13.70 * 12, label: "Tier 1" },
-    { maxMAGI: 167000, partBSurcharge: 176.40 * 12, partDSurcharge: 35.50 * 12, label: "Tier 2" },
-    { maxMAGI: 200000, partBSurcharge: 281.90 * 12, partDSurcharge: 57.30 * 12, label: "Tier 3" },
-    { maxMAGI: 500000, partBSurcharge: 387.30 * 12, partDSurcharge: 79.00 * 12, label: "Tier 4" },
-    { maxMAGI: Infinity, partBSurcharge: 422.00 * 12, partDSurcharge: 85.80 * 12, label: "Tier 5" },
-  ],
-  married: [
-    { maxMAGI: 212000, partBSurcharge: 0, partDSurcharge: 0, label: "No surcharge" },
-    { maxMAGI: 266000, partBSurcharge: 70.90 * 12, partDSurcharge: 13.70 * 12, label: "Tier 1" },
-    { maxMAGI: 334000, partBSurcharge: 176.40 * 12, partDSurcharge: 35.50 * 12, label: "Tier 2" },
-    { maxMAGI: 400000, partBSurcharge: 281.90 * 12, partDSurcharge: 57.30 * 12, label: "Tier 3" },
-    { maxMAGI: 750000, partBSurcharge: 387.30 * 12, partDSurcharge: 79.00 * 12, label: "Tier 4" },
-    { maxMAGI: Infinity, partBSurcharge: 422.00 * 12, partDSurcharge: 85.80 * 12, label: "Tier 5" },
-  ],
-};
+// 2026 IRMAA table (2024 MAGI) from shared/irmaa.ts — SSA POMS HI 01101.031,
+// read 2026-09-23. Annual surcharges per enrollee. Tier 5's upper edge is
+// exclusive (joint MAGI under $750,000, single under $500,000).
+type IrmaaRow = { maxMAGI: number; maxInclusive: boolean; partBSurcharge: number; partDSurcharge: number; label: string };
+const toRows = (f: IrmaaFiling): IrmaaRow[] => IRMAA_2026[f].map((t) => ({
+  maxMAGI: t.maxMagi,
+  maxInclusive: t.maxInclusive,
+  partBSurcharge: Math.round(t.partBMonthly * 12 * 100) / 100,
+  partDSurcharge: Math.round(t.partDMonthly * 12 * 100) / 100,
+  label: t.tier === 1 ? "No surcharge" : `Tier ${t.tier}`,
+}));
+const IRMAA_BRACKETS_2026: Record<IrmaaFiling, IrmaaRow[]> = { single: toRows("single"), married: toRows("married") };
+const edgeText = (b: IrmaaRow, n: string) => `${b.maxInclusive ? "≤" : "<"} ${n}`;
 
-const BASE_PART_B_PREMIUM_2025 = 185.00 * 12; // Monthly * 12
-const BASE_PART_D_PREMIUM_2025 = 36.78 * 12;
+const BASE_PART_B_PREMIUM_2026 = PART_B_STANDARD_MONTHLY_2026 * 12; // $202.90/month, SSA POMS HI 01101.031 (2026)
+// Part D national base beneficiary premium 2026: $38.99/month (was $36.78 for 2025).
+// CMS, 2026 Medicare Part D Bid Information fact sheet, 2025-07-28, read 2026-09-23:
+// https://www.cms.gov/newsroom/fact-sheets/2026-medicare-part-d-bid-information-and-part-d-premium-stabilization-demonstration-parameters
+const BASE_PART_D_PREMIUM_2026 = 38.99 * 12;
 
 export default function MedicareIRMAA() {
   const { user } = useAuth();
@@ -144,31 +143,31 @@ export default function MedicareIRMAA() {
   }, [clientData]);
 
   const analysis = useMemo(() => {
-    const brackets = IRMAA_BRACKETS_2025[filingStatus];
+    const brackets = IRMAA_BRACKETS_2026[filingStatus];
 
     const findBracket = (income: number) => {
-      return brackets.find((b) => income <= b.maxMAGI) || brackets[brackets.length - 1];
+      return brackets[irmaaTierIndex(income, filingStatus)];
     };
 
     const currentBracket = findBracket(magi);
-    const currentPartBTotal = BASE_PART_B_PREMIUM_2025 + currentBracket.partBSurcharge;
-    const currentPartDTotal = includePartD ? BASE_PART_D_PREMIUM_2025 + currentBracket.partDSurcharge : 0;
+    const currentPartBTotal = BASE_PART_B_PREMIUM_2026 + currentBracket.partBSurcharge;
+    const currentPartDTotal = includePartD ? BASE_PART_D_PREMIUM_2026 + currentBracket.partDSurcharge : 0;
     const currentAnnualCost = currentPartBTotal + currentPartDTotal + customSurcharge;
     const multiplier = spouseOnMedicare && filingStatus === "married" ? 2 : 1;
     const currentHouseholdCost = currentAnnualCost * multiplier;
 
     const withRothMAGI = magi + rothConversion;
     const rothBracket = findBracket(withRothMAGI);
-    const rothPartBTotal = BASE_PART_B_PREMIUM_2025 + rothBracket.partBSurcharge;
-    const rothPartDTotal = includePartD ? BASE_PART_D_PREMIUM_2025 + rothBracket.partDSurcharge : 0;
+    const rothPartBTotal = BASE_PART_B_PREMIUM_2026 + rothBracket.partBSurcharge;
+    const rothPartDTotal = includePartD ? BASE_PART_D_PREMIUM_2026 + rothBracket.partDSurcharge : 0;
     const rothAnnualCost = rothPartBTotal + rothPartDTotal + customSurcharge;
     const rothHouseholdCost = rothAnnualCost * multiplier;
     const rothImpact = rothHouseholdCost - currentHouseholdCost;
 
     const iulMAGI = magi; // IUL loans don't count
     const iulBracket = findBracket(iulMAGI);
-    const iulPartBTotal = BASE_PART_B_PREMIUM_2025 + iulBracket.partBSurcharge;
-    const iulPartDTotal = includePartD ? BASE_PART_D_PREMIUM_2025 + iulBracket.partDSurcharge : 0;
+    const iulPartBTotal = BASE_PART_B_PREMIUM_2026 + iulBracket.partBSurcharge;
+    const iulPartDTotal = includePartD ? BASE_PART_D_PREMIUM_2026 + iulBracket.partDSurcharge : 0;
     const iulAnnualCost = iulPartBTotal + iulPartDTotal + customSurcharge;
     const iulHouseholdCost = iulAnnualCost * multiplier;
     const iulSavings = rothHouseholdCost - iulHouseholdCost;
@@ -212,10 +211,10 @@ export default function MedicareIRMAA() {
   };
 
   const exportCSV = () => {
-    const brackets = IRMAA_BRACKETS_2025[filingStatus];
+    const brackets = IRMAA_BRACKETS_2026[filingStatus];
     const headers = ["MAGI Threshold", "Tier", "Part B Surcharge/yr", "Part D Surcharge/yr", "Total Annual Surcharge"];
     const rows = brackets.map((b) => [
-      b.maxMAGI === Infinity ? `> ${IRMAA_BRACKETS_2025[filingStatus][brackets.indexOf(b) - 1]?.maxMAGI || 0}` : `≤ ${b.maxMAGI}`,
+      b.maxMAGI === Infinity ? `≥ ${IRMAA_BRACKETS_2026[filingStatus][brackets.indexOf(b) - 1]?.maxMAGI || 0}` : edgeText(b, String(b.maxMAGI)),
       b.label,
       b.partBSurcharge,
       b.partDSurcharge,
@@ -229,7 +228,7 @@ export default function MedicareIRMAA() {
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
     link.setAttribute("href", encodedUri);
-    link.setAttribute("download", `IRMAA_Brackets_2025_${filingStatus}.csv`);
+    link.setAttribute("download", `IRMAA_Brackets_2026_${filingStatus}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -242,19 +241,19 @@ export default function MedicareIRMAA() {
         name: "Current",
         "Medicare Cost": analysis.currentHouseholdCost,
         "Surcharge": (analysis.currentBracket.partBSurcharge + analysis.currentBracket.partDSurcharge) * analysis.multiplier,
-        "Base Premium": (BASE_PART_B_PREMIUM_2025 + (includePartD ? BASE_PART_D_PREMIUM_2025 : 0)) * analysis.multiplier
+        "Base Premium": (BASE_PART_B_PREMIUM_2026 + (includePartD ? BASE_PART_D_PREMIUM_2026 : 0)) * analysis.multiplier
       },
       {
         name: "With Roth",
         "Medicare Cost": analysis.rothHouseholdCost,
         "Surcharge": (analysis.rothBracket.partBSurcharge + analysis.rothBracket.partDSurcharge) * analysis.multiplier,
-        "Base Premium": (BASE_PART_B_PREMIUM_2025 + (includePartD ? BASE_PART_D_PREMIUM_2025 : 0)) * analysis.multiplier
+        "Base Premium": (BASE_PART_B_PREMIUM_2026 + (includePartD ? BASE_PART_D_PREMIUM_2026 : 0)) * analysis.multiplier
       },
       {
         name: "With IUL",
         "Medicare Cost": analysis.iulHouseholdCost,
         "Surcharge": (analysis.iulBracket.partBSurcharge + analysis.iulBracket.partDSurcharge) * analysis.multiplier,
-        "Base Premium": (BASE_PART_B_PREMIUM_2025 + (includePartD ? BASE_PART_D_PREMIUM_2025 : 0)) * analysis.multiplier
+        "Base Premium": (BASE_PART_B_PREMIUM_2026 + (includePartD ? BASE_PART_D_PREMIUM_2026 : 0)) * analysis.multiplier
       }
     ];
   }, [analysis, includePartD]);
@@ -275,8 +274,8 @@ export default function MedicareIRMAA() {
   
   const pieData = useMemo(() => {
     return [
-      { name: 'Base Premium', value: BASE_PART_B_PREMIUM_2025 * analysis.multiplier },
-      { name: 'Part D Premium', value: includePartD ? BASE_PART_D_PREMIUM_2025 * analysis.multiplier : 0 },
+      { name: 'Base Premium', value: BASE_PART_B_PREMIUM_2026 * analysis.multiplier },
+      { name: 'Part D Premium', value: includePartD ? BASE_PART_D_PREMIUM_2026 * analysis.multiplier : 0 },
       { name: 'Part B Surcharge', value: analysis.currentBracket.partBSurcharge * analysis.multiplier },
       { name: 'Part D Surcharge', value: includePartD ? analysis.currentBracket.partDSurcharge * analysis.multiplier : 0 },
     ].filter((d) => d.value > 0);
@@ -293,7 +292,7 @@ export default function MedicareIRMAA() {
   }, [magi, analysis]);
 
   const filteredBrackets = useMemo(() => {
-    let brackets = IRMAA_BRACKETS_2025[filingStatus];
+    let brackets = IRMAA_BRACKETS_2026[filingStatus];
     if (searchQuery) {
       brackets = brackets.filter((b) => 
         b.label.toLowerCase().includes(searchQuery.toLowerCase()) || 
@@ -698,7 +697,7 @@ export default function MedicareIRMAA() {
               <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-[#12233e] pb-4 mb-6 gap-4">
                 <div>
                   <h2 className="text-xl font-semibold text-white">
-                    2025 IRMAA Brackets - {filingStatus === "married" ? "Married Filing Jointly" : "Single"}
+                    2026 IRMAA Brackets (2024 MAGI) - {filingStatus === "married" ? "Married Filing Jointly" : "Single"}
                   </h2>
                   <p className="text-[#7a95b8] text-sm mt-1">Based on Modified Adjusted Gross Income (MAGI) from 2 years prior</p>
                 </div>
@@ -746,7 +745,7 @@ export default function MedicareIRMAA() {
                     <tbody className="divide-y divide-[#12233e]">
                       {filteredBrackets.map((bracket, i) => {
                         const isCurrentBracket = bracket === analysis.currentBracket;
-                        const origIndex = IRMAA_BRACKETS_2025[filingStatus].indexOf(bracket);
+                        const origIndex = IRMAA_BRACKETS_2026[filingStatus].indexOf(bracket);
                         
                         return (
                           <tr 
@@ -756,8 +755,8 @@ export default function MedicareIRMAA() {
                           >
                             <td className="px-4 py-4 font-medium text-white whitespace-nowrap">
                               {bracket.maxMAGI === Infinity 
-                                ? `> ${fmt(IRMAA_BRACKETS_2025[filingStatus][origIndex - 1]?.maxMAGI || 0)}` 
-                                : `≤ ${fmt(bracket.maxMAGI)}`}
+                                ? `≥ ${fmt(IRMAA_BRACKETS_2026[filingStatus][origIndex - 1]?.maxMAGI || 0)}` 
+                                : edgeText(bracket, fmt(bracket.maxMAGI))}
                               {isCurrentBracket && <span className="rc-badge rc-badge-green ml-3 text-[10px] py-0.5">Current Tier</span>}
                             </td>
                             <td className="px-4 py-4 text-[#c8d8ec]">{bracket.label}</td>
@@ -955,7 +954,7 @@ export default function MedicareIRMAA() {
                 <h3 className="text-lg font-semibold text-white mb-4">MAGI vs Surcharge Trend</h3>
                 <div className="h-[300px] w-full">
                   <ResponsiveContainer width="100%" height="100%">
-                    <ComposedChart data={IRMAA_BRACKETS_2025[filingStatus].filter((b) => b.maxMAGI < Infinity)}>
+                    <ComposedChart data={IRMAA_BRACKETS_2026[filingStatus].filter((b) => b.maxMAGI < Infinity)}>
                       <CartesianGrid stroke="#12233e" />
                       <XAxis dataKey="label" stroke="#7a95b8" />
                       <YAxis yAxisId="left" stroke="#3b82f6" />
@@ -1205,8 +1204,8 @@ export default function MedicareIRMAA() {
               </p>
               
               {(() => {
-                const brackets = IRMAA_BRACKETS_2025[filingStatus];
-                const findBracket = (income) => brackets.find((b) => income <= b.maxMAGI) || brackets[brackets.length - 1];
+                const brackets = IRMAA_BRACKETS_2026[filingStatus];
+                const findBracket = (income: number) => brackets[irmaaTierIndex(income, filingStatus)];
                 const mult = spouseOnMedicare && filingStatus === "married" ? 2 : 1;
                 
                 const yearData = Array.from({ length: projectionYears }, (_, i) => {
