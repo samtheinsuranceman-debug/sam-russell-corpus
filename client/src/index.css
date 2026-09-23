@@ -2077,9 +2077,15 @@ html[data-quiet] .rc-integral { display: none; }
 }
 .rc-floor-link:hover { background: rgba(110,231,183,0.08); border-color: rgba(110,231,183,0.4); }
 .rc-floor-link[data-active="true"] { background: rgba(110,231,183,0.14); border-color: #6ee7b7; color: #6ee7b7; }
-.rc-floor-doors { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
-.rc-floor-doors-toggle { border-style: dashed; color: #cbd5e1; }
-.rc-floor-doors-toggle[aria-expanded="true"] { border-style: solid; }
+.rc-floor-rooms { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; }
+.rc-floor-room-list { display: flex; flex-wrap: wrap; gap: 2px; list-style: none; margin: 0; padding: 2px; border-radius: 10px; background: rgba(148,163,184,0.08); }
+.rc-floor-room {
+  min-height: 30px; padding: 4px 12px; border-radius: 8px; border: 0; background: transparent;
+  font-size: 13px; font-weight: 700; color: #cbd5e1; cursor: pointer; white-space: nowrap;
+}
+.rc-floor-room:hover { color: #fff; background: rgba(148,163,184,0.12); }
+.rc-floor-room[data-active="true"] { background: #12233e; color: #6ee7b7; }
+.rc-floor-room[data-doors="true"] { font-style: italic; }
 .rc-floor-all {
   display: inline-flex; align-items: center; gap: 6px; min-height: 32px; padding: 4px 12px;
   border-radius: 999px; border: 1px solid transparent; background: rgba(148,163,184,0.1);
@@ -2096,7 +2102,7 @@ html[data-quiet] .rc-integral { display: none; }
 
 /* Focus: always visible to keyboard users, never on mouse click. */
 .rc-stair:focus-visible, .rc-floor-link:focus-visible, .rc-floor-all:focus-visible,
-.rc-floor-icon-btn:focus-visible, .rc-floor-chip:focus-visible, .rc-floor-bottom-word:focus-visible,
+.rc-floor-icon-btn:focus-visible, .rc-floor-chip:focus-visible, .rc-floor-room:focus-visible, .rc-floor-bottom-word:focus-visible,
 .rc-floor-index-input:focus-visible {
   outline: 2px solid #fbbf24; outline-offset: 2px;
 }
@@ -2168,7 +2174,7 @@ html[data-quiet] .rc-integral { display: none; }
   }
   .rc-floor-sheet-head { display: flex; align-items: center; justify-content: space-between; }
   .rc-floor-sheet-title { font-size: 17px; font-weight: 700; color: #6ee7b7; }
-  .rc-floor-sheet .rc-floor-link, .rc-floor-sheet .rc-floor-all { min-height: 44px; }
+  .rc-floor-sheet .rc-floor-link, .rc-floor-sheet .rc-floor-all, .rc-floor-sheet .rc-floor-room { min-height: 44px; }
   .rc-floor-sheet .rc-floor-utilities { margin-left: 0; flex-wrap: wrap; }
 }
 

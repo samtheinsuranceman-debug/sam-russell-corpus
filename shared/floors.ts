@@ -13,11 +13,14 @@
  *           and nowhere else (control 35).
  *   Talk  - Goldman, the genome, notes.
  *
- * Every page in the menu belongs to exactly one floor. A floor shows at most
- * seven short links (control 66: few words above the fold; control 67: no
- * forty-link rail). Everything else on the floor is one keystroke away in that
- * floor's "All tools" index, so nothing that is reachable today becomes
- * unreachable (server/floorNav.test.ts and server/navReachability.test.ts).
+ * Every page in the menu belongs to exactly one floor. The owner's rule is at
+ * most eight top-level tabs, each opening to about four, then about four more:
+ * here the four floors open to at most four rooms of at most four links
+ * (control 66: few words above the fold; control 67: no forty-link rail).
+ * Everything else on a floor is one keystroke away in its "All tools" index,
+ * so nothing reachable today becomes unreachable (server/floorNav.test.ts,
+ * server/navReachability.test.ts). Who sees a page is decided by its audience
+ * (household, advisor, owner), not by which floor it is on.
  *
  * Assignment is by rule, most specific first: a path override, then the
  * menu subgroup, then the menu section. A page added to the menu therefore
@@ -34,8 +37,16 @@ export const FLOORS: readonly FloorId[] = ["Body", "Wound", "Work", "Talk"] as c
 /** The spec's active_word_scale: the floor you are on reads 1.25x larger. */
 export const ACTIVE_WORD_SCALE = 1.25;
 
-/** Most links a floor shows before "All tools". */
-export const MAX_VISIBLE_PER_FLOOR = 7;
+/**
+ * The owner's rule for the top of the menu: at most eight top-level tabs, each
+ * opening to about four, each of those to about four more (4 -> 4 -> 4). The
+ * four floors are the top level; each floor opens to at most four rooms; each
+ * room shows at most four links. Everything else on a floor is in its "All
+ * tools" index.
+ */
+export const MAX_TOP_LEVEL = 8;
+export const MAX_ROOMS_PER_FLOOR = 4;
+export const MAX_LINKS_PER_ROOM = 4;
 
 /** One short line per floor, for screen readers and the index heading. */
 export const FLOOR_BLURB: Record<FloorId, string> = {
@@ -47,47 +58,110 @@ export const FLOOR_BLURB: Record<FloorId, string> = {
 
 export type FloorLink = { path: string; label: string };
 
-/**
- * The few links each floor shows. Labels are one or two words on purpose.
- * Every path must be in the menu and must be assigned to the same floor
- * (asserted in server/floorNav.test.ts).
- */
-export const FLOOR_FEATURED: Record<FloorId, readonly FloorLink[]> = {
-  Body: [
-    { path: "/portal/client-snapshot", label: "Snapshot" },
-    { path: "/portal/household-wealth", label: "Household" },
-    { path: "/portal/couples", label: "Spouse view" },
-    { path: "/portal/client-files", label: "Files" },
-    { path: "/portal/plan-ledger", label: "Plan ledger" },
-    { path: "/portal/financial-vitals", label: "Vitals" },
-  ],
-  Wound: [
-    { path: "/portal/mortgage-ledger", label: "Mortgage note" },
-    { path: "/portal/tax-waterfall", label: "Tax heat" },
-    { path: "/portal/income-gap", label: "Income gap" },
-    { path: "/portal/disability-gap-analyzer", label: "Disability gap" },
-    { path: "/portal/estate-tax", label: "Estate" },
-  ],
-  Work: [
-    { path: "/portal/sequence-planner", label: "Sequence" },
-    { path: "/portal/iul-engine", label: "IUL" },
-    { path: "/portal/roth-conversion", label: "Roth" },
-    { path: "/portal/real-estate", label: "Real estate" },
-    { path: "/portal/annuity-explorer", label: "Annuity" },
-    { path: "/portal/trusts", label: "Trust" },
-  ],
-  Talk: [
-    { path: "/portal/samuel-goldman", label: "Goldman" },
-    { path: "/portal/wealth-genome", label: "Genome" },
-    { path: "/portal/the-map", label: "Genome map" },
-    { path: "/portal/ai-meeting-notes", label: "Notes" },
-    { path: "/portal/meetings", label: "Meetings" },
-  ],
-};
+/* ─── Who sees what ──────────────────────────────────────────────────────── */
 
 /**
- * The advisor doors. Work only (control 35). Rendered behind one "Advisor
- * doors" disclosure, so Work still shows seven controls at most.
+ * Who a page is for. A household sees its own picture and the instruments; an
+ * advisor also sees the book of households, the pipeline, compliance and the
+ * advisor doors; the owner also sees the running of the firm.
+ */
+export type Audience = "household" | "advisor" | "owner";
+const RANK: Record<Audience, number> = { household: 0, advisor: 1, owner: 2 };
+
+/** Whether a viewer at one level may see a page for an audience. */
+export function canSee(audience: Audience, viewer: Audience): boolean {
+  return RANK[viewer] >= RANK[audience];
+}
+
+/**
+ * The viewer's level. users.role is only "user" or "admin" today, so the owner
+ * and admins see everything and everyone else sees the household view.
+ * TODO(household-role): when users.role gains "advisor" (and "household"),
+ * map "advisor" to "advisor" here; nothing else needs to change.
+ */
+export function viewerAudience(input: { role?: string | null; isOwner?: boolean }): Audience {
+  if (input.isOwner || input.role === "admin") return "owner";
+  if (input.role === "advisor") return "advisor";
+  return "household";
+}
+
+/** Default audience for each top-level menu section; unlisted sections are for households. */
+export const SECTION_AUDIENCE: Record<string, Audience> = {
+  "Clients": "advisor",
+  "Sales & Growth": "advisor",
+  "Compliance": "advisor",
+  "Settings & Admin": "owner",
+};
+
+/** Subgroups whose audience differs from their section, keyed "Section/Subgroup". */
+export const SUBGROUP_AUDIENCE: Record<string, Audience> = {
+  "Products/Carriers": "advisor",
+};
+
+/** Single pages whose audience differs from their subgroup or section. */
+export const PATH_AUDIENCE: Record<string, Audience> = {
+  // A household's own view inside the Clients section: its assessment, its
+  // partner, its risk answers, its own portfolio and score, its notes.
+  "/portal/couples": "household",
+  "/portal/financial-assessment": "household",
+  "/portal/risk-tolerance": "household",
+  "/portal/risk-score": "household",
+  "/portal/onboarding-quiz": "household",
+  "/portal/client-portfolio": "household",
+  "/portal/client-financial-health-score": "household",
+  "/portal/ai-meeting-notes": "household",
+  "/portal/pet": "household",
+  // Pages that list the whole book of households (they read clients.list) are advisor pages.
+  "/portal/command": "advisor",
+  "/portal/command-center": "advisor",
+  "/portal/dashboard": "advisor",
+  "/portal/nerve-center": "advisor",
+  "/portal/financial-vitals": "advisor",
+  "/portal/my-world": "advisor",
+  "/portal/russell-number": "advisor",
+  "/portal/household-wealth": "advisor",
+  "/portal/tax-return-upload": "advisor",
+  "/portal/bulk-generation": "advisor",
+  // Advisor training and advisor-side AI.
+  "/portal/advisor-training": "advisor",
+  "/portal/agency-tutorial": "advisor",
+  "/portal/career-path": "advisor",
+  "/portal/certifications": "advisor",
+  "/portal/agent-tutorial": "advisor",
+  "/portal/training": "advisor",
+  "/portal/advisor": "advisor",
+  "/portal/co-pilot": "advisor",
+  "/portal/whisper-coach": "advisor",
+  "/portal/ai-assist": "advisor",
+  "/portal/ai-recommender": "advisor",
+  "/portal/collaborative-planning": "advisor",
+  // The running of the firm.
+  "/portal/site-health": "owner",
+  "/portal/system-health": "owner",
+  "/portal/brain-hub": "owner",
+  "/portal/ai-brain-hub": "owner",
+  "/portal/lab": "owner",
+  "/portal/nav-placeholder": "owner",
+  "/portal/interior": "owner",
+};
+
+/** The audience a menu entry is for, by the most specific rule. */
+export function audienceOf(entry: { path: string; section: string; subLabel?: string }): Audience {
+  const byPath = PATH_AUDIENCE[entry.path];
+  if (byPath) return byPath;
+  if (entry.subLabel) {
+    const bySub = SUBGROUP_AUDIENCE[`${entry.section}/${entry.subLabel}`];
+    if (bySub) return bySub;
+  }
+  return SECTION_AUDIENCE[entry.section] ?? "household";
+}
+
+/* ─── Rooms: the second and third levels ─────────────────────────────────── */
+
+export type Room = { label: string; audience: Audience; links: readonly FloorLink[] };
+
+/**
+ * The advisor doors. Work only (control 35), and only for advisors and up.
  */
 export const ADVISOR_DOORS: readonly FloorLink[] = [
   { path: "/portal/clients", label: "Clients" },
@@ -95,6 +169,114 @@ export const ADVISOR_DOORS: readonly FloorLink[] = [
   { path: "/portal/presentation-builder", label: "Presentations" },
   { path: "/portal/ai-assist", label: "AI assist" },
 ];
+
+/**
+ * Each floor's rooms, and each room's links. Labels are one or two words.
+ * A link is also filtered by its own page's audience, so a household room may
+ * hold one advisor link that households simply do not see.
+ * Every path must be a menu page on the same floor (server/floorNav.test.ts).
+ */
+export const FLOOR_ROOMS: Record<FloorId, readonly Room[]> = {
+  Body: [
+    { label: "Us", audience: "household", links: [
+      { path: "/portal/financial-assessment", label: "Assessment" },
+      { path: "/portal/couples", label: "Spouse view" },
+      { path: "/portal/risk-tolerance", label: "Risk" },
+      { path: "/portal/plan-ledger", label: "Plan ledger" },
+    ] },
+    { label: "Assets", audience: "household", links: [
+      { path: "/portal/client-portfolio", label: "Portfolio" },
+      { path: "/portal/real-estate-portfolio", label: "Property" },
+      { path: "/portal/wealth-dashboard", label: "Summary" },
+      { path: "/portal/client-financial-health-score", label: "Health score" },
+    ] },
+    { label: "Households", audience: "advisor", links: [
+      { path: "/portal/client-snapshot", label: "Snapshot" },
+      { path: "/portal/household-wealth", label: "Household" },
+      { path: "/portal/financial-vitals", label: "Vitals" },
+      { path: "/portal/client-files", label: "Files" },
+    ] },
+  ],
+  Wound: [
+    { label: "Debt", audience: "household", links: [
+      { path: "/portal/mortgage-ledger", label: "Mortgage note" },
+      { path: "/portal/erosion", label: "Purchasing power" },
+      { path: "/portal/wealth-erosion", label: "Erosion" },
+      { path: "/portal/market-stress-test", label: "Stress test" },
+    ] },
+    { label: "Tax heat", audience: "household", links: [
+      { path: "/portal/tax-waterfall", label: "Tax heat" },
+      { path: "/portal/tax-brackets", label: "Brackets" },
+      { path: "/portal/medicare-irmaa", label: "IRMAA" },
+      { path: "/portal/tax-alpha-scorecard", label: "Tax score" },
+    ] },
+    { label: "Gaps", audience: "household", links: [
+      { path: "/portal/income-gap", label: "Income gap" },
+      { path: "/portal/disability-gap-analyzer", label: "Disability gap" },
+      { path: "/portal/retirement-readiness-score", label: "Readiness" },
+      { path: "/portal/ai-policy-review", label: "Policy gaps" },
+    ] },
+    { label: "Estate", audience: "household", links: [
+      { path: "/portal/estate-tax", label: "Estate tax" },
+      { path: "/portal/estate-timeline", label: "Timeline" },
+      { path: "/portal/estate-flow", label: "Estate flow" },
+      { path: "/portal/wealth-transfer-scorecard", label: "Transfer" },
+    ] },
+  ],
+  Work: [
+    { label: "Income", audience: "household", links: [
+      { path: "/portal/sequence-planner", label: "Sequence" },
+      { path: "/portal/annuity-explorer", label: "Annuity" },
+      { path: "/portal/income-floor-strategy", label: "Income floor" },
+      { path: "/portal/social-security", label: "Social Security" },
+    ] },
+    { label: "Tax-free", audience: "household", links: [
+      { path: "/portal/iul-engine", label: "IUL" },
+      { path: "/portal/roth-conversion", label: "Roth" },
+      { path: "/portal/iul-vs-roth", label: "Compare" },
+      { path: "/portal/policy-loans", label: "Policy loans" },
+    ] },
+    { label: "Property", audience: "household", links: [
+      { path: "/portal/real-estate", label: "Real estate" },
+      { path: "/portal/mortgage-killer", label: "Mortgage plan" },
+      { path: "/portal/1031-exchange-analyzer", label: "1031" },
+      { path: "/portal/trusts", label: "Trust" },
+    ] },
+    { label: "Advisor doors", audience: "advisor", links: ADVISOR_DOORS },
+  ],
+  Talk: [
+    { label: "Goldman", audience: "household", links: [
+      { path: "/portal/samuel-goldman", label: "Goldman" },
+      { path: "/portal/ai-advisor", label: "Ask" },
+      { path: "/portal/voice", label: "Voice" },
+      { path: "/portal/whisperer", label: "Whisperer" },
+    ] },
+    { label: "Genome", audience: "household", links: [
+      { path: "/portal/wealth-genome", label: "Genome" },
+      { path: "/portal/the-map", label: "Genome map" },
+      { path: "/portal/the-arrival", label: "Arrival" },
+      { path: "/portal/the-mirror", label: "Mirror" },
+    ] },
+    { label: "Notes", audience: "household", links: [
+      { path: "/portal/ai-meeting-notes", label: "Notes" },
+      { path: "/portal/knowledge", label: "Knowledge" },
+      { path: "/portal/meetings", label: "Meetings" },
+      { path: "/portal/advisor-chat", label: "Chat" },
+    ] },
+  ],
+};
+
+/** The rooms a viewer sees on a floor, each holding only the links that viewer may see. */
+export function roomsFor(
+  floor: FloorId,
+  viewer: Audience,
+  audienceOfPath: (path: string) => Audience,
+): Room[] {
+  return FLOOR_ROOMS[floor]
+    .filter((r) => canSee(r.audience, viewer))
+    .map((r) => ({ ...r, links: r.links.filter((l) => canSee(audienceOfPath(l.path), viewer)) }))
+    .filter((r) => r.links.length > 0);
+}
 
 /** Default floor for each top-level menu section. */
 export const SECTION_FLOOR: Record<string, FloorId> = {
@@ -163,6 +345,11 @@ export const PATH_FLOOR: Record<string, FloorId> = {
   "/portal/erosion": "Wound",
   "/portal/outside-forces": "Wound",
   "/portal/market-stress-test": "Wound",
+  // Diagnostics that find a problem rather than fix one sit on Wound.
+  "/portal/tax-alpha-scorecard": "Wound",
+  "/portal/ai-policy-review": "Wound",
+  "/portal/policy-review": "Wound",
+  "/portal/policy-review-checklist": "Wound",
   "/portal/wealth-dashboard": "Body",
   "/portal/plan-ledger": "Body",
   "/portal/financial-plan-checklist": "Body",
