@@ -55,7 +55,7 @@ describe('the account as the carrier states it', () => {
   });
 
   it('names no carrier outside the three de-identified labels', () => {
-    const allowed = ['Mutual Company A', 'Mutual Company B', 'Mutual Company C', 'Comparison parameter'];
+    const allowed = ['Mutual Company N', 'Mutual Company S', 'Illustrative (no carrier)', 'Comparison parameter'];
     for (const a of SEGMENT_ACCOUNTS) expect(allowed).toContain(a.carrierLabel);
   });
 });
@@ -257,12 +257,12 @@ describe('summarizeWindow counts segments, never years', () => {
 });
 
 describe('the segment accounts as index options on every calculator', () => {
-  it('both appear in ALL_INDEX_OPTIONS under Mutual Company B', () => {
+  it('both appear in ALL_INDEX_OPTIONS under Mutual Company S', () => {
     const bia = ALL_INDEX_OPTIONS.find((o) => o.id === 'bm-sp500-2yr-balanced');
     const par = ALL_INDEX_OPTIONS.find((o) => o.id === 'bm-sp500-par110');
-    expect(bia?.carrier).toBe('mutual-b');
-    expect(par?.carrier).toBe('mutual-b');
-    expect(getOptionsByCarrier('mutual-b').map((o) => o.id)).toEqual(
+    expect(bia?.carrier).toBe('mutual-s');
+    expect(par?.carrier).toBe('mutual-s');
+    expect(getOptionsByCarrier('mutual-s').map((o) => o.id)).toEqual(
       expect.arrayContaining(['bm-sp500-2yr-balanced', 'bm-sp500-par110'])
     );
   });
@@ -414,7 +414,7 @@ describe('the carrier\'s own basis: annualized, net of the spread', () => {
     expect(cap.sourced).toBe(true);
     expect(cap.capPct).toBe(10);
     expect(cap.participationPct).toBe(100);
-    expect(cap.carrierLabel).toBe('Mutual Company B');
+    expect(cap.carrierLabel).toBe('Mutual Company S');
     expect(cap.source).toMatch(/F94327-15/);
   });
 });

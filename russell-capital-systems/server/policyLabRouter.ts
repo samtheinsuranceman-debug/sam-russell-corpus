@@ -10,6 +10,7 @@
 // is carrier structure and arithmetic, not anybody's case.
 // ============================================================
 import { z } from "zod";
+import { CARRIER_ROSTER } from "@shared/carrierRoster";
 import { publicProcedure, router } from "./_core/trpc";
 import {
   COMPLETE_BASELINES,
@@ -78,6 +79,8 @@ export const policyLabRouter = router({
   /** What each of the three companies is known to charge, and what is still absent. */
   carriers: publicProcedure.query(() => {
     return {
+      // Every carrier under the owner's codes (S, N, SY, LF, MT, PC, AR, MO), with what is held for each.
+      roster: CARRIER_ROSTER,
       // A first (the page's default basis), then B, each read off its own
       // cost summary.
       complete: COMPLETE_BASELINES.map((b) => ({

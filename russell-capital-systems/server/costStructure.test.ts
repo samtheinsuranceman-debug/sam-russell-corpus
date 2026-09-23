@@ -13,8 +13,8 @@ import {
   impliedSurrenderPerThousand,
   blendMultiIndex,
   COMPLETE_BASELINES,
-  MUTUAL_A_BASELINE,
-  MUTUAL_B_BASELINE,
+  MUTUAL_N_BASELINE,
+  MUTUAL_S_BASELINE,
   PENDING_BASELINES,
   MULTI_INDEX_BLEND,
   type CostSummaryYear,
@@ -107,7 +107,7 @@ describe('the cost of insurance, derived exactly', () => {
 
   it('matches the baseline transcribed into the module', () => {
     for (const row of implied) {
-      const held = MUTUAL_A_BASELINE.coiPerThousandByAge.find((c) => c.age === row.age)!;
+      const held = MUTUAL_N_BASELINE.coiPerThousandByAge.find((c) => c.age === row.age)!;
       expect(held.perThousand, `age ${row.age}`).toBeCloseTo(row.perThousand, 2);
     }
   });
@@ -149,21 +149,21 @@ describe('the surrender charge is dollars per $1,000, not a percentage of value'
   });
 
   it('matches the baseline schedule held in the module', () => {
-    expect(MUTUAL_A_BASELINE.surrenderPerThousandByYear.slice(0, 11)).toEqual(perK.slice(0, 11));
+    expect(MUTUAL_N_BASELINE.surrenderPerThousandByYear.slice(0, 11)).toEqual(perK.slice(0, 11));
   });
 
   it('drives the engine on the product\'s own basis', () => {
     const out = runPolicyMechanics({
       issueAge: 63, faceAmount: SPEC, annualPremium: 480_000, premiumYears: 5, years: 3,
       charges: {
-        premiumLoadPctByYear: [...MUTUAL_A_BASELINE.percentOfPremiumByYear],
-        monthlyPolicyFee: MUTUAL_A_BASELINE.perPolicyMonthly,
-        perUnitMonthlyPerThousand: MUTUAL_A_BASELINE.perThousandAnnual / 12,
-        perUnitYears: MUTUAL_A_BASELINE.perThousandYears,
-        coiTable: MUTUAL_A_BASELINE.coiPerThousandByAge,
+        premiumLoadPctByYear: [...MUTUAL_N_BASELINE.percentOfPremiumByYear],
+        monthlyPolicyFee: MUTUAL_N_BASELINE.perPolicyMonthly,
+        perUnitMonthlyPerThousand: MUTUAL_N_BASELINE.perThousandAnnual / 12,
+        perUnitYears: MUTUAL_N_BASELINE.perThousandYears,
+        coiTable: MUTUAL_N_BASELINE.coiPerThousandByAge,
         coiTableSource: 'derived from an Annual Cost Summary',
         surrenderChargePctByYear: [],
-        surrenderChargePerThousandByYear: MUTUAL_A_BASELINE.surrenderPerThousandByYear,
+        surrenderChargePerThousandByYear: MUTUAL_N_BASELINE.surrenderPerThousandByYear,
       },
       creditedRatePctByYear: [6.75, 6.75, 6.75],
       corridorFactorByAge: {},
@@ -202,7 +202,7 @@ describe('the multi-index blend, per the contract\'s own rule', () => {
 });
 
 /**
- * Mutual Company B, read off its Charges Report ("Your policy's current
+ * Mutual Company S, read off its Charges Report ("Your policy's current
  * charges summary"), de-identified: female, issue age 64, preferred
  * non-tobacco, level death benefit $2,918,696, $300,000 a year for five years,
  * GPT. Columns as printed: premium charge, cost of insurance, policy issue
@@ -264,7 +264,7 @@ const B_SECOND_CASE = [
 ];
 const B_SECOND_SPEC = 2_724_116;
 
-describe('Mutual Company B, read off its Charges Report', () => {
+describe('Mutual Company S, read off its Charges Report', () => {
   it('rolls forward to the printed cash value in every one of twenty years', () => {
     let prior = 0;
     for (const y of B_SUMMARY) {
@@ -307,14 +307,14 @@ describe('Mutual Company B, read off its Charges Report', () => {
   it('holds the premium charge, policy issue charge and monthly charge the report prints', () => {
     expect(B_SUMMARY[0]!.percentOfPremiumCharge / B_SUMMARY[0]!.premium).toBeCloseTo(0.08, 6);
     for (const y of B_SUMMARY.slice(1, 5)) expect(y.percentOfPremiumCharge / y.premium).toBeCloseTo(0.065, 6);
-    expect(MUTUAL_B_BASELINE.percentOfPremiumByYear.slice(0, 5)).toEqual([8.0, 6.5, 6.5, 6.5, 6.5]);
+    expect(MUTUAL_S_BASELINE.percentOfPremiumByYear.slice(0, 5)).toEqual([8.0, 6.5, 6.5, 6.5, 6.5]);
     // $19,818 a year for exactly ten years, $6.79 per $1,000 of face.
     expect(B_SUMMARY.filter((y) => y.perThousandCharge > 0)).toHaveLength(10);
-    expect(19818 / (B_SPEC / 1000)).toBeCloseTo(MUTUAL_B_BASELINE.perThousandAnnual, 2);
-    expect(MUTUAL_B_BASELINE.perThousandYears).toBe(10);
+    expect(19818 / (B_SPEC / 1000)).toBeCloseTo(MUTUAL_S_BASELINE.perThousandAnnual, 2);
+    expect(MUTUAL_S_BASELINE.perThousandYears).toBe(10);
     // Additional charges are $60 in every year: the $5 monthly policy charge.
     for (const y of B_SUMMARY) expect(y.perPolicyCharge).toBe(60);
-    expect(MUTUAL_B_BASELINE.perPolicyMonthly).toBe(5);
+    expect(MUTUAL_S_BASELINE.perPolicyMonthly).toBe(5);
   });
 
   it('credits the bonus interest as 0.60% of the prior year-end cash value from year 11', () => {
@@ -325,13 +325,13 @@ describe('Mutual Company B, read off its Charges Report', () => {
       expect(pctOfPrior).toBeLessThan(0.612);
     }
     for (let i = 0; i < 10; i++) expect(B_SUMMARY[i]!.conditionalCredit).toBeLessThan(1500);
-    expect(MUTUAL_B_BASELINE.bonusInterestPctOfCashValue).toBe(0.6);
-    expect(MUTUAL_B_BASELINE.bonusInterestFromYear).toBe(11);
+    expect(MUTUAL_S_BASELINE.bonusInterestPctOfCashValue).toBe(0.6);
+    expect(MUTUAL_S_BASELINE.bonusInterestFromYear).toBe(11);
   });
 
   it('has a surrender charge in dollars per $1,000 of face that falls from year 1 and ends at year 10', () => {
     const perK = impliedSurrenderPerThousand(B_SUMMARY, B_SPEC);
-    expect(perK.slice(0, 10)).toEqual(MUTUAL_B_BASELINE.surrenderPerThousandByYear);
+    expect(perK.slice(0, 10)).toEqual(MUTUAL_S_BASELINE.surrenderPerThousandByYear);
     expect(perK[0]).toBe(51.49);
     for (let i = 1; i < 9; i++) expect(perK[i]!, `year ${i + 1}`).toBeLessThan(perK[i - 1]!);
     expect(perK[9]).toBe(0);
@@ -341,7 +341,7 @@ describe('Mutual Company B, read off its Charges Report', () => {
   it('derives the cost of insurance exactly and it rises through age 73', () => {
     const implied = impliedCoiPerThousand(B_SUMMARY);
     for (const row of implied) {
-      const held = MUTUAL_B_BASELINE.coiPerThousandByAge.find((c) => c.age === row.age)!;
+      const held = MUTUAL_S_BASELINE.coiPerThousandByAge.find((c) => c.age === row.age)!;
       expect(held.perThousand, `age ${row.age}`).toBeCloseTo(row.perThousand, 2);
     }
     const first10 = implied.slice(0, 10);
@@ -355,45 +355,45 @@ describe('Mutual Company B, read off its Charges Report', () => {
   it('matches a second case of the same sex, age and class to within one percent', () => {
     for (const y of B_SECOND_CASE) {
       expect(y.premiumCharge / y.premium).toBeCloseTo(y.age === 64 ? 0.08 : 0.065, 6);
-      expect(y.issue / (B_SECOND_SPEC / 1000)).toBeCloseTo(MUTUAL_B_BASELINE.perThousandAnnual, 2);
+      expect(y.issue / (B_SECOND_SPEC / 1000)).toBeCloseTo(MUTUAL_S_BASELINE.perThousandAnnual, 2);
       const perThousand = y.coi / ((B_SECOND_SPEC - y.cashValue) / 1000);
-      const held = MUTUAL_B_BASELINE.coiPerThousandByAge.find((c) => c.age === y.age)!.perThousand;
+      const held = MUTUAL_S_BASELINE.coiPerThousandByAge.find((c) => c.age === y.age)!.perThousand;
       expect(Math.abs(perThousand - held) / held, `age ${y.age}`).toBeLessThan(0.01);
     }
   });
 
   it('confirms from the illustration that B credits interest to the cash value', () => {
-    expect(MUTUAL_B_BASELINE.creditingTarget).toBe('cash-value');
-    expect(MUTUAL_B_BASELINE.fromCostSummary).toBe(true);
+    expect(MUTUAL_S_BASELINE.creditingTarget).toBe('cash-value');
+    expect(MUTUAL_S_BASELINE.fromCostSummary).toBe(true);
     // Surrender value equals cash value less the surrender charge in every year.
     for (const y of B_SUMMARY) expect(y.surrenderValue).toBeLessThanOrEqual(y.accountValue);
     for (const y of B_SUMMARY.slice(10)) expect(y.surrenderValue).toBe(y.accountValue);
   });
 
   it('keeps the case it came from attached, de-identified', () => {
-    const d = MUTUAL_B_BASELINE.derivedFrom;
+    const d = MUTUAL_S_BASELINE.derivedFrom;
     expect(d.sex).toBe('female');
     expect(d.issueAge).toBe(64);
     expect(d.riskClass).toBe('preferred non-tobacco');
     expect(d.specifiedAmount).toBe(B_SPEC);
     expect(d.totalPremiumOutlay).toBe(1_500_000);
     expect(d.definitionalTest).toBe('GPT');
-    expect(MUTUAL_B_BASELINE.caveats.join(' ')).toMatch(/ONE sex, ONE issue age and ONE risk class/);
-    expect(JSON.stringify(MUTUAL_B_BASELINE)).not.toMatch(/Brandt|Aufdembrink|Case ID/);
+    expect(MUTUAL_S_BASELINE.caveats.join(' ')).toMatch(/ONE sex, ONE issue age and ONE risk class/);
+    expect(JSON.stringify(MUTUAL_S_BASELINE)).not.toMatch(/Brandt|Aufdembrink|Case ID/);
   });
 
   it('drives the engine on the product\'s own basis', () => {
     const out = runPolicyMechanics({
       issueAge: 64, faceAmount: B_SPEC, annualPremium: 300_000, premiumYears: 5, years: 3,
       charges: {
-        premiumLoadPctByYear: [...MUTUAL_B_BASELINE.percentOfPremiumByYear],
-        monthlyPolicyFee: MUTUAL_B_BASELINE.perPolicyMonthly,
-        perUnitMonthlyPerThousand: MUTUAL_B_BASELINE.perThousandAnnual / 12,
-        perUnitYears: MUTUAL_B_BASELINE.perThousandYears,
-        coiTable: MUTUAL_B_BASELINE.coiPerThousandByAge,
+        premiumLoadPctByYear: [...MUTUAL_S_BASELINE.percentOfPremiumByYear],
+        monthlyPolicyFee: MUTUAL_S_BASELINE.perPolicyMonthly,
+        perUnitMonthlyPerThousand: MUTUAL_S_BASELINE.perThousandAnnual / 12,
+        perUnitYears: MUTUAL_S_BASELINE.perThousandYears,
+        coiTable: MUTUAL_S_BASELINE.coiPerThousandByAge,
         coiTableSource: 'derived from a Charges Report',
         surrenderChargePctByYear: [],
-        surrenderChargePerThousandByYear: MUTUAL_B_BASELINE.surrenderPerThousandByYear,
+        surrenderChargePerThousandByYear: MUTUAL_S_BASELINE.surrenderPerThousandByYear,
       },
       creditedRatePctByYear: [6.6, 6.6, 6.6],
       corridorFactorByAge: {},
@@ -409,19 +409,19 @@ describe('Mutual Company B, read off its Charges Report', () => {
 
 describe('what the third carrier still lacks', () => {
   it('lists A and B as complete and only C as pending', () => {
-    expect(COMPLETE_BASELINES.map((c) => c.carrierId)).toEqual(['mutual-a', 'mutual-b']);
-    expect(PENDING_BASELINES.map((p) => p.carrierId)).toEqual(['mutual-c']);
-    expect(MUTUAL_A_BASELINE.creditingTarget).toBe('accumulated-value');
-    expect(MUTUAL_B_BASELINE.creditingTarget).toBe('cash-value');
+    expect(COMPLETE_BASELINES.map((c) => c.carrierId)).toEqual(['mutual-n', 'mutual-s']);
+    expect(PENDING_BASELINES.map((p) => p.carrierId)).toEqual(['mutual-pc']);
+    expect(MUTUAL_N_BASELINE.creditingTarget).toBe('accumulated-value');
+    expect(MUTUAL_S_BASELINE.creditingTarget).toBe('cash-value');
   });
 
   it('keeps the case the baseline came from attached to it', () => {
-    const d = MUTUAL_A_BASELINE.derivedFrom;
+    const d = MUTUAL_N_BASELINE.derivedFrom;
     expect(d.sex).toBe('female');
     expect(d.issueAge).toBe(63);
     expect(d.specifiedAmount).toBe(SPEC);
     expect(d.totalPremiumOutlay).toBe(2_100_000);
     // And the caveat that the curve is one class, not a universal one.
-    expect(MUTUAL_A_BASELINE.caveats.join(' ')).toMatch(/ONE sex, ONE issue age and ONE risk class/);
+    expect(MUTUAL_N_BASELINE.caveats.join(' ')).toMatch(/ONE sex, ONE issue age and ONE risk class/);
   });
 });
