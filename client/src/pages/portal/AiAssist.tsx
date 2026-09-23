@@ -150,10 +150,17 @@ export default function AiAssist() {
       { name: "56-65", min: 56, max: 65 },
       { name: "66+", min: 66, max: 120 },
     ];
-    const ageData = ageBuckets.map((b) => ({
-      name: b.name,
-      count: clients.filter((c) => c.age && Number(c.age) >= b.min && Number(c.age) < b.max).length,
-    }));
+    // Average recorded wealth (IRA + Roth + real-estate equity) of the clients in each age band.
+    const recordedWealth = (c: (typeof clients)[number]) =>
+      Number(c.iraBalance ?? 0) + Number(c.rothBalance ?? 0) + Number(c.realEstateEquity ?? 0);
+    const ageData = ageBuckets.map((b) => {
+      const inBand = clients.filter((c) => c.age && Number(c.age) >= b.min && Number(c.age) < b.max);
+      return {
+        name: b.name,
+        count: inBand.length,
+        avgWealth: inBand.length ? inBand.reduce((acc, c) => acc + recordedWealth(c), 0) / inBand.length : 0,
+      };
+    });
 
     const rothOpportunity = clients.filter((c) => {
       const ira = Number(c.iraBalance ?? 0);
@@ -826,7 +833,7 @@ export default function AiAssist() {
                 <div className="text-xs text-[#7a95b8]">Correlation Analysis</div>
               </div>
               <ResponsiveContainer width="100%" height={250}>
-                <ComposedChart data={clientAnalytics.ageData.map((d, i) => ({...d, avgWealth: Math.random() * 1000000 + 500000}))} margin={{ top: 5, right: 20, bottom: 5, left: 20 }}>
+                <ComposedChart data={clientAnalytics.ageData} margin={{ top: 5, right: 20, bottom: 5, left: 20 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#12233e" vertical={false} />
                   <XAxis dataKey="name" tick={{ fill: "#7a95b8", fontSize: 10 }} axisLine={false} tickLine={false} />
                   <YAxis yAxisId="left" tick={{ fill: "#7a95b8", fontSize: 10 }} axisLine={false} tickLine={false} />
@@ -996,8 +1003,8 @@ export default function AiAssist() {
                             <thead className="bg-[#0f1e35] text-[#7a95b8] sticky top-0">
                               <tr>
                                 <th className="px-4 py-3 font-medium">Client</th>
-                                <th className="px-4 py-3 font-medium">Metric 1</th>
-                                <th className="px-4 py-3 font-medium">Metric 2</th>
+                                <th className="px-4 py-3 font-medium">Income</th>
+                                <th className="px-4 py-3 font-medium">IRA Balance</th>
                                 <th className="px-4 py-3 font-medium">Status</th>
                               </tr>
                             </thead>
@@ -1008,12 +1015,19 @@ export default function AiAssist() {
                                     {expandedRow === i ? <ChevronRight size={14} className="rotate-90 text-[#7a95b8] transition-transform" /> : <ChevronRight size={14} className="text-[#7a95b8] transition-transform" />}
                                     {client.name}
                                   </td>
-                                  <td className="px-4 py-3 text-[#c8d8ec]">${(Math.random() * 50000 + 10000).toLocaleString(undefined, {maximumFractionDigits: 0})}</td>
-                                  <td className="px-4 py-3 text-[#c8d8ec]">${(Math.random() * 200000 + 50000).toLocaleString(undefined, {maximumFractionDigits: 0})}</td>
+                                  <td className="px-4 py-3 text-[#c8d8ec]">{client.income != null ? `$${Number(client.income).toLocaleString(undefined, {maximumFractionDigits: 0})}` : "—"}</td>
+                                  <td className="px-4 py-3 text-[#c8d8ec]">{client.iraBalance != null ? `$${Number(client.iraBalance).toLocaleString(undefined, {maximumFractionDigits: 0})}` : "—"}</td>
                                   <td className="px-4 py-3">
-                                    <span className={`px-2 py-0.5 rounded-full text-[10px] font-medium ${i % 3 === 0 ? 'bg-[#f0c040]/10 text-[#f0c040]' : 'bg-[#22c55e]/10 text-[#22c55e]'}`}>
-                                      {i % 3 === 0 ? 'Action Needed' : 'On Track'}
-                                    </span>
+                                    {(() => {
+                                      // Same rule as the Roth-opportunity count above: IRA over $100K with Roth under 30% of it.
+                                      const ira = Number(client.iraBalance ?? 0);
+                                      const flagged = ira > 100_000 && Number(client.rothBalance ?? 0) < ira * 0.3;
+                                      return (
+                                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-medium ${flagged ? 'bg-[#f0c040]/10 text-[#f0c040]' : 'bg-[#22c55e]/10 text-[#22c55e]'}`}>
+                                          {flagged ? 'Roth Review' : 'No Flag'}
+                                        </span>
+                                      );
+                                    })()}
                                   </td>
                                 </tr>
                               ))}

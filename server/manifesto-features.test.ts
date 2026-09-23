@@ -10,7 +10,7 @@ function createAuthContext(): { ctx: TrpcContext } {
     openId: "test-manifesto-user",
     email: "manifesto@example.com",
     name: "Manifesto Tester",
-    loginMethod: "manus",
+    loginMethod: "owner-password",
     role: "user",
     createdAt: new Date(),
     updatedAt: new Date(),

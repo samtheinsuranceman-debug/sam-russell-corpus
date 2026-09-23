@@ -63,7 +63,8 @@
  *     route manifest equals the router; `/portal/macro-intelligence` renders
  *     the seed with "No live pull yet" until the first cron run.
  *
- * Standing rules honoured: no DeepSeek; no secret in `shared/`; every rate,
+ * Standing rules honoured: no China-linked AI and no Chinese government or
+ * state source; no secret in `shared/`; every rate,
  * elasticity, prior and threshold in `assumptions.ts` with `{source, asOf}`;
  * 10,000 seeded paths; owner-only writes.
  */
@@ -89,4 +90,4 @@ export * from "./scoring";
 export * from "./people";
 export * from "./household";
 
-export const MACRO_LAYER_VERSION = "2026.09.22d";
+export const MACRO_LAYER_VERSION = "2026.09.23a";

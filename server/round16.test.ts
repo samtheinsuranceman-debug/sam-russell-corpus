@@ -13,7 +13,7 @@ function createAuthContext(): { ctx: TrpcContext } {
     openId: "test-user-r16",
     email: "advisor@russellcapital.test",
     name: "Test Advisor",
-    loginMethod: "manus",
+    loginMethod: "owner-password",
     role: "user",
     createdAt: new Date(),
     updatedAt: new Date(),

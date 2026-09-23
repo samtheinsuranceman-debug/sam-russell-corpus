@@ -44,26 +44,6 @@ import { toast } from "sonner";
    Where the boundary between you and the machine dissolves.
    ═══════════════════════════════════════════════════════════════════ */
 
-function WaterParticle({ delay, channel, amount }: { delay: number; channel: string; amount: number }) {
-  const [y, setY] = useState(-10);
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      const interval = setInterval(() => {
-        setY(prev => prev >= 100 ? -10 : prev + 0.5);
-      }, 30);
-      return () => clearInterval(interval);
-    }, delay);
-    return () => clearTimeout(timeout);
-  }, [delay]);
-
-  return (
-    <div
-      className="absolute w-2 h-2 rounded-full bg-cyan-400/60 blur-[1px] transition-all"
-      style={{ top: `${y}%`, left: `${Math.random() * 80 + 10}%`, animationDelay: `${delay}ms` }}
-    />
-  );
-}
-
 function WealthWaterfall() {
   const [isPlaying, setIsPlaying] = useState(true);
   const [selectedChannel, setSelectedChannel] = useState<string | null>(null);
@@ -78,18 +58,6 @@ function WealthWaterfall() {
   ];
 
   const totalFlow = channels.reduce((sum, c) => sum + c.flow, 0);
-  const [animatedTotal, setAnimatedTotal] = useState(0);
-
-  useEffect(() => {
-    if (!isPlaying) return;
-    const interval = setInterval(() => {
-      setAnimatedTotal(prev => {
-        const next = prev + Math.random() * 150 + 50;
-        return next >= totalFlow ? 0 : next;
-      });
-    }, 50);
-    return () => clearInterval(interval);
-  }, [isPlaying, totalFlow]);
 
   return (
     <div className="space-y-6">
@@ -99,14 +67,14 @@ function WealthWaterfall() {
           <h3 className="text-lg font-bold text-cyan-300 flex items-center gap-2">
             <Waves className="w-5 h-5" /> Wealth Waterfall
           </h3>
-          <p className="text-sm text-muted-foreground">Watch money flow through your entire practice in real time</p>
+          <p className="text-sm text-muted-foreground">An illustration of how money could flow through a practice, using a fixed sample dataset</p>
         </div>
         <div className="flex gap-2">
           <Button size="sm" variant="outline" onClick={() => setIsPlaying(!isPlaying)}
             className="border-cyan-500/30 text-cyan-300">
             {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
           </Button>
-          <Button size="sm" variant="outline" onClick={() => { setAnimatedTotal(0); toast.success("Waterfall reset"); }}
+          <Button size="sm" variant="outline" onClick={() => { setSelectedChannel(null); toast.success("Waterfall reset"); }}
             className="border-cyan-500/30 text-cyan-300">
             <RotateCcw className="w-4 h-4" />
           </Button>
@@ -118,12 +86,9 @@ function WealthWaterfall() {
         <CardContent className="p-4 text-center">
           <p className="text-xs text-cyan-400 uppercase tracking-wider">Total Client Assets</p>
           <p className="text-3xl font-black text-cyan-300 font-mono">
-            ${(2_790_000 + animatedTotal).toLocaleString()}
+            ${(2_790_000).toLocaleString()}
           </p>
-          <div className="flex items-center justify-center gap-1 mt-1">
-            <Activity className="w-3 h-3 text-cyan-400 animate-pulse" />
-            <span className="text-xs text-cyan-400">Live flow: ${Math.round(animatedTotal).toLocaleString()}/cycle</span>
-          </div>
+          <p className="text-xs text-amber-300 mt-1">Sample figure — not a real balance</p>
         </CardContent>
       </Card>
 
@@ -659,6 +624,11 @@ export default function BlackMirror() {
           <p className="text-muted-foreground">
             When the platform becomes more real than reality. Where the boundary between you and the machine dissolves.
           </p>
+        </div>
+
+        <div role="note" className="rounded-xl border-2 border-amber-500/60 bg-amber-500/10 p-4 text-sm text-amber-200">
+          <strong>Sample data — not real records.</strong> Every client count, dollar figure and score on this page is a
+          fixed demonstration dataset. None of it is drawn from your clients, your book or your commissions.
         </div>
 
         <Tabs defaultValue="waterfall" className="w-full">

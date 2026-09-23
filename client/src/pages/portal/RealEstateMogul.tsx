@@ -458,11 +458,8 @@ export default function RealEstateMogul() {
     const newProps = Array.from({ length: Math.min(count, 150 - properties.length) }, (_, i) => ({
       ...DEFAULT_PROPERTY,
       id: startId + i,
+      // Same default inputs as "Add Property"; the user enters each property's real figures.
       name: `Rental Property ${startId + i}`,
-      purchasePrice: 250000 + Math.round(Math.random() * 200000),
-      monthlyRent: 1800 + Math.round(Math.random() * 1200),
-      state: STATES[Math.floor(Math.random() * STATES.length)],
-      propertyType: PROPERTY_TYPES[Math.floor(Math.random() * PROPERTY_TYPES.length)].value,
     }));
     setProperties(prev => [...prev, ...newProps]);
   }, [properties]);

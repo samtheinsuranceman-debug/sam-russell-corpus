@@ -54,14 +54,23 @@ import {
   mulberry32,
   summarise,
 } from "@shared/macro";
-import type { Evidence } from "@shared/macro";
+import type { Environment, Evidence, Statement, StatementCategory } from "@shared/macro";
 
 const TODAY = "2026-09-22";
 
 describe("source registry — the standing-order minimums", () => {
-  it("has at least fifteen Japanese and fifteen Chinese sources", () => {
+  it("has at least fifteen Japanese sources and no Chinese or Hong Kong one", () => {
     expect(sourcesByJurisdiction("JP").length).toBeGreaterThanOrEqual(SOURCE_MINIMUMS.JP);
-    expect(sourcesByJurisdiction("CN").length).toBeGreaterThanOrEqual(SOURCE_MINIMUMS.CN);
+    expect(sourcesByJurisdiction("CN").length).toBeLessThanOrEqual(SOURCE_MINIMUMS.CN);
+    expect(sourcesByJurisdiction("HK")).toEqual([]);
+  });
+
+  it("no source is a Chinese government, Party or state-media site, or sits on a .cn/.hk/.mo host", () => {
+    const host = (u?: string) => { try { return u ? new URL(u.replace("{KEY}", "k")).hostname : ""; } catch { return ""; } };
+    for (const s of MACRO_SOURCES) {
+      for (const u of [s.url, s.apiUrl]) expect(host(u), s.id).not.toMatch(/\.(?:cn|hk|mo)$/);
+      expect(`${s.entity} ${s.name}`, s.id).not.toMatch(/Xinhua|People's Bank of China|\bPBOC\b|\bSAFE\b|State Council|\bNPC\b|Politburo|\bCCP\b|MOFCOM|Global Times|People's Daily|Shanghai (?:Futures|Gold) Exchange|China Investment Corporation|CSRC|\bNFRA\b|NDRC|National Bureau of Statistics of China/);
+    }
   });
 
   it("has at least twenty-five oil-settlement sources, ten debt sources, ten Taiwan sources", () => {
@@ -80,12 +89,8 @@ describe("source registry — the standing-order minimums", () => {
     }
   });
 
-  it("state media is never tiered above wire services", () => {
-    // Every state-media row is a Chinese Party organ (or a Xinhua-carried readout); nothing else may claim the tier.
-    for (const s of MACRO_SOURCES.filter(s => s.tier === "state-media")) {
-      expect(["cn-xinhua", "cn-peoples-daily", "cn-global-times", "cn-politburo-readouts"]).toContain(s.id);
-      expect(s.jurisdiction).toBe("CN");
-    }
+  it("no source claims the state-media tier (the Chinese Party organs that held it were removed)", () => {
+    expect(MACRO_SOURCES.filter(s => s.tier === "state-media")).toEqual([]);
   });
 
   it("keyed sources name the environment variable that holds the key", () => {
@@ -94,11 +99,13 @@ describe("source registry — the standing-order minimums", () => {
 });
 
 describe("indicator panels", () => {
-  it("Japan and China panels have fifteen indicators each; petrodollar and Taiwan have fifty", () => {
+  it("Japan has fifteen indicators; the China, petrodollar and Taiwan panels keep only rows a U.S. or allied publisher can feed", () => {
+    // 23 Sep 2026: rows readable only from a Chinese government, Party, state-media
+    // or .cn/.hk site were removed (China 15 → 9, petrodollar 50 → 44, Taiwan 50 → 39).
     expect(JAPAN_LIQUIDATION).toHaveLength(15);
-    expect(CHINA_LIQUIDATION).toHaveLength(15);
-    expect(PETRODOLLAR_RIPPLE).toHaveLength(50);
-    expect(TAIWAN_STRIKE).toHaveLength(50);
+    expect(CHINA_LIQUIDATION).toHaveLength(9);
+    expect(PETRODOLLAR_RIPPLE).toHaveLength(44);
+    expect(TAIWAN_STRIKE).toHaveLength(39);
   });
 
   it("every indicator cites only registered sources and has a unique id", () => {
@@ -279,11 +286,15 @@ describe("daily liquidation confidence", () => {
       const c = assessLiquidation(holder, SEED_OBSERVATIONS, TODAY);
       expect(c.stress.band.probability).toBeGreaterThan(0);
       expect(c.stress.band.probability).toBeLessThan(1);
-      expect(c.stress.band.confidence).toBeGreaterThan(30);
       expect(c.narrative).toContain("confidence");
       expect(c.forecast.horizons).toHaveLength(4);
-      expect(c.stress.drivers.length).toBeGreaterThan(5);
     }
+    const jp = assessLiquidation("JP", SEED_OBSERVATIONS, TODAY);
+    expect(jp.stress.band.confidence).toBeGreaterThan(30);
+    expect(jp.stress.drivers.length).toBeGreaterThan(5);
+    // China is now read only from U.S. data (TIC, OFAC): fewer drivers, and a confidence that says so.
+    const cn = assessLiquidation("CN", SEED_OBSERVATIONS, TODAY);
+    expect(cn.stress.drivers.length).toBeGreaterThanOrEqual(3);
   });
 
   it("Japan's 2026 evidence reads as elevated versus its prior", () => {
@@ -291,11 +302,10 @@ describe("daily liquidation confidence", () => {
     expect(c.stress.band.probability).toBeGreaterThan(0.15);
   });
 
-  it("state-media threats are discounted by the follow-through ledger", () => {
+  it("China carries no statement indicator: no Chinese official or state-media channel is read", () => {
     const c = assessLiquidation("CN", SEED_OBSERVATIONS, TODAY);
-    const media = c.statementWeights.find(w => w.indicatorId === "cn-state-media-threat");
-    expect(media).toBeDefined();
-    expect(media!.multiplier).toBeLessThan(0.6);
+    expect(c.statementWeights).toEqual([]);
+    for (const o of SEED_OBSERVATIONS) expect(SOURCE_BY_ID.get(o.sourceId)?.jurisdiction, `${o.indicatorId} ← ${o.sourceId}`).not.toMatch(/^(?:CN|HK)$/);
   });
 });
 
@@ -444,16 +454,33 @@ describe("Taiwan strike-risk model", () => {
 });
 
 describe("statement follow-through scorer", () => {
-  it("the ledger spans four decades and every row is sourced", () => {
-    const years = STATEMENT_LEDGER.map(s => Number(s.date.slice(0, 4)));
-    expect(Math.min(...years)).toBeLessThanOrEqual(1980);
-    expect(Math.max(...years)).toBeGreaterThanOrEqual(2026);
+  it("carries no statement coded from a Chinese government, Party or state-media channel", () => {
+    // The 1979–2026 Beijing seed ledger was removed on 23 Sep 2026 (owner's order).
+    expect(STATEMENT_LEDGER).toEqual([]);
     for (const s of STATEMENT_LEDGER) expect(SOURCE_BY_ID.has(s.sourceId), s.id).toBe(true);
-    expect(new Set(STATEMENT_LEDGER.map(s => s.id)).size).toBe(STATEMENT_LEDGER.length);
   });
 
+  /** An illustrative ledger for the arithmetic only: generic speakers, no real statement, no Chinese source. */
+  const row = (id: string, category: StatementCategory, speaker: string, channel: string, environment: Environment, outcome: Statement["outcome"]): Statement =>
+    ({ id, date: "2020-01-01", speaker, channel, category, severity: "threat", environment, claim: "illustrative", outcome, sourceId: "fixture" });
+  const FIXTURE: Statement[] = [
+    row("m1", "taiwan-military", "Theater Command", "Announcement", "us-official-visit", "followed"),
+    row("m2", "taiwan-military", "Theater Command", "Announcement", "us-official-visit", "followed"),
+    row("m3", "taiwan-military", "Theater Command", "Announcement", "taiwan-election", "followed"),
+    row("m4", "taiwan-military", "Theater Command", "Announcement", "calm", "followed"),
+    row("f1", "financial-retaliation", "Commentator", "State media", "sanctions-escalation", "not-followed"),
+    row("f2", "financial-retaliation", "Commentator", "State media", "trade-dispute", "not-followed"),
+    row("f3", "financial-retaliation", "Ministry", "Statement", "sanctions-escalation", "not-followed"),
+    row("f4", "financial-retaliation", "Ministry", "Statement", "sanctions-escalation", "partial"),
+    row("t1", "trade-retaliation", "Trade ministry", "Announcement", "trade-dispute", "followed"),
+    row("t2", "trade-retaliation", "Trade ministry", "Announcement", "trade-dispute", "partial"),
+    row("l1", "sanctions-countermeasure", "State Council", "Law", "sanctions-escalation", "followed"),
+    row("c1", "currency-policy", "Central bank", "Statement", "domestic-stress", "reversed"),
+    row("p1", "diplomatic-warning", "Ministry", "Statement", "calm", "pending"),
+  ];
+
   it("financial threats follow through less than military announcements", () => {
-    const r = followThroughReport();
+    const r = followThroughReport(FIXTURE);
     const fin = r.byCategory.find(c => c.category === "financial-retaliation")!.rate;
     const mil = r.byCategory.find(c => c.category === "taiwan-military")!.rate;
     expect(fin.rate).toBeLessThan(mil.rate);
@@ -462,24 +489,29 @@ describe("statement follow-through scorer", () => {
     expect(r.findings.length).toBeGreaterThanOrEqual(3);
   });
 
-  it("state media is the least reliable channel", () => {
-    const r = followThroughReport();
+  it("channels are grouped and the least reliable one is visible", () => {
+    const r = followThroughReport(FIXTURE);
     const media = r.byChannel.find(c => c.channel === "State media")!.rate;
     for (const c of r.byChannel) if (c.channel !== "State media") expect(c.rate.rate).toBeGreaterThanOrEqual(media.rate);
   });
 
   it("credibility multiplier is bounded and shrinks toward the overall rate in thin cells", () => {
-    const fin = statementCredibility("financial-retaliation", "sanctions-escalation");
-    const mil = statementCredibility("taiwan-military", "us-official-visit");
+    const fin = statementCredibility("financial-retaliation", "sanctions-escalation", FIXTURE);
+    const mil = statementCredibility("taiwan-military", "us-official-visit", FIXTURE);
     expect(fin).toBeGreaterThanOrEqual(0.2);
     expect(fin).toBeLessThan(mil);
     expect(mil).toBeLessThanOrEqual(1);
-    const empty = statementCredibility("domestic-economic", "leadership-transition");
+    const empty = statementCredibility("domestic-economic", "leadership-transition", FIXTURE);
     expect(empty).toBeGreaterThan(0.2);
   });
 
+  it("with no decided statement on record the multiplier is an uninformed 0.5", () => {
+    expect(statementCredibility("financial-retaliation", "sanctions-escalation", [])).toBe(0.5);
+    expect(statementCredibility("reserve-management", "calm")).toBe(0.5);
+  });
+
   it("Wilson intervals contain the point estimate", () => {
-    const r = followThroughReport();
+    const r = followThroughReport(FIXTURE);
     expect(r.overall.low).toBeLessThanOrEqual(r.overall.rate);
     expect(r.overall.high).toBeGreaterThanOrEqual(r.overall.rate);
   });
@@ -495,7 +527,7 @@ describe("emergent pattern detector", () => {
   it("finds structure in the illustrative series and tags below-awareness findings", () => {
     const series = illustrativeSeries(JAPAN_LIQUIDATION.concat(CHINA_LIQUIDATION), 48);
     const r = detectPatterns(series, { minAbsR: 0.5 });
-    expect(r.seriesCount).toBe(30);
+    expect(r.seriesCount).toBe(JAPAN_LIQUIDATION.length + CHINA_LIQUIDATION.length);
     expect(r.months).toBe(48);
     expect(r.correlations.length).toBeGreaterThan(0);
     for (const f of r.correlations) {

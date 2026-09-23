@@ -1,5 +1,5 @@
 {
-  "tree": "8e053e7",
+  "tree": "8011800",
   "summary": {
     "engines": 98,
     "enginesFromCatalogue": 40,
@@ -11,7 +11,7 @@
       "enginesWithHardCodedYearsOlderThan2025": 50,
       "enginesWithUnseededRandomness": 0,
       "pagesImportingAnEngineWithNoProvenanceOnPage": 35,
-      "pagesImportingAnEngine": 132,
+      "pagesImportingAnEngine": 134,
       "enginesThatSimulate": 22,
       "enginesOnALiveFeed": 10,
       "enginesImportedByNoPageAndNoRouter": 8,
@@ -1048,6 +1048,7 @@
         "instruments"
       ],
       "pages": [
+        "client/src/pages/InteropEnginePage.tsx",
         "client/src/pages/MassiveCalculatorsPage.tsx"
       ],
       "serverImporters": [
@@ -1084,8 +1085,10 @@
         ]
       },
       "liveFeed": [],
-      "provenanceOnPage": false,
-      "provenancePages": [],
+      "provenanceOnPage": true,
+      "provenancePages": [
+        "client/src/pages/InteropEnginePage.tsx"
+      ],
       "hardCodedYears": [],
       "numericConstants": 5,
       "shellSourced": false
@@ -1197,7 +1200,9 @@
       "memoryGroups": [
         "insurance-mechanics"
       ],
-      "pages": [],
+      "pages": [
+        "client/src/pages/portal/CarrierSettings.tsx"
+      ],
       "serverImporters": [
         "server/carrierKnowledge.ts",
         "server/carrierRatingsService.ts"
@@ -1241,8 +1246,10 @@
         ]
       },
       "liveFeed": [],
-      "provenanceOnPage": false,
-      "provenancePages": [],
+      "provenanceOnPage": true,
+      "provenancePages": [
+        "client/src/pages/portal/CarrierSettings.tsx"
+      ],
       "hardCodedYears": [
         2020,
         2021,
@@ -2519,6 +2526,7 @@
         "client/src/pages/portal/PolicyLoans.tsx",
         "client/src/pages/portal/PremiumFinancing.tsx",
         "client/src/pages/portal/RealEstateMogul.tsx",
+        "client/src/pages/portal/SalesStoryBuilder.tsx",
         "client/src/pages/portal/TaxAdvantagedGrowth.tsx"
       ],
       "serverImporters": [
@@ -2572,6 +2580,7 @@
         "client/src/pages/portal/PolicyLoans.tsx",
         "client/src/pages/portal/PremiumFinancing.tsx",
         "client/src/pages/portal/RealEstateMogul.tsx",
+        "client/src/pages/portal/SalesStoryBuilder.tsx",
         "client/src/pages/portal/TaxAdvantagedGrowth.tsx"
       ],
       "hardCodedYears": [
@@ -2684,6 +2693,7 @@
       ],
       "pages": [
         "client/src/pages/portal/IULHistoricalPerformance.tsx",
+        "client/src/pages/portal/IndexBacktester.tsx",
         "client/src/pages/portal/LookbackIntegrity.tsx",
         "client/src/pages/portal/ThomasGoldman.tsx"
       ],
@@ -2759,6 +2769,7 @@
       "provenanceOnPage": true,
       "provenancePages": [
         "client/src/pages/portal/IULHistoricalPerformance.tsx",
+        "client/src/pages/portal/IndexBacktester.tsx",
         "client/src/pages/portal/LookbackIntegrity.tsx"
       ],
       "hardCodedYears": [
@@ -3680,6 +3691,7 @@
         "client/src/pages/ClientPortalView.tsx",
         "client/src/pages/portal/MortgageKiller.tsx",
         "client/src/pages/portal/PremiumFinancing.tsx",
+        "client/src/pages/portal/RetirementIncomeProjection.tsx",
         "client/src/pages/portal/RothConversionSTR.tsx",
         "client/src/pages/portal/StrategyCompare.tsx"
       ],
@@ -3734,6 +3746,7 @@
         "client/src/pages/ClientPortalView.tsx",
         "client/src/pages/portal/MortgageKiller.tsx",
         "client/src/pages/portal/PremiumFinancing.tsx",
+        "client/src/pages/portal/RetirementIncomeProjection.tsx",
         "client/src/pages/portal/RothConversionSTR.tsx"
       ],
       "hardCodedYears": [

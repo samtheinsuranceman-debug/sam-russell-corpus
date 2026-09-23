@@ -1,54 +1,45 @@
 /**
- * Board D32 (22 Sep 2026): the built-in Manus Forge gateway is not the
- * platform's last resort. It is off unless the operator opts in, the Brain Hub
- * chain never slides into it, and invokeLLM's callers are answered by the chain.
+ * The hosted gateway the platform shipped with has been removed outright
+ * (owner's order of 23 Sep 2026). There is no opt-in: the Brain Hub chain is
+ * the only transport, and invokeLLM's callers are answered by it.
  */
-import { afterEach, describe, expect, it } from "vitest";
+import { describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { forgeGatewayAllowed, jsonInstructionFor, messageToChatText } from "./_core/llm";
-import { forgeGatewayEnabled } from "./providerRegistry";
+import { jsonInstructionFor, messageToChatText } from "./_core/llm";
+import { PROVIDERS } from "@shared/aiProviders";
 
-const saved = { allow: process.env.RCS_ALLOW_FORGE_GATEWAY, key: process.env.BUILT_IN_FORGE_API_KEY };
-afterEach(() => {
-  if (saved.allow === undefined) delete process.env.RCS_ALLOW_FORGE_GATEWAY; else process.env.RCS_ALLOW_FORGE_GATEWAY = saved.allow;
-  if (saved.key === undefined) delete process.env.BUILT_IN_FORGE_API_KEY; else process.env.BUILT_IN_FORGE_API_KEY = saved.key;
-});
-
-describe("Manus Forge gateway is opt-in only (D32)", () => {
-  it("a Forge key alone does not enable the gateway; the explicit opt-in does", () => {
-    process.env.BUILT_IN_FORGE_API_KEY = "test-key";
-    delete process.env.RCS_ALLOW_FORGE_GATEWAY;
-    expect(forgeGatewayEnabled()).toBe(false);
-    process.env.RCS_ALLOW_FORGE_GATEWAY = "1";
-    expect(forgeGatewayEnabled()).toBe(true);
+describe("no hosted gateway anywhere in the chain", () => {
+  it("the provider catalogue has no internal gateway entry", () => {
+    expect(PROVIDERS.some(p => p.id === "forge")).toBe(false);
   });
 
-  it("the opt-in without a key is still off", () => {
-    process.env.RCS_ALLOW_FORGE_GATEWAY = "1";
-    delete process.env.BUILT_IN_FORGE_API_KEY;
-    expect(forgeGatewayEnabled()).toBe(false);
-  });
-
-  it("the registry no longer imports the gateway module, and brainComplete has no fallback branch", () => {
+  it("the registry does not import the gateway module and reads no gateway variables", () => {
     const src = readFileSync(join(__dirname, "providerRegistry.ts"), "utf8");
     expect(src).not.toContain("_core/llm");
     expect(src).not.toContain("invokeLLM");
-    expect(src).not.toMatch(/providerId:\s*"forge",\s*model:\s*"gateway"/);
+    expect(src).not.toMatch(/forgeGateway|gatewayFallback/); // the variables themselves: chinaAiBan.test.ts
   });
 
-  it("ultraAI carries no Manus member and no gateway lead", () => {
+  it("the host environment reader carries no gateway variables", () => {
+    const src = readFileSync(join(__dirname, "_core", "env.ts"), "utf8");
+    expect(src).not.toMatch(/forgeApi|oAuthServerUrl/);
+  });
+
+  it("ultraAI carries no gateway member and no gateway lead", () => {
     const src = readFileSync(join(__dirname, "ultraAI.ts"), "utf8");
-    expect(src).not.toContain('id: "manus"');
     expect(src).not.toContain("invokeLLM");
     expect(src).toContain("brainComplete");
   });
 });
 
 describe("invokeLLM through the Brain Hub chain", () => {
-  it("is the default path when the gateway is off", () => {
-    delete process.env.RCS_ALLOW_FORGE_GATEWAY;
-    expect(forgeGatewayAllowed()).toBe(false);
+  it("is the only path: llm.ts carries no hosted gateway URL, key or fetch", () => {
+    const src = readFileSync(join(__dirname, "_core", "llm.ts"), "utf8");
+    expect(src).not.toMatch(/fetch\(/);
+    expect(src).not.toMatch(/https?:\/\//);
+    expect(src).not.toMatch(/FORGE/i);
+    expect(src).toContain("invokeViaBrainHub");
   });
 
   it("flattens text parts and maps tool/function roles to user", () => {

@@ -1,6 +1,6 @@
 # Household signals — what families pay and do, wired into the platform
 
-Generated from `shared/macro/household.ts` by `server/macroFactorsDoc.ts`; macro layer 2026.09.22d; rendered 2026-09-22. Do not edit by hand — `server/macroHousehold.test.ts` compares this file with the renderer's output.
+Generated from `shared/macro/household.ts` by `server/macroFactorsDoc.ts`; macro layer 2026.09.23a; rendered 2026-09-22. Do not edit by hand — `server/macroHousehold.test.ts` compares this file with the renderer's output.
 
 **Counts:** 50 signals in 8 groups (housing, autos, education, food-and-shopping, saving-and-credit, income-and-wealth, health-energy-travel, corporate-tells) · 34 keyless · 25 backtested as factors · 25 further ideas.
 

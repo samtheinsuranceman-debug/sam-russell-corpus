@@ -14,5 +14,5 @@ export function verificationProvider(): "perplexity" | "mock" {
 
 /** True when the platform LLM (server/_core/llm.ts) has a key to run the adversarial reviewer pass. */
 export function llmConfigured(): boolean {
-  return Boolean(env("OPENAI_API_KEY") || env("ANTHROPIC_API_KEY") || env("BUILT_IN_FORGE_API_KEY") || env("LLM_API_KEY"));
+  return Boolean(env("OPENAI_API_KEY") || env("ANTHROPIC_API_KEY") || env("LLM_API_KEY"));
 }

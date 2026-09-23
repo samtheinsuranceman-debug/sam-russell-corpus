@@ -108,7 +108,7 @@ export default function Webhooks() {
       if (data?.secret) setSecretKey(data.secret);
       toast.success("Workspace secret regenerated");
     }
-  }) || { mutate: () => { setSecretKey("whsec_new" + Math.random().toString(36).substring(7)); toast.success("Secret regenerated (mock)"); }, isPending: false };
+  }) || { mutate: () => { toast.info("Secret rotation is not available yet; the existing secret is unchanged."); }, isPending: false };
 
   const webhooks = webhooksQuery.data ?? [];
   const availableEvents = eventsQuery.data ?? Object.keys(EVENT_LABELS);
@@ -232,31 +232,11 @@ export default function Webhooks() {
     return result;
   }, [webhooks, searchQuery, statusFilter]);
 
-  const generateMockLogs = useCallback(() => {
-    const statuses = [200, 201, 400, 401, 403, 404, 500, 502, 503];
-    const mockLogs = [];
-    for (let i = 0; i < 50; i++) {
-      const isSuccess = Math.random() > 0.15;
-      const status = isSuccess ? (Math.random() > 0.5 ? 200 : 201) : statuses[Math.floor(Math.random() * statuses.length)];
-      mockLogs.push({
-        id: `log_${Math.random().toString(36).substr(2, 9)}`,
-        webhookId: webhooks[Math.floor(Math.random() * webhooks.length)]?.id || "unknown",
-        event: Object.keys(EVENT_LABELS)[Math.floor(Math.random() * (Object.keys(EVENT_LABELS).length - 1))],
-        status,
-        duration: Math.floor(Math.random() * 1500) + 50,
-        timestamp: new Date(Date.now() - Math.floor(Math.random() * 7 * 24 * 60 * 60 * 1000)).toISOString(),
-        requestPayload: JSON.stringify({ data: "mock request data" }),
-        responsePayload: isSuccess ? JSON.stringify({ success: true }) : JSON.stringify({ error: "Something went wrong" }),
-        attempts: isSuccess ? 1 : Math.floor(Math.random() * 5) + 1
-      });
-    }
-    return mockLogs.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
-  }, [webhooks]);
-
-  const mockLogsData = useMemo(() => generateMockLogs(), [generateMockLogs]);
+  // Delivery logs come only from the server. None are recorded yet, so the list
+  // shows its empty state instead of generated rows.
   
   const filteredLogs = useMemo(() => {
-    let result = logs.length > 0 ? logs : mockLogsData;
+    let result = logs;
     
     if (logSearchQuery) {
       const lowerQuery = logSearchQuery.toLowerCase();
@@ -272,58 +252,29 @@ export default function Webhooks() {
     }
     
     return result;
-  }, [logs, mockLogsData, logSearchQuery, selectedWebhookId]);
+  }, [logs, logSearchQuery, selectedWebhookId]);
 
-  const generateActivityData = () => {
-    const data = [];
-    for (let i = 6; i >= 0; i--) {
-      const date = subDays(new Date(), i);
-      data.push({
-        name: format(date, 'MMM dd'),
-        success: Math.floor(Math.random() * 500) + 100,
-        errors: Math.floor(Math.random() * 50),
-        latency: Math.floor(Math.random() * 300) + 100,
-      });
-    }
-    return data;
-  };
-
-  const activityData = useMemo(() => generateActivityData(), []);
+  // Per-delivery history (volume, latency, hourly traffic) is not stored, so those
+  // charts show an empty state. What is real: each endpoint's subscribed events,
+  // failure count and last trigger time.
+  const activityData: { name: string; success: number; errors: number; latency: number }[] = [];
 
   const eventDistributionData = useMemo(() => {
-    return Object.keys(EVENT_LABELS)
-      .filter((k) => k !== '*')
-      .slice(0, 6)
-      .map((key) => ({
-        name: EVENT_LABELS[key],
-        value: Math.floor(Math.random() * 1000) + 100
-      }));
-  }, []);
+    const counts: Record<string, number> = {};
+    webhooks.forEach((w) => ((w.events as string[]) ?? []).forEach((e) => { counts[e] = (counts[e] ?? 0) + 1; }));
+    return Object.entries(counts).map(([key, value]) => ({ name: EVENT_LABELS[key] ?? key, value }));
+  }, [webhooks]);
 
   const endpointPerformanceData = useMemo(() => {
     return webhooks.slice(0, 5).map((w) => ({
       name: w.label || w.url.substring(0, 20) + '...',
-      successRate: Math.floor(Math.random() * 20) + 80,
-      avgLatency: Math.floor(Math.random() * 500) + 50,
-      totalCalls: Math.floor(Math.random() * 5000) + 500,
+      failCount: w.failCount ?? 0,
     }));
   }, [webhooks]);
 
-  const hourlyTrafficData = useMemo(() => {
-    const data = [];
-    for (let i = 0; i < 24; i++) {
-      data.push({
-        hour: `${i}:00`,
-        traffic: Math.floor(Math.random() * 1000) + (i > 8 && i < 18 ? 2000 : 200),
-      });
-    }
-    return data;
-  }, []);
-
   const activeWebhooksCount = webhooks.filter((w) => w.active).length;
   const failedWebhooksCount = webhooks.filter((w) => w.failCount > 0).length;
-  const totalCalls = activityData.reduce((acc, curr) => acc + curr.success + curr.errors, 0);
-  const successRate = totalCalls > 0 ? ((activityData.reduce((acc, curr) => acc + curr.success, 0) / totalCalls) * 100).toFixed(2) : 100;
+  const triggeredLast7d = webhooks.filter((w) => w.lastTriggeredAt && Date.now() - new Date(w.lastTriggeredAt).getTime() < 7 * 24 * 60 * 60 * 1000).length;
 
   const exportToCsv = useCallback(() => {
     const headers = ["ID", "Label", "URL", "Status", "Fail Count", "Events", "Created At"];
@@ -479,17 +430,13 @@ export default function Webhooks() {
                   </td>
                   <td className="p-4 align-top">
                     <div className="flex flex-col gap-1 text-xs">
-                      <div className="flex justify-between w-24">
-                        <span className="text-[#7a95b8]">Success:</span>
-                        <span className="text-[#22c55e]">99.9%</span>
+                      <div className="flex justify-between gap-2 w-32">
+                        <span className="text-[#7a95b8]">Failures:</span>
+                        <span className={webhook.failCount > 0 ? "text-[#ef4444]" : "text-[#22c55e]"}>{webhook.failCount ?? 0}</span>
                       </div>
-                      <div className="flex justify-between w-24">
-                        <span className="text-[#7a95b8]">Avg Latency:</span>
-                        <span className="text-white">124ms</span>
-                      </div>
-                      <div className="flex justify-between w-24">
+                      <div className="flex justify-between gap-2 w-32">
                         <span className="text-[#7a95b8]">Last Fired:</span>
-                        <span className="text-white">2m ago</span>
+                        <span className="text-white">{webhook.lastTriggeredAt ? new Date(webhook.lastTriggeredAt).toLocaleString() : "Never"}</span>
                       </div>
                     </div>
                   </td>
@@ -873,8 +820,8 @@ export default function Webhooks() {
                     { label: "Total Webhooks", value: String(webhooks.length) },
                     { label: "Active Webhooks", value: String(activeWebhooksCount) },
                     { label: "Available Events", value: String(availableEvents.length) },
-                    { label: "Total Calls (7d)", value: String(totalCalls) },
-                    { label: "Success Rate", value: `${successRate}%` }
+                    { label: "Endpoints triggered (7d)", value: String(triggeredLast7d) },
+                    { label: "Endpoints with failures", value: String(failedWebhooksCount) }
                   ]
                 }
               ]}
@@ -933,10 +880,9 @@ export default function Webhooks() {
             </div>
             <div>
               <div className="flex items-baseline gap-2">
-                <div className="text-3xl font-bold text-white tracking-tight">{(totalCalls / 1000).toFixed(1)}k</div>
-                <div className="text-xs font-medium text-emerald-400 flex items-center"><ArrowUpRight size={12} /> 12%</div>
+                <div className="text-3xl font-bold text-white tracking-tight">{triggeredLast7d}</div>
               </div>
-              <div className="text-sm text-[#7a95b8] font-medium">Events (7d)</div>
+              <div className="text-sm text-[#7a95b8] font-medium">Endpoints triggered (7d)</div>
             </div>
           </div>
         </div>
@@ -1216,28 +1162,7 @@ export default function Webhooks() {
                     <Activity size={16} className="text-[#3b82f6]" /> Delivery Volume & Latency
                   </h3>
                   <div className="h-64">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <ComposedChart data={activityData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                        <defs>
-                          <linearGradient id="colorSuccess" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="#10b981" stopOpacity={0.3}/>
-                            <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
-                          </linearGradient>
-                        </defs>
-                        <CartesianGrid strokeDasharray="3 3" stroke="#1a3050" vertical={false} />
-                        <XAxis dataKey="name" stroke="#7a95b8" fontSize={12} tickLine={false} axisLine={false} />
-                        <YAxis yAxisId="left" stroke="#7a95b8" fontSize={12} tickLine={false} axisLine={false} />
-                        <YAxis yAxisId="right" orientation="right" stroke="#7a95b8" fontSize={12} tickLine={false} axisLine={false} />
-                        <Tooltip 
-                          contentStyle={{ backgroundColor: '#0f1e35', borderColor: '#1a3050', borderRadius: '8px', color: '#fff' }}
-                          cursor={{ stroke: '#1a3050', strokeWidth: 1, strokeDasharray: '3 3' }}
-                        />
-                        <Legend wrapperStyle={{ fontSize: '12px', paddingTop: '10px' }} />
-                        <Area yAxisId="left" type="monotone" dataKey="success" name="Successful Deliveries" stroke="#10b981" fillOpacity={1} fill="url(#colorSuccess)" />
-                        <Bar yAxisId="left" dataKey="errors" name="Failed Deliveries" fill="#ef4444" radius={[4, 4, 0, 0]} maxBarSize={40} />
-                        <Line yAxisId="right" type="monotone" dataKey="latency" name="Avg Latency (ms)" stroke="#f59e0b" strokeWidth={2} dot={{ r: 4, fill: '#f59e0b', strokeWidth: 0 }} />
-                      </ComposedChart>
-                    </ResponsiveContainer>
+                    <div className="h-full flex items-center justify-center text-center text-sm text-[#7a95b8] border border-dashed border-[#1a3050] rounded-lg px-6">No delivery history recorded yet. Delivery volume and latency will chart here once deliveries are logged.</div>
                   </div>
                 </div>
 
@@ -1268,7 +1193,7 @@ export default function Webhooks() {
                   {/* Chart 2: Event Distribution (PieChart) */}
                   <div className="bg-[#0a1628] border border-[#1a3050] rounded-xl p-5 shadow-lg">
                     <h3 className="text-white font-medium mb-4 flex items-center gap-2">
-                      <PieChart className="text-[#34d399]" size={16} /> Event Distribution
+                      <PieChart className="text-[#34d399]" size={16} /> Endpoint Subscriptions by Event
                     </h3>
                     <div className="h-64 flex items-center justify-center">
                       <ResponsiveContainer width="100%" height="100%">
@@ -1300,21 +1225,21 @@ export default function Webhooks() {
                   {/* Chart 3: Endpoint Performance (BarChart) */}
                   <div className="bg-[#0a1628] border border-[#1a3050] rounded-xl p-5 shadow-lg">
                     <h3 className="text-white font-medium mb-4 flex items-center gap-2">
-                      <BarChart2 className="text-[#3b82f6]" size={16} /> Endpoint Success Rates
+                      <BarChart2 className="text-[#3b82f6]" size={16} /> Endpoint Failure Counts
                     </h3>
                     <div className="h-64">
                       <ResponsiveContainer width="100%" height="100%">
                         <BarChart data={endpointPerformanceData} layout="vertical" margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                           <CartesianGrid strokeDasharray="3 3" stroke="#1a3050" horizontal={false} />
-                          <XAxis type="number" domain={[0, 100]} stroke="#7a95b8" fontSize={12} tickFormatter={(val) => `${val}%`} />
+                          <XAxis type="number" allowDecimals={false} stroke="#7a95b8" fontSize={12} />
                           <YAxis dataKey="name" type="category" stroke="#7a95b8" fontSize={12} width={100} tickLine={false} axisLine={false} />
                           <Tooltip 
                             contentStyle={{ backgroundColor: '#0f1e35', borderColor: '#1a3050', borderRadius: '8px', color: '#fff' }}
                             cursor={{ fill: '#1a3050', opacity: 0.4 }}
                           />
-                          <Bar dataKey="successRate" name="Success Rate %" radius={[0, 4, 4, 0]} barSize={20}>
+                          <Bar dataKey="failCount" name="Recorded failures" radius={[0, 4, 4, 0]} barSize={20}>
                             {endpointPerformanceData.map((entry, index) => (
-                              <Cell key={`cell-${index}`} fill={entry.successRate > 95 ? '#10b981' : entry.successRate > 80 ? '#f59e0b' : '#ef4444'} />
+                              <Cell key={`cell-${index}`} fill={entry.failCount === 0 ? '#10b981' : entry.failCount < 5 ? '#f59e0b' : '#ef4444'} />
                             ))}
                           </Bar>
                         </BarChart>
@@ -1328,18 +1253,7 @@ export default function Webhooks() {
                       <Clock className="text-[#ec4899]" size={16} /> 24-Hour Traffic Pattern
                     </h3>
                     <div className="h-64">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <LineChart data={hourlyTrafficData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                          <CartesianGrid strokeDasharray="3 3" stroke="#1a3050" vertical={false} />
-                          <XAxis dataKey="hour" stroke="#7a95b8" fontSize={12} tickLine={false} axisLine={false} />
-                          <YAxis stroke="#7a95b8" fontSize={12} tickLine={false} axisLine={false} />
-                          <Tooltip 
-                            contentStyle={{ backgroundColor: '#0f1e35', borderColor: '#1a3050', borderRadius: '8px', color: '#fff' }}
-                            cursor={{ stroke: '#1a3050', strokeWidth: 1, strokeDasharray: '3 3' }}
-                          />
-                          <Line type="monotone" dataKey="traffic" name="Events" stroke="#ec4899" strokeWidth={3} dot={false} activeDot={{ r: 6, fill: '#ec4899', strokeWidth: 0 }} />
-                        </LineChart>
-                      </ResponsiveContainer>
+                      <div className="h-full flex items-center justify-center text-center text-sm text-[#7a95b8] border border-dashed border-[#1a3050] rounded-lg px-6">No delivery history recorded yet, so there is no hourly traffic pattern to show.</div>
                     </div>
                   </div>
                   
@@ -1349,38 +1263,21 @@ export default function Webhooks() {
                       <h3 className="text-white font-medium mb-2 flex items-center gap-2">
                         <Activity className="text-[#06b6d4]" size={16} /> System Health Metrics
                       </h3>
-                      <p className="text-sm text-[#7a95b8] mb-4">Comprehensive view of your webhook infrastructure performance across key dimensions.</p>
+                      <p className="text-sm text-[#7a95b8] mb-4">Reliability, response time and delivery success need per-delivery logs, which are not recorded yet.</p>
                       <div className="space-y-3">
                         <div className="flex justify-between items-center bg-[#0f1e35] p-3 rounded-lg border border-[#1a3050]">
-                          <span className="text-sm text-[#c8d8ec]">Reliability Score</span>
-                          <span className="text-lg font-bold text-[#10b981]">98.5/100</span>
+                          <span className="text-sm text-[#c8d8ec]">Active endpoints</span>
+                          <span className="text-lg font-bold text-white">{activeWebhooksCount} / {webhooks.length}</span>
                         </div>
                         <div className="flex justify-between items-center bg-[#0f1e35] p-3 rounded-lg border border-[#1a3050]">
-                          <span className="text-sm text-[#c8d8ec]">Avg Response Time</span>
-                          <span className="text-lg font-bold text-white">124ms</span>
+                          <span className="text-sm text-[#c8d8ec]">Endpoints with failures</span>
+                          <span className="text-lg font-bold text-white">{failedWebhooksCount}</span>
                         </div>
                         <div className="flex justify-between items-center bg-[#0f1e35] p-3 rounded-lg border border-[#1a3050]">
-                          <span className="text-sm text-[#c8d8ec]">Delivery Success</span>
-                          <span className="text-lg font-bold text-[#10b981]">99.9%</span>
+                          <span className="text-sm text-[#c8d8ec]">Response time / delivery success</span>
+                          <span className="text-sm font-medium text-[#7a95b8]">Not tracked</span>
                         </div>
                       </div>
-                    </div>
-                    <div className="w-full md:w-1/2 h-72">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <RadarChart cx="50%" cy="50%" outerRadius="70%" data={[
-                          { subject: 'Reliability', A: 98, fullMark: 100 },
-                          { subject: 'Speed', A: 85, fullMark: 100 },
-                          { subject: 'Security', A: 100, fullMark: 100 },
-                          { subject: 'Uptime', A: 99, fullMark: 100 },
-                          { subject: 'Throughput', A: 75, fullMark: 100 },
-                        ]}>
-                          <PolarGrid stroke="#1a3050" />
-                          <PolarAngleAxis dataKey="subject" tick={{ fill: '#7a95b8', fontSize: 12 }} />
-                          <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
-                          <Radar name="System Health" dataKey="A" stroke="#06b6d4" fill="#06b6d4" fillOpacity={0.4} />
-                          <Tooltip contentStyle={{ backgroundColor: '#0f1e35', borderColor: '#1a3050', borderRadius: '8px', color: '#fff' }} />
-                        </RadarChart>
-                      </ResponsiveContainer>
                     </div>
                   </div>
                 </div>

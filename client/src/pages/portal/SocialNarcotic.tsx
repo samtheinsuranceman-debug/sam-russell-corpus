@@ -33,7 +33,7 @@ import {
   Lightbulb,
   Brain,
 } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 
 /* ═══════════════════════════════════════════════════════════════════
@@ -43,17 +43,6 @@ import { toast } from "sonner";
 
 function SpectatorMode() {
   const [watching, setWatching] = useState<number | null>(null);
-  const [viewerCount, setViewerCount] = useState(0);
-
-  useEffect(() => {
-    if (watching !== null) {
-      setViewerCount(Math.floor(Math.random() * 50) + 12);
-      const interval = setInterval(() => {
-        setViewerCount(prev => prev + Math.floor(Math.random() * 3) - 1);
-      }, 5000);
-      return () => clearInterval(interval);
-    }
-  }, [watching]);
 
   const liveAdvisors = [
     { name: "Platinum_Eagle", rank: 1, level: 87, specialty: "MYGA Grandmaster", viewers: 47, activity: "Running a $2.1M retirement optimization", streak: 142, avatar: "🦅" },
@@ -74,7 +63,7 @@ function SpectatorMode() {
       <div>
         <h3 className="text-lg font-bold text-red-300 flex items-center gap-2">
           <Eye className="w-5 h-5" /> Spectator Mode
-          <Badge className="bg-red-500/20 text-red-300 text-[10px] animate-pulse">● LIVE</Badge>
+          <Badge className="bg-amber-500/20 text-amber-300 text-[10px]">SAMPLE</Badge>
         </h3>
         <p className="text-sm text-muted-foreground">Watch top advisors work in real time. Like Twitch, but for making money.</p>
       </div>
@@ -145,9 +134,9 @@ function SpectatorMode() {
               </div>
             </div>
             <div className="absolute top-3 left-3 flex items-center gap-2">
-              <Badge className="bg-red-600 text-white text-[10px] animate-pulse">● LIVE</Badge>
+              <Badge className="bg-amber-600 text-white text-[10px]">SAMPLE</Badge>
               <Badge className="bg-black/60 text-white text-[10px]">
-                <Eye className="w-3 h-3 mr-1" /> {viewerCount} watching
+                <Eye className="w-3 h-3 mr-1" /> {liveAdvisors[watching].viewers} watching (sample)
               </Badge>
             </div>
           </Card>
@@ -576,6 +565,10 @@ export default function SocialNarcotic() {
           <p className="text-muted-foreground">
             Every user is a broadcasting tower. Every win is content. Every share is a new user.
           </p>
+        </div>
+
+        <div className="px-4 py-3 rounded-lg border border-amber-500/40 bg-amber-500/10 text-amber-300 text-sm font-semibold">
+          Sample data — not real records. This is a concept preview: the advisors, streams, chat, viewer counts, shares, likes and scores on this page are fixed examples, not live users or activity.
         </div>
 
         <Tabs defaultValue="spectator" className="w-full">

@@ -7,6 +7,7 @@ import { federalTaxOnTaxable, federalMarginalRateFor } from "@shared/taxBracketE
 import { TAX_RULES_2026 } from "@shared/taxRules";
 import { uniformLifetimeDivisor, FIRST_RMD_DIVISOR_AT_73 } from "@shared/uniformLifetimeTable";
 import { IRMAA_2026 } from "@shared/irmaa";
+import { runIbbotsonModel, IBBOTSON_END_YEAR } from "@shared/ibbotsonModel";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { BarChart, LineChart, PieChart, AreaChart, RadarChart, ComposedChart, ResponsiveContainer, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Bar, Line, Pie, Cell, Area, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis } from "recharts";
 
@@ -564,6 +565,17 @@ export default function SalesStoryBuilder() {
     if (n >= 1000) return `$${(n / 1000).toFixed(0)}K`;
     return `$${n.toLocaleString()}`;
   }, []);
+
+  // Real S&P 500 total returns for the last 30 years on record (shared/ibbotsonModel),
+  // credited at an assumed 7.5% cap / 0% floor, on the same premium rule the slides use.
+  const historicalRows = useMemo(() => {
+    const premium = Math.round(annualIncome * 0.12);
+    let accountValue = 0;
+    return runIbbotsonModel({ startYear: IBBOTSON_END_YEAR - 29, endYear: IBBOTSON_END_YEAR, capRate: 0.075, floorRate: 0 }).map((r) => {
+      accountValue = (accountValue + premium) * (1 + r.creditedRate);
+      return { ...r, premium, accountValue };
+    });
+  }, [annualIncome]);
 
   const slides: SlideData[] = useMemo(() => {
     const taxRate = storyTaxRatePct(annualIncome);
@@ -1323,6 +1335,9 @@ export default function SalesStoryBuilder() {
           <Card>
             <CardHeader>
               <CardTitle>Historical Performance Data</CardTitle>
+              <CardDescription>
+                Actual S&amp;P 500 total returns {IBBOTSON_END_YEAR - 29}–{IBBOTSON_END_YEAR} (S&amp;P Dow Jones Indices / SBBI series in shared/ibbotsonModel). IUL credit uses an assumed 7.5% cap and 0% floor. Account value is premiums credited at those rates before any policy charges; no surrender schedule or death benefit is modeled here. Past performance does not guarantee future results.
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="overflow-x-auto">
@@ -1332,20 +1347,18 @@ export default function SalesStoryBuilder() {
                       <th className="px-4 py-3">Year</th>
                       <th className="px-4 py-3">S&P 500 Return</th>
                       <th className="px-4 py-3">IUL Credited</th>
-                      <th className="px-4 py-3">Account Value</th>
-                      <th className="px-4 py-3">Surrender Value</th>
-                      <th className="px-4 py-3">Death Benefit</th>
+                      <th className="px-4 py-3">Premium</th>
+                      <th className="px-4 py-3">Account Value (before charges)</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {Array.from({ length: 30 }).map((_, i) => (
-                      <tr key={i} className="border-b border-border">
-                        <td className="px-4 py-2">Year {i + 1}</td>
-                        <td className="px-4 py-2">{(Math.random() * 20 - 5).toFixed(2)}%</td>
-                        <td className="px-4 py-2">{Math.max(0, Math.min(10, Math.random() * 15)).toFixed(2)}%</td>
-                        <td className="px-4 py-2">{fmt(iulPremium * (i + 1) * 1.05)}</td>
-                        <td className="px-4 py-2">{fmt(iulPremium * (i + 1) * 1.02)}</td>
-                        <td className="px-4 py-2">{fmt(Math.max(1000000, iulPremium * (i + 1) * 2))}</td>
+                    {historicalRows.map((r) => (
+                      <tr key={r.year} className="border-b border-border">
+                        <td className="px-4 py-2">{r.year}</td>
+                        <td className="px-4 py-2">{(r.sp500Return * 100).toFixed(2)}%</td>
+                        <td className="px-4 py-2">{(r.creditedRate * 100).toFixed(2)}%</td>
+                        <td className="px-4 py-2">{fmt(r.premium)}</td>
+                        <td className="px-4 py-2">{fmt(Math.round(r.accountValue))}</td>
                       </tr>
                     ))}
                   </tbody>

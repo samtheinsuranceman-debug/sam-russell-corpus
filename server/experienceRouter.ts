@@ -5,7 +5,7 @@
 import { z } from "zod";
 import { adminProcedure, protectedProcedure, publicProcedure, router } from "./_core/trpc";
 import { invokeLLM } from "./_core/llm";
-import { generateImage } from "./_core/imageGeneration";
+import { TRPCError } from "@trpc/server";
 import { storagePut } from "./storage";
 import { notifyOwner } from "./_core/notification";
 
@@ -314,41 +314,14 @@ export const experienceRouter = router({
     style: z.enum(["professional", "warrior", "mystic", "futuristic", "royal"]).default("professional"),
     isSpouse: z.boolean().default(false),
   })).mutation(async ({ ctx, input }) => {
-    const stylePrompts: Record<string, string> = {
-      professional: "a polished, sophisticated executive portrait in a luxury office setting, wearing a tailored suit, dramatic lighting, oil painting style, rich colors",
-      warrior: "an epic fantasy warrior portrait with golden armor, glowing sword, dramatic battlefield background, cinematic lighting, digital art masterpiece",
-      mystic: "a mystical sorcerer portrait with glowing runes, ethereal energy swirling around, cosmic background with stars and nebulae, fantasy art style",
-      futuristic: "a cyberpunk tech mogul portrait with holographic displays, neon city background, sleek futuristic attire, blade runner aesthetic",
-      royal: "a regal royal portrait in a grand palace, wearing a crown and royal robes, golden throne, renaissance painting style, dramatic chiaroscuro lighting",
-    };
-
-    const prompt = `Create ${stylePrompts[input.style]}. The subject should look powerful, confident, and successful. Make it look like a high-end character portrait from a AAA video game. Ultra detailed, 4K quality.`;
-
-    try {
-      const result = await generateImage({
-        prompt,
-        originalImages: [{
-          url: `data:image/jpeg;base64,${input.imageBase64}`,
-          mimeType: "image/jpeg",
-        }],
-      });
-
-      if (result?.url) {
-        // Store the avatar URL on the user's XP profile
-        const db = await getDb();
-        if (db) {
-          const { userXpProfiles } = await import("../drizzle/schema");
-          const field = input.isSpouse ? "spouseAvatarUrl" : "avatarUrl";
-          await db.update(userXpProfiles)
-            .set({ [field]: result.url })
-            .where(eq(userXpProfiles.userId, ctx.user.id));
-        }
-        return { avatarUrl: result.url, style: input.style };
-      }
-      throw new Error("Image generation failed");
-    } catch (error: any) {
-      throw new Error(`Avatar generation failed: ${error.message}`);
-    }
+    // No image-generation provider is wired: the hosted image service the
+    // platform shipped with was removed on 23 Sep 2026. Uploading a photo
+    // (uploadAvatarPhoto) still works when file storage is configured.
+    void ctx; void input;
+    throw new TRPCError({
+      code: "PRECONDITION_FAILED",
+      message: "AI avatar generation is not configured on this host.",
+    });
   }),
 });
 
