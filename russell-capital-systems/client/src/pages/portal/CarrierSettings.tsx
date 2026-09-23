@@ -65,7 +65,7 @@ const DEFAULT_CARRIERS = [{ id: "aaa-plus-mutual", name: "AAA+ Mutual", rating: 
 ,
   { id: "amutual-c", name: "AA- Mutual", rating: "A+", founded: 1888, hq: "Boston, MA", amBest: "A+", sp: "AA-", moody: "Aa3", fitch: "AA-" },
 ,
-  { id: "mutual-a", name: "Mutual Company A", rating: "", founded: 0, hq: "", amBest: "", sp: "", moody: "", fitch: "" }
+  { id: "custom-carrier", name: "Your carrier (enter details)", rating: "", founded: 0, hq: "", amBest: "", sp: "", moody: "", fitch: "" }
 ];
 
 const DEFAULTS = { loadFee: "0.0800", coiRate: "0.0080", capRate: "0.1450", floorRate: "0.0000", avgReturn: "0.0750", participationRate: "1.0000", fixedAccountRate: "0.0400", loanRate: "0.0500", bonusRate: "0.0100", assetBasedFee: "0.0025", policyFee: "120" };

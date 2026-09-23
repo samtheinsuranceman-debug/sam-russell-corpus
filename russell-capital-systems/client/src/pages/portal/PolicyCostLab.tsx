@@ -2,7 +2,7 @@
 // THE POLICY COST LAB — the first page on this platform driven by charges
 // that came off a carrier document rather than out of a band.
 //
-// Mutual Company A's Annual Cost Summary gave every charge column year by
+// Mutual Company N's Annual Cost Summary gave every charge column year by
 // year. From it: the percent-of-premium load, the per-policy charge, the
 // per-$1,000 charge and how long it runs, the indexed strategy charge, the
 // surrender schedule in dollars per $1,000, and a real mortality curve for
@@ -387,7 +387,7 @@ export default function PolicyCostLab() {
               ))}
             </div>
             <p className="mt-3 text-[11px] text-slate-500">
-              One cost summary closes it, the same way one closed Mutual Company A and one closed Mutual Company B.
+              One cost summary closes it, the same way one closed Mutual Company N and one closed Mutual Company S.
             </p>
           </div>
         )}

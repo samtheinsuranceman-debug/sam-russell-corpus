@@ -13,8 +13,8 @@ import { z } from "zod";
 import { publicProcedure, router } from "./_core/trpc";
 import {
   COMPLETE_BASELINES,
-  MUTUAL_A_BASELINE,
-  MUTUAL_B_BASELINE,
+  MUTUAL_N_BASELINE,
+  MUTUAL_S_BASELINE,
   PENDING_BASELINES,
   MULTI_INDEX_BLEND,
   type CostBaseline,
@@ -49,7 +49,7 @@ import {
 import { RAW_INDEX_RETURNS, MIN_YEAR, MAX_YEAR } from "@shared/indexCreditingData";
 import { provenanceWarning, checkSeriesAgainstPublishedClaims, SP500_SERIES_VERIFIED } from "@shared/sp500SeriesAudit";
 
-/** Mutual Company A's baseline, in the shape the projection engine takes. */
+/** Mutual Company N's baseline, in the shape the projection engine takes. */
 export function chargesFromBaseline(b: CostBaseline): PolicyCharges {
   return {
     premiumLoadPctByYear: [...b.percentOfPremiumByYear],
@@ -129,11 +129,11 @@ export const policyLabRouter = router({
         years: z.number().min(5).max(60).default(30),
         creditedRatePct: z.number().min(0).max(12).default(6.75),
         /** Which carrier's cost summary drives the charges. */
-        carrierId: z.enum(["mutual-a", "mutual-b"]).default("mutual-a"),
+        carrierId: z.enum(["mutual-n", "mutual-s", "mutual-a", "mutual-b"]).default("mutual-n"),
       })
     )
     .query(({ input }) => {
-      const baseline = input.carrierId === "mutual-b" ? MUTUAL_B_BASELINE : MUTUAL_A_BASELINE;
+      const baseline = input.carrierId === "mutual-s" || input.carrierId === "mutual-b" ? MUTUAL_S_BASELINE : MUTUAL_N_BASELINE;
       const charges = chargesFromBaseline(baseline);
       const cov = coiCoverage(baseline);
       const result = runPolicyMechanics({
