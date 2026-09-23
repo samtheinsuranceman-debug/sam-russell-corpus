@@ -169,7 +169,7 @@ export default function StrategyCompare() {
         loanRate: selectedCarrier.loanRate, avgReturn: selectedCarrier.avgIllustratedRate,
       };
     }
-    return { loadFee: 0.06, coiRate: 0.05, loanRate: 0.05, avgReturn: 0.075 }; // AG 49 max
+    return { loadFee: 0.06, coiRate: 0.05, loanRate: 0.05, avgReturn: 0.075 }; // assumed crediting rate
   }, [carrierId, activeOverride, selectedCarrier]);
 
   useEffect(() => {
@@ -713,7 +713,7 @@ export default function StrategyCompare() {
                 <div>
                   <label className="rc-label">Carrier Configuration</label>
                   <select className="rc-input" value={carrierId} onChange={(e) => setCarrierId(e.target.value)}>
-                    <option value="generic">Generic (AG 49 Max)</option>
+                    <option value="generic">Generic (assumed 7.5%)</option>
                     {IUL_CARRIERS.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
                   </select>
                 </div>

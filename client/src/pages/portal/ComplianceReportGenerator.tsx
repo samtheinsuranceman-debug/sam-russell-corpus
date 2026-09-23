@@ -129,7 +129,8 @@ function AG49RateValidator() {
   const [multiplierRate, setMultiplierRate] = useState<number>(1.0);
   const [hasRun, setHasRun] = useState<boolean>(false);
 
-  const AG49_MAX_ILLUSTRATED = 7.5;
+  // The firm's own house limit on an illustrated rate. AG 49-A sets each carrier's maximum by formula; it states no single figure.
+  const FIRM_HOUSE_RATE_LIMIT = 7.5;
   const AG49B_BONUS_LIMIT = 0.5;
   const AG49B_MULTIPLIER_LIMIT = 1.0;
 
@@ -141,12 +142,12 @@ function AG49RateValidator() {
       id: "illustrated-rate",
       label: "Illustrated Crediting Rate",
       value: `${illustratedRate.toFixed(2)}%`,
-      limit: `≤ ${AG49_MAX_ILLUSTRATED.toFixed(2)}%`,
-      status: illustratedRate <= AG49_MAX_ILLUSTRATED ? "pass" : "fail",
-      regulation: "AG 49-A §7",
-      detail: illustratedRate <= AG49_MAX_ILLUSTRATED
-        ? `Rate of ${illustratedRate.toFixed(2)}% is at or below the AG 49 maximum of ${AG49_MAX_ILLUSTRATED}%.`
-        : `VIOLATION: Rate of ${illustratedRate.toFixed(2)}% exceeds the AG 49 maximum illustrated rate of ${AG49_MAX_ILLUSTRATED}%. This must be reduced.`,
+      limit: `≤ ${FIRM_HOUSE_RATE_LIMIT.toFixed(2)}%`,
+      status: illustratedRate <= FIRM_HOUSE_RATE_LIMIT ? "pass" : "fail",
+      regulation: "Firm house limit (AG 49-A sets each carrier's maximum per product)",
+      detail: illustratedRate <= FIRM_HOUSE_RATE_LIMIT
+        ? `Rate of ${illustratedRate.toFixed(2)}% is at or below the firm's house limit of ${FIRM_HOUSE_RATE_LIMIT}%. Confirm against the carrier's own AG 49-A maximum on its illustration.`
+        : `Rate of ${illustratedRate.toFixed(2)}% is above the firm's house limit of ${FIRM_HOUSE_RATE_LIMIT}%. Confirm it against the carrier's own AG 49-A maximum on its illustration before it appears on one.`,
     });
 
     results.push({
@@ -244,7 +245,7 @@ function AG49RateValidator() {
   }, [hasRun, illustratedRate, capRate, parRate, floorRate, spreadRate, statedLoanRate, loanArbitrage, bonusRate, multiplierRate]);
 
   const rateComparisonData = [
-    { name: 'Illustrated', rate: illustratedRate, max: AG49_MAX_ILLUSTRATED },
+    { name: 'Illustrated', rate: illustratedRate, max: FIRM_HOUSE_RATE_LIMIT },
     { name: 'Cap', rate: capRate, max: 15 },
     { name: 'Floor', rate: floorRate, max: 5 },
     { name: 'Loan', rate: statedLoanRate, max: 8 },

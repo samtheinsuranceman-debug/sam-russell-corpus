@@ -54,7 +54,7 @@ import { ComplianceFooter } from "@/components/ComplianceFooter";
 const fmt = (n: number) => `$${Math.round(n).toLocaleString()}`;
 const fmtPct = (n: number) => `${(n * 100).toFixed(1)}%`;
 
-const TM_TOOLTIP = "Time Machine values represent a hypothetical pre-existing account large enough that, when credited at AG 49-compliant rates (0–7.5%), it produces the same dollar interest credit that actual 30-year historical index returns would have generated. No AG 49 laws are violated.";
+const TM_TOOLTIP = "Time Machine values represent a hypothetical pre-existing account large enough that, when credited at the assumed crediting rate you set, it produces the same dollar interest credit that actual 30-year historical index returns would have generated. This is a mechanic, not a carrier illustration.";
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8'];
 

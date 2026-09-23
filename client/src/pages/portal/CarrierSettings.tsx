@@ -180,9 +180,9 @@ function parseCSV(text: string): ParsedCarrierRow[] {
 function generateTemplateCSV(): string {
   return [
     "carrier_id,carrier_name,load_fee,coi_rate,cap_rate,floor_rate,avg_return,participation_rate,fixed_account_rate,loan_rate,bonus_rate,asset_based_fee,policy_fee,notes",
-    "aaa-plus-mutual,AAA+ Mutual,6%,4.5%,12%,0%,7.5%,100%,4%,5%,1%,0.25%,120,Based on 2024 illustration (AG 49 max)",
-    "national-life,National Life Group,5.5%,5%,11.5%,1%,7.5%,110%,3.5%,4.5%,0.5%,0.30%,100,LSW illustration dated Jan 2024 (AG 49 max)",
-    "amutual-c,AA- Mutual,7%,5.5%,13%,0%,7.5%,95%,4.5%,5.5%,1.5%,0.20%,150,FIA+ rider included (AG 49 max)",
+    "aaa-plus-mutual,AAA+ Mutual,6%,4.5%,12%,0%,7.5%,100%,4%,5%,1%,0.25%,120,Based on 2024 illustration (assumed rate)",
+    "national-life,National Life Group,5.5%,5%,11.5%,1%,7.5%,110%,3.5%,4.5%,0.5%,0.30%,100,LSW illustration dated Jan 2024 (assumed rate)",
+    "amutual-c,AA- Mutual,7%,5.5%,13%,0%,7.5%,95%,4.5%,5.5%,1.5%,0.20%,150,FIA+ rider included (assumed rate)",
   ].join("\n");
 }
 

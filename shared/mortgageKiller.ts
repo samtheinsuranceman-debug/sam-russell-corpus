@@ -11,7 +11,7 @@
  * 7. Home appreciates 5% annually, updating HELOC capacity
  * 8. Track all values for 30-year cascading projection
  *
- * AG 49 Compliance: 7.5% max illustrated rate
+ * Crediting rate: an assumption the visitor sets (default 7.5%); a mechanic, not an illustration
  */
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -256,7 +256,7 @@ const MGA_RATE_SOURCE = {
   note: "6.25% is a real declared rate near the top of the market, about 1.1 points above the market average; it is not a typical rate.",
 };
 
-/** iulCreditRate default 0.075. The header calls 7.5% the AG 49 maximum; the guideline states a formula, not a number. */
+/** iulCreditRate default 0.075: an assumed crediting rate the visitor sets. AG 49-A governs carrier illustrations and states a formula, not a number. */
 const AG49_SOURCE = {
   label: "NAIC, Actuarial Guideline XLIX-A, The Application of the Life Illustrations Model Regulation to Policies with Index-Based Interest, Section 4 (illustrated scale) and Section 6 (policy loan leverage)",
   url: "https://content.naic.org/sites/default/files/inline-files/AG%2049A%28posted%29.pdf",
@@ -268,7 +268,7 @@ const MORTGAGE_KILLER_ASSUMPTIONS = [
   { label: "Assumption: maximum IUL premium years = 5 (MAX_PREMIUM_YEARS), chosen by the firm because the strategy funds premiums from the HELOC only over a short, fixed schedule; no external source" },
   { label: "Assumption: HELOC loan-to-value = 70% (HELOC_LTV_DEFAULT), chosen by the firm because it leaves headroom below the 80% combined LTV most lenders quote; no external source" },
   { label: "Assumption: policy loan = 80% of surrender value (LIFE_LOAN_PCT), chosen by the firm because it keeps a cushion against lapse; the carrier's contract sets the true limit; no external source" },
-  { label: "Assumption: IUL credit rate = 7.5% a year (iulCreditRate default), chosen by the firm as an illustration rate; see the NAIC AG 49-A note, the carrier's filed maximum governs; no external source for the figure itself" },
+  { label: "Assumption: IUL credit rate = 7.5% a year (iulCreditRate default), an assumed crediting rate for the mechanics, not an illustration; the carrier's own illustration governs any policy; no external source for the figure itself" },
   { label: "Assumption: IUL premium = 20% of annual income (incomeAllocationPct default), chosen by the firm because it is a planning share of income, not a carrier or regulatory figure; no external source" },
   { label: "Assumption: policy loan carrying cost = 5% a year (policyLoanDragRate default), chosen by the firm to approximate a carrier loan rate; no external source" },
   { label: "Assumption: saved interest reinvested at 7% a year for 20 years (interestReinvestRate, interestReinvestYears defaults), chosen by the firm as a long-run balanced return; no external source" },
