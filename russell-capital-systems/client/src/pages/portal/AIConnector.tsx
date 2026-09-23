@@ -70,8 +70,13 @@ export default function AIConnector() {
   const data = overview.data!;
 
   return (
-    <AppShell title="Brain Hub" subtitle="Forty brains, forty MCP servers — keyed here or on Railway, never in code">
+    <AppShell title="Brain Hub" subtitle="Fifty-five brains, forty MCP servers — keyed here or on Railway, never in code">
       <div className="max-w-5xl space-y-5 pb-10">
+        {/* The Railway keys work whether or not the vault exists, so they are
+            shown and testable before any vault gate — otherwise the page can
+            read "one variable still needed" while seven brains are answering. */}
+        <RailwayKeysPanel data={data} />
+
         {!data.vault.ready ? (
           <VaultSetupRequired reason={data.vault.reason} />
         ) : !data.access.configured ? (
@@ -90,6 +95,79 @@ export default function AIConnector() {
         <AuditTrail />
       </div>
     </AppShell>
+  );
+}
+
+// ─── Keys the hosting environment already holds ─────────────────────────────
+
+type OverviewData = inferRouterOutputs<AppRouter>["vault"]["overview"];
+type EnvTest = inferRouterOutputs<AppRouter>["vault"]["testEnvironment"][number];
+
+/**
+ * Every provider keyed by a Railway variable, with one button that makes a
+ * real call on each and reports the outcome per variable. Needs the owner
+ * session only; the vault is not involved, because these keys never enter it.
+ */
+function RailwayKeysPanel({ data }: { data: OverviewData }) {
+  const fromEnv = data.fromEnvironment ?? [];
+  const [results, setResults] = useState<EnvTest[] | null>(null);
+  const test = trpc.vault.testEnvironment.useMutation({
+    onSuccess: r => {
+      setResults(r);
+      const ok = r.filter(x => x.ok).length;
+      if (ok === r.length) toast.success(`All ${ok} Railway key${ok === 1 ? "" : "s"} answered.`);
+      else toast.warning(`${ok} of ${r.length} Railway keys answered. See each row.`);
+    },
+    onError: e => toast.error(e.message),
+  });
+  const nameOf = (id: string) => data.catalog.find(c => c.id === id)?.name ?? id;
+
+  return (
+    <section className="rounded-2xl border border-sky-500/30 bg-sky-500/[0.05] p-5 space-y-3" data-testid="railway-keys-panel">
+      <div className="flex flex-wrap items-center gap-3">
+        <Globe className="w-4 h-4 text-sky-400 shrink-0" />
+        <h2 className="text-[14px] font-semibold text-white">
+          {fromEnv.length === 0
+            ? "No provider keys on Railway yet"
+            : `${fromEnv.length} brain${fromEnv.length === 1 ? "" : "s"} keyed on Railway`}
+        </h2>
+        <Button
+          size="sm"
+          variant="outline"
+          onClick={() => test.mutate()}
+          disabled={test.isPending || fromEnv.length === 0}
+          className="ml-auto h-7 border-sky-500/40 bg-transparent text-sky-200 hover:text-white hover:border-sky-400"
+        >
+          {test.isPending ? <Loader2 className="w-3.5 h-3.5 animate-spin mr-1" /> : <Zap className="w-3.5 h-3.5 mr-1" />}
+          {test.isPending ? "Calling each one…" : "Test the Railway keys"}
+        </Button>
+      </div>
+
+      {fromEnv.length === 0 ? (
+        <p className="text-[12.5px] text-slate-400 leading-relaxed">
+          On Railway: your service → <strong>Variables</strong> → New Variable, named for the provider (for example{" "}
+          <code className="text-amber-400">ANTHROPIC_API_KEY</code>, <code className="text-amber-400">MISTRAL_API_KEY</code>, or the
+          uniform <code className="text-amber-400">RCS_BRAIN_&lt;PROVIDER&gt;_API_KEY</code>). Every accepted name is listed on the
+          provider's row below once the vault is open.
+        </p>
+      ) : (
+        <ul className="divide-y divide-sky-500/15">
+          {fromEnv.map(id => {
+            const r = results?.find(x => x.providerId === id);
+            return (
+              <li key={id} className="flex flex-wrap items-center gap-2 py-2 text-[13px]">
+                <span className={cn("w-2 h-2 rounded-full shrink-0", r ? (r.ok ? "bg-emerald-400" : "bg-red-400") : "bg-sky-400")} />
+                <span className="font-medium text-white">{nameOf(id)}</span>
+                {r?.envName && <code className="text-[11px] text-slate-500">{r.envName}</code>}
+                <span className={cn("ml-auto text-[12px]", r ? (r.ok ? "text-emerald-300" : "text-red-300") : "text-slate-500")}>
+                  {r ? r.message : "Set on the server · not yet tested"}
+                </span>
+              </li>
+            );
+          })}
+        </ul>
+      )}
+    </section>
   );
 }
 
