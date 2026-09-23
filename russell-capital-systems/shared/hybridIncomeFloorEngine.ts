@@ -23,18 +23,18 @@
  * retirement assets seeking both guaranteed income and tax-free growth.
  */
 
+import { UNIFORM_LIFETIME_TABLE, uniformLifetimeDivisor } from "./uniformLifetimeTable";
+
 // ─── Tax constants ────────────────────────────────────────────────────────────
 /** Required minimum distributions begin at 75 for those born in 1960 or later — SECURE 2.0 § 107. */
 export const RMD_AGE = 75;
 /**
- * Uniform Lifetime Table divisors, abbreviated to the ages this engine projects.
- * Treas. Reg. § 1.401(a)(9)-9.
+ * Uniform Lifetime Table divisors — the shared full table (ages 72–120),
+ * Treas. Reg. § 1.401(a)(9)-9(c); see shared/uniformLifetimeTable.ts for the
+ * source URL and read date. Previously an abbreviated copy stopping at 95,
+ * which held the age-95 divisor (8.9) for every later age.
  */
-export const UNIFORM_LIFETIME_DIVISORS: Record<number, number> = {
-  75: 24.6, 76: 23.7, 77: 22.9, 78: 22.0, 79: 21.1, 80: 20.2, 81: 19.4, 82: 18.5,
-  83: 17.7, 84: 16.8, 85: 16.0, 86: 15.2, 87: 14.4, 88: 13.7, 89: 12.9, 90: 12.2,
-  91: 11.5, 92: 10.8, 93: 10.1, 94: 9.5, 95: 8.9,
-};
+export const UNIFORM_LIFETIME_DIVISORS: Readonly<Record<number, number>> = UNIFORM_LIFETIME_TABLE;
 
 export type RetirementPhase = "early" | "mid" | "late";
 
@@ -195,8 +195,7 @@ function phaseFor(age: number, retirementAge: number, lifeExpectancyAge: number)
 
 function rmdFor(age: number, balance: number): number {
   if (age < RMD_AGE || balance <= 0) return 0;
-  const divisor = UNIFORM_LIFETIME_DIVISORS[Math.min(95, age)] ?? 8.9;
-  return balance / divisor;
+  return balance / uniformLifetimeDivisor(age);
 }
 
 /**

@@ -211,8 +211,9 @@ export default function CompetitiveAnalysis() {
   const growthData = useMemo(() => {
     const iul = simulateGrowth(annualContribution, years, iulRate, 0.06, 0);
     const btid = simulateGrowth(annualContribution, years, marketRate, 0.002, 0.15);
-    const roth = simulateGrowth(Math.min(annualContribution, 7000), years, marketRate, 0, 0);
-    const k401 = simulateGrowth(Math.min(annualContribution, 23500), years, marketRate, 0, taxBracket);
+    // 2026 limits: Roth IRA $7,500, 401(k) $24,500 — IRS Notice 2025-67, https://www.irs.gov/pub/irs-drop/n-25-67.pdf, and https://www.irs.gov/newsroom/401k-limit-increases-to-24500-for-2026-ira-limit-increases-to-7500 (read 23 Sep 2026). Were $7,000 / $23,500.
+    const roth = simulateGrowth(Math.min(annualContribution, 7500), years, marketRate, 0, 0);
+    const k401 = simulateGrowth(Math.min(annualContribution, 24500), years, marketRate, 0, taxBracket);
     return iul.map((d, i) => ({
       year: d.year,
       "IUL (Tax-Free)": d.afterTax,

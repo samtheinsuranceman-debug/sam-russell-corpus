@@ -78,7 +78,9 @@ export default function TaxAdvantagedGrowth() {
   const [showInflationAdjusted, setShowInflationAdjusted] = useState(false);
   const [iulLoadFee, setIulLoadFee] = useState(6);
   const [iulCOI, setIulCOI] = useState(0.5);
-  const [rothLimit, setRothLimit] = useState(7000);
+  // 2026 IRA/Roth IRA limit $7,500 (catch-up 50+ $1,100); 401(k) $24,500 (catch-up 50+ $8,000).
+  // Per IRS Notice 2025-67, https://www.irs.gov/pub/irs-drop/n-25-67.pdf, and https://www.irs.gov/newsroom/401k-limit-increases-to-24500-for-2026-ira-limit-increases-to-7500 (read 23 Sep 2026). Were 2025 figures: $7,000 / $1,000 / $23,500 / $7,500.
+  const [rothLimit, setRothLimit] = useState(7500);
   const [showAdvancedSettings, setShowAdvancedSettings] = useState(false);
   const [taxDrag, setTaxDrag] = useState(1.5);
   const [managementFee, setManagementFee] = useState(1.0);
@@ -143,8 +145,8 @@ export default function TaxAdvantagedGrowth() {
       const age = currentAge + y - 1;
       const inflationMultiplier = showInflationAdjusted ? Math.pow(1 - inflationRate / 100, y) : 1;
       
-      const currentRothLimit = rothLimit + (catchUpContributions && age >= 50 ? 1000 : 0);
-      const current401kLimit = 23500 + (catchUpContributions && age >= 50 ? 7500 : 0);
+      const currentRothLimit = rothLimit + (catchUpContributions && age >= 50 ? 1100 : 0);
+      const current401kLimit = 24500 + (catchUpContributions && age >= 50 ? 8000 : 0);
       
       const iulNet = annualContribution * (1 - actualIulLoadFee);
       totalIulContributions += annualContribution;
@@ -1026,7 +1028,7 @@ export default function TaxAdvantagedGrowth() {
                         </thead>
                         <tbody>
                             {[
-                            { feature: "Contribution Limits", iul: "None*", taxable: "None", roth: "$7,000/yr", _401k: "$23,500/yr" },
+                            { feature: "Contribution Limits", iul: "None*", taxable: "None", roth: "$7,500/yr", _401k: "$24,500/yr" },
                             { feature: "Tax on Growth", iul: "Tax-deferred", taxable: "Annual tax drag", roth: "Tax-free", _401k: "Tax-deferred" },
                             { feature: "Tax on Distribution", iul: "Tax-free loans†", taxable: "Capital gains", roth: "Tax-free‡", _401k: "Ordinary income" },
                             { feature: "Death Benefit", iul: "Yes (income tax-free)", taxable: "Step-up basis", roth: "Tax-free to heirs", _401k: "Taxable to heirs" },
@@ -1085,7 +1087,7 @@ export default function TaxAdvantagedGrowth() {
                         <div className="p-4 bg-slate-900/50 border border-slate-700/50 rounded-xl">
                             <h4 className="text-sm font-semibold text-white mb-2">Contribution Limits Matter</h4>
                             <p className="text-xs text-slate-400 leading-relaxed">
-                            Roth IRAs ($7,000/yr) and 401(k)s ($23,500/yr) have strict annual limits. For high earners
+                            Roth IRAs ($7,500/yr) and 401(k)s ($24,500/yr) have strict annual limits. For high earners
                             who want to save more, IUL and taxable accounts offer unlimited contributions (IUL subject
                             to MEC limits). This is why comparing vehicles at the same contribution level can be misleading.
                             </p>
@@ -1126,7 +1128,7 @@ export default function TaxAdvantagedGrowth() {
                             { label: "IUL (Policy Loans)", key: "iul" as const, color: IUL_COLOR, icon: <Shield className="w-4 h-4" />, note: "No contribution limit" },
                             { label: "Taxable Brokerage", key: "taxable" as const, color: TAXABLE_COLOR, icon: <DollarSign className="w-4 h-4" />, note: "No contribution limit" },
                             { label: "Roth IRA", key: "roth" as const, color: ROTH_COLOR, icon: <Percent className="w-4 h-4" />, note: `$${(rothLimit).toLocaleString()}/yr limit` },
-                            { label: "401(k)", key: "_401k" as const, color: _401K_COLOR, icon: <TrendingUp className="w-4 h-4" />, note: `$23,500/yr limit` },
+                            { label: "401(k)", key: "_401k" as const, color: _401K_COLOR, icon: <TrendingUp className="w-4 h-4" />, note: `$24,500/yr limit` },
                         ].map((v) => (
                             <div key={v.key} className="p-3 rounded-lg bg-slate-900/50 border border-slate-700/50" style={{ borderLeftColor: v.color, borderLeftWidth: 4 }}>
                                 <div className="flex items-center gap-2 mb-2">
