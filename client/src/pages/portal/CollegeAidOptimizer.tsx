@@ -1,8 +1,7 @@
-// @ts-nocheck
 
 import React, { useState, useMemo } from 'react';
 import { GraduationCap, DollarSign, TrendingUp, Target, Calendar, Percent, ArrowRight, Shield, CheckCircle2, AlertTriangle, BookOpen, Users } from 'lucide-react';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend, AreaChart, Area, ComposedChart, Line } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend, AreaChart, Area, ComposedChart, Line, LineChart } from 'recharts';
 import { PageInsights } from "@/components/PageInsights";
 
 const CollegeAidOptimizer = () => {
@@ -10,12 +9,10 @@ const CollegeAidOptimizer = () => {
   const [fafsaIncome, setFafsaIncome] = useState(0);
   const [fafsaAssets, setFafsaAssets] = useState(0);
   const [fafsaFamilySize, setFafsaFamilySize] = useState(4);
-  const [fafsaEFC, setFafsaEFC] = useState(0);
 
   // State for CSS Profile Impact Analysis
   const [cssProfileIncome, setCssProfileIncome] = useState(0);
   const [cssProfileAssets, setCssProfileAssets] = useState(0);
-  const [cssProfileImpact, setCssProfileImpact] = useState(0);
 
   // State for Income Sheltering Strategies
   const [retirementContribution, setRetirementContribution] = useState(0);
@@ -42,12 +39,11 @@ const CollegeAidOptimizer = () => {
   // State for Multi-Child College Funding Timeline
   const [child1Year, setChild1Year] = useState(2025);
   const [child2Year, setChild2Year] = useState(2027);
-  const [fundingTimeline, setFundingTimeline] = useState([]);
 
   // State for 529 Superfunding Strategy
   const [superfundAmount, setSuperfundAmount] = useState(90000);
   const [superfundYears, setSuperfundYears] = useState(5);
-  const [superfundProjection, setSuperfundProjection] = useState([]);
+  const [superfundGrowthPct, setSuperfundGrowthPct] = useState(7);
 
   // State for SECURE 2.0 529-to-Roth Rollover
   const [rothRolloverAmount, setRothRolloverAmount] = useState(0);
@@ -57,7 +53,6 @@ const CollegeAidOptimizer = () => {
   const [tuitionPerYear, setTuitionPerYear] = useState(50000);
   const [inflationRate, setInflationRate] = useState(0.03);
   const [yearsToComplete, setYearsToComplete] = useState(4);
-  const [totalCostProjection, setTotalCostProjection] = useState([]);
 
   // Compliance Section State (just a flag for now)
   const [complianceChecked, setComplianceChecked] = useState(false);
@@ -66,14 +61,12 @@ const CollegeAidOptimizer = () => {
   const calculateFAFSAEFC = useMemo(() => {
     // Simplified EFC formula for demonstration
     const efc = (fafsaIncome * 0.22) + (fafsaAssets * 0.05) - (fafsaFamilySize * 5000);
-    setFafsaEFC(Math.max(efc, 0));
-    return efc;
+    return Math.max(efc, 0);
   }, [fafsaIncome, fafsaAssets, fafsaFamilySize]);
 
   const calculateCSSProfileImpact = useMemo(() => {
     // Simplified impact analysis
     const impact = cssProfileIncome * 0.15 + cssProfileAssets * 0.10;
-    setCssProfileImpact(impact);
     return impact;
   }, [cssProfileIncome, cssProfileAssets]);
 
@@ -117,15 +110,15 @@ const CollegeAidOptimizer = () => {
 
   const calculateSuperfundProjection = useMemo(() => {
     // Project 529 superfunding
-    const projection = [];
+    // Growth is the assumed annual rate the visitor enters.
+    const projection: { year: number; balance: number }[] = [];
     let balance = superfundAmount;
     for (let i = 1; i <= superfundYears; i++) {
-      balance *= 1.07; // Assumed 7% growth
-      projection.push({ year: i, balance });
+      balance *= 1 + superfundGrowthPct / 100;
+      projection.push({ year: i, balance: Math.round(balance) });
     }
-    setSuperfundProjection(projection);
     return projection;
-  }, [superfundAmount, superfundYears]);
+  }, [superfundAmount, superfundYears, superfundGrowthPct]);
 
   const calculateRothRollover = useMemo(() => {
     // Simplified rollover calculation
@@ -136,13 +129,12 @@ const CollegeAidOptimizer = () => {
 
   const calculateTotalCostProjection = useMemo(() => {
     // Project costs over years
-    const projection = [];
+    const projection: { year: number; cost: number }[] = [];
     let cost = tuitionPerYear;
     for (let i = 1; i <= yearsToComplete; i++) {
-      projection.push({ year: i, cost });
+      projection.push({ year: i, cost: Math.round(cost) });
       cost *= (1 + inflationRate);
     }
-    setTotalCostProjection(projection);
     return projection;
   }, [tuitionPerYear, inflationRate, yearsToComplete]);
 
@@ -225,6 +217,7 @@ const CollegeAidOptimizer = () => {
         <h2 style={{ color: '#00b4d8' }}><CheckCircle2 size={24} /> 529 Superfunding Strategy</h2>
         <input type="number" placeholder="Superfund Amount" onChange={(e) => setSuperfundAmount(Number(e.target.value))} style={{ margin: '10px', padding: '10px', backgroundColor: '#3e3e4c' }} />
         <input type="number" placeholder="Years" onChange={(e) => setSuperfundYears(Number(e.target.value))} style={{ margin: '10px', padding: '10px', backgroundColor: '#3e3e4c' }} />
+        <input type="number" aria-label="Assumed annual growth rate (%)" placeholder="Assumed growth % (default 7)" onChange={(e) => setSuperfundGrowthPct(e.target.value === '' ? 7 : Number(e.target.value))} style={{ margin: '10px', padding: '10px', backgroundColor: '#3e3e4c' }} />
         <ResponsiveContainer width="100%" height={200}>
           <AreaChart data={calculateSuperfundProjection}>
             <XAxis dataKey="year" />
@@ -266,7 +259,7 @@ const CollegeAidOptimizer = () => {
         <button onClick={() => setComplianceChecked(!complianceChecked)} style={{ padding: '10px', backgroundColor: '#a855f7', color: '#fff' }}>Check Compliance</button>
         {complianceChecked && <p style={{ color: '#00b4d8' }}>Compliance verified. All strategies align with current regulations.</p>}
       </div>
-      <PageInsights section="college-aid-optimizer" />
+      <PageInsights pageId="college-aid-optimizer" />
     </div>
   );
 };
