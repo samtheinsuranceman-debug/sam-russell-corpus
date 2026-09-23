@@ -1,3 +1,4 @@
+import { NOT_IN_NAVIGATION } from "../shared/hiddenRoutes";
 import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
@@ -54,7 +55,7 @@ const OUTSIDE_SIDEBAR = [
   '/administrator', '/executive', '/fact-finder', '/calculators', '/ultra-calculator',
 ];
 
-const portalRoutes = routes.filter((r) => r.indexOf(':') === -1 && OUTSIDE_SIDEBAR.indexOf(r) === -1);
+const portalRoutes = routes.filter((r) => r.indexOf(':') === -1 && OUTSIDE_SIDEBAR.indexOf(r) === -1 && !(r in NOT_IN_NAVIGATION));
 const navSet: Record<string, boolean> = {};
 for (const p of navPaths) navSet[p] = true;
 
