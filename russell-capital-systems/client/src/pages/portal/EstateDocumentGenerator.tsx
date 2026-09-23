@@ -156,7 +156,7 @@ export default function EstateDocumentGenerator() {
       const docType = DOCUMENT_TYPES.find((d) => d.id === docId)!;
       const totalAssets = Number(selectedClient.iraBalance ?? 0) + Number(selectedClient.rothBalance ?? 0) + Number(selectedClient.taxableAssets ?? 0) + Number(selectedClient.realEstateEquity ?? 0);
       
-      const docId_unique = `${docId}_${Date.now()}_${Math.random().toString(36).substring(7)}`;
+      const docId_unique = `${docId}_${crypto.randomUUID()}`;
       
       return {
         id: docId_unique,
