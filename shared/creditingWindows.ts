@@ -78,7 +78,8 @@ export const CREDITING_WINDOWS: readonly CreditingWindow[] = [
     id: 'dotcom',
     label: `Since the dot-com peak (2000–${END})`,
     description:
-      'Beginning at the top of the market in 2000, immediately before three consecutive losing years — the only such run in the modern series.',
+      // Damodaran histretSP (read 2026-09-23): S&P 500 -9.03% (2000), -11.85% (2001), -21.97% (2002); 1939-41 was the previous three-year run.
+      'Beginning at the top of the market in 2000, the first of three consecutive losing years — the first such run since 1939–41.',
     fromYear: 2000,
     toYear: END,
     startsAtPeak: true,
@@ -86,7 +87,8 @@ export const CREDITING_WINDOWS: readonly CreditingWindow[] = [
   {
     id: 'crisis',
     label: `Since the financial crisis peak (2007–${END})`,
-    description: 'Beginning the year before credit markets seized and equities lost roughly a third of their value.',
+    // Damodaran histretSP (read 2026-09-23): S&P 500 -36.55% in 2008 with dividends; RAW_INDEX_RETURNS -38.3% on price.
+    description: 'Beginning the year before credit markets seized and equities lost more than a third of their value.',
     fromYear: 2007,
     toYear: END,
     startsAtPeak: true,
