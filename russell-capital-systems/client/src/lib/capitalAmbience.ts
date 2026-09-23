@@ -64,8 +64,8 @@ const BELL_PARTIALS: ReadonlyArray<{ ratio: number; gain: number; decay: number 
 const STORAGE_KEY = "rcs-ambience";
 const STORAGE_VOL = "rcs-ambience-vol";
 
-const rand = (min: number, max: number) => min + Math.random() * (max - min);
-const pick = <T,>(arr: readonly T[]): T => arr[Math.floor(Math.random() * arr.length)];
+const rand = (min: number, max: number) => min + Math.random() * (max - min); // decorative
+const pick = <T,>(arr: readonly T[]): T => arr[Math.floor(Math.random() * arr.length)]; // decorative
 
 export interface AmbienceState {
   enabled: boolean;
@@ -251,7 +251,7 @@ class CapitalAmbienceEngine {
     // Brown-ish noise: softer and warmer than white, reads as "machine room".
     let last = 0;
     for (let i = 0; i < len; i++) {
-      const white = Math.random() * 2 - 1;
+      const white = Math.random() * 2 - 1; // decorative
       last = (last + 0.02 * white) / 1.02;
       data[i] = last * 3.5;
     }
@@ -390,7 +390,7 @@ class CapitalAmbienceEngine {
     const voicingRoot = Math.floor(rand(2, 6.999)); // which inversion / octave
     const pan = rand(-0.35, 0.35);
     const chaToChing = rand(0.045, 0.085); // mechanical → bell gap
-    const sparkle = Math.random() < 0.65;
+    const sparkle = Math.random() < 0.65; // decorative
 
     const panner = ctx.createStereoPanner?.();
     const out = ctx.createGain();
@@ -499,7 +499,7 @@ class CapitalAmbienceEngine {
     }
 
     // Now and then the register rings twice — a bigger sale.
-    if (velocityScale === 1 && Math.random() < 0.18) {
+    if (velocityScale === 1 && Math.random() < 0.18) { // decorative
       setTimeout(() => {
         if (this.state.enabled && this.ctx?.state === "running") this.strike(0.72);
       }, rand(260, 400));

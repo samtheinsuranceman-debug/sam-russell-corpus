@@ -354,7 +354,7 @@ class AmbientMusicPlayer {
 
   playMood(mood: MusicMood) {
     const tracks = mood === "relaxation" ? RELAXATION_TRACKS : EXCITEMENT_TRACKS;
-    const track = tracks[Math.floor(Math.random() * tracks.length)];
+    const track = tracks[Math.floor(Math.random() * tracks.length)]; // decorative
     this.play(track);
   }
 

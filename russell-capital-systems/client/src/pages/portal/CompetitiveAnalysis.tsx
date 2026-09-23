@@ -239,14 +239,6 @@ export default function CompetitiveAnalysis() {
     }));
   }, []);
 
-  const lineData = useMemo(() => {
-    return Array.from({length: 20}, (_, i) => ({
-      year: i + 1,
-      trendA: Math.random() * 100 + 50,
-      trendB: Math.random() * 80 + 30,
-    }));
-  }, []);
-
   const composedData = useMemo(() => {
     return CARRIERS.map((c) => ({
       name: c.name.split(" ")[0],
@@ -831,26 +823,6 @@ export default function CompetitiveAnalysis() {
                       <Tooltip />
                       <Legend />
                     </PieChart>
-                  </ResponsiveContainer>
-                </CardContent>
-              </Card>
-
-              {/* Line Chart */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg">Trend Analysis over 20 Years</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <ResponsiveContainer width="100%" height={300}>
-                    <LineChart data={lineData}>
-                      <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
-                      <XAxis dataKey="year" tick={{ fill: "#9ca3af", fontSize: 11 }} />
-                      <YAxis tick={{ fill: "#9ca3af", fontSize: 11 }} />
-                      <Tooltip />
-                      <Legend />
-                      <Line type="monotone" dataKey="trendA" name="Trend A" stroke="#10b981" strokeWidth={2} />
-                      <Line type="monotone" dataKey="trendB" name="Trend B" stroke="#f43f5e" strokeWidth={2} />
-                    </LineChart>
                   </ResponsiveContainer>
                 </CardContent>
               </Card>
