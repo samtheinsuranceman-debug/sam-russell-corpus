@@ -23,6 +23,11 @@ export type ReportPdfDeps = {
   readStored?: (key: string, maxBytes: number) => Promise<{ body: Buffer }>;
   fetchImpl?: typeof fetch;
   resolve?: Resolver;
+  /**
+   * Ownership rule for first-party "/files/<key>" paths (server/storageOwnership.ts).
+   * When given, a key it rejects is refused before anything is read.
+   */
+  canReadKey?: (key: string) => boolean;
 };
 
 function isSafeKey(key: string) {
@@ -47,7 +52,11 @@ export async function loadReportPdf(pdfUrl: string, deps: ReportPdfDeps = {}): P
     if (!path.startsWith(FILE_URL_PREFIX)) return null;
     let key: string;
     try { key = decodeURIComponent(path.slice(FILE_URL_PREFIX.length)); } catch { return refuse("Invalid file path."); }
-    return isSafeKey(key) ? key : refuse("Invalid file path.");
+    if (!isSafeKey(key)) return refuse("Invalid file path.");
+    if (deps.canReadKey && !deps.canReadKey(key)) {
+      throw new TRPCError({ code: "FORBIDDEN", message: "That file is not one of yours." });
+    }
+    return key;
   };
 
   // 1. A first-party file path: read from the bucket directly.
