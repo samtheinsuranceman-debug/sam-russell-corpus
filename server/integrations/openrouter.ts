@@ -12,7 +12,12 @@
  *   - Russell Capital (quant/analysis) → x-ai/grok-3 (fast reasoning)
  *   - Church (theological/uncensored) → meta-llama/llama-4-maverick (open, uncensored)
  *   - EduGenius (education) → google/gemini-2.5-flash (fast, cheap)
- *   - Default → auto (OpenRouter picks optimal model)
+ *   - Default → anthropic/claude-sonnet-4. Never "auto": OpenRouter's router
+ *     can land on a China-linked model, which the owner's rule forbids.
+ *
+ * Every model id sent — routed, caller-supplied, or in a fallback list — and
+ * every model that answers is checked against the firm's China ban
+ * (shared/aiProviders.ts); a banned id is refused before the request leaves.
  * 
  * Python parity: This mirrors openrouter_bus.py in the Python stack.
  * Both use the same API key and routing strategy.
@@ -20,12 +25,13 @@
 
 import { invokeLLM, type Message, type Role } from "../_core/llm";
 import { Mem0Bus, type ProjectNamespace } from "./mem0";
+import { ChinaPolicyError, assertModelAllowed, isBannedModel, isBannedProvider } from "@shared/aiProviders";
 
 const OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1";
 
 // ─── MODEL ROUTING TABLE (per-project optimal model selection) ───────────────
 export const MODEL_ROUTES: Record<ProjectNamespace, string> = {
-  root: "auto",
+  root: "anthropic/claude-sonnet-4",
   dr_buddy: "anthropic/claude-sonnet-4",
   russell_capital: "x-ai/grok-3",
   church: "meta-llama/llama-4-maverick",
@@ -41,7 +47,7 @@ export const FALLBACK_CHAINS: Record<string, string[]> = {
   "x-ai/grok-3": ["x-ai/grok-3-mini", "openai/gpt-4o", "google/gemini-2.5-flash"],
   "meta-llama/llama-4-maverick": ["meta-llama/llama-3.3-70b-instruct", "openai/gpt-4o"],
   "google/gemini-2.5-flash": ["openai/gpt-4o-mini", "anthropic/claude-3.5-haiku"],
-  "auto": ["openai/gpt-4o", "anthropic/claude-3.5-sonnet", "google/gemini-2.5-flash"],
+  default: ["openai/gpt-4o", "anthropic/claude-3.5-sonnet", "google/gemini-2.5-flash"],
 };
 
 // ─── INTERFACES ──────────────────────────────────────────────────────────────
@@ -172,7 +178,15 @@ export class OpenRouterBus {
     } = options;
 
     // 1. Resolve model from routing table if not specified
-    const resolvedModel = model || MODEL_ROUTES[project] || "auto";
+    const resolvedModel = model || MODEL_ROUTES[project] || MODEL_ROUTES.root;
+
+    // Owner's rule: no China-linked model, named or as a fallback, and no
+    // China-linked upstream host in the routing preferences.
+    assertModelAllowed(resolvedModel);
+    for (const m of models ?? []) assertModelAllowed(m, "fallback model");
+    for (const p of providerPreferences?.order ?? []) {
+      if (isBannedProvider(p)) throw new ChinaPolicyError(p, "provider order");
+    }
 
     // 2. Optionally inject Mem0 context
     let enrichedMessages = [...messages];
@@ -239,6 +253,7 @@ export class OpenRouterBus {
       }
 
       const result = await response.json() as OpenRouterResponse;
+      if (isBannedModel(result.model)) throw new ChinaPolicyError(result.model, "answering model");
 
       // Track usage
       this.callCount++;
@@ -280,8 +295,10 @@ export class OpenRouterBus {
    */
   async chatWithFallback(options: OpenRouterOptions): Promise<OpenRouterResponse> {
     const project = options.project || "root";
-    const primaryModel = options.model || MODEL_ROUTES[project] || "auto";
-    const fallbacks = FALLBACK_CHAINS[primaryModel] || FALLBACK_CHAINS["auto"];
+    const primaryModel = options.model || MODEL_ROUTES[project] || MODEL_ROUTES.root;
+    // A banned id is refused outright, not quietly swapped for a fallback.
+    assertModelAllowed(primaryModel);
+    const fallbacks = FALLBACK_CHAINS[primaryModel] || FALLBACK_CHAINS.default;
 
     // Try primary model
     try {
@@ -349,7 +366,10 @@ export class OpenRouterBus {
       }
 
       const data = await response.json() as { data: OpenRouterModel[] };
-      return data.data || [];
+      // The catalogue carries China-linked models; none is offered here.
+      return (data.data || []).filter(
+        m => !isBannedModel(m.id) && !isBannedProvider(m.name) && !isBannedProvider(m.architecture?.tokenizer),
+      );
     } finally {
       clearTimeout(timeoutId);
     }

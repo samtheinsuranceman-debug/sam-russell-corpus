@@ -139,8 +139,10 @@ systemd unit, a `.env` loaded by your process manager, etc.) — **not** in the 
 `COHERE_API_KEY`, `TOGETHER_API_KEY`,
 `BUILT_IN_FORGE_API_KEY` (Manus / built‑in gateway; also powers `BUILT_IN_FORGE_API_URL` if self‑hosted).
 > With zero AI keys the homepage concierge degrades gracefully to a written teaser.
-> **Owner's standing rule:** DeepSeek is excluded from this platform. Do not add it as a
-> provider, a panel voice, or an OpenRouter route.
+> **Owner's standing rule:** no China-linked AI on this platform — DeepSeek and every other
+> Chinese lab, model or host (Taiwan-based labs are suspect too). Do not add one as a provider,
+> a panel voice, a model id, or an OpenRouter route; the code refuses them at runtime with
+> "Blocked by firm policy: no China-linked AI models".
 
 ### Email (pick one — this is how you hear about new leads)
 - **Plain SMTP, nothing to verify:** `SMTP_HOST`, `SMTP_PORT` (587), `SMTP_USER`,
