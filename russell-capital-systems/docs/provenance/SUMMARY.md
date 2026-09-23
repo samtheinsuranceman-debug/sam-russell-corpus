@@ -1,4 +1,4 @@
-# Provenance census — summary (tree `d360a2f`)
+# Provenance census — summary (tree `9ea1fc0`)
 
 Every count below is computed from the tree; none is typed. `server/provenanceCensus.test.ts` fails the build if any list grows.
 
@@ -8,7 +8,7 @@ Every count below is computed from the tree; none is typed. `server/provenanceCe
 | **Engines with zero sources** | **0** (of which 0 carry 20+ typed-in numeric literals) |
 | **Catalogue engines whose sources the shell cannot print yet** | **1** |
 | **Engines with unseeded randomness** | **1** |
-| **Pages that import an engine and print no source** | **82** of 120 |
+| **Pages that import an engine and print no source** | **46** of 120 |
 | Engines with hard-coded years older than 2025 | 50 |
 | Engines that simulate | 21 |
 | Engines on a live feed seam | 9 |
@@ -69,47 +69,11 @@ Every count below is computed from the tree; none is typed. `server/provenanceCe
 - `client/src/pages/portal/FIACollateralStrategy.tsx`
 - `client/src/pages/portal/FIATop10.tsx`
 - `client/src/pages/portal/GrowthAnnuities.tsx`
-- `client/src/pages/portal/HotIncome.tsx`
-- `client/src/pages/portal/HouseRecyclingStrategy.tsx`
-- `client/src/pages/portal/HouseholdWealth.tsx`
-- `client/src/pages/portal/IULvsRoth.tsx`
-- `client/src/pages/portal/IbbotsonCharts.tsx`
-- `client/src/pages/portal/IllustrationCompare.tsx`
 - `client/src/pages/portal/IncomeAnnuityTop10.tsx`
-- `client/src/pages/portal/IncomeGapAnalyzer.tsx`
-- `client/src/pages/portal/IncomeTimeline.tsx`
-- `client/src/pages/portal/InflationAnalysis.tsx`
-- `client/src/pages/portal/MarketScenarioStressTest.tsx`
-- `client/src/pages/portal/MechanismDetail.tsx`
-- `client/src/pages/portal/MedicareIRMAA.tsx`
-- `client/src/pages/portal/MultiGenWealthTransfer.tsx`
-- `client/src/pages/portal/MultiScenarioPlayZone.tsx`
 - `client/src/pages/portal/PatentShowcase.tsx`
-- `client/src/pages/portal/PolicyReview.tsx`
-- `client/src/pages/portal/PortfolioDriftMonitor.tsx`
-- `client/src/pages/portal/PredictiveAnalytics.tsx`
-- `client/src/pages/portal/QuickQuote.tsx`
-- `client/src/pages/portal/RealEstateMogul.tsx`
-- `client/src/pages/portal/Recommendations.tsx`
-- `client/src/pages/portal/RetirementGuardrails.tsx`
-- `client/src/pages/portal/ReverseHeloc.tsx`
-- `client/src/pages/portal/SavedScenariosHub.tsx`
-- `client/src/pages/portal/ScenarioAdjustments.tsx`
-- `client/src/pages/portal/ScenarioSideBySide.tsx`
-- `client/src/pages/portal/SocialSecurityOptimizer.tsx`
 - `client/src/pages/portal/Sphere.tsx`
 - `client/src/pages/portal/StrategyCompare.tsx`
-- `client/src/pages/portal/StrategyLab.tsx`
-- `client/src/pages/portal/SuccessionPlanningWizard.tsx`
-- `client/src/pages/portal/TaxAdvantagedGrowth.tsx`
-- `client/src/pages/portal/TaxLossHarvestingScanner.tsx`
-- `client/src/pages/portal/TaxOpportunityDetector.tsx`
-- `client/src/pages/portal/TaxReturnUpload.tsx`
 - `client/src/pages/portal/ThomasGoldman.tsx`
-- `client/src/pages/portal/TimeMachineAG49.tsx`
-- `client/src/pages/portal/TimeMachineCalculator.tsx`
-- `client/src/pages/portal/TimeMachineMethod.tsx`
-- `client/src/pages/portal/WithdrawalSequencing.tsx`
 
 ## Engines with hard-coded years older than 2025
 

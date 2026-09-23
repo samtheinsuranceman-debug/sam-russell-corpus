@@ -412,3 +412,27 @@ export const IBBOTSON_DISCLAIMER =
 export const IBBOTSON_SHORT_DISCLAIMER =
   "Based on Ibbotson SBBI historical data. Research-based estimates only — not guaranteed. " +
   "Past performance ≠ future results. Assumed crediting rate: 7.5%.";
+
+// ─── Where These Numbers Come From ──────────────────────────────────────────
+
+/**
+ * The return table above is the S&P 500 total return (price plus reinvested
+ * dividends), calendar years, in the series S&P Dow Jones Indices publishes
+ * and the Ibbotson SBBI yearbooks carry back to 1926. It was checked year by
+ * year against a public compilation of that series; it is not Damodaran's
+ * reconstruction, which differs slightly (-36.55% for 2008 against -37.00%).
+ */
+export const IBBOTSON_MODEL_SOURCES: readonly { label: string; url?: string; asOf?: string; note?: string }[] = [
+  {
+    label: "S&P Dow Jones Indices, S&P 500 total return (the index's publisher; before 1957 the S&P 90 Composite, as carried in Morningstar's Ibbotson SBBI yearbooks)",
+    url: "https://www.spglobal.com/spdji/en/indices/equity/sp-500/",
+    asOf: "read 2026-09-23",
+  },
+  {
+    label: "Slickcharts, S&P 500 Total Returns by Year Since 1926 (year-by-year compilation of the same series): -8.42% (1929), -24.90% (1930), -43.34% (1931), 52.62% (1954), -37.00% (2008), -18.11% (2022), 26.29% (2023), 25.02% (2024), 17.88% (2025)",
+    url: "https://www.slickcharts.com/sp500/returns",
+    asOf: "page last verified 2026-09-17; read 2026-09-23",
+    note: "SP500_ANNUAL_RETURNS matches this table for the years checked (1929-1931, 1954, 2008, 2022-2024). Its 2025 entry is 2.00%, marked 'YTD estimate'; the full-year 2025 total return is 17.88%. Not changed; flagged for review.",
+  },
+  { label: "Assumption: the 7.5% cap (the capRate default), 0% floor, 100% participation and 2005 default start year are inputs chosen by the firm; a carrier's current terms and its AG 49-A maximum illustrated rate govern" },
+];

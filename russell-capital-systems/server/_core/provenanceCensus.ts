@@ -15,7 +15,8 @@
  *     the Senate and the House
  *   - a page counts as printing a source when the app shell prints one for
  *     it: its route is a catalogue entry whose engine has a loader in
- *     shared/engineSources.ts (the EngineSourcesFooter)
+ *     shared/engineSources.ts (the EngineSourcesFooter), or a route that file
+ *     maps to sourced engines or to page sources (routeHasShellSources)
  *
  * Reads files only. Never evaluates an engine, never prints an environment
  * value, never reproduces a formula.
@@ -23,7 +24,7 @@
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import path from "node:path";
 import { CALCULATORS } from "@shared/calculatorCatalog";
-import { ENGINES_WITH_SOURCE_LOADERS } from "@shared/engineSources";
+import { ENGINES_WITH_SOURCE_LOADERS, routeHasShellSources } from "@shared/engineSources";
 
 export interface SimulationFacts {
   seeded: boolean | null;
@@ -186,11 +187,12 @@ export function censusTree(root: string): Census {
 
   const appSrc = existsSync(path.join(root, "client/src/App.tsx")) ? read("client/src/App.tsx") : "";
   const routes = routeFiles(appSrc);
-  // Page files the shell prints a source list for: any of their routes is a catalogue path whose engine has a loader.
+  // Page files the shell prints a source list for: any of their routes is a catalogue path whose engine has a
+  // loader, or a route shared/engineSources.ts maps to sourced engines (ROUTE_ENGINES) or page sources
+  // (shared/pageSources.ts), every named engine having a loader.
   const shellSourcedFiles = new Set<string>();
-  for (const c of CALCULATORS) {
-    const file = routes.get(c.path);
-    if (file && c.engine && ENGINES_WITH_SOURCE_LOADERS.includes(c.engine)) shellSourcedFiles.add(file);
+  for (const [route, file] of Array.from(routes.entries())) {
+    if (routeHasShellSources(route)) shellSourcedFiles.add(file);
   }
 
   const importers = (engine: string, texts: Map<string, string>) => {

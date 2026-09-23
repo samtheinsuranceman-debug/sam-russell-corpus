@@ -3,14 +3,22 @@
  * source list, and the normaliser handles every shape the engines export.
  */
 import { describe, expect, it } from "vitest";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import {
   ENGINE_SOURCE_LOADERS,
   ENGINES_WITH_SOURCE_LOADERS,
+  ROUTE_ENGINES,
   engineForPath,
+  enginesForPath,
   loadEngineSources,
+  loadRouteSources,
   normalizeSources,
+  routeHasShellSources,
+  routeMatches,
   uniqueSources,
 } from "../shared/engineSources";
+import { PAGE_SOURCES } from "../shared/pageSources";
 import { CALCULATORS } from "../shared/calculatorCatalog";
 import { placeholderCohortSize } from "../shared/retirementDNA";
 
@@ -67,6 +75,44 @@ describe("engineForPath", () => {
     expect(engineForPath(withEngine.path)).toBe(withEngine.engine);
     expect(engineForPath(`${withEngine.path}?tab=x`)).toBe(withEngine.engine);
     expect(engineForPath("/portal/not-a-real-page")).toBeNull();
+  });
+});
+
+describe("routes mapped outside the catalogue", () => {
+  const app = readFileSync(join(__dirname, "..", "client/src/App.tsx"), "utf8");
+  const routerPaths = new Set(Array.from(app.matchAll(/<Route\s+path="([^"]+)"/g)).map(m => m[1]!));
+
+  it("every ROUTE_ENGINES and PAGE_SOURCES key is a real route", () => {
+    for (const route of [...Object.keys(ROUTE_ENGINES), ...Object.keys(PAGE_SOURCES)]) expect(routerPaths.has(route), route).toBe(true);
+  });
+
+  it("every engine a route names has a loader, so the footer never names an unsourced engine", () => {
+    for (const [route, engines] of Object.entries(ROUTE_ENGINES)) {
+      for (const e of engines) expect(ENGINE_SOURCE_LOADERS[e], `${route} → ${e}`).toBeDefined();
+      expect(routeHasShellSources(route), route).toBe(true);
+    }
+  });
+
+  it("every page source has a label, and a url or an explicit assumption", () => {
+    for (const [route, refs] of Object.entries(PAGE_SOURCES)) {
+      expect(refs.length, route).toBeGreaterThan(0);
+      for (const r of refs) {
+        expect(r.label.length, route).toBeGreaterThan(10);
+        if (!r.url) expect(/^Assumption:|^Sample data:|^The /.test(r.label), `${route}: ${r.label.slice(0, 60)}`).toBe(true);
+      }
+    }
+  });
+
+  it("matches router patterns and prints engine sources before the page's own", async () => {
+    expect(routeMatches("/portal/mechanism/:slug", "/portal/mechanism/velocity")).toBe(true);
+    expect(routeMatches("/portal/mechanism/:slug", "/portal/mechanism")).toBe(false);
+    expect(enginesForPath("/portal/mechanism/velocity?x=1")).toEqual(["shared/mechanismDossiers.ts", "shared/cycleEngine.ts"]);
+    expect(engineForPath("/portal/medicare-irmaa")).toBe("shared/taxBracketEngine.ts");
+    const r = await loadRouteSources("/portal/medicare-irmaa");
+    expect(r.missing).toEqual([]);
+    expect(r.sources.some(s => s.label.startsWith("IRS, Rev. Proc. 2025-32"))).toBe(true);
+    expect(r.sources.some(s => s.url === "https://www.cms.gov/newsroom/fact-sheets/2025-medicare-parts-b-premiums-and-deductibles")).toBe(true);
+    expect(routeHasShellSources("/portal/not-a-real-page")).toBe(false);
   });
 });
 
