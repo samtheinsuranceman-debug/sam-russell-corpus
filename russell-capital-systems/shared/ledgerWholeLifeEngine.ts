@@ -72,6 +72,7 @@
  * skipped or cut early permanently lowers later room.
  */
 import { resolveYearSeries, type YearSeries } from './ledgerIulEngine';
+import { POLICY_DISCLOSURE } from './policyDisclosure';
 
 export type { YearSeries, YearBand } from './ledgerIulEngine';
 
@@ -255,7 +256,14 @@ function validate(input: LedgerWholeLifeInput): string | null {
     const lim = input.loans.limitPctOfCashValue ?? 90;
     if (!(lim >= 0 && lim <= 100)) return 'The loan limit must be between 0% and 100% of cash value.';
     const lr = resolveYearSeries(input.loans.ratePct, input.years);
+    const gapYear = lr.covered.indexOf(false);
+    if (gapYear >= 0) return `No loan rate was supplied for policy year ${gapYear + 1}. Supply the loan rate for every year of the run; a missing year is not interest-free.`;
     if (lr.values.some((v) => !Number.isFinite(v) || v < 0)) return 'A loan rate must be a finite, non-negative percentage.';
+    if (input.loans.recognition.kind === 'direct') {
+      const rr = resolveYearSeries(input.loans.recognition.loanedDividendRetainedPct, input.years);
+      const rGap = rr.covered.indexOf(false);
+      if (rGap >= 0) return `No direct-recognition dividend adjustment was supplied for policy year ${rGap + 1}.`;
+    }
   }
   return null;
 }
@@ -309,6 +317,7 @@ function simulate(input: LedgerWholeLifeInput, scale: number, referencePool: num
   const loanLimitPct = loans?.limitPctOfCashValue ?? 90;
 
   const notes: string[] = [
+    POLICY_DISCLOSURE.life,
     'Mechanics from caller-supplied guaranteed values and dividends. Not an illustration. Dividends are not guaranteed.',
   ];
   if (!faceSupplied) notes.push('No paid-up face per dollar was supplied, so the death benefit leaves out PUA face.');

@@ -12,7 +12,8 @@
 import { describe, expect, it } from 'vitest';
 import { runLedgerIul, resolveYearSeries, type LedgerIulInput, type LedgerIulResult } from '../shared/ledgerIulEngine';
 import { runLedgerWholeLife, type LedgerWholeLifeInput, type LedgerWholeLifeResult } from '../shared/ledgerWholeLifeEngine';
-import { CASE_09_NO_EVA, CASE_09_WITH_EVA, CASE_10, CASE_11, CASE_14, CASE_19 } from './ledgerEngines.fixtures';
+import { POLICY_DISCLOSURE } from '../shared/policyDisclosure';
+import { CASE_09_NO_EVA, CASE_09_WITH_EVA, CASE_10, CASE_11, CASE_14, CASE_15, CASE_16, CASE_19 } from './ledgerEngines.fixtures';
 
 const YEARS = 40;
 const pctErr = (a: number, b: number) => ((a - b) / b) * 100;
@@ -164,6 +165,35 @@ describe('ledger IUL engine: printed cash values within the red-team tolerance',
   });
 });
 
+describe('ledger IUL engine: the timing convention holds out of sample', () => {
+  const oos = (f: typeof CASE_15 | typeof CASE_16, extra: Partial<LedgerIulInput>): LedgerIulInput => ({
+    years: f.years,
+    issueAge: f.issueAge,
+    premiums: f.premium,
+    charges: { premiumCharge: f.premiumCharge, costOfInsurance: f.costOfInsurance, policyFees: f.policyIssueCharge, riderCharges: f.additionalCharges },
+    assumedCreditingRatePct: f.illustratedRatePct,
+    bonusCreditDollars: f.bonusCredits,
+    deathBenefit: { option: 'A', faceAmount: f.faceAmount },
+    ...extra,
+  });
+  const worst = (run: LedgerIulResult, printed: Readonly<Record<number, number>>) =>
+    Math.max(...Object.entries(printed).map(([y, v]) => Math.abs(pctErr(run.years[Number(y) - 1].accountValue, v))));
+
+  it('CASE-15 (50% one-year / 50% two-year, not used to choose the convention): cash value within 0.2% over years 1-20', () => {
+    const alloc = [
+      { sharePct: CASE_15.allocationPct.oneYear, termYears: 1 as const },
+      { sharePct: CASE_15.allocationPct.twoYear, termYears: 2 as const },
+    ];
+    const run = ok(runLedgerIul(oos(CASE_15, { timing: MONTHLY_AVERAGE, allocation: alloc })));
+    expect(worst(run, CASE_15.printedCv)).toBeLessThan(0.2);
+    // The annual one-year default misses by more.
+    expect(worst(ok(runLedgerIul(oos(CASE_15, {}))), CASE_15.printedCv)).toBeGreaterThan(1);
+  });
+  it('CASE-16 (one-year account, not used to choose the convention): cash value within 0.05% over years 1-30', () => {
+    expect(worst(ok(runLedgerIul(oos(CASE_16, { timing: MONTHLY_AVERAGE }))), CASE_16.printedCv)).toBeLessThan(0.05);
+  });
+});
+
 describe('ledger IUL engine: death benefit options, term blend and corridor', () => {
   it('CASE-09: increasing death benefit (face + cash value) through year 30, then level face under the corridor', () => {
     const run = ok(runLedgerIul(case09(CASE_09_WITH_EVA, { timing: MONTHLY_AVERAGE })));
@@ -191,6 +221,10 @@ describe('ledger IUL engine: death benefit options, term blend and corridor', ()
  * ================================================================== */
 
 describe('ledger IUL engine: inputs and refusals', () => {
+  it('carries the life-policy disclosure line in its notes', () => {
+    expect(ok(runLedgerIul(case19())).notes[0]).toBe(POLICY_DISCLOSURE.life);
+    expect(okWl(runLedgerWholeLife(synthetic())).notes[0]).toBe(POLICY_DISCLOSURE.life);
+  });
   it('refuses to run without charges, and asks for the carrier charges report', () => {
     const run = runLedgerIul({ ...case19(), charges: {} });
     expect(run.ok).toBe(false);
@@ -225,6 +259,17 @@ describe('ledger IUL engine: inputs and refusals', () => {
     const b = ok(runLedgerIul({ ...case19(), premiums: bands }));
     expect(b.years[YEARS - 1].accountValue).toBeCloseTo(a.years[YEARS - 1].accountValue, 6);
   });
+  it('refuses a loan-rate year left out, rather than charging or crediting 0%', () => {
+    const loan = { type: 'fixed' as const, requests: [10000], limit: { basis: 'loanValue' as const, limitPct: 90 }, interest: 'capitalize' as const };
+    const short = runLedgerIul({ ...case19(), loans: { ...loan, chargedRatePct: [{ fromYear: 1, toYear: 10, value: 5 }], creditedOnLoanedPct: [{ fromYear: 1, toYear: YEARS, value: 3 }] } });
+    expect(short.ok).toBe(false);
+    if (!short.ok) expect(short.reason).toMatch(/loan rate .*year 11/);
+    const noCredit = runLedgerIul({ ...case19(), loans: { ...loan, chargedRatePct: [{ fromYear: 1, toYear: YEARS, value: 5 }] } });
+    expect(noCredit.ok).toBe(false);
+    if (!noCredit.ok) expect(noCredit.reason).toMatch(/credited-on-loaned rate .*year 1\b/);
+    // A wash loan may leave the credited rate out: it credits the charged rate.
+    expect(runLedgerIul({ ...case19(), loans: { ...loan, type: 'wash', chargedRatePct: [{ fromYear: 1, toYear: YEARS, value: 5 }] } }).ok).toBe(true);
+  });
   it('refuses an allocation that does not sum to 100%', () => {
     expect(runLedgerIul({ ...case14(), allocation: [{ sharePct: 60, termYears: 1 }, { sharePct: 60, termYears: 2 }] }).ok).toBe(false);
   });
@@ -246,6 +291,13 @@ describe('ledger IUL engine: early-value riders', () => {
     const confirmed = ok(runLedgerIul(case09(CASE_09_NO_EVA, { earlyValueRider: { kind: 'waiver', raisesLoanValue: 'yes' } })));
     expect(confirmed.years[0].loanValue).toBeCloseTo(confirmed.years[0].accountValue, 6);
     expect(confirmed.loanValueBasisUnconfirmed).toBe(false);
+  });
+});
+
+describe('ledger IUL engine: a waiver run on an illustration that already carries the waiver', () => {
+  it('says the unadjusted schedule must come from the matched illustration without the rider', () => {
+    const run = ok(runLedgerIul(case09(CASE_09_WITH_EVA, { earlyValueRider: { kind: 'waiver', raisesLoanValue: 'unconfirmed' } })));
+    expect(run.notes.join(' ')).toMatch(/matched illustration without the rider/);
   });
 });
 
@@ -315,7 +367,7 @@ describe('ledger IUL engine: loans (engine tests on CASE-09 inputs; no case illu
     const run = ok(
       runLedgerIul({
         ...case09(CASE_09_NO_EVA),
-        loans: { type: 'fixed', requests: [1_000_000], chargedRatePct: [5], creditedOnLoanedPct: [3], limit: { basis: 'loanValue', limitPct: 45 }, interest: 'paid' },
+        loans: { type: 'fixed', requests: [1_000_000], chargedRatePct: [{ fromYear: 1, toYear: YEARS, value: 5 }], creditedOnLoanedPct: [{ fromYear: 1, toYear: YEARS, value: 3 }], limit: { basis: 'loanValue', limitPct: 45 }, interest: 'paid' },
       }),
     );
     const y1 = run.years[0];
@@ -343,6 +395,25 @@ describe('ledger IUL engine: loans (engine tests on CASE-09 inputs; no case illu
     const run = ok(runLedgerIul({ ...case14(), premiums: [170000] }));
     expect(run.lapseYear).not.toBeNull();
     expect(run.lapseYear!).toBeLessThan(10);
+  });
+});
+
+describe('ledger IUL engine: loan interest in a 0% index year', () => {
+  const zero = () => case09(CASE_09_WITH_EVA, { assumedCreditingRatePct: 0 });
+  const noLoan = ok(runLedgerIul(zero()));
+  const band = (v: number) => [{ fromYear: 1, toYear: YEARS, value: v }];
+  it('participating: the loan still charges its rate while the index credits nothing', () => {
+    const run = ok(runLedgerIul({ ...zero(), loans: { type: 'participating', requests: [20000], chargedRatePct: band(5), limit: { basis: 'loanValue', limitPct: 90 }, interest: 'capitalize' } }));
+    expect(run.years[0].indexCredits).toBe(0);
+    expect(run.years[0].accountValue).toBeCloseTo(noLoan.years[0].accountValue, 6);
+    expect(run.years[0].loanInterestCharged).toBeCloseTo(20000 * 0.05, 6);
+    expect(run.years[0].netSurrenderValue).toBeCloseTo(noLoan.years[0].surrenderValue - 21000, 6);
+  });
+  it('fixed: the collateral earns its credited rate and the loan its charged rate, whatever the index does', () => {
+    const run = ok(runLedgerIul({ ...zero(), loans: { type: 'fixed', requests: [20000], chargedRatePct: band(4), creditedOnLoanedPct: band(3), limit: { basis: 'loanValue', limitPct: 90 }, interest: 'capitalize' } }));
+    expect(run.years[0].indexCredits).toBe(0);
+    expect(run.years[0].collateralCredits).toBeCloseTo(20000 * 0.03, 6);
+    expect(run.years[0].loanInterestCharged).toBeCloseTo(20000 * 0.04, 6);
   });
 });
 
@@ -434,7 +505,7 @@ describe('ledger whole-life engine: 50% dividend-scale stress', () => {
 function synthetic(extra: Partial<LedgerWholeLifeInput> = {}): LedgerWholeLifeInput {
   return {
     years: 20,
-    issueAge: 50,
+    issueAge: 63,
     base: {
       faceAmount: 500000,
       premium: [{ fromYear: 1, toYear: 20, value: 20000 }],
@@ -460,6 +531,12 @@ describe('ledger whole-life engine: mechanics', () => {
     const r = runLedgerWholeLife({ ...s, dividends: { kind: 'perYear', amounts: [3000] } });
     expect(r.ok).toBe(false);
     if (!r.ok) expect(r.reason).toMatch(/will not assume a dividend/);
+  });
+
+  it('refuses a loan-rate year left out, rather than charging 0% interest', () => {
+    const r = runLedgerWholeLife(synthetic({ loans: { requests: [0, 10000], ratePct: [{ fromYear: 1, toYear: 7, value: 5 }], interest: 'capitalize', recognition: { kind: 'nonDirect' } } }));
+    expect(r.ok).toBe(false);
+    if (!r.ok) expect(r.reason).toMatch(/loan rate .*year 8/);
   });
 
   it('term rider: the death benefit drops when it ends', () => {
