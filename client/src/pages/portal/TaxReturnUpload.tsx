@@ -27,6 +27,7 @@ import { ExportToSlides } from "@/components/ExportToSlides";
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, Legend, PieChart, Pie, Cell, LineChart, Line, AreaChart, Area, ComposedChart, Scatter } from "recharts";
 import { ExecutiveSummary, GoalsAccelerator, RecommendationSummary, DoNothingBaseline, TaxBracketPanel } from "@/components/ConsumerOutcomeBlocks";
 import { formatTaxCurrency } from "@shared/taxBracketEngine";
+import { rulesForYear, filingKeyFromLabel } from "@shared/taxRules";
 import { RelatedCalculators } from "@/components/RelatedCalculators";
 import { ComplianceFooter } from "@/components/ComplianceFooter";
 
@@ -232,15 +233,14 @@ export default function TaxReturnUpload() {
 
   const taxBracketData = useMemo(() => {
     if (!extraction) return [];
-    const brackets = [
-      { rate: "10%", threshold: 11000, cumulative: 1100 },
-      { rate: "12%", threshold: 44725, cumulative: 5147 },
-      { rate: "22%", threshold: 95375, cumulative: 16290 },
-      { rate: "24%", threshold: 182100, cumulative: 37104 },
-      { rate: "32%", threshold: 231250, cumulative: 52832 },
-      { rate: "35%", threshold: 578125, cumulative: 174238 },
-      { rate: "37%", threshold: 1000000, cumulative: 330332 }
-    ];
+    // The return's own year and filing status, from the versioned tables in
+    // shared/taxRules.ts (years before the earliest rule set use that set).
+    // The open-ended 37% row is drawn to $1,000,000.
+    const rules = rulesForYear(Number(extraction.taxYear) || new Date().getFullYear());
+    const brackets = rules.brackets[filingKeyFromLabel(extraction.filingStatus)].map((b) => ({
+      rate: `${Math.round(b.rate * 100)}%`,
+      threshold: b.upTo ?? 1_000_000,
+    }));
     
     let currentIncome = simulationMode ? simulatedAgi : extraction.taxableIncome;
     

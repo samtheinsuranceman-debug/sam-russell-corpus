@@ -3,6 +3,9 @@ import { NumberInput } from "@/components/NumberInput";
 import { useState, useMemo, useCallback, useEffect } from "react";
 
 import { trpc } from "@/lib/trpc";
+import { federalTaxOnTaxable, federalMarginalRateFor } from "@shared/taxBracketEngine";
+import { TAX_RULES_2026 } from "@shared/taxRules";
+import { IRMAA_2026 } from "@shared/irmaa";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { BarChart, LineChart, PieChart, AreaChart, RadarChart, ComposedChart, ResponsiveContainer, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Bar, Line, Pie, Cell, Area, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis } from "recharts";
 
@@ -78,27 +81,13 @@ const generateYearlyData = (startAge: number, endAge: number, initialBalance: nu
   return data;
 };
 
-const advancedTaxCalculation = (income: number, status: 'single' | 'married') => {
-  let tax = 0;
-  if (status === 'married') {
-    if (income > 731200) tax = (income - 731200) * 0.37 + 193654;
-    else if (income > 487450) tax = (income - 487450) * 0.35 + 108341;
-    else if (income > 383900) tax = (income - 383900) * 0.32 + 75205;
-    else if (income > 201050) tax = (income - 201050) * 0.24 + 31321;
-    else if (income > 94300) tax = (income - 94300) * 0.22 + 7836;
-    else if (income > 23200) tax = (income - 23200) * 0.12 + 2320;
-    else tax = income * 0.10;
-  } else {
-    if (income > 609350) tax = (income - 609350) * 0.37 + 183647;
-    else if (income > 243725) tax = (income - 243725) * 0.35 + 55678;
-    else if (income > 191950) tax = (income - 191950) * 0.32 + 39110;
-    else if (income > 100525) tax = (income - 100525) * 0.24 + 17168;
-    else if (income > 47150) tax = (income - 47150) * 0.22 + 5425;
-    else if (income > 11600) tax = (income - 11600) * 0.12 + 1160;
-    else tax = income * 0.10;
-  }
-  return Math.round(tax);
-};
+// Federal tax on taxable income from the current-year shared table (shared/taxRules.ts).
+const advancedTaxCalculation = (income: number, status: 'single' | 'married') =>
+  Math.round(federalTaxOnTaxable(income, status === 'married' ? 'joint' : 'single'));
+
+// Story marginal rate: the current-year single-filer rate on gross income from the
+// shared table, with this story's floor of 24% (the firm's framing, not a tax figure).
+const storyTaxRatePct = (grossIncome: number) => Math.max(24, Math.round(federalMarginalRateFor(grossIncome, 'single') * 100));
 
 
 
@@ -581,7 +570,7 @@ export default function SalesStoryBuilder() {
   }, []);
 
   const slides: SlideData[] = useMemo(() => {
-    const taxRate = annualIncome > 578125 ? 37 : annualIncome > 231250 ? 35 : annualIncome > 182100 ? 32 : 24;
+    const taxRate = storyTaxRatePct(annualIncome);
     const effectiveRate = Math.round(taxRate * 0.72);
     const annualTax = Math.round(annualIncome * effectiveRate / 100);
     const iulPremium = Math.round(annualIncome * 0.12);
@@ -589,7 +578,7 @@ export default function SalesStoryBuilder() {
     const taxFreeIncome = Math.round(iulCashValue20 * 0.065);
     const rmdAt72 = Math.round(retirement401k * Math.pow(1.07, 72 - clientAge) / 27.4);
     const rmdTax = Math.round(rmdAt72 * taxRate / 100);
-    const estateExemption = 13610000;
+    const estateExemption = TAX_RULES_2026.estateBasicExclusion; // shared/taxRules.ts
     const estateTax = Math.max(0, Math.round((estateValue * Math.pow(1.06, 85 - clientAge) - estateExemption) * 0.40));
 
     if (selectedTemplate === "iul-value") {
@@ -913,7 +902,7 @@ export default function SalesStoryBuilder() {
             </div>
             <div className="p-3 rounded-lg bg-amber-500/10 border border-amber-500/20 text-sm">
               <AlertTriangle className="h-4 w-4 inline mr-1 text-amber-400" />
-              RMDs may also trigger: IRMAA Medicare surcharges ({fmt(Math.round(rmdAt72 > 206000 ? 5000 : 0))}/yr), Social Security taxation (up to 85%), and higher state taxes.
+              RMDs may also trigger: IRMAA Medicare surcharges ({fmt(Math.round(rmdAt72 > IRMAA_2026.married[0]!.maxMagi ? 5000 : 0))}/yr), Social Security taxation (up to 85%), and higher state taxes.
             </div>
           </div>
         )},
@@ -1036,7 +1025,7 @@ export default function SalesStoryBuilder() {
   const taxProjectionData = Array.from({ length: 5 }).map((_, i) => {
     const year = i * 5;
     const projected401k = Math.round(retirement401k * Math.pow(1.07, year));
-    const taxRate = annualIncome > 578125 ? 37 : annualIncome > 231250 ? 35 : annualIncome > 182100 ? 32 : 24;
+    const taxRate = storyTaxRatePct(annualIncome);
     return {
       year: `Year ${year}`,
       balance: projected401k,

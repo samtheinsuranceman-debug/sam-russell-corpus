@@ -34,48 +34,31 @@ import { Progress } from "@/components/ui/progress";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ExecutiveSummary, GoalsAccelerator, RecommendationSummary, DoNothingBaseline, TaxBracketPanel } from "@/components/ConsumerOutcomeBlocks";
-import { formatTaxCurrency } from "@shared/taxBracketEngine";
+import { formatTaxCurrency, federalBrackets, federalStandardDeduction, FEDERAL_TAX_YEAR } from "@shared/taxBracketEngine";
+import { TAX_RULES_2026, saltAllowed } from "@shared/taxRules";
 import { RelatedCalculators } from "@/components/RelatedCalculators";
 import { ComplianceFooter } from "@/components/ComplianceFooter";
 
 const fmt = (n: number) => `$${n.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
 const fmtPct = (n: number) => `${n.toFixed(2)}%`;
 
-const BRACKETS_2025 = {
-  single: [
-    { rate: 10, min: 0, max: 11925 },
-    { rate: 12, min: 11925, max: 48475 },
-    { rate: 22, min: 48475, max: 103350 },
-    { rate: 24, min: 103350, max: 197300 },
-    { rate: 32, min: 197300, max: 250525 },
-    { rate: 35, min: 250525, max: 626350 },
-    { rate: 37, min: 626350, max: Infinity },
-  ],
-  married: [
-    { rate: 10, min: 0, max: 23850 },
-    { rate: 12, min: 23850, max: 96950 },
-    { rate: 22, min: 96950, max: 206700 },
-    { rate: 24, min: 206700, max: 394600 },
-    { rate: 32, min: 394600, max: 501050 },
-    { rate: 35, min: 501050, max: 751600 },
-    { rate: 37, min: 751600, max: Infinity },
-  ],
-  headOfHousehold: [
-    { rate: 10, min: 0, max: 17000 },
-    { rate: 12, min: 17000, max: 64850 },
-    { rate: 22, min: 64850, max: 103350 },
-    { rate: 24, min: 103350, max: 197300 },
-    { rate: 32, min: 197300, max: 250525 },
-    { rate: 35, min: 250525, max: 626350 },
-    { rate: 37, min: 626350, max: Infinity },
-  ]
+// Current-year federal brackets (rates in percent, as this page draws them)
+// and standard deductions, read from shared/taxRules.ts through the bracket
+// engine, so this page and every other calculator use one table.
+const pctRows = (filing: string) => federalBrackets(filing).map((b) => ({ rate: Math.round(b.rate * 100), min: b.min, max: b.max }));
+const BRACKETS_CURRENT = {
+  single: pctRows("single"),
+  married: pctRows("joint"),
+  headOfHousehold: pctRows("hoh"),
 };
 
-const STANDARD_DEDUCTION_2025 = {
-  single: 15000,
-  married: 30000,
-  headOfHousehold: 22500,
+const STANDARD_DEDUCTION_CURRENT = {
+  single: federalStandardDeduction("single"),
+  married: federalStandardDeduction("joint"),
+  headOfHousehold: federalStandardDeduction("hoh"),
 };
+
+const FILING_KEY = { single: "single", married: "joint", headOfHousehold: "hoh" } as const;
 
 const COLORS = [
   "#22c55e", "#10b981", "#14b8a6", "#06b6d4",
@@ -128,10 +111,11 @@ export default function TaxBracketVisualizer() {
   }, [clientData]);
 
   const calculations = useMemo(() => {
-    const brackets = BRACKETS_2025[filingStatus];
-    const standardDeduction = STANDARD_DEDUCTION_2025[filingStatus];
+    const brackets = BRACKETS_CURRENT[filingStatus];
+    const standardDeduction = STANDARD_DEDUCTION_CURRENT[filingStatus];
     
-    const saltDeduction = Math.min(stateLocalTaxes, 10000); // SALT cap
+    // SALT cap with the MAGI phase-down for the current year (shared/taxRules.ts).
+    const saltDeduction = saltAllowed(stateLocalTaxes, grossIncome + otherIncome + rothConversion, FILING_KEY[filingStatus], TAX_RULES_2026);
     const itemizedDeductions = charitableContributions + mortgageInterest + saltDeduction + additionalDeductions;
     
     const totalDeductions = Math.max(standardDeduction, itemizedDeductions);
@@ -218,6 +202,7 @@ export default function TaxBracketVisualizer() {
       isItemizing,
       itemizedDeductions,
       standardDeduction,
+      saltDeduction,
       withRoth,
       withoutRoth,
       rothTaxCost,
@@ -426,12 +411,12 @@ export default function TaxBracketVisualizer() {
                       <CardTitle>Federal Tax Bracket Breakdown</CardTitle>
                       <Badge variant="outline">{filingStatus === "married" ? "Married Filing Jointly" : filingStatus === "single" ? "Single" : "Head of Household"}</Badge>
                     </div>
-                    <CardDescription>2025 Tax Year Visualization</CardDescription>
+                    <CardDescription>{FEDERAL_TAX_YEAR} Tax Year Visualization</CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-4">
                     {/* Interactive Elements: Bracket selection */}
                     <div className="flex space-x-2 overflow-x-auto pb-2">
-                      {BRACKETS_2025[filingStatus].map((b, i) => (
+                      {BRACKETS_CURRENT[filingStatus].map((b, i) => (
                         <Button 
                           key={i} 
                           variant={selectedBracketIndex === i ? "default" : "outline"}
@@ -677,7 +662,7 @@ export default function TaxBracketVisualizer() {
                               <span className="font-mono text-primary font-medium">{fmt(stateLocalTaxes)}</span>
                             </div>
                             <Slider value={[stateLocalTaxes]} onValueChange={([v]) => setStateLocalTaxes(v)} min={0} max={50000} step={1000} className="py-2" />
-                            <p className="text-xs text-muted-foreground">Capped at $10,000 for federal deduction</p>
+                            <p className="text-xs text-muted-foreground">Capped at ${TAX_RULES_2026.salt.cap.toLocaleString()} for federal deduction, reduced above ${TAX_RULES_2026.salt.phaseDownStartMagi.toLocaleString()} MAGI (not below ${TAX_RULES_2026.salt.floor.toLocaleString()})</p>
                           </div>
                           
                           <div className="space-y-2">
@@ -1102,7 +1087,7 @@ export default function TaxBracketVisualizer() {
               {/* Table 1: Current Brackets */}
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-lg">2025 Tax Brackets ({filingStatus})</CardTitle>
+                  <CardTitle className="text-lg">{FEDERAL_TAX_YEAR} Tax Brackets ({filingStatus})</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <ScrollArea className="h-[250px]">
@@ -1115,7 +1100,7 @@ export default function TaxBracketVisualizer() {
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                        {BRACKETS_2025[filingStatus].map((b, i) => {
+                        {BRACKETS_CURRENT[filingStatus].map((b, i) => {
                           const width = b.max === Infinity ? 0 : b.max - b.min;
                           const maxTax = width * (b.rate / 100);
                           return (
@@ -1194,7 +1179,7 @@ export default function TaxBracketVisualizer() {
                       </TableRow>
                       <TableRow>
                         <TableCell>State & Local Taxes (capped)</TableCell>
-                        <TableCell className="text-right">{fmt(Math.min(stateLocalTaxes, 10000))}</TableCell>
+                        <TableCell className="text-right">{fmt(calculations.saltDeduction)}</TableCell>
                         <TableCell className="text-center"></TableCell>
                       </TableRow>
                       <TableRow>

@@ -40,7 +40,9 @@ import {
   PolarAngleAxis, PolarRadiusAxis, Radar, ComposedChart
 } from "recharts";
 import { ExecutiveSummary, GoalsAccelerator, RecommendationSummary, DoNothingBaseline, TaxBracketPanel } from "@/components/ConsumerOutcomeBlocks";
-import { formatTaxCurrency } from "@shared/taxBracketEngine";
+import { formatTaxCurrency, federalBrackets, federalStandardDeduction } from "@shared/taxBracketEngine";
+import { TAX_RULES_2026, filingKeyFromLabel, saltAllowed } from "@shared/taxRules";
+import { IRMAA_2026 } from "@shared/irmaa";
 import { RelatedCalculators } from "@/components/RelatedCalculators";
 import { ComplianceFooter } from "@/components/ComplianceFooter";
 
@@ -63,40 +65,16 @@ interface TaxOpportunity {
   confidence: number;
 }
 
-const BRACKETS_MFJ = [
-  { min: 0, max: 23850, rate: 0.10 },
-  { min: 23850, max: 96950, rate: 0.12 },
-  { min: 96950, max: 206700, rate: 0.22 },
-  { min: 206700, max: 394600, rate: 0.24 },
-  { min: 394600, max: 501050, rate: 0.32 },
-  { min: 501050, max: 751600, rate: 0.35 },
-  { min: 751600, max: Infinity, rate: 0.37 },
-];
-
-const BRACKETS_SINGLE = [
-  { min: 0, max: 11925, rate: 0.10 },
-  { min: 11925, max: 48475, rate: 0.12 },
-  { min: 48475, max: 103350, rate: 0.22 },
-  { min: 103350, max: 197300, rate: 0.24 },
-  { min: 197300, max: 250525, rate: 0.32 },
-  { min: 250525, max: 626350, rate: 0.35 },
-  { min: 626350, max: Infinity, rate: 0.37 },
-];
-
-const BRACKETS_HOH = [
-  { min: 0, max: 17000, rate: 0.10 },
-  { min: 17000, max: 64950, rate: 0.12 },
-  { min: 64950, max: 103350, rate: 0.22 },
-  { min: 103350, max: 197300, rate: 0.24 },
-  { min: 197300, max: 250525, rate: 0.32 },
-  { min: 250525, max: 626350, rate: 0.35 },
-  { min: 626350, max: Infinity, rate: 0.37 },
-];
+// Current-year federal brackets and standard deductions, read from
+// shared/taxRules.ts through the bracket engine (one source of truth).
+const BRACKETS_MFJ = federalBrackets("joint");
+const BRACKETS_SINGLE = federalBrackets("single");
+const BRACKETS_HOH = federalBrackets("hoh");
 
 const STANDARD_DEDUCTION = {
-  married_filing_jointly: 29200,
-  single: 14600,
-  head_of_household: 21900,
+  married_filing_jointly: federalStandardDeduction("joint"),
+  single: federalStandardDeduction("single"),
+  head_of_household: federalStandardDeduction("hoh"),
 };
 
 const COLORS = ['#22c55e', '#f0c040', '#3b82f6', '#ef4444', '#a855f7', '#ec4899', '#14b8a6', '#f97316'];
@@ -168,7 +146,11 @@ export default function TaxOpportunityDetector() {
   const bracketRoom = currentBracket ? currentBracket.max - income : 0;
   
   const stdDed = STANDARD_DEDUCTION[filingStatus as keyof typeof STANDARD_DEDUCTION] || 0;
-  const itemizedDeductions = mortgage + charitable + Math.min(10000, state) + Math.max(0, medical - (income * 0.075));
+  // SALT: the current-year cap and MAGI phase-down (shared/taxRules.ts), not the pre-2025 $10,000 cap.
+  const saltDeduction = saltAllowed(state, income, filingKeyFromLabel(filingStatus.replace(/_/g, " ")), TAX_RULES_2026);
+  const itemizedDeductions = mortgage + charitable + saltDeduction + Math.max(0, medical - (income * 0.075));
+  // First IRMAA threshold (tier 1 upper edge) for this filing status, shared/irmaa.ts.
+  const irmaaFirstThreshold = IRMAA_2026[filingStatus === "married_filing_jointly" ? "married" : "single"][0]!.maxMagi;
   const effectiveDeduction = Math.max(stdDed, itemizedDeductions);
   const taxableIncome = Math.max(0, income - effectiveDeduction);
   
@@ -322,7 +304,7 @@ export default function TaxOpportunityDetector() {
       });
     }
 
-    if (income > 194000 && age >= 63) {
+    if (income > irmaaFirstThreshold && age >= 63) {
       opps.push({
         id: "irmaa", title: "Medicare IRMAA Bracket Management",
         description: "Income above IRMAA thresholds triggers higher Medicare Part B and D premiums. Managing AGI through Roth conversions, QCDs, and timing can avoid surcharges.",
@@ -504,10 +486,10 @@ export default function TaxOpportunityDetector() {
     return [
       { name: "Income Tax", standard: income * marginalRate * 0.8, optimized: income * marginalRate * 0.65 },
       { name: "Capital Gains", standard: gains * 0.15, optimized: Math.max(0, gains - 3000) * 0.15 },
-      { name: "Medicare IRMAA", standard: income > 194000 ? 5000 : 0, optimized: 0 },
+      { name: "Medicare IRMAA", standard: income > irmaaFirstThreshold ? 5000 : 0, optimized: 0 },
       { name: "RMD Tax Drag", standard: iraBalance * 0.04 * marginalRate, optimized: iraBalance * 0.02 * marginalRate }
     ];
-  }, [income, marginalRate, gains, iraBalance]);
+  }, [income, marginalRate, gains, iraBalance, irmaaFirstThreshold]);
 
   const radarChartData = useMemo(() => {
     const metrics = {
