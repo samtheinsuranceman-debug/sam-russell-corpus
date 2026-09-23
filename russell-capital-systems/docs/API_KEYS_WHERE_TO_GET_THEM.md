@@ -77,7 +77,10 @@ This one goes into GitHub, not Railway.
 | Cohere | https://dashboard.cohere.com/api-keys → **New Trial/Production key** | `COHERE_API_KEY` |
 | Together AI | https://api.together.xyz/settings/api-keys → **Create** | `TOGETHER_API_KEY` |
 
-DeepSeek is excluded by your rule.
+No China-linked AI, by your rule: DeepSeek, Qwen/Alibaba, Kimi/Moonshot, GLM/Zhipu, MiniMax, Baidu,
+Tencent, ByteDance, StepFun and every other Chinese lab or `.cn` host, with Taiwan-based labs treated as
+suspect. The code refuses them everywhere with "Blocked by firm policy: no China-linked AI models"
+(`BANNED_PROVIDER_PATTERN` in `shared/aiProviders.ts`, enforced by `server/chinaAiBan.test.ts`).
 
 ## Traffic and search (public ids, not secrets)
 

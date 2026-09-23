@@ -1,3 +1,4 @@
+import { HELOC_RATE_DEFAULT } from "@shared/marketRateDefaults";
 import { TRPCError } from "@trpc/server";
 import { createHash, randomBytes } from "crypto";
 import { z } from "zod";
@@ -130,6 +131,7 @@ import { ENV } from "./_core/env";
 import { sendInvitationEmail, sendStaleClientDigest, sendStrategyNotification, sendProjectionFollowUp, sendQuoteRequestNotification, sendDriftAlertEmail } from "./email";
 import { recommendCarriers, type CarrierRates, type RiskTolerance } from "@shared/carrierRecommendation";
 import { IUL_CARRIERS } from "@shared/iulCarriers";
+import { requiredMinimumDistribution, rmdStartAgeForAge } from "@shared/uniformLifetimeTable";
 import { dispatchWebhook, WEBHOOK_EVENTS } from "./webhookDispatch";
 import { generateBulkComparisonPdf, type BulkResult, type BulkSummary } from "./bulkComparisonPdf";
 import { getDb } from "./db";
@@ -138,6 +140,8 @@ import { eq, and, desc, lte, isNull, gte, inArray, sql, asc } from "drizzle-orm"
 import { getUserMembership } from "./db";
 import { runMortgageKillerAnalysis, buildStandardAmortization, calculateInterestSavings, type MortgageKillerInput } from "@shared/mortgageKiller";
 import { calculateEstateTax } from "@shared/advancedAnalytics";
+import { TAX_RULES_2026 } from "@shared/taxRules";
+import { irmaaAnnualSurchargePerPerson } from "@shared/irmaa";
 import { calculateComprehensiveEstateTax } from "@shared/estateTaxEngine";
 import { ALL_INDEX_OPTIONS, CARRIERS, AVAILABLE_YEARS, getCreditingHistory, runBacktest } from "@shared/indexCreditingData";
 import { MODEL_PORTFOLIOS, getPortfolioAllocations } from "@shared/modelPortfolios";
@@ -150,12 +154,13 @@ import { calculateLifetimeIncome, getDefaultLifetimeIncomeInput, INCOME_RATE_TAB
 import { FG_PRODUCT_DATA, INDEX_STRATEGIES, PRECIOUS_METALS_DATA, ETF_VS_TRADITIONAL, FIAT_CURRENCY_DATA, runGrowthAnnuityAnalysis } from "@shared/growthAnnuityEngine";
 
 // ─── Financial engine ─────────────────────────────────────────────────────────
+// 2026 married-filing-jointly brackets from the versioned rule set
+// (shared/taxRules.ts; IRS 2026 inflation adjustments, Rev. Proc. 2025-32 as
+// amended by OBBBA, https://www.irs.gov/newsroom/irs-releases-tax-inflation-adjustments-for-tax-year-2026-including-amendments-from-the-one-big-beautiful-bill,
+// read 2026-09-23). Replaces a hand-typed 2024 table (23,200 / 94,300 /
+// 201,050 / 383,900 / 487,450 / 731,200).
 function calcRothHeadroom(income: number, targetBracket: number): number {
-  const brackets = [
-    { top: 23200, rate: 0.10 }, { top: 94300, rate: 0.12 }, { top: 201050, rate: 0.22 },
-    { top: 383900, rate: 0.24 }, { top: 487450, rate: 0.32 }, { top: 731200, rate: 0.35 },
-    { top: Infinity, rate: 0.37 },
-  ];
+  const brackets = TAX_RULES_2026.brackets.joint.map((b) => ({ top: b.upTo ?? Infinity, rate: b.rate }));
   for (const b of brackets) {
     if (b.rate <= targetBracket && income < b.top) return Math.max(0, b.top - income);
   }
@@ -170,7 +175,9 @@ function buildRothLadder(input: { age: number; income: number; iraBalance: numbe
     const tax = Math.round(conversion * input.targetBracket);
     ira = Math.max((ira - conversion) * (1 + input.assumedReturn), 0);
     roth = (roth + conversion) * (1 + input.assumedReturn);
-    const irmaa = input.income + conversion > 206000 ? 3600 : 0;
+    // 2026 IRMAA (SSA POMS HI 01101.031, shared/irmaa.ts), joint table, two
+    // enrollees. Replaces a flat $3,600 above a stale $206,000 threshold.
+    const irmaa = Math.round(irmaaAnnualSurchargePerPerson(input.income + conversion, "married") * 2);
     rows.push({ year: y, age: input.age + y - 1, conversion: Math.round(conversion), taxEstimate: tax, endingIraBalance: Math.round(ira), endingRothBalance: Math.round(roth), estimatedIrmaa: irmaa });
   }
   return rows;
@@ -334,7 +341,7 @@ const mortgageKillerInputSchema = z.object({
   incomeAllocationPct: z.number().min(0.05).max(0.50).default(0.20),
   iulCreditRate: z.number().min(0.04).max(0.20).default(0.075),
   premiumYears: z.number().min(3).max(5).default(5),
-  helocRate: z.number().min(0.01).max(0.20).default(0.085),
+  helocRate: z.number().min(0.01).max(0.20).default(HELOC_RATE_DEFAULT), // Curinos national average, 2026-09-21; see HELOC_RATE_DEFAULT_SOURCE
   helocLtvPct: z.number().min(0.10).max(0.90).default(0.70),
   policyLoanPct: z.number().min(0.10).max(0.95).default(0.80),
   policyLoanDragRate: z.number().min(0.01).max(0.10).default(0.05),
@@ -2608,12 +2615,17 @@ Keep it personal, specific with dollar amounts, and actionable. Use their actual
       // Build income timeline
       const age = client.age ?? 45;
       const retirementAge = 65;
+      // IRA RMDs start at 73 (born 1951–1959) or 75 (born 1960+), SECURE 2.0 § 107, and are the
+      // balance ÷ the Uniform Lifetime Table divisor, Treas. Reg. § 1.401(a)(9)-9(c) — sources and read
+      // dates in shared/uniformLifetimeTable.ts. The balance is held at today's figure (no growth
+      // assumed). Was: from 72, balance ÷ (91 − age), which is not the IRS table.
+      const iraRmdStart = rmdStartAgeForAge(age);
       const incomeTimeline = Array.from({ length: 35 }, (_, i) => {
         const yr = age + i;
         const ssIncome = yr >= 67 ? 36000 : 0;
         const rothIncome = yr >= retirementAge ? Math.round(Number(client.rothBalance ?? 0) * 0.04) : 0;
         const iulIncome = yr >= retirementAge ? Math.round(Number(client.lifeInsuranceCv ?? 0) * 0.06) : 0;
-        const iraIncome = yr >= 72 ? Math.round(Number(client.iraBalance ?? 0) / (90 - yr + 1)) : 0;
+        const iraIncome = Math.round(requiredMinimumDistribution(yr, Number(client.iraBalance ?? 0), iraRmdStart));
         return { age: yr, socialSecurity: ssIncome, rothDistributions: rothIncome, iulLoans: iulIncome, iraRmd: iraIncome, total: ssIncome + rothIncome + iulIncome + iraIncome };
       });
 

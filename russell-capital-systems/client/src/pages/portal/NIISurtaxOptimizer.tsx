@@ -106,9 +106,10 @@ export default function NIISurtaxOptimizer() {
               <Shield className="mr-2" />
               Strategy 2: Maximize retirement contributions
             </h3>
-            <p className="text-[#94a3b8] mt-2">$23,500 401(k) + $7,500 catch-up = $31K.</p>
-            <p className="text-[#94a3b8] mt-2">Reduces MAGI by $31K.</p>
-            <p className="text-[#94a3b8] mt-2">Surtax saved: $1,178.</p>
+            {/* 2026 401(k) $24,500 + $8,000 catch-up (50+): IRS Notice 2025-67, https://www.irs.gov/pub/irs-drop/n-25-67.pdf, and https://www.irs.gov/newsroom/401k-limit-increases-to-24500-for-2026-ira-limit-increases-to-7500 (read 23 Sep 2026). Surtax 3.8% × $32,500 = $1,235 (IRC § 1411). Was $23,500 + $7,500 = $31K, $1,178. */}
+            <p className="text-[#94a3b8] mt-2">$24,500 401(k) + $8,000 catch-up = $32.5K (2026).</p>
+            <p className="text-[#94a3b8] mt-2">Reduces MAGI by $32.5K.</p>
+            <p className="text-[#94a3b8] mt-2">Surtax saved: $1,235.</p>
           </div>
 
           {/* Strategy 3 */}

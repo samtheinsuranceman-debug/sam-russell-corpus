@@ -3,16 +3,23 @@
  * source list, and the normaliser handles every shape the engines export.
  */
 import { describe, expect, it } from "vitest";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import {
   ENGINE_SOURCE_LOADERS,
   ENGINES_WITH_SOURCE_LOADERS,
+  ROUTES_WITH_SHELL_SOURCES,
   engineForPath,
   loadEngineSources,
   normalizeSources,
+  routeSourcesKeyForPath,
+  sourcePlanForPath,
   uniqueSources,
 } from "../shared/engineSources";
+import { ROUTE_SOURCES } from "../shared/pageSources";
 import { CALCULATORS } from "../shared/calculatorCatalog";
 import { placeholderCohortSize } from "../shared/retirementDNA";
+import { assumed, ruled, sourced } from "../shared/sourcing";
 
 describe("normalizeSources", () => {
   it("accepts a string, a label/url object, a name/entity object, arrays and records", () => {
@@ -37,6 +44,17 @@ describe("normalizeSources", () => {
     expect(normalizeSources({ label: "" })).toEqual([]);
   });
 
+  it("prints Sourced records (shared/sourcing.ts): sources as sources, assumptions as assumptions, defects out loud", () => {
+    expect(normalizeSources(sourced("S&P 500 price returns", "ChartRow, S&P 500 Returns by Year", "2026-09-14", { url: "https://chartrow.com/sp500/returns", n: 32 })))
+      .toEqual([{ label: "S&P 500 price returns: ChartRow, S&P 500 Returns by Year", asOf: "2026-09-14", kind: "sourced", url: "https://chartrow.com/sp500/returns", note: "n = 32" }]);
+    expect(normalizeSources(ruled(0.9, "26 U.S.C. § 7702", "2026-01-01"))).toEqual([{ label: "26 U.S.C. § 7702", asOf: "2026-01-01", kind: "rule" }]);
+    expect(normalizeSources([assumed(80, "An 80th-percentile flag is our convention.")]))
+      .toEqual([{ label: "We assumed: An 80th-percentile flag is our convention.", kind: "assumption" }]);
+    const [bad] = normalizeSources(sourced("A rate", "internal", "2026-01-01"));
+    expect(bad!.kind).toBe("sourced");
+    expect(bad!.defect).toMatch(/names no document/);
+  });
+
   it("de-duplicates by label", () => {
     expect(uniqueSources([{ label: "A", url: "https://a" }, { label: "A" }, { label: "B" }])).toHaveLength(2);
   });
@@ -52,12 +70,23 @@ describe("engine source loaders", () => {
     }
   });
 
+  it("prints the look-back integrity engine's assumptions apart from its sources", async () => {
+    const refs = (await loadEngineSources("shared/lookbackIntegrity.ts"))!;
+    expect(refs.some(r => r.kind === "sourced" && /FLM-1491AO\.10/.test(r.label))).toBe(true);
+    expect(refs.some(r => r.kind === "assumption" && r.label.startsWith("We assumed"))).toBe(true);
+    expect(refs.every(r => !r.defect)).toBe(true);
+    expect(engineForPath("/portal/lookback-integrity")).toBe("shared/lookbackIntegrity.ts");
+  });
+
   it("returns null for an engine with no loader, so the footer can say so honestly", async () => {
     expect(await loadEngineSources("shared/doesNotExist.ts")).toBeNull();
   });
 
   it("names only engines the catalogue or memory bank could reach", () => {
-    for (const engine of Object.keys(ENGINE_SOURCE_LOADERS)) expect(engine).toMatch(/^shared\/.+\.ts$/);
+    const catalogueEngines = new Set(CALCULATORS.map(c => c.engine).filter(Boolean));
+    for (const engine of Object.keys(ENGINE_SOURCE_LOADERS)) {
+      expect(/^shared\/.+\.ts$/.test(engine) || catalogueEngines.has(engine), engine).toBe(true);
+    }
   });
 });
 
@@ -67,6 +96,51 @@ describe("engineForPath", () => {
     expect(engineForPath(withEngine.path)).toBe(withEngine.engine);
     expect(engineForPath(`${withEngine.path}?tab=x`)).toBe(withEngine.engine);
     expect(engineForPath("/portal/not-a-real-page")).toBeNull();
+    expect(engineForPath("/portal/outside-forces")).toBe("server/outsideForces.ts");
+    expect(ENGINES_WITH_SOURCE_LOADERS).toContain(engineForPath("/portal/outside-forces"));
+  });
+});
+
+describe("routes mapped outside the catalogue", () => {
+  const app = readFileSync(join(__dirname, "..", "client/src/App.tsx"), "utf8");
+  const routerPaths = new Set(Array.from(app.matchAll(/<Route\s+path="([^"]+)"/g)).map(m => m[1]!));
+
+  it("every ROUTE_SOURCES key is a real route", () => {
+    for (const route of Object.keys(ROUTE_SOURCES)) expect(routerPaths.has(route), route).toBe(true);
+  });
+
+  it("every engine a route names has a loader, so the footer never names an unsourced engine", () => {
+    for (const [route, r] of Object.entries(ROUTE_SOURCES)) {
+      for (const e of r.engines ?? []) expect(ENGINE_SOURCE_LOADERS[e], `${route} → ${e}`).toBeDefined();
+      expect(ROUTES_WITH_SHELL_SOURCES, route).toContain(route);
+    }
+  });
+
+  it("every page source has a label, and a url or an explicit assumption", () => {
+    for (const [route, r] of Object.entries(ROUTE_SOURCES)) {
+      expect((r.engines?.length ?? 0) + (r.sources?.length ?? 0), route).toBeGreaterThan(0);
+      for (const s of r.sources ?? []) {
+        expect(s.label.length, route).toBeGreaterThan(10);
+        if (!s.url) expect(/^Assumption:|^Sample data:|^The |^Not sourced|^Not corrected yet:|^Computed by /.test(s.label), `${route}: ${s.label.slice(0, 60)}`).toBe(true);
+      }
+    }
+  });
+
+  it("matches router patterns and loads every engine's sources alongside the page's own", async () => {
+    expect(routeSourcesKeyForPath("/portal/mechanism/velocity")).toBe("/portal/mechanism/:slug");
+    expect(routeSourcesKeyForPath("/portal/mechanism")).toBeNull();
+    expect(sourcePlanForPath("/portal/mechanism/velocity?x=1")!.engines).toEqual(["shared/mechanismDossiers.ts", "shared/cycleEngine.ts"]);
+    expect(engineForPath("/portal/medicare-irmaa")).toBe("shared/taxBracketEngine.ts");
+    const plan = sourcePlanForPath("/portal/medicare-irmaa")!;
+    const loaded = await Promise.all(plan.engines.map(e => loadEngineSources(e)));
+    expect(loaded.every(s => s !== null)).toBe(true);
+    const sources = uniqueSources([...plan.pageSources, ...loaded.flatMap(s => s ?? [])]);
+    expect(sources.some(s => s.label.startsWith("IRS, Rev. Proc. 2025-32"))).toBe(true);
+    // The page now carries the 2026 tables: IRMAA tiers from shared/irmaa.ts (SSA POMS HI 01101.031) and the
+    // 2026 Part D base premium from CMS. It pinned the 2025 CMS Part B fact sheet, which the page no longer uses.
+    expect(sources.some(s => s.url === "https://www.cms.gov/newsroom/fact-sheets/2026-medicare-part-d-bid-information-and-part-d-premium-stabilization-demonstration-parameters")).toBe(true);
+    expect(sources.some(s => s.url === "https://secure.ssa.gov/poms.nsf/lnx/0601101031")).toBe(true);
+    expect(sourcePlanForPath("/portal/not-a-real-page")).toBeNull();
   });
 });
 

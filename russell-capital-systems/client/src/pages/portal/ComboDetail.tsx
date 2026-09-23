@@ -10,6 +10,9 @@ import {
   RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis
 } from "recharts";
 import combosData from "@/data/combos.json";
+import { federalBrackets, FEDERAL_RATES_SOURCE } from "@shared/taxBracketEngine";
+
+const BRACKET_COLORS = ["#22c55e", "#84cc16", "#f59e0b", "#f97316", "#ef4444", "#dc2626", "#991b1b"];
 import { PDFExportButton } from "@/components/PDFExport";
 
 const COLORS = ["#22c55e", "#3b82f6", "#a855f7", "#f59e0b", "#ef4444", "#06b6d4", "#ec4899", "#84cc16", "#f97316", "#6366f1"];
@@ -118,15 +121,8 @@ function TaxBracketCalculator({ combo }: { combo: any }) {
   const income = combo.clientProfile.annualIncome || 850000;
   const taxSaved = combo.totalTaxSaved || 0;
 
-  const brackets = [
-    { rate: 10, min: 0, max: 22000, color: "#22c55e" },
-    { rate: 12, min: 22001, max: 89450, color: "#84cc16" },
-    { rate: 22, min: 89451, max: 190750, color: "#f59e0b" },
-    { rate: 24, min: 190751, max: 364200, color: "#f97316" },
-    { rate: 32, min: 364201, max: 462500, color: "#ef4444" },
-    { rate: 35, min: 462501, max: 693750, color: "#dc2626" },
-    { rate: 37, min: 693751, max: Infinity, color: "#991b1b" },
-  ];
+  // Current-year married-filing-jointly brackets from shared/taxRules.ts; colors are this chart's.
+  const brackets = federalBrackets("joint").map((b, i) => ({ rate: Math.round(b.rate * 100), min: b.min, max: b.max, color: BRACKET_COLORS[i] ?? "#991b1b" }));
 
   const effectiveIncome = income;
   const reducedIncome = Math.max(0, income - taxSaved);
@@ -185,6 +181,7 @@ function TaxBracketCalculator({ combo }: { combo: any }) {
           <Bar dataKey="reduced" name="After Strategy" fill="#22c55e" fillOpacity={0.6} radius={[0, 4, 4, 0]} />
         </BarChart>
       </ResponsiveContainer>
+      <p className="text-[10px] text-gray-500 mt-2">Source: {FEDERAL_RATES_SOURCE.short}, married filing jointly.</p>
     </div>
   );
 }

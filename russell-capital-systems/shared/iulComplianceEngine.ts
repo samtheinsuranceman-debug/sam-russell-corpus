@@ -6,6 +6,8 @@
  * persuasive impact within regulatory bounds.
  */
 
+import { cashValueCorridorPct } from "./irc7702"; // 26 U.S.C. 7702(d)(2), https://www.law.cornell.edu/uscode/text/26/7702, read 2026-09-23
+
 export interface AG49Input {
   carrier: string;
   productName: string;
@@ -144,8 +146,9 @@ export function generateCompliantIllustration(input: AG49Input): AG49Result {
       const surrenderPct = y <= 10 ? Math.max(0, 1 - (10 - y) * 0.01) : 1;
       const surrenderValue = cashValue * surrenderPct;
 
-      // Death benefit (corridor test)
-      const corridorFactor = age < 40 ? 2.5 : age < 60 ? 1.5 : age < 75 ? 1.15 : 1.05;
+      // Death benefit (corridor test): IRC 7702(d)(2) applicable percentage at the
+      // attained age (250% to 40 ... 105% at 75-90, 100% at 95+), not a step table.
+      const corridorFactor = cashValueCorridorPct(age) / 100;
       const db = Math.max(input.deathBenefit, cashValue * corridorFactor);
 
       projections.push({

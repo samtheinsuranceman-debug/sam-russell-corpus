@@ -52,7 +52,8 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { ExecutiveSummary, GoalsAccelerator, RecommendationSummary, DoNothingBaseline, TaxBracketPanel } from "@/components/ConsumerOutcomeBlocks";
 import { useClientData } from "@/contexts/ClientDataContext";
-import { formatTaxCurrency } from "@shared/taxBracketEngine";
+import { formatTaxCurrency, federalBrackets } from "@shared/taxBracketEngine";
+import { TAX_RULES_2026, ROTH_IRA_PHASE_OUT_2026 } from "@shared/taxRules";
 import { RelatedCalculators } from "@/components/RelatedCalculators";
 import { ComplianceFooter } from "@/components/ComplianceFooter";
 
@@ -63,13 +64,16 @@ const fmtPct = (n: number) => `${(n * 100).toFixed(2)}%`;
 const TM_TOOLTIP = "Time Machine values represent a hypothetical pre-existing account large enough that, when credited at the assumed crediting rate you set, it produces the same dollar interest credit that actual 30-year historical index returns would have generated. This is a mechanic, not a carrier illustration.";
 
 const ROTH_LIMITS = {
-  contributionUnder50: 7000,
-  contributionOver50: 8000,
+  // IRA contribution limit and 50+ catch-up for the current year (shared/taxRules.ts).
+  contributionUnder50: TAX_RULES_2026.retirement.ira,
+  contributionOver50: TAX_RULES_2026.retirement.ira + TAX_RULES_2026.retirement.iraCatchUp,
   catchUpAge: 50,
-  incomePhaseOutSingleStart: 146000,
-  incomePhaseOutSingleEnd: 161000,
-  incomePhaseOutMarriedStart: 230000,
-  incomePhaseOutMarriedEnd: 240000,
+  // 2026 Roth IRA MAGI phase-outs (IRS Notice 2025-67), read from shared/taxRules.ts:
+  // $153,000–$168,000 single, $242,000–$252,000 joint. Replaces the 2024 ranges ($146K–$161K / $230K–$240K).
+  incomePhaseOutSingleStart: ROTH_IRA_PHASE_OUT_2026.single.start,
+  incomePhaseOutSingleEnd: ROTH_IRA_PHASE_OUT_2026.single.end,
+  incomePhaseOutMarriedStart: ROTH_IRA_PHASE_OUT_2026.joint.start,
+  incomePhaseOutMarriedEnd: ROTH_IRA_PHASE_OUT_2026.joint.end,
   earlyWithdrawalPenalty: 0.10,
   earlyWithdrawalAge: 59.5,
   fiveYearRule: 5,
@@ -114,25 +118,9 @@ const COMPARISON_FEATURES = [
   },
 ];
 
-const TAX_BRACKETS_SINGLE = [
-  { rate: 0.10, upTo: 11600 },
-  { rate: 0.12, upTo: 47150 },
-  { rate: 0.22, upTo: 100525 },
-  { rate: 0.24, upTo: 191950 },
-  { rate: 0.32, upTo: 243725 },
-  { rate: 0.35, upTo: 609350 },
-  { rate: 0.37, upTo: Infinity }
-];
-
-const TAX_BRACKETS_MARRIED = [
-  { rate: 0.10, upTo: 23200 },
-  { rate: 0.12, upTo: 94300 },
-  { rate: 0.22, upTo: 201050 },
-  { rate: 0.24, upTo: 383900 },
-  { rate: 0.32, upTo: 487450 },
-  { rate: 0.35, upTo: 731200 },
-  { rate: 0.37, upTo: Infinity }
-];
+// Current-year federal brackets, read from shared/taxRules.ts (one source of truth).
+const TAX_BRACKETS_SINGLE = federalBrackets("single").map((b) => ({ rate: b.rate, upTo: b.max }));
+const TAX_BRACKETS_MARRIED = federalBrackets("joint").map((b) => ({ rate: b.rate, upTo: b.max }));
 
 const COLORS = ["#22c55e", "#3b82f6", "#f59e0b", "#ef4444", "#a855f7", "#ec4899", "#06b6d4", "#f97316"];
 

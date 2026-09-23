@@ -41,8 +41,13 @@ import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { ExecutiveSummary, GoalsAccelerator, RecommendationSummary, DoNothingBaseline, TaxBracketPanel } from "@/components/ConsumerOutcomeBlocks";
 import { formatTaxCurrency } from "@shared/taxBracketEngine";
+import { FIRST_RMD_DIVISOR_AT_73 } from "@shared/uniformLifetimeTable";
 import { RelatedCalculators } from "@/components/RelatedCalculators";
 import { ComplianceFooter } from "@/components/ComplianceFooter";
+import { rulesForYear } from "@shared/taxRules";
+// Federal estate/GST exemption: $15,000,000 per person in 2026, indexed, no sunset — P.L. 119-21 § 70106 amending IRC § 2010(c)(3), https://www.congress.gov/119/plaws/publ21/PLAW-119publ21.pdf; Rev. Proc. 2025-32, https://www.irs.gov/pub/irs-drop/rp-25-32.pdf (read 23 Sep 2026).
+// Replaces the 2024 figure, $13,610,000.
+const ESTATE_EXCLUSION_2026 = rulesForYear(2026).estateBasicExclusion;
 
 const fmt = (n: number) => {
   if (n >= 1000000) return `$${(n / 1000000).toFixed(1)}M`;
@@ -144,7 +149,10 @@ export default function PredictiveAnalytics() {
     const readinessRatio = projectedAssets / retirementNeed;
 
     const currentTaxBurden = p.income * (p.taxRate / 100);
-    const rmdProjected = p.iraBalance * Math.pow(1 + marketReturn, p.yearsToRetirement) / 27.4;
+    // First-year RMD at 73: ÷ 26.5, Uniform Lifetime Table, Treas. Reg. § 1.401(a)(9)-9(c) (effective 2022;
+    // https://www.ecfr.gov/current/title-26/chapter-I/subchapter-A/part-1/subject-group-ECFR6f8c3724b50e44d/section-1.401(a)(9)-9,
+    // read 23 Sep 2026). Was ÷ 27.4, the age-72 divisor.
+    const rmdProjected = p.iraBalance * Math.pow(1 + marketReturn, p.yearsToRetirement) / FIRST_RMD_DIVISOR_AT_73;
     const projectedTaxBurden = rmdProjected * (p.taxRate / 100);
 
     const iulCashValue = includeIul ? p.iulPremium * p.yearsToRetirement * 1.55 : 0;
@@ -232,12 +240,12 @@ export default function PredictiveAnalytics() {
       },
       {
         metric: "Estate Tax Exposure",
-        current: Math.round(Math.max(0, p.netWorth - 13610000) * 0.40),
-        projected: Math.round(Math.max(0, netWorthProjected - 13610000) * 0.40),
+        current: Math.round(Math.max(0, p.netWorth - ESTATE_EXCLUSION_2026) * 0.40),
+        projected: Math.round(Math.max(0, netWorthProjected - ESTATE_EXCLUSION_2026) * 0.40),
         confidence: 75,
-        trend: netWorthProjected > 13610000 ? "down" : "stable",
-        insight: netWorthProjected > 13610000
-          ? `Projected estate of ${fmt(netWorthProjected)} exceeds exemption. Tax exposure: ${fmt(Math.max(0, netWorthProjected - 13610000) * 0.40)}`
+        trend: netWorthProjected > ESTATE_EXCLUSION_2026 ? "down" : "stable",
+        insight: netWorthProjected > ESTATE_EXCLUSION_2026
+          ? `Projected estate of ${fmt(netWorthProjected)} exceeds exemption. Tax exposure: ${fmt(Math.max(0, netWorthProjected - ESTATE_EXCLUSION_2026) * 0.40)}`
           : "Estate currently below federal exemption threshold",
         action: "Implement ILIT with IUL policy to provide tax-free estate liquidity",
         category: "Estate",
@@ -1069,9 +1077,9 @@ export default function PredictiveAnalytics() {
                       </TableRow>
                       <TableRow>
                         <TableCell className="font-medium">Estate Liquidity</TableCell>
-                        <TableCell className="text-right">{fmt(Math.max(0, profile.netWorth - 13610000) * 0.4)}</TableCell>
+                        <TableCell className="text-right">{fmt(Math.max(0, profile.netWorth - ESTATE_EXCLUSION_2026) * 0.4)}</TableCell>
                         <TableCell className="text-right">{fmt(0)}</TableCell>
-                        <TableCell className="text-right text-red-400">{fmt(Math.max(0, profile.netWorth - 13610000) * 0.4)}</TableCell>
+                        <TableCell className="text-right text-red-400">{fmt(Math.max(0, profile.netWorth - ESTATE_EXCLUSION_2026) * 0.4)}</TableCell>
                       </TableRow>
                     </TableBody>
                   </Table>

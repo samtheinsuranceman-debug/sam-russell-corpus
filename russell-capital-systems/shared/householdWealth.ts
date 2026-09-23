@@ -30,6 +30,9 @@
  * - IUL payment schedule NEVER exceeds 5 years
  */
 
+import { cashValueCorridorPct, IRC_7702_CORRIDOR_SOURCE } from "./irc7702";
+import { HELOC_RATE_DEFAULT, HELOC_RATE_DEFAULT_SOURCE } from "./marketRateDefaults";
+
 // ─── Constants ───────────────────────────────────────────────────────────────
 const GROWTH_RATE = 0.075;
 const LOAN_DRAG = 0.05;
@@ -68,18 +71,19 @@ const INTEREST_COMPOUND_SOURCE = {
   note: "6.25% is a real declared 5-year rate near the top of the market, about 1.1 points above the market average; compounding it for 40 to 50 years assumes it can be renewed at that level.",
 };
 
-/** helocRate default 0.085 in runMortgageKiller and runHouseholdSimulation; 0.06 fallback in the grandchild HELOC tracker. */
-const HELOC_RATE_SOURCE = {
+/** helocRate default HELOC_RATE_DEFAULT (0.0709) in runMortgageKiller, runHouseholdSimulation and the grandchild HELOC tracker. Was 0.085, with a 0.06 fallback. */
+const HELOC_RATE_SOURCE = HELOC_RATE_DEFAULT_SOURCE;
+const HELOC_BANKRATE_REFERENCE_SOURCE = {
   label: "Bankrate Monitor National Index, Home Equity Line of Credit rate (BRMHELOC01, via FRED): 7.29% for the week of 2026-09-02",
   url: "https://fred.stlouisfed.org/series/BRMHELOC01",
   asOf: "2026-09-02 observation, read 2026-09-23",
-  note: "The 8.5% default is 1.21 points above this national average, and the 6% fallback used for the grandchildren's HELOC tracker is 1.29 points below it. Not changed; flagged for review.",
+  note: "Reference only: a second national HELOC average, 0.2 points above the Curinos figure the default uses.",
 };
 const PRIME_RATE_SOURCE = {
   label: "Board of Governors of the Federal Reserve System, H.15 Selected Interest Rates, Bank Prime Loan Rate (DPRIME, via FRED): 6.75% on 2026-09-02",
   url: "https://fred.stlouisfed.org/series/DPRIME",
   asOf: "2026-09-02 observation, read 2026-09-23",
-  note: "The 8.5% HELOC default equals prime plus 1.75 points; that margin is the firm's assumption.",
+  note: "Reference only: the 7.09% HELOC default is prime plus 0.34 points at this reading.",
 };
 
 /** GROWTH_RATE = 0.075: an assumed crediting rate. AG 49-A governs carrier illustrations and states a formula, not a number. */
@@ -90,13 +94,8 @@ const AG49_SOURCE = {
   note: "AG 49-A caps the illustrated rate at the lesser of the benchmark index account lookback average and 145% of the insurer's net investment earnings rate, per carrier and per year; it names no 7.5% figure. Section 6 limits the illustrated loan arbitrage to 50 basis points, which matches the header's +0.5% note.",
 };
 
-/** The 1.05 death benefit floor in simulatePolicy (accountValue * 1.05). */
-const CORRIDOR_SOURCE = {
-  label: "26 U.S. Code Section 7702(d)(2), cash value corridor applicable percentages: 250% to age 40, falling to 105% for ages 75 to 90 and 100% at 95 (Cornell Legal Information Institute)",
-  url: "https://www.law.cornell.edu/uscode/text/26/7702",
-  asOf: "read 2026-09-23",
-  note: "The code floors the death benefit at 105% of account value at every age; the statute requires 105% only at attained ages 75 to 90 and more at younger ages (for example 250% to age 40). Not changed; flagged for review.",
-};
+/** The death benefit floor in simulatePolicy: accountValue × cashValueCorridorPct(attained age) / 100. Was a flat 105% at every age. */
+const CORRIDOR_SOURCE = IRC_7702_CORRIDOR_SOURCE;
 
 const HOUSEHOLD_WEALTH_ASSUMPTIONS = [
   { label: "Assumption: IUL growth = 7.5% a year (GROWTH_RATE), an assumed crediting rate for the mechanics, not an illustration; the carrier's own illustration governs any policy; no external source for the figure itself" },
@@ -403,7 +402,9 @@ export function simulatePolicy(
 
     loansOutstanding += lifeLoanThisYear;
 
-    const currentDB = Math.max(deathBenefit, accountValue * 1.05);
+    // IRC 7702(d)(2) cash value corridor at the insured's attained age (250% to
+    // 40 down to 105% at 75-90 and 100% at 95+), not a flat 105%.
+    const currentDB = Math.max(deathBenefit, accountValue * cashValueCorridorPct(currentAge) / 100);
     const netCashValue = surrenderValue - loansOutstanding;
 
     policyYears.push({
@@ -451,7 +452,7 @@ export function runMortgageKiller(
   homeValue: number,
   annualPremium: number,
   policyYears: PolicyYearData[],
-  helocRate: number = 0.085
+  helocRate: number = HELOC_RATE_DEFAULT
 ): MortgageKillerResult {
   const monthlyRate = mortgageRate / 12;
   const totalMonths = yearsLeft * 12;
@@ -697,7 +698,7 @@ export function runHouseholdSimulation(input: HouseholdSimulationInput): Househo
       input.primaryHomeValue,
       input.primaryAnnualPremium,
       primaryPolicy.years,
-      input.helocRate || 0.085
+      input.helocRate || HELOC_RATE_DEFAULT
     );
     mortgageResults.push({ name: "Primary Owner", relationship: "primary", result });
   }
@@ -731,7 +732,7 @@ export function runHouseholdSimulation(input: HouseholdSimulationInput): Househo
       const result = runMortgageKiller(
         child.mortgageBalance, child.mortgageRate, child.mortgageYearsLeft,
         child.homeValue, input.primaryAnnualPremium * CHILD_DB_RATIO,
-        augmentedYears, input.helocRate || 0.085
+        augmentedYears, input.helocRate || HELOC_RATE_DEFAULT
       );
       mortgageResults.push({ name: child.name, relationship: "child", result });
     });
@@ -755,7 +756,7 @@ export function runHouseholdSimulation(input: HouseholdSimulationInput): Househo
       const result = runMortgageKiller(
         child.mortgageBalance, child.mortgageRate, child.mortgageYearsLeft,
         child.homeValue, input.primaryAnnualPremium * CHILD_DB_RATIO,
-        augmentedYears, input.helocRate || 0.085
+        augmentedYears, input.helocRate || HELOC_RATE_DEFAULT
       );
       mortgageResults.push({ name: child.name, relationship: "child", result });
 
@@ -797,7 +798,7 @@ export function runHouseholdSimulation(input: HouseholdSimulationInput): Househo
     const result = runMortgageKiller(
       gc.mortgageBalance, gc.mortgageRate, gc.mortgageYearsLeft,
       gc.homeValue, input.primaryAnnualPremium * CHILD_DB_RATIO * GRANDCHILD_DB_RATIO,
-      augmentedYears, input.helocRate || 0.085
+      augmentedYears, input.helocRate || HELOC_RATE_DEFAULT
     );
     mortgageResults.push({ name: gc.name, relationship: "grandchild", result });
   });
@@ -816,7 +817,7 @@ export function runHouseholdSimulation(input: HouseholdSimulationInput): Househo
   }, 0);
 
   const helocTracking = totalGcHeloc > 0
-    ? simulateHeloc(totalGcHeloc, input.helocRate || 0.06, avgAnnualExcess, years)
+    ? simulateHeloc(totalGcHeloc, input.helocRate || HELOC_RATE_DEFAULT, avgAnnualExcess, years)
     : [];
 
   // ── 4. Real estate appreciation ───────────────────────────────────────────
@@ -1021,6 +1022,7 @@ export const HOUSEHOLD_WEALTH_SOURCES: readonly { label: string; url?: string; a
   HOME_APPRECIATION_SOURCE,
   INTEREST_COMPOUND_SOURCE,
   HELOC_RATE_SOURCE,
+  HELOC_BANKRATE_REFERENCE_SOURCE,
   PRIME_RATE_SOURCE,
   AG49_SOURCE,
   CORRIDOR_SOURCE,

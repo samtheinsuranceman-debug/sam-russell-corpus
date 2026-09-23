@@ -1,4 +1,5 @@
 // @ts-nocheck
+import { HELOC_RATE_DEFAULT } from "@shared/marketRateDefaults";
 import { AltCreditLink } from "@/components/AltCreditLink";
 import { AppShell } from "@/components/AppShell";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -124,7 +125,7 @@ export default function MortgageKiller() {
     incomeAllocationPct: 0.20,
     iulCreditRate: 0.075, // assumed crediting rate (the visitor sets it)
     premiumYears: 5,
-    helocRate: 0.085,
+    helocRate: HELOC_RATE_DEFAULT, // Curinos national average, 2026-09-21; see HELOC_RATE_DEFAULT_SOURCE
     helocLtvPct: 0.70,
     helocDrawPct: 0.70, // v4: 70% LTV HELOC draw
     policyLoanPct: 0.80, // v4: 80% life loan

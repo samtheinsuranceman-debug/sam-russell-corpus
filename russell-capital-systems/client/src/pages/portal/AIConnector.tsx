@@ -19,7 +19,7 @@ import { trpc } from "@/lib/trpc";
 import type { inferRouterOutputs } from "@trpc/server";
 import type { AppRouter } from "../../../../server/routers";
 import { cn } from "@/lib/utils";
-import { looksLikeValidKey } from "@shared/aiProviders";
+import { CHINA_POLICY_MESSAGE, isBannedModel, isBannedProvider, looksLikeValidKey } from "@shared/aiProviders";
 import { ADVISOR_NAME as ADVISOR_NAME_LABEL } from "@shared/aiAdvisor";
 import {
   AlertTriangle,
@@ -541,6 +541,9 @@ function CustomSection({ custom, onChanged }: { custom: Overview["custom"]; onCh
 
   const hasApi = Boolean(baseUrl.trim() && model.trim() && apiKey.trim());
   const hasMcp = Boolean(mcpUrl.trim());
+  // Owner's rule, checked as it is typed; the server refuses the same values.
+  const blocked =
+    isBannedProvider(name) || isBannedProvider(baseUrl) || isBannedProvider(chatPath) || isBannedModel(model) || isBannedProvider(mcpUrl);
 
   const addMcp = trpc.vault.setMcpServer.useMutation();
 
@@ -649,6 +652,7 @@ function CustomSection({ custom, onChanged }: { custom: Overview["custom"]; onCh
             <Field label="Model" hint="Exact id this service expects">
               <Input value={model} onChange={e => setModel(e.target.value)} placeholder="e.g. reka-core" spellCheck={false}
                 className="bg-[#111827]/70 border-[#1e3a5f] text-white font-mono text-[13px] focus-visible:border-amber-500 focus-visible:ring-amber-500/20" />
+              {isBannedModel(model) && <p className="text-[11.5px] text-red-400 mt-1">{CHINA_POLICY_MESSAGE}.</p>}
             </Field>
             <Field label="API style" hint="Almost always the first one">
               <select value={wireFormat} onChange={e => setWireFormat(e.target.value as any)}
@@ -700,13 +704,17 @@ function CustomSection({ custom, onChanged }: { custom: Overview["custom"]; onCh
             )}
           </div>
 
+          {blocked && (
+            <p className="text-[12px] text-red-400 leading-relaxed">{CHINA_POLICY_MESSAGE}. This endpoint cannot be connected.</p>
+          )}
           <Button
             size="sm"
             onClick={() => {
+              if (blocked) return;
               if (hasApi) add.mutate({ name, baseUrl, chatPath, wireFormat, model, apiKey, note: note || undefined });
               else void submitMcpOnly();
             }}
-            disabled={!name || (!hasApi && !hasMcp) || add.isPending || addMcp.isPending}
+            disabled={blocked || !name || (!hasApi && !hasMcp) || add.isPending || addMcp.isPending}
             className="bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-[#0a0f1a] font-semibold disabled:opacity-40"
           >
             {add.isPending || addMcp.isPending ? <Loader2 className="w-3.5 h-3.5 animate-spin mr-1.5" /> : <Globe className="w-3.5 h-3.5 mr-1.5" />}
@@ -1017,6 +1025,7 @@ function ProviderRow({
   const [open, setOpen] = useState(false);
   const [apiKey, setApiKey] = useState("");
   const [model, setModel] = useState(status?.model || provider.defaultModel);
+  const modelBlocked = isBannedModel(model);
   const [priority, setPriority] = useState(status?.priority ?? 100);
   const [testFirst, setTestFirst] = useState(true);
 
@@ -1175,8 +1184,9 @@ function ProviderRow({
                 list={`models-${provider.id}`}
                 className="bg-[#111827]/70 border-[#1e3a5f] text-white font-mono text-[13px] focus-visible:border-amber-500 focus-visible:ring-amber-500/20"
               />
+              {modelBlocked && <p className="text-[11.5px] text-red-400 leading-relaxed">{CHINA_POLICY_MESSAGE}.</p>}
               <datalist id={`models-${provider.id}`}>
-                {provider.suggestedModels.map(m => (
+                {provider.suggestedModels.filter(m => !isBannedModel(m)).map(m => (
                   <option key={m} value={m} />
                 ))}
               </datalist>
@@ -1209,7 +1219,7 @@ function ProviderRow({
             <Button
               size="sm"
               onClick={() => setKey.mutate({ providerId: provider.id, apiKey, model, priority, testFirst })}
-              disabled={!apiKey || setKey.isPending}
+              disabled={!apiKey || modelBlocked || setKey.isPending}
               className="bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-[#0a0f1a] font-semibold disabled:opacity-40"
             >
               {setKey.isPending ? <Loader2 className="w-3.5 h-3.5 animate-spin mr-1.5" /> : <KeyRound className="w-3.5 h-3.5 mr-1.5" />}
@@ -1244,6 +1254,7 @@ function ProviderRow({
                     size="sm"
                     variant="outline"
                     onClick={() => updateProvider.mutate({ providerId: provider.id, model, priority })}
+                    disabled={modelBlocked}
                     className="border-amber-500/40 bg-transparent text-amber-400"
                   >
                     Save settings

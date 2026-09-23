@@ -23,14 +23,14 @@ export const ZERO_SOURCE_ENGINES: readonly string[] = [
 
 ];
 
-/** Engines with Math.random() in a value path. chainEngine uses it for step ids only (cosmetic, D47). */
+/** Engines with Math.random() in a value path. Empty: chainEngine's step ids now come from the seeded mulberry32 stream. */
 export const UNSEEDED_RANDOM_ENGINES: readonly string[] = [
-  "shared/chainEngine.ts",
+
 ];
 
-/** Catalogue engines with no loader in shared/engineSources.ts, so the shell cannot print their sources yet. outsideForces is server code the shell cannot import. */
+/** Catalogue engines with no loader in shared/engineSources.ts, so the shell cannot print their sources yet. Empty: outsideForces loads its list from shared/outsideForcesSources.ts. */
 export const CATALOGUE_ENGINES_WITHOUT_SHELL_SOURCES: readonly string[] = [
-  "server/outsideForces.ts",
+
 ];
 
 /** Pages and components that import an engine and print no source, and whose route the shell does not cover. */
@@ -50,9 +50,7 @@ export const PAGES_PRINTING_NO_SOURCE: readonly string[] = [
   "client/src/components/rooms/RoomTheme.tsx",
   "client/src/pages/Login.tsx",
   "client/src/pages/MassiveCalculatorsPage.tsx",
-  "client/src/pages/SpecialtyIndexPage.tsx",
   "client/src/pages/TrialLogin.tsx",
-  "client/src/pages/portal/AIFinancialAdvisor.tsx",
   "client/src/pages/portal/AIPolicyReviewGap.tsx",
   "client/src/pages/portal/AdvisorIncomeCalculator.tsx",
   "client/src/pages/portal/AiStrategyRecommender.tsx",
@@ -60,61 +58,16 @@ export const PAGES_PRINTING_NO_SOURCE: readonly string[] = [
   "client/src/pages/portal/AnnuityMemory.tsx",
   "client/src/pages/portal/AtheneGuaranteedIncome.tsx",
   "client/src/pages/portal/AxonicSP500.tsx",
-  "client/src/pages/portal/BeneficiaryOptimization.tsx",
   "client/src/pages/portal/BulkGeneration.tsx",
-  "client/src/pages/portal/BusinessOwnerPlanning.tsx",
   "client/src/pages/portal/CarrierComparison.tsx",
-  "client/src/pages/portal/ChainBuilder.tsx",
-  "client/src/pages/portal/CharitableGivingOptimizer.tsx",
-  "client/src/pages/portal/ClientPortfolioDashboard.tsx",
-  "client/src/pages/portal/ClientSnapshotMap.tsx",
   "client/src/pages/portal/CompetitiveAnalysis.tsx",
   "client/src/pages/portal/Controls.tsx",
-  "client/src/pages/portal/CryptoCurrencyCorner.tsx",
-  "client/src/pages/portal/EstateFlowChart.tsx",
-  "client/src/pages/portal/EstateTax.tsx",
   "client/src/pages/portal/FIACollateralStrategy.tsx",
   "client/src/pages/portal/FIATop10.tsx",
   "client/src/pages/portal/GrowthAnnuities.tsx",
-  "client/src/pages/portal/HotIncome.tsx",
-  "client/src/pages/portal/HouseRecyclingStrategy.tsx",
-  "client/src/pages/portal/HouseholdWealth.tsx",
-  "client/src/pages/portal/IULvsRoth.tsx",
-  "client/src/pages/portal/IbbotsonCharts.tsx",
-  "client/src/pages/portal/IllustrationCompare.tsx",
   "client/src/pages/portal/IncomeAnnuityTop10.tsx",
-  "client/src/pages/portal/IncomeGapAnalyzer.tsx",
-  "client/src/pages/portal/IncomeTimeline.tsx",
-  "client/src/pages/portal/InflationAnalysis.tsx",
-  "client/src/pages/portal/MarketScenarioStressTest.tsx",
-  "client/src/pages/portal/MechanismDetail.tsx",
-  "client/src/pages/portal/MedicareIRMAA.tsx",
-  "client/src/pages/portal/MultiGenWealthTransfer.tsx",
-  "client/src/pages/portal/MultiScenarioPlayZone.tsx",
   "client/src/pages/portal/PatentShowcase.tsx",
-  "client/src/pages/portal/PolicyReview.tsx",
-  "client/src/pages/portal/PortfolioDriftMonitor.tsx",
-  "client/src/pages/portal/PredictiveAnalytics.tsx",
-  "client/src/pages/portal/QuickQuote.tsx",
-  "client/src/pages/portal/RealEstateMogul.tsx",
-  "client/src/pages/portal/Recommendations.tsx",
-  "client/src/pages/portal/RetirementGuardrails.tsx",
-  "client/src/pages/portal/ReverseHeloc.tsx",
-  "client/src/pages/portal/SavedScenariosHub.tsx",
-  "client/src/pages/portal/ScenarioAdjustments.tsx",
-  "client/src/pages/portal/ScenarioSideBySide.tsx",
-  "client/src/pages/portal/SocialSecurityOptimizer.tsx",
   "client/src/pages/portal/Sphere.tsx",
   "client/src/pages/portal/StrategyCompare.tsx",
-  "client/src/pages/portal/StrategyLab.tsx",
-  "client/src/pages/portal/SuccessionPlanningWizard.tsx",
-  "client/src/pages/portal/TaxAdvantagedGrowth.tsx",
-  "client/src/pages/portal/TaxLossHarvestingScanner.tsx",
-  "client/src/pages/portal/TaxOpportunityDetector.tsx",
-  "client/src/pages/portal/TaxReturnUpload.tsx",
   "client/src/pages/portal/ThomasGoldman.tsx",
-  "client/src/pages/portal/TimeMachineAG49.tsx",
-  "client/src/pages/portal/TimeMachineCalculator.tsx",
-  "client/src/pages/portal/TimeMachineMethod.tsx",
-  "client/src/pages/portal/WithdrawalSequencing.tsx",
 ];

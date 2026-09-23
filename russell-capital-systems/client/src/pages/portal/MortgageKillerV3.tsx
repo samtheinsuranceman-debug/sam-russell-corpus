@@ -1,3 +1,4 @@
+import { HELOC_RATE_DEFAULT } from "@shared/marketRateDefaults";
 import { useState, useMemo, useCallback } from "react";
 import { useLocation } from "wouter";
 import {
@@ -14,6 +15,9 @@ import {
   XAxis, YAxis, CartesianGrid, Tooltip, Legend,
   ResponsiveContainer, ComposedChart, Cell, PieChart, Pie,
 } from "recharts";
+// Federal estate/GST exemption: $15,000,000 per person in 2026, indexed, no sunset — P.L. 119-21 § 70106 amending IRC § 2010(c)(3), https://www.congress.gov/119/plaws/publ21/PLAW-119publ21.pdf; Rev. Proc. 2025-32, https://www.irs.gov/pub/irs-drop/rp-25-32.pdf (read 23 Sep 2026).
+// Replaces the 2024 figure, $13,610,000.
+const ESTATE_EXCLUSION_2026 = 15_000_000;
 
 // ─── CONSTANTS ─────────────────────────────────────────────────────
 const fmt = (n: number) => {
@@ -175,7 +179,7 @@ export default function MortgageKillerV3() {
     mortgageTermYears: 30,
     propertyAppreciation: 0.05,
     helocLtvPct: 0.70,
-    helocRate: 0.085,
+    helocRate: HELOC_RATE_DEFAULT, // Curinos national average, 2026-09-21
     maxHelocDrawPct: 0.40,
     acquisitionInterval: 24,
     maxProperties: 10,
@@ -193,7 +197,7 @@ export default function MortgageKillerV3() {
     managementFeePct: 0.10,
     strPremium: 1.5,
     projectionYears: 50,
-    estateExemption: 13610000,
+    estateExemption: ESTATE_EXCLUSION_2026,
     estateTaxRate: 0.40,
     capitalGainsRate: 0.20,
     stateCapGainsRate: 0.05,

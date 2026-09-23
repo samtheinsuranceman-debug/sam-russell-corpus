@@ -41,36 +41,38 @@ export default function SLATPlanner() {
         </div>
       </header>
 
-      {/* EXEMPTION SUNSET WARNING Section */}
-      <div className="bg-yellow-600 p-6 rounded-lg shadow-lg mb-12 flex items-start">
-        <AlertTriangle className="mr-4 text-yellow-200" size={32} />
+      {/* Exemption under current law: $15M per person in 2026, indexed, no sunset — P.L. 119-21 § 70106 amending IRC § 2010(c)(3), https://www.congress.gov/119/plaws/publ21/PLAW-119publ21.pdf; Rev. Proc. 2025-32, https://www.irs.gov/pub/irs-drop/rp-25-32.pdf (read 23 Sep 2026).
+          Was an "Exemption Sunset Warning" ($13.61M → ~$7M in 2026, "use it or lose it"). */}
+      <div className="bg-[#0d1526] p-6 rounded-lg shadow-lg mb-12 flex items-start border-l-4 border-emerald-500">
+        <Shield className="mr-4 text-emerald-300" size={32} />
         <div>
-          <h2 className="text-2xl font-semibold text-rose-400 mb-2">Exemption Sunset Warning</h2>
-          <p className="text-lg">Current exemption: $13.61M per person ($27.22M for a couple)</p>
-          <p className="text-lg">2026 sunset: Drops to approximately $7M per person ($14M for a couple)</p>
-          <p className="text-lg font-bold text-yellow-300">ACT NOW: Use it or lose it — Fund SLATs before the sunset to maximize exemptions!</p>
+          <h2 className="text-2xl font-semibold text-emerald-300 mb-2">Exemption Under Current Law</h2>
+          <p className="text-lg">2026 exemption: $15M per person ($30M for a couple), indexed for inflation</p>
+          <p className="text-lg">Scheduled sunset: none — P.L. 119-21 (July 2025) made it permanent</p>
+          <p className="text-lg text-slate-300">What if Congress lowers it later? Gifts already made under a higher exemption are not clawed back (Treas. Reg. § 20.2010-1(c)).</p>
         </div>
       </div>
 
-      {/* DUAL SLAT STRUCTURE Section */}
+      {/* DUAL SLAT STRUCTURE Section — funding at the 2026 exemption ($15M; source above); $15M × 1.08^30 = $150.9M.
+          Was $13.61M → $136M. */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
         <div className="bg-[#0d1526] p-6 rounded-lg shadow-md border-l-4 border-rose-400">
           <h2 className="text-3xl font-bold text-yellow-500 mb-4 flex items-center">
             <Heart className="mr-2" size={24} /> Spouse A's SLAT (for Spouse B)
           </h2>
-          <p className="flex items-center mb-2"><DollarSign className="mr-2 text-rose-400" size={20} /> Funding: $13.61M (full exemption)</p>
+          <p className="flex items-center mb-2"><DollarSign className="mr-2 text-rose-400" size={20} /> Funding: $15M (full 2026 exemption)</p>
           <p className="flex items-center mb-2"><Users className="mr-2 text-yellow-500" size={20} /> Beneficiary: Spouse B + children</p>
           <p className="flex items-center mb-2"><Shield className="mr-2 text-rose-400" size={20} /> Trustee: Independent trustee</p>
-          <p className="flex items-center"><TrendingUp className="mr-2 text-yellow-500" size={20} /> Growth at 8%: $136M in 30 years</p>
+          <p className="flex items-center"><TrendingUp className="mr-2 text-yellow-500" size={20} /> Growth at 8%: $151M in 30 years</p>
         </div>
         <div className="bg-[#0d1526] p-6 rounded-lg shadow-md border-l-4 border-yellow-500">
           <h2 className="text-3xl font-bold text-rose-400 mb-4 flex items-center">
             <Heart className="mr-2" size={24} /> Spouse B's SLAT (for Spouse A)
           </h2>
-          <p className="flex items-center mb-2"><DollarSign className="mr-2 text-yellow-500" size={20} /> Funding: $13.61M (full exemption)</p>
+          <p className="flex items-center mb-2"><DollarSign className="mr-2 text-yellow-500" size={20} /> Funding: $15M (full 2026 exemption)</p>
           <p className="flex items-center mb-2"><Users className="mr-2 text-rose-400" size={20} /> Beneficiary: Spouse A + children</p>
           <p className="flex items-center mb-2"><Shield className="mr-2 text-yellow-500" size={20} /> Trustee: Independent trustee</p>
-          <p className="flex items-center"><TrendingUp className="mr-2 text-rose-400" size={20} /> Growth at 8%: $136M in 30 years</p>
+          <p className="flex items-center"><TrendingUp className="mr-2 text-rose-400" size={20} /> Growth at 8%: $151M in 30 years</p>
         </div>
       </div>
 

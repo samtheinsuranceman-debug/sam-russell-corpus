@@ -4,6 +4,7 @@ import React, { useState, useMemo } from 'react';
 import { Heart, DollarSign, TrendingUp, Shield, CheckCircle2, AlertTriangle, Calendar, Target, Percent, ArrowRight, Gift, Scale } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend, ComposedChart, Line, PieChart, Pie, Cell, AreaChart, Area } from 'recharts';
 import { PageInsights } from "@/components/PageInsights";
+import { federalStandardDeduction, FEDERAL_RATES_SOURCE } from "@shared/taxBracketEngine";
 
 export default function CharitableGivingDashboard() {
   const [adjustedGrossIncome, setAdjustedGrossIncome] = useState(100000);
@@ -36,7 +37,7 @@ export default function CharitableGivingDashboard() {
   }, [adjustedGrossIncome, charitableDeduction]);
 
   const bunchingStrategy = useMemo(() => {
-    const standardDeduction = 12950; 
+    const standardDeduction = federalStandardDeduction("single"); // current-year single-filer figure, shared/taxRules.ts
     const itemizedDeduction = bunchingAmount + charitableDeduction;
     return itemizedDeduction > standardDeduction ? 'Itemized is better' : 'Standard is better';
   }, [bunchingAmount, charitableDeduction]);
@@ -153,6 +154,7 @@ export default function CharitableGivingDashboard() {
             />
           </div>
           <p className="text-gold-400">Strategy: {bunchingStrategy}</p>
+          <p className="text-xs text-gray-500">Standard deduction source: {FEDERAL_RATES_SOURCE.short}, single filer.</p>
           <p className="text-sm mt-2">Compares standard deduction vs. itemized for bunching donations.</p>
         </section>
 
@@ -232,7 +234,8 @@ export default function CharitableGivingDashboard() {
               <h3 className="text-xl font-medium flex items-center text-emerald-400">
                 <Calendar className="mr-2" /> Section 408(d)(8) (QCD)
               </h3>
-              <p>Qualified distributions from IRAs for those 70.5+, up to $100,000/year.</p>
+              {/* 2026 QCD limit $111,000 per IRA owner, indexed (IRC § 408(d)(8)); IRS Notice 2025-67, https://www.irs.gov/pub/irs-drop/n-25-67.pdf (read 23 Sep 2026). Was $100,000, the pre-2024 unindexed figure. */}
+              <p>Qualified distributions from IRAs for those 70½+, up to $111,000/year per IRA owner (2026, indexed).</p>
             </div>
             <div className="md:col-span-2">
               <h3 className="text-xl font-medium flex items-center text-gold-400">

@@ -92,7 +92,7 @@ describe('legislative scenarios', () => {
   });
 
   it('applies a scenario only from its effective year', () => {
-    const sunset = LEGISLATIVE_SCENARIOS.find((s) => s.id === 'scheduled-sunset')!;
+    const sunset = LEGISLATIVE_SCENARIOS.find((s) => s.id === 'what-if-pre-tcja-rates')!;
     const short = projectUnderScenario({ ...base, years: 20 }, sunset);
     expect(short.find((r) => r.year === 2027)).toBeTruthy();
     expect(short).toHaveLength(20);

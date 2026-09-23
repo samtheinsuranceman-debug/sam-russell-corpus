@@ -7,6 +7,7 @@ import {
   compareIULvsRoth,
 } from "../shared/advancedAnalytics";
 import { IUL_CARRIERS } from "../shared/iulCarriers";
+import { TAX_RULES_2026 } from "../shared/taxRules";
 
 /* ══════════════════════════════════════════════════════════════════════════════
    Round 44 — Model Portfolio Presets for Index Backtester
@@ -223,9 +224,13 @@ describe("Round 50 — Tax Bracket Waterfall", () => {
    Round 51 — Estate Tax Impact Analyzer
    ══════════════════════════════════════════════════════════════════════════════ */
 describe("Round 51 — Estate Tax Impact", () => {
+  // 2026 basic exclusion, $15,000,000 (Rev. Proc. 2025-32; P.L. 119-21 §70106), from shared/taxRules.ts.
+  // These cases pinned the 2024 figure, $13,610,000; the gross estate moves to $16.39M so the taxable
+  // excess ($1,390,000) and the tax ($556,000) are unchanged.
   it("should calculate estate tax with exemption", () => {
-    const grossEstate = 15000000;
-    const exemption = 13610000;
+    const grossEstate = 16390000;
+    const exemption = TAX_RULES_2026.estateBasicExclusion;
+    expect(exemption).toBe(15_000_000);
     const taxableEstate = Math.max(0, grossEstate - exemption);
     const estateTax = taxableEstate * 0.40;
     expect(taxableEstate).toBe(1390000);
@@ -233,9 +238,9 @@ describe("Round 51 — Estate Tax Impact", () => {
   });
 
   it("should show ILIT benefit excluding death benefit from estate", () => {
-    const grossEstate = 15000000;
+    const grossEstate = 16390000;
     const deathBenefit = 3000000;
-    const exemption = 13610000;
+    const exemption = TAX_RULES_2026.estateBasicExclusion;
     // Without ILIT: death benefit included in estate
     const withoutILIT = Math.max(0, grossEstate - exemption) * 0.40;
     // With ILIT: death benefit excluded from estate

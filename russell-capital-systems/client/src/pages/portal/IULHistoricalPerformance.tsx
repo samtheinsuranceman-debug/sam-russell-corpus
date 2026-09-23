@@ -48,6 +48,9 @@ import { ExecutiveSummary, GoalsAccelerator, RecommendationSummary, DoNothingBas
 import { formatTaxCurrency } from "@shared/taxBracketEngine";
 import { RelatedCalculators } from "@/components/RelatedCalculators";
 import { ComplianceFooter } from "@/components/ComplianceFooter";
+import { LookbackIntegrityBadge } from "@/components/LookbackIntegrityBadge";
+import { creditedSeries } from "@shared/lookbackIntegrity";
+import { RAW_INDEX_RETURNS } from "@shared/indexCreditingData";
 
 const SP500_ANNUAL_RETURNS = [{ year: 2001, beginValue: 1320.28, endValue: 1148.08, rawReturn: -13.04 },
 ,
@@ -229,6 +232,20 @@ export default function IULHistoricalPerformance() {
     const bestYear = Math.max(...credited);
     
     return { avgCredited, avgRaw, yearsProtected, totalProtection, yearsCapped, maxDrawdown, bestYear };
+  }, [historicalData]);
+
+  // Look-back integrity: the window this page shows, ranked among every window of
+  // the same length in the sourced S&P 500 price series, credited on this page's terms.
+  const lookbackSeries = useMemo(() => creditedSeries(RAW_INDEX_RETURNS.SP500, (raw) => {
+    const effectiveFloor = Math.max(floorRate, guaranteedMin);
+    let credited = computeCreditedRate(raw * indexMultiplier - spreadRate, capRate, effectiveFloor, participationRate);
+    if (showFees) credited -= feeRate;
+    return credited;
+  }), [capRate, floorRate, participationRate, guaranteedMin, indexMultiplier, spreadRate, showFees, feeRate]);
+  const lookbackWindow = useMemo(() => {
+    const rows = historicalData.filter(Boolean);
+    if (!rows.length) return null;
+    return { start: rows[0].year, years: rows[rows.length - 1].year - rows[0].year + 1 };
   }, [historicalData]);
 
   const tmComparisonData = useMemo(() => {
@@ -574,6 +591,16 @@ export default function IULHistoricalPerformance() {
             </CardContent>
           </Card>
         </div>
+
+        {lookbackWindow && (
+          <LookbackIntegrityBadge
+            series={lookbackSeries}
+            startYear={lookbackWindow.start}
+            years={lookbackWindow.years}
+            market={RAW_INDEX_RETURNS.SP500}
+            seriesLabel={`S&P 500 price return 1994–2025 (ChartRow), credited at this page's cap, floor, participation, spread and fee${useHistoricalCaps ? "; historical caps are not applied to the comparison" : ""}`}
+          />
+        )}
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="w-full justify-start bg-slate-900 border-b border-slate-800 rounded-none p-0 h-auto overflow-x-auto flex-nowrap">

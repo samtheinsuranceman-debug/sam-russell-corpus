@@ -38,6 +38,7 @@ import { recordEvent } from "./ledger";
 import { voiceOutConfigured } from "./voiceSettings";
 import { synthesize } from "./speech";
 import { brainComplete } from "./providerRegistry";
+import { assertEndpointAllowed, assertModelAllowed } from "@shared/aiProviders";
 
 // Owner's standing rule (2026-09-06): DeepSeek is not part of this platform and
 // must not be added back as a provider, a panel voice, or an OpenRouter route.
@@ -63,6 +64,9 @@ async function timedFetch(url: string, init: RequestInit): Promise<Response> {
 }
 
 async function openAiCompatible(baseUrl: string, model: string, apiKey: string, system: string, user: string): Promise<string> {
+  // Owner's rule: nothing China-linked leaves this server, whatever the table above says.
+  assertEndpointAllowed(baseUrl, "base URL");
+  assertModelAllowed(model);
   const res = await timedFetch(`${baseUrl}/chat/completions`, {
     method: "POST",
     headers: { "content-type": "application/json", authorization: `Bearer ${apiKey}` },

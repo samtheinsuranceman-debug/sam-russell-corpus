@@ -32,13 +32,13 @@ export const BITCOIN_CYCLES: BitcoinCycle[] = [
     halvingPrice: 12.35,
     blockReward: 25,
     supplyMined: 75,
-    bullATH: 1177,
-    athDate: "2013-11-29",
+    bullATH: 1163,
+    athDate: "2013-11-30",
     athMarketCap: 14,
     bearATL: 152,
     atlDate: "2015-01-14",
-    pctDropATHtoATL: -87.1,
-    pctGainATLtoNextATH: 12912,
+    pctDropATHtoATL: -86.9,
+    pctGainATLtoNextATH: 12915,
     bullDurationMonths: 12,
     bearDurationMonths: 14,
   },
@@ -54,7 +54,7 @@ export const BITCOIN_CYCLES: BitcoinCycle[] = [
     bearATL: 3122,
     atlDate: "2018-12-15",
     pctDropATHtoATL: -84.2,
-    pctGainATLtoNextATH: 2104,
+    pctGainATLtoNextATH: 2103,
     bullDurationMonths: 17,
     bearDurationMonths: 12,
   },
@@ -67,10 +67,10 @@ export const BITCOIN_CYCLES: BitcoinCycle[] = [
     bullATH: 68789,
     athDate: "2021-11-10",
     athMarketCap: 1300,
-    bearATL: 15460,
+    bearATL: 15480,
     atlDate: "2022-11-21",
     pctDropATHtoATL: -77.5,
-    pctGainATLtoNextATH: 716,
+    pctGainATLtoNextATH: 715,
     bullDurationMonths: 18,
     bearDurationMonths: 12,
   },
@@ -80,15 +80,15 @@ export const BITCOIN_CYCLES: BitcoinCycle[] = [
     halvingPrice: 63800,
     blockReward: 3.125,
     supplyMined: 96.875,
-    bullATH: 126200,
+    bullATH: 126198,
     athDate: "2025-10-06",
     athMarketCap: 2500,
-    bearATL: 60000,
-    atlDate: "2026-06-01",
-    pctDropATHtoATL: -52.5,
+    bearATL: 58035,
+    atlDate: "2026-06-25",
+    pctDropATHtoATL: -54.0,
     pctGainATLtoNextATH: null,
     bullDurationMonths: 18,
-    bearDurationMonths: 12,
+    bearDurationMonths: 9,
   },
 ];
 
@@ -126,7 +126,7 @@ const BITCOIN_COM_PRICE_HISTORY_SOURCE = {
   asOf: "published 2026-08-12; read 2026-09-23",
 };
 
-/** bullATH 19783 on 2017-12-17 and the 2015 and 2018 lows. */
+/** bullATH 1163 on 2013-11-30, bullATH 19783 on 2017-12-17, the 2015 and 2018 lows, and the 2011 crash in simulateNextCycles. */
 const DRAWDOWN_HISTORY_SOURCE = {
   label:
     "Paybis, 'Bitcoin Crash History': 2013 peak $1,163 (Nov 30, 2013) to $152 (Jan 2015); $19,783 (CoinDesk index, Dec 17, 2017) to $3,122 (Dec 2018); " +
@@ -134,36 +134,41 @@ const DRAWDOWN_HISTORY_SOURCE = {
   url: "https://paybis.com/blog/bitcoin-crash-history/",
   asOf: "published 2026-02-10; read 2026-09-23",
   note:
-    "bullATH 1177 on 2013-11-29 matches no publication found: Bitstamp printed $1,163 on Nov 30, CoinGecko $1,127 on Nov 30 and CoinMarketCap $1,156.10 in December 2013. " +
-    "historicalGains 53650 (2011 low to 2013 peak) disagrees with about 58,000% computed from the $1.99 to $2.01 low and a $1,163 to $1,177 peak.",
+    "Cycle 1 was corrected on 2026-09-23 from $1,177 on 2013-11-29, which matched no publication, to Paybis's $1,163 on 2013-11-30 " +
+    "(Bitstamp; CoinGecko printed $1,127 the same day and CoinMarketCap $1,156.10 in December 2013). pctDropATHtoATL is then -86.9% " +
+    "($1,163 to $152) and cycle 1's gain to the 2017 peak 12,915% ($152 to $19,783). In simulateNextCycles the 2011 figures were " +
+    "corrected from a 93.7% drop and a 53,650% gain to 93.6% ($31.50 to $2.01) and 57,761% ($2.01 to $1,163).",
 };
 
-/** bearATL 15460 on 2022-11-21. */
+/** bearATL 15480 on 2022-11-21. */
 const CNBC_2022_LOW_SOURCE = {
   label: "CNBC, 'Bitcoin hits 2-year low as FTX collapse contagion fears linger': low of $15,480 per Coin Metrics, Nov 22, 2022 (U.S. time)",
   url: "https://www.cnbc.com/2022/11/22/bitcoin-btc-hits-2-year-low-as-ftx-collapse-contagion-fears-linger.html",
   asOf: "published 2022-11-22; read 2026-09-23",
-  note: "The code's 15,460 is $20 under this print; other trackers give $15,476 to $15,479 on Nov 21 (UTC).",
+  note:
+    "Corrected on 2026-09-23 from 15,460, which was $20 under this print; other trackers give $15,476 to $15,479 on Nov 21 (UTC). " +
+    "Cycle 3's gain to the 2025 peak is then 715% ($15,480 to $126,198).",
 };
 
-/** bullATH 126200 on 2025-10-06 (the $126,198 print, rounded) and the 2,500 billion market cap at that peak. */
+/** bullATH 126198 on 2025-10-06 (the CoinMarketCap print) and the 2,500 billion market cap at that peak. */
 const ATH_2025_SOURCE = {
   label: "Investor's Business Daily, 'Bitcoin Hits Record Above $126,000': record high of $126,198 on Oct 6, 2025, according to CoinMarketCap data",
   url: "https://www.investors.com/news/bitcoin-hits-new-record-above-125000-crypto-prices-figure-coverage-buy-rating-figr-stock/",
   asOf: "published 2025-10-06; read 2026-09-23",
 };
 
-/** bearATL 60000 on 2026-06-01. */
+/** bearATL 58035 on 2026-06-25. */
 const LOW_2026_SOURCE = {
   label:
-    "CNBC, 'Bitcoin cracks $60,000, sinking to lowest level since October 2024' (low $59,099.25 on 2026-06-05) and " +
-    "'Bitcoin falls back under $60,000' (low $59,023.98 on 2026-06-24); BBC reported a fall to $60,000 on 2026-02-05",
-  url: "https://www.cnbc.com/2026/06/24/bitcoin-falls-back-under-60000-hitting-its-lowest-level-since-october-2024.html",
-  asOf: "read 2026-09-23",
+    "investingLive (ForexLive), Greg Michalowski, 'Bitcoin is testing the low for 2026 and lowest level going back to September 2024': " +
+    "the low from June 25 comes in at $58,035, the lowest since September 2024; a retest on June 30 reached $58,076",
+  url: "https://investinglive.com/Cryptocurrency/bitcoin-is-testing-the-low-for-2026-and-lowest-level-going-back-to-september-2024-20260630/",
+  asOf: "published 2026-06-30; read 2026-09-23",
   note:
-    "The code's 60,000 on 2026-06-01 matches no print: the 2026 lows found are about $60,000 (Feb 5), $59,099 (Jun 5) and $59,024 (Jun 24), " +
-    "and IG cites Bloomberg for about $58,076 in late June. The cycle-4 bear market may not be over, so bearATL and bearDurationMonths 12 " +
-    "(October 2025 to June 2026 is about 8 months) are provisional.",
+    "Corrected on 2026-09-23 from $60,000 on 2026-06-01, which matched no print. Earlier 2026 lows: about $60,000 (Feb 5, BBC), " +
+    "$59,099.25 (Jun 5, CNBC) and $59,023.98 (Jun 24, CNBC, https://www.cnbc.com/2026/06/24/bitcoin-falls-back-under-60000-hitting-its-lowest-level-since-october-2024.html); " +
+    "other feeds print about $57,800 to $57,950 in the same week. pctDropATHtoATL is -54.0% ($126,198 to $58,035) and bearDurationMonths 9 " +
+    "(Oct 6, 2025 to Jun 25, 2026 is 8.6 months). The cycle-4 bear market may not be over, so bearATL and the duration are provisional.",
 };
 
 /** athMarketCap, pctDrop, pctGain and duration columns. */
@@ -200,8 +205,9 @@ export interface SimulatedCycle {
 
 export function simulateNextCycles(numCycles: number = 10): SimulatedCycle[] {
   // Diminishing returns model based on historical patterns
-  const historicalDrops = [93.7, 87.1, 84.2, 77.5, 52.5];
-  const historicalGains = [53650, 12912, 2104, 716];
+  // 2011, then cycles 1-4; see DRAWDOWN_HISTORY_SOURCE, CNBC_2022_LOW_SOURCE and LOW_2026_SOURCE (read 2026-09-23).
+  const historicalDrops = [93.6, 86.9, 84.2, 77.5, 54.0];
+  const historicalGains = [57761, 12915, 2103, 715];
   
   // Calculate decay rates
   const dropDecayRate = 0.88; // drops shrink ~12% each cycle

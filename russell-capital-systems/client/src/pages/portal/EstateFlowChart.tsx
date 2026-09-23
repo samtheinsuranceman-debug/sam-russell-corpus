@@ -53,6 +53,7 @@ import { ExecutiveSummary, GoalsAccelerator, RecommendationSummary, DoNothingBas
 import { formatTaxCurrency } from "@shared/taxBracketEngine";
 import { RelatedCalculators } from "@/components/RelatedCalculators";
 import { ComplianceFooter } from "@/components/ComplianceFooter";
+import { rulesForYear } from "@shared/taxRules";
 
 interface AssetNode {
   id: string;
@@ -272,8 +273,12 @@ export default function EstateFlowChart() {
     setBeneficiariesList(prev => prev.map((b) => b.id === id ? { ...b, [field]: value } : b));
   }, []);
 
+  // 2024: $13,610,000 per person (Rev. Proc. 2023-34, https://www.irs.gov/pub/irs-drop/rp-23-34.pdf), shown for comparison.
+  // 2026 (current law): $15,000,000 per person, indexed, no sunset — P.L. 119-21 § 70106 amending IRC § 2010(c)(3), https://www.congress.gov/119/plaws/publ21/PLAW-119publ21.pdf; Rev. Proc. 2025-32, https://www.irs.gov/pub/irs-drop/rp-25-32.pdf (read 23 Sep 2026).
+  // Married assumes the second exclusion passes by portability. The 2026 column was a "TCJA sunset" to $7M / $14M,
+  // which P.L. 119-21 cancelled.
   const exemption2024 = filingStatus === "married" ? 27220000 : 13610000;
-  const exemption2026 = filingStatus === "married" ? 14000000 : 7000000;
+  const exemption2026 = (filingStatus === "married" ? 2 : 1) * rulesForYear(2026).estateBasicExclusion;
   
   const stateExemption = 5000000; // Example state exemption
   const maxStateRate = 0.16;
@@ -434,7 +439,7 @@ export default function EstateFlowChart() {
         ]
       },
       {
-        title: "Tax Analysis (2024 Current Law)",
+        title: "Tax Analysis (2024, for comparison)",
         items: [
           { label: "Taxable Estate", value: fmt(analysis.taxableEstate) },
           { label: "Exemption Available", value: fmt(exemption2024) },
@@ -446,7 +451,7 @@ export default function EstateFlowChart() {
         ]
       },
       {
-        title: "Tax Analysis (2026 Sunset)",
+        title: "Tax Analysis (2026 Current Law — P.L. 119-21)",
         items: [
           { label: "Taxable Estate", value: fmt(analysis.taxableEstate) },
           { label: "Exemption Available", value: fmt(exemption2026) },
@@ -680,7 +685,7 @@ export default function EstateFlowChart() {
                     <BarChart3 className="w-5 h-5 text-primary" />
                     Distribution: 2024 vs 2026
                   </CardTitle>
-                  <CardDescription>Impact of the TCJA sunset on estate distribution</CardDescription>
+                  <CardDescription>2024 exemption vs. the 2026 exemption under current law (P.L. 119-21: $15M, indexed, no sunset)</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="h-[300px] w-full">
@@ -688,14 +693,14 @@ export default function EstateFlowChart() {
                       <BarChart
                         data={[
                           { 
-                            name: '2024 (Current Law)', 
+                            name: '2024 ($13.61M exemption)', 
                             'To Beneficiaries': analysis.toBeneficiaries2024,
                             'Federal Tax': analysis.federalEstateTax2024,
                             'State Tax': analysis.stateEstateTax,
                             'Charity': analysis.charitableDeduction
                           },
                           { 
-                            name: '2026 (Post-Sunset)', 
+                            name: '2026 (current law)', 
                             'To Beneficiaries': analysis.toBeneficiaries2026,
                             'Federal Tax': analysis.federalEstateTax2026,
                             'State Tax': analysis.stateEstateTax,
@@ -732,7 +737,7 @@ export default function EstateFlowChart() {
                       <Users className="w-5 h-5 text-primary" />
                       Beneficiary Summary
                     </CardTitle>
-                    <CardDescription>Projected inheritance per beneficiary based on 2026 sunset</CardDescription>
+                    <CardDescription>Projected inheritance per beneficiary under 2026 current law</CardDescription>
                   </div>
                   <Button variant="outline" size="sm" onClick={() => setActiveTab("assets")}>
                     Edit Beneficiaries
@@ -964,12 +969,12 @@ export default function EstateFlowChart() {
                       </div>
                       
                       <div className="p-4 rounded-xl bg-card border shadow-sm text-center space-y-1">
-                        <div className="text-sm font-medium text-muted-foreground">Current Exemption (2024)</div>
+                        <div className="text-sm font-medium text-muted-foreground">Exemption (2024, for comparison)</div>
                         <div className="text-2xl font-bold">{fmt(exemption2024)}</div>
                       </div>
                       
                       <div className="p-4 rounded-xl bg-card border shadow-sm text-center space-y-1">
-                        <div className="text-sm font-medium text-muted-foreground">Projected Exemption (2026)</div>
+                        <div className="text-sm font-medium text-muted-foreground">Exemption (2026 current law)</div>
                         <div className="text-2xl font-bold text-amber-500">{fmt(exemption2026)}</div>
                       </div>
                     </div>
@@ -1117,7 +1122,7 @@ export default function EstateFlowChart() {
                       {selectedNode === "gross" && "The total fair market value of all assets owned at death, before any deductions or exemptions."}
                       {selectedNode === "taxable" && "The gross estate minus allowable deductions (debts, administration expenses, marital deduction, charitable deduction)."}
                       {selectedNode === "ilit" && "Irrevocable Life Insurance Trust. Removes the death benefit from the taxable estate while providing liquidity."}
-                      {selectedNode === "tax2026" && "Estimated federal and state estate tax liability based on the 2026 exemption sunset rules."}
+                      {selectedNode === "tax2026" && "Estimated federal and state estate tax liability under 2026 current law ($15M exemption per person, P.L. 119-21)."}
                       {selectedNode.startsWith("ben-") && "Final distribution amount projected for this beneficiary after all taxes and deductions."}
                     </p>
                   </div>
@@ -1198,7 +1203,7 @@ export default function EstateFlowChart() {
               {/* 2026 Breakdown */}
               <Card className="border-red-500/20 shadow-sm">
                 <CardHeader className="pb-4">
-                  <Badge className="w-fit mb-2 bg-red-500/10 text-red-600 hover:bg-red-500/20 border-red-500/20">TCJA Sunset</Badge>
+                  <Badge className="w-fit mb-2 bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500/20 border-emerald-500/20">Current Law (P.L. 119-21)</Badge>
                   <CardTitle className="text-xl">2026 Exemption</CardTitle>
                   <CardDescription>Exemption amount: {fmt(exemption2026)}</CardDescription>
                 </CardHeader>
@@ -1239,8 +1244,8 @@ export default function EstateFlowChart() {
                     <TableHeader>
                       <TableRow>
                         <TableHead>Metric</TableHead>
-                        <TableHead className="text-right">2024 (Current)</TableHead>
-                        <TableHead className="text-right">2026 (Sunset)</TableHead>
+                        <TableHead className="text-right">2024</TableHead>
+                        <TableHead className="text-right">2026 (Current Law)</TableHead>
                         <TableHead className="text-right">Difference</TableHead>
                       </TableRow>
                     </TableHeader>
@@ -1249,7 +1254,7 @@ export default function EstateFlowChart() {
                         <TableCell className="font-medium">Federal Estate Tax</TableCell>
                         <TableCell className="text-right">{fmt(analysis.federalEstateTax2024)}</TableCell>
                         <TableCell className="text-right">{fmt(analysis.federalEstateTax2026)}</TableCell>
-                        <TableCell className="text-right text-red-500">+{fmt(analysis.federalEstateTax2026 - analysis.federalEstateTax2024)}</TableCell>
+                        <TableCell className="text-right">{(analysis.federalEstateTax2026 - analysis.federalEstateTax2024) >= 0 ? "+" : "−"}{fmt(Math.abs(analysis.federalEstateTax2026 - analysis.federalEstateTax2024))}</TableCell>
                       </TableRow>
                       <TableRow>
                         <TableCell className="font-medium">State Estate Tax</TableCell>
@@ -1260,14 +1265,14 @@ export default function EstateFlowChart() {
                       <TableRow className="bg-muted/30">
                         <TableCell className="font-bold">Total Tax Liability</TableCell>
                         <TableCell className="text-right font-bold">{fmt(analysis.totalTax2024)}</TableCell>
-                        <TableCell className="text-right font-bold text-red-500">{fmt(analysis.totalTax2026)}</TableCell>
-                        <TableCell className="text-right font-bold text-red-500">+{fmt(analysis.totalTax2026 - analysis.totalTax2024)}</TableCell>
+                        <TableCell className="text-right font-bold">{fmt(analysis.totalTax2026)}</TableCell>
+                        <TableCell className="text-right font-bold">{(analysis.totalTax2026 - analysis.totalTax2024) >= 0 ? "+" : "−"}{fmt(Math.abs(analysis.totalTax2026 - analysis.totalTax2024))}</TableCell>
                       </TableRow>
                       <TableRow>
                         <TableCell className="font-medium">Effective Tax Rate</TableCell>
                         <TableCell className="text-right">{((analysis.totalTax2024 / analysis.totalEstate) * 100).toFixed(1)}%</TableCell>
                         <TableCell className="text-right">{((analysis.totalTax2026 / analysis.totalEstate) * 100).toFixed(1)}%</TableCell>
-                        <TableCell className="text-right text-red-500">+{(((analysis.totalTax2026 - analysis.totalTax2024) / analysis.totalEstate) * 100).toFixed(1)}%</TableCell>
+                        <TableCell className="text-right">{(((analysis.totalTax2026 - analysis.totalTax2024) / analysis.totalEstate) * 100).toFixed(1)}%</TableCell>
                       </TableRow>
                     </TableBody>
                   </Table>
@@ -1624,7 +1629,7 @@ export default function EstateFlowChart() {
                         dot={{ r: 4 }}
                         activeDot={{ r: 6 }}
                       />
-                      {/* Reference line for 2026 sunset drop */}
+                      {/* Reference line: 60% transfer efficiency */}
                       <Line 
                         type="step" 
                         dataKey={() => 60} 

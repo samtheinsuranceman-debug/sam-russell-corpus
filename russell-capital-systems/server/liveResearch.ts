@@ -15,6 +15,7 @@ import {
   PERPLEXITY_API_KEY, PERPLEXITY_BASE_URL, PERPLEXITY_MODEL, verificationProvider, llmConfigured,
 } from "./liveResearchConfig";
 import { invokeLLM } from "./_core/llm";
+import { CHINA_POLICY_MESSAGE, isBannedModel, isBannedProvider } from "@shared/aiProviders";
 
 // A citation as Perplexity first returns it, before the panel cross-examines it.
 type RawCitation = { title: string; source: string; url: string; relevance: string; topic: string };
@@ -158,6 +159,12 @@ export async function fetchLiveCitations(params: {
 Strengths to interpret and fortify: ${strengths}.
 Weaknesses (bottlenecks) to understand and remediate: ${weaknesses}.
 Prioritize meta-analyses and trials on trainability/remediation. Return only sources with real DOIs or stable links.`;
+
+  // PERPLEXITY_MODEL and PERPLEXITY_BASE_URL come from the environment; the
+  // owner's rule applies to them like any other model id or endpoint.
+  if (isBannedModel(PERPLEXITY_MODEL) || isBannedProvider(PERPLEXITY_BASE_URL)) {
+    return { mocked: false, citations: [], rejected: 0, note: `${CHINA_POLICY_MESSAGE}. Live research is off until PERPLEXITY_MODEL / PERPLEXITY_BASE_URL is changed.` };
+  }
 
   try {
     const res = await fetch(`${PERPLEXITY_BASE_URL.replace(/\/$/, "")}/chat/completions`, {

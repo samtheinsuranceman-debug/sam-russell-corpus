@@ -34,36 +34,43 @@ const FEDERAL_BRACKETS_2026: Record<FilingStatus, TaxBracket[]> = {
  * taxRules.ts; the 10% starting marginal rate in calculateTax is the lowest of
  * those seven.
  */
-const FEDERAL_RATES_SOURCE = {
+export const FEDERAL_RATES_SOURCE = {
+  /** One line for a page footer under a bracket chart or tax figure. */
+  short: "IRS Rev. Proc. 2025-32 (tax year 2026 brackets and standard deduction)",
   label: "IRS, Rev. Proc. 2025-32 (tax year 2026): section 2.01 (the seven rates 10%, 12%, 22%, 24%, 32%, 35%, 37% made permanent by P.L. 119-21 section 70101), section 4.01 (tax rate tables) and section 4.14 (standard deduction)",
   url: "https://www.irs.gov/pub/irs-drop/rp-25-32.pdf",
   asOf: "read 2026-09-23",
 };
 
 /**
- * Where the state rates were checked. The table below is a single top marginal
- * rate per state, applied flat to taxable income. It was compared line by line
- * with the Tax Foundation table as of 1 January 2026: 32 of 51 entries match
- * that table's top rate; 19 carry an older year's rate (listed in the note).
- * The numbers are left as typed; the disagreement is recorded, not corrected.
+ * Where the state rates come from. The table below is a single top marginal
+ * rate per state (single filer), applied flat to taxable income. Every entry
+ * was checked line by line on 2026-09-23 against the Tax Foundation table
+ * "State Individual Income Tax Rates and Brackets, as of January 1, 2026";
+ * all 51 now match it. Nineteen entries were stale and were corrected then
+ * (old -> new): AR 4.4% -> 3.9%, GA 5.49% -> 5.19%, ID 5.8% -> 5.3%,
+ * IN 3.05% -> 2.95%, IA 6.0% -> 3.8%, KS 5.7% -> 5.58%, KY 4.0% -> 3.5%,
+ * LA 4.25% -> 3.0%, MD 5.75% -> 6.5%, MS 5.0% -> 4.0%, MO 4.8% -> 4.7%,
+ * MT 6.75% -> 5.65%, NE 6.64% -> 4.55%, NC 4.5% -> 3.99%, OH 3.5% -> 2.75%,
+ * OK 4.75% -> 4.5%, SC 6.5% -> 6.0%, UT 4.65% -> 4.5%, WV 5.12% -> 4.82%.
  */
-const STATE_TAX_RATES_SOURCE = {
-  label: "Tax Foundation, State Individual Income Tax Rates and Brackets, 2026 (rates as of January 1, 2026; top marginal rate per state, single filer)",
+export const STATE_TAX_RATES_SOURCE = {
+  label: "Tax Foundation, 2026 State Income Tax Rates and Brackets (table: State Individual Income Tax Rates and Brackets, as of January 1, 2026; top marginal rate per state, single filer)",
   url: "https://taxfoundation.org/data/all/state/state-income-tax-rates-2026/",
-  asOf: "published 2026-02-17, read 2026-09-23",
-  note: "Entries here that differ from the 2026 table's top rate (code vs table): AR 4.4% vs 3.9%, GA 5.49% vs 5.19%, ID 5.8% vs 5.3%, IN 3.05% vs 2.95%, IA 6.0% vs 3.8%, KS 5.7% vs 5.58%, KY 4.0% vs 3.5%, LA 4.25% vs 3.0%, MD 5.75% vs 6.5%, MS 5.0% vs 4.0%, MO 4.8% vs 4.7%, MT 6.75% vs 5.65%, NE 6.64% vs 4.55%, NC 4.5% vs 3.99%, OH 3.5% vs 2.75%, OK 4.75% vs 4.5%, SC 6.5% vs 6.0%, UT 4.65% vs 4.5%, WV 5.12% vs 4.82%. WA is 0 here because Washington taxes capital gains only (7%, 9% over $1 million), not wages. MA 9% is the 5% rate plus the 4% surtax above $1,083,150.",
+  asOf: "rates as of 2026-01-01; page published 2026-02-19; checked 2026-09-23",
+  note: "All 51 entries match the table's top rate. WA is 0 here because Washington taxes capital gains only (7%, 9% over $1 million), not wages; NH has no wage tax. MA 9% is the 5% rate plus the 4% surtax above $1,083,150. SC: the table notes its top rate is scheduled to revert to 6.2% on July 1, 2026 (footnote qq); the table's 6.0% is used. Local income taxes are excluded, as in the table.",
 };
 
-// ── State Income Tax Rates (simplified top marginal rates; see STATE_TAX_RATES_SOURCE) ──
+// ── State Income Tax Rates, 2026 (top marginal rate, single filer; see STATE_TAX_RATES_SOURCE) ──
 const STATE_TAX_RATES: Record<string, number> = {
-  AL: 0.05, AK: 0, AZ: 0.025, AR: 0.044, CA: 0.133, CO: 0.044, CT: 0.0699,
-  DE: 0.066, FL: 0, GA: 0.0549, HI: 0.11, ID: 0.058, IL: 0.0495, IN: 0.0305,
-  IA: 0.06, KS: 0.057, KY: 0.04, LA: 0.0425, ME: 0.0715, MD: 0.0575,
-  MA: 0.09, MI: 0.0425, MN: 0.0985, MS: 0.05, MO: 0.048, MT: 0.0675,
-  NE: 0.0664, NV: 0, NH: 0, NJ: 0.1075, NM: 0.059, NY: 0.109, NC: 0.045,
-  ND: 0.025, OH: 0.035, OK: 0.0475, OR: 0.099, PA: 0.0307, RI: 0.0599,
-  SC: 0.065, SD: 0, TN: 0, TX: 0, UT: 0.0465, VT: 0.0875, VA: 0.0575,
-  WA: 0, WV: 0.0512, WI: 0.0765, WY: 0, DC: 0.1075,
+  AL: 0.05, AK: 0, AZ: 0.025, AR: 0.039, CA: 0.133, CO: 0.044, CT: 0.0699,
+  DE: 0.066, FL: 0, GA: 0.0519, HI: 0.11, ID: 0.053, IL: 0.0495, IN: 0.0295,
+  IA: 0.038, KS: 0.0558, KY: 0.035, LA: 0.03, ME: 0.0715, MD: 0.065,
+  MA: 0.09, MI: 0.0425, MN: 0.0985, MS: 0.04, MO: 0.047, MT: 0.0565,
+  NE: 0.0455, NV: 0, NH: 0, NJ: 0.1075, NM: 0.059, NY: 0.109, NC: 0.0399,
+  ND: 0.025, OH: 0.0275, OK: 0.045, OR: 0.099, PA: 0.0307, RI: 0.0599,
+  SC: 0.06, SD: 0, TN: 0, TX: 0, UT: 0.045, VT: 0.0875, VA: 0.0575,
+  WA: 0, WV: 0.0482, WI: 0.0765, WY: 0, DC: 0.1075,
 };
 
 // ── Standard Deductions 2026 (Rev. Proc. 2025-32, via taxRules.ts) ──
@@ -198,6 +205,70 @@ export function calculateTaxSavings(
     bracketDropped,
     lifetimeSavings: totalSavings * projectionYears,
   };
+}
+
+/**
+ * The 2026 federal marginal rate for a gross income, after the standard
+ * deduction, from the versioned bracket table. For pages that need a default
+ * rate before the adviser types one: a married-filing-jointly household on
+ * $250,000 is $217,800 taxable, which is the 24% bracket, not 32%.
+ * `filing` accepts this engine's keys or free text such as "married",
+ * "Married Filing Jointly", "head of household"; anything else is single.
+ */
+export function federalMarginalRateFor(grossIncome: number, filing: unknown = "single"): number {
+  return calculateTax(grossIncome, filingStatusFrom(filing), "TX").federalMarginalRate;
+}
+
+/**
+ * This engine's filing key for a page's own wording: "joint", "married",
+ * "married_joint", "Married Filing Jointly", "mfj" -> joint; "hoh",
+ * "head_of_household", "headOfHousehold" -> hoh; married filing separately
+ * and anything else -> single (the separate table matches single below the
+ * 35% bracket).
+ */
+export function filingStatusFrom(filing: unknown): FilingStatus {
+  const f = String(filing ?? "").toLowerCase();
+  if (f.includes("separat")) return "single";
+  if (f === "joint" || f.includes("joint") || f.includes("married") || f === "mfj") return "joint";
+  if (f === "hoh" || f.includes("head")) return "hoh";
+  return "single";
+}
+
+/** Tax year the federal tables below are for (taxRules.ts). */
+export const FEDERAL_TAX_YEAR = TAX_RULES_2026.taxYear;
+
+/**
+ * The current-year federal brackets as {min, max, rate} rows, read from
+ * taxRules.ts. Pages that draw or walk the bracket table call this instead
+ * of typing their own copy. Returns a fresh array; `filing` accepts the same
+ * wording as filingStatusFrom.
+ */
+export function federalBrackets(filing: unknown = "single"): TaxBracket[] {
+  return FEDERAL_BRACKETS_2026[filingStatusFrom(filing)].map((b) => ({ ...b }));
+}
+
+/** The current-year federal standard deduction (taxRules.ts); `filing` as in filingStatusFrom. */
+export function federalStandardDeduction(filing: unknown = "single"): number {
+  return STANDARD_DEDUCTIONS[filingStatusFrom(filing)];
+}
+
+/** Federal income tax on a taxable income (after deductions), from the current-year table. */
+export function federalTaxOnTaxable(taxableIncome: number, filing: unknown = "single"): number {
+  let tax = 0;
+  for (const b of FEDERAL_BRACKETS_2026[filingStatusFrom(filing)]) {
+    if (taxableIncome <= b.min) break;
+    tax += (Math.min(taxableIncome, b.max) - b.min) * b.rate;
+  }
+  return tax;
+}
+
+/** Federal marginal rate on a taxable income (after deductions), from the current-year table. */
+export function federalMarginalRateOnTaxable(taxableIncome: number, filing: unknown = "single"): number {
+  let rate = 0.10;
+  for (const b of FEDERAL_BRACKETS_2026[filingStatusFrom(filing)]) {
+    if (taxableIncome > b.min) rate = b.rate;
+  }
+  return rate;
 }
 
 /**

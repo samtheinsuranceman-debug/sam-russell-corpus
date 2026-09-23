@@ -184,13 +184,29 @@ const DAMODARAN_HISTORICAL_RETURNS_SOURCE = {
   label:
     "Aswath Damodaran, NYU Stern, 'Historical Returns on Stocks, Bonds and Bills: 1928-2025' (histretSP). " +
     "Computed by the firm from the page's annual rows, 1928-2025: S&P 500 including dividends, geometric average 10.02%, " +
-    "arithmetic average 11.86%, standard deviation 19.40%; Real Estate column (home prices), geometric average 4.20%",
+    "arithmetic average 11.86% (11.855%), sample standard deviation 19.40%; Real Estate column (home prices), geometric average 4.20%",
   url: "https://pages.stern.nyu.edu/~adamodar/New_Home_Page/datafile/histretSP.html",
   asOf: "page updated January 5, 2026; read 2026-09-23",
   note:
-    "sp500.expectedReturn 0.10 matches the 10.02% geometric average. sp500.volatility 0.16 is below the 19.40% standard deviation " +
-    "in the same table, so the preset understates the spread of S&P 500 outcomes. realEstate.expectedReturn 0.04 is close to the 4.20% geometric average.",
+    "runMonteCarlo draws each year's return from a normal distribution, so its centre must be the arithmetic mean, not the geometric one: " +
+    "sp500.expectedReturn is SP500_ARITHMETIC_MEAN (0.1186, from 11.855% over the 98 annual rows) and sp500.volatility is " +
+    "SP500_ANNUAL_STDEV (0.1940, the sample standard deviation of the same 98 rows). The 10.02% geometric average is what those " +
+    "draws compound to, roughly mean minus half the variance. realEstate.expectedReturn 0.04 is close to the 4.20% geometric average.",
 };
+
+/**
+ * S&P 500 (including dividends) arithmetic mean of annual returns, 1928-2025: 11.855%.
+ * Computed from the 98 annual rows of Damodaran's histretSP table
+ * (https://pages.stern.nyu.edu/~adamodar/New_Home_Page/datafile/histretSP.html, updated January 5, 2026; read 2026-09-23).
+ * A normal (arithmetic) draw needs this mean; the 10.02% geometric average is the compound result, not the draw centre.
+ */
+export const SP500_ARITHMETIC_MEAN = 0.1186;
+
+/**
+ * S&P 500 (including dividends) sample standard deviation of annual returns, 1928-2025: 19.40%.
+ * Same 98 rows and source as SP500_ARITHMETIC_MEAN (read 2026-09-23). Population SD of the same rows is 19.30%.
+ */
+export const SP500_ANNUAL_STDEV = 0.194;
 
 /** Long-run consumer price inflation for retirementWithdrawal.inflationRate. */
 const CPI_INFLATION_SOURCE = {
@@ -238,10 +254,10 @@ export const MONTE_CARLO_PRESETS = {
     capReturn: 0.12,
     annualFees: 0.01,
   },
-  /** S&P 500 historical */
+  /** S&P 500 historical: arithmetic mean and standard deviation, Damodaran 1928-2025 (see DAMODARAN_HISTORICAL_RETURNS_SOURCE) */
   sp500: {
-    expectedReturn: 0.10,
-    volatility: 0.16,
+    expectedReturn: SP500_ARITHMETIC_MEAN,
+    volatility: SP500_ANNUAL_STDEV,
     annualFees: 0.001,
   },
   /** MYGA fixed rate (very low volatility) */
