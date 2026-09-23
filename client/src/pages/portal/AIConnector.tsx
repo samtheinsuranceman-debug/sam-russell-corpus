@@ -110,6 +110,7 @@ type EnvTest = inferRouterOutputs<AppRouter>["vault"]["testEnvironment"][number]
  */
 function RailwayKeysPanel({ data }: { data: OverviewData }) {
   const fromEnv = data.fromEnvironment ?? [];
+  const media = data.mediaFromEnvironment ?? [];
   const [results, setResults] = useState<EnvTest[] | null>(null);
   const test = trpc.vault.testEnvironment.useMutation({
     onSuccess: r => {
@@ -120,22 +121,23 @@ function RailwayKeysPanel({ data }: { data: OverviewData }) {
     },
     onError: e => toast.error(e.message),
   });
-  const nameOf = (id: string) => data.catalog.find(c => c.id === id)?.name ?? id;
+  const nameOf = (id: string) => data.catalog.find(c => c.id === id)?.name ?? media.find(m => m.id === id)?.name ?? id;
+  const rows = [...fromEnv, ...media.map(m => m.id)];
 
   return (
     <section className="rounded-2xl border border-sky-500/30 bg-sky-500/[0.05] p-5 space-y-3" data-testid="railway-keys-panel">
       <div className="flex flex-wrap items-center gap-3">
         <Globe className="w-4 h-4 text-sky-400 shrink-0" />
         <h2 className="text-[14px] font-semibold text-white">
-          {fromEnv.length === 0
+          {rows.length === 0
             ? "No provider keys on Railway yet"
-            : `${fromEnv.length} brain${fromEnv.length === 1 ? "" : "s"} keyed on Railway`}
+            : `${fromEnv.length} brain${fromEnv.length === 1 ? "" : "s"}${media.length ? ` and ${media.length} media service${media.length === 1 ? "" : "s"}` : ""} keyed on Railway`}
         </h2>
         <Button
           size="sm"
           variant="outline"
           onClick={() => test.mutate()}
-          disabled={test.isPending || fromEnv.length === 0}
+          disabled={test.isPending || rows.length === 0}
           className="ml-auto h-7 border-sky-500/40 bg-transparent text-sky-200 hover:text-white hover:border-sky-400"
         >
           {test.isPending ? <Loader2 className="w-3.5 h-3.5 animate-spin mr-1" /> : <Zap className="w-3.5 h-3.5 mr-1" />}
@@ -143,7 +145,7 @@ function RailwayKeysPanel({ data }: { data: OverviewData }) {
         </Button>
       </div>
 
-      {fromEnv.length === 0 ? (
+      {rows.length === 0 ? (
         <p className="text-[12.5px] text-slate-400 leading-relaxed">
           On Railway: your service → <strong>Variables</strong> → New Variable, named for the provider (for example{" "}
           <code className="text-amber-400">ANTHROPIC_API_KEY</code>, <code className="text-amber-400">MISTRAL_API_KEY</code>, or the
@@ -152,7 +154,7 @@ function RailwayKeysPanel({ data }: { data: OverviewData }) {
         </p>
       ) : (
         <ul className="divide-y divide-sky-500/15">
-          {fromEnv.map(id => {
+          {rows.map(id => {
             const r = results?.find(x => x.providerId === id);
             return (
               <li key={id} className="flex flex-wrap items-center gap-2 py-2 text-[13px]">

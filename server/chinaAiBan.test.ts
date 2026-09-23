@@ -88,6 +88,9 @@ const MUST_MATCH = [
   // Manus / Butterfly Effect (China-origin agent platform) and its hosted pieces
   "manus", "Manus", "Manus AI", "https://forge.manus.im", "forge.manus.im/v1/chat/completions", "vite-plugin-manus-runtime",
   "/__manus__/debug-collector.js", "https://forge.butterfly-effect.dev", "3000-abc.us2.manus.computer", "manus-built-in",
+  // PRC video generators resold by US hosts
+  "hailuo3", "minimax/hailuo-02", "seedance2", "seedance2_fast", "bytedance/seedance-1-pro", "kling-v2.1", "kwaivgi/kling-v2.1-master",
+  "vidu-q1", "wan3", "wan3_prime", "wan2.1-t2v-14b", "Wan-AI/Wan2.2-T2V-A14B",
   // Taiwan (suspect)
   "taide/TAIDE-LX-7B", "MediaTek-Research/Breeze-7B-Instruct", "yentinglin/Taiwan-LLM-13B", "foxbrain",
   // Hosts
@@ -118,7 +121,12 @@ const MUST_NOT_MATCH = [
   "openrouter", "OpenRouter", "https://openrouter.ai/api", "vercel-gateway", "amazon.nova-pro-v1:0", "writer", "palmyra-x5", "reka-core",
   "ai21", "jamba-large", "upstage", "solar-pro2", "HCX-007", "plamo-3.0-prime", "sarvam-105b", "Krutrim-spectre-v2", "trinity-large-thinking",
   "inception", "mercury-2", "aleph-alpha", "pharia-1-llm-7b-control", "swiss-ai/apertus-v1.5-70b", "thinkingmachines/inkling", "poolside/laguna-s-2.1",
+  // media services and models wired on 23 Sep 2026
+  "gen4.5", "gen4_turbo", "veo3.1", "veo3.1_fast", "ray-2", "ray-flash-2", "sonic-3.6", "nova-3", "universal-3-5-pro", "voyage-4", "@openai/gpt-5", "portkey",
+  "https://api.cartesia.ai", "https://api.deepgram.com", "https://api.assemblyai.com", "https://api.dev.runwayml.com", "https://api.lumalabs.ai/dream-machine/v1",
+  "https://api.voyageai.com/v1", "https://api.pinecone.io", "https://api.portkey.ai",
   // ordinary words that share letters with a banned term
+  "sparkling", "swan2", "Swan 2", "wanted", "individual",
   "step-1", "step-3", "step-by-step", "Apache Spark", "sparkline", "structuredNotes", "Bernie", "yuan", "Chinese yuan", "algorithm", "glamour",
   "kimono", "manuscript", "Manuscripts", "forge", "Forge Anchor", "https://www.cnn.com", "https://example.com/cn/", "https://example.co", "https://api.example.com/v1",
 ];

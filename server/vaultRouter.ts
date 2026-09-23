@@ -213,6 +213,9 @@ export const vaultRouter = router({
       // otherwise the connector reads "nothing configured" while three models
       // are answering.
       fromEnvironment: environmentProviderIds(),
+      // Voice, transcription, video, embedding and vector-store keys on the
+      // host. Not brains, but the same "Test the Railway keys" button checks them.
+      mediaFromEnvironment: (await import("./mediaKeys")).mediaFromEnvironment(),
       mcp: await mcpStatus(),
       custom: await (async () => {
         const { getDb } = await import("./db");
@@ -564,7 +567,9 @@ export const vaultRouter = router({
    */
   testEnvironment: ownerProcedure.mutation(async ({ ctx }) => {
     const { testEnvironmentKeys } = await import("./providerRegistry");
-    const results = await testEnvironmentKeys();
+    const { testMediaKeys } = await import("./mediaKeys");
+    const [brains, media] = await Promise.all([testEnvironmentKeys(), testMediaKeys()]);
+    const results = [...brains, ...media];
     await audit({
       action: "key_tested",
       actorEmail: ctx.user.email ?? undefined,

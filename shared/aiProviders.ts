@@ -1,5 +1,5 @@
 /**
- * AI Provider Definitions — the fifty-five brains the AI advisor (named in shared/aiAdvisor.ts) can be wired to.
+ * AI Provider Definitions — the fifty-six brains the AI advisor (named in shared/aiAdvisor.ts) can be wired to.
  * ════════════════════════════════════════════════════════════════════════════
  *
  * What each provider needs in order to be called: its endpoint, its wire
@@ -29,8 +29,13 @@
 
 export type WireFormat = "openai-compatible" | "anthropic" | "google-generative";
 
-/** The Brain Hub holds at most this many provider keys and this many MCP servers. */
-export const MAX_BRAINS = 55;
+/**
+ * The Brain Hub holds at most this many provider keys and this many MCP servers.
+ * Fifty-six are catalogued (Portkey added 23 Sep 2026); the cap sits two above
+ * that so the next catalogue additions (Replicate and IBM watsonx are queued)
+ * do not also have to move it.
+ */
+export const MAX_BRAINS = 58;
 export const MAX_MCP_SERVERS = 40;
 
 export type ProviderDefinition = {
@@ -64,6 +69,12 @@ export type ProviderDefinition = {
   caution?: string;
   /** Needs a Base URL override before it can be called (account-scoped endpoints). */
   requiresBaseUrl?: boolean;
+  /**
+   * Header that carries the key, sent bare, when the provider does not take
+   * `Authorization: Bearer <key>` (Portkey reads x-portkey-api-key and would
+   * forward a bearer token to the upstream provider instead).
+   */
+  authHeader?: string;
 };
 
 const ALNUM = /^[A-Za-z0-9_-]{20,}$/;
@@ -209,7 +220,7 @@ export const PROVIDERS: ProviderDefinition[] = [
     baseUrl: "https://api.writer.com",
     chatPath: "/v1/chat/completions",
     defaultModel: "palmyra-x5",
-    suggestedModels: ["palmyra-x5", "palmyra-fin"],
+    suggestedModels: ["palmyra-x5", "palmyra-x6", "palmyra-fin"],
     keyPattern: ALNUM,
     keyHint: "A long alphanumeric string",
     consoleUrl: "https://app.writer.com/aistudio",
@@ -259,6 +270,24 @@ export const PROVIDERS: ProviderDefinition[] = [
     keyHint: "Starts with vck_",
     consoleUrl: "https://vercel.com/dashboard/ai-gateway",
     role: "Gateway with per-model spend caps and automatic failover across providers.",
+  },
+  {
+    id: "portkey",
+    name: "Portkey AI Gateway",
+    country: "United States",
+    wireFormat: "openai-compatible",
+    baseUrl: "https://api.portkey.ai",
+    chatPath: "/v1/chat/completions",
+    // Model Catalog ids are "@<provider slug>/<model>"; the slug is whatever the
+    // owner named the provider in Portkey, so these assume the default slugs.
+    defaultModel: "@openai/gpt-5",
+    suggestedModels: ["@openai/gpt-5", "@anthropic/claude-opus-5", "@google/gemini-2.5-pro"],
+    keyPattern: /^[A-Za-z0-9+/=_-]{20,}$/,
+    keyHint: "The Portkey API key from the dashboard's API Keys page",
+    consoleUrl: "https://app.portkey.ai/api-keys",
+    role: "Gateway with its own logs, budgets, caching and fallbacks across the providers configured in its Model Catalog.",
+    caution: "Requests are relayed through Portkey. A model id names a provider slug from your Portkey Model Catalog (e.g. @openai/gpt-5); set PORTKEY_MODEL if yours is named differently.",
+    authHeader: "x-portkey-api-key",
   },
   {
     id: "azure-openai",
@@ -966,6 +995,9 @@ const BANNED_TERMS: readonly string[] = [
   // Manus (Butterfly Effect): China-origin agent platform, its Forge gateway, runtime and debug collector.
   // "manus" only as a whole word, so "manuscript" is not caught.
   String.raw`\bmanus(?![a-z])`, String.raw`__manus__`, String.raw`forge\.manus`, String.raw`butterfly-effect`,
+  // PRC video generators some US hosts resell (Runway and Luma aggregators among them): MiniMax Hailuo,
+  // ByteDance Seedance, Kuaishou Kling, Shengshu Vidu, Alibaba Wan ("wan" only as a numbered model id)
+  String.raw`hailuo`, String.raw`seedance`, String.raw`\bkling`, String.raw`\bvidu\b`, String.raw`\bwan[-_.]?\d`,
   // Taiwan-based labs (suspect under the rule)
   String.raw`\btaide\b`, String.raw`mediatek`, String.raw`taiwan-llm`, String.raw`foxbrain`,
   // Hosts: any PRC, Hong Kong, Macau or Taiwan TLD, and PRC cloud regions (AWS China, Alibaba, Volcengine)
