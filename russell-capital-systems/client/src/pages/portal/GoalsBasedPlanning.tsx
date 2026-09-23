@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { useState, useEffect, useMemo } from "react";
 import { AppShell } from "@/components/AppShell";
 import { OilGasToggle } from "@/components/OilGasToggle";
@@ -321,15 +320,15 @@ export default function GoalsBasedPlanning() {
                   </div>
                   <div className="grid gap-2">
                     <Label>Target Amount</Label>
-                    <NumberInput value={newGoal.targetAmount || 0} onChange={(e) => setNewGoal({ ...newGoal, targetAmount: val })} />
+                    <NumberInput value={newGoal.targetAmount || 0} onChange={(val: number) => setNewGoal({ ...newGoal, targetAmount: val })} />
                   </div>
                   <div className="grid gap-2">
                     <Label>Current Amount</Label>
-                    <NumberInput value={newGoal.currentAmount || 0} onChange={(e) => setNewGoal({ ...newGoal, currentAmount: val })} />
+                    <NumberInput value={newGoal.currentAmount || 0} onChange={(val: number) => setNewGoal({ ...newGoal, currentAmount: val })} />
                   </div>
                   <div className="grid gap-2">
                     <Label>Monthly Contribution</Label>
-                    <NumberInput value={newGoal.monthlyContribution || 0} onChange={(e) => setNewGoal({ ...newGoal, monthlyContribution: val })} />
+                    <NumberInput value={newGoal.monthlyContribution || 0} onChange={(val: number) => setNewGoal({ ...newGoal, monthlyContribution: val })} />
                   </div>
                   <div className="grid gap-2">
                     <Label>Target Date</Label>

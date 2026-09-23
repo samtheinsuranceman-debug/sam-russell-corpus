@@ -1,8 +1,7 @@
-// @ts-nocheck
 
 import React, { useState, useMemo } from 'react';
 import { Droplets, DollarSign, TrendingUp, Target, Calendar, Percent, ArrowRight, Shield, CheckCircle2, AlertTriangle, Scale, Lock } from 'lucide-react';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend, AreaChart, Area, PieChart, Pie, Cell } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend, LineChart, Line, AreaChart, Area, PieChart, Pie, Cell } from 'recharts';
 import { PageInsights } from "@/components/PageInsights";
 
 const TrustDecantingPlanner = () => {
@@ -194,7 +193,7 @@ const TrustDecantingPlanner = () => {
           </ul>
         </section>
       )}
-      <PageInsights section="trust-decanting-planner" />
+      <PageInsights pageId="trust-decanting-planner" />
     </div>
   );
 };
