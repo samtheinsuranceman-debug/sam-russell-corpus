@@ -61,45 +61,45 @@ interface ComplianceItem {
   costEstimate?: number;
 }
 
-const generateComplianceItems = (): ComplianceItem[] => {
-  const items: ComplianceItem[] = [];
-  const categories = ["ADV Filing", "Client Agreements", "Advertising", "Cybersecurity", "Books & Records", "AML/KYC", "Suitability", "Privacy", "Custody", "Insurance", "Continuing Ed", "Disclosures"];
-  const statuses: ("compliant" | "warning" | "violation" | "pending")[] = ["compliant", "warning", "violation", "pending"];
-  const priorities: ("high" | "medium" | "low")[] = ["high", "medium", "low"];
-  const departments = ["Legal", "Operations", "IT", "HR", "Executive", "Sales"];
-  
-  for (let i = 1; i <= 50; i++) {
-    const category = categories[i % categories.length];
-    const status = statuses[i % statuses.length];
-    const priority = priorities[i % priorities.length];
-    const dept = departments[i % departments.length];
-    
-    items.push({
-      id: `C-${1000 + i}`,
-      category,
-      title: `${category} Requirement ${i}`,
-      description: `Detailed description for ${category} compliance requirement ${i}. Ensuring adherence to regulatory standards.`,
-      status,
-      dueDate: new Date(Date.now() + (i * 86400000 * (i % 2 === 0 ? 1 : -1))).toISOString().split('T')[0],
-      lastChecked: new Date(Date.now() - (i * 86400000)).toISOString().split('T')[0],
-      regulation: `SEC Rule 20${i % 10}-${i % 5}`,
-      priority,
-      actionRequired: `Action required for item ${i}. Review and update documentation.`,
-      assignee: `User ${i % 10}`,
-      department: dept,
-      impactScore: Math.floor(Math.random() * 100),
-      costEstimate: Math.floor(Math.random() * 10000)
-    });
-  }
-  return items;
+const ALERT_CATEGORY: Record<string, string> = {
+  RMD_DEADLINE: "RMD Deadline",
+  CONTRIBUTION_LIMIT: "Contribution Limit",
+  FILING_DEADLINE: "Filing Deadline",
+  REBALANCE_OVERDUE: "Rebalance Overdue",
+  REVIEW_OVERDUE: "Review Overdue",
+  AGE_MILESTONE: "Age Milestone",
+  HIGH_CONCENTRATION: "High Concentration",
+  STALE_STRATEGY: "Stale Strategy",
 };
 
-const COMPLIANCE_ITEMS = generateComplianceItems();
+/**
+ * Tracked items are the workspace's stored compliance alerts — nothing else.
+ * Fields an alert does not carry (regulation, assignee, department) are left
+ * blank rather than filled in.
+ */
+function alertToItem(alert: any): ComplianceItem {
+  const status: ComplianceItem["status"] = alert.resolvedAt
+    ? "compliant"
+    : alert.severity === "CRITICAL" ? "violation" : alert.severity === "WARNING" ? "warning" : "pending";
+  return {
+    id: `A-${alert.id}`,
+    category: ALERT_CATEGORY[alert.alertType] ?? String(alert.alertType ?? "Alert"),
+    title: alert.title,
+    description: alert.message,
+    status,
+    dueDate: alert.dueDate ? new Date(alert.dueDate).toISOString().split("T")[0] : "Ongoing",
+    lastChecked: alert.createdAt ? new Date(alert.createdAt).toISOString().split("T")[0] : "—",
+    regulation: "—",
+    priority: alert.severity === "CRITICAL" ? "high" : alert.severity === "WARNING" ? "medium" : "low",
+    actionRequired: alert.message,
+    assignee: "Unassigned",
+  };
+}
 
 const STATUS_STYLES = {
   compliant: { bg: "bg-emerald-500/10", text: "text-emerald-400", border: "border-emerald-500/30", label: "Compliant", icon: CheckCircle2, badge: "rc-badge-green" },
   warning: { bg: "bg-amber-500/10", text: "text-amber-400", border: "border-amber-500/30", label: "Warning", icon: AlertTriangle, badge: "rc-badge-gold" },
-  violation: { bg: "bg-red-500/10", text: "text-red-400", border: "border-red-500/30", label: "Violation", icon: XCircle, badge: "rc-badge-red" },
+  violation: { bg: "bg-red-500/10", text: "text-red-400", border: "border-red-500/30", label: "Critical", icon: XCircle, badge: "rc-badge-red" },
   pending: { bg: "bg-blue-500/10", text: "text-blue-400", border: "border-blue-500/30", label: "Pending", icon: Clock, badge: "rc-badge-blue" },
 };
 
@@ -127,7 +127,9 @@ export default function ComplianceMonitoringDashboard() {
   const teamQuery = trpc.team.members.useQuery();
 
   const liveAlerts = alertsListQuery.data ?? [];
-  const liveStats = alertsStatsQuery.data;
+  const COMPLIANCE_ITEMS = useMemo<ComplianceItem[]>(() => liveAlerts.map(alertToItem), [liveAlerts]);
+  const workspaceAuditQuery = trpc.enterprise.auditLogs.useQuery({ page: 1, pageSize: 5 }, { staleTime: 30_000 });
+  const recentAuditLogs = workspaceAuditQuery.data?.logs ?? [];
   
   const handleRefresh = () => {
     setIsRefreshing(true);
@@ -197,16 +199,18 @@ export default function ComplianceMonitoringDashboard() {
       });
     }
     return result;
-  }, [filterStatus, searchQuery, selectedDept, sortConfig]);
+  }, [COMPLIANCE_ITEMS, filterStatus, searchQuery, selectedDept, sortConfig]);
 
   const departments = ["All", ...Array.from(new Set(COMPLIANCE_ITEMS.map((i) => i.department).filter(Boolean)))];
 
   const compliantCount = COMPLIANCE_ITEMS.filter((i) => i.status === "compliant").length;
-  const warningCount = COMPLIANCE_ITEMS.filter((i) => i.status === "warning").length + (liveStats?.warning ?? 0);
+  const warningCount = COMPLIANCE_ITEMS.filter((i) => i.status === "warning").length;
   const pendingCount = COMPLIANCE_ITEMS.filter((i) => i.status === "pending").length;
-  const violationCount = COMPLIANCE_ITEMS.filter((i) => i.status === "violation").length + (liveStats?.critical ?? 0);
-  const totalItems = COMPLIANCE_ITEMS.length + (liveStats?.total ?? 0);
-  const complianceScore = Math.round((compliantCount / Math.max(totalItems, 1)) * 100);
+  const violationCount = COMPLIANCE_ITEMS.filter((i) => i.status === "violation").length;
+  const totalItems = COMPLIANCE_ITEMS.length;
+  // Share of tracked alerts that are resolved. Null with no alerts: no score is shown.
+  const complianceScore: number | null = totalItems > 0 ? Math.round((compliantCount / totalItems) * 100) : null;
+  const scoreForBar = complianceScore ?? 0;
 
   const categoryData = useMemo(() => {
     const cats: Record<string, { compliant: number; warning: number; pending: number; violation: number }> = {};
@@ -215,7 +219,7 @@ export default function ComplianceMonitoringDashboard() {
       cats[item.category][item.status]++;
     });
     return Object.entries(cats).map(([name, counts]) => ({ name: name.length > 14 ? name.slice(0, 14) + "…" : name, ...counts }));
-  }, []);
+  }, [COMPLIANCE_ITEMS]);
 
   const pieData = [
     { name: "Compliant", value: compliantCount },
@@ -224,42 +228,23 @@ export default function ComplianceMonitoringDashboard() {
     { name: "Violation", value: violationCount },
   ].filter((d) => d.value > 0);
 
+  // Alerts created per month over the last 12 months, from stored alerts.
   const trendData = useMemo(() => {
-    return Array.from({ length: 12 }).map((_, i) => ({
-      month: `Month ${i+1}`,
-      score: 70 + Math.random() * 25,
-      violations: Math.floor(Math.random() * 10),
-      warnings: Math.floor(Math.random() * 20)
-    }));
-  }, []);
-
-  const radarData = useMemo(() => {
-    return [
-      { subject: 'Cybersecurity', A: 120, B: 110, fullMark: 150 },
-      { subject: 'AML/KYC', A: 98, B: 130, fullMark: 150 },
-      { subject: 'Suitability', A: 86, B: 130, fullMark: 150 },
-      { subject: 'Privacy', A: 99, B: 100, fullMark: 150 },
-      { subject: 'Advertising', A: 85, B: 90, fullMark: 150 },
-      { subject: 'Books & Records', A: 65, B: 85, fullMark: 150 },
-    ];
-  }, []);
-
-  const composedData = useMemo(() => {
-    return Array.from({ length: 10 }).map((_, i) => ({
-      name: `Dept ${i+1}`,
-      uv: Math.floor(Math.random() * 1000),
-      pv: Math.floor(Math.random() * 800),
-      amt: Math.floor(Math.random() * 500)
-    }));
-  }, []);
-
-  const areaData = useMemo(() => {
-    return Array.from({ length: 30 }).map((_, i) => ({
-      day: i + 1,
-      checks: Math.floor(Math.random() * 50) + 10,
-      passed: Math.floor(Math.random() * 40) + 5
-    }));
-  }, []);
+    const now = new Date();
+    const months = Array.from({ length: 12 }).map((_, i) => {
+      const d = new Date(now.getFullYear(), now.getMonth() - (11 - i), 1);
+      return { key: `${d.getFullYear()}-${d.getMonth()}`, month: d.toLocaleString("en-US", { month: "short" }), violations: 0, warnings: 0 };
+    });
+    liveAlerts.forEach((a: any) => {
+      const d = new Date(a.createdAt);
+      const row = months.find((m) => m.key === `${d.getFullYear()}-${d.getMonth()}`);
+      if (!row) return;
+      if (a.severity === "CRITICAL") row.violations++;
+      else if (a.severity === "WARNING") row.warnings++;
+    });
+    return months;
+  }, [liveAlerts]);
+  const hasTrend = trendData.some((m) => m.violations + m.warnings > 0);
 
   const renderItemsTable = () => (
     <div className="overflow-x-auto rounded-xl border border-[#12233e] bg-[#060d19]">
@@ -326,13 +311,14 @@ export default function ComplianceMonitoringDashboard() {
           </tr>
         </thead>
         <tbody>
-          {Array.from({length: 5}).map((_, i) => (
-            <tr key={i} className="border-b border-[#12233e] hover:bg-[#0d1a2e]/50">
-              <td className="px-4 py-3">{new Date(Date.now() - i * 3600000).toLocaleString()}</td>
-              <td className="px-4 py-3">Updated Compliance Item C-{1000+i}</td>
-              <td className="px-4 py-3">Admin User</td>
-              <td className="px-4 py-3">192.168.1.{100+i}</td>
-              <td className="px-4 py-3"><span className="rc-badge rc-badge-green">Success</span></td>
+          {recentAuditLogs.length === 0 && <tr><td colSpan={5} className="px-4 py-6 text-center text-[#7a95b8]">No audit-log entries yet.</td></tr>}
+          {recentAuditLogs.map((log: any) => (
+            <tr key={log.id} className="border-b border-[#12233e] hover:bg-[#0d1a2e]/50">
+              <td className="px-4 py-3">{new Date(log.createdAt).toLocaleString()}</td>
+              <td className="px-4 py-3">{String(log.action).replace(/_/g, " ")}{log.entityType ? ` — ${log.entityType}` : ""}</td>
+              <td className="px-4 py-3">{log.actorName || log.actorEmail || "System"}</td>
+              <td className="px-4 py-3">{typeof log.metadata?.ip === "string" ? log.metadata.ip : "Not recorded"}</td>
+              <td className="px-4 py-3"><span className="rc-badge rc-badge-green">Logged</span></td>
             </tr>
           ))}
         </tbody>
@@ -352,21 +338,7 @@ export default function ComplianceMonitoringDashboard() {
           </tr>
         </thead>
         <tbody>
-          {Array.from({length: 5}).map((_, i) => (
-            <tr key={i} className="border-b border-[#12233e] hover:bg-[#0d1a2e]/50">
-              <td className="px-4 py-3 font-medium text-white">Team Member {i+1}</td>
-              <td className="px-4 py-3">Compliance Officer</td>
-              <td className="px-4 py-3">{10 + i * 2}</td>
-              <td className="px-4 py-3">
-                <div className="flex items-center gap-2">
-                  <div className="flex-1 h-2 bg-[#12233e] rounded-full overflow-hidden">
-                    <div className="h-full bg-[#22c55e]" style={{width: `${80 + i * 4}%`}}></div>
-                  </div>
-                  <span className="text-xs">{80 + i * 4}%</span>
-                </div>
-              </td>
-            </tr>
-          ))}
+          {<tr><td colSpan={4} className="px-4 py-6 text-center text-[#7a95b8]">Compliance items are not assigned to team members yet, so no per-person figures are shown.</td></tr>}
         </tbody>
       </table>
     </div>
@@ -385,6 +357,7 @@ export default function ComplianceMonitoringDashboard() {
           </tr>
         </thead>
         <tbody>
+          {departments.filter((d) => d !== "All").length === 0 && <tr><td colSpan={5} className="px-4 py-6 text-center text-[#7a95b8]">Alerts are not tagged by department, so no department breakdown is available.</td></tr>}
           {departments.filter((d) => d !== "All").map((dept, i) => {
             const deptItems = COMPLIANCE_ITEMS.filter((item) => item.department === dept);
             const comp = deptItems.filter((item) => item.status === 'compliant').length;
@@ -421,14 +394,7 @@ export default function ComplianceMonitoringDashboard() {
           </tr>
         </thead>
         <tbody>
-          {Array.from({length: 5}).map((_, i) => (
-            <tr key={i} className="border-b border-[#12233e] hover:bg-[#0d1a2e]/50">
-              <td className="px-4 py-3 font-medium text-white">SEC Rule 20{i}-{i%3}</td>
-              <td className="px-4 py-3">SEC</td>
-              <td className="px-4 py-3">2025-10-{10+i}</td>
-              <td className="px-4 py-3"><span className="rc-badge rc-badge-red">High</span></td>
-            </tr>
-          ))}
+          {<tr><td colSpan={4} className="px-4 py-6 text-center text-[#7a95b8]">No regulatory framework register is maintained here yet.</td></tr>}
         </tbody>
       </table>
     </div>
@@ -447,24 +413,7 @@ export default function ComplianceMonitoringDashboard() {
           </tr>
         </thead>
         <tbody>
-          {Array.from({length: 5}).map((_, i) => {
-            const score = Math.floor(Math.random() * 100);
-            return (
-              <tr key={i} className="border-b border-[#12233e] hover:bg-[#0d1a2e]/50">
-                <td className="px-4 py-3 font-medium text-white">Risk Category {i+1}</td>
-                <td className="px-4 py-3">{Math.floor(Math.random() * 100)}%</td>
-                <td className="px-4 py-3">{Math.floor(Math.random() * 100)}%</td>
-                <td className="px-4 py-3">
-                  <span className={`rc-badge ${score > 70 ? 'rc-badge-red' : score > 40 ? 'rc-badge-gold' : 'rc-badge-green'}`}>
-                    {score}
-                  </span>
-                </td>
-                <td className="px-4 py-3">
-                  {i % 2 === 0 ? <ArrowUpRight className="w-4 h-4 text-red-500" /> : <ArrowDownRight className="w-4 h-4 text-emerald-500" />}
-                </td>
-              </tr>
-            );
-          })}
+          {<tr><td colSpan={5} className="px-4 py-6 text-center text-[#7a95b8]">No risk assessment has been recorded. Probability, impact and score will appear here once one is logged; none are estimated.</td></tr>}
         </tbody>
       </table>
     </div>
@@ -482,7 +431,7 @@ export default function ComplianceMonitoringDashboard() {
               </div>
               <div>
                 <h1 className="rc-page-title text-white text-2xl font-bold">Compliance Monitoring Dashboard</h1>
-                <p className="rc-page-subtitle text-[#7a95b8] mt-1">Real-time regulatory compliance tracking across SEC, FINRA, and state requirements.</p>
+                <p className="rc-page-subtitle text-[#7a95b8] mt-1">Compliance alerts raised for this workspace, tracked to resolution.</p>
               </div>
             </div>
           </div>
@@ -505,7 +454,7 @@ export default function ComplianceMonitoringDashboard() {
                 {
                   title: "Compliance Overview",
                   items: [
-                    { label: "Compliance Score", value: `${complianceScore}%` },
+                    { label: "Resolved Share", value: complianceScore === null ? "No alerts" : `${complianceScore}%` },
                     { label: "Total Items", value: totalItems.toString() },
                     { label: "Compliant", value: compliantCount.toString() },
                     { label: "Warnings", value: warningCount.toString() },
@@ -571,10 +520,11 @@ export default function ComplianceMonitoringDashboard() {
           </div>
           <div className="flex flex-col md:flex-row items-center gap-8 relative z-10">
             <div className="text-center md:text-left">
-              <div className={`text-6xl font-black tracking-tight ${complianceScore >= 80 ? "text-[#22c55e]" : complianceScore >= 60 ? "text-[#f0c040]" : "text-red-400"}`}>
-                {complianceScore}%
+              <div className={`text-6xl font-black tracking-tight ${complianceScore === null ? "text-[#7a95b8]" : scoreForBar >= 80 ? "text-[#22c55e]" : scoreForBar >= 60 ? "text-[#f0c040]" : "text-red-400"}`}>
+                {complianceScore === null ? "—" : `${complianceScore}%`}
               </div>
-              <div className="text-sm text-[#7a95b8] mt-2 font-medium uppercase tracking-wider">Overall Compliance Score</div>
+              <div className="text-sm text-[#7a95b8] mt-2 font-medium uppercase tracking-wider">Alerts Resolved</div>
+              <div className="text-xs text-[#7a95b8] mt-1">{totalItems === 0 ? "No compliance alerts on record" : `Of ${totalItems} open or resolved alerts`}</div>
             </div>
             <div className="flex-1 w-full">
               <div className="flex justify-between text-xs text-[#7a95b8] mb-1">
@@ -584,8 +534,8 @@ export default function ComplianceMonitoringDashboard() {
               </div>
               <div className="h-4 bg-[#060d19] rounded-full overflow-hidden border border-[#12233e] mb-4 relative">
                 <div 
-                  className={`h-full transition-all duration-1000 ease-out ${complianceScore >= 80 ? "bg-[#22c55e]" : complianceScore >= 60 ? "bg-[#f0c040]" : "bg-red-500"}`}
-                  style={{ width: `${complianceScore}%` }}
+                  className={`h-full transition-all duration-1000 ease-out ${scoreForBar >= 80 ? "bg-[#22c55e]" : scoreForBar >= 60 ? "bg-[#f0c040]" : "bg-red-500"}`}
+                  style={{ width: `${scoreForBar}%` }}
                 />
                 <div className="absolute top-0 bottom-0 w-1 bg-white z-10" style={{ left: `${numberInputVal}%` }}></div>
               </div>
@@ -608,7 +558,7 @@ export default function ComplianceMonitoringDashboard() {
                 <button onClick={() => {setFilterStatus("violation"); setActiveTab("overview");}} className="flex items-center gap-2 bg-[#060d19]/50 px-3 py-1.5 rounded-lg border border-[#12233e] hover:border-red-400 transition-colors cursor-pointer">
                   <XCircle className="w-4 h-4 text-red-400" /> 
                   <span className="text-white font-medium">{violationCount}</span>
-                  <span className="text-[#7a95b8]">violations</span>
+                  <span className="text-[#7a95b8]">critical</span>
                 </button>
               </div>
             </div>
@@ -705,8 +655,8 @@ export default function ComplianceMonitoringDashboard() {
                   <div className="w-16 h-16 bg-[#060d19] rounded-full flex items-center justify-center mb-4 border border-[#12233e]">
                     <Search className="w-8 h-8 text-[#7a95b8]" />
                   </div>
-                  <h3 className="text-lg font-medium text-white mb-1">No items found</h3>
-                  <p className="text-[#7a95b8]">Try adjusting your search or filters to find what you're looking for.</p>
+                  <h3 className="text-lg font-medium text-white mb-1">{COMPLIANCE_ITEMS.length === 0 ? "No compliance items yet" : "No items found"}</h3>
+                  <p className="text-[#7a95b8]">{COMPLIANCE_ITEMS.length === 0 ? "Items appear here when a compliance check creates alerts for your clients." : "Try adjusting your search or filters to find what you're looking for."}</p>
                   <button 
                     onClick={() => { setFilterStatus("all"); setSearchQuery(""); setSelectedDept("All"); }}
                     className="mt-4 rc-btn rc-btn-ghost"
@@ -898,24 +848,28 @@ export default function ComplianceMonitoringDashboard() {
                 {/* Chart 3: LineChart */}
                 <div className="rc-card">
                   <div className="flex justify-between items-center mb-6">
-                    <h3 className="text-lg font-semibold text-white">Compliance Trend (12 Months)</h3>
+                    <h3 className="text-lg font-semibold text-white">Alerts Raised (12 Months)</h3>
                     <button className="p-1 text-[#7a95b8] hover:text-white transition-colors"><MoreHorizontal className="w-4 h-4"/></button>
                   </div>
                   <div className="h-[300px]">
+                    {!hasTrend ? (
+                      <div className="h-full flex items-center justify-center text-center text-sm text-[#7a95b8] px-6">No alerts raised in the last 12 months.</div>
+                    ) : (
                     <ResponsiveContainer width="100%" height="100%">
                       <LineChart data={trendData} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
                         <CartesianGrid strokeDasharray="3 3" stroke="#12233e" vertical={false} />
                         <XAxis dataKey="month" tick={{ fill: "#7a95b8", fontSize: 11 }} axisLine={{ stroke: '#12233e' }} tickLine={false} />
-                        <YAxis yAxisId="left" tick={{ fill: "#7a95b8", fontSize: 11 }} axisLine={false} tickLine={false} domain={[0, 100]} />
+                        <YAxis yAxisId="left" tick={{ fill: "#7a95b8", fontSize: 11 }} axisLine={false} tickLine={false} allowDecimals={false} />
                         <YAxis yAxisId="right" orientation="right" tick={{ fill: "#7a95b8", fontSize: 11 }} axisLine={false} tickLine={false} />
                         <Tooltip 
                           contentStyle={{ background: "#0d1a2e", border: "1px solid #12233e", borderRadius: "8px", color: "#fff" }}
                         />
                         <Legend iconType="circle" wrapperStyle={{ fontSize: '12px' }} />
-                        <Line yAxisId="left" type="monotone" dataKey="score" stroke="#22c55e" strokeWidth={3} dot={{ r: 4, fill: "#22c55e", strokeWidth: 0 }} activeDot={{ r: 6 }} name="Score %" />
-                        <Line yAxisId="right" type="monotone" dataKey="violations" stroke="#ef4444" strokeWidth={2} dot={false} name="Violations" />
+                        <Line yAxisId="left" type="monotone" dataKey="warnings" stroke="#f0c040" strokeWidth={2} dot={false} name="Warnings" />
+                        <Line yAxisId="left" type="monotone" dataKey="violations" stroke="#ef4444" strokeWidth={2} dot={false} name="Critical" />
                       </LineChart>
                     </ResponsiveContainer>
+                    )}
                   </div>
                 </div>
 
@@ -926,27 +880,7 @@ export default function ComplianceMonitoringDashboard() {
                     <button className="p-1 text-[#7a95b8] hover:text-white transition-colors"><MoreHorizontal className="w-4 h-4"/></button>
                   </div>
                   <div className="h-[300px]">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <AreaChart data={areaData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
-                        <defs>
-                          <linearGradient id="colorChecks" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3}/>
-                            <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
-                          </linearGradient>
-                          <linearGradient id="colorPassed" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="#22c55e" stopOpacity={0.3}/>
-                            <stop offset="95%" stopColor="#22c55e" stopOpacity={0}/>
-                          </linearGradient>
-                        </defs>
-                        <CartesianGrid strokeDasharray="3 3" stroke="#12233e" vertical={false} />
-                        <XAxis dataKey="day" tick={{ fill: "#7a95b8", fontSize: 11 }} axisLine={{ stroke: '#12233e' }} tickLine={false} />
-                        <YAxis tick={{ fill: "#7a95b8", fontSize: 11 }} axisLine={false} tickLine={false} />
-                        <Tooltip contentStyle={{ background: "#0d1a2e", border: "1px solid #12233e", borderRadius: "8px", color: "#fff" }} />
-                        <Legend iconType="circle" wrapperStyle={{ fontSize: '12px' }} />
-                        <Area type="monotone" dataKey="checks" stroke="#3b82f6" fillOpacity={1} fill="url(#colorChecks)" name="Total Checks" />
-                        <Area type="monotone" dataKey="passed" stroke="#22c55e" fillOpacity={1} fill="url(#colorPassed)" name="Passed Checks" />
-                      </AreaChart>
-                    </ResponsiveContainer>
+                    <div className="h-full flex items-center justify-center text-center text-sm text-[#7a95b8] px-6">Automated check runs are not logged per day, so no check history is shown.</div>
                   </div>
                 </div>
 
@@ -957,17 +891,7 @@ export default function ComplianceMonitoringDashboard() {
                     <button className="p-1 text-[#7a95b8] hover:text-white transition-colors"><MoreHorizontal className="w-4 h-4"/></button>
                   </div>
                   <div className="h-[300px]">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <RadarChart cx="50%" cy="50%" outerRadius="80%" data={radarData}>
-                        <PolarGrid stroke="#12233e" />
-                        <PolarAngleAxis dataKey="subject" tick={{ fill: "#7a95b8", fontSize: 11 }} />
-                        <PolarRadiusAxis angle={30} domain={[0, 150]} tick={{ fill: "#7a95b8", fontSize: 10 }} />
-                        <Radar name="Current Risk" dataKey="A" stroke="#ef4444" fill="#ef4444" fillOpacity={0.3} />
-                        <Radar name="Industry Avg" dataKey="B" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.3} />
-                        <Legend iconType="circle" wrapperStyle={{ fontSize: '12px' }} />
-                        <Tooltip contentStyle={{ background: "#0d1a2e", border: "1px solid #12233e", borderRadius: "8px", color: "#fff" }} />
-                      </RadarChart>
-                    </ResponsiveContainer>
+                    <div className="h-full flex items-center justify-center text-center text-sm text-[#7a95b8] px-6">No risk profile or industry benchmark is recorded. Nothing is estimated here.</div>
                   </div>
                 </div>
 
@@ -978,17 +902,7 @@ export default function ComplianceMonitoringDashboard() {
                     <button className="p-1 text-[#7a95b8] hover:text-white transition-colors"><MoreHorizontal className="w-4 h-4"/></button>
                   </div>
                   <div className="h-[300px]">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <ComposedChart data={composedData} margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
-                        <CartesianGrid stroke="#12233e" strokeDasharray="3 3" vertical={false} />
-                        <XAxis dataKey="name" tick={{ fill: "#7a95b8", fontSize: 11 }} axisLine={{ stroke: '#12233e' }} tickLine={false} />
-                        <YAxis tick={{ fill: "#7a95b8", fontSize: 11 }} axisLine={false} tickLine={false} />
-                        <Tooltip contentStyle={{ background: "#0d1a2e", border: "1px solid #12233e", borderRadius: "8px", color: "#fff" }} />
-                        <Legend iconType="circle" wrapperStyle={{ fontSize: '12px' }} />
-                        <Bar dataKey="pv" barSize={20} fill="#3b82f6" name="Items Processed" radius={[4, 4, 0, 0]} />
-                        <Line type="monotone" dataKey="uv" stroke="#f0c040" strokeWidth={2} name="Target Metric" />
-                      </ComposedChart>
-                    </ResponsiveContainer>
+                    <div className="h-full flex items-center justify-center text-center text-sm text-[#7a95b8] px-6">Alerts are not tagged by department, so no department metrics are shown.</div>
                   </div>
                 </div>
               </div>
@@ -1115,7 +1029,7 @@ export default function ComplianceMonitoringDashboard() {
                     <FileText className="w-5 h-5 text-[#22c55e]" /> Compliance Overview
                   </h3>
                   <p className="text-[#c8d8ec] text-sm leading-relaxed">
-                    The Compliance Monitoring Dashboard tracks <strong className="text-white">{COMPLIANCE_ITEMS.length}</strong> regulatory requirements across SEC, FINRA, state, and industry standards.
+                    This dashboard tracks <strong className="text-white">{COMPLIANCE_ITEMS.length}</strong> open or resolved compliance alerts raised by the compliance checks for this workspace.
                   </p>
                   <div className="my-4 h-[1px] bg-[#12233e]" />
                   <p className="text-[#c8d8ec] text-sm leading-relaxed mb-4">

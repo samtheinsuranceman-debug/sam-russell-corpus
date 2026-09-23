@@ -32,12 +32,27 @@ const DigitalEstatePlanner: React.FC = () => {
   const handleAddSocial = () => setSocialAccounts([...socialAccounts, { platform: '', handle: '', legacyContact: '' }]);
 
   const handleGenerateOutcome = () => {
-    const successRate = Math.floor(Math.random() * 50 + 50);
-    const issues = successRate < 80 
-      ? ['Incomplete wallet keys', 'Missing legacy contact for social accounts'] 
-      : [];
+    // Readiness is computed from what has been entered: every listed asset
+    // needs a named item plus access instructions, every account a legacy contact.
+    const cryptoRows = cryptoAssets.filter((a) => a.name.trim() || a.value.trim() || a.walletKey.trim());
+    const socialRows = socialAccounts.filter((a) => a.platform.trim() || a.handle.trim() || a.legacyContact.trim());
+    const checks: boolean[] = [
+      ...cryptoRows.map((a) => Boolean(a.name.trim() && a.walletKey.trim())),
+      ...socialRows.map((a) => Boolean((a.platform.trim() || a.handle.trim()) && a.legacyContact.trim())),
+    ];
+    if (checks.length === 0) {
+      setSimulationResult(null);
+      toast.error('Add at least one digital asset or account to assess readiness.');
+      return;
+    }
+    const successRate = Math.round((checks.filter(Boolean).length / checks.length) * 100);
+    const issues: string[] = [];
+    const missingKeys = cryptoRows.filter((a) => !a.walletKey.trim()).length;
+    const missingContacts = socialRows.filter((a) => !a.legacyContact.trim()).length;
+    if (missingKeys) issues.push(`${missingKeys} digital asset${missingKeys === 1 ? '' : 's'} without access instructions`);
+    if (missingContacts) issues.push(`${missingContacts} account${missingContacts === 1 ? '' : 's'} without a legacy contact`);
     setSimulationResult({ successRate, issues });
-    toast.success('Outcome generated based on current data.');
+    toast.success('Readiness calculated from the items you entered.');
   };
 
   return (
@@ -207,7 +222,7 @@ const DigitalEstatePlanner: React.FC = () => {
           </button>
           {simulationResult && (
             <div className="mt-4 text-[#7a95b8]">
-              <p>Success Rate: {simulationResult.successRate}%</p>
+              <p>Plan readiness: {simulationResult.successRate}% of listed items have complete access details</p>
               {simulationResult.issues.length > 0 && (
                 <ul className="list-disc ml-5">
                   {simulationResult.issues.map((issue, idx) => (

@@ -68,34 +68,6 @@ import {
   Minus
 } from "lucide-react";
 
-const MOCK_TIME_SERIES = Array.from({ length: 30 }).map((_, i) => ({
-  date: new Date(Date.now() - (29 - i) * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-  actions: Math.floor(Math.random() * 100) + 20,
-  errors: Math.floor(Math.random() * 10),
-  warnings: Math.floor(Math.random() * 20)
-}));
-
-const MOCK_SEVERITY_DATA = [
-  { name: "Low", value: 400, color: "#3b82f6" },
-  { name: "Medium", value: 300, color: "#f59e0b" },
-  { name: "High", value: 200, color: "#ef4444" },
-  { name: "Critical", value: 100, color: "#991b1b" }
-];
-
-const MOCK_RESOURCE_USAGE = [
-  { name: "CPU", value: 45, fullMark: 100 },
-  { name: "Memory", value: 60, fullMark: 100 },
-  { name: "Storage", value: 80, fullMark: 100 },
-  { name: "Network", value: 30, fullMark: 100 },
-  { name: "DB Connections", value: 50, fullMark: 100 }
-];
-
-const MOCK_COMPLIANCE_SCORES = Array.from({ length: 12 }).map((_, i) => ({
-  month: new Date(2023, i, 1).toLocaleString('default', { month: 'short' }),
-  score: Math.floor(Math.random() * 20) + 80,
-  target: 95
-}));
-
 const ACTION_TYPES = [
   { value: "ALL", label: "All Actions" },
   { value: "CLIENT_CREATED", label: "Client Created" },
@@ -701,30 +673,31 @@ export default function ComplianceExport() {
             </div>
           </div>
           <div className="flex-1 w-full">
+            {chartData.timelineData.length === 0 ? (
+              <div className="h-full flex items-center justify-center text-center text-sm text-[#7a95b8] px-6">No logged activity matches these filters. Actions recorded in the activity log will be charted here.</div>
+            ) : (
             <ResponsiveContainer width="100%" height="100%">
               {chartView === 'line' ? (
-                <LineChart data={MOCK_TIME_SERIES} margin={{ top: 5, right: 20, left: -20, bottom: 0 }}>
+                <LineChart data={chartData.timelineData} margin={{ top: 5, right: 20, left: -20, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#12233e" vertical={false} />
                   <XAxis dataKey="date" stroke="#7a95b8" fontSize={10} tickLine={false} axisLine={false} tickFormatter={(val) => val.substring(5)} />
-                  <YAxis stroke="#7a95b8" fontSize={10} tickLine={false} axisLine={false} />
+                  <YAxis stroke="#7a95b8" fontSize={10} tickLine={false} axisLine={false} allowDecimals={false} />
                   <RTooltip contentStyle={{ background: "#060d19", border: "1px solid #12233e", borderRadius: 8 }} />
                   <Legend wrapperStyle={{ fontSize: '12px', color: '#7a95b8' }} />
-                  <Line type="monotone" dataKey="actions" stroke="#3b82f6" strokeWidth={2} dot={false} activeDot={{ r: 4 }} name="Total Actions" />
-                  <Line type="monotone" dataKey="warnings" stroke="#f59e0b" strokeWidth={2} dot={false} name="Warnings" />
+                  <Line type="monotone" dataKey="count" stroke="#3b82f6" strokeWidth={2} dot={false} activeDot={{ r: 4 }} name="Logged Actions" />
                 </LineChart>
               ) : (
-                <BarChart data={MOCK_TIME_SERIES} margin={{ top: 5, right: 20, left: -20, bottom: 0 }}>
+                <BarChart data={chartData.timelineData} margin={{ top: 5, right: 20, left: -20, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#12233e" vertical={false} />
                   <XAxis dataKey="date" stroke="#7a95b8" fontSize={10} tickLine={false} axisLine={false} tickFormatter={(val) => val.substring(5)} />
-                  <YAxis stroke="#7a95b8" fontSize={10} tickLine={false} axisLine={false} />
+                  <YAxis stroke="#7a95b8" fontSize={10} tickLine={false} axisLine={false} allowDecimals={false} />
                   <RTooltip contentStyle={{ background: "#060d19", border: "1px solid #12233e", borderRadius: 8 }} cursor={{ fill: "#12233e", opacity: 0.5 }} />
                   <Legend wrapperStyle={{ fontSize: '12px', color: '#7a95b8' }} />
-                  <Bar dataKey="actions" fill="#3b82f6" radius={[2, 2, 0, 0]} stackId="a" name="Normal" />
-                  <Bar dataKey="warnings" fill="#f59e0b" radius={[0, 0, 0, 0]} stackId="a" name="Warnings" />
-                  <Bar dataKey="errors" fill="#ef4444" radius={[2, 2, 0, 0]} stackId="a" name="Errors" />
+                  <Bar dataKey="count" fill="#3b82f6" radius={[2, 2, 0, 0]} name="Logged Actions" />
                 </BarChart>
               )}
             </ResponsiveContainer>
+            )}
           </div>
         </div>
 
@@ -783,27 +756,7 @@ export default function ComplianceExport() {
             </h3>
           </div>
           <div className="flex-1 w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={MOCK_TIME_SERIES} margin={{ top: 5, right: 20, left: -20, bottom: 0 }}>
-                <defs>
-                  <linearGradient id="colorErrors" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#ef4444" stopOpacity={0.3}/>
-                    <stop offset="95%" stopColor="#ef4444" stopOpacity={0}/>
-                  </linearGradient>
-                  <linearGradient id="colorWarnings" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.3}/>
-                    <stop offset="95%" stopColor="#f59e0b" stopOpacity={0}/>
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#12233e" vertical={false} />
-                <XAxis dataKey="date" stroke="#7a95b8" fontSize={10} tickLine={false} axisLine={false} tickFormatter={(val) => val.substring(5)} />
-                <YAxis stroke="#7a95b8" fontSize={10} tickLine={false} axisLine={false} />
-                <RTooltip contentStyle={{ background: "#060d19", border: "1px solid #12233e", borderRadius: 8 }} />
-                <Legend wrapperStyle={{ fontSize: '12px', color: '#7a95b8' }} />
-                <Area type="monotone" dataKey="errors" stroke="#ef4444" fillOpacity={1} fill="url(#colorErrors)" name="Critical/Errors" />
-                <Area type="monotone" dataKey="warnings" stroke="#f59e0b" fillOpacity={1} fill="url(#colorWarnings)" name="Warnings" />
-              </AreaChart>
-            </ResponsiveContainer>
+            <div className="h-full flex items-center justify-center text-center text-sm text-[#7a95b8] px-6">Activity-log entries carry no severity level, so no severity trend is shown. See Compliance Alerts for severity-rated items.</div>
           </div>
         </div>
 
@@ -816,15 +769,7 @@ export default function ComplianceExport() {
             </h3>
           </div>
           <div className="flex-1 w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <RadarChart cx="50%" cy="50%" outerRadius="70%" data={MOCK_RESOURCE_USAGE}>
-                <PolarGrid stroke="#12233e" />
-                <PolarAngleAxis dataKey="name" tick={{ fill: '#7a95b8', fontSize: 10 }} />
-                <PolarRadiusAxis angle={30} domain={[0, 100]} tick={{ fill: '#7a95b8', fontSize: 10 }} />
-                <Radar name="Usage %" dataKey="value" stroke="#34d399" fill="#34d399" fillOpacity={0.4} />
-                <RTooltip contentStyle={{ background: "#060d19", border: "1px solid #12233e", borderRadius: 8 }} />
-              </RadarChart>
-            </ResponsiveContainer>
+            <div className="h-full flex items-center justify-center text-center text-sm text-[#7a95b8] px-6">System resource monitoring is not connected to this page. No usage figures are shown.</div>
           </div>
         </div>
 
@@ -835,29 +780,9 @@ export default function ComplianceExport() {
               <ShieldCheck className="h-4 w-4 text-[#10b981]" />
               Compliance Health Score Trend
             </h3>
-            <div className="text-right">
-              <div className="text-2xl font-bold text-white">94.2%</div>
-              <div className="text-xs text-[#22c55e] flex items-center justify-end gap-1">
-                <TrendingUp className="h-3 w-3" /> +2.4% vs last month
-              </div>
-            </div>
           </div>
           <div className="flex-1 w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <ComposedChart data={MOCK_COMPLIANCE_SCORES} margin={{ top: 20, right: 20, bottom: 20, left: -20 }}>
-                <CartesianGrid stroke="#12233e" strokeDasharray="3 3" vertical={false} />
-                <XAxis dataKey="month" stroke="#7a95b8" fontSize={11} tickLine={false} axisLine={false} />
-                <YAxis stroke="#7a95b8" fontSize={11} tickLine={false} axisLine={false} domain={[0, 100]} />
-                <RTooltip contentStyle={{ background: "#060d19", border: "1px solid #12233e", borderRadius: 8 }} />
-                <Legend wrapperStyle={{ fontSize: '12px', color: '#7a95b8' }} />
-                <Bar dataKey="score" barSize={20} fill="#3b82f6" radius={[4, 4, 0, 0]} name="Actual Score">
-                  {MOCK_COMPLIANCE_SCORES.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.score >= entry.target ? '#10b981' : entry.score >= 80 ? '#f59e0b' : '#ef4444'} />
-                  ))}
-                </Bar>
-                <Line type="monotone" dataKey="target" stroke="#ef4444" strokeWidth={2} strokeDasharray="5 5" dot={false} name="Target Score (95%)" />
-              </ComposedChart>
-            </ResponsiveContainer>
+            <div className="h-full flex items-center justify-center text-center text-sm text-[#7a95b8] px-6">No compliance health score is calculated yet. A monthly score will appear here once a scoring method is recorded against real reviews; none is estimated.</div>
           </div>
         </div>
       </div>

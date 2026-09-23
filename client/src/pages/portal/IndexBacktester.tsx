@@ -1,6 +1,7 @@
 // @ts-nocheck
 import React, { useState, useMemo, useCallback, useEffect } from "react";
 import { trpc } from "@/lib/trpc";
+import { ALL_INDEX_OPTIONS, getCreditingHistory, MAX_YEAR, RAW_INDEX_RETURNS } from "@shared/indexCreditingData";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -98,6 +99,26 @@ const mockPieData = [
   { name: 'Russell 2000', value: 300 },
   { name: 'MSCI EAFE', value: 200 },
 ];
+
+/**
+ * Ten-year crediting statistics for one option, computed from the same
+ * historical index series the backtest engine uses.
+ */
+function tenYearCreditingStats(optionId: string) {
+  const option = ALL_INDEX_OPTIONS.find((o) => o.id === optionId);
+  if (!option) return null;
+  const from = MAX_YEAR - 9;
+  const history = getCreditingHistory(option, from, MAX_YEAR);
+  if (history.length === 0) return null;
+  const rates = history.map((h) => h.creditedRate);
+  return {
+    from,
+    to: MAX_YEAR,
+    average: rates.reduce((a, b) => a + b, 0) / rates.length,
+    best: Math.max(...rates),
+    zeroYears: rates.filter((r) => r <= 0).length,
+  };
+}
 
 export default function IndexBacktester() {
   const { clientData } = useClientData();
@@ -289,14 +310,20 @@ export default function IndexBacktester() {
 
   const chartData = useMemo(() => {
     if (!simResult) return [];
-    return simResult.years.map((y) => ({
+    // Benchmark: the same premium paid in at the start of each year and left
+    // in the S&P 500 price index (no dividends, no floor, no cap).
+    let benchmarkValue = 0;
+    return simResult.years.map((y) => {
+      benchmarkValue = (benchmarkValue + (simResult.annualPremium ?? annualPremium)) * (1 + (RAW_INDEX_RETURNS.SP500[y.year] ?? 0) / 100);
+      return {
       year: y.year,
       accountValue: y.endingValue,
       creditRate: y.weightedCreditRate,
       premium: annualPremium,
-      benchmark: y.endingValue * (1 + (Math.random() * 0.1 - 0.05)), // Mock benchmark data
+      benchmark: Math.round(benchmarkValue),
       inflationAdjusted: y.endingValue / Math.pow(1 + inflationRate / 100, y.year - startYear + 1)
-    }));
+      };
+    });
   }, [simResult, annualPremium, inflationRate, startYear]);
 
   const rollingChartData = useMemo(() => {
@@ -913,20 +940,33 @@ export default function IndexBacktester() {
                                     {opt.spread > 0 ? `, minus a ${opt.spread}% spread` : ''}.
                                     The floor is strictly 0%, meaning you will never lose principal due to market downturns.
                                   </p>
-                                  <div className="bg-background p-3 rounded border text-xs space-y-2">
-                                    <div className="flex justify-between">
-                                      <span className="text-muted-foreground">Historical 10Y Avg:</span>
-                                      <span className="font-medium">{(Math.random() * 4 + 4).toFixed(2)}%</span>
-                                    </div>
-                                    <div className="flex justify-between">
-                                      <span className="text-muted-foreground">Best Year (Historical):</span>
-                                      <span className="font-medium text-emerald-600">{(Math.random() * 5 + 10).toFixed(2)}%</span>
-                                    </div>
-                                    <div className="flex justify-between">
-                                      <span className="text-muted-foreground">0% Years (Historical):</span>
-                                      <span className="font-medium text-amber-600">{Math.floor(Math.random() * 3 + 1)}</span>
-                                    </div>
-                                  </div>
+                                  {(() => {
+                                    const stats = tenYearCreditingStats(opt.id);
+                                    if (!stats) {
+                                      return (
+                                        <div className="bg-background p-3 rounded border text-xs text-muted-foreground">
+                                          No crediting history available for this option.
+                                        </div>
+                                      );
+                                    }
+                                    return (
+                                      <div className="bg-background p-3 rounded border text-xs space-y-2">
+                                        <div className="flex justify-between">
+                                          <span className="text-muted-foreground">Backtested Avg Credit ({stats.from}–{stats.to}):</span>
+                                          <span className="font-medium">{stats.average.toFixed(2)}%</span>
+                                        </div>
+                                        <div className="flex justify-between">
+                                          <span className="text-muted-foreground">Best Year (Backtested):</span>
+                                          <span className="font-medium text-emerald-600">{stats.best.toFixed(2)}%</span>
+                                        </div>
+                                        <div className="flex justify-between">
+                                          <span className="text-muted-foreground">0% Years (Backtested):</span>
+                                          <span className="font-medium text-amber-600">{stats.zeroYears}</span>
+                                        </div>
+                                        <p className="text-[10px] text-muted-foreground">Current terms applied to historical index returns; not the carrier's actual declared credits.</p>
+                                      </div>
+                                    );
+                                  })()}
                                 </div>
                                 
                                 <div className="col-span-2">
@@ -1152,7 +1192,7 @@ export default function IndexBacktester() {
                             yAxisId="left"
                             type="monotone"
                             dataKey="benchmark"
-                            name="S&P 500 Benchmark"
+                            name="S&P 500 Price Index (same premiums)"
                             stroke="#94a3b8"
                             strokeWidth={2}
                             strokeDasharray="5 5"

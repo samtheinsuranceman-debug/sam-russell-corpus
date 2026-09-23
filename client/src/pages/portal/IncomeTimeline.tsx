@@ -194,7 +194,7 @@ export default function IncomeTimeline() {
 
   const addSource = () => {
     setSources(s => [...s, {
-      id: Math.random().toString(36).substring(7),
+      id: crypto.randomUUID(),
       name: "New Source", startAge: retirementAge, endAge: endAge,
       annualAmount: 10000, growthRate: 0, taxable: false, color: "#10b981", category: "Other"
     }]);

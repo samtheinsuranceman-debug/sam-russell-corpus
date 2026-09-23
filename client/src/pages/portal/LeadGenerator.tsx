@@ -211,41 +211,10 @@ export default function LeadGenerator() {
     setShowConfirmDialog(false);
     setIsGenerating(true);
 
-    setTimeout(() => {
-      const leads = Array.from({ length: leadCount }, (_, i) => ({
-        id: `LD-${Math.floor(Math.random() * 10000)}`,
-        firstName: ["James", "Sarah", "Michael", "Jennifer", "Robert", "Lisa", "David", "Maria", "William", "Patricia", "Richard", "Elizabeth", "Thomas", "Susan", "Charles", "Margaret", "Daniel", "Dorothy", "Matthew", "Karen"][Math.floor(Math.random() * 20)],
-        lastName: ["Anderson", "Thompson", "Martinez", "Robinson", "Clark", "Rodriguez", "Lewis", "Lee", "Walker", "Hall", "Allen", "Young", "King", "Wright", "Lopez", "Hill", "Scott", "Green", "Adams", "Baker"][Math.floor(Math.random() * 20)],
-        email: verifiedOnly ? `verified_${Date.now()}_${i}@example.com` : null,
-        phone: includePhone ? `(${Math.floor(Math.random() * 900) + 100}) ${Math.floor(Math.random() * 900) + 100}-${Math.floor(Math.random() * 9000) + 1000}` : null,
-        city: city || ["Miami", "Orlando", "Tampa", "Jacksonville", "Fort Lauderdale", "Naples", "Sarasota", "West Palm Beach"][Math.floor(Math.random() * 8)],
-        state: state || "Florida",
-        age: Math.floor(Math.random() * 20) + 45,
-        estimatedIncome: Math.floor(Math.random() * 300 + 100) * 1000,
-        netWorth: Math.floor(Math.random() * 5000 + 500) * 1000,
-        category: category?.name,
-        confidence: Math.floor(Math.random() * 20) + 80,
-        status: "New",
-        dateAdded: new Date().toISOString(),
-        lastContact: null,
-        notes: "Generated via AI matching engine.",
-        engagementScore: Math.floor(Math.random() * 100),
-        riskTolerance: ["Conservative", "Moderate", "Aggressive"][Math.floor(Math.random() * 3)]
-      }));
-
-      setGeneratedLeads(prev => [...leads, ...prev]);
-      setCreditBalance(prev => prev - estimatedCredits);
-      setTotalCreditsSpent(prev => prev + estimatedCredits);
-      const newTotal = totalLeadsGenerated + leadCount;
-      setTotalLeadsGenerated(newTotal);
-      setIsGenerating(false);
-      checkTrophies(newTotal);
-      toast.success(`${leadCount} exclusive leads generated successfully!`);
-      setActiveTab("results");
-      
-      logActivity({ action: "generate_leads", details: `Generated ${leadCount} leads` });
-      trackBilling({ amount: estimatedCredits, type: "spend" });
-    }, 2000);
+    // No lead data source is connected. Leads are never invented: nothing is
+    // generated, nothing is added to the table and no credits are deducted.
+    setIsGenerating(false);
+    toast.error("Lead sourcing is not connected yet. No leads were generated and no credits were used.");
   };
 
   const purchaseCredits = (pkg: typeof CREDIT_PACKAGES[0]) => {
@@ -320,16 +289,19 @@ export default function LeadGenerator() {
   };
 
   const leadQualityData = [
-    { name: 'A+ (90-100)', value: generatedLeads.filter((l) => l.confidence >= 90).length || 5 },
-    { name: 'A (80-89)', value: generatedLeads.filter((l) => l.confidence >= 80 && l.confidence < 90).length || 15 },
-    { name: 'B (70-79)', value: generatedLeads.filter((l) => l.confidence >= 70 && l.confidence < 80).length || 8 },
-    { name: 'C (<70)', value: generatedLeads.filter((l) => l.confidence < 70).length || 2 },
+    { name: 'A+ (90-100)', value: generatedLeads.filter((l) => l.confidence >= 90).length },
+    { name: 'A (80-89)', value: generatedLeads.filter((l) => l.confidence >= 80 && l.confidence < 90).length },
+    { name: 'B (70-79)', value: generatedLeads.filter((l) => l.confidence >= 70 && l.confidence < 80).length },
+    { name: 'C (<70)', value: generatedLeads.filter((l) => l.confidence < 70).length },
   ];
 
   const leadCategoryData = LEAD_CATEGORIES.map((cat) => ({
     name: cat.name.split(' ')[0],
-    count: generatedLeads.filter((l) => l.category === cat.name).length || Math.floor(Math.random() * 20),
-    avgScore: Math.floor(Math.random() * 20) + 70
+    count: generatedLeads.filter((l) => l.category === cat.name).length,
+    avgScore: (() => {
+      const inCat = generatedLeads.filter((l) => l.category === cat.name);
+      return inCat.length ? Math.round(inCat.reduce((a, l) => a + (l.confidence ?? 0), 0) / inCat.length) : null;
+    })()
   }));
 
   const timelineData = Array.from({ length: 7 }, (_, i) => {
@@ -337,28 +309,11 @@ export default function LeadGenerator() {
     d.setDate(d.getDate() - (6 - i));
     return {
       date: d.toLocaleDateString('en-US', { weekday: 'short' }),
-      generated: Math.floor(Math.random() * 50),
-      converted: Math.floor(Math.random() * 10),
-      cost: Math.floor(Math.random() * 1000)
+      generated: generatedLeads.filter((l) => new Date(l.dateAdded).toDateString() === d.toDateString()).length,
+      converted: 0,
+      cost: 0
     };
   });
-
-  const radarData = [
-    { subject: 'Income', A: 120, B: 110, fullMark: 150 },
-    { subject: 'Net Worth', A: 98, B: 130, fullMark: 150 },
-    { subject: 'Engagement', A: 86, B: 130, fullMark: 150 },
-    { subject: 'Readiness', A: 99, B: 100, fullMark: 150 },
-    { subject: 'Fit Score', A: 85, B: 90, fullMark: 150 },
-    { subject: 'Location', A: 65, B: 85, fullMark: 150 },
-  ];
-
-  const stateDistributionData = [
-    { name: 'FL', leads: 45, avgIncome: 120 },
-    { name: 'TX', leads: 30, avgIncome: 110 },
-    { name: 'CA', leads: 25, avgIncome: 150 },
-    { name: 'NY', leads: 20, avgIncome: 140 },
-    { name: 'IL', leads: 15, avgIncome: 105 },
-  ];
 
   const formatCurrency = (val: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(val);
 
@@ -883,7 +838,10 @@ export default function LeadGenerator() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="h-[300px]">
-                  <ResponsiveContainer width="100%" height="100%">
+                  {generatedLeads.length === 0 ? (
+<div className="h-full flex items-center justify-center text-center text-sm text-slate-400 px-6">No leads yet. Lead sourcing is not connected, so nothing is charted.</div>
+) : (
+<ResponsiveContainer width="100%" height="100%">
                     <PieChart>
                       <Pie data={leadQualityData} cx="50%" cy="50%" innerRadius={60} outerRadius={100} paddingAngle={5} dataKey="value">
                         {leadQualityData.map((entry, index) => (
@@ -894,6 +852,7 @@ export default function LeadGenerator() {
                       <Legend />
                     </PieChart>
                   </ResponsiveContainer>
+)}
                 </CardContent>
               </Card>
 
@@ -905,7 +864,10 @@ export default function LeadGenerator() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="h-[300px]">
-                  <ResponsiveContainer width="100%" height="100%">
+                  {generatedLeads.length === 0 ? (
+<div className="h-full flex items-center justify-center text-center text-sm text-slate-400 px-6">No leads yet. Lead sourcing is not connected, so nothing is charted.</div>
+) : (
+<ResponsiveContainer width="100%" height="100%">
                     <BarChart data={leadCategoryData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
                       <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} />
                       <XAxis dataKey="name" stroke="#94a3b8" fontSize={12} tickLine={false} />
@@ -914,6 +876,7 @@ export default function LeadGenerator() {
                       <Bar dataKey="count" fill="#10b981" radius={[4, 4, 0, 0]} />
                     </BarChart>
                   </ResponsiveContainer>
+)}
                 </CardContent>
               </Card>
 
@@ -925,7 +888,10 @@ export default function LeadGenerator() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="h-[300px]">
-                  <ResponsiveContainer width="100%" height="100%">
+                  {generatedLeads.length === 0 ? (
+<div className="h-full flex items-center justify-center text-center text-sm text-slate-400 px-6">No leads yet. Lead sourcing is not connected, so nothing is charted.</div>
+) : (
+<ResponsiveContainer width="100%" height="100%">
                     <AreaChart data={timelineData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
                       <defs>
                         <linearGradient id="colorGenerated" x1="0" y1="0" x2="0" y2="1">
@@ -940,6 +906,7 @@ export default function LeadGenerator() {
                       <Area type="monotone" dataKey="generated" stroke="#10b981" fillOpacity={1} fill="url(#colorGenerated)" />
                     </AreaChart>
                   </ResponsiveContainer>
+)}
                 </CardContent>
               </Card>
 
@@ -951,17 +918,7 @@ export default function LeadGenerator() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="h-[300px]">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <RadarChart cx="50%" cy="50%" outerRadius="80%" data={radarData}>
-                      <PolarGrid stroke="#334155" />
-                      <PolarAngleAxis dataKey="subject" tick={{ fill: '#94a3b8', fontSize: 12 }} />
-                      <PolarRadiusAxis angle={30} domain={[0, 150]} tick={false} axisLine={false} />
-                      <Radar name="Your Leads" dataKey="A" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.5} />
-                      <Radar name="Platform Avg" dataKey="B" stroke="#10b981" fill="#10b981" fillOpacity={0.3} />
-                      <Legend />
-                      <Tooltip contentStyle={{ backgroundColor: '#1e293b', borderColor: '#334155' }} />
-                    </RadarChart>
-                  </ResponsiveContainer>
+                  <div className="h-full flex items-center justify-center text-center text-sm text-slate-400 px-6">No profile-match scoring or platform average is recorded.</div>
                 </CardContent>
               </Card>
 
@@ -973,18 +930,7 @@ export default function LeadGenerator() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="h-[300px]">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <ComposedChart data={timelineData} margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
-                      <CartesianGrid stroke="#334155" strokeDasharray="3 3" vertical={false} />
-                      <XAxis dataKey="date" stroke="#94a3b8" fontSize={12} />
-                      <YAxis yAxisId="left" stroke="#94a3b8" fontSize={12} />
-                      <YAxis yAxisId="right" orientation="right" stroke="#94a3b8" fontSize={12} />
-                      <Tooltip contentStyle={{ backgroundColor: '#1e293b', borderColor: '#334155' }} />
-                      <Legend />
-                      <Bar yAxisId="left" dataKey="cost" name="Cost (Credits)" barSize={20} fill="#6366f1" />
-                      <Line yAxisId="right" type="monotone" dataKey="converted" name="Conversions" stroke="#f59e0b" strokeWidth={3} />
-                    </ComposedChart>
-                  </ResponsiveContainer>
+                  <div className="h-full flex items-center justify-center text-center text-sm text-slate-400 px-6">No lead costs or conversions are recorded.</div>
                 </CardContent>
               </Card>
             </div>
@@ -1000,13 +946,7 @@ export default function LeadGenerator() {
                       <tr><th className="p-2 text-left text-slate-400 font-medium">State</th><th className="p-2 text-right text-slate-400 font-medium">Leads</th><th className="p-2 text-right text-slate-400 font-medium">Avg Income</th></tr>
                     </thead>
                     <tbody>
-                      {stateDistributionData.map((d) => (
-                        <tr key={d.name} className="border-b border-slate-700/30">
-                          <td className="p-2 text-white">{d.name}</td>
-                          <td className="p-2 text-right text-slate-300">{d.leads}</td>
-                          <td className="p-2 text-right text-emerald-400">${d.avgIncome}k</td>
-                        </tr>
-                      ))}
+                      <tr><td colSpan={3} className="p-4 text-center text-slate-400">No leads yet, so no state breakdown.</td></tr>
                     </tbody>
                   </table>
                 </CardContent>
@@ -1082,8 +1022,8 @@ export default function LeadGenerator() {
                         <tr key={d.name} className="border-b border-slate-700/30">
                           <td className="p-2 text-white">{d.name}</td>
                           <td className="p-2 text-right text-slate-300">250 cr</td>
-                          <td className="p-2 text-right text-blue-400">{d.avgScore}</td>
-                          <td className="p-2 text-right text-emerald-400">High</td>
+                          <td className="p-2 text-right text-blue-400">{d.avgScore ?? "—"}</td>
+                          <td className="p-2 text-right text-slate-400">—</td>
                         </tr>
                       ))}
                     </tbody>

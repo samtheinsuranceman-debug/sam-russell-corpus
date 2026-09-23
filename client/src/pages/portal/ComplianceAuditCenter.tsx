@@ -99,7 +99,7 @@ export default function ComplianceAuditCenter() {
   }, { staleTime: 30_000 });
   
   const complianceAlertsQuery = trpc.complianceAlerts.list.useQuery({
-    status: "active"
+    dismissed: false
   }, { staleTime: 30_000 });
 
   const securityEventsQuery = trpc.complianceTracking.getEvents.useQuery({
@@ -215,57 +215,42 @@ export default function ComplianceAuditCenter() {
       name: t.type.replace(/_/g, " "),
       count: t.count,
       originalType: t.type,
-      successRate: Math.floor(Math.random() * 20) + 80, // Mock data for richer charts
-      avgDuration: Math.floor(Math.random() * 500) + 100
     })).sort((a, b) => b.count - a.count).slice(0, 10);
   }, [stats]);
 
+  // Built only from the workspace audit-log entries returned by the server
+  // (the 50 most recent). Nothing here is generated.
   const timeSeriesData = useMemo(() => {
-    const data = [];
+    const dayKey = (d: Date) => d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    const buckets = new Map<string, { date: string; events: number; exports: number }>();
     const now = new Date();
     for (let i = 14; i >= 0; i--) {
       const d = new Date(now);
       d.setDate(d.getDate() - i);
-      data.push({
-        date: d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-        calculations: Math.floor(Math.random() * 50) + 10,
-        errors: Math.floor(Math.random() * 5),
-        logins: Math.floor(Math.random() * 100) + 20,
-        exports: Math.floor(Math.random() * 20)
-      });
+      buckets.set(dayKey(d), { date: dayKey(d), events: 0, exports: 0 });
     }
-    return data;
-  }, []);
+    auditLogs.forEach((log: any) => {
+      const b = buckets.get(dayKey(new Date(log.createdAt)));
+      if (!b) return;
+      b.events++;
+      if (String(log.action ?? "").toLowerCase().includes("export")) b.exports++;
+    });
+    return Array.from(buckets.values());
+  }, [auditLogs]);
 
-  const severityData = useMemo(() => {
-    return [
-      { name: 'Low', value: 400, color: '#3b82f6' },
-      { name: 'Medium', value: 300, color: '#f59e0b' },
-      { name: 'High', value: 100, color: '#ef4444' },
-      { name: 'Critical', value: 20, color: '#7f1d1d' },
-    ];
-  }, []);
-
-  const radarData = useMemo(() => {
-    return [
-      { subject: 'Authentication', A: 120, B: 110, fullMark: 150 },
-      { subject: 'Authorization', A: 98, B: 130, fullMark: 150 },
-      { subject: 'Data Access', A: 86, B: 130, fullMark: 150 },
-      { subject: 'Exports', A: 99, B: 100, fullMark: 150 },
-      { subject: 'Modifications', A: 85, B: 90, fullMark: 150 },
-      { subject: 'Deletions', A: 65, B: 85, fullMark: 150 },
-    ];
-  }, []);
+  const hasTimeline = useMemo(() => timeSeriesData.some((d) => d.events > 0), [timeSeriesData]);
 
   const userActivityData = useMemo(() => {
-    return [
-      { name: 'John Doe', reads: 120, writes: 45, deletes: 2 },
-      { name: 'Jane Smith', reads: 98, writes: 30, deletes: 0 },
-      { name: 'Bob Johnson', reads: 150, writes: 60, deletes: 5 },
-      { name: 'Alice Brown', reads: 80, writes: 20, deletes: 1 },
-      { name: 'Charlie Davis', reads: 200, writes: 90, deletes: 10 },
-    ];
-  }, []);
+    const byUser = new Map<string, { name: string; events: number; deletes: number }>();
+    auditLogs.forEach((log: any) => {
+      const name = log.actorName || log.actorEmail || (log.actorUserId ? `User #${log.actorUserId}` : "System");
+      const row = byUser.get(name) ?? { name, events: 0, deletes: 0 };
+      row.events++;
+      if (String(log.action ?? "").toLowerCase().includes("delete")) row.deletes++;
+      byUser.set(name, row);
+    });
+    return Array.from(byUser.values()).sort((a, b) => b.events - a.events).slice(0, 10);
+  }, [auditLogs]);
 
   const filteredLogs = useMemo(() => {
     let result = [...logs];
@@ -609,7 +594,6 @@ export default function ComplianceAuditCenter() {
                       <RechartsTooltip contentStyle={{ backgroundColor: '#0d1a2e', borderColor: '#12233e', color: '#fff', borderRadius: '8px' }} />
                       <Legend />
                       <Line type="monotone" dataKey="count" name="Usage Count" stroke="#3b82f6" strokeWidth={3} dot={{ r: 4, fill: '#3b82f6', strokeWidth: 2, stroke: '#060d19' }} activeDot={{ r: 6 }} />
-                      <Line type="monotone" dataKey="successRate" name="Success Rate (%)" stroke="#22c55e" strokeWidth={3} dot={{ r: 4, fill: '#22c55e', strokeWidth: 2, stroke: '#060d19' }} />
                     </LineChart>
                   )}
                 </ResponsiveContainer>
@@ -623,7 +607,11 @@ export default function ComplianceAuditCenter() {
               <Activity className="w-5 h-5 text-[#22c55e]" />
               <h2 className="text-lg font-semibold text-white">Activity Timeline</h2>
             </div>
+            <p className="text-xs text-[#7a95b8] -mt-4 mb-4">Workspace audit-log entries per day (most recent 50 entries).</p>
             <div className="h-64 w-full">
+              {!hasTimeline ? (
+                <div className="h-full flex items-center justify-center text-center text-sm text-[#7a95b8] px-6">No audit-log entries in the last 14 days. Logged actions will be charted here.</div>
+              ) : (
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={timeSeriesData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                   <defs>
@@ -640,10 +628,11 @@ export default function ComplianceAuditCenter() {
                   <XAxis dataKey="date" stroke="#7a95b8" fontSize={12} tickLine={false} axisLine={false} />
                   <YAxis stroke="#7a95b8" fontSize={12} tickLine={false} axisLine={false} />
                   <RechartsTooltip contentStyle={{ backgroundColor: '#0d1a2e', borderColor: '#12233e', color: '#fff', borderRadius: '8px' }} />
-                  <Area type="monotone" dataKey="calculations" stroke="#3b82f6" fillOpacity={1} fill="url(#colorCalc)" />
-                  <Area type="monotone" dataKey="logins" stroke="#22c55e" fillOpacity={1} fill="url(#colorLogins)" />
+                  <Area type="monotone" dataKey="events" name="Audit events" stroke="#3b82f6" fillOpacity={1} fill="url(#colorCalc)" />
+                  <Area type="monotone" dataKey="exports" name="Exports" stroke="#22c55e" fillOpacity={1} fill="url(#colorLogins)" />
                 </AreaChart>
               </ResponsiveContainer>
+              )}
             </div>
           </div>
 
@@ -654,17 +643,7 @@ export default function ComplianceAuditCenter() {
               <h2 className="text-lg font-semibold text-white">Security Posture</h2>
             </div>
             <div className="h-64 w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <RadarChart cx="50%" cy="50%" outerRadius="80%" data={radarData}>
-                  <PolarGrid stroke="#12233e" />
-                  <PolarAngleAxis dataKey="subject" tick={{ fill: '#7a95b8', fontSize: 10 }} />
-                  <PolarRadiusAxis angle={30} domain={[0, 150]} tick={{ fill: '#7a95b8', fontSize: 10 }} />
-                  <Radar name="Current Month" dataKey="A" stroke="#10b981" fill="#10b981" fillOpacity={0.6} />
-                  <Radar name="Previous Month" dataKey="B" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.3} />
-                  <Legend />
-                  <RechartsTooltip contentStyle={{ backgroundColor: '#0d1a2e', borderColor: '#12233e', color: '#fff', borderRadius: '8px' }} />
-                </RadarChart>
-              </ResponsiveContainer>
+              <div className="h-full flex items-center justify-center text-center text-sm text-[#7a95b8] px-6">No security-posture scoring is connected. Scores will appear here once a security monitoring source reports them; none are estimated.</div>
             </div>
           </div>
 
@@ -675,6 +654,9 @@ export default function ComplianceAuditCenter() {
               <h2 className="text-lg font-semibold text-white">User Activity Analysis</h2>
             </div>
             <div className="h-64 w-full">
+              {userActivityData.length === 0 ? (
+                <div className="h-full flex items-center justify-center text-center text-sm text-[#7a95b8] px-6">No audit-log entries yet. Actions per user will appear here as they are logged.</div>
+              ) : (
               <ResponsiveContainer width="100%" height="100%">
                 <ComposedChart data={userActivityData} margin={{ top: 20, right: 20, bottom: 20, left: -20 }}>
                   <CartesianGrid stroke="#12233e" strokeDasharray="3 3" vertical={false} />
@@ -682,11 +664,11 @@ export default function ComplianceAuditCenter() {
                   <YAxis stroke="#7a95b8" fontSize={12} tickLine={false} axisLine={false} />
                   <RechartsTooltip contentStyle={{ backgroundColor: '#0d1a2e', borderColor: '#12233e', color: '#fff', borderRadius: '8px' }} />
                   <Legend />
-                  <Bar dataKey="reads" name="Read Operations" barSize={20} fill="#3b82f6" radius={[4, 4, 0, 0]} />
-                  <Bar dataKey="writes" name="Write Operations" barSize={20} fill="#22c55e" radius={[4, 4, 0, 0]} />
-                  <Line type="monotone" dataKey="deletes" name="Delete Operations" stroke="#ef4444" strokeWidth={3} />
+                  <Bar dataKey="events" name="Logged Actions" barSize={20} fill="#3b82f6" radius={[4, 4, 0, 0]} />
+                  <Line type="monotone" dataKey="deletes" name="Delete Actions" stroke="#ef4444" strokeWidth={3} />
                 </ComposedChart>
               </ResponsiveContainer>
+              )}
             </div>
           </div>
         </div>
@@ -1227,16 +1209,17 @@ export default function ComplianceAuditCenter() {
                 <div className="py-12 text-center flex flex-col items-center">
                   <CheckCircle className="w-12 h-12 text-[#22c55e] mb-4" />
                   <h3 className="text-lg font-medium text-white mb-1">No active alerts</h3>
-                  <p className="text-[#7a95b8]">All compliance checks passed successfully.</p>
+                  <p className="text-[#7a95b8]">No open compliance alerts are on record for this workspace.</p>
                 </div>
               ) : (
                 <div className="space-y-3">
-                  {/* Mock alerts if none exist but we want to show UI */}
-                  {[
-                    { id: 1, title: 'Missing Client Signature', desc: 'Required document "Risk Profile" missing signature for John Doe.', severity: 'High', date: new Date().toISOString() },
-                    { id: 2, title: 'Unusual Calculation Volume', desc: 'User Jane Smith ran 50+ calculations in 1 hour.', severity: 'Medium', date: new Date(Date.now() - 86400000).toISOString() },
-                    { id: 3, title: 'Outdated KYC Information', desc: '3 clients have KYC information older than 1 year.', severity: 'Low', date: new Date(Date.now() - 172800000).toISOString() }
-                  ].map((alert) => (
+                  {alerts.map((raw: any) => ({
+                    id: raw.id,
+                    title: raw.title,
+                    desc: raw.message,
+                    severity: raw.severity === 'CRITICAL' ? 'High' : raw.severity === 'WARNING' ? 'Medium' : 'Low',
+                    date: raw.createdAt,
+                  })).map((alert) => (
                     <div key={alert.id} className="flex flex-col sm:flex-row gap-4 p-4 bg-[#060d19] rounded-lg border border-[#12233e] hover:border-[#1e3a66] transition-colors">
                       <div className={`p-2 rounded-full h-fit ${
                         alert.severity === 'High' ? 'bg-red-900/20 text-red-400' :
@@ -1277,36 +1260,11 @@ export default function ComplianceAuditCenter() {
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {/* Mock reports */}
-                {[
-                  { id: 1, name: 'Q1 2026 Compliance Summary', type: 'Quarterly', date: 'Apr 01, 2026', size: '2.4 MB' },
-                  { id: 2, name: 'March User Activity Audit', type: 'Monthly', date: 'Apr 02, 2026', size: '1.8 MB' },
-                  { id: 3, name: 'Security Incident Log', type: 'On-Demand', date: 'Mar 15, 2026', size: '0.5 MB' },
-                  { id: 4, name: 'Calculation Accuracy Check', type: 'Automated', date: 'Apr 10, 2026', size: '4.1 MB' },
-                  { id: 5, name: 'Data Export Log', type: 'Weekly', date: 'Apr 08, 2026', size: '1.2 MB' }
-                ].map((report) => (
-                  <div key={report.id} className="p-4 bg-[#060d19] rounded-lg border border-[#12233e] hover:border-[#3b82f6]/50 transition-colors group cursor-pointer">
-                    <div className="flex justify-between items-start mb-3">
-                      <div className="p-2 bg-[#12233e] rounded text-[#3b82f6]">
-                        <FileText className="w-5 h-5" />
-                      </div>
-                      <span className="text-xs text-[#7a95b8] bg-[#0d1a2e] px-2 py-1 rounded">{report.type}</span>
-                    </div>
-                    <h4 className="text-sm font-medium text-white mb-1 group-hover:text-[#3b82f6] transition-colors">{report.name}</h4>
-                    <div className="flex justify-between items-center mt-4 text-xs text-[#7a95b8]">
-                      <span className="flex items-center gap-1"><Calendar className="w-3 h-3" /> {report.date}</span>
-                      <span className="flex items-center gap-1"><Database className="w-3 h-3" /> {report.size}</span>
-                    </div>
-                    <div className="mt-4 pt-3 border-t border-[#12233e] flex justify-between">
-                      <button className="text-xs text-[#3b82f6] hover:text-[#60a5fa] flex items-center gap-1">
-                        <Eye className="w-3 h-3" /> View
-                      </button>
-                      <button className="text-xs text-[#22c55e] hover:text-[#4ade80] flex items-center gap-1">
-                        <Download className="w-3 h-3" /> Download PDF
-                      </button>
-                    </div>
-                  </div>
-                ))}
+                <div className="col-span-full py-12 text-center text-[#7a95b8]">
+                  <FileText className="w-10 h-10 mx-auto mb-3 opacity-40" />
+                  <p className="text-white font-medium mb-1">No audit reports generated yet</p>
+                  <p className="text-sm">Reports you generate will be listed here with their date and a download link.</p>
+                </div>
               </div>
             </div>
           )}
@@ -1321,32 +1279,20 @@ export default function ComplianceAuditCenter() {
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div className="p-3 bg-[#060d19] rounded border border-[#12233e]">
-                <div className="text-xs text-[#7a95b8] mb-1">Database Sync</div>
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-[#22c55e]"></div>
-                  <span className="text-sm text-white">Optimal</span>
-                </div>
+                <div className="text-xs text-[#7a95b8] mb-1">Calculation audit entries</div>
+                <span className="text-sm text-white">{stats ? stats.totalLogs : "—"}</span>
               </div>
               <div className="p-3 bg-[#060d19] rounded border border-[#12233e]">
-                <div className="text-xs text-[#7a95b8] mb-1">API Endpoints</div>
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-[#22c55e]"></div>
-                  <span className="text-sm text-white">99.9% Uptime</span>
-                </div>
+                <div className="text-xs text-[#7a95b8] mb-1">Workspace audit entries</div>
+                <span className="text-sm text-white">{auditLogsQuery.data ? auditLogsQuery.data.total : "—"}</span>
               </div>
               <div className="p-3 bg-[#060d19] rounded border border-[#12233e]">
-                <div className="text-xs text-[#7a95b8] mb-1">Log Storage</div>
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-[#f0c040]"></div>
-                  <span className="text-sm text-white">78% Capacity</span>
-                </div>
+                <div className="text-xs text-[#7a95b8] mb-1">Latest audit entry</div>
+                <span className="text-sm text-white">{auditLogs[0]?.createdAt ? new Date(auditLogs[0].createdAt).toLocaleString() : "None yet"}</span>
               </div>
               <div className="p-3 bg-[#060d19] rounded border border-[#12233e]">
-                <div className="text-xs text-[#7a95b8] mb-1">Last Backup</div>
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-[#3b82f6]"></div>
-                  <span className="text-sm text-white">2 hours ago</span>
-                </div>
+                <div className="text-xs text-[#7a95b8] mb-1">Open compliance alerts</div>
+                <span className="text-sm text-white">{complianceAlertsQuery.data ? alerts.length : "—"}</span>
               </div>
             </div>
           </div>
