@@ -2,7 +2,7 @@
 // THE POLICY COST LAB — the first page on this platform driven by charges
 // that came off a carrier document rather than out of a band.
 //
-// Mutual Company A's Annual Cost Summary gave every charge column year by
+// Mutual Company N's Annual Cost Summary gave every charge column year by
 // year. From it: the percent-of-premium load, the per-policy charge, the
 // per-$1,000 charge and how long it runs, the indexed strategy charge, the
 // surrender schedule in dollars per $1,000, and a real mortality curve for
@@ -366,6 +366,44 @@ export default function PolicyCostLab() {
           </div>
         )}
 
+        {/* The carrier roster: every company under the owner's codes, and what is held for each */}
+        {carriers.data?.roster && (
+          <div className={`${CARD} p-5`} data-testid="carrier-roster">
+            <h2 className={H}>The carriers — what the platform holds for each</h2>
+            <div className="mt-3 overflow-x-auto">
+              <table className="w-full text-left text-xs">
+                <thead className="text-slate-500">
+                  <tr>
+                    <th className="py-1 pr-3 font-medium">Code</th>
+                    <th className="py-1 pr-3 font-medium">Carrier</th>
+                    <th className="py-1 pr-3 font-medium">Cost structure</th>
+                    <th className="py-1 pr-3 font-medium">Loan terms</th>
+                    <th className="py-1 font-medium">Ratings</th>
+                  </tr>
+                </thead>
+                <tbody className="text-slate-300">
+                  {carriers.data.roster.map((r) => (
+                    <tr key={r.code} className="border-t border-white/5 align-top">
+                      <td className="py-1.5 pr-3 font-semibold text-white">{r.label}</td>
+                      <td className="py-1.5 pr-3">{r.name}</td>
+                      <td className="py-1.5 pr-3">{r.costStructure.status === "held" ? `Held: ${r.costStructure.product}` : <span className="text-slate-500">Pending</span>}</td>
+                      <td className="py-1.5 pr-3">
+                        {r.loanTerms.status === "held"
+                          ? <span title={r.loanTerms.source ?? undefined}>{r.loanTerms.declaredCharged} charged; {r.loanTerms.declaredCredited} credited</span>
+                          : <span className="text-slate-500">{r.loanTerms.notes.length > 0 ? "Pending: no loan table printed" : "Pending"}</span>}
+                      </td>
+                      <td className="py-1.5">{r.ratings.status === "held" ? `${r.ratings.count} verified` : <span className="text-slate-500">Pending</span>}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <p className="mt-3 text-[11px] text-slate-500">
+              Each status is read from the carrier's own documents: a cost summary, an illustration's loan table, the carrier's ratings page. Pending means none has been read yet.
+            </p>
+          </div>
+        )}
+
         {/* Carriers still pending */}
         {carriers.data && carriers.data.pending.length > 0 && (
           <div className={`${CARD} p-5`}>
@@ -387,7 +425,7 @@ export default function PolicyCostLab() {
               ))}
             </div>
             <p className="mt-3 text-[11px] text-slate-500">
-              One cost summary closes it, the same way one closed Mutual Company A and one closed Mutual Company B.
+              One cost summary closes it, the same way one closed Mutual Company N and one closed Mutual Company S.
             </p>
           </div>
         )}

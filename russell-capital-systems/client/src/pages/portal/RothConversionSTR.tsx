@@ -83,7 +83,7 @@ export default function RothConversionSTR() {
 
   const [showWhatIf, setShowWhatIf] = useState(false);
   const [showCarrier, setShowCarrier] = useState(false);
-  const [carrierId, setCarrierId] = useState("mutual-a");
+  const [carrierId, setCarrierId] = useState("custom");
   const [sendingEmail, setSendingEmail] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
   const [showArchived, setShowArchived] = useState(false);
@@ -1398,7 +1398,7 @@ export default function RothConversionSTR() {
                 </div>
 
                 <div className="mt-3 p-3 rounded-lg bg-emerald-500/5 border border-emerald-500/15 text-xs text-[#7a95b8]">
-                  <strong className="text-[#22c55e]">How to read:</strong> This table compares our engine's illustrated policy value projections against the official Mutual Company A Accumulator III illustration from sample illustration. Values within 2% tolerance are marked PASS. The engine uses the same charge structure (8%/6%/0% loads, age-based COI, $120/yr policy fee, per-unit charges, 0.20% conditional credit from Y11).
+                  <strong className="text-[#22c55e]">How to read:</strong> This table compares our engine's illustrated policy value projections against the official Mutual Company N Accumulator III illustration from sample illustration. Values within 2% tolerance are marked PASS. The engine uses the same charge structure (8%/6%/0% loads, age-based COI, $120/yr policy fee, per-unit charges, 0.20% conditional credit from Y11).
                 </div>
               </>
             )}

@@ -153,7 +153,7 @@ export const SEGMENT_ACCOUNTS: readonly SegmentTerms[] = [
   {
     id: 'bia-2yr',
     name: '2-Year Balanced Indexed Account',
-    carrierLabel: 'Mutual Company B',
+    carrierLabel: 'Mutual Company S',
     termYears: 2,
     participationPct: 105,
     spreadPct: 2.5,
@@ -191,7 +191,7 @@ export const SEGMENT_ACCOUNTS: readonly SegmentTerms[] = [
   {
     id: 'cap10-annual',
     name: '10% cap, annual, 100% participation',
-    carrierLabel: 'Mutual Company B',
+    carrierLabel: 'Mutual Company S',
     termYears: 1,
     participationPct: 100,
     spreadPct: 0,

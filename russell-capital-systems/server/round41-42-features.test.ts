@@ -2,14 +2,14 @@ import { describe, it, expect } from "vitest";
 
 // ─── Index Crediting Data Module Tests ───────────────────────────────────────
 describe("Index Crediting Data Module", () => {
-  it("exports ALL_INDEX_OPTIONS with Mutual Company A, Mutual Company B, and Mutual Company C options", async () => {
+  it("exports ALL_INDEX_OPTIONS with Mutual Company N, Mutual Company S, and Illustrative options", async () => {
     const { ALL_INDEX_OPTIONS, CARRIERS } = await import("../shared/indexCreditingData");
     expect(ALL_INDEX_OPTIONS.length).toBeGreaterThanOrEqual(10);
 
     const carrierIds = [...new Set(ALL_INDEX_OPTIONS.map((o: any) => o.carrier))];
-    expect(carrierIds).toContain("mutual-a");
-    expect(carrierIds).toContain("mutual-b");
-    expect(carrierIds).toContain("mutual-c");
+    expect(carrierIds).toContain("mutual-n");
+    expect(carrierIds).toContain("mutual-s");
+    expect(carrierIds).toContain("illustrative");
 
     expect(CARRIERS.length).toBe(3);
   });
@@ -29,7 +29,7 @@ describe("Index Crediting Data Module", () => {
 
   it("getCreditingHistory returns year-by-year data with cap/floor applied", async () => {
     const { ALL_INDEX_OPTIONS, getCreditingHistory } = await import("../shared/indexCreditingData");
-    const spCapped = ALL_INDEX_OPTIONS.find((o: any) => o.carrier === "mutual-a" && o.cap !== null && o.index === "SP500" && o.indexType === "single");
+    const spCapped = ALL_INDEX_OPTIONS.find((o: any) => o.carrier === "mutual-n" && o.cap !== null && o.index === "SP500" && o.indexType === "single");
     expect(spCapped).toBeTruthy();
 
     const history = getCreditingHistory(spCapped!, 2000, 2020);
@@ -50,7 +50,7 @@ describe("Index Crediting Data Module", () => {
 
   it("floor protection kicks in during 2008 crash", async () => {
     const { ALL_INDEX_OPTIONS, getCreditingHistory } = await import("../shared/indexCreditingData");
-    const spOption = ALL_INDEX_OPTIONS.find((o: any) => o.carrier === "mutual-a" && o.index === "SP500" && o.cap !== null && o.indexType === "single");
+    const spOption = ALL_INDEX_OPTIONS.find((o: any) => o.carrier === "mutual-n" && o.index === "SP500" && o.cap !== null && o.indexType === "single");
     const history = getCreditingHistory(spOption!, 2008, 2008);
     expect(history.length).toBe(1);
     // S&P 500 was deeply negative in 2008, floor should protect
@@ -59,7 +59,7 @@ describe("Index Crediting Data Module", () => {
 
   it("cap limits gains in strong bull years", async () => {
     const { ALL_INDEX_OPTIONS, getCreditingHistory } = await import("../shared/indexCreditingData");
-    const spCapped = ALL_INDEX_OPTIONS.find((o: any) => o.carrier === "mutual-a" && o.index === "SP500" && o.cap !== null && o.cap < 20 && o.indexType === "single");
+    const spCapped = ALL_INDEX_OPTIONS.find((o: any) => o.carrier === "mutual-n" && o.index === "SP500" && o.cap !== null && o.cap < 20 && o.indexType === "single");
     const history = getCreditingHistory(spCapped!, 2013, 2013);
     // 2013 was a strong year (~30%), should be capped
     expect(history[0].creditedRate).toBeLessThanOrEqual(spCapped!.cap! + 0.01);
@@ -70,7 +70,7 @@ describe("Index Crediting Data Module", () => {
 describe("Backtest Engine (runBacktest)", () => {
   it("runs a 20-year simulation with single allocation", async () => {
     const { ALL_INDEX_OPTIONS, runBacktest } = await import("../shared/indexCreditingData");
-    const option = ALL_INDEX_OPTIONS.find((o: any) => o.carrier === "mutual-a" && o.index === "SP500" && o.cap !== null && o.indexType === "single");
+    const option = ALL_INDEX_OPTIONS.find((o: any) => o.carrier === "mutual-n" && o.index === "SP500" && o.cap !== null && o.indexType === "single");
 
     const result = runBacktest(
       [{ optionId: option!.id, percentage: 100 }],
@@ -97,7 +97,7 @@ describe("Backtest Engine (runBacktest)", () => {
 
   it("runs a simulation with split allocations (50/50)", async () => {
     const { ALL_INDEX_OPTIONS, runBacktest } = await import("../shared/indexCreditingData");
-    const opts = ALL_INDEX_OPTIONS.filter((o: any) => o.carrier === "mutual-b");
+    const opts = ALL_INDEX_OPTIONS.filter((o: any) => o.carrier === "mutual-s");
     if (opts.length < 2) return; // skip if not enough options
 
     const result = runBacktest(
@@ -122,7 +122,7 @@ describe("Backtest Engine (runBacktest)", () => {
 
   it("final value grows with premiums (no negative account values)", async () => {
     const { ALL_INDEX_OPTIONS, runBacktest } = await import("../shared/indexCreditingData");
-    const option = ALL_INDEX_OPTIONS.find((o: any) => o.carrier === "mutual-c" && o.cap !== null && o.indexType === "single");
+    const option = ALL_INDEX_OPTIONS.find((o: any) => o.carrier === "illustrative" && o.cap !== null && o.indexType === "single");
 
     const result = runBacktest(
       [{ optionId: option!.id, percentage: 100 }],
@@ -139,12 +139,12 @@ describe("Backtest Engine (runBacktest)", () => {
     expect(result.finalValue).toBeGreaterThanOrEqual(25000 * 10 * 0.5); // at least 50% of premiums
   });
 
-  it("Mutual Company C options produce reasonable results", async () => {
+  it("Illustrative options produce reasonable results", async () => {
     const { ALL_INDEX_OPTIONS, runBacktest } = await import("../shared/indexCreditingData");
-    const symetraOpts = ALL_INDEX_OPTIONS.filter((o: any) => o.carrier === "mutual-c");
+    const symetraOpts = ALL_INDEX_OPTIONS.filter((o: any) => o.carrier === "illustrative");
     expect(symetraOpts.length).toBeGreaterThanOrEqual(3);
 
-    // Run with the first Mutual Company C option
+    // Run with the first Illustrative option
     const result = runBacktest(
       [{ optionId: symetraOpts[0].id, percentage: 100 }],
       50000,
@@ -176,7 +176,7 @@ describe("Backtest Engine (runBacktest)", () => {
 describe("Rolling Window Analysis", () => {
   it("produces correct number of windows", async () => {
     const { ALL_INDEX_OPTIONS, runBacktest } = await import("../shared/indexCreditingData");
-    const option = ALL_INDEX_OPTIONS.find((o: any) => o.carrier === "mutual-a" && o.index === "SP500" && o.cap !== null && o.indexType === "single");
+    const option = ALL_INDEX_OPTIONS.find((o: any) => o.carrier === "mutual-n" && o.index === "SP500" && o.cap !== null && o.indexType === "single");
 
     // For 15-year windows from 1994-2025, there should be (2025 - 1994 - 15 + 2) = 18 windows
     const windows: any[] = [];
@@ -194,22 +194,22 @@ describe("Rolling Window Analysis", () => {
   });
 });
 
-// ─── Carrier Comparison (with Mutual Company C) ───────────────────────────────────────
-describe("Carrier Comparison with Mutual Company C", () => {
-  it("Mutual Company C is included in carrier options", async () => {
+// ─── Carrier Comparison (with Illustrative) ───────────────────────────────────────
+describe("Carrier Comparison with Illustrative", () => {
+  it("Illustrative is included in carrier options", async () => {
     const { ALL_INDEX_OPTIONS, CARRIERS } = await import("../shared/indexCreditingData");
-    const symetraCarrier = CARRIERS.find((c: any) => c.id === "mutual-c");
+    const symetraCarrier = CARRIERS.find((c: any) => c.id === "illustrative");
     expect(symetraCarrier).toBeTruthy();
-    expect(symetraCarrier!.name).toContain("Mutual Company C");
+    expect(symetraCarrier!.name).toContain("Illustrative");
 
-    const symetraOptions = ALL_INDEX_OPTIONS.filter((o: any) => o.carrier === "mutual-c");
+    const symetraOptions = ALL_INDEX_OPTIONS.filter((o: any) => o.carrier === "illustrative");
     expect(symetraOptions.length).toBeGreaterThanOrEqual(3);
   });
 
   it("all three carriers produce different results for same premium", async () => {
     const { ALL_INDEX_OPTIONS, runBacktest } = await import("../shared/indexCreditingData");
 
-    const carriers = ["mutual-a", "mutual-b", "mutual-c"];
+    const carriers = ["mutual-n", "mutual-s", "illustrative"];
     const results: Record<string, number> = {};
 
     for (const carrier of carriers) {

@@ -519,7 +519,7 @@ export const TIME_MACHINE_SOURCES: readonly { label: string; url?: string; asOf?
   },
   {
     label:
-      "Assumption: the caps, participation rates and spreads of the index options are anonymised terms ('Mutual Company A/B/C') with no source or as-of date " +
+      "Assumption: the caps, participation rates and spreads of the index options are anonymised terms ('Mutual Company N', 'Mutual Company S', 'Illustrative (no carrier)') with no source or as-of date " +
       "in indexCreditingData.ts; real carrier terms are being collected under docs/carriers/. Treat the historical columns as the mechanics applied to those terms, not a carrier's result",
   },
   {

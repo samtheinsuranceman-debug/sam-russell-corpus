@@ -64,7 +64,7 @@ export default function LookbackIntegrity() {
     if (seriesId === "raw") return MARKET;
     if (seriesId === "custom") {
       const terms: IndexOption = {
-        id: "custom", name: "Your terms", carrier: "mutual-a", index: "SP500", cap, floor, participation: par,
+        id: "custom", name: "Your terms", carrier: "illustrative", index: "SP500", cap, floor, participation: par,
         spread: 0, strategyCharge: 0, bonus: 0, description: "", availableFrom: MIN_YEAR,
       };
       return creditedSeries(MARKET, raw => calculateCreditedRate(terms, raw));
