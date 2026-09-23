@@ -1,5 +1,5 @@
 {
-  "tree": "39d44f0",
+  "tree": "ce56fbd",
   "summary": {
     "engines": 98,
     "enginesFromCatalogue": 40,
@@ -11,7 +11,7 @@
       "enginesWithHardCodedYearsOlderThan2025": 50,
       "enginesWithUnseededRandomness": 0,
       "pagesImportingAnEngineWithNoProvenanceOnPage": 35,
-      "pagesImportingAnEngine": 125,
+      "pagesImportingAnEngine": 130,
       "enginesThatSimulate": 22,
       "enginesOnALiveFeed": 10,
       "enginesImportedByNoPageAndNoRouter": 8,
@@ -5344,7 +5344,7 @@
     {
       "engine": "shared/taxBracketEngine.ts",
       "exists": true,
-      "lines": 717,
+      "lines": 766,
       "cataloguePages": [
         "/portal/tax-waterfall",
         "/portal/tax-brackets"
@@ -5354,6 +5354,7 @@
       ],
       "pages": [
         "client/src/components/ConsumerOutcomeBlocks.tsx",
+        "client/src/components/OilGasToggle.tsx",
         "client/src/pages/portal/AIPolicyReviewGap.tsx",
         "client/src/pages/portal/AdvisorIncomeCalculator.tsx",
         "client/src/pages/portal/AiStrategyRecommender.tsx",
@@ -5365,8 +5366,10 @@
         "client/src/pages/portal/BulkGeneration.tsx",
         "client/src/pages/portal/BusinessOwnerPlanning.tsx",
         "client/src/pages/portal/CarrierComparison.tsx",
+        "client/src/pages/portal/CharitableGivingDashboard.tsx",
         "client/src/pages/portal/CharitableGivingOptimizer.tsx",
         "client/src/pages/portal/ClientSnapshotMap.tsx",
+        "client/src/pages/portal/ComboDetail.tsx",
         "client/src/pages/portal/CompetitiveAnalysis.tsx",
         "client/src/pages/portal/CryptoCurrencyCorner.tsx",
         "client/src/pages/portal/EstateFlowChart.tsx",
@@ -5408,9 +5411,11 @@
         "client/src/pages/portal/RetirementIncomeProjection.tsx",
         "client/src/pages/portal/ReverseHeloc.tsx",
         "client/src/pages/portal/RothConversionSTR.tsx",
+        "client/src/pages/portal/SalesStoryBuilder.tsx",
         "client/src/pages/portal/SavedScenariosHub.tsx",
         "client/src/pages/portal/ScenarioAdjustments.tsx",
         "client/src/pages/portal/ScenarioSideBySide.tsx",
+        "client/src/pages/portal/SecretDetail.tsx",
         "client/src/pages/portal/SocialSecurityOptimizer.tsx",
         "client/src/pages/portal/StrategyCompare.tsx",
         "client/src/pages/portal/StrategyLab.tsx",
@@ -5431,8 +5436,10 @@
       ],
       "sources": [
         "Assumption: bracket and standard deduction inflation in the dynamic projection = 2.5% a year (bracketInflationRate default), chosen by the firm as a round lo…",
+        "IRS Rev. Proc. 2025-32 (tax year 2026 brackets and standard deduction)",
         "IRS, Rev. Proc. 2025-32 (tax year 2026): section 2.01 (the seven rates 10%, 12%, 22%, 24%, 32%, 35%, 37% made permanent by P.L. 119-21 section 70101), sectio…",
         "Tax Foundation, 2026 State Income Tax Rates and Brackets (table: State Individual Income Tax Rates and Brackets, as of January 1, 2026; top marginal rate per…",
+        "export FEDERAL_RATES_SOURCE",
         "export STATE_TAX_RATES_SOURCE",
         "export TAX_BRACKET_SOURCES",
         "https://taxfoundation.org/data/all/state/state-income-tax-rates-2026/",
@@ -5445,6 +5452,7 @@
         "note:"
       ],
       "sourceExports": [
+        "FEDERAL_RATES_SOURCE",
         "STATE_TAX_RATES_SOURCE",
         "TAX_BRACKET_SOURCES"
       ],
@@ -5462,11 +5470,14 @@
       ],
       "provenanceOnPage": true,
       "provenancePages": [
+        "client/src/components/OilGasToggle.tsx",
         "client/src/pages/portal/AthenePEPlus15.tsx",
         "client/src/pages/portal/BeneficiaryOptimization.tsx",
         "client/src/pages/portal/BusinessOwnerPlanning.tsx",
+        "client/src/pages/portal/CharitableGivingDashboard.tsx",
         "client/src/pages/portal/CharitableGivingOptimizer.tsx",
         "client/src/pages/portal/ClientSnapshotMap.tsx",
+        "client/src/pages/portal/ComboDetail.tsx",
         "client/src/pages/portal/CryptoCurrencyCorner.tsx",
         "client/src/pages/portal/EstateFlowChart.tsx",
         "client/src/pages/portal/EstateTax.tsx",
@@ -5503,9 +5514,11 @@
         "client/src/pages/portal/RetirementIncomeProjection.tsx",
         "client/src/pages/portal/ReverseHeloc.tsx",
         "client/src/pages/portal/RothConversionSTR.tsx",
+        "client/src/pages/portal/SalesStoryBuilder.tsx",
         "client/src/pages/portal/SavedScenariosHub.tsx",
         "client/src/pages/portal/ScenarioAdjustments.tsx",
         "client/src/pages/portal/ScenarioSideBySide.tsx",
+        "client/src/pages/portal/SecretDetail.tsx",
         "client/src/pages/portal/SocialSecurityOptimizer.tsx",
         "client/src/pages/portal/StrategyLab.tsx",
         "client/src/pages/portal/SuccessionPlanningWizard.tsx",
@@ -5523,7 +5536,7 @@
       "hardCodedYears": [
         2025
       ],
-      "numericConstants": 64,
+      "numericConstants": 67,
       "shellSourced": true
     },
     {
@@ -5608,7 +5621,13 @@
       "memoryGroups": [
         "tax-engines"
       ],
-      "pages": [],
+      "pages": [
+        "client/src/pages/portal/IULvsRoth.tsx",
+        "client/src/pages/portal/SalesStoryBuilder.tsx",
+        "client/src/pages/portal/TaxBracketVisualizer.tsx",
+        "client/src/pages/portal/TaxOpportunityDetector.tsx",
+        "client/src/pages/portal/TaxReturnUpload.tsx"
+      ],
       "serverImporters": [
         "server/advice.ts",
         "server/controlsRouter.ts",
@@ -5639,8 +5658,14 @@
         "markers": []
       },
       "liveFeed": [],
-      "provenanceOnPage": false,
-      "provenancePages": [],
+      "provenanceOnPage": true,
+      "provenancePages": [
+        "client/src/pages/portal/IULvsRoth.tsx",
+        "client/src/pages/portal/SalesStoryBuilder.tsx",
+        "client/src/pages/portal/TaxBracketVisualizer.tsx",
+        "client/src/pages/portal/TaxOpportunityDetector.tsx",
+        "client/src/pages/portal/TaxReturnUpload.tsx"
+      ],
       "hardCodedYears": [
         2024,
         2025
