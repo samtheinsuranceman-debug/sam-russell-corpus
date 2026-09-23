@@ -19,6 +19,7 @@
  * add one loader line below. The census test checks the loader resolves.
  */
 import { CALCULATORS } from "./calculatorCatalog";
+import { sourceDefect, type SourceKind, type Sourced } from "./sourcing";
 
 export type SourceRef = {
   label: string;
@@ -26,6 +27,13 @@ export type SourceRef = {
   /** When the figure was read or which edition it is. */
   asOf?: string;
   note?: string;
+  /**
+   * Set when the engine exported `Sourced` records (shared/sourcing.ts). An
+   * "assumption" renders as "we assumed", never as a source.
+   */
+  kind?: SourceKind;
+  /** Why a `Sourced` record is not defensible, when it is not. Rendered, never hidden. */
+  defect?: string;
 };
 
 type Loader = () => Promise<unknown>;
@@ -62,6 +70,7 @@ export const ENGINE_SOURCE_LOADERS: Record<string, Loader> = {
   "shared/iulLinks.ts": () => import("./iulLinks").then(m => m.IUL_LINK_SOURCES),
   "shared/liquidityRoutes.ts": () => import("./liquidityRoutes").then(m => m.LIQUIDITY_ROUTES_SOURCES),
   "shared/longevityEngine.ts": () => import("./longevityEngine").then(m => m.LONGEVITY_SOURCES),
+  "shared/lookbackIntegrity.ts": () => import("./lookbackIntegrity").then(m => m.LOOKBACK_INTEGRITY_SOURCES),
   "shared/ltcEngine.ts": () => import("./ltcEngine").then(m => m.LTC_SOURCES),
   "shared/macroEngine.ts": () => import("./macroEngine").then(m => m.MACRO_SOURCES),
   "shared/mechanismDossiers.ts": () => import("./mechanismDossiers").then(m => m.MECHANISM_DOSSIERS_SOURCES),
@@ -116,6 +125,37 @@ export function catalogueEntryForPath(path: string) {
   return CALCULATORS.find(c => c.path === clean) ?? null;
 }
 
+const SOURCE_KINDS: readonly string[] = ["sourced", "rule", "input", "derived", "assumption"];
+
+/** A `Sourced<T>` record from shared/sourcing.ts: value, kind, source, asOf. */
+function isSourcedRecord(v: unknown): v is Sourced<unknown> {
+  if (typeof v !== "object" || v === null) return false;
+  const r = v as Record<string, unknown>;
+  return "value" in r && typeof r.kind === "string" && SOURCE_KINDS.includes(r.kind) && "source" in r && "asOf" in r;
+}
+
+/**
+ * A `Sourced` record as a footer line. Defensible records print their source;
+ * an assumption prints as "We assumed"; anything else prints its defect, so a
+ * source that fails `sourceDefect` is reported on the page rather than dropped.
+ */
+function fromSourcedRecord(s: Sourced<unknown>): SourceRef {
+  const what = typeof s.value === "string" ? s.value : "";
+  const n = typeof s.n === "number" && Number.isFinite(s.n) ? `n = ${s.n}` : "";
+  if (s.kind === "assumption") {
+    return { label: `We assumed: ${s.note || what || String(s.value)}`, kind: "assumption" };
+  }
+  const defect = sourceDefect(s);
+  if (defect !== null) {
+    return { label: what || String(s.value), kind: s.kind, defect };
+  }
+  const ref: SourceRef = { label: what ? `${what}: ${s.source}` : s.source, asOf: s.asOf, kind: s.kind };
+  if (s.url) ref.url = s.url;
+  const note = [s.note ?? "", n].filter(Boolean).join("; ");
+  if (note) ref.note = note;
+  return ref;
+}
+
 function isRef(v: unknown): v is { label?: unknown; name?: unknown; url?: unknown; asOf?: unknown; note?: unknown; entity?: unknown; verifiedOn?: unknown } {
   return typeof v === "object" && v !== null && ("label" in v || "name" in v || "url" in v);
 }
@@ -123,8 +163,10 @@ function isRef(v: unknown): v is { label?: unknown; name?: unknown; url?: unknow
 /**
  * Turn whatever an engine exports into a flat list of `SourceRef`.
  *
- * Accepts a string, a {label|name, url?, asOf?, note?, entity?} object, an
- * array of either, or a record whose values are either (nested one level).
+ * Accepts a string, a {label|name, url?, asOf?, note?, entity?} object, a
+ * `Sourced<T>` record from shared/sourcing.ts (assumptions and defects kept
+ * visible, see fromSourcedRecord), an array of any of these, or a record whose
+ * values are any of these (nested one level).
  * Unknown shapes contribute nothing, never a throw: the footer must render
  * on every page.
  */
@@ -132,6 +174,7 @@ export function normalizeSources(value: unknown, depth = 0): SourceRef[] {
   if (value == null || depth > 2) return [];
   if (typeof value === "string") return value.trim() ? [{ label: value.trim() }] : [];
   if (Array.isArray(value)) return value.flatMap(v => normalizeSources(v, depth + 1));
+  if (isSourcedRecord(value)) return [fromSourcedRecord(value)];
   if (isRef(value)) {
     let label = typeof value.label === "string" ? value.label : typeof value.name === "string" ? value.name : "";
     if (!label) {
