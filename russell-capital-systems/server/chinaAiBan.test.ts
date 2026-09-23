@@ -88,11 +88,24 @@ const MUST_MATCH = [
   // Manus / Butterfly Effect (China-origin agent platform) and its hosted pieces
   "manus", "Manus", "Manus AI", "https://forge.manus.im", "forge.manus.im/v1/chat/completions", "vite-plugin-manus-runtime",
   "/__manus__/debug-collector.js", "https://forge.butterfly-effect.dev", "3000-abc.us2.manus.computer", "manus-built-in",
+  // Chinese image and video models on the media hosts (Replicate, fal)
+  "wan-video/wan-2.2", "wan-video/wan-2.2-t2v-fast", "wavespeedai/wan-2.1-t2v-480p", "fal-ai/wan/v2.2-a14b/text-to-video", "fal-ai/wan-i2v",
+  "fal-ai/wan-25-preview/text-to-video", "Wan2.1-T2V-14B", "wanx-v1", "qwen/qwen-image", "fal-ai/qwen-image", "tencent/hunyuan-image-3",
+  "fal-ai/hunyuan-video", "kwaivgi/kling-v2.1", "fal-ai/kling-video/v2.1/master/text-to-video", "kling2.1", "fal-ai/kolors",
+  "bytedance/seedream-4", "fal-ai/bytedance/seedream/v4/text-to-image", "seedance-1-pro", "seededit-3.0", "seedvr2", "fal-ai/dreamina",
+  "fal-ai/omnihuman", "fal-ai/bagel", "sdxl-lightning-4step", "fal-ai/hyper-sdxl", "fal-ai/pulid", "minimax/hailuo-02", "fal-ai/hailuo",
+  "hidream-ai/hidream-l1", "fal-ai/vidu/q1/text-to-video", "fal-ai/pixverse/v5", "fal-ai/skyreels-i2v", "fal-ai/step1x-edit", "fal-ai/magi",
+  "fal-ai/omnigen-v2", "fal-ai/lumina-image/v2", "janus-pro-7b", "fal-ai/janus", "fal-ai/infinitalk", "multitalk", "tencentarc/photomaker",
+  "ip-adapter-faceid", "tencentarc/gfpgan", "nightmareai/real-esrgan", "instantx/instantid",
   // Taiwan (suspect)
   "taide/TAIDE-LX-7B", "MediaTek-Research/Breeze-7B-Instruct", "yentinglin/Taiwan-LLM-13B", "foxbrain",
   // Hosts
   "https://api.example.cn", "https://example.cn:443", "https://llm.example.com.cn/v1", "https://ai.example.hk", "https://ai.example.tw/v1",
   "https://bedrock-runtime.cn-north-1.amazonaws.com.cn", "cn-beijing",
+  // face-consistency tools (added 23 Sep 2026)
+  "bytedance/infiniteyou", "fal-ai/infinite-you", "ali-vilab/ace-plus", "fal-ai/ace++", "fal-ai/uno", "fal-ai/dreamo",
+  "tencent/instant-character", "fal-ai/instant-character", "fal-ai/ecomid", "story-diffusion", "consistent-id", "fofr/consistent-character",
+  "supir", "insightface/inswapper_128", "antelopev2", "buffalo_l",
 ];
 
 /** Routers that choose the model after the request leaves: refused as model ids. */
@@ -118,9 +131,19 @@ const MUST_NOT_MATCH = [
   "openrouter", "OpenRouter", "https://openrouter.ai/api", "vercel-gateway", "amazon.nova-pro-v1:0", "writer", "palmyra-x5", "reka-core",
   "ai21", "jamba-large", "upstage", "solar-pro2", "HCX-007", "plamo-3.0-prime", "sarvam-105b", "Krutrim-spectre-v2", "trinity-large-thinking",
   "inception", "mercury-2", "aleph-alpha", "pharia-1-llm-7b-control", "swiss-ai/apertus-v1.5-70b", "thinkingmachines/inkling", "poolside/laguna-s-2.1",
+  // image models the generator runs on (Black Forest Labs, Stability, OpenAI) and IBM's watsonx line-up
+  "black-forest-labs/flux-schnell", "black-forest-labs/flux-1.1-pro", "black-forest-labs/flux-kontext-pro", "fal-ai/flux/schnell",
+  "fal-ai/flux-pro/v1.1", "fal-ai/flux-pro/kontext", "stability-ai/stable-diffusion-3.5-large", "gpt-image-1", "core", "ultra",
+  "ideogram-ai/ideogram-v3-turbo", "recraft-ai/recraft-v3", "google/imagen-4", "luma/photon",
+  "ibm/granite-4-h-small", "ibm/granite-3-3-8b-instruct", "meta-llama/llama-3-3-70b-instruct", "mistralai/mistral-medium-2505",
+  "https://us-south.ml.cloud.ibm.com", "https://iam.cloud.ibm.com/identity/token", "https://api.replicate.com/v1", "https://fal.run",
+  // ordinary words that share letters with a media-model term
+  "want", "wants to retire", "swan", "wander", "Wanda", "Klingon", "seed", "seed money", "bagel", "magic", "Lumina", "Janus",
+  "power adapter", "instantly", "pulley",
   // ordinary words that share letters with a banned term
   "step-1", "step-3", "step-by-step", "Apache Spark", "sparkline", "structuredNotes", "Bernie", "yuan", "Chinese yuan", "algorithm", "glamour",
   "kimono", "manuscript", "Manuscripts", "forge", "Forge Anchor", "https://www.cnn.com", "https://example.com/cn/", "https://example.co", "https://api.example.com/v1",
+  "unobtrusive", "unordered", "insight", "insights", "Instant quote", "instant", "our story", "consistent", "consistently", "ace", "space", "Grace", "superior", "dream",
 ];
 
 describe("the pattern", () => {

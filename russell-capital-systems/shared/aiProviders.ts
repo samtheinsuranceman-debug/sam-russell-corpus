@@ -1,5 +1,5 @@
 /**
- * AI Provider Definitions — the fifty-five brains the AI advisor (named in shared/aiAdvisor.ts) can be wired to.
+ * AI Provider Definitions — the fifty-six brains the AI advisor (named in shared/aiAdvisor.ts) can be wired to.
  * ════════════════════════════════════════════════════════════════════════════
  *
  * What each provider needs in order to be called: its endpoint, its wire
@@ -24,13 +24,15 @@
  *
  * Most providers speak the OpenAI chat-completions shape, natively or through
  * a compatibility endpoint. Anthropic and Google have their own shapes and
- * get their own adapters (server/aiProviderAdapters.ts).
+ * get their own adapters (server/aiProviderAdapters.ts). IBM watsonx.ai has
+ * a chat shape close to OpenAI's but wants a short-lived IAM token exchanged
+ * from the API key and a project id in the body, so it gets its own too.
  */
 
-export type WireFormat = "openai-compatible" | "anthropic" | "google-generative";
+export type WireFormat = "openai-compatible" | "anthropic" | "google-generative" | "ibm-watsonx";
 
 /** The Brain Hub holds at most this many provider keys and this many MCP servers. */
-export const MAX_BRAINS = 55;
+export const MAX_BRAINS = 56;
 export const MAX_MCP_SERVERS = 40;
 
 export type ProviderDefinition = {
@@ -896,6 +898,31 @@ export const PROVIDERS: ProviderDefinition[] = [
     caution: "Set the Base URL override to https://<your-workspace>/serving-endpoints before this brain can be called.",
     requiresBaseUrl: true,
   },
+  // Added 23 Sep 2026 (owner's order). IBM's own API, reached through its own
+  // adapter: the API key is exchanged at iam.cloud.ibm.com for an hour-long
+  // bearer token, and every call names the watsonx.ai project it bills to.
+  {
+    id: "watsonx",
+    name: "IBM watsonx.ai",
+    country: "United States",
+    wireFormat: "ibm-watsonx",
+    baseUrl: "https://us-south.ml.cloud.ibm.com",
+    chatPath: "/ml/v1/text/chat?version=2024-10-08",
+    defaultModel: "ibm/granite-4-h-small",
+    suggestedModels: [
+      "ibm/granite-4-h-small",
+      "ibm/granite-3-3-8b-instruct",
+      "meta-llama/llama-3-3-70b-instruct",
+      "meta-llama/llama-4-maverick-17b-128e-instruct-fp8",
+      "mistralai/mistral-medium-2505",
+    ],
+    // An IBM Cloud API key, optionally followed by ":<project id>".
+    keyPattern: /^[A-Za-z0-9_-]{30,}(?::[A-Za-z0-9-]{8,})?$/,
+    keyHint: "An IBM Cloud API key. The project id comes from WATSONX_PROJECT_ID, or append it as <key>:<project id>",
+    consoleUrl: "https://cloud.ibm.com/iam/apikeys",
+    role: "IBM's Granite models, trained on licensed data with IBM's IP indemnity; the brain for a compliance-minded client who asks whose model it is.",
+    caution: "Needs a watsonx.ai project id (WATSONX_PROJECT_ID). Dallas (us-south) by default; set WATSONX_URL for another region, and note it in the privacy policy if that region is outside the US.",
+  },
 ];
 
 /** The brains the owner can wire. There is no internal gateway entry. */
@@ -966,6 +993,29 @@ const BANNED_TERMS: readonly string[] = [
   // Manus (Butterfly Effect): China-origin agent platform, its Forge gateway, runtime and debug collector.
   // "manus" only as a whole word, so "manuscript" is not caught.
   String.raw`\bmanus(?![a-z])`, String.raw`__manus__`, String.raw`forge\.manus`, String.raw`butterfly-effect`,
+  // Chinese image and video models the media hosts (Replicate, fal) serve beside Flux.
+  // Wan (Alibaba) only in its model shapes, so "want", "swan" and "wander" pass.
+  String.raw`\bwan-video\b`, String.raw`\bwan-?2\.\d`, String.raw`\bwanx(?:iang)?\b`,
+  String.raw`(?:^|\/)wan(?:-?\d|[-\/](?:v\d|i2v|t2v|flf2v|vace|pro|video|animate|effects|trainer|alpha|move))`,
+  // Kling and Kolors (Kuaishou) — "kling" as a model name, not "Klingon"
+  String.raw`\bkling(?:\b|ai\b|v?\d)`, String.raw`kwaivgi`, String.raw`\bkolors\b`,
+  // ByteDance's media lines: Seedream, Seedance, SeedEdit, SeedVR, Dreamina, OmniHuman, BAGEL, the Lightning distillations, PuLID
+  String.raw`\bseed(?:ream|ance|edit|vr)`, String.raw`dreamina`, String.raw`omnihuman`, String.raw`\/bagel(?:[-\/]|$)`,
+  String.raw`(?:sdxl|animatediff)-lightning`, String.raw`\bhyper-sd`, String.raw`\bpulid`,
+  // MiniMax's Hailuo video, HiDream, Shengshu's Vidu, AIsphere's PixVerse, Skywork's SkyReels, StepFun's Step1X, Sand AI's Magi
+  String.raw`hailuo`, String.raw`hidream`, String.raw`\bvidu\b`, String.raw`pixverse`, String.raw`skyreels`, String.raw`\bstep1x`,
+  String.raw`\/magi(?:-1|-distilled)?(?:\/|$)`,
+  // BAAI's OmniGen, Shanghai AI Lab's Lumina, DeepSeek's Janus, Meituan's MeiGen talkers
+  String.raw`\bomnigen`, String.raw`\blumina-(?:image|t2x|next|dimoo)`, String.raw`\bjanus-(?:pro|flow)`, String.raw`\/janus(?:\/|$)`,
+  String.raw`\bmultitalk`, String.raw`\binfini(?:te)?-?talk`,
+  // Tencent ARC and Tencent AI Lab tools (PhotoMaker, IP-Adapter, GFPGAN, Real-ESRGAN) and InstantX's InstantID
+  String.raw`\bphotomaker`, String.raw`\bip-?adapter`, String.raw`\bgfpgan`, String.raw`real-?esrgan`, String.raw`instantx`, String.raw`\binstant-?id\b`,
+  // Face-consistency tools and face models: ByteDance's InfiniteYou, UNO/UMO/USO and DreamO, Alibaba's ACE++ and EcomID,
+  // Tencent's InstantCharacter, StoryDiffusion, ConsistentID, SUPIR, and InsightFace (inswapper, antelopev2, buffalo_l),
+  // which the ID adapters use to read faces; fofr/consistent-character runs InstantID and IP-Adapter inside
+  String.raw`infinite-?you`, String.raw`ali-vilab`, String.raw`\bace[-_]?(?:plus|\+\+)`, String.raw`(?:^|\/)(?:uno|umo|uso)(?:[-\/]|$)`,
+  String.raw`\bdreamo\b`, String.raw`instant-?character`, String.raw`\becomid\b`, String.raw`story-?diffusion`, String.raw`consistent-?id\b`,
+  String.raw`consistent-character`, String.raw`\bsupir\b`, String.raw`insightface`, String.raw`inswapper`, String.raw`antelopev2`, String.raw`buffalo_l\b`,
   // Taiwan-based labs (suspect under the rule)
   String.raw`\btaide\b`, String.raw`mediatek`, String.raw`taiwan-llm`, String.raw`foxbrain`,
   // Hosts: any PRC, Hong Kong, Macau or Taiwan TLD, and PRC cloud regions (AWS China, Alibaba, Volcengine)

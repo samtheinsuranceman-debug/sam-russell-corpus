@@ -13,6 +13,7 @@ import { z } from "zod";
 import { protectedProcedure, router } from "./_core/trpc";
 import { activeVoice, setActiveVoice, voiceSource, type VoiceProvider } from "./voiceSettings";
 import { listHeygenVoices, synthesizeWith } from "./speech";
+import { isOwnerSession } from "./ownerGuard";
 
 const SAMPLE_LINE = "Doctor, thank you for sitting down with me. I am going to ask about every asset you have, the way a seasoned advisor would across the table, and then I will explain it all back to you.";
 
@@ -22,9 +23,8 @@ type XiVoice = {
   fine_tuning?: { state?: Record<string, string> } | null;
 };
 
-function ownerOnly(user: { role?: string | null; email?: string | null }) {
-  const owner = process.env.OWNER_EMAIL?.trim().toLowerCase();
-  if (user.role === "admin" || (owner && user.email?.toLowerCase() === owner)) return;
+function ownerOnly(user: { role?: string | null; email?: string | null; openId?: string | null }) {
+  if (user.role === "admin" || isOwnerSession(user)) return;
   throw new TRPCError({ code: "FORBIDDEN", message: "The Voice Studio is for the site owner." });
 }
 
