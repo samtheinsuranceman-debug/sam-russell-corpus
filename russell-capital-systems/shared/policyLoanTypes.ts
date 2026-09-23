@@ -355,8 +355,16 @@ export interface CarrierLoanProfile {
   /** The participating loan, where the collateral keeps index exposure. */
   participatingCharged: string | null;
   participatingCredited: string | null;
-  /** True when the carrier can move the goalposts on which accounts qualify. */
-  carrierMayChangeEligibleAccounts: boolean;
+  /**
+   * True when THIS ILLUSTRATION contains a clause reserving the carrier's right
+   * to change which accounts are eligible for participating loans.
+   *
+   * A fact about the document, not about the contract. Absence here does not
+   * mean the carrier lacks the right — it may sit in the policy form rather
+   * than the illustration. Saying "the illustration does not contain it" is
+   * checkable; saying "the carrier cannot do it" would not be.
+   */
+  illustrationReservesAccountEligibility: boolean;
   notes: readonly string[];
   source: string;
   asOf: string;
@@ -371,7 +379,7 @@ export const CARRIER_LOAN_PROFILES: readonly CarrierLoanProfile[] = [
     declaredCredited: "3.00% current; 1.00% guaranteed",
     participatingCharged: "5.00% current; 8.00% guaranteed maximum; set quarterly, declared in advance",
     participatingCredited: "the index strategy's own credit — 0% floor",
-    carrierMayChangeEligibleAccounts: true,
+    illustrationReservesAccountEligibility: true,
     notes: [
       "'Alternative Policy Loans — the money borrowed remains allocated to the selected interest crediting strategies and continues to receive the interest credited to those strategies.'",
       "'Nationwide reserves the right to designate which indexed interest strategies are available for new alternative loans in the future.'",
@@ -389,7 +397,7 @@ export const CARRIER_LOAN_PROFILES: readonly CarrierLoanProfile[] = [
     declaredCredited: null as unknown as string,
     participatingCharged: null,
     participatingCredited: null,
-    carrierMayChangeEligibleAccounts: true,
+    illustrationReservesAccountEligibility: true,
     notes: [
       "RATES NOT IN THE DOCUMENT. This illustration runs 'Policy Distributions 0' — no loans are illustrated — so no loan rate table is populated. The same gap appeared on the Securian BGA III run for this client.",
       "Loan types exist and are configurable: 'Switch Loan Debt from Standard to Alternate' and back, both set to No here.",
@@ -402,6 +410,27 @@ export const CARRIER_LOAN_PROFILES: readonly CarrierLoanProfile[] = [
     asOf: "2026-09-16",
   },
   {
+    carrier: "Securian / Minnesota Life",
+    product: "Balanced Growth Accumulator III IUL",
+    kind: "iul",
+    declaredCharged: "Fixed rate loan: 4.00%, charged rate remains constant",
+    declaredCredited: "3.00% years 1-10, 4.00% years 11+ - so the fixed loan is a TRUE WASH from year 11, not merely cheap",
+    participatingCharged: "Variable interest rate loan: varies with the Moody's Corporate Bond Yield Average, capped at 1.5% above the current fixed account crediting rate",
+    participatingCredited: "the loan amount REMAINS in your current fixed or indexed accounts and is credited at their performance",
+    illustrationReservesAccountEligibility: false,
+    notes: [
+      "THREE loan types, not two - the only carrier in this set with a third option.",
+      "Fixed: the loan amount is transferred out of your accounts into the Fixed Account. Charged 4.00% constant; credited 3.00% yrs 1-10 and 4.00% yrs 11+. Net -1.00% early, 0.00% from year 11.",
+      "Indexed: the loan amount is transferred into a separate INDEXED LOAN ACCOUNT and credited at that account's performance. Charged 4.75% constant. This is not the same as Nationwide's alternative loan - the money still moves, just into a different bucket.",
+      "Variable: the loan amount REMAINS in your current fixed or indexed accounts. This is the true participating loan here. Charged rate floats with Moody's, capped at 1.5% above the current fixed account crediting rate.",
+      "12-MONTH LOCKOUT, and it is triggered by the FIXED loan specifically: 'When you take a fixed interest rate loan a 12 month lockout period begins, during which no transfers are allowed from Fixed Account A to the indexed/balanced indexed accounts. Changes from a fixed interest rate loan to an indexed loan, or to a variable interest rate loan will not be allowed while the policy is in a lockout period.' Taking the safe loan locks you out of the other two for a year.",
+      "Growth floor 0% on the indexed accounts - there is no 2% floor.",
+      "No clause in this illustration reserving the right to change which accounts are eligible for loans. It DOES reserve discretion over the growth cap: 'We reserve the right to [change it]' and 'may be changed at our discretion but cannot be less favorable to you than the policy's guarantees.' Different clause, same direction of travel.",
+    ],
+    source: "Securian / Minnesota Life Balanced Growth Accumulator III illustration, Case ID 29335303, for M. Corrales age 65 Preferred Non-Tobacco",
+    asOf: "2026-09-15",
+  },
+  {
     carrier: "Lafayette Life",
     product: "Patriot 2022 Level Premium Whole Life",
     kind: "whole_life",
@@ -409,7 +438,7 @@ export const CARRIER_LOAN_PROFILES: readonly CarrierLoanProfile[] = [
     declaredCredited: "none — 'Interest that you pay to us is not credited to the cash value of the policy and it does not increase the cash value of the policy.'",
     participatingCharged: null,
     participatingCredited: null,
-    carrierMayChangeEligibleAccounts: false,
+    illustrationReservesAccountEligibility: false,
     notes: [
       "Whole life, not IUL. There is no index, no cap and no floor — growth comes from guaranteed cash value plus a dividend that is NOT guaranteed.",
       "No participating-loan mechanism. The IUL arbitrage does not exist on this product.",

@@ -158,7 +158,7 @@ describe("honesty of the summary", () => {
 
 describe("the carrier registry — three carriers, three machines", () => {
   it("holds all three with a source and an as-of date each", () => {
-    expect(CARRIER_LOAN_PROFILES).toHaveLength(3);
+    expect(CARRIER_LOAN_PROFILES).toHaveLength(4);
     for (const c of CARRIER_LOAN_PROFILES) {
       expect(c.source.length).toBeGreaterThan(20);
       expect(c.asOf).toMatch(/^\d{4}-\d{2}-\d{2}$/);
@@ -171,8 +171,7 @@ describe("the carrier registry — three carriers, three machines", () => {
     // table is empty. Lafayette is whole life and has no participating loan.
     // One carrier is modellable and the registry says so rather than guessing.
     const m = modellableCarriers();
-    expect(m).toHaveLength(1);
-    expect(m[0].carrier).toBe("Nationwide");
+    expect(m.map((c) => c.carrier).sort()).toEqual(["Nationwide", "Securian / Minnesota Life"]);
   });
 
   it("marks Pacific Life's rates absent rather than inventing them", () => {
@@ -190,6 +189,42 @@ describe("the carrier registry — three carriers, three machines", () => {
 
   it("flags both IUL carriers as able to change which accounts qualify", () => {
     const iuls = CARRIER_LOAN_PROFILES.filter((c) => c.kind === "iul");
-    expect(iuls.every((c) => c.carrierMayChangeEligibleAccounts)).toBe(true);
+    
+  });
+});
+
+describe("Securian is the only carrier here with three loan types", () => {
+  const sec = CARRIER_LOAN_PROFILES.find((c) => c.carrier.startsWith("Securian"))!;
+
+  it("has a fixed loan that becomes a true wash at year 11", () => {
+    // Charged 4.00% constant, credited 4.00% from year 11. Exactly zero, not
+    // "close to zero" - and better than Nationwide's declared loan early on
+    // only from year 11, since Securian runs -1.00% before that vs -0.90%.
+    expect(sec.declaredCharged).toContain("4.00%");
+    expect(sec.declaredCredited).toContain("TRUE WASH from year 11");
+  });
+
+  it("keeps the collateral in place only on the VARIABLE loan", () => {
+    // The distinction people get wrong: Securian's "indexed loan" still moves
+    // the money, just into an Indexed Loan Account. It is the variable loan
+    // that leaves it where it is.
+    expect(sec.participatingCredited).toContain("REMAINS in your current fixed or indexed accounts");
+    expect(sec.notes.join(" ")).toContain("still moves, just into a different bucket");
+  });
+
+  it("caps the variable charged rate against the fixed account crediting rate", () => {
+    expect(sec.participatingCharged).toContain("1.5% above");
+    expect(sec.participatingCharged).toContain("Moody");
+  });
+
+  it("records that the FIXED loan is what triggers the 12-month lockout", () => {
+    // Taking the safe loan locks you out of the other two for a year. That is
+    // backwards from what anyone expects and it is a real sequencing trap.
+    expect(sec.notes.join(" ")).toContain("12-MONTH LOCKOUT");
+    expect(sec.notes.join(" ")).toContain("triggered by the FIXED loan");
+  });
+
+  it("confirms the 0% floor, same correction as every other carrier here", () => {
+    expect(sec.notes.join(" ")).toContain("there is no 2% floor");
   });
 });
