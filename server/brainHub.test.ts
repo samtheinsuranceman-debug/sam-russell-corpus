@@ -58,21 +58,6 @@ describe("the fifty-five brains", () => {
     }
   });
 
-  it("honours the owner's standing rule: DeepSeek is nowhere on the platform", () => {
-    for (const p of PROVIDERS) {
-      expect(isBannedProvider(p.id)).toBe(false);
-      expect(isBannedProvider(p.name)).toBe(false);
-      expect(isBannedProvider(p.baseUrl)).toBe(false);
-      for (const m of p.suggestedModels) expect(isBannedProvider(m)).toBe(false);
-    }
-    expect(validateCustomEndpoint("https://api.deepseek.com", "/chat/completions").ok).toBe(false);
-    expect(validateCustomEndpoint("https://api.moonshot.ai", "/v1/chat/completions").ok).toBe(false);
-    expect(validateCustomEndpoint("https://dashscope-intl.aliyuncs.com", "/compatible-mode/v1/chat/completions").ok).toBe(false);
-    expect(validateCustomEndpoint("https://api.example.cn", "/v1/chat/completions").ok).toBe(false);
-    expect(validateCustomEndpoint("https://example.cn:443", "/v1/chat/completions").ok).toBe(false);
-    expect(validateCustomEndpoint("https://api.crusoe.ai", "/v1/chat/completions").ok).toBe(true);
-  });
-
   it("every non-US provider carries a data-handling caution", () => {
     for (const p of BRAIN_PROVIDERS) {
       const us = /United States|Managed|Your infrastructure/.test(p.country);

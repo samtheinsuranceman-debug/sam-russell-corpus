@@ -39,8 +39,8 @@ import { synthesize } from "./speech";
 import { brainComplete } from "./providerRegistry";
 import { assertEndpointAllowed, assertModelAllowed } from "@shared/aiProviders";
 
-// Owner's standing rule (2026-09-06): DeepSeek is not part of this platform and
-// must not be added back as a provider, a panel voice, or an OpenRouter route.
+// Owner's standing rule: no China-linked AI (BANNED_PROVIDER_PATTERN in
+// shared/aiProviders.ts) as a provider, a panel voice, or an OpenRouter route.
 type ProviderId = "claude" | "chatgpt" | "grok" | "gemini" | "perplexity" | "openrouter" | "mistral" | "groq" | "cohere" | "together";
 
 export type Provider = {

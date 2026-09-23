@@ -392,6 +392,38 @@ describe("no source file wires in a China-linked model or provider", () => {
   });
 });
 
+// ─── Consolidated from the other suites (the ban is proved here, once) ─────
+
+describe("consolidated catalogue and endpoint checks", () => {
+  it("no provider in the catalogue is China-linked by id, name, base URL, model or country", () => {
+    for (const p of PROVIDERS) {
+      for (const v of [p.id, p.name, p.baseUrl, ...p.suggestedModels]) expect(isBannedProvider(v), `${p.id}: ${v}`).toBe(false);
+      expect(p.country, p.id).not.toMatch(/china|hong kong|macau/i);
+    }
+    for (const gone of ["deepseek", "moonshot", "qwen", "zhipu", "minimax", "qianfan"]) {
+      expect(getProvider(gone), gone).toBeUndefined();
+      expect(isBannedProvider(gone), gone).toBe(true);
+    }
+  });
+
+  it("custom endpoints on a banned lab or a .cn host are refused; an allied one is accepted", () => {
+    for (const [base, path] of [
+      ["https://api.deepseek.com", "/chat/completions"],
+      ["https://api.moonshot.ai", "/v1/chat/completions"],
+      ["https://dashscope-intl.aliyuncs.com", "/compatible-mode/v1/chat/completions"],
+      ["https://api.example.cn", "/v1/chat/completions"],
+      ["https://example.cn:443", "/v1/chat/completions"],
+    ]) expect(validateCustomEndpoint(base, path).ok, base).toBe(false);
+    expect(validateCustomEndpoint("https://api.crusoe.ai", "/v1/chat/completions").ok).toBe(true);
+  });
+
+  it("the ultraAI panel carries no banned key, host or provider id", () => {
+    const src = readFileSync(resolve(root, "server/ultraAI.ts"), "utf-8");
+    for (const lit of src.match(/"[^"\n]{2,200}"/g) ?? []) expect(isBannedProvider(lit.slice(1, -1)), lit).toBe(false);
+    expect(src).not.toMatch(/DEEPSEEK_API_KEY|api\.deepseek\.com/);
+  });
+});
+
 // ─── 4. Manus stays out ──────────────────────────────────────────────────────
 
 /** The Manus names: the product, its gateway host, its runtime folder and its parent company's hosts. */
