@@ -347,7 +347,7 @@
       {
         "stepNumber": 1,
         "strategyId": 3,
-        "strategyName": "Mega Roth Conversion Catapult",
+        "strategyName": "Large Roth Conversion Catapult",
         "action": "Execute a strategic Roth conversion of $4,775,000 from a traditional IRA under IRC Section 408A, converting pre-tax funds to allow for tax-free growth and withdrawals, thereby saving $2,650,000 in future taxes by paying them upfront. This initial step establishes a tax-efficient foundation by shifting assets into a Roth structure, paving the way for subsequent strategies that leverage this converted capital.",
         "amountDeployed": 4775000,
         "taxSaved": 2650000,
@@ -564,7 +564,7 @@
       {
         "stepNumber": 5,
         "strategyId": 3,
-        "strategyName": "Mega Roth Conversion Catapult",
+        "strategyName": "Large Roth Conversion Catapult",
         "action": "Drawing from the tax-free growth in Step 4, the Yardley Family executes a Roth conversion of $22,625,000 from traditional IRA/401(k) accounts under IRC Section 408A, saving $9,119,000 in taxes by converting to tax-free withdrawals after paying $8,371,250 upfront. This mechanism eliminates future taxes on earnings, providing long-term benefits for retirement planning. It builds on earlier strategies by reallocating pre-tax assets into a Roth structure, enhancing the overall tax efficiency and liquidity established in prior investments.",
         "amountDeployed": 22625000,
         "taxSaved": 9119000,
@@ -722,7 +722,7 @@
       {
         "stepNumber": 6,
         "strategyId": 3,
-        "strategyName": "Mega Roth Conversion Catapult",
+        "strategyName": "Large Roth Conversion Catapult",
         "action": "Building upon the ILIT in Step 5, execute a strategic Roth conversion of $8,075,000 from a traditional IRA under IRC Section 408A, paying $2,987,750 in conversion taxes to save $5,070,000 in future taxes through tax-free growth and withdrawals. This catapult approach converts taxable accounts into tax-free ones, optimizing for long-term gains. It enhances the estate planning from earlier steps by aligning retirement assets with the family's overall tax-minimization framework.",
         "amountDeployed": 8075000,
         "taxSaved": 5070000,
@@ -1194,7 +1194,7 @@
       {
         "stepNumber": 6,
         "strategyId": 3,
-        "strategyName": "Mega Roth Conversion Catapult",
+        "strategyName": "Large Roth Conversion Catapult",
         "action": "Execute a Roth conversion of $6,825,000 from traditional IRA/401(k) accounts under IRC \u00a7408A, saving $4,667,000 in taxes by converting to tax-free growth, despite paying $2,525,250 in conversion taxes upfront. This step leverages the asset shielding from the BLAT and prior tax savings to make the conversion more feasible, ensuring long-term tax-free withdrawals. It builds on earlier strategies by using the accumulated deductions and credits to fund the tax payment, accelerating wealth accumulation for the family.",
         "amountDeployed": 6825000,
         "taxSaved": 4667000,
@@ -1510,7 +1510,7 @@
       {
         "stepNumber": 4,
         "strategyId": 3,
-        "strategyName": "Mega Roth Conversion Catapult",
+        "strategyName": "Large Roth Conversion Catapult",
         "action": "Expanding on the tax-efficient structures from Steps 1-3, the family executes a Roth conversion of $1,550,000 from traditional IRA/401(k) accounts under IRC Section 408A, paying $573,500 in conversion taxes to achieve tax-free withdrawals later and saving $1,062,000 in future taxes. This strategic move converts taxable growth into tax-free assets. It enhances the prior steps' focus on wealth preservation by aligning retirement funds with the family's overall tax-minimizing framework.",
         "amountDeployed": 1550000,
         "taxSaved": 1062000,
@@ -2733,7 +2733,7 @@
         "stepNumber": 5,
         "strategyId": 17,
         "strategyName": "HELOC Velocity Banking Arbitrage",
-        "action": "Building upon the executive bonus strategy in Step 4, extract $2,375,000 via a Home Equity Line of Credit (HELOC) at 7.5% and deploy it into an IUL earning 8.5% indexed returns under IRC \u00a7163, creating a 1% arbitrage that saves $640,000 in taxes through interest deductions and tax-deferred gains. This velocity banking technique accelerates debt repayment while generating tax advantages. It enhances the previous IUL investments by optimizing cash flow and reducing overall borrowing costs.",
+        "action": "Building upon the executive bonus strategy in Step 4, extract $2,375,000 via a Home Equity Line of Credit (HELOC) at 7.5% and deploy it into an IUL earning 8.5% indexed returns under IRC \u00a7163, creating a 1% arbitrage that saves $640,000 in taxes through interest deductions and tax-deferred gains. This velocity banking technique accelerates debt repayment while generating tax advantages. It enhances the previous IUL premiums by optimizing cash flow and reducing overall borrowing costs.",
         "amountDeployed": 2375000,
         "taxSaved": 640000,
         "netWorthBefore": 13049000,
@@ -3736,7 +3736,7 @@
       {
         "stepNumber": 3,
         "strategyId": 3,
-        "strategyName": "Mega Roth Conversion Catapult",
+        "strategyName": "Large Roth Conversion Catapult",
         "action": "After securing the BLAT, execute a Roth conversion of $650,000 from a traditional IRA/401(k) under IRC \u00a7408A, saving $324,000 in future taxes by converting to tax-free growth while paying $240,500 in conversion taxes upfront. This optimizes retirement funds for long-term tax advantages. It builds on previous steps by further enhancing the tax-sheltered assets from Steps 1 and 2.",
         "amountDeployed": 650000,
         "taxSaved": 324000,
@@ -3939,7 +3939,7 @@
       {
         "stepNumber": 7,
         "strategyId": 3,
-        "strategyName": "Mega Roth Conversion Catapult",
+        "strategyName": "Large Roth Conversion Catapult",
         "action": "Drawing on the MYGA structure from Step 6, execute a Roth conversion of $4,875,000 from traditional IRA/401(k) under IRC \u00a7408A, paying $1,803,750 in conversion taxes to save $3,224,000 long-term by avoiding future ordinary income taxes; this catapult builds upon accumulated assets to provide tax-free growth for retirement.",
         "amountDeployed": 4875000,
         "taxSaved": 3224000,
@@ -4344,7 +4344,7 @@
       {
         "stepNumber": 10,
         "strategyId": 3,
-        "strategyName": "Mega Roth Conversion Catapult",
+        "strategyName": "Large Roth Conversion Catapult",
         "action": "Culminating from the executive bonus in Step 9, execute a Roth conversion of $23,325,000 from traditional IRA/401(k) under IRC Section 408A, paying $8,630,250 in conversion taxes. This saves $14,221,000 in future taxes by converting to tax-free growth. It synthesizes all previous steps by reallocating optimized assets into a tax-free catapult for accelerated retirement wealth.",
         "amountDeployed": 23325000,
         "taxSaved": 14221000,
@@ -4913,7 +4913,7 @@
       {
         "stepNumber": 5,
         "strategyId": 3,
-        "strategyName": "Mega Roth Conversion Catapult",
+        "strategyName": "Large Roth Conversion Catapult",
         "action": "Execute a Roth conversion of $13,425,000 from traditional IRA/401(k) under IRC Section 408A, paying $4,967,250 in conversion taxes to save $8,149,000 in future taxes through tax-free growth and withdrawals. This savings mechanism shifts taxable distributions to tax-free ones, enhancing long-term wealth accumulation. Building on the MYGA investment, this step converts deferred assets into a tax-free vehicle, further securing the family's income stream established in prior steps.",
         "amountDeployed": 13425000,
         "taxSaved": 8149000,
@@ -5290,7 +5290,7 @@
       {
         "stepNumber": 7,
         "strategyId": 3,
-        "strategyName": "Mega Roth Conversion Catapult",
+        "strategyName": "Large Roth Conversion Catapult",
         "action": "Building on the tax-deferred growth from Steps 1-6, execute a Roth conversion of $4,575,000 from traditional IRA/401(k) under IRC \u00a7408A, saving $2,656,000 in future taxes by paying $1,692,750 upfront. This strategy shifts taxable distributions to tax-free withdrawals. It leverages previous steps' savings to optimize retirement planning for enhanced benefits in Step 8.",
         "amountDeployed": 4575000,
         "taxSaved": 2656000,
@@ -5605,7 +5605,7 @@
       {
         "stepNumber": 3,
         "strategyId": 3,
-        "strategyName": "Mega Roth Conversion Catapult",
+        "strategyName": "Large Roth Conversion Catapult",
         "action": "Building on the deferred gains from Steps 1 and 2, execute a Roth conversion of $1,300,000 from traditional IRA/401(k) under IRC provisions, saving $686,000 in future taxes by converting to tax-free growth. By paying $481,000 in conversion taxes now, the family secures long-term benefits. This step amplifies the tax efficiency of prior investments, creating a stronger retirement foundation.",
         "amountDeployed": 1300000,
         "taxSaved": 686000,
@@ -7098,7 +7098,7 @@
       {
         "stepNumber": 7,
         "strategyId": 3,
-        "strategyName": "Mega Roth Conversion Catapult",
+        "strategyName": "Large Roth Conversion Catapult",
         "action": "Drawing on the enhanced assets from Steps 1-6, execute a Roth conversion of $9,075,000 from traditional IRA/401(k) under IRC Section 408A, paying $3,357,750 in conversion taxes to save $5,636,000 overall in future taxes. This savings mechanism shifts funds to a tax-free growth environment, avoiding taxes on withdrawals. It builds on prior tax deferrals by converting them into permanent tax elimination, propelling the family toward tax-free retirement income.",
         "amountDeployed": 9075000,
         "taxSaved": 5636000,
@@ -7197,7 +7197,7 @@
       {
         "stepNumber": 3,
         "strategyId": 3,
-        "strategyName": "Mega Roth Conversion Catapult",
+        "strategyName": "Large Roth Conversion Catapult",
         "action": "Execute a Roth conversion of $7,800,000 from traditional IRA/401(k) under IRC Section 408A, paying $2,886,000 in conversion taxes to achieve tax-free growth, resulting in $5,147,000 in tax savings over time. This step builds on the equity extracted in Step 2 by utilizing available funds for conversion, optimizing future withdrawals. It further diversifies tax-advantaged accounts, preparing for more advanced wealth transfer strategies.",
         "amountDeployed": 7800000,
         "taxSaved": 5147000,
@@ -7429,7 +7429,7 @@
       {
         "stepNumber": 7,
         "strategyId": 3,
-        "strategyName": "Mega Roth Conversion Catapult",
+        "strategyName": "Large Roth Conversion Catapult",
         "action": "Building upon the captive insurance in Step 6, execute a Roth conversion of $5,450,000 from traditional IRA/401(k) accounts under IRC 408A; paying $2,016,500 in conversion taxes now saves $3,306,000 long-term by enabling tax-free growth and withdrawals. This catapult accelerates wealth growth from prior tax savings, positioning the family for maximized retirement benefits.",
         "amountDeployed": 5450000,
         "taxSaved": 3306000,
@@ -7511,7 +7511,7 @@
       {
         "stepNumber": 2,
         "strategyId": 3,
-        "strategyName": "Mega Roth Conversion Catapult",
+        "strategyName": "Large Roth Conversion Catapult",
         "action": "Execute a strategic Roth conversion of $725,000 from a traditional IRA under IRC Section 408A, paying $268,250 in conversion taxes to save $481,000 in future taxes by converting to tax-free growth. This mechanism eliminates taxes on withdrawals, providing long-term benefits. This builds on Step 1 by utilizing the enhanced cash flow from tax savings to fund the conversion, amplifying tax-efficient growth.",
         "amountDeployed": 725000,
         "taxSaved": 481000,
@@ -7730,7 +7730,7 @@
       {
         "stepNumber": 5,
         "strategyId": 3,
-        "strategyName": "Mega Roth Conversion Catapult",
+        "strategyName": "Large Roth Conversion Catapult",
         "action": "Leveraging the liquidity from Steps 1-4, execute a Roth conversion of $10,425,000 from traditional IRA/401(k) accounts under IRC Section 408A, yielding tax savings of $5,780,000 by converting to tax-free growth after paying $3,857,250 in conversion taxes. This Mega Roth Conversion Catapult accelerates wealth accumulation by eliminating future taxes on earnings, providing a tax-free income stream for retirement. It enhances the prior insurance and real estate plays by securing long-term tax efficiency for the family's diversified assets.",
         "amountDeployed": 10425000,
         "taxSaved": 5780000,
@@ -7872,7 +7872,7 @@
       {
         "stepNumber": 3,
         "strategyId": 3,
-        "strategyName": "Mega Roth Conversion Catapult",
+        "strategyName": "Large Roth Conversion Catapult",
         "action": "Leveraging the liquidity from the previous steps, the Blackwell Family executes a strategic Roth conversion of $4,825,000 from their traditional IRA/401(k) under IRC Section 408A, paying $1,785,250 in conversion taxes to save $2,902,000 in future taxes through tax-free withdrawals. This conversion accelerates growth in a Roth account, avoiding required minimum distributions and providing tax-free income. It builds on the earlier tax shields by converting pre-tax assets into a tax-efficient structure, compounding the benefits of Steps 1 and 2.",
         "amountDeployed": 4825000,
         "taxSaved": 2902000,
@@ -8421,7 +8421,7 @@
       {
         "stepNumber": 5,
         "strategyId": 3,
-        "strategyName": "Mega Roth Conversion Catapult",
+        "strategyName": "Large Roth Conversion Catapult",
         "action": "Utilizing the charitable strategy from Step 4, execute a Roth conversion of $1,425,000 from a traditional IRA/401(k) under IRC Section 408A, saving $771,000 in taxes by converting to tax-free growth, despite paying $527,250 in conversion taxes upfront. This catapult advances the plan by securing tax-free withdrawals in retirement, directly building on previous steps' tax efficiencies.",
         "amountDeployed": 1425000,
         "taxSaved": 771000,
@@ -8893,7 +8893,7 @@
       {
         "stepNumber": 2,
         "strategyId": 3,
-        "strategyName": "Mega Roth Conversion Catapult",
+        "strategyName": "Large Roth Conversion Catapult",
         "action": "Execute a strategic Roth conversion of $2,700,000 from a traditional IRA under IRC Section 408A, converting taxable income into tax-free growth and saving $1,399,000 in future taxes. This mechanism allows for tax-free withdrawals, amplifying long-term savings. Building on the initial cost segregation, this step further optimizes our tax position by shielding more assets from taxation.",
         "amountDeployed": 2700000,
         "taxSaved": 1399000,
@@ -9440,7 +9440,7 @@
       {
         "stepNumber": 6,
         "strategyId": 3,
-        "strategyName": "Mega Roth Conversion Catapult",
+        "strategyName": "Large Roth Conversion Catapult",
         "action": "Perform a Roth conversion of $29,850,000 from traditional IRA/401(k) under IRC Section 408A, saving $20,125,000 in taxes by paying $11,044,500 upfront for tax-free growth thereafter. Building on the IUL and MYGA foundations from earlier steps, this catapult accelerates wealth transfer and prepares for estate planning tools like dynasty trusts.",
         "amountDeployed": 29850000,
         "taxSaved": 20125000,
@@ -9740,7 +9740,7 @@
       {
         "stepNumber": 4,
         "strategyId": 3,
-        "strategyName": "Mega Roth Conversion Catapult",
+        "strategyName": "Large Roth Conversion Catapult",
         "action": "After securing the Dynasty Trust, execute a strategic Roth conversion of $3,200,000 from a traditional IRA under IRC Section 408A, paying $1,184,000 in conversion taxes but saving $2,047,000 in future taxes through tax-free withdrawals, as this converts taxable growth into tax-free assets. This step leverages the liquidity from earlier actions to fund the conversion, building a tax-free income stream that compounds the benefits of previous wealth optimization.",
         "amountDeployed": 3200000,
         "taxSaved": 2047000,
@@ -10055,7 +10055,7 @@
       {
         "stepNumber": 3,
         "strategyId": 3,
-        "strategyName": "Mega Roth Conversion Catapult",
+        "strategyName": "Large Roth Conversion Catapult",
         "action": "Expanding on the tax-deferred assets from Step 2, execute a Roth conversion of $1,200,000 from a traditional IRA under IRC 408A, saving $521,000 in taxes by converting to tax-free growth. This strategy pays $444,000 in conversion taxes now for future tax-free withdrawals. It builds on previous steps by converting deferred gains into a tax-free vehicle, further securing long-term wealth.",
         "amountDeployed": 1200000,
         "taxSaved": 521000,
@@ -10303,7 +10303,7 @@
       {
         "stepNumber": 8,
         "strategyId": 3,
-        "strategyName": "Mega Roth Conversion Catapult",
+        "strategyName": "Large Roth Conversion Catapult",
         "action": "Execute a Roth conversion of $28,550,000 from traditional IRA/401(k), paying $10,563,500 in conversion taxes but saving $16,483,000 overall through IRC 408A's tax-free withdrawals, converting taxable growth into permanent tax savings. Leveraging the CLAT and ESOP strategies from Steps 6 and 7, this catapult amplifies the family's tax-free income potential for retirement and beyond.",
         "amountDeployed": 28550000,
         "taxSaved": 16483000,
@@ -10445,7 +10445,7 @@
       {
         "stepNumber": 6,
         "strategyId": 3,
-        "strategyName": "Mega Roth Conversion Catapult",
+        "strategyName": "Large Roth Conversion Catapult",
         "action": "Building upon the IUL funding in Step 5, execute a strategic Roth conversion of $4,500,000 from traditional IRA/401(k) under IRC Section 408A, paying $1,665,000 in conversion taxes to save $3,028,000 in future taxes by converting to tax-free growth. This catapult accelerates retirement planning by eliminating taxes on withdrawals, creating a tax-free income stream. It integrates with prior investments by reallocating saved taxes into the family's growing asset base, enhancing long-term wealth preservation.",
         "amountDeployed": 4500000,
         "taxSaved": 3028000,
@@ -10557,7 +10557,7 @@
       {
         "stepNumber": 2,
         "strategyId": 3,
-        "strategyName": "Mega Roth Conversion Catapult",
+        "strategyName": "Large Roth Conversion Catapult",
         "action": "Execute a strategic Roth conversion of $300,000 from a traditional IRA/401(k), governed by IRC \u00a7408A, to save $163,000 in future taxes by converting taxable distributions into tax-free growth, while paying $111,000 in conversion taxes upfront. This step leverages the tax savings of $228,000 from the Dynasty Trust in Step 1 to offset immediate costs, enhancing overall tax efficiency. Building on the established trust structure, it accelerates wealth accumulation for retirement by aligning with the family's growing protected assets.",
         "amountDeployed": 300000,
         "taxSaved": 163000,
@@ -11059,7 +11059,7 @@
       {
         "stepNumber": 4,
         "strategyId": 3,
-        "strategyName": "Mega Roth Conversion Catapult",
+        "strategyName": "Large Roth Conversion Catapult",
         "action": "Drawing from the Opportunity Zone deployments in Step 3, execute a strategic Roth conversion of $8,800,000 from traditional IRA/401(k) accounts under relevant IRC provisions, paying $3,256,000 in conversion taxes upfront. This approach saves $5,700,000 in future taxes by allowing tax-free growth and withdrawals, transforming taxable retirement funds into a tax-efficient vehicle. It builds on prior steps by converting deferred gains into a perpetual tax shield, enhancing the overall intergenerational wealth strategy.",
         "amountDeployed": 8800000,
         "taxSaved": 5700000,
@@ -11374,7 +11374,7 @@
       {
         "stepNumber": 5,
         "strategyId": 3,
-        "strategyName": "Mega Roth Conversion Catapult",
+        "strategyName": "Large Roth Conversion Catapult",
         "action": "Utilizing the deferred gains from Steps 1-4, execute a Roth conversion of $23,075,000 from traditional accounts, paying $8,537,750 in conversion taxes to save $12,082,000 overall by avoiding future taxation on growth; this references IRC rules for Roth conversions, transforming the accumulated assets into tax-free vehicles for enhanced retirement planning.",
         "amountDeployed": 23075000,
         "taxSaved": 12082000,
@@ -11591,7 +11591,7 @@
       {
         "stepNumber": 7,
         "strategyId": 3,
-        "strategyName": "Mega Roth Conversion Catapult",
+        "strategyName": "Large Roth Conversion Catapult",
         "action": "Capitalizing on the ESOP's deferred gains, execute a strategic Roth conversion of $5,000,000 from a traditional IRA under IRC Section 408A, saving $2,762,000 in taxes by converting to tax-free growth after paying $1,850,000 in conversion taxes. This catapult builds on previous steps by securing tax-free retirement income, further solidifying our long-term wealth dynasty.",
         "amountDeployed": 5000000,
         "taxSaved": 2762000,
@@ -13271,7 +13271,7 @@
       {
         "stepNumber": 9,
         "strategyId": 3,
-        "strategyName": "Mega Roth Conversion Catapult",
+        "strategyName": "Large Roth Conversion Catapult",
         "action": "Capitalizing on the tax-optimized assets from Steps 1-8, execute a Roth conversion of $27,475,000 from traditional IRA/401(k) under IRC \u00a7408A, saving $12,395,000 in taxes by paying $10,165,750 in conversion taxes upfront for tax-free growth. This finalizes a tax-efficient retirement plan. It culminates the previous strategies by converting shielded and grown assets into permanent tax-free income streams.",
         "amountDeployed": 27475000,
         "taxSaved": 12395000,
@@ -13632,7 +13632,7 @@
       {
         "stepNumber": 10,
         "strategyId": 3,
-        "strategyName": "Mega Roth Conversion Catapult",
+        "strategyName": "Large Roth Conversion Catapult",
         "action": "Following the Opportunity Zone investment, execute a Roth conversion of $6,800,000 from a traditional IRA under IRC 408A, paying $2,516,000 in conversion taxes but saving $2,917,000 long-term through tax-free growth. This creates a tax-efficient income source in retirement. It builds on the deferred gains from previous steps to maximize future withdrawals.",
         "amountDeployed": 6800000,
         "taxSaved": 2917000,
@@ -13977,7 +13977,7 @@
       {
         "stepNumber": 10,
         "strategyId": 3,
-        "strategyName": "Mega Roth Conversion Catapult",
+        "strategyName": "Large Roth Conversion Catapult",
         "action": "Synthesizing the entire strategy of trusts, insurance, and investments from the previous steps, execute a Roth conversion of $77,750,000 from traditional IRA/401(k) under IRC Section 408A, saving $43,459,000 in future taxes by converting to tax-free withdrawals after paying $28,767,500 in conversion taxes. This catapult propels the family's wealth into a tax-free environment for retirement and heirs. It finalizes the multi-generational plan by transforming all accumulated assets into the most tax-advantaged form, securing perpetual growth and distribution.",
         "amountDeployed": 77750000,
         "taxSaved": 43459000,
@@ -14405,7 +14405,7 @@
       {
         "stepNumber": 4,
         "strategyId": 3,
-        "strategyName": "Mega Roth Conversion Catapult",
+        "strategyName": "Large Roth Conversion Catapult",
         "action": "Leveraging the deferred gains from Step 3, the family performs a strategic Roth conversion of $12,800,000 from traditional IRA/401(k) accounts under relevant IRC rules, saving $8,428,000 in future taxes by converting to tax-free growth. This step pays $4,736,000 in conversion taxes but positions assets for tax-exempt withdrawals. It advances the family's tax efficiency by building on earlier deferrals, creating a catapult for long-term wealth accumulation.",
         "amountDeployed": 12800000,
         "taxSaved": 8428000,
@@ -14764,7 +14764,7 @@
       {
         "stepNumber": 5,
         "strategyId": 3,
-        "strategyName": "Mega Roth Conversion Catapult",
+        "strategyName": "Large Roth Conversion Catapult",
         "action": "Execute a Roth conversion of $13,100,000 from traditional IRA/401(k) under IRC Section 408A, saving $5,684,000 in taxes by converting to tax-free growth, while paying $4,847,000 in conversion taxes upfront. This maneuver builds on the real estate and insurance foundations by shifting more assets to tax-free status for retirement. Integrating with previous steps' wealth accumulation, it accelerates the family's path to tax-free income, complementing their New York operations.",
         "amountDeployed": 13100000,
         "taxSaved": 5684000,
@@ -15311,7 +15311,7 @@
       {
         "stepNumber": 4,
         "strategyId": 3,
-        "strategyName": "Mega Roth Conversion Catapult",
+        "strategyName": "Large Roth Conversion Catapult",
         "action": "Expanding from the Dynasty Trust in Step 3, execute a Roth conversion of $7,150,000 from traditional IRA/401(k) under IRC Section 408A, paying $2,645,500 in conversion taxes to save $3,181,000 long-term by converting to tax-free growth. This strategy shifts taxable distributions to tax-free withdrawals, enhancing retirement security. It leverages the asset base from earlier steps to maximize tax savings and integrate seamlessly with ongoing estate planning.",
         "amountDeployed": 7150000,
         "taxSaved": 3181000,
@@ -15559,7 +15559,7 @@
       {
         "stepNumber": 10,
         "strategyId": 3,
-        "strategyName": "Mega Roth Conversion Catapult",
+        "strategyName": "Large Roth Conversion Catapult",
         "action": "Execute a Roth conversion of $8,700,000 from traditional IRA/401(k) under IRC Section 408A, paying $3,219,000 in conversion taxes to save $5,110,000 in future taxes through tax-free growth. The tax savings result from converting to Roth accounts for qualified withdrawals. Culminating the previous strategies, this final step optimizes the family's tax-free income sources, leveraging the wealth built in earlier phases for ultimate retirement security.",
         "amountDeployed": 8700000,
         "taxSaved": 5110000,
@@ -15641,7 +15641,7 @@
       {
         "stepNumber": 4,
         "strategyId": 3,
-        "strategyName": "Mega Roth Conversion Catapult",
+        "strategyName": "Large Roth Conversion Catapult",
         "action": "Execute a strategic Roth conversion of $8,950,000 from traditional IRA/401(k) accounts under IRC Sections 408A and 61, advancing the executive bonus structure from Step 3 for greater tax efficiency. This saves $5,663,000 in future taxes by shifting to Roth accounts where qualified withdrawals are tax-free, while the upfront $3,311,500 conversion cost is offset by the family's increasing income and prior shields.",
         "amountDeployed": 8950000,
         "taxSaved": 5663000,
@@ -15873,7 +15873,7 @@
       {
         "stepNumber": 8,
         "strategyId": 3,
-        "strategyName": "Mega Roth Conversion Catapult",
+        "strategyName": "Large Roth Conversion Catapult",
         "action": "Building on the real estate and trust foundations, execute a Roth conversion of $45,675,000 from traditional IRA/401(k) under IRC 408A, paying $16,899,750 in current taxes to achieve tax-free growth and save $25,523,000 long-term by eliminating future taxation on withdrawals. This catapult propels the family's retirement assets into a tax-free environment for accelerated compounding. It integrates with earlier actions by using the liquidity and deductions from previous steps to manage the conversion costs, solidifying multi-generational wealth.",
         "amountDeployed": 45675000,
         "taxSaved": 25523000,
@@ -15987,7 +15987,7 @@
         "stepNumber": 5,
         "strategyId": 1,
         "strategyName": "IUL Infinite Banking Fortress",
-        "action": "Utilizing the tax savings and growth from Step 4, fund a max-overfunded IUL policy with $1,750,000 under IRC Section 7702, with cash value growing at 7-9% tax-deferred. This saves $621,000 in taxes through deferred gains and policy loans. It creates an infinite banking system that expands on prior IUL investments, enabling self-funding for future acquisitions and trusts.",
+        "action": "Utilizing the tax savings and growth from Step 4, fund a max-overfunded IUL policy with $1,750,000 under IRC Section 7702, with cash value growing at 7-9% tax-deferred. This saves $621,000 in taxes through deferred gains and policy loans. It creates an infinite banking system that expands on prior IUL premiums, enabling self-funding for future acquisitions and trusts.",
         "amountDeployed": 1750000,
         "taxSaved": 621000,
         "netWorthBefore": 7446000,
@@ -16046,7 +16046,7 @@
       {
         "stepNumber": 9,
         "strategyId": 3,
-        "strategyName": "Mega Roth Conversion Catapult",
+        "strategyName": "Large Roth Conversion Catapult",
         "action": "Leveraging the charitable benefits from Step 8, execute a Roth conversion of $5,000,000 from traditional IRA/401(k) under IRC Section 408A, paying $1,850,000 in conversion taxes. This saves $2,632,000 in future taxes by converting to tax-free growth and withdrawals. It catapults the family's retirement planning by transforming taxable accounts into tax-free ones, based on the liquidity and deductions accumulated in previous steps.",
         "amountDeployed": 5000000,
         "taxSaved": 2632000,
@@ -16128,7 +16128,7 @@
       {
         "stepNumber": 3,
         "strategyId": 3,
-        "strategyName": "Mega Roth Conversion Catapult",
+        "strategyName": "Large Roth Conversion Catapult",
         "action": "Following the Dynasty Trust setup, execute a strategic Roth conversion of $6,625,000 from traditional IRA/401(k) under IRC \u00a7408A, paying $2,451,250 in conversion taxes to achieve $3,473,000 in long-term savings by avoiding future required minimum distributions and taxes on growth. This step converts taxable income into tax-free withdrawals, amplifying the benefits of prior deferrals. It builds on the established tax shelter by creating a tax-free income stream for retirement.",
         "amountDeployed": 6625000,
         "taxSaved": 3473000,
@@ -16736,7 +16736,7 @@
       {
         "stepNumber": 10,
         "strategyId": 3,
-        "strategyName": "Mega Roth Conversion Catapult",
+        "strategyName": "Large Roth Conversion Catapult",
         "action": "Execute a Roth conversion of $4,075,000 from traditional IRA/401(k) under IRC 408A, paying $1,507,750 in conversion taxes but saving $2,607,000 long-term by enabling tax-free withdrawals. This final step culminates the previous strategies by converting accumulated tax-deferred assets into tax-free growth, using liquidity from annuities and policies. It solidifies the Redmond Family's legacy by ensuring future distributions are shielded, completing the integrated tax-saving architecture.",
         "amountDeployed": 4075000,
         "taxSaved": 2607000,

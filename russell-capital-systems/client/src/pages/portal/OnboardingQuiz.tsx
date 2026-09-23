@@ -81,7 +81,7 @@ const OnboardingQuiz: React.FC = () => {
 
   const savePlan = () => {
     localStorage.setItem('financialPlan', JSON.stringify({ answers, results }));
-    alert('Your Financial Prescription has been saved!');
+    alert('Your financial plan outline has been saved!');
   };
 
   const renderQuestion = () => {
@@ -158,7 +158,7 @@ const OnboardingQuiz: React.FC = () => {
   const renderResults = () => results && (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
       <CardHeader>
-        <CardTitle className="text-2xl flex items-center gap-2"><Shield className="text-emerald-500" /> Your Financial Prescription</CardTitle>
+        <CardTitle className="text-2xl flex items-center gap-2"><Shield className="text-emerald-500" /> Your Financial Plan Outline</CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
         <div>
@@ -207,7 +207,7 @@ const OnboardingQuiz: React.FC = () => {
                 <div className="flex gap-4">
                   {step > 1 && <Button variant="outline" onClick={handleBack} className="border-[#1e3a5f]">Back</Button>}
                   <Button onClick={handleNext} className="bg-emerald-500 hover:bg-emerald-600" disabled={!answers.trainingStage || (step === 2 && !answers.specialty)}>
-                    {step === QUESTIONS ? 'See Diagnosis' : 'Next'}
+                    {step === QUESTIONS ? 'See Your Profile' : 'Next'}
                   </Button>
                 </div>
               </CardContent>

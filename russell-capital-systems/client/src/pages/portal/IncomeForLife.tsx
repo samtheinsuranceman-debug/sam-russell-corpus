@@ -56,13 +56,13 @@ export default function IncomeForLife() {
   const L = longevity.data; const P = plan.data;
 
   return (
-    <AppShell title="Tax-Free Income for Life">
+    <AppShell title="Lifetime Income (Roth-Held Annuity)">
       <div className="mx-auto max-w-6xl space-y-6 pb-16">
         <div className={`${CARD} p-6`}>
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div>
               <p className={H}><HeartHandshake size={12} className="mr-1 inline" /> Income for life · the Longevity Engine</p>
-              <h1 className="mt-1 text-2xl font-semibold text-white">Guaranteed income you cannot outlive, tax-free, sized to how long you and your spouse are likely to live</h1>
+              <h1 className="mt-1 text-2xl font-semibold text-white">Lifetime income from an annuity held in your Roth IRA (qualified distributions are tax-free), subject to the insurer's claims-paying ability, sized to how long you and your spouse are likely to live</h1>
               <p className="mt-2 text-sm text-white/70">The pre-tax account goes through the <Link href="/portal/roth-conversion" className="text-emerald-300 underline">conversion pass</Link> first; the income plan runs on the Roth. The payout comes from a carrier's published rate sheet in the registry below; the years come from the Social Security life table. The research on what guaranteed income does for people is shown first, as it stands, before any number.</p>
             </div>
             <button className={`${BTN} print:hidden`} onClick={() => window.print()}><Printer size={12} className="mr-1 inline" />Print / save as PDF (the studies print first)</button>

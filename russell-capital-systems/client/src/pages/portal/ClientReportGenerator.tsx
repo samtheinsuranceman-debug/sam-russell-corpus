@@ -33,6 +33,7 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, Legend, ResponsiveContainer,
   LineChart, Line, PieChart, Pie, Cell, AreaChart, Area, ComposedChart, Scatter
 } from "recharts";
+import { TAX_RULES_2026 } from "@shared/taxRules";
 
 const REPORT_SECTIONS = [{ id: "cover", label: "Cover Page", icon: FileText, description: "Branded cover with client name, advisor info, and date" },
   { id: "executive", label: "Executive Summary", icon: Eye, description: "System-generated summary of key findings and recommendations" },
@@ -1099,7 +1100,7 @@ export default function ClientReportGenerator() {
                           </tr>
                           <tr className="border-b border-[#12233e]">
                             <td className="py-3 px-4 text-white font-medium">Annual Gifting Program</td>
-                            <td className="py-3 px-4 text-[#7a95b8]">Utilize annual exclusion ($18,000/person) to transfer wealth to heirs tax-free.</td>
+                            <td className="py-3 px-4 text-[#7a95b8]">Utilize the annual exclusion ({`$${TAX_RULES_2026.annualGiftExclusion.toLocaleString()}/recipient in ${TAX_RULES_2026.taxYear}; Source: IRS Rev. Proc. 2025-32`}) to transfer wealth to heirs free of gift tax.</td>
                             <td className="text-right py-3 px-4 text-[#22c55e]">$144,000/yr</td>
                           </tr>
                           <tr>

@@ -108,7 +108,7 @@ export const MINDS: readonly Mind[] = [
     reads: ["value-buying", "convincer", "modal-operators", "people-convincer"],
     owns: ["choice-of-agreements", "conversational-postulate", "embedded-command"],
     instruction:
-      "Watch the decision signals on every turn. Past the hot threshold, answer only what was literally asked in two sentences, name one next step, and stop — the documented failure in this firm's own call review is talking past a decision until it comes undone. Never manufacture urgency to create a signal that is not there.",
+      "Watch the decision signals on every turn. Past the hot threshold, answer only what was literally asked in two sentences (plus any qualifier the regulatory floor requires), name one next step, and stop — the documented failure in this firm's own call review is talking past a decision until it comes undone. Never manufacture urgency to create a signal that is not there.",
     standingQuestion: "Have they already decided, and am I about to talk them out of it?",
   },
   {
@@ -124,7 +124,7 @@ export const MINDS: readonly Mind[] = [
     reads: ["emotional-coping", "emotional-state", "ego-strength", "emotional-exuberance"],
     owns: ["pacing-current-experience", "backtrack", "content-reframe"],
     instruction:
-      "Hold the arc. Three sentences on pain, then pivot to what can be done. Never stack caveats on top of hope. When bad news must land, it arrives paired in the same breath with the specific thing still in their control.",
+      "Hold the arc. Three sentences on pain, then pivot to what can be done. Pair hope with the qualifiers the regulatory floor requires (hypothetical, not guaranteed, the tax-free conditions); those qualifiers are never trimmed as caveats. When bad news must land, it arrives paired in the same breath with the specific thing still in their control.",
     standingQuestion: "Where in the arc are they, and is my reply the right length for that phase?",
   },
   {

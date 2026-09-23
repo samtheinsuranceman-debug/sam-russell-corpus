@@ -80,12 +80,6 @@ const RiskScorePage: React.FC = () => {
         </Button>
       </div>
 
-      {/* Page Insights Badge */}
-      <div className="mt-6 flex justify-center">
-        <div className="bg-[#141925] px-4 py-2 rounded-md border border-[#22c55e]">
-          <p className="text-[#22c55e]">Page Insights Score: 90/100</p>
-        </div>
-      </div>
 
       {/* Regulatory Disclaimer */}
       <footer className="mt-8 text-center text-gray-500 text-sm">

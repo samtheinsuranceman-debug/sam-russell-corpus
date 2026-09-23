@@ -209,7 +209,7 @@ const LAB_TOOLS: { path: string; label: string }[] = [
   { path: "/portal/retirement-gap", label: "Retirement Gap" },
   { path: "/portal/retirement-healthcare", label: "Retirement Healthcare" },
   { path: "/portal/retirement-income-proj", label: "Retirement Income Proj" },
-  { path: "/portal/revenue-guarantee", label: "Revenue Guarantee" },
+  { path: "/portal/revenue-guarantee", label: "Revenue Case" },
   { path: "/portal/risk-compliance", label: "Risk Compliance" },
   { path: "/portal/risk-tolerance", label: "Risk Tolerance" },
   { path: "/portal/roth-vs-traditional", label: "Roth Vs Traditional" },

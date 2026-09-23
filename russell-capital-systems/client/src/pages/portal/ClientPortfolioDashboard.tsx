@@ -930,7 +930,7 @@ export default function ClientPortfolioDashboard() {
                 <CardContent className="p-3">
                   <div className="text-[10px] text-amber-400 font-semibold">MYGA VALUE (Yr {projectionYears})</div>
                   <div className="text-xl font-black text-white">{summary ? fmt$(summary.migaFinalMYGA) : "—"}</div>
-                  <div className="text-[10px] text-gray-400">6.25% guaranteed compounding</div>
+                  <div className="text-[10px] text-gray-400">Assumed 6.25% MYGA rate (hypothetical; guaranteed only for the contract term)</div>
                 </CardContent>
               </Card>
               <Card className="border-green-500/20 bg-green-500/5">
@@ -994,7 +994,7 @@ export default function ClientPortfolioDashboard() {
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm flex items-center gap-2">
                   <Scale className="w-4 h-4 text-amber-400" />
-                  MYGA Growth (6.25%) vs Bank Loan Balance — Collateral Always Wins
+                  MYGA Growth at the Assumed 6.25% Rate vs Bank Loan Balance (Hypothetical)
                 </CardTitle>
               </CardHeader>
               <CardContent>

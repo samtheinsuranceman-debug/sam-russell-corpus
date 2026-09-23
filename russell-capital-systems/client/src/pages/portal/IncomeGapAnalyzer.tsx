@@ -1121,8 +1121,8 @@ export default function IncomeGapAnalyzer() {
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {[
-                    { title: "Tax-Free Income", desc: "Policy loans are not taxable income", icon: <DollarSign className="h-5 w-5 text-green-500" /> },
-                    { title: "Zero Floor Protection", desc: "Never lose money due to market declines", icon: <Shield className="h-5 w-5 text-blue-500" /> },
+                    { title: "Tax-Free Income (Conditions Apply)", desc: "Policy loans are generally not taxable if the policy is not a MEC and stays in force", icon: <DollarSign className="h-5 w-5 text-green-500" /> },
+                    { title: "Zero Floor on Index Credits", desc: "Negative index years credit 0%; policy charges still apply", icon: <Shield className="h-5 w-5 text-blue-500" /> },
                     { title: "No RMDs", desc: "No forced withdrawals at age 73+", icon: <Calendar className="h-5 w-5 text-emerald-500" /> },
                     { title: "Social Security Optimization", desc: "Doesn't increase taxation of SS benefits", icon: <Activity className="h-5 w-5 text-orange-500" /> },
                     { title: "IRMAA Protection", desc: "Doesn't increase Medicare premiums", icon: <Zap className="h-5 w-5 text-yellow-500" /> },

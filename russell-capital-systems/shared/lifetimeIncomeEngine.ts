@@ -689,20 +689,21 @@ export function analyzeExistingAnnuity(input: ExistingAnnuityInput): ExistingAnn
     canAfford: e.monthlyCost <= discretionaryMonthly,
   }));
   
-  // ─── Longevity Benefits ───
+  // ─── Predictable income (was "Longevity Benefits") ───
+  // The health, mortality and depression figures that lived here were removed 23 Sep 2026: an annuity is
+  // not a health product, the figures had no dates or links, and several could not be traced to the named
+  // source. What remains is what the contract itself does, plus one dated, linked satisfaction study.
   const longevityBenefits = {
-    headline: "People With Guaranteed Lifetime Income Live Longer, Healthier, and Happier Lives",
+    headline: "What Predictable Lifetime Income Can Do for a Retirement Budget",
     stats: [
-      { label: "Reduced Mortality Risk", value: "Up to 25% lower mortality risk", source: "Journal of Financial Planning, 2019" },
-      { label: "Reduced Stress & Anxiety", value: "63% less financial anxiety", source: "TIAA Institute & George Washington University" },
-      { label: "Better Health Outcomes", value: "40% more likely to rate health as 'excellent'", source: "Employee Benefit Research Institute" },
-      { label: "Greater Life Satisfaction", value: "2.5x more likely to feel 'very satisfied'", source: "LIMRA Retirement Research" },
-      { label: "Longer Retirement", value: "Average 3-5 additional years of life", source: "Society of Actuaries Longevity Study" },
-      { label: "Reduced Depression", value: "47% lower rates of depression", source: "National Bureau of Economic Research" },
+      { label: "Income Set by the Contract", value: `$${Math.round(guaranteedMonthlyIncome).toLocaleString("en-US")}/month in this hypothetical`, source: "Your inputs and the contract's payout terms; subject to the insurer's claims-paying ability" },
+      { label: "Not Tied to Markets", value: "Payments do not change with the index", source: "Annuity contract terms (income rider or payout option)" },
+      { label: "Simpler Budgeting", value: "Fixed expenses can be matched to a known amount", source: "Planning method; not a guarantee of outcomes" },
+      { label: "Reported Satisfaction", value: "Retirees with annuitized income reported higher retirement satisfaction", source: "C. Panis, RAND working paper DRU-3021 (2003), https://www.rand.org/pubs/drafts/DRU3021.html" },
     ],
-    message: "When you remove the #1 source of stress in retirement — the fear of running out of money — your body and mind respond. " +
-      "Guaranteed lifetime income isn't just a financial strategy. It's a health strategy. It's a happiness strategy. " +
-      "It's the difference between surviving retirement and thriving in it.",
+    message: "Predictable income can make a retirement budget simpler to plan, because fixed costs can be matched to an amount the contract pays. " +
+      "It does not remove every risk: inflation, surrender charges and the insurer's claims-paying ability still matter. " +
+      "Everything shown is hypothetical and based on your facts.",
   };
   
   return {

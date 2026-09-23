@@ -1,14 +1,13 @@
 import { AlertTriangle, Shield, Info } from "lucide-react";
-import { useDisclaimer } from "@/contexts/DisclaimerContext";
 
 /**
- * NAIC AG 49-A/B Compliance Disclaimer Component
- * 
- * Required on every page that displays IUL-related calculations, projections,
- * illustrations, or comparisons. Ensures regulatory compliance with:
- * - NAIC Actuarial Guideline 49-A (2020) and 49-B (2024)
- * - State insurance department illustration regulations
- * - SEC/FINRA guidance on non-securities product marketing
+ * NAIC disclosure component for IUL calculations, projections and comparisons.
+ *
+ * The engines on this site are mechanics, not policy illustrations: they run
+ * at an assumed rate the visitor sets. Only the insurer's illustration shows
+ * policy values, and only that illustration is governed by Actuarial Guideline
+ * 49-A/49-B. So this component states what the numbers are; it never claims
+ * that a page "complies" with a guideline that does not apply to it.
  */
 
 type DisclaimerVariant = "full" | "compact" | "inline" | "footer";
@@ -36,7 +35,7 @@ const CORE_DISCLAIMER = "This material is for educational and illustrative purpo
 
 const HISTORICAL_DISCLAIMER = "Historical index performance data shown reflects what would have been credited to a hypothetical policy based on the index parameters displayed. Past index performance is not indicative of future results. Actual credited rates depend on the specific policy's cap rate, participation rate, floor, and spread at the time of each policy anniversary.";
 
-const PROJECTION_DISCLAIMER = "Projected values are hypothetical illustrations based on assumed rates of return and are not guaranteed. Actual results will vary based on market conditions, policy charges, cost of insurance, and the financial strength of the issuing carrier. These illustrations comply with NAIC Actuarial Guideline 49-A and 49-B requirements.";
+const PROJECTION_DISCLAIMER = "Projected values are hypothetical, based on your facts and the assumed crediting rate you set, and are not guaranteed. Actual results will vary based on market conditions, policy charges, cost of insurance, and the financial strength of the issuing carrier. This is not a policy illustration; only the insurer's illustration shows policy values.";
 
 const COMPARISON_DISCLAIMER = "Product comparisons are simplified for educational purposes and may not reflect all features, benefits, limitations, or costs of each product type. IUL policies have costs including premium loads, cost of insurance charges, administrative fees, and surrender charges that affect policy values. Consult a licensed insurance professional for personalized recommendations.";
 
@@ -54,8 +53,7 @@ export function NAICDisclaimer({
   showsCashValues = false,
   className = "",
 }: NAICDisclaimerProps) {
-  const { showDisclaimers } = useDisclaimer();
-  if (!showDisclaimers) return null;
+  // Always rendered. No user setting hides a disclosure (contexts/DisclaimerContext.tsx).
 
   if (variant === "inline") {
     return (
@@ -92,7 +90,7 @@ export function NAICDisclaimer({
       <div className={`mt-6 pt-4 border-t border-border/20 ${className}`}>
         <div className="flex items-center gap-2 mb-2">
           <Shield className="w-4 h-4 text-muted-foreground/40" />
-          <p className="text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider">Regulatory Compliance — NAIC AG 49-A/B</p>
+          <p className="text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider">Important Disclosures</p>
         </div>
         <div className="space-y-1.5">
           <p className="text-[10px] text-muted-foreground/50 leading-relaxed">{CORE_DISCLAIMER}</p>
@@ -124,7 +122,7 @@ export function NAICDisclaimer({
     <div className={`mt-6 p-4 rounded-lg bg-amber-500/5 border border-amber-500/10 ${className}`}>
       <div className="flex items-center gap-2 mb-3">
         <Shield className="w-5 h-5 text-amber-500/60" />
-        <p className="text-xs font-medium text-amber-500/80">Important Regulatory Disclosures — NAIC AG 49-A/B Compliance</p>
+        <p className="text-xs font-medium text-amber-500/80">Important Disclosures — Hypothetical, Not a Policy Illustration</p>
       </div>
       <div className="space-y-2">
         <p className="text-[11px] text-muted-foreground/70 leading-relaxed">{CORE_DISCLAIMER}</p>

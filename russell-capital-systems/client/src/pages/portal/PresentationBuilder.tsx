@@ -413,7 +413,7 @@ export default function PresentationBuilder() {
           "Phase 1: Complete fact-finder and risk assessment",
           "Phase 2: Initiate Roth conversion strategy",
           "Phase 3: Establish IUL policy with optimal carrier",
-          "Phase 4: Set up MYGA ladder for guaranteed returns",
+          "Phase 4: Set up a MYGA ladder (contractual fixed rates for each term, subject to the insurer's claims-paying ability)",
           "Ongoing: Quarterly reviews and rebalancing",
         ],
         notes: "",

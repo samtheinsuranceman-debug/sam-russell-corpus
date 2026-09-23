@@ -234,24 +234,9 @@ export default function GrowthAnnuities() {
                   </SelectContent>
                 </Select>
               </div>
-              <div className="flex items-center gap-3">
-                <div className="p-2 rounded bg-muted/10">
-                  <p className="text-xs text-muted-foreground">Annuity Guaranty Limit</p>
-                  <p className="text-lg font-bold text-emerald-400">${(guaranty.annuityLimit / 1000).toFixed(0)}K</p>
-                </div>
-                <Badge variant="outline" className={`text-xs ${guaranty.tier === "Premium" ? "border-emerald-500/50 text-emerald-400" : guaranty.tier === "Enhanced" ? "border-blue-500/50 text-blue-400" : guaranty.tier === "Below Standard" ? "border-red-500/50 text-red-400" : "border-slate-500/50 text-slate-400"}`}>
-                  {guaranty.tier} Protection
-                </Badge>
-              </div>
               <div className="flex items-center">
                 <p className="text-xs text-muted-foreground">
                   <strong>{growthProducts.length}</strong> growth FIA products available in {getStateName(stateCode)}
-                  {splitRec.splitCount > 1 && (
-                    <span className="block mt-1 text-amber-400">
-                      <AlertTriangle className="w-3 h-3 inline mr-1" />
-                      Consider splitting across {splitRec.splitCount} carriers for full guaranty coverage
-                    </span>
-                  )}
                 </p>
               </div>
             </div>
@@ -310,7 +295,7 @@ export default function GrowthAnnuities() {
                       <div className="bg-muted/30 rounded-lg p-4 text-center">
                         <p className="text-xs text-muted-foreground">Downside Protection</p>
                         <p className="font-bold text-emerald-400 text-lg mt-1">0% Floor</p>
-                        <p className="text-xs text-muted-foreground">Never lose principal</p>
+                        <p className="text-xs text-muted-foreground">No index losses credited (surrender charges apply)</p>
                       </div>
                     </div>
 
@@ -579,10 +564,10 @@ export default function GrowthAnnuities() {
                           </div>
                         </div>
                         <p className="text-sm text-muted-foreground">
-                          Precious metals are the ultimate hedge against the fiat-based currency system. If the government's
-                          growing trend of money printing and debt creation continues — and there is no indication it will stop —
-                          this is <strong>one of the only recommendation chassis that will outperform inflation</strong> and create
-                          heavy double-digit returns <strong>without the possibility of loss</strong>. Gold cannot be printed,
+                          Many investors treat precious metals as a hedge against currency debasement. In an annuity, gold exposure
+                          comes through the index an insurer offers: credits follow the index up to the cap and participation rate
+                          the insurer sets (and may change), and a negative index year credits 0%. It <strong>may keep pace with
+                          inflation depending on the credited rate</strong>; past gold returns do not predict future index credits. Gold cannot be printed,
                           digitally expanded, or inflated away. Since 1971, gold has appreciated over <strong>13,500%</strong> while
                           the US dollar has lost 87% of its purchasing power.
                         </p>

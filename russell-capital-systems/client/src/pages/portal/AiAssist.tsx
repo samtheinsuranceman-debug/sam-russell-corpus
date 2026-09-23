@@ -41,6 +41,7 @@ import {
 import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { Streamdown } from "@/components/StreamdownLite";
+import AiAnswerNote from "@/components/AiAnswerNote";
 import { ExportToSlides } from "@/components/ExportToSlides";
 import { PageInsights } from "@/components/PageInsights";
 import { useAuth } from "@/_core/hooks/useAuth";
@@ -370,6 +371,7 @@ export default function AiAssist() {
                 <div className="prose prose-invert max-w-none prose-sm">
                   <Streamdown content={String(strategyMut.data.content || "No content generated.")} />
                 </div>
+                <AiAnswerNote />
 
                 {/* Roth Ladder Preview */}
                 {strategyMut.data.ladder && strategyMut.data.ladder.length > 0 && (

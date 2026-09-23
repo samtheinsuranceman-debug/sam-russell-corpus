@@ -10,6 +10,8 @@ import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { ULTRA_PROFILE_KEY } from "@/components/VoiceAdvisor";
 import PageBackdrop from "@/components/PageBackdrop";
+import PolicyDisclosureLine from "@/components/PolicyDisclosureLine";
+import AiAnswerNote from "@/components/AiAnswerNote";
 import { EngineWhyFooter, OutputWhy, QuestionWhy } from "@/components/rooms/Reveal";
 import {
   defaultModules, runUltraScenario, MODULE_CATALOG, ULTRA_DISCLOSURE,
@@ -68,7 +70,7 @@ export default function UltraCalculatorPage() {
   });
   const [windowLen, setWindowLen] = useState(10);
   const [windows, setWindows] = useState<WindowPlan[]>([
-    { years: 10, goal: "Kill the mortgage; start the trust-owned IUL." },
+    { years: 10, goal: "Model an earlier mortgage payoff; start the trust-owned IUL life insurance policy." },
     { years: 10, goal: "Second and third recycled properties; IUL income begins." },
     { years: 10, goal: "Full passive-income phase." },
   ]);
@@ -142,6 +144,7 @@ export default function UltraCalculatorPage() {
         <h1 className="mt-1 text-3xl font-bold">The Decade Machine</h1>
         <p className="text-sm font-medium text-amber-300/80">The Ultra Calculator — every calculator, one machine, decade after decade.</p>
         <QuestionWhy />
+        <PolicyDisclosureLine path="/ultra-calculator" className="mt-3 flex max-w-3xl items-start gap-2 rounded-lg border border-slate-800 bg-slate-900/60 px-3 py-2 text-xs text-slate-400" />
         <p className="mt-2 max-w-3xl text-sm text-slate-400">
           Every calculator on this site as one machine. Enter the household once, toggle the strategy modules,
           set your planning windows — each window's goals in your words — and every window starts from the previous
@@ -368,6 +371,7 @@ export default function UltraCalculatorPage() {
             <div className="mt-4 rounded-xl border border-amber-500/30 bg-slate-800/60 p-4 text-sm text-slate-200 whitespace-pre-wrap">
               <p className="mb-1 text-xs font-semibold uppercase text-amber-400">AI team commentary ({plan.data.aiVia})</p>
               {plan.data.aiCommentary}
+              <AiAnswerNote />
             </div>
           )}
         </section>

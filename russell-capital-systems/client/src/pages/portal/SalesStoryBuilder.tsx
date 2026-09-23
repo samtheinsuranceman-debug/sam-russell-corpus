@@ -42,9 +42,9 @@ import {
 const STORY_TEMPLATES = [
   { id: "iul-value", label: "The IUL Value Proposition", slides: 8, duration: "12 min", description: "Walk through tax savings, market protection, and retirement income" },
   { id: "tax-bomb", label: "The Tax Bomb", slides: 6, duration: "8 min", description: "Show how 401(k) RMDs create a tax crisis and how to solve it" },
-  { id: "mega-roth", label: "The Mega Roth Strategy", slides: 7, duration: "10 min", description: "IUL as the unlimited Roth IRA for high earners" },
-  { id: "estate-shield", label: "Estate Shield", slides: 6, duration: "8 min", description: "Protect wealth from the 2026 estate tax sunset" },
-  { id: "mortgage-killer", label: "The Mortgage Killer", slides: 7, duration: "10 min", description: "Eliminate mortgage interest while building tax-free wealth" },
+  { id: "iul-vs-roth", label: "IUL Life Insurance vs. Roth", slides: 7, duration: "10 min", description: "How IUL life insurance compares with a Roth IRA for high earners: limits, charges, and when loans are tax-free" },
+  { id: "estate-shield", label: "Estate Shield", slides: 6, duration: "8 min", description: "Model estate tax exposure against the $15M 2026 exemption (P.L. 119-21)" },
+  { id: "mortgage-killer", label: "The Mortgage Killer", slides: 7, duration: "10 min", description: "Model an earlier mortgage payoff alongside life insurance cash value" },
   { id: "retirement-gap", label: "The Retirement Income Gap", slides: 8, duration: "12 min", description: "Guaranteed income + tax-free IUL loans fill the gap" },
 ];
 
@@ -689,9 +689,9 @@ export default function SalesStoryBuilder() {
             <div className="space-y-4">
               <div className="grid grid-cols-3 gap-3">
                 {[
-                  { icon: Shield, label: "0% Floor Protection", desc: "Never lose money to market downturns", color: "text-blue-400" },
+                  { icon: Shield, label: "0% Floor on Index Credits", desc: "Negative index years credit 0%; policy charges still apply", color: "text-blue-400" },
                   { icon: TrendingUp, label: "Index-Linked Growth", desc: "Participate in market upside with caps", color: "text-green-400" },
-                  { icon: DollarSign, label: "Tax-Free Access", desc: "Policy loans are not taxable income", color: "text-amber-400" },
+                  { icon: DollarSign, label: "Tax-Free Access (Conditions Apply)", desc: "Policy loans are generally not taxable income if the policy is not a MEC and stays in force", color: "text-amber-400" },
                 ].map((item, i) => {
                   const Icon = item.icon;
                   return (

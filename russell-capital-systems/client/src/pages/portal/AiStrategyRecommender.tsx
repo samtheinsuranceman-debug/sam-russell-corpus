@@ -5,6 +5,7 @@ import { trpc } from "@/lib/trpc";
 import { ExportToSlides } from "@/components/ExportToSlides";
 import { PageInsights } from "@/components/PageInsights";
 import { Streamdown } from "@/components/StreamdownLite";
+import AiAnswerNote from "@/components/AiAnswerNote";
 import { toast } from "sonner";
 import { useAuth } from "@/_core/hooks/useAuth";
 import {
@@ -1017,6 +1018,7 @@ export default function AiStrategyRecommender() {
                           <div className="prose prose-invert max-w-none prose-headings:text-white prose-headings:font-semibold prose-h3:text-lg prose-p:text-[#c8d8ec] prose-p:leading-relaxed prose-a:text-emerald-400 prose-strong:text-white prose-ul:text-[#c8d8ec] prose-li:marker:text-emerald-500">
                             <Streamdown>{result.content}</Streamdown>
                           </div>
+                          <AiAnswerNote />
                         </CardContent>
                       </Card>
 

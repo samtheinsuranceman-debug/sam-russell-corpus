@@ -7,6 +7,8 @@ import {
   Sparkles, Crown, Eye
 } from "lucide-react";
 import { NAICDisclaimer } from "@/components/NAICDisclaimer";
+import { techStatusLabel, statusSentence } from "@shared/patentStatus";
+import { TAX_RULES_2026 } from "@shared/taxRules";
 import { toast } from "sonner";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { Link } from "wouter";
@@ -29,51 +31,51 @@ interface CalculatorModule {
 const CALCULATOR_MODULES: CalculatorModule[] = [
   {
     id: "zero-roth",
-    name: "Zero-Percent Roth Conversion",
-    tagline: "Convert $2M+ to Roth — Pay $0 in Tax",
-    description: "The 248-calculator brain sequences IUL cash value loans against Roth conversion income, creating a zero-tax corridor that traditional advisors say is impossible. For physicians with $500K–$2M in traditional IRAs, this module shows the exact year-by-year conversion schedule.",
+    name: "Roth Conversion Tax Offset",
+    tagline: "Model a Large Roth Conversion — and What Could Offset Its Tax",
+    description: "The engine sequences a Roth conversion year by year against deductions and credits you may qualify for (depreciation, oil and gas intangible drilling costs, charitable gifts), based on your facts. A conversion is taxable income in the year it happens; a policy loan is not a deduction and does not offset it. For physicians with $500K–$2M in traditional IRAs, this module shows a hypothetical conversion schedule for your CPA to review.",
     icon: Landmark,
     color: "text-emerald-400",
     bgColor: "bg-emerald-500/10",
     borderColor: "border-emerald-500/20",
     portalLink: "/portal/roth-conversion",
     highlights: [
-      "Year-by-year conversion schedule with zero tax liability",
-      "IUL cash value loan offset against conversion income",
+      "Year-by-year hypothetical conversion schedule, with the tax shown each year",
+      "Deductions and credits that may offset part of the conversion income (IRC §§ 168, 263(c), 170)",
       "Works for $500K–$2M+ traditional IRA balances",
-      "IRC §72(e) tax-free loan provisions applied automatically"
+      "Qualified Roth withdrawals later are tax-free (IRC § 408A(d)); every item needs CPA review"
     ]
   },
   {
     id: "mortgage-killer",
     name: "Mortgage Killer V3",
-    tagline: "Eliminate Your Mortgage in 7–12 Years",
-    description: "Physicians carry $800K–$2M mortgages. This module shows how HELOC-to-IUL arbitrage eliminates the mortgage while simultaneously building a tax-free retirement fund. The waterfall engine calculates exact monthly cash flows.",
+    tagline: "Model an Earlier Mortgage Payoff, Based on Your Facts",
+    description: "Physicians often carry $800K–$2M mortgages. This module models borrowing against home equity to fund an indexed universal life (IUL) insurance policy, then using policy loans to pay the mortgage down, and shows the hypothetical monthly cash flows at the rates you set. Policy charges, loan interest and the HELOC rate can make the strategy cost more than it saves.",
     icon: HomeIcon,
     color: "text-teal-400",
     bgColor: "bg-teal-500/10",
     borderColor: "border-teal-500/20",
     portalLink: "/portal/mortgage-killer-v3",
     highlights: [
-      "HELOC-to-IUL arbitrage with exact monthly cash flows",
-      "Eliminates $800K–$2M mortgages in 7–12 years",
-      "Simultaneously builds tax-free retirement fund",
+      "HELOC-to-IUL life insurance strategy with hypothetical monthly cash flows",
+      "Shows a modeled payoff year for your mortgage, not a promise",
+      "Builds life insurance cash value that may later supplement retirement income",
       "50-year waterfall projection engine"
     ]
   },
   {
     id: "divorce-protection",
     name: "Divorce Asset Protection",
-    tagline: "Shield 60–80% of Wealth from Division",
-    description: "With physician divorce rates exceeding 24%, asset protection isn't optional. This module calculates how IUL + ILIT + fixed annuity structures create creditor-protected wealth that survives equitable distribution proceedings.",
+    tagline: "See What Your State's Rules May Protect — and What They May Not",
+    description: "This module models how an irrevocable life insurance trust (ILIT), an IUL life insurance policy and a fixed annuity are treated under your state's divorce and creditor rules. North Carolina is an equitable-distribution state: cash value built during the marriage is generally marital property. Planning must happen before any claim arises, and every result needs a licensed attorney's review.",
     icon: Scissors,
     color: "text-red-400",
     bgColor: "bg-red-500/10",
     borderColor: "border-red-500/20",
     portalLink: "/portal/divorce-calculator",
     highlights: [
-      "IRS Code §72(e) and IRC §101(a) protection structures",
-      "IUL + ILIT + Fixed Annuity triple-layer shield",
+      "State exemption rules for cash value and annuities, side by side",
+      "ILIT + IUL life insurance + fixed annuity structures modeled together",
       "Side-by-side protected vs. unprotected comparison",
       "50-year projection with conservative/moderate/aggressive scenarios"
     ]
@@ -82,7 +84,7 @@ const CALCULATOR_MODULES: CalculatorModule[] = [
     id: "tax-waterfall",
     name: "Tax Waterfall Engine",
     tagline: "Visualize Every Dollar's Tax Journey",
-    description: "Physicians in the 37%+ bracket lose more to taxes than any other profession. The cascading waterfall shows exactly where each dollar goes — federal, state, FICA, NIIT, AMT — and how to redirect those flows into tax-free vehicles.",
+    description: "Physicians in the 37% bracket carry some of the heaviest tax loads of any profession. The cascading waterfall shows where each dollar goes — federal, state, FICA, NIIT, AMT — and models redirecting flows into tax-advantaged options, each with the conditions that make it so.",
     icon: BarChart3,
     color: "text-amber-400",
     bgColor: "bg-amber-500/10",
@@ -98,7 +100,7 @@ const CALCULATOR_MODULES: CalculatorModule[] = [
   {
     id: "estate-planning",
     name: "Estate & Trust Structures",
-    tagline: "Transfer $10M+ Tax-Free Across Generations",
+    tagline: "Model Transfers of $10M+ Across Generations",
     description: "For physicians with $5M+ estates, the ILIT and dynasty trust modules calculate exact premium structures, death benefit leveraging, and generation-skipping transfer strategies that preserve wealth across 3+ generations.",
     icon: Crown,
     color: "text-yellow-400",
@@ -114,19 +116,19 @@ const CALCULATOR_MODULES: CalculatorModule[] = [
   },
   {
     id: "income-replacement",
-    name: "Guaranteed Income Floor",
-    tagline: "Replace $30K–$50K/Month — Tax-Free",
-    description: "When physicians retire, they need $30K–$50K/month to maintain lifestyle. This module builds a guaranteed income floor using fixed indexed annuities with income riders, layered with IUL tax-free distributions.",
+    name: "Lifetime Income Floor",
+    tagline: "Model an Income Floor Sized to Your Expenses",
+    description: "Many retired physicians want $30K–$50K/month to maintain their lifestyle. This module models an income floor from fixed indexed annuities with income riders (income the contract pays once elected, subject to the insurer's claims-paying ability), layered with IUL life insurance policy loans. Annuity income is generally taxable; loans from a non-MEC policy kept in force generally are not.",
     icon: Shield,
     color: "text-emerald-400",
     bgColor: "bg-emerald-500/10",
     borderColor: "border-emerald-500/20",
     portalLink: "/portal/lifetime-income",
     highlights: [
-      "Guaranteed income floor of $30K–$50K/month",
-      "Fixed indexed annuity + IUL distribution layering",
-      "Zero market risk on guaranteed portion",
-      "Tax-free income via IUL loan provisions"
+      "Income floor sized to the monthly figure you enter (hypothetical)",
+      "Fixed indexed annuity + IUL life insurance loan layering",
+      "No index exposure on the rider's contractual income, subject to the insurer's claims-paying ability",
+      "Policy loans generally not taxable if the policy is not a MEC and stays in force; a lapse with a loan can be taxable"
     ]
   },
 ];
@@ -138,11 +140,13 @@ const INCOME_TIERS = [
   { range: "$1.5M – $2M+", label: "Multi-Practice / Executive", strategies: 10, savings: "$18M – $40M+", color: "bg-emerald-500" },
 ];
 
+// Unsourced statistics (divorce rate, "burnout rate", debt averages) were removed:
+// NAIC Model 570 §5.R / 11 NCAC 12 .0427(l) require a named, recent source.
 const PAIN_POINTS = [
-  { stat: "37%+", label: "Federal Tax Bracket", desc: "Physicians lose more to taxes than any other profession" },
-  { stat: "24%", label: "Divorce Rate", desc: "Nearly 1 in 4 physician marriages end in divorce" },
-  { stat: "$250K+", label: "Avg Student Debt", desc: "Medical school debt delays wealth building by 10+ years" },
-  { stat: "62%", label: "Burnout Rate", desc: "Most physicians can't afford to retire when they want to" },
+  { stat: "37%", label: "Top Federal Bracket", desc: `Top ${TAX_RULES_2026.taxYear} federal income tax rate (IRC § 1; Rev. Proc. 2025-32)` },
+  { stat: "3.8%", label: "Net Investment Income Tax", desc: "On investment income above the IRC § 1411 thresholds" },
+  { stat: "0.9%", label: "Additional Medicare Tax", desc: "On wages above $200K single / $250K joint (IRC § 3101(b)(2))" },
+  { stat: `$${TAX_RULES_2026.retirement.deferral401k.toLocaleString()}`, label: `${TAX_RULES_2026.taxYear} 401(k) Deferral Limit`, desc: "IRS Notice 2025-67; the engine reads it from shared tax rules" },
 ];
 
 /* ─── Component ────────────────────────────────────────────────── */
@@ -166,10 +170,10 @@ export default function PhysiciansEdge() {
           </div>
         </div>
         <p className="text-muted-foreground mt-3 max-w-3xl leading-relaxed">
-          You didn't spend 12+ years in training to hand 37% of every dollar to the IRS. The Russell Capital Systems™ 
-          248-calculator brain was engineered specifically for physicians — the highest-taxed, most divorce-vulnerable, 
-          most financially underserved professionals in America. This isn't a generic financial plan. This is a 
-          <span className="text-emerald-400 font-semibold"> weaponized tax elimination system</span>.
+          You didn't spend 12+ years in training to hand the top bracket more than the law requires. The Russell Capital Systems™
+          calculator brain was engineered specifically for physicians, whose income, debt and practice decisions are
+          unusually tangled together. This isn't a generic financial plan. This is a
+          <span className="text-emerald-400 font-semibold"> coordinated tax-planning model</span>, hypothetical and based on your facts.
         </p>
       </div>
 
@@ -211,7 +215,7 @@ export default function PhysiciansEdge() {
               <div className="text-xs text-muted-foreground mb-2">{tier.label}</div>
               <div className="flex justify-between text-xs">
                 <span className="text-emerald-400">{tier.strategies} strategies</span>
-                <span className="text-emerald-400">{tier.savings} saved</span>
+                <span className="text-emerald-400" title="Hypothetical modeled range for this tier, not a result for you">{tier.savings} modeled (hypothetical)</span>
               </div>
             </button>
           ))}
@@ -296,9 +300,9 @@ export default function PhysiciansEdge() {
             <div className="text-xs text-muted-foreground mt-1">Conservative, moderate, and aggressive scenarios</div>
           </div>
           <div className="p-4 rounded-xl bg-card/50 border border-border/30">
-            <div className="text-2xl font-bold text-emerald-400 mb-1">8 Patents</div>
-            <div className="text-xs font-semibold text-white">Filed with USPTO</div>
-            <div className="text-xs text-muted-foreground mt-1">47 claims protecting the cascading calculation engine</div>
+            <div className="text-2xl font-bold text-emerald-400 mb-1">Proprietary</div>
+            <div className="text-xs font-semibold text-white">{techStatusLabel()}</div>
+            <div className="text-xs text-muted-foreground mt-1">{statusSentence()}</div>
           </div>
         </div>
       </div>

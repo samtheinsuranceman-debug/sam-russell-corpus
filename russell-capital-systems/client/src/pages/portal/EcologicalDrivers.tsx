@@ -68,9 +68,9 @@ const FACTORS: RetirementFactor[] = [{
     realWorldExample: "Michael and Sarah Thompson retired in January 2008 with $1.2M in a 60/40 portfolio. By March 2009, their account dropped to $720K — a 40% loss. They were withdrawing $60K/year (5%). Even though the S&P 500 recovered by 2013, their account never did because they kept withdrawing from a depleted base. By age 78, they were down to $180K.",
     exampleClient: "Michael & Sarah Thompson",
     traditionalOutcome: "Portfolio dropped 40% in year 1, withdrawals accelerated depletion. Account exhausted by age 82.",
-    iulSolution: "IUL provides a 0% floor — the account never loses value in a down market. During 2008-2009, an IUL credited 0% (not -40%). The cash value remained intact, and policy loans provided tax-free income without selling at a loss. The account participated in the recovery via index crediting when markets rebounded.",
+    iulSolution: "IUL life insurance has a 0% floor on index credits: in a down market the index credit is 0%, not negative. During 2008-2009 a typical IUL credited 0% (not -40%), though policy charges still reduced the account value. Policy loans (income-tax-free only if the policy is not a MEC and stays in force) could provide income without selling at a loss, and index crediting resumed when markets rebounded.",
     iulMechanism: [
-      "0% floor protection — account value never decreases due to market losses",
+      "0% floor on index credits — market losses are not credited (policy charges still apply)",
       "Index crediting captures upside when markets recover (typically 8-12% cap)",
       "Policy loans provide income without triggering taxable events",
       "No forced liquidation during downturns — cash value remains whole",
@@ -99,9 +99,9 @@ const FACTORS: RetirementFactor[] = [{
     realWorldExample: "James and Carol Williams both retired with $1M and withdrew $50K/year. James got -15%, -20%, +25%, +30% in his first 4 years. Carol got +30%, +25%, -20%, -15%. Same average return (5%). After 20 years, James had $210K left. Carol had $890K. The only difference was the order of returns. James's early losses while withdrawing created an unrecoverable deficit.",
     exampleClient: "James & Carol Williams",
     traditionalOutcome: "Identical average returns, but early losses + withdrawals left James with 76% less than Carol after 20 years.",
-    iulSolution: "IUL eliminates sequence risk by design. The 0% floor means there are no negative years to sequence against. Every year starts at the previous year's high-water mark. Policy loans for income don't reduce the crediting base. The account captures upside in good years and preserves capital in bad years — the mathematical opposite of sequence risk.",
+    iulSolution: "IUL reduces sequence risk from index losses. The 0% floor means no negative index credits to sequence against, although policy charges and loan interest still reduce the account value in every year. Policy loans for income don't reduce the crediting base. The account captures capped upside in good years and avoids index losses in bad years.",
     iulMechanism: [
-      "0% floor eliminates negative return years from the sequence entirely",
+      "0% floor removes negative index credits from the sequence (charges still apply)",
       "Annual point-to-point reset — each year starts from the high-water mark",
       "Policy loans don't reduce the index crediting base",
       "No forced selling during down years — income comes from loans, not liquidation",
@@ -134,7 +134,7 @@ const FACTORS: RetirementFactor[] = [{
     realWorldExample: "David and Patricia Morgan had $2M in traditional IRAs. At age 73, RMDs forced them to withdraw $75K/year — pushing them into the 24% bracket and triggering Medicare IRMAA surcharges of $4,200/year. Over 20 years, they paid $624K in federal taxes and $84K in IRMAA penalties on money they didn't even need to spend. Their effective tax rate on retirement income was 35%.",
     exampleClient: "David & Patricia Morgan",
     traditionalOutcome: "RMDs forced $624K in taxes over 20 years plus $84K in IRMAA surcharges. Total tax drag: $708K.",
-    iulSolution: "IUL cash value grows tax-free under IRC §7702. Policy loans are not reported as income (IRC §72(e)), so they don't trigger RMDs, don't increase MAGI, and don't cause IRMAA surcharges. A properly structured IUL can provide $80K+/year in tax-free income via policy loans — the equivalent of $120K pre-tax from a traditional IRA.",
+    iulSolution: "IUL cash value grows tax-deferred inside a policy that meets IRC §7702. Loans from a policy that is not a MEC and stays in force are not reported as income (IRC §72(e)), so they don't trigger RMDs, don't increase MAGI, and don't cause IRMAA surcharges. In this hypothetical, a well-funded IUL provides $80K/year in policy loans — about what $120K of pre-tax IRA withdrawals would net. Loan interest accrues, and a lapse with loans outstanding can create a large tax bill.",
     iulMechanism: [
       "Tax-free growth under IRC §7702 — no annual capital gains or dividend taxes",
       "Tax-free income via policy loans under IRC §72(e) — not reported on tax return",
@@ -199,7 +199,7 @@ const FACTORS: RetirementFactor[] = [{
     realWorldExample: "William and Elizabeth Foster planned for retirement to age 85. William passed at 82, but Elizabeth lived to 96. Their portfolio was designed for a 20-year horizon. By age 88, the portfolio was down to $120K. Elizabeth spent her final 8 years relying on Social Security alone ($2,400/month) and family support. She couldn't afford long-term care and had to move in with her daughter at age 91.",
     exampleClient: "William & Elizabeth Foster",
     traditionalOutcome: "Plan designed for age 85 failed when Elizabeth lived to 96. Final 8 years in financial distress.",
-    iulSolution: "IUL provides income for life — there is no 'end date' on policy loans as long as the policy remains in force. The death benefit guarantees a legacy regardless of how long the insured lives. Cash value continues to earn index credits indefinitely. A properly funded IUL can provide $60K-$100K+/year in tax-free income from age 65 to 100+ without depleting the underlying asset.",
+    iulSolution: "IUL policy loans can continue as long as the policy remains in force, and the death benefit pays a legacy when the insured dies, if the policy is still in force. Loans and charges do deplete the policy: if the loan balance grows too large the policy can lapse, and a lapse with loans outstanding can be taxable. In this hypothetical, a well-funded IUL provides $60K-$100K/year in policy loans from age 65, based on the assumed rate you set.",
     iulMechanism: [
       "Lifetime income via policy loans — no depletion timeline",
       "Death benefit provides legacy and long-term care funding options",
@@ -231,9 +231,9 @@ const FACTORS: RetirementFactor[] = [{
     realWorldExample: "Robert and Linda Chen had $900K in a diversified portfolio entering 2020. When COVID crashed markets 34% in March, Robert panicked and moved everything to cash at the bottom. By the time he re-entered in November 2020, the S&P had already recovered 60%. That single emotional decision cost them $280K in missed recovery gains.",
     exampleClient: "Robert & Linda Chen",
     traditionalOutcome: "Panic sold at the March 2020 bottom, missed the recovery. Portfolio permanently reduced by $280K.",
-    iulSolution: "IUL eliminates the emotional trigger entirely. With a 0% floor, there is no loss to panic about. The account value stays flat in down years, so there's no urge to sell. Clients stay the course because there's nothing to flee from. When markets recover, index crediting captures gains automatically — no re-entry decision needed.",
+    iulSolution: "IUL reduces the emotional trigger. With a 0% floor, index losses are not credited, though charges continue, so the account value dips only by the charges in down years and there is less urge to sell. Clients stay the course because there's nothing to flee from. When markets recover, index crediting captures gains automatically — no re-entry decision needed.",
     iulMechanism: [
-      "0% floor removes the emotional trigger — no losses to panic about",
+      "0% floor on index credits reduces the urge to sell in a crash",
       "Automatic index crediting captures recovery without re-entry decisions",
       "Policy loans provide liquidity without selling positions",
       "Removes the \"sell low, buy high\" behavioral cycle entirely",
@@ -263,7 +263,7 @@ const FACTORS: RetirementFactor[] = [{
     realWorldExample: "David and Patricia Morgan had $1.1M in an aggressive growth portfolio averaging 9.2% annually — but with 18% standard deviation. Their neighbor, the Andersons, had $1.1M in a balanced strategy averaging 7.8% with only 8% standard deviation. After 20 years of $55K annual withdrawals, the Morgans had $380K left. The Andersons had $620K. Lower average return, but dramatically better outcome due to reduced volatility.",
     exampleClient: "David & Patricia Morgan",
     traditionalOutcome: "High-return but high-volatility portfolio depleted faster than a lower-return, smoother portfolio.",
-    iulSolution: "IUL delivers inherently smooth returns. The 0% floor eliminates negative years entirely, and the cap (typically 8-12%) moderates extreme upside. This creates a naturally low-volatility return pattern that is mathematically optimal for retirement withdrawals. The geometric return closely matches the arithmetic return because there are no negative compounding years.",
+    iulSolution: "IUL crediting is smoother than the index. The 0% floor removes negative index credits, and the cap (set by the insurer, which may change it) limits upside. This creates a lower-volatility crediting pattern that can suit retirement withdrawals; policy charges still apply every year. The geometric return closely matches the arithmetic return because there are no negative compounding years.",
     iulMechanism: [
       "0% floor + capped upside creates naturally low-volatility return pattern",
       "Geometric return closely matches arithmetic return (no volatility drag)",
@@ -271,7 +271,7 @@ const FACTORS: RetirementFactor[] = [{
       "Withdrawal efficiency is maximized because account never drops",
       "Standard deviation of IUL crediting is typically 4-6% vs. 15-18% for equities",
     ],
-    engagementQuestion: "Would you rather have an investment that averages 9% with wild swings, or one that averages 7% but never loses? Which one do you think actually produces more income over 30 years?",
+    engagementQuestion: "Hypothetically, at rates you set: would a portfolio that averages 9% with wild swings, or a floor-and-cap crediting pattern that averages less but never credits a negative year, produce more income over 30 years?",
     marketOnlyScore: 30,
     structuredScore: 90,
     stressTestData: [
@@ -327,7 +327,7 @@ const FACTORS: RetirementFactor[] = [{
     realWorldExample: "George and Martha Sullivan needed $80K unexpectedly for their daughter's medical emergency in year 3 of retirement. Their traditional IRA withdrawal triggered $80K in taxable income, pushing them into the 32% bracket and causing their Social Security to become 85% taxable. The $80K withdrawal actually cost them $108K after taxes and Medicare surcharges. They never recovered the tax efficiency of their original plan.",
     exampleClient: "George & Martha Sullivan",
     traditionalOutcome: "Emergency IRA withdrawal triggered $28K in additional taxes and permanently disrupted tax planning.",
-    iulSolution: "IUL policy loans are tax-free, do not count as income, do not affect Social Security taxation, and do not trigger Medicare surcharges. George could have borrowed $80K from his IUL with zero tax impact, maintained his original withdrawal sequence, and repaid the loan over time or let the death benefit offset it. Total cost: $80K, not $108K.",
+    iulSolution: "Loans from an IUL that is not a MEC and stays in force are not taxable income, do not affect Social Security taxation, and do not trigger Medicare surcharges. In this hypothetical, George could have borrowed $80K from his IUL with no income tax, maintained his original withdrawal sequence, and repaid the loan over time or let the death benefit offset it. Total cost: $80K, not $108K.",
     iulMechanism: [
       "Tax-free policy loans for unexpected expenses without income impact",
       "No RMDs — take income when you need it, not when the IRS demands",
@@ -359,7 +359,7 @@ const FACTORS: RetirementFactor[] = [{
     realWorldExample: "Richard and Barbara Taylor retired in 2002 with $70K/year in expenses. By 2024, those same expenses cost $112K due to cumulative 60% inflation. Their bond portfolio yielded a fixed 4% ($40K/year), Social Security provided $38K, and the gap grew from $0 to $34K/year. They were forced to liquidate principal to cover the shortfall, accelerating portfolio depletion.",
     exampleClient: "Richard & Barbara Taylor",
     traditionalOutcome: "Fixed income sources lost purchasing power. Growing gap between income and expenses forced principal liquidation.",
-    iulSolution: "IUL cash value grows with index performance, which historically tracks or exceeds inflation over long periods. The S&P 500 has averaged 10.5% annually since 1926 — well above any inflation measure. IUL crediting captures a portion of this growth (typically 6-8% net) while the 0% floor prevents inflation-adjusted losses. Policy loan amounts can increase over time as cash value grows, providing naturally inflation-adjusted income.",
+    iulSolution: "IUL cash value grows with index performance, which historically tracks or exceeds inflation over long periods. The S&P 500 has averaged 10.5% annually since 1926 — well above any inflation measure. IUL crediting captures a portion of index growth, up to the cap the insurer sets, at the assumed rate you choose; the 0% floor prevents negative index credits, not inflation losses or charges. Past index performance is not indicative of future results. Policy loan amounts can increase over time as cash value grows, providing naturally inflation-adjusted income.",
     iulMechanism: [
       "Index-linked growth historically exceeds inflation over 10+ year periods",
       "Increasing cash value supports increasing loan amounts over time",
@@ -1526,7 +1526,7 @@ export default function EcologicalDrivers() {
                   <div className="bg-[#12233e]/40 rounded-lg p-4 space-y-3">
                     <h4 className="text-xs font-bold text-white flex items-center gap-2">
                       <Info size={14} style={{ color: factor.color }} />
-                      Real-World Example: {factor.exampleClient}
+                      Hypothetical Example (not a real client): {factor.exampleClient}
                     </h4>
                     <p className="text-xs text-[#c8d6e5] leading-relaxed">{factor.realWorldExample}</p>
                     <div className="flex gap-3 mt-3">

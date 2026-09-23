@@ -265,9 +265,9 @@ export const STRATEGIES: readonly Strategy[] = [
 
   {
     id: 'guaranteed-tax-free-income-for-life',
-    name: 'Guaranteed Tax-Free Income for Life',
+    name: 'Policy-Loan Income for Life (Conditions Apply)',
     family: 'insurance-structure',
-    oneLine: 'An income stream that does not appear on a tax return and does not stop while you are alive.',
+    oneLine: 'An income stream from life insurance policy loans that does not appear on a tax return while the policy stays in force and is not a MEC.',
     whatItIs: [
       'Built from properly structured policy cash value accessed through loans and withdrawals rather than from an annuity, this produces income that is not reportable, does not raise the taxation of Social Security, and does not push Medicare premium surcharges. For a household that will be in a meaningful bracket in retirement, the tax character of the income is frequently worth more than the headline rate on the account it comes from.',
       'The mechanism has one unforgiving condition: the policy must remain in force for life. A lapse with a large outstanding loan triggers a taxable event on the full gain, in one year, with no cash arriving to pay it — which is the single worst outcome available in personal finance and it happens to people who stopped paying attention rather than to people who chose it.',
@@ -400,7 +400,7 @@ export const STRATEGIES: readonly Strategy[] = [
     housePosition: 'refers-out',
     housePositionWhy: 'Recorded as described, not yet verified. Until the contract, the crediting base definition and a current illustration have been read, this firm has nothing to implement — and a structure that cannot be shown cannot be sold.',
     claims: [
-      { claim: 'Over 25% returns on the all-time account value in four of the last six years, with no risk of loss to principal or interest.', status: 'unconfirmed', note: 'No contract, illustration or statement supporting this has been read by this system, so it is not a figure here and must not be repeated to a client. Three things need separating before it means anything: what "all-time account value" is defined as in the contract, whether the credit is an index credit or includes a bonus or multiplier, and what the guaranteed floor actually is in a year the index does nothing. A no-loss guarantee is a guarantee of the carrier and is only as good as the carrier, which is a statement about claims-paying strength rather than about the index.', settledBy: 'The contract, a current carrier illustration including the guaranteed column, and a client statement with the crediting base and the credit shown separately.' },
+      { claim: 'Over 25% returns on the all-time account value in four of the last six years, with no risk of loss to principal or interest.', status: 'unconfirmed', note: 'No contract, illustration or statement supporting this has been read by this system, so it is not a figure here and must not be repeated to a client. Three things need separating before it means anything: what "all-time account value" is defined as in the contract, whether the credit is an index credit or includes a bonus or multiplier, and what the guaranteed floor actually is in a year the index does nothing. A no-loss guarantee is a guarantee of the carrier and is only as good as the carrier, which is a statement about claims-paying strength rather than about the index.', settledBy: 'The contract, a current carrier illustration including the guaranteed column, and a client statement with the crediting base and the credit shown separately.' }, // copy-ok: R10 claim recorded verbatim as 'unconfirmed' in the claims registry; its note says it must not be repeated to a client
     ],
     relatedPaths: [P.lifetimeIncome],
   },

@@ -95,8 +95,8 @@ const CARRIERS = [
 const BATTLE_CARDS = [
   {
     objection: "IUL fees are too high compared to index funds",
-    response: "Index funds have zero death benefit, zero tax-free income, and zero creditor protection. When you factor in the 15-20% capital gains tax on index fund withdrawals, the IUL's effective cost is often LOWER. Plus, the floor protection means you never lose money in a down market — the S&P 500 lost 38% in 2008 while IUL policyholders lost 0%.",
-    killer: "Ask them: 'Would you pay 1.5% for a guarantee you'll never lose money AND get tax-free income for life?'",
+    response: "Compare both on the client's own numbers. Index funds have no death benefit and their withdrawals can be taxed as capital gains; IUL life insurance carries cost-of-insurance and other policy charges, surrender charges and loan interest. In 2008 the S&P 500 fell about 38%; an IUL's index credit that year was 0%, while policy charges still reduced account values. Past index performance is not indicative of future results.",
+    killer: "Ask: 'What matters more to you: full market upside, or a floor on index credits with policy charges as the cost?'",
     icon: DollarSign, color: "text-emerald-400",
   },
   {

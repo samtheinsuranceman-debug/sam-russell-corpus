@@ -80,6 +80,18 @@ export const STAGE: PatentStage = 'drafted';
 export const APPLICATIONS: readonly PatentApplication[] = [];
 
 /**
+ * THE switch, as a flat list: the USPTO application numbers actually on file.
+ * Derived from APPLICATIONS, so it is empty until a receipt is entered there.
+ * Every badge, eyebrow and sentence that could say "patent pending" reads
+ * techStatusLabel() / statusBadge(), which read this. While it is empty the
+ * surfaces say "Proprietary method"; the day it holds a number they say
+ * "Patent pending (Application No. …)".
+ */
+export const FILED_APPLICATION_NUMBERS: readonly string[] = APPLICATIONS.map((a) => a.applicationNumber).filter(
+  (n) => n.trim().length > 0,
+);
+
+/**
  * Count of claims described in the portfolio, filed or not. Derived, because
  * the number was wrong the moment the portfolio grew past fifteen and a
  * hand-typed constant has no way of noticing.
@@ -105,7 +117,19 @@ export const DRAFTED_COUNT = CLAIMS.filter((c) => Boolean(c.applicationDraft)).l
  * claim true, and this is the function that stops that from reaching a page.
  */
 export function mayClaimPatentPending(): boolean {
-  return APPLICATIONS.length > 0;
+  return FILED_APPLICATION_NUMBERS.length > 0;
+}
+
+/**
+ * The status word for a single technology's eyebrow ("Technology 07 · … ·").
+ * "Proprietary method" until an application number exists; then the claim,
+ * with its number, so it can be checked.
+ */
+export function techStatusLabel(ref?: string): string {
+  if (!mayClaimPatentPending()) return 'Proprietary method';
+  const app = ref ? APPLICATIONS.find((a) => a.ref === ref || a.ref.endsWith(ref)) : undefined;
+  const number = app?.applicationNumber ?? FILED_APPLICATION_NUMBERS[0];
+  return `Patent pending (Application No. ${number})`;
 }
 
 /** May a surface say a patent has been granted? */
@@ -139,7 +163,7 @@ export function statusSentence(): string {
  */
 export function statusBadge(): string {
   if (mayClaimGranted()) return 'Patented';
-  if (mayClaimPatentPending()) return 'Patent Pending';
+  if (mayClaimPatentPending()) return `Patent Pending (Application No. ${FILED_APPLICATION_NUMBERS[0]})`;
   return 'Claims drafted — not filed';
 }
 
@@ -157,5 +181,58 @@ export const FORBIDDEN_WHEN_UNFILED = [
   'patent-pending',
   'patents pending',
   'patent applications in process',
-  'filed with the USPTO',
+  // Lower case: the guard lower-cases the text it reads, so a mixed-case entry
+  // here ("filed with the USPTO") could never match, and "8 Patents — Filed
+  // with USPTO" shipped through a green suite. patentClaimGuard.test.ts now
+  // lower-cases both sides, and asserts every entry is already lower case.
+  'filed with the uspto',
+  'filed with uspto',
+  'patents filed',
+  'patent filed',
 ] as const;
+
+/**
+ * Split-form claims a plain phrase list cannot see: "Technology 01 · Pending ·
+ * Only at RCS" says "patent pending" without the two words touching. Matched
+ * against lower-cased text with separators (· — – - |) collapsed to spaces.
+ */
+export const FORBIDDEN_PATTERNS_WHEN_UNFILED: readonly RegExp[] = [
+  /\b(technology|technologies|patent|patents|invention|inventions)\b(\s+\S+){0,6}?\s+pending\b/,
+  /\bpending\b(\s+\S+){0,3}?\s+(patent|patents|uspto)\b/,
+  /\b\d+\s+patents?\b(\s+\S+){0,3}?\s+filed\b/,
+];
+
+/**
+ * Every patent-status claim in a piece of source text, or [] when there is none.
+ * Enforced only while mayClaimPatentPending() is false.
+ *
+ * Lower-cases BOTH sides and collapses separators before matching. The first
+ * guard lower-cased the file and compared it with the phrases as written, so
+ * the mixed-case entry 'filed with the USPTO' could never match and "8 Patents
+ * — Filed with USPTO" shipped on /portal/physicians-edge through a green suite.
+ * It also matched contiguous phrases only, so the split form "Technology 01 ·
+ * Pending · Only at RCS" on the homepage passed. Used by
+ * server/patentClaimGuard.test.ts and server/copyComplianceGuard.test.ts.
+ */
+export function normalizeForClaims(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/[·—–|\-]/g, ' ')
+    .replace(/<[^>]*>/g, ' ')
+    .replace(/\$\{[^}]*\}/g, ' ')
+    .replace(/\s+/g, ' ');
+}
+
+export function patentClaimHits(text: string): string[] {
+  if (mayClaimPatentPending()) return [];
+  const t = normalizeForClaims(text);
+  const hits: string[] = [];
+  for (const phrase of FORBIDDEN_WHEN_UNFILED) {
+    if (t.includes(normalizeForClaims(phrase))) hits.push(phrase);
+  }
+  for (const rx of FORBIDDEN_PATTERNS_WHEN_UNFILED) {
+    const m = t.match(rx);
+    if (m) hits.push(`/${rx.source}/ → "${m[0]}"`);
+  }
+  return hits;
+}

@@ -741,7 +741,7 @@ export default function RothConversionSTR() {
             <Landmark size={18} className="text-[#22c55e]" />
           </div>
           <div>
-            <h1 className="rc-page-title">0% Roth Conversion Strategies</h1>
+            <h1 className="rc-page-title">Roth Conversion Tax-Offset Strategies</h1>
             <p className="rc-page-subtitle">
               6 Options &middot; 1-5 Year Non Solar + Solar Equity &middot; 20-Year IUL Cascade
             </p>
@@ -908,8 +908,8 @@ export default function RothConversionSTR() {
           <div className="flex items-start gap-3">
             <Info size={18} className="text-[#22c55e] mt-0.5 flex-shrink-0" />
             <div className="text-sm text-[#7a95b8] space-y-2">
-              <p className="text-white font-medium">How the 0% Roth Conversion Strategies Work:</p>
-              <p>Convert your full IRA value to Roth (new Roth IRA = entire IRA). Tax savings = 50% of original IRA. Leverage IRA &divide; 0.4 to purchase STR property with 30% down from HELOC. Multi-year strategies spread property purchases over 2-5 years.</p>
+              <p className="text-white font-medium">How the Roth Conversion Tax-Offset Strategies Are Modeled (hypothetical, based on your facts):</p>
+              <p>The model converts your full IRA value to a Roth IRA. The conversion is taxable income in the year it happens. It then models short-term-rental property purchases (IRA &divide; 0.4 in property, 30% down from a HELOC) whose depreciation may offset part of that income if you qualify (for example, material participation). The model assumes the deductions equal 50% of the original IRA; that is a simplifying assumption, not a tax result, and your CPA must confirm every item. Multi-year strategies spread property purchases over 2-5 years.</p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
                 <div className="p-3 rounded-lg bg-[#0f1e35] border border-[#12233e]">
                   <div className="flex items-center gap-2 mb-1">
@@ -926,7 +926,7 @@ export default function RothConversionSTR() {
                   <p className="text-xs">22% of IRA value as Year 1 IUL premium (held 12 months). Y2: Equal Roth funds. Month 13: 25% IRA policy loan &rarr; STR principal. Y3: 80% surrender loan &rarr; STR principal. Y4+: Borrow cascade.</p>
                 </div>
               </div>
-              <p className="text-xs mt-2"><strong className="text-white">IUL Parameters:</strong> 6% load fee &middot; 5% COI &middot; 5% loan rate &middot; 10% avg return on account value (illustrated, non-guaranteed) &middot; IUL as assigned collateral for STR purchase</p>
+              <p className="text-xs mt-2"><strong className="text-white">IUL Parameters:</strong> 6% load fee &middot; 5% COI &middot; 5% loan rate &middot; 10% assumed average crediting rate on account value (an assumption, not guaranteed and not a policy illustration) &middot; IUL as assigned collateral for STR purchase</p>
             </div>
           </div>
         </div>
@@ -1181,7 +1181,7 @@ export default function RothConversionSTR() {
               </div>
             </div>
             <div className="mt-3 p-3 rounded-lg bg-emerald-500/5 border border-emerald-500/15 text-xs text-[#7a95b8]">
-              <strong className="text-emerald-400">How to read:</strong> The green line shows the base case (fixed 10% return). The purple bands show the probability distribution across 500 simulated paths using 19.4% annual volatility (historical S&P 500, 1928–2025). The IUL floor of 0% prevents negative returns. Wider bands = more uncertainty in later years.
+              <strong className="text-emerald-400">How to read:</strong> The green line shows the base case (the assumed 10% crediting rate, hypothetical). The purple bands show the probability distribution across 500 simulated paths using 19.4% annual volatility (historical S&P 500, 1928–2025). The IUL floor of 0% prevents negative returns. Wider bands = more uncertainty in later years.
             </div>
           </div>
         )}

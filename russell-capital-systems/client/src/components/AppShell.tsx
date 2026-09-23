@@ -17,7 +17,6 @@ import {
 } from "lucide-react";
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { useEntrainment } from "@/contexts/EntrainmentEngine";
-import { useDisclaimer } from "@/contexts/DisclaimerContext";
 import { Link, useLocation } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { useTheme } from "@/contexts/ThemeContext";
@@ -473,7 +472,7 @@ const NAV_SECTIONS: NavSection[] = [
           { path: "/portal/income-annuity", label: "Income Annuity", icon: ChevronRight, color: "amber" },
           { path: "/portal/myga-fixed-rate", label: "MYGA Waterfall", icon: Lock, color: "emerald" },
           { path: "/portal/myga-waterfall", label: "MYGA Waterfall", icon: ChevronRight, color: "amber" },
-          { path: "/portal/revenue-guarantee", label: "Revenue Guarantee", icon: Shield, color: "gold" },
+          { path: "/portal/revenue-guarantee", label: "Revenue Case", icon: Shield, color: "gold" },
           { path: "/portal/fia-top10", label: "Top 10 FIA", icon: TrendingUp, color: "emerald" },
           { path: "/portal/income-annuity-top10", label: "Top 10 Income", icon: Award, color: "emerald" },
         ],
@@ -728,31 +727,6 @@ const BOTTOM_TABS = [
   { path: "/portal/ai-assist", label: "AI Tools", icon: Zap },
   { path: "/portal/arena", label: "Arena", icon: Trophy },
 ];
-
-function DisclaimerToggle() {
-  const { showDisclaimers, setShowDisclaimers } = useDisclaimer();
-  return (
-    <button
-      onClick={() => setShowDisclaimers(!showDisclaimers)}
-      className="flex items-center justify-between w-full group"
-      title={showDisclaimers ? "Switch to Demo Mode (hide disclaimers)" : "Switch to Compliance Mode (show disclaimers)"}
-    >
-      <div className="flex items-center gap-2">
-        <Shield size={10} className={showDisclaimers ? "text-amber-400" : "text-[#7a95b8]"} />
-        <span className="text-[9px] text-[#7a95b8] group-hover:text-white transition-colors">
-          {showDisclaimers ? "Compliance Mode" : "Demo Mode"}
-        </span>
-      </div>
-      <div className={`w-8 h-4 rounded-full transition-colors relative ${
-        showDisclaimers ? "bg-amber-500/30" : "bg-[#1a3055]"
-      }`}>
-        <div className={`absolute top-0.5 w-3 h-3 rounded-full transition-all ${
-          showDisclaimers ? "left-4 bg-amber-400" : "left-0.5 bg-[#7a95b8]"
-        }`} />
-      </div>
-    </button>
-  );
-}
 
 function LiveDateTime() {
   const [now, setNow] = useState(new Date());
@@ -1293,10 +1267,7 @@ function Sidebar({ open, onClose }: { open: boolean; onClose: () => void }) {
           ))}
         </nav>
 
-        {/* Disclaimer Mode Toggle */}
-        <div className="px-3 py-1.5 border-t border-[#12233e]">
-          <DisclaimerToggle />
-        </div>
+        {/* Disclosures always render: there is no user switch that hides them (contexts/DisclaimerContext.tsx). */}
 
         {/* Music Player Mini-Bar */}
         <MusicPlayerMiniBar />

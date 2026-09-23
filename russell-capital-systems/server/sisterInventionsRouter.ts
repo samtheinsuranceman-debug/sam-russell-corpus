@@ -1,6 +1,6 @@
 /**
  * Sister Inventions tRPC Router
- * Connects all 27 patent-pending shared engines to server-side procedures.
+ * Connects all 27 proprietary shared engines to server-side procedures.
  * Each procedure validates input via Zod, calls the shared engine, and returns typed results.
  */
 import { z } from "zod";

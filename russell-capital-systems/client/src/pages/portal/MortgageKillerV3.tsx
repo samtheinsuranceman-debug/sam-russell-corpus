@@ -1,4 +1,5 @@
 import { HELOC_RATE_DEFAULT } from "@shared/marketRateDefaults";
+import { ASSUMED_RATE_LABEL } from "@shared/policyDisclosure";
 import { useState, useMemo, useCallback } from "react";
 import { useLocation } from "wouter";
 import {
@@ -110,7 +111,7 @@ const TRANSFER_STRATEGIES = [
     bestFor: "Clients who want to sell properties, avoid capital gains, and still leave an inheritance",
     howItWorks: [
       "Transfer $2M in appreciated property to CRT (basis: $600K, gain: $1.4M)",
-      "CRT sells property for $2M — pays $0 capital gains tax",
+      "CRT sells property for $2M with no immediate capital gains tax; the gain is taxed to you over time as distributions carry it out (IRC §664)",
       "You receive 5% annual income = $100K/yr for life",
       "Immediate charitable deduction of ~$600K (reduces current year taxes)",
       "IUL death benefit of $2M+ replaces the charitable gift — heirs receive full inheritance tax-free",
@@ -635,7 +636,7 @@ export default function MortgageKillerV3() {
                 </h1>
                 <span className="text-[10px] bg-teal-500/20 text-teal-300 px-2 py-0.5 rounded-full font-bold">INFINITE PROPERTY ENGINE</span>
               </div>
-              <p className="text-[10px] text-gray-500">HELOC → IUL → Policy Loan → Buy Property → Appreciate → Extract Equity → Repeat Forever</p>
+              <p className="text-[10px] text-gray-500">HELOC → IUL life insurance → Policy Loan → Buy Property → Appreciate → Extract Equity → Repeat (hypothetical)</p>
             </div>
           </div>
           <div className="flex items-center gap-4">
@@ -779,8 +780,8 @@ export default function MortgageKillerV3() {
                 <p className="text-xs text-gray-300">
                   <strong className="text-teal-300">Key Principle:</strong> The same capital cycles through multiple vehicles simultaneously.
                   Your home equity funds the IUL. The IUL funds the down payment. The property appreciates and generates rental income.
-                  The new equity funds the next cycle. The money never leaves the system — it multiplies.
-                  <strong className="text-amber-300 ml-1">Rule: Never extract more than 40% of equity in year one</strong> (IRC §7702 compliance).
+                  The new equity funds the next cycle. Every link carries borrowing cost and risk, and a fall in property values or a rise in rates can stop the cycle.
+                  <strong className="text-amber-300 ml-1">Model rule: never extract more than 40% of equity in year one</strong> (a conservative draw limit this engine uses; it is not an IRS rule).
                   Year 2+ allows up to 80% equity draw. HELOC payoff enforced within {inputs.helocPayoffYears} years per cycle.
                 </p>
               </div>
@@ -834,7 +835,7 @@ export default function MortgageKillerV3() {
                     <Shield className="w-4 h-4 text-blue-400" /> IUL Parameters
                   </h3>
                   <div className="space-y-3">
-                    <PctField label="IUL Credit Rate (AG 49)" value={inputs.iulCreditRate} onChange={(v: number) => updateInput("iulCreditRate", v)} />
+                    <PctField label={ASSUMED_RATE_LABEL} value={inputs.iulCreditRate} onChange={(v: number) => updateInput("iulCreditRate", v)} />
                     <PctField label="IUL Floor" value={inputs.iulFloor} onChange={(v: number) => updateInput("iulFloor", v)} />
                     <PctField label="IUL Cap" value={inputs.iulCap} onChange={(v: number) => updateInput("iulCap", v)} />
                     <PctField label="Policy Loan Rate" value={inputs.policyLoanRate} onChange={(v: number) => updateInput("policyLoanRate", v)} />
@@ -1409,7 +1410,7 @@ export default function MortgageKillerV3() {
                   <div className="text-lg font-bold text-red-400">{fmt(projection.summary.estateTax)}</div>
                 </div>
                 <div>
-                  <div className="text-[10px] text-gray-400">Total Tax Eliminable</div>
+                  <div className="text-[10px] text-gray-400">Tax Modeled as Reducible or Deferrable (hypothetical)</div>
                   <div className="text-lg font-bold text-emerald-400">{fmt(projection.summary.capGainsTax + projection.summary.estateTax)}</div>
                 </div>
               </div>
@@ -1469,7 +1470,7 @@ export default function MortgageKillerV3() {
                           {strategy.id === "qprt" && `Transfers your primary residence at a 60-70% gift tax discount. On a ${fmt(projection.properties[0]?.currentValue || 0)} home, the gift value drops to ~${fmt((projection.properties[0]?.currentValue || 0) * 0.35)}.`}
                           {strategy.id === "idgt" && `Freezes ${fmt(projection.summary.totalPropertyValue)} in property value outside your estate. All future appreciation passes to beneficiaries tax-free.`}
                           {strategy.id === "1031" && `Defers ${fmt(projection.summary.capGainsTax)} in capital gains indefinitely through exchange chains, then eliminates estate tax via dynasty trust.`}
-                          {strategy.id === "crt" && `Sells ${fmt(projection.summary.totalPropertyValue)} in property with $0 capital gains tax. Generates ~${fmt(projection.summary.totalPropertyValue * 0.05)}/yr income for life. IUL death benefit replaces the charitable remainder.`}
+                          {strategy.id === "crt" && `Sells ${fmt(projection.summary.totalPropertyValue)} in property with no immediate capital gains tax (the gain is taxed over time as distributions carry it out). Generates ~${fmt(projection.summary.totalPropertyValue * 0.05)}/yr income for life. IUL death benefit replaces the charitable remainder.`}
                         </p>
                       </div>
                     </div>
@@ -1499,8 +1500,8 @@ export default function MortgageKillerV3() {
                 </p>
                 <div className="bg-amber-500/10 border border-amber-500/20 rounded-lg p-3 mt-3">
                   <p className="text-xs text-amber-200">
-                    <strong>Total Tax Eliminated:</strong> {fmt(projection.summary.capGainsTax + projection.summary.estateTax + projection.summary.cumulativeTaxSaved)} —
-                    combining capital gains elimination ({fmt(projection.summary.capGainsTax)}), estate tax elimination ({fmt(projection.summary.estateTax)}),
+                    <strong>Total Tax Modeled as Reduced or Deferred (hypothetical):</strong> {fmt(projection.summary.capGainsTax + projection.summary.estateTax + projection.summary.cumulativeTaxSaved)} —
+                    combining capital gains deferral ({fmt(projection.summary.capGainsTax)}), estate tax elimination ({fmt(projection.summary.estateTax)}),
                     and annual deductions ({fmt(projection.summary.cumulativeTaxSaved)}).
                   </p>
                 </div>

@@ -13,6 +13,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Mic, Sparkles, Square, ArrowRight, Calendar } from "lucide-react";
 import { trpc } from "@/lib/trpc";
+import AiAnswerNote from "@/components/AiAnswerNote";
 
 type SpeechRecognitionLike = {
   lang: string;
@@ -37,7 +38,7 @@ function getRecognizer(): SpeechRecognitionLike | null {
 const EXAMPLES = [
   "I'm a surgeon with student loans, a big mortgage, and a 401(k) — how would you help me keep more and pay debt off faster?",
   "How do you turn my home equity and taxable accounts into something that's protected and tax-efficient?",
-  "What's the general idea behind making my money 'divorce-proof'?",
+  "What's the general idea behind protecting my money in a divorce?",
 ];
 
 export default function HomeAIConcierge() {
@@ -184,7 +185,8 @@ export default function HomeAIConcierge() {
             </div>
           )}
 
-          <p className="mt-4 text-center text-[11px] leading-relaxed text-white/45">
+          <AiAnswerNote className="mt-4 flex items-start justify-center gap-1.5 text-center text-[11px] leading-relaxed text-white/55" />
+          <p className="mt-2 text-center text-[11px] leading-relaxed text-white/45">
             General education only — not tax, legal, or investment advice, and no specific figures are shared here.
             Your speech is transcribed in your browser; only the text of your question is sent. A licensed
             professional confirms every specific in a personal review.

@@ -246,7 +246,8 @@ export default function TimeMachineAG49() {
   const [maxYears, setMaxYears] = useState(100);
   const [activeTab, setActiveTab] = useState("setup");
 
-  const [enableGenerational, setEnableGenerational] = useState(true);
+  // Off by default: a policy ends at the insured's death, so the generational scenario is a labelled simplification.
+  const [enableGenerational, setEnableGenerational] = useState(false);
   const [spouseTransferYear, setSpouseTransferYear] = useState(35);
   const [spouseAge, setSpouseAge] = useState(38);
   const [childTransferYear, setChildTransferYear] = useState(60);
@@ -413,9 +414,9 @@ export default function TimeMachineAG49() {
           <p className="text-muted-foreground mt-2 max-w-3xl">
             Same assumed crediting rate. Same premium. The only variable is <strong>time</strong>.
             This calculator reveals how compound interest transforms a modest annual rate into what
-            <em> appears</em> to be a 28%, 50%, or even 80% return on your original premium — all without
-            violating any illustrated rate limits. The policy never lapses at death; it transfers to
-            surviving family members, compounding across generations.
+            <em> appears</em> to be a large yearly credit measured against your original premium, at the assumed
+            crediting rate you set. It is hypothetical, before policy charges, and not a return any policy has paid.
+            A policy ends when the insured dies and pays its death benefit; it does not keep compounding after that.
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -579,9 +580,10 @@ export default function TimeMachineAG49() {
                 <Users className="w-5 h-5 text-emerald-500" /> Generational Ownership Transfer
               </CardTitle>
               <CardDescription>
-                The policy doesn't lapse at death. Ownership can be reassigned to a surviving spouse,
-                children, or grandchildren — continuing the compounding across multiple lifetimes.
-                The account value never resets; it keeps growing.
+                Ownership (not the insured) can be reassigned to a spouse, children or grandchildren while
+                the insured is alive. The policy still ends when the insured dies and pays its death benefit.
+                This toggle is a simplified, hypothetical scenario that treats that death benefit as funding a
+                successor policy on the next generation; no single policy works that way. Off by default.
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -1040,10 +1042,11 @@ export default function TimeMachineAG49() {
                 <Users className="w-5 h-5 text-emerald-500" /> Multigenerational Wealth Engine
               </CardTitle>
               <CardDescription>
-                Unlike most financial vehicles, a properly structured IUL policy does not terminate at the
-                insured's death. Through ownership transfer, the policy can be reassigned to a surviving
-                spouse, then to children, then to grandchildren — each generation inheriting the full
-                compounded account value and continuing to earn tax-free interest credits on the entire balance.
+                An IUL policy is permanent life insurance: it ends when the insured dies and pays an income-tax-free
+                death benefit (IRC §101(a)). What can carry across generations is the money: a death benefit paid to
+                a trust can fund new coverage on the next generation. Ownership can change while the insured lives,
+                but the insured cannot. Interest credits inside the policy are tax-deferred, not tax-free, and are
+                reduced by policy charges.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -1159,15 +1162,14 @@ export default function TimeMachineAG49() {
                     <Shield className="w-6 h-6 text-emerald-500 flex-shrink-0 mt-1" />
                     <div>
                       <p className="font-semibold text-emerald-700 dark:text-emerald-300 mb-1">
-                        The Policy Never Dies
+                        Time Does the Work, Until the Insured Dies
                       </p>
                       <p className="text-sm text-muted-foreground">
-                        Through proper ownership transfer planning, this policy can continue compounding
-                        across 3, 4, or even 5+ generations. The account value never resets. Each generation
-                        inherits the full snowball. A {creditingRate}% annual rate that starts modest becomes
-                        extraordinary when measured against the original premium after 50, 75, or 100+ years
-                        of uninterrupted compounding. This is not a higher rate — it's the same rate with
-                        more time. Einstein's "eighth wonder of the world" in action.
+                        A policy on a younger insured can run for many decades, and the longer it runs the larger
+                        each year's credit becomes at the same {creditingRate}% assumed rate. It is not a higher
+                        rate, only more time. The policy ends when the insured dies. Everything here is
+                        hypothetical, based on the rate you set, and before the policy charges an insurer's
+                        illustration would show.
                       </p>
                     </div>
                   </div>
@@ -1232,7 +1234,8 @@ export default function TimeMachineAG49() {
                   This is the key metric. It answers: <em>"What percentage of my original {fmtM(totalPremiums)}
                   investment did I earn THIS year in interest alone?"</em> The crediting rate R never changes.
                   But as AV grows, the dollar amount of each year's credit grows — making the effective return
-                  on the original premium climb steadily toward 28%, 50%, 80%, and beyond.
+                  on the original premium climb over time. This is a hypothetical ratio at your assumed rate,
+                  before policy charges; it is not a return any policy has paid.
                 </p>
               </div>
 
