@@ -97,6 +97,9 @@ const MUST_MATCH = [
   "hidream-ai/hidream-l1", "fal-ai/vidu/q1/text-to-video", "fal-ai/pixverse/v5", "fal-ai/skyreels-i2v", "fal-ai/step1x-edit", "fal-ai/magi",
   "fal-ai/omnigen-v2", "fal-ai/lumina-image/v2", "janus-pro-7b", "fal-ai/janus", "fal-ai/infinitalk", "multitalk", "tencentarc/photomaker",
   "ip-adapter-faceid", "tencentarc/gfpgan", "nightmareai/real-esrgan", "instantx/instantid",
+  // PRC video generators resold by US hosts
+  "hailuo3", "minimax/hailuo-02", "seedance2", "seedance2_fast", "bytedance/seedance-1-pro", "kling-v2.1", "kwaivgi/kling-v2.1-master",
+  "vidu-q1", "wan3", "wan3_prime", "wan2.1-t2v-14b", "Wan-AI/Wan2.2-T2V-A14B",
   // Taiwan (suspect)
   "taide/TAIDE-LX-7B", "MediaTek-Research/Breeze-7B-Instruct", "yentinglin/Taiwan-LLM-13B", "foxbrain",
   // Hosts
@@ -109,7 +112,9 @@ const MUST_MATCH = [
 ];
 
 /** Routers that choose the model after the request leaves: refused as model ids. */
-const ROUTER_IDS = ["auto", "auto-tool", "auto-reasoning", "openrouter/auto", "openrouter/free", "openrouter/fusion", "openrouter/pareto-code", "sakana/fugu-ultra"];
+const ROUTER_IDS = ["auto", "auto-tool", "auto-reasoning", "openrouter/auto", "openrouter/free", "openrouter/fusion", "openrouter/pareto-code", "sakana/fugu-ultra",
+  // the same routers behind a gateway catalogue slug (Portkey), and the hosts the owner bans by name
+  "@openrouter/openrouter/auto", "@openrouter/auto", "@my-gateway/openrouter/free", "@novita/meta-llama/llama-3.3-70b-instruct", "novita/llama-3", "@jina/reader-lm"];
 
 /** US/EU/allied names, hosts and model ids the platform runs on: must pass. */
 const MUST_NOT_MATCH = [
@@ -140,7 +145,12 @@ const MUST_NOT_MATCH = [
   // ordinary words that share letters with a media-model term
   "want", "wants to retire", "swan", "wander", "Wanda", "Klingon", "seed", "seed money", "bagel", "magic", "Lumina", "Janus",
   "power adapter", "instantly", "pulley",
+  // media services and models wired on 23 Sep 2026
+  "gen4.5", "gen4_turbo", "veo3.1", "veo3.1_fast", "ray-2", "ray-flash-2", "sonic-3.6", "nova-3", "universal-3-5-pro", "voyage-4", "@openai/gpt-5", "portkey",
+  "https://api.cartesia.ai", "https://api.deepgram.com", "https://api.assemblyai.com", "https://api.dev.runwayml.com", "https://api.lumalabs.ai/dream-machine/v1",
+  "https://api.voyageai.com/v1", "https://api.pinecone.io", "https://api.portkey.ai",
   // ordinary words that share letters with a banned term
+  "sparkling", "swan2", "Swan 2", "wanted", "individual",
   "step-1", "step-3", "step-by-step", "Apache Spark", "sparkline", "structuredNotes", "Bernie", "yuan", "Chinese yuan", "algorithm", "glamour",
   "kimono", "manuscript", "Manuscripts", "forge", "Forge Anchor", "https://www.cnn.com", "https://example.com/cn/", "https://example.co", "https://api.example.com/v1",
   "unobtrusive", "unordered", "insight", "insights", "Instant quote", "instant", "our story", "consistent", "consistently", "ace", "space", "Grace", "superior", "dream",

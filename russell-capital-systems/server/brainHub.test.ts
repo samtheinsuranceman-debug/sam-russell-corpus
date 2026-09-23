@@ -18,9 +18,9 @@ import {
 import { MCP_PRESETS, mcpPresetsByCategory } from "@shared/mcpPresets";
 import { environmentCredentials, environmentKeyNames } from "./providerRegistry";
 
-describe("the fifty-six brains", () => {
+describe("the fifty-seven brains", () => {
   it("offers exactly MAX_BRAINS providers to the owner, and no internal gateway", () => {
-    expect(MAX_BRAINS).toBe(56);
+    expect(MAX_BRAINS).toBe(57);
     expect(BRAIN_PROVIDERS).toHaveLength(MAX_BRAINS);
     expect(PROVIDERS).toHaveLength(MAX_BRAINS);
     expect(getProvider("forge")).toBeUndefined();

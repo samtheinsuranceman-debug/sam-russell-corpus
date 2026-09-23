@@ -1,5 +1,5 @@
 /**
- * AI Provider Definitions — the fifty-six brains the AI advisor (named in shared/aiAdvisor.ts) can be wired to.
+ * AI Provider Definitions — the fifty-seven brains the AI advisor (named in shared/aiAdvisor.ts) can be wired to.
  * ════════════════════════════════════════════════════════════════════════════
  *
  * What each provider needs in order to be called: its endpoint, its wire
@@ -32,7 +32,7 @@
 export type WireFormat = "openai-compatible" | "anthropic" | "google-generative" | "ibm-watsonx";
 
 /** The Brain Hub holds at most this many provider keys and this many MCP servers. */
-export const MAX_BRAINS = 56;
+export const MAX_BRAINS = 57;
 export const MAX_MCP_SERVERS = 40;
 
 export type ProviderDefinition = {
@@ -66,6 +66,12 @@ export type ProviderDefinition = {
   caution?: string;
   /** Needs a Base URL override before it can be called (account-scoped endpoints). */
   requiresBaseUrl?: boolean;
+  /**
+   * Header that carries the key, sent bare, when the provider does not take
+   * `Authorization: Bearer <key>` (Portkey reads x-portkey-api-key and would
+   * forward a bearer token to the upstream provider instead).
+   */
+  authHeader?: string;
 };
 
 const ALNUM = /^[A-Za-z0-9_-]{20,}$/;
@@ -211,7 +217,7 @@ export const PROVIDERS: ProviderDefinition[] = [
     baseUrl: "https://api.writer.com",
     chatPath: "/v1/chat/completions",
     defaultModel: "palmyra-x5",
-    suggestedModels: ["palmyra-x5", "palmyra-fin"],
+    suggestedModels: ["palmyra-x5", "palmyra-x6", "palmyra-fin"],
     keyPattern: ALNUM,
     keyHint: "A long alphanumeric string",
     consoleUrl: "https://app.writer.com/aistudio",
@@ -261,6 +267,24 @@ export const PROVIDERS: ProviderDefinition[] = [
     keyHint: "Starts with vck_",
     consoleUrl: "https://vercel.com/dashboard/ai-gateway",
     role: "Gateway with per-model spend caps and automatic failover across providers.",
+  },
+  {
+    id: "portkey",
+    name: "Portkey AI Gateway",
+    country: "United States",
+    wireFormat: "openai-compatible",
+    baseUrl: "https://api.portkey.ai",
+    chatPath: "/v1/chat/completions",
+    // Model Catalog ids are "@<provider slug>/<model>"; the slug is whatever the
+    // owner named the provider in Portkey, so these assume the default slugs.
+    defaultModel: "@openai/gpt-5",
+    suggestedModels: ["@openai/gpt-5", "@anthropic/claude-opus-5", "@google/gemini-2.5-pro"],
+    keyPattern: /^[A-Za-z0-9+/=_-]{20,}$/,
+    keyHint: "The Portkey API key from the dashboard's API Keys page",
+    consoleUrl: "https://app.portkey.ai/api-keys",
+    role: "Gateway with its own logs, budgets, caching and fallbacks across the providers configured in its Model Catalog.",
+    caution: "Requests are relayed through Portkey. A model id starts with a provider slug from your Portkey Model Catalog; set PORTKEY_MODEL if yours are named differently.",
+    authHeader: "x-portkey-api-key",
   },
   {
     id: "azure-openai",
@@ -1016,6 +1040,8 @@ const BANNED_TERMS: readonly string[] = [
   String.raw`infinite-?you`, String.raw`ali-vilab`, String.raw`\bace[-_]?(?:plus|\+\+)`, String.raw`(?:^|\/)(?:uno|umo|uso)(?:[-\/]|$)`,
   String.raw`\bdreamo\b`, String.raw`instant-?character`, String.raw`\becomid\b`, String.raw`story-?diffusion`, String.raw`consistent-?id\b`,
   String.raw`consistent-character`, String.raw`\bsupir\b`, String.raw`insightface`, String.raw`inswapper`, String.raw`antelopev2`, String.raw`buffalo_l\b`,
+  // Wan as a bare numbered id ("wan3", "wan2.1-t2v"), as Runway and others name it
+  String.raw`\bwan[-_.]?\d`,
   // Taiwan-based labs (suspect under the rule)
   String.raw`\btaide\b`, String.raw`mediatek`, String.raw`taiwan-llm`, String.raw`foxbrain`,
   // Hosts: any PRC, Hong Kong, Macau or Taiwan TLD, and PRC cloud regions (AWS China, Alibaba, Volcengine)
@@ -1040,12 +1066,21 @@ export function isBannedProvider(value: string | null | undefined): boolean {
  * orchestrator) pick the model after the request leaves us, and every one of
  * them can land on a Chinese model. A model id has to name the model.
  */
-export const ROUTER_MODEL_PATTERN = /^(?:[a-z0-9._-]+\/)?auto(?:-[a-z0-9-]+)?$|^~?openrouter\/|^sakana\/fugu/i;
+export const ROUTER_MODEL_PATTERN = /^(?:@[a-z0-9._-]+\/)?(?:(?:[a-z0-9._-]+\/)?auto(?:-[a-z0-9-]+)?$|~?openrouter\/|sakana\/fugu)/i;
+// The optional "@slug/" prefix is a gateway catalogue slug (Portkey's "@openrouter/openrouter/auto"),
+// which must not carry a router past the check.
+
+/**
+ * Hosts the owner has ruled out by name, reached through a gateway slug or a
+ * vendor prefix ("@novita/…", "novita/…", "@jina/…"): Novita resells Chinese
+ * models, and Jina is excluded outright.
+ */
+export const OWNER_BANNED_HOST_MODEL_PATTERN = /(?:^|[@\/])(?:novita|jina)(?:-?ai)?\//i;
 
 /** True when a model id may not be sent to any provider on this platform. */
 export function isBannedModel(model: string | null | undefined): boolean {
   const m = (model ?? "").trim();
-  return isBannedProvider(m) || ROUTER_MODEL_PATTERN.test(m);
+  return isBannedProvider(m) || ROUTER_MODEL_PATTERN.test(m) || OWNER_BANNED_HOST_MODEL_PATTERN.test(m);
 }
 
 export class ChinaPolicyError extends Error {

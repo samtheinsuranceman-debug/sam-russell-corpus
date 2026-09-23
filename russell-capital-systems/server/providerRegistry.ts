@@ -204,6 +204,7 @@ const CONVENTIONAL_ENV_NAMES: Record<string, string[]> = {
   writer: ["WRITER_API_KEY"],
   reka: ["REKA_API_KEY"],
   "vercel-gateway": ["AI_GATEWAY_API_KEY"],
+  portkey: ["PORTKEY_API_KEY"],
   "azure-openai": ["AZURE_OPENAI_API_KEY"],
   "amazon-bedrock": ["AWS_BEARER_TOKEN_BEDROCK"],
   "google-vertex": ["VERTEX_API_KEY"],
