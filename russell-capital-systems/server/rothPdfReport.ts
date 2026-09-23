@@ -1,5 +1,6 @@
 import PDFDocument from "pdfkit";
 import { IVORY, IVORY_COMPANY, ivoryPage } from "./_core/ivory";
+import { SP500_ANNUAL_STDEV } from "../shared/monteCarloEngine";
 
 const GREEN = IVORY.positive;
 const DARK = IVORY.band;
@@ -491,12 +492,13 @@ export async function generateRothReport(params: {
     ivoryPage(doc);
     doc.rect(0, 0, doc.page.width, 50).fill(DARK);
     doc.fontSize(14).fillColor(PURPLE).text("Monte Carlo Simulation — IUL Net Cash Value", 40, 18);
-    doc.fontSize(8).fillColor(IVORY.bandMuted).text("500 simulations | 15% S&P 500 volatility | 0% IUL floor", 40, 36);
+    doc.fontSize(8).fillColor(IVORY.bandMuted).text("500 simulations | 19.4% S&P 500 volatility | 0% IUL floor", 40, 36);
     doc.moveDown(2);
 
     // Run Monte Carlo
     const MC_SIMS = 500;
-    const MC_VOL = 0.15;
+    // S&P 500 sample SD of annual returns, 19.40%, Damodaran histretSP 1928-2025 (read 2026-09-23); see shared/monteCarloEngine.ts
+    const MC_VOL = SP500_ANNUAL_STDEV;
     const mcPercentiles: { year: number; p10: number; p25: number; p50: number; p75: number; p90: number; actual: number }[] = [];
     const allPaths: number[][] = [];
     for (let s = 0; s < MC_SIMS; s++) {
@@ -591,7 +593,7 @@ export async function generateRothReport(params: {
 
     doc.moveDown(0.5);
     doc.fontSize(8).fillColor(GRAY).text(
-      "Monte Carlo simulation runs 500 paths with 15% annual volatility (historical S&P 500 average). " +
+      "Monte Carlo simulation runs 500 paths with 19.4% annual volatility (S&P 500 standard deviation, 1928-2025, Damodaran). " +
       "The IUL floor of 0% prevents negative returns from reducing account value. " +
       "Wider spreads in later years reflect compounding uncertainty. " +
       `The base case uses a fixed ${(IUL_AVG_RETURN * 100).toFixed(0)}% annual return for comparison.`,
@@ -609,7 +611,7 @@ export async function generateRothReport(params: {
     doc.moveDown(2);
 
     const sensReturnRates = [0.06, 0.07, 0.08, 0.09, 0.10, 0.11, 0.12];
-    const sensVolatilities = [0.10, 0.12, 0.15, 0.18, 0.20];
+    const sensVolatilities = [0.10, 0.12, 0.15, SP500_ANNUAL_STDEV, 0.24];
     const SENS_SIMS = 200;
     const sensGrid: number[][] = [];
     let sensMin = Infinity, sensMax = -Infinity;
@@ -656,10 +658,10 @@ export async function generateRothReport(params: {
     doc.rect(sensTableX, sensHeaderY - 2, sensLabelW + sensCellW * sensVolatilities.length, sensCellH).fill(DARK);
     doc.fontSize(7).fillColor(CYAN).text("Return \\ Vol", sensTableX + 4, sensHeaderY + 2, { width: sensLabelW - 8 });
     sensVolatilities.forEach((v, i) => {
-      const isBase = v === 0.15;
+      const isBase = v === SP500_ANNUAL_STDEV;
       const x = sensTableX + sensLabelW + i * sensCellW;
       if (isBase) doc.rect(x, sensHeaderY - 2, sensCellW, sensCellH).fill("#DCE6F0");
-      doc.fontSize(7).fillColor(isBase ? CYAN : GRAY).text(`${(v * 100).toFixed(0)}%`, x + 4, sensHeaderY + 2, { width: sensCellW - 8, align: "center" });
+      doc.fontSize(7).fillColor(isBase ? CYAN : GRAY).text(`${Number.isInteger(Math.round(v * 1000) / 10) ? (v * 100).toFixed(0) : (v * 100).toFixed(1)}%`, x + 4, sensHeaderY + 2, { width: sensCellW - 8, align: "center" });
     });
     doc.y = sensHeaderY + sensCellH;
 
@@ -671,7 +673,7 @@ export async function generateRothReport(params: {
       doc.fontSize(7).fillColor(isBaseRow ? CYAN : GRAY).text(`${(ret * 100).toFixed(0)}%`, sensTableX + 4, rowY + 2, { width: sensLabelW - 8 });
       sensGrid[ri].forEach((val, ci) => {
         const x = sensTableX + sensLabelW + ci * sensCellW;
-        const isBase = ret === 0.10 && sensVolatilities[ci] === 0.15;
+        const isBase = ret === 0.10 && sensVolatilities[ci] === SP500_ANNUAL_STDEV;
         const ratio = sensMax === sensMin ? 1 : (val - sensMin) / (sensMax - sensMin);
         let bgColor = IVORY.surface;
         let textColor = RED;
@@ -692,7 +694,7 @@ export async function generateRothReport(params: {
       "Each cell shows the median IUL net cash value (account value minus cumulative loan balance) " +
       `at year ${iulYears} across 200 simulated paths per scenario. ` +
       "Higher returns and lower volatility produce better outcomes. " +
-      "The highlighted cell (10% return, 15% volatility) represents the base case assumptions.",
+      "The highlighted cell (10% return, 19.4% volatility) represents the base case assumptions.",
       40, doc.y, { width: 515, lineGap: 3 }
     );
 
@@ -725,7 +727,7 @@ export async function generateRothReport(params: {
       "Real estate projections assume consistent appreciation and rental yields. Actual property performance depends on location, market conditions, property management, and other factors.",
       "Tax savings estimates are approximate and depend on individual tax situations, filing status, and applicable deductions. Consult a qualified tax professional before making any conversion decisions.",
       "Policy loans accrue interest at the declared rate and reduce the death benefit and cash surrender value. Excessive policy loans may cause the policy to lapse.",
-      "Monte Carlo simulations use historical S&P 500 volatility (approximately 15%) and are not predictive of future performance. Past performance does not guarantee future results.",
+      "Monte Carlo simulations use historical S&P 500 volatility (19.4%, 1928-2025) and are not predictive of future performance. Past performance does not guarantee future results.",
       "Russell Capital Systems™ and its advisors are not affiliated with A Mutual Life, and this report does not represent an official carrier illustration.",
     ];
 
