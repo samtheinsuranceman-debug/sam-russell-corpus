@@ -71,6 +71,25 @@ const clampPositive = (n: number) => (Number.isFinite(n) && n > 0 ? n : 0);
 
 /* ═══ Defaults ═════════════════════════════════════════════════════════════ */
 
+/**
+ * Where the two take-out lending defaults come from. refinanceMaxLtv 0.75 is
+ * Fannie Mae's single-family ceiling for a one-unit investment property
+ * refinance, cash-out or limited cash-out; refinanceMinDscr 1.25 is Fannie
+ * Mae Multifamily's minimum debt service coverage for a conventional property.
+ * Every other default below is the firm's assumption (see RECIN_SOURCES).
+ */
+const TAKEOUT_LTV_SOURCE = {
+  label: "Fannie Mae, Eligibility Matrix (incorporated in the Selling Guide), Standard Eligibility Requirements, Desktop Underwriter: investment property, 1 unit, cash-out and limited cash-out refinance, maximum LTV/CLTV/HCLTV 75%",
+  url: "https://singlefamily.fanniemae.com/media/20786/display",
+  asOf: "matrix dated 2026-08-05, read 2026-09-23",
+  note: "The same matrix allows 80% for a one-unit principal residence cash-out refinance and 70% for a 2 to 4 unit investment property cash-out refinance.",
+};
+const TAKEOUT_DSCR_SOURCE = {
+  label: "Fannie Mae Multifamily, Conventional Properties Term Sheet: minimum DSCR 1.25x, maximum LTV 80%",
+  url: "https://multifamily.fanniemae.com/financing-options/conventional-properties-term-sheet",
+  asOf: "read 2026-09-23",
+};
+
 export function getDefaultScenarioAssumptions(): ScenarioAssumptions {
   return {
     vacancyRate: 0.07,
@@ -929,3 +948,22 @@ export function compareStrategies(
   scored.forEach((s, i) => (s.rank = i + 1));
   return scored;
 }
+
+/* ═══ Sources ══════════════════════════════════════════════════════════════ */
+
+/**
+ * Every source this engine's typed-in numbers rest on, and every number that
+ * is the firm's own choice, said so in words. Policy thresholds (target DSCR,
+ * debt yield, portfolio LTV, reserves) live in DEFAULT_REAL_ESTATE_POLICY in
+ * realEstateCapitalTypes.ts, not here.
+ */
+export const RECIN_SOURCES: readonly { label: string; url?: string; asOf?: string; note?: string }[] = [
+  TAKEOUT_LTV_SOURCE,
+  TAKEOUT_DSCR_SOURCE,
+  { label: "Assumption: vacancy = 7% of gross rent, chosen by the firm as an underwriting stress between full occupancy and a weak market; no external source" },
+  { label: "Assumption: rent, expense and property value growth = 3% a year each, chosen by the firm as a round long-run nominal figure; no external source" },
+  { label: "Assumption: selling costs = 7% of sale price (commission, transfer tax, closing), chosen by the firm; no external source" },
+  { label: "Assumption: take-out refinance rate = 7.5% (default and the fallback when none is given), chosen by the firm as a conservative investor-loan rate; no external source" },
+  { label: "Assumption: take-out readiness score = 60% on the share of the three take-out tests passed plus 40% on exit coverage, and fragility = 40% capacity decay under the severe scenario plus 40% policy misses plus 20% exit weakness, chosen by the firm as scoring weights; no external source" },
+  { label: "Assumption: payment schedules printed for at most 120 months (10 years), chosen by the firm for display; no external source" },
+];

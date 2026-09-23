@@ -28,7 +28,33 @@ const FEDERAL_BRACKETS_2026: Record<FilingStatus, TaxBracket[]> = {
   hoh: legacyBrackets(TAX_RULES_2026.brackets.hoh),
 };
 
-// ── State Income Tax Rates (simplified top marginal rates) ──
+/**
+ * Where the federal figures come from. The seven rates (10% to 37%) and the
+ * 2026 bracket thresholds and standard deductions are read through
+ * taxRules.ts; the 10% starting marginal rate in calculateTax is the lowest of
+ * those seven.
+ */
+const FEDERAL_RATES_SOURCE = {
+  label: "IRS, Rev. Proc. 2025-32 (tax year 2026): section 2.01 (the seven rates 10%, 12%, 22%, 24%, 32%, 35%, 37% made permanent by P.L. 119-21 section 70101), section 4.01 (tax rate tables) and section 4.14 (standard deduction)",
+  url: "https://www.irs.gov/pub/irs-drop/rp-25-32.pdf",
+  asOf: "read 2026-09-23",
+};
+
+/**
+ * Where the state rates were checked. The table below is a single top marginal
+ * rate per state, applied flat to taxable income. It was compared line by line
+ * with the Tax Foundation table as of 1 January 2026: 32 of 51 entries match
+ * that table's top rate; 19 carry an older year's rate (listed in the note).
+ * The numbers are left as typed; the disagreement is recorded, not corrected.
+ */
+const STATE_TAX_RATES_SOURCE = {
+  label: "Tax Foundation, State Individual Income Tax Rates and Brackets, 2026 (rates as of January 1, 2026; top marginal rate per state, single filer)",
+  url: "https://taxfoundation.org/data/all/state/state-income-tax-rates-2026/",
+  asOf: "published 2026-02-17, read 2026-09-23",
+  note: "Entries here that differ from the 2026 table's top rate (code vs table): AR 4.4% vs 3.9%, GA 5.49% vs 5.19%, ID 5.8% vs 5.3%, IN 3.05% vs 2.95%, IA 6.0% vs 3.8%, KS 5.7% vs 5.58%, KY 4.0% vs 3.5%, LA 4.25% vs 3.0%, MD 5.75% vs 6.5%, MS 5.0% vs 4.0%, MO 4.8% vs 4.7%, MT 6.75% vs 5.65%, NE 6.64% vs 4.55%, NC 4.5% vs 3.99%, OH 3.5% vs 2.75%, OK 4.75% vs 4.5%, SC 6.5% vs 6.0%, UT 4.65% vs 4.5%, WV 5.12% vs 4.82%. WA is 0 here because Washington taxes capital gains only (7%, 9% over $1 million), not wages. MA 9% is the 5% rate plus the 4% surtax above $1,083,150.",
+};
+
+// ── State Income Tax Rates (simplified top marginal rates; see STATE_TAX_RATES_SOURCE) ──
 const STATE_TAX_RATES: Record<string, number> = {
   AL: 0.05, AK: 0, AZ: 0.025, AR: 0.044, CA: 0.133, CO: 0.044, CT: 0.0699,
   DE: 0.066, FL: 0, GA: 0.0549, HI: 0.11, ID: 0.058, IL: 0.0495, IN: 0.0305,
@@ -577,6 +603,7 @@ export function generateOGSchedulesFromMYGA(
   mygaCycles: number,
   mygaTerm: number,
   ogInvestmentPerCycle: number,
+  // These three defaults are the firm's assumptions (see TAX_BRACKET_SOURCES).
   y1DepPct: number = 80,
   ongoingDepPct: number = 8,
   ogTerm: number = 12,
@@ -652,3 +679,16 @@ export function compareStrategies(
     yearByYearDelta,
   };
 }
+
+/**
+ * Every source this engine's typed-in numbers rest on, and every number that
+ * rests on nothing but the firm's judgement, said so in words. The shell
+ * prints this list through shared/engineSources.ts.
+ */
+export const TAX_BRACKET_SOURCES: readonly { label: string; url?: string; asOf?: string; note?: string }[] = [
+  FEDERAL_RATES_SOURCE,
+  STATE_TAX_RATES_SOURCE,
+  { label: "Assumption: bracket and standard deduction inflation in the dynamic projection = 2.5% a year (bracketInflationRate default), chosen by the firm as a round long-run figure; no external source. The IRS actually indexes by chained CPI under IRC section 1(f), one year at a time" },
+  { label: "Assumption: oil and gas tranche defaults = 80% of the investment deducted in year 1, 8% a year after, over a 12-year term (generateOGSchedulesFromMYGA), chosen by the firm as a typical drilling-program profile; no external source. The real split depends on the sponsor's intangible drilling cost ratio and the CPA's filing" },
+  { label: "Assumption: projection horizon = 20 years (calculateTaxSavings projectionYears and runDynamicTaxProjection years defaults), chosen by the firm as a planning horizon; no external source" },
+];

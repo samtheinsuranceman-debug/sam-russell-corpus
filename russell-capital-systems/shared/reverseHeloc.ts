@@ -192,6 +192,37 @@ const TAX_TRANCHE_COLORS = [
   "#22c55e", "#10b981", "#059669", "#047857", "#065f46",
 ];
 
+/**
+ * The two defaults below that come from a document: the 37% federal rate is
+ * the top federal bracket, and the 5.75% state rate is Virginia's top rate.
+ * Everything else in getDefaultReverseHelocInput is an illustrative input or
+ * the firm's assumption, listed in words in REVERSE_HELOC_SOURCES.
+ */
+const FEDERAL_TOP_RATE_SOURCE = {
+  label: "IRS, Rev. Proc. 2025-32, section 2.01: seven individual rates, top rate 37%, made permanent by P.L. 119-21 section 70101",
+  url: "https://www.irs.gov/pub/irs-drop/rp-25-32.pdf",
+  asOf: "read 2026-09-23",
+};
+const STATE_RATE_SOURCE = {
+  label: "Tax Foundation, State Individual Income Tax Rates and Brackets, 2026: Virginia top rate 5.75% over $17,000 of taxable income",
+  url: "https://taxfoundation.org/data/all/state/state-income-tax-rates-2026/",
+  asOf: "published 2026-02-17, read 2026-09-23",
+};
+/** The HELOC rate default is an assumption; this is the benchmark a HELOC usually floats on, for comparison. */
+const PRIME_RATE_BENCHMARK = {
+  label: "Board of Governors of the Federal Reserve System, H.15 Selected Interest Rates, Bank Prime Loan Rate, via FRED series DPRIME: 6.75% on 2026-09-02",
+  url: "https://fred.stlouisfed.org/series/DPRIME",
+  asOf: "2026-09-02 observation, read 2026-09-23",
+  note: "The 8.5% HELOC default is prime plus 1.75 points at this reading.",
+};
+/** The IUL growth default is an assumption; this is the regulation that limits what an illustration may show. */
+const IUL_ILLUSTRATION_RULE = {
+  label: "NAIC, Actuarial Guideline XLIX-A (policies with index-based interest sold on or after December 14, 2020): section 4 limits the illustrated indexed credit rate; section 6 limits an illustrated policy loan's credited rate to 50 basis points above the loan rate",
+  url: "https://content.naic.org/sites/default/files/inline-files/AG%2049A%28posted%29.pdf",
+  asOf: "read 2026-09-23",
+  note: "The 12% growth default is the firm's input, not an illustrated rate, and is not bounded by this guideline; a carrier illustration would normally show less.",
+};
+
 export function getDefaultReverseHelocInput(): ReverseHelocInput {
   return {
     homeValue: 500000,
@@ -734,3 +765,22 @@ export function runReverseHeloc(input: ReverseHelocInput): ReverseHelocResult {
 
   return { input, projection, summary, tranches };
 }
+
+/**
+ * Every source this engine's typed-in numbers rest on, and every number that
+ * is the firm's own choice, said so in words. This strategy is a HELOC on the
+ * home, not a reverse mortgage: no HUD HECM limit applies to any figure here.
+ */
+export const REVERSE_HELOC_SOURCES: readonly { label: string; url?: string; asOf?: string; note?: string }[] = [
+  FEDERAL_TOP_RATE_SOURCE,
+  STATE_RATE_SOURCE,
+  PRIME_RATE_BENCHMARK,
+  IUL_ILLUSTRATION_RULE,
+  { label: "Assumption: illustrative client = $500,000 home, $50,000 annual IUL premium, $250,000 annual income, chosen by the firm as a sample case; the client replaces all three" },
+  { label: "Assumption: HELOC at 70% of home value and 8.5% interest, chosen by the firm as a conservative draw and a rate near prime plus a margin; no external source" },
+  { label: "Assumption: IUL policy loan of 90% of cash value at month 13 at 5.5%, a second loan of 80% of tax-savings-boosted value, and 12% assumed annual cash value growth, chosen by the firm; carrier contract terms govern the real figures; no external source" },
+  { label: "Assumption: IUL cash value equal to 65% of the year 1 premium and 85% of the year 2 premium, chosen by the firm as an early surrender-value profile; the carrier's illustration governs; no external source" },
+  { label: "Assumption: MYGA at 6.25% for 5 years, and a bank loan of 70% of MYGA value at 7%, chosen by the firm; no external source" },
+  { label: "Assumption: oil and gas term 12 years, 15% annual distribution, 80% of the investment deducted in year 1 and 8% a year after, chosen by the firm as a typical drilling-program profile; no external source" },
+  { label: "Assumption: a new tax-savings cycle starts once $10,000 has accumulated in the IUL, and the projection runs 25 years, chosen by the firm; no external source" },
+];

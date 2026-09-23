@@ -22,6 +22,29 @@ import { TOP_MARGINAL_RATE, windowStats, type WindowStats, type YearValue } from
 import { DEM_LEVER_SHARE, MIN_WINDOWS, baseRateFor, conditionalWindowStats, type PowerBucket } from "./powerHistory";
 import { computeTaxPicture, currentRules, type FilingKey, type TaxRuleSet } from "./taxRules";
 
+/**
+ * The top-rate bounds used below. 94 is the highest top marginal rate the
+ * federal income tax has ever carried (1944 and 1945); taxTrajectory never
+ * projects above it. 37 is today's top rate, the fallback when the series has
+ * no value for the start year.
+ */
+const TOP_RATE_HISTORY_SOURCE = {
+  label: "Tax Policy Center (Urban Institute and Brookings), Historical Highest Marginal Income Tax Rates, 1913 to 2015: 94.00% in 1944 and 1945, 86.45% in 1946",
+  url: "https://taxpolicycenter.org/sites/default/files/statistics/pdf/toprate_historical.pdf",
+  asOf: "table dated 2015-02-19, read 2026-09-23",
+};
+const CURRENT_TOP_RATE_SOURCE = {
+  label: "IRS, Rev. Proc. 2025-32, section 2.01: the seven individual rates, top rate 37%, made permanent by P.L. 119-21 section 70101",
+  url: "https://www.irs.gov/pub/irs-drop/rp-25-32.pdf",
+  asOf: "read 2026-09-23",
+};
+/** The inflation ladder is fed from these series by server/inflation.ts; no CPI figure is typed into this file. */
+const CPI_SOURCE = {
+  label: "U.S. Bureau of Labor Statistics, Consumer Price Index for All Urban Consumers (CPI-U), all items and category series, via FRED (Federal Reserve Bank of St. Louis), series CPIAUCSL",
+  url: "https://fred.stlouisfed.org/series/CPIAUCSL",
+  asOf: "July 2026 observation, read 2026-09-23",
+};
+
 export const HORIZONS = [5, 10, 15, 20, 25, 30, 35, 40] as const;
 export type Horizon = (typeof HORIZONS)[number];
 
@@ -142,6 +165,7 @@ export type TrajectoryInput = {
 
 export function taxTrajectory(input: TrajectoryInput): TrajectoryPoint[] {
   const series = input.series ?? TOP_MARGINAL_RATE;
+  // 37: today's top rate (CURRENT_TOP_RATE_SOURCE); 94 in the clamp below: the 1944 high (TOP_RATE_HISTORY_SOURCE).
   const current = series.find((p) => p.year === input.startYear)?.value ?? series[series.length - 1]!.value ?? 37;
   return HORIZONS.map((h) => {
     const hist = windowStats(series, h, input.historyFrom ?? 1946);
@@ -313,3 +337,21 @@ function r4(n: number): number { return Math.round(n * 10_000) / 10_000; }
 export function conditionalOddsTable(series: YearValue[] = TOP_MARGINAL_RATE, from = 1946) {
   return HORIZONS.map((h) => ({ horizonYears: h, all: windowStats(series, h, from), left: conditionalWindowStats(series, h, "left", from), divided: conditionalWindowStats(series, h, "divided", from), right: conditionalWindowStats(series, h, "right", from), minWindows: MIN_WINDOWS }));
 }
+
+/**
+ * Every source this engine's typed-in numbers rest on, and every number that
+ * is the firm's own choice, said so in words. The statutory rate history and
+ * the power history carry their own lists (TAX_HISTORY_SOURCES,
+ * POWER_HISTORY_SOURCES); these are the numbers typed into this file.
+ */
+export const EROSION_SOURCES: readonly { label: string; url?: string; asOf?: string; note?: string }[] = [
+  TOP_RATE_HISTORY_SOURCE,
+  CURRENT_TOP_RATE_SOURCE,
+  CPI_SOURCE,
+  { label: "Assumption: history window starts in 1946 (historyFrom, longRunLeverShare and conditionalOddsTable defaults), chosen by the firm as the first year after the Second World War, so wartime rates set the ceiling but not the base rate; no external source" },
+  { label: "Assumption: the forecaster panel can move the history base rate by at most 80% (wHist = 1 - 0.8 x coverage), chosen by the firm so the record is never fully overridden; no external source" },
+  { label: "Assumption: floors and clamps = history multiplier at least 0.25, projected top rate between 10% and 94%, effective federal rate at most 90%, chosen by the firm as guard rails; 94% is the historical maximum (Tax Policy Center, above), 10%, 0.25 and 90% have no external source" },
+  { label: "Assumption: confidence is scaled by 0.5 + 0.5 x panel completeness, chosen by the firm so a half-silent panel halves the panel's say; no external source" },
+  { label: "Assumption: horizons of 5 to 40 years in five-year steps, an inflation ladder of 1 to 40 years, a 3% real return target in the hurdle rate and a 40-year purchasing-power figure, chosen by the firm as planning horizons; no external source" },
+  { label: "Assumption: a 0.5 lever share when the power series is empty, chosen by the firm as the neutral midpoint; no external source" },
+];
