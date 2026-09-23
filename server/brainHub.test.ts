@@ -19,11 +19,11 @@ import { MCP_PRESETS, mcpPresetsByCategory } from "@shared/mcpPresets";
 import { environmentCredentials, environmentKeyNames } from "./providerRegistry";
 
 describe("the fifty-five brains", () => {
-  it("offers exactly MAX_BRAINS providers to the owner, plus the internal gateway", () => {
+  it("offers exactly MAX_BRAINS providers to the owner, and no internal gateway", () => {
     expect(MAX_BRAINS).toBe(55);
     expect(BRAIN_PROVIDERS).toHaveLength(MAX_BRAINS);
-    expect(PROVIDERS).toHaveLength(MAX_BRAINS + 1);
-    expect(getProvider("forge")).toBeDefined();
+    expect(PROVIDERS).toHaveLength(MAX_BRAINS);
+    expect(getProvider("forge")).toBeUndefined();
   });
 
   it("carries the fifteen platforms added on 23 Sep 2026, each with a conventional Railway name", () => {
@@ -53,8 +53,8 @@ describe("the fifty-five brains", () => {
       expect(p.suggestedModels).toContain(p.defaultModel);
       expect(p.role.length).toBeGreaterThan(10);
       if (p.baseUrl) expect(() => new URL(p.baseUrl)).not.toThrow();
-      // A provider with no default base must say it needs one (or be the gateway).
-      if (!p.baseUrl && p.id !== "forge") expect(p.requiresBaseUrl).toBe(true);
+      // A provider with no default base must say it needs one.
+      if (!p.baseUrl) expect(p.requiresBaseUrl).toBe(true);
     }
   });
 

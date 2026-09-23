@@ -1,6 +1,6 @@
 import type { Express } from "express";
 import { portalTokenCanAccessStorageKey } from "../db";
-import { ENV } from "./env";
+import { FILE_URL_PREFIX, isStorageConfigured, storageGetSignedUrl } from "../storage";
 import { sdk } from "./sdk";
 
 const PUBLIC_ASSET_KEYS = new Set([
@@ -12,8 +12,9 @@ function isSafeStorageKey(key: string) {
   return key.length > 0 && key.length <= 512 && !key.startsWith("/") && !key.includes("..") && !key.includes("\\") && !key.includes("\0");
 }
 
+/** GET /files/{key}: checks access, then redirects to a short-lived signed URL on the firm's own bucket. */
 export function registerStorageProxy(app: Express) {
-  app.get("/manus-storage/*", async (req, res) => {
+  app.get(`${FILE_URL_PREFIX}*`, async (req, res) => {
     const key = (req.params as Record<string, string>)[0];
     if (!key || !isSafeStorageKey(key)) {
       res.status(400).send("Invalid storage key");
@@ -36,30 +37,18 @@ export function registerStorageProxy(app: Express) {
       return;
     }
 
-    if (!ENV.forgeApiUrl || !ENV.forgeApiKey) {
-      res.status(500).send("Storage proxy not configured");
+    if (!isStorageConfigured()) {
+      res.status(503).send("File storage is not configured on this host");
       return;
     }
 
     try {
-      const forgeUrl = new URL("v1/storage/presign/get", ENV.forgeApiUrl.replace(/\/+$/, "") + "/");
-      forgeUrl.searchParams.set("path", key);
-      const forgeResp = await fetch(forgeUrl, { headers: { Authorization: `Bearer ${ENV.forgeApiKey}` } });
-      if (!forgeResp.ok) {
-        console.error(`[StorageProxy] backend status ${forgeResp.status}`);
-        res.status(502).send("Storage backend error");
-        return;
-      }
-      const { url } = (await forgeResp.json()) as { url?: string };
-      if (!url) {
-        res.status(502).send("Storage backend error");
-        return;
-      }
+      const url = await storageGetSignedUrl(key);
       res.set("Cache-Control", "no-store");
       res.redirect(307, url);
     } catch {
-      console.error("[StorageProxy] request failed");
-      res.status(502).send("Storage proxy error");
+      console.error("[StorageProxy] signing failed");
+      res.status(502).send("Storage backend error");
     }
   });
 }

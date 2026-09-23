@@ -28,7 +28,7 @@ function createContext(): TrpcContext {
       openId: "planning-test-user",
       name: "Planning Test",
       email: "planning@example.com",
-      loginMethod: "manus",
+      loginMethod: "owner-password",
       role: "user",
       createdAt: new Date(),
       updatedAt: new Date(),

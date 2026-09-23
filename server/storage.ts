@@ -1,20 +1,61 @@
-// Preconfigured storage helpers for Manus WebDev templates
-// Uploads via Forge Server presigned URL to S3 (PUT direct).
-// Downloads return /manus-storage/{key} paths served via 307 redirect.
+// ============================================================
+// FILE STORAGE — uploads go to the firm's own S3-compatible bucket (AWS S3,
+// Cloudflare R2, Backblaze B2, MinIO…), the same kind of store the database
+// backups use (server/backups.ts). Downloads are served as /files/{key} by
+// server/_core/storageProxy.ts, which checks access and then redirects to a
+// short-lived signed URL.
+//
+// Host environment:
+//   STORAGE_S3_BUCKET   the bucket (required; with it unset, storage is off and
+//                       every upload fails with a clear "not configured" error)
+//   STORAGE_S3_PREFIX   key prefix inside the bucket (default "files/")
+//   S3_ENDPOINT, S3_REGION, S3_ACCESS_KEY_ID, S3_SECRET_ACCESS_KEY  credentials
+// ============================================================
 
-import { ENV } from "./_core/env";
+export const FILE_URL_PREFIX = "/files/";
 
-function getForgeConfig() {
-  const forgeUrl = ENV.forgeApiUrl;
-  const forgeKey = ENV.forgeApiKey;
+type Env = Record<string, string | undefined>;
 
-  if (!forgeUrl || !forgeKey) {
-    throw new Error(
-      "Storage config missing: set BUILT_IN_FORGE_API_URL and BUILT_IN_FORGE_API_KEY",
-    );
+export class StorageNotConfiguredError extends Error {
+  constructor() {
+    super("File storage is not configured on this host (set STORAGE_S3_BUCKET and the S3_* credentials).");
+    this.name = "StorageNotConfiguredError";
   }
+}
 
-  return { forgeUrl: forgeUrl.replace(/\/+$/, ""), forgeKey };
+export type StorageConfig = { bucket: string; prefix: string; region: string; endpoint?: string; accessKeyId?: string; secretAccessKey?: string };
+
+export function storageConfig(env: Env = process.env): StorageConfig | null {
+  const bucket = env.STORAGE_S3_BUCKET?.trim();
+  if (!bucket) return null;
+  return {
+    bucket,
+    prefix: (env.STORAGE_S3_PREFIX ?? "files/").replace(/^\/+/, ""),
+    region: env.S3_REGION || env.AWS_REGION || "auto",
+    endpoint: env.S3_ENDPOINT || undefined,
+    accessKeyId: env.S3_ACCESS_KEY_ID || undefined,
+    secretAccessKey: env.S3_SECRET_ACCESS_KEY || undefined,
+  };
+}
+
+export function isStorageConfigured(env: Env = process.env): boolean {
+  return storageConfig(env) !== null;
+}
+
+function requireConfig(): StorageConfig {
+  const cfg = storageConfig();
+  if (!cfg) throw new StorageNotConfiguredError();
+  return cfg;
+}
+
+async function s3Client(cfg: StorageConfig) {
+  const { S3Client } = await import("@aws-sdk/client-s3");
+  return new S3Client({
+    region: cfg.region,
+    endpoint: cfg.endpoint,
+    forcePathStyle: Boolean(cfg.endpoint),
+    credentials: cfg.accessKeyId && cfg.secretAccessKey ? { accessKeyId: cfg.accessKeyId, secretAccessKey: cfg.secretAccessKey } : undefined,
+  });
 }
 
 function normalizeKey(relKey: string): string {
@@ -33,65 +74,28 @@ export async function storagePut(
   data: Buffer | Uint8Array | string,
   contentType = "application/octet-stream",
 ): Promise<{ key: string; url: string }> {
-  const { forgeUrl, forgeKey } = getForgeConfig();
+  const cfg = requireConfig();
   const key = appendHashSuffix(normalizeKey(relKey));
-
-  // 1. Get presigned PUT URL from Forge
-  const presignUrl = new URL("v1/storage/presign/put", forgeUrl + "/");
-  presignUrl.searchParams.set("path", key);
-
-  const presignResp = await fetch(presignUrl, {
-    headers: { Authorization: `Bearer ${forgeKey}` },
-  });
-
-  if (!presignResp.ok) {
-    const msg = await presignResp.text().catch(() => presignResp.statusText);
-    throw new Error(`Storage presign failed (${presignResp.status}): ${msg}`);
-  }
-
-  const { url: s3Url } = (await presignResp.json()) as { url: string };
-  if (!s3Url) throw new Error("Forge returned empty presign URL");
-
-  // 2. PUT file directly to S3
-  const blob =
-    typeof data === "string"
-      ? new Blob([data], { type: contentType })
-      : new Blob([data as any], { type: contentType });
-
-  const uploadResp = await fetch(s3Url, {
-    method: "PUT",
-    headers: { "Content-Type": contentType },
-    body: blob,
-  });
-
-  if (!uploadResp.ok) {
-    throw new Error(`Storage upload to S3 failed (${uploadResp.status})`);
-  }
-
-  return { key, url: `/manus-storage/${key}` };
+  const { PutObjectCommand } = await import("@aws-sdk/client-s3");
+  const client = await s3Client(cfg);
+  const body = typeof data === "string" ? Buffer.from(data, "utf8") : Buffer.from(data);
+  await client.send(new PutObjectCommand({ Bucket: cfg.bucket, Key: cfg.prefix + key, Body: body, ContentType: contentType }));
+  return { key, url: `${FILE_URL_PREFIX}${key}` };
 }
 
 export async function storageGet(relKey: string): Promise<{ key: string; url: string }> {
   const key = normalizeKey(relKey);
-  return { key, url: `/manus-storage/${key}` };
+  return { key, url: `${FILE_URL_PREFIX}${key}` };
 }
 
-export async function storageGetSignedUrl(relKey: string): Promise<string> {
-  const { forgeUrl, forgeKey } = getForgeConfig();
+/** A signed download URL valid for five minutes. */
+export async function storageGetSignedUrl(relKey: string, expiresInSeconds = 300): Promise<string> {
+  const cfg = requireConfig();
   const key = normalizeKey(relKey);
-
-  const getUrl = new URL("v1/storage/presign/get", forgeUrl + "/");
-  getUrl.searchParams.set("path", key);
-
-  const resp = await fetch(getUrl, {
-    headers: { Authorization: `Bearer ${forgeKey}` },
-  });
-
-  if (!resp.ok) {
-    const msg = await resp.text().catch(() => resp.statusText);
-    throw new Error(`Storage signed URL failed (${resp.status}): ${msg}`);
-  }
-
-  const { url } = (await resp.json()) as { url: string };
-  return url;
+  const [{ GetObjectCommand }, { getSignedUrl }] = await Promise.all([
+    import("@aws-sdk/client-s3"),
+    import("@aws-sdk/s3-request-presigner"),
+  ]);
+  const client = await s3Client(cfg);
+  return getSignedUrl(client, new GetObjectCommand({ Bucket: cfg.bucket, Key: cfg.prefix + key }), { expiresIn: expiresInSeconds });
 }

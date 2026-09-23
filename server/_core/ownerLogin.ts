@@ -1,9 +1,8 @@
 // ============================================================
-// SELF-HOSTED SIGN-IN: OWNER AND ENTRANCE PASSCODE
-// The portal's managed sign-in is the OAuth server (Manus). On a plain host
-// there is no such server, so this file provides two alternatives that issue
-// the same signed session cookie the OAuth flow does, so every downstream
-// permission check is unchanged.
+// SIGN-IN: OWNER AND ENTRANCE PASSCODE
+// The only two ways into the site. Both issue the same signed session cookie
+// (server/_core/sdk.ts), so every downstream permission check is the same.
+// There is no external identity provider.
 //
 //   Owner sign-in (role admin):
 //   OWNER_EMAIL          the owner's sign-in email
@@ -62,7 +61,6 @@ export function ownerTotpEnabled(env = ENV): boolean {
 
 export function authMode(env = ENV) {
   return {
-    managedOAuth: Boolean(env.oAuthServerUrl),
     ownerLogin: isOwnerLoginConfigured(env),
     ownerTotp: ownerTotpEnabled(env),
     guestLogin: isGuestLoginConfigured(env),

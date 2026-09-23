@@ -15,7 +15,6 @@
 //     OPENROUTER_API_KEY     (OpenRouter — routes to many models)
 //     MISTRAL_API_KEY        (Mistral)
 //     GROQ_API_KEY           (Groq)
-//     BUILT_IN_FORGE_API_KEY (Manus — the built-in Forge gateway)
 //     ELEVENLABS_API_KEY + ELEVENLABS_VOICE_ID  (voice output)
 //     AIRDNA_API_KEY / MASHVISOR_API_KEY / AIRROI_API_KEY / PRICELABS_API_KEY /
 //     EXPEDIA_RAPID_API_KEY / BEYOND_API_TOKEN  (short-term rental sources; optional)

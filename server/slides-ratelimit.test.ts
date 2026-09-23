@@ -19,7 +19,7 @@ function createMockContext(overrides?: Partial<AuthenticatedUser>): TrpcContext 
     openId: "test-user-open-id",
     email: "test@example.com",
     name: "Test User",
-    loginMethod: "manus",
+    loginMethod: "owner-password",
     role: "user",
     createdAt: new Date(),
     updatedAt: new Date(),
@@ -30,7 +30,7 @@ function createMockContext(overrides?: Partial<AuthenticatedUser>): TrpcContext 
     user,
     req: {
       protocol: "https",
-      headers: { origin: "https://test.manus.space" },
+      headers: { origin: "https://test.example.com" },
     } as TrpcContext["req"],
     res: {
       clearCookie: vi.fn(),

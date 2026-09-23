@@ -2629,7 +2629,7 @@ Keep it personal, specific with dollar amounts, and actionable. Use their actual
           id: d.id,
           name: d.name,
           category: d.category,
-          url: d.url.startsWith("/manus-storage/") ? `${d.url}?portalToken=${encodeURIComponent(input.token)}` : d.url,
+          url: d.url.startsWith("/files/") ? `${d.url}?portalToken=${encodeURIComponent(input.token)}` : d.url,
           createdAt: d.createdAt,
         })),
         strategies: strats.map(s => ({ id: s.id, summary: s.summary, createdAt: s.createdAt })),
@@ -5663,16 +5663,7 @@ Extract ALL years shown in the illustration. Use the ILLUSTRATED (non-guaranteed
       ];
       let dataSource: "live" | "static" = "static";
       let liveData: Record<string, any> = {};
-      try {
-        const { callDataApi } = await import("./_core/dataApi");
-        const resp = await callDataApi("MarketData/indices", {
-          query: { symbols: indices.map(i => i.symbol).join(",") },
-        });
-        if (resp && typeof resp === "object") {
-          liveData = resp as Record<string, any>;
-          dataSource = "live";
-        }
-      } catch { /* fall through to static */ }
+      // No live index feed is wired; the curated static data below is served.
 
       // Static performance data (updated quarterly) used as fallback
       const STATIC_PERFORMANCE: Record<string, { ytd: number; oneYear: number; threeYear: number; fiveYear: number; tenYear: number }> = {

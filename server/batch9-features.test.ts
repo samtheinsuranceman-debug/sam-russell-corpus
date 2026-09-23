@@ -136,9 +136,10 @@ describe("Open Access — All Users Get Full Access", () => {
     expect(routersContent).toContain('code: "FORBIDDEN"');
   });
 
-  it("executive access should use managed OAuth with no bypass endpoint", () => {
+  it("executive access should use the site's own sign-in with no bypass endpoint", () => {
     expect(indexContent).not.toContain("executive-access");
-    expect(indexContent).toContain("registerOAuthRoutes");
+    expect(indexContent).not.toContain("registerOAuthRoutes");
+    expect(indexContent).toContain("registerOwnerLoginRoutes");
   });
 });
 
