@@ -99,3 +99,16 @@ export async function storageGetSignedUrl(relKey: string, expiresInSeconds = 300
   const client = await s3Client(cfg);
   return getSignedUrl(client, new GetObjectCommand({ Bucket: cfg.bucket, Key: cfg.prefix + key }), { expiresIn: expiresInSeconds });
 }
+
+/** Read a stored object's bytes directly from the bucket, refusing anything larger than `maxBytes`. */
+export async function storageGetBytes(relKey: string, maxBytes = 15 * 1024 * 1024): Promise<{ body: Buffer; contentType: string }> {
+  const cfg = requireConfig();
+  const key = normalizeKey(relKey);
+  const { GetObjectCommand } = await import("@aws-sdk/client-s3");
+  const client = await s3Client(cfg);
+  const res = await client.send(new GetObjectCommand({ Bucket: cfg.bucket, Key: cfg.prefix + key }));
+  if (typeof res.ContentLength === "number" && res.ContentLength > maxBytes) throw new Error(`Stored file is larger than ${maxBytes} bytes`);
+  const bytes = res.Body ? await res.Body.transformToByteArray() : new Uint8Array();
+  if (bytes.byteLength > maxBytes) throw new Error(`Stored file is larger than ${maxBytes} bytes`);
+  return { body: Buffer.from(bytes), contentType: res.ContentType ?? "application/octet-stream" };
+}

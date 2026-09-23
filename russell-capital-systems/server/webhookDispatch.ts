@@ -1,5 +1,6 @@
 import { createHmac } from "crypto";
 import { getActiveWebhooksForEvent, markWebhookFailed, markWebhookTriggered } from "./db";
+import { safeFetch } from "./_core/safeFetch";
 
 export const WEBHOOK_EVENTS = [
   "client.created",
@@ -47,12 +48,8 @@ export async function dispatchWebhook(workspaceId: number, event: WebhookEventTy
         if (signature) headers["X-Webhook-Signature"] = `sha256=${signature}`;
 
         try {
-          const res = await fetch(hook.url, {
-            method: "POST",
-            headers,
-            body,
-            signal: AbortSignal.timeout(10_000),
-          });
+          // A workspace webhook URL is user-supplied: https, public host, no redirect, bounded (server/_core/safeFetch.ts).
+          const res = await safeFetch(hook.url, { method: "POST", headers, body, timeoutMs: 10_000, maxBytes: 64 * 1024 });
           if (res.ok) {
             await markWebhookTriggered(hook.id);
             console.log(`[Webhook] ${event} → ${hook.url} (${res.status})`);
