@@ -98,7 +98,7 @@ import {
   createReferral, listReferrals, updateReferral, deleteReferral,
   listAllDocuments,
   saveComplianceSignatureDb, getLatestComplianceSignature, getComplianceSignaturesByUser, getAllComplianceSignatures,
-  createUserSession, endUserSession, endUserSessionByUserId, getActiveSession, getUserSessionHistory, getAllUserSessions, getDistinctSessionUsers,
+  createUserSession, endUserSession, endUserSessionByUserId, getActiveSession, getUserSessionHistory, getAllUserSessions, getDistinctSessionUsers, getWebsiteUsageAnalytics,
   logPageVisit, closePageVisit, getPageActivityBySession, getPageActivityByUser,
   getHouseholdFactFinder, upsertHouseholdFactFinder,
   createPaymentDisclosure, getPaymentDisclosures, getPaymentDisclosuresByUser, getPaymentDisclosureById,
@@ -109,7 +109,7 @@ import {
   addOwnerTrustedIp, isOwnerTrustedIp, getOwnerTrustedIps, removeOwnerTrustedIp,
   addSlideComment, getSlideComments, resolveSlideComment, deleteSlideComment,
   createSlideShare, getSlideShares, getSlideShareByToken, deleteSlideShare,
-  getOwnerAnalyticsSummary, getTopPages, getRecentLogins, getConversionFunnel,
+  getOwnerAnalyticsSummary, getOwnerActivityTimeline, getTopPages, getRecentLogins, getConversionFunnel,
   getWorkspaceRecentActivity, getTopClientsByAUM, getAssetAllocation,
   getSidebarFavorites, addSidebarFavorite, removeSidebarFavorite,
   logSlideUsage, getTrialSlideCountToday, getSlideUsageAnalytics,
@@ -1691,6 +1691,11 @@ Keep it personal, specific with dollar amounts, and actionable. Use their actual
     topPages: protectedProcedure.input(z.object({ limit: z.number().default(20) }).optional()).query(async ({ ctx, input }) => {
       if (ctx.user.role !== "admin") throw new TRPCError({ code: "FORBIDDEN" });
       return getTopPages(input?.limit ?? 20);
+    }),
+
+    activityTimeline: protectedProcedure.input(z.object({ range: z.enum(["24h", "7d", "30d", "12m"]).default("7d") })).query(async ({ ctx, input }) => {
+      if (ctx.user.role !== "admin") throw new TRPCError({ code: "FORBIDDEN" });
+      return getOwnerActivityTimeline(input.range);
     }),
 
     recentLogins: protectedProcedure.input(z.object({ limit: z.number().default(50) }).optional()).query(async ({ ctx, input }) => {
@@ -6677,6 +6682,14 @@ If a field cannot be determined, use 0 for numbers and "Unknown" for strings. Be
       userId: z.number(),
     })).query(async ({ input }) => {
       return getPageActivityByUser(input.userId);
+    }),
+
+    // Real usage aggregates (traffic, devices, browsers, hours, top pages, live sessions)
+    getAnalytics: adminProcedure.input(z.object({
+      password: z.string().optional(),
+      days: z.number().min(1).max(90).default(30),
+    }).optional()).query(async ({ input }) => {
+      return getWebsiteUsageAnalytics(input?.days ?? 30);
     }),
 
     // Get summary stats for all users

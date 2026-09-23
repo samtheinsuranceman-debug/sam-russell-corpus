@@ -43,102 +43,17 @@ import {
   PolarAngleAxis, PolarRadiusAxis, Radar, ComposedChart, Legend
 } from "recharts";
 
-const activityData = [
-  { time: "08:00", messages: 12, alerts: 2, commands: 5 },
-  { time: "10:00", messages: 28, alerts: 5, commands: 12 },
-  { time: "12:00", messages: 45, alerts: 8, commands: 18 },
-  { time: "14:00", messages: 32, alerts: 4, commands: 15 },
-  { time: "16:00", messages: 56, alerts: 12, commands: 25 },
-  { time: "18:00", messages: 24, alerts: 3, commands: 8 },
-  { time: "20:00", messages: 8, alerts: 1, commands: 2 },
-];
-
-const channelData = [
-  { name: "general", count: 400 },
-  { name: "alerts", count: 300 },
-  { name: "deals", count: 300 },
-  { name: "support", count: 200 },
-];
 const COLORS = ['#4f8cff', '#22c55e', '#f59e0b', '#e11d48', '#10b981'];
 
-const eventTypeData = [
-  { subject: 'New Clients', A: 120, B: 110, fullMark: 150 },
-  { subject: 'Deal Won', A: 98, B: 130, fullMark: 150 },
-  { subject: 'Documents', A: 86, B: 130, fullMark: 150 },
-  { subject: 'Notes', A: 99, B: 100, fullMark: 150 },
-  { subject: 'Strategies', A: 85, B: 90, fullMark: 150 },
-  { subject: 'Support', A: 65, B: 85, fullMark: 150 },
-];
-
-const weeklyData = [
-  { name: 'Mon', usage: 4000, active: 2400, amt: 2400 },
-  { name: 'Tue', usage: 3000, active: 1398, amt: 2210 },
-  { name: 'Wed', usage: 2000, active: 9800, amt: 2290 },
-  { name: 'Thu', usage: 2780, active: 3908, amt: 2000 },
-  { name: 'Fri', usage: 1890, active: 4800, amt: 2181 },
-  { name: 'Sat', usage: 2390, active: 3800, amt: 2500 },
-  { name: 'Sun', usage: 3490, active: 4300, amt: 2100 },
-];
-
-const mockLogs = Array.from({ length: 50 }).map((_, i) => ({
-  id: i,
-  timestamp: new Date(Date.now() - i * 3600000).toISOString(),
-  type: i % 3 === 0 ? "Command" : i % 2 === 0 ? "Alert" : "Message",
-  channel: i % 4 === 0 ? "#general" : i % 3 === 0 ? "#deals" : "#alerts",
-  status: i % 10 === 0 ? "Failed" : "Success",
-  user: `User ${i % 5 + 1}`,
-  details: `Executed action ${i}`
-}));
-
-const mockUsers = Array.from({ length: 20 }).map((_, i) => ({
-  id: i,
-  name: `User ${i + 1}`,
-  email: `user${i + 1}@example.com`,
-  role: i === 0 ? "Admin" : i < 5 ? "Manager" : "Member",
-  status: i % 5 === 0 ? "Offline" : "Online",
-  lastActive: new Date(Date.now() - i * 86400000).toLocaleDateString(),
-  messagesSent: Math.floor(Math.random() * 500)
-}));
-
-const mockChannels = Array.from({ length: 15 }).map((_, i) => ({
-  id: i,
-  name: `channel-${i + 1}`,
-  type: i % 3 === 0 ? "Private" : "Public",
-  members: Math.floor(Math.random() * 50) + 5,
-  isMapped: i < 5,
-  purpose: `Purpose for channel ${i + 1}`,
-  createdAt: new Date(Date.now() - i * 86400000 * 30).toLocaleDateString()
-}));
-
-const mockWebhooks = Array.from({ length: 8 }).map((_, i) => ({
-  id: i,
-  name: `Webhook ${i + 1}`,
-  url: `https://hooks.slack.example/services/T.../B.../${i}`,
-  channel: `#channel-${i % 5 + 1}`,
-  events: ["New Client", "Deal Won", "Document Uploaded"].slice(0, i % 3 + 1).join(", "),
-  status: i === 7 ? "Inactive" : "Active",
-  lastTriggered: new Date(Date.now() - i * 3600000 * 5).toLocaleString()
-}));
-
-const mockRules = Array.from({ length: 12 }).map((_, i) => ({
-  id: i,
-  name: `Routing Rule ${i + 1}`,
-  condition: `If event type is ${i % 2 === 0 ? "Deal" : "Client"}`,
-  action: `Send to #channel-${i % 3 + 1}`,
-  priority: i + 1,
-  enabled: i < 10,
-  createdBy: `Admin ${i % 2 + 1}`
-}));
-
-const mockIntegrations = Array.from({ length: 6 }).map((_, i) => ({
-  id: i,
-  name: `Integration ${i + 1}`,
-  provider: i % 2 === 0 ? "Slack" : "Custom",
-  status: i === 5 ? "Error" : "Connected",
-  syncFrequency: "Real-time",
-  lastSync: new Date(Date.now() - i * 60000).toLocaleString(),
-  errors: i === 5 ? 3 : 0
-}));
+// The integration posts through a Slack incoming webhook. Nothing on the server
+// records sent messages, Slack users, channels, or command usage, so there is no
+// history to show: these lists stay empty rather than filled with invented rows.
+const mockLogs: { id: number; timestamp: string; type: string; channel: string; status: string; user: string; details: string }[] = [];
+const mockUsers: { id: number; name: string; email: string; role: string; status: string; lastActive: string; messagesSent: number }[] = [];
+const mockChannels: { id: number; name: string; type: string; members: number; isMapped: boolean; purpose: string; createdAt: string }[] = [];
+const mockWebhooks: { id: number; name: string; url: string; channel: string; events: string; status: string; lastTriggered: string }[] = [];
+const mockRules: { id: number; name: string; condition: string; action: string; priority: number; enabled: boolean; createdBy: string }[] = [];
+const mockIntegrations: { id: number; name: string; provider: string; status: string; syncFrequency: string; lastSync: string; errors: number }[] = [];
 
 export default function SlackIntegration() {
   const { user } = useAuth();
@@ -444,7 +359,7 @@ export default function SlackIntegration() {
               </div>
             </div>
             <div className="flex items-end gap-2 mt-4">
-              <span className="text-3xl font-bold text-white tracking-tight">{isConnected ? "Active" : "Inactive"}</span>
+              <span className="text-3xl font-bold text-white tracking-tight">{isConnected ? (status?.active === false ? "Paused" : "Active") : "Not connected"}</span>
             </div>
             {isConnected && status?.teamName && (
               <div className="mt-2 text-xs text-[#7a95b8] truncate">Workspace: {status.teamName}</div>
@@ -459,12 +374,9 @@ export default function SlackIntegration() {
               </div>
             </div>
             <div className="flex items-end gap-2 mt-4">
-              <span className="text-3xl font-bold text-white tracking-tight">{isConnected ? "205" : "0"}</span>
-              {isConnected && <span className="text-sm font-medium text-[#22c55e] mb-1 flex items-center bg-[#22c55e]/10 px-2 py-0.5 rounded-full"><ArrowRight size={12} className="-rotate-45 mr-1" /> 12%</span>}
+              <span className="text-3xl font-bold text-white tracking-tight">—</span>
             </div>
-            <div className="mt-2 w-full bg-[#12233e] h-1.5 rounded-full overflow-hidden">
-              <div className="bg-[#4f8cff] h-full" style={{ width: isConnected ? '65%' : '0%' }}></div>
-            </div>
+            <div className="mt-2 text-xs text-[#7a95b8]">Not tracked: sent messages are not logged yet</div>
           </div>
 
           <div className="rc-card flex flex-col justify-between hover:border-[#f0c040]/50 transition-colors group cursor-pointer" onClick={() => setActiveTab("users")}>
@@ -475,21 +387,9 @@ export default function SlackIntegration() {
               </div>
             </div>
             <div className="flex items-end gap-2 mt-4">
-              <span className="text-3xl font-bold text-white tracking-tight">{isConnected ? "24" : "0"}</span>
-              {isConnected && <span className="text-sm font-medium text-[#7a95b8] mb-1">/ 50 total</span>}
+              <span className="text-3xl font-bold text-white tracking-tight">—</span>
             </div>
-            <div className="mt-2 flex -space-x-2">
-              {isConnected && Array.from({ length: Math.min(5, 24) }).map((_, i) => (
-                <div key={i} className="w-6 h-6 rounded-full bg-gradient-to-br from-[#4f8cff] to-[#10b981] border-2 border-[#0d1a2e] flex items-center justify-center text-[10px] font-bold text-white z-10" style={{ zIndex: 5 - i }}>
-                  {String.fromCharCode(65 + i)}
-                </div>
-              ))}
-              {isConnected && 24 > 5 && (
-                <div className="w-6 h-6 rounded-full bg-[#12233e] border-2 border-[#0d1a2e] flex items-center justify-center text-[10px] font-bold text-[#7a95b8] z-0">
-                  +19
-                </div>
-              )}
-            </div>
+            <div className="mt-2 text-xs text-[#7a95b8]">Not tracked: a webhook connection cannot see Slack users</div>
           </div>
 
           <div className="rc-card flex flex-col justify-between hover:border-[#e11d48]/50 transition-colors group cursor-pointer" onClick={() => setActiveTab("rules")}>
@@ -500,14 +400,9 @@ export default function SlackIntegration() {
               </div>
             </div>
             <div className="flex items-end gap-2 mt-4">
-              <span className="text-3xl font-bold text-white tracking-tight">{isConnected ? "12" : "6"}</span>
-              <span className="text-sm font-medium text-[#22c55e] mb-1 flex items-center bg-[#22c55e]/10 px-2 py-0.5 rounded-full"><ArrowRight size={12} className="-rotate-45 mr-1" /> 3 new</span>
+              <span className="text-3xl font-bold text-white tracking-tight">—</span>
             </div>
-            <div className="mt-2 flex gap-1">
-              {['Deals', 'Clients', 'Docs'].map((tag) => (
-                <span key={tag} className="text-[10px] bg-[#12233e] text-[#c8d8ec] px-1.5 py-0.5 rounded">{tag}</span>
-              ))}
-            </div>
+            <div className="mt-2 text-xs text-[#7a95b8]">No event routing is configured yet</div>
           </div>
           
           <div className="rc-card flex flex-col justify-between hover:border-[#10b981]/50 transition-colors group cursor-pointer hidden xl:flex" onClick={() => setActiveTab("commands")}>
@@ -518,10 +413,9 @@ export default function SlackIntegration() {
               </div>
             </div>
             <div className="flex items-end gap-2 mt-4">
-              <span className="text-3xl font-bold text-white tracking-tight">{isConnected ? "42" : "0"}</span>
-              {isConnected && <span className="text-sm font-medium text-[#e11d48] mb-1 flex items-center bg-[#e11d48]/10 px-2 py-0.5 rounded-full"><ArrowRight size={12} className="rotate-45 mr-1" /> 5%</span>}
+              <span className="text-3xl font-bold text-white tracking-tight">—</span>
             </div>
-            <div className="mt-2 text-xs text-[#7a95b8] truncate">Most used: /rc client</div>
+            <div className="mt-2 text-xs text-[#7a95b8] truncate">Not tracked: command usage is not logged</div>
           </div>
         </div>
 
@@ -591,32 +485,10 @@ export default function SlackIntegration() {
                     </div>
                     <div className="h-[350px] w-full relative z-10">
                       {isConnected ? (
-                        <ResponsiveContainer width="100%" height="100%">
-                          <ComposedChart data={activityData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                            <defs>
-                              <linearGradient id="colorMessages" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="5%" stopColor="#4f8cff" stopOpacity={0.4} />
-                                <stop offset="95%" stopColor="#4f8cff" stopOpacity={0} />
-                              </linearGradient>
-                              <linearGradient id="colorAlerts" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.4} />
-                                <stop offset="95%" stopColor="#f59e0b" stopOpacity={0} />
-                              </linearGradient>
-                            </defs>
-                            <CartesianGrid strokeDasharray="3 3" stroke="#12233e" vertical={false} />
-                            <XAxis dataKey="time" stroke="#7a95b8" fontSize={12} tickLine={false} axisLine={false} dy={10} />
-                            <YAxis stroke="#7a95b8" fontSize={12} tickLine={false} axisLine={false} dx={-10} />
-                            <Tooltip
-                              contentStyle={{ backgroundColor: '#0d1a2e', borderColor: '#12233e', borderRadius: '8px', boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.5)' }}
-                              itemStyle={{ color: '#c8d8ec', fontWeight: 500 }}
-                              labelStyle={{ color: '#7a95b8', marginBottom: '8px', fontWeight: 600 }}
-                            />
-                            <Legend wrapperStyle={{ paddingTop: '20px' }} iconType="circle" />
-                            <Area type="monotone" dataKey="messages" name="Messages" stroke="#4f8cff" strokeWidth={3} fillOpacity={1} fill="url(#colorMessages)" />
-                            <Area type="monotone" dataKey="alerts" name="Alerts" stroke="#f59e0b" strokeWidth={2} fillOpacity={1} fill="url(#colorAlerts)" />
-                            <Line type="monotone" dataKey="commands" name="Commands" stroke="#22c55e" strokeWidth={2} dot={{ r: 4, strokeWidth: 2 }} activeDot={{ r: 6 }} />
-                          </ComposedChart>
-                        </ResponsiveContainer>
+                        <div className="w-full h-full flex flex-col items-center justify-center text-[#7a95b8] border-2 border-dashed border-[#12233e] rounded-xl bg-[#0d1a2e]/50">
+                          <p className="text-lg font-medium text-white mb-2">No message history recorded</p>
+                          <p className="text-sm text-center max-w-md">Slack is connected{status?.channelName ? ` to #${String(status.channelName).replace(/^#/, "")}` : ""}. Messages are posted through an incoming webhook and are not logged yet, so volume over time will appear here once delivery logging is added.</p>
+                        </div>
                       ) : (
                         <div className="w-full h-full flex flex-col items-center justify-center text-[#7a95b8] border-2 border-dashed border-[#12233e] rounded-xl bg-[#0d1a2e]/50">
                           <div className="w-16 h-16 rounded-full bg-[#12233e] flex items-center justify-center mb-4">
@@ -639,33 +511,7 @@ export default function SlackIntegration() {
                       <h3 className="text-lg font-semibold text-white mb-1">Channel Distribution</h3>
                       <p className="text-xs text-[#7a95b8] mb-4">Message volume by channel</p>
                       <div className="h-[250px] w-full">
-                        {isConnected ? (
-                          <ResponsiveContainer width="100%" height="100%">
-                            <PieChart>
-                              <Pie
-                                data={channelData}
-                                cx="50%"
-                                cy="50%"
-                                innerRadius={60}
-                                outerRadius={80}
-                                paddingAngle={5}
-                                dataKey="count"
-                                stroke="none"
-                              >
-                                {channelData.map((entry, index) => (
-                                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                                ))}
-                              </Pie>
-                              <Tooltip 
-                                contentStyle={{ backgroundColor: '#0d1a2e', borderColor: '#12233e', borderRadius: '8px' }}
-                                itemStyle={{ color: '#c8d8ec' }}
-                              />
-                              <Legend layout="vertical" verticalAlign="middle" align="right" iconType="circle" />
-                            </PieChart>
-                          </ResponsiveContainer>
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center text-[#7a95b8] text-sm">No data</div>
-                        )}
+                        <div className="w-full h-full flex items-center justify-center text-center text-[#7a95b8] text-sm px-6">No data recorded yet. Per-channel and per-event counts appear here once Slack deliveries are logged.</div>
                       </div>
                     </div>
 
@@ -674,23 +520,7 @@ export default function SlackIntegration() {
                       <h3 className="text-lg font-semibold text-white mb-1">Event Coverage</h3>
                       <p className="text-xs text-[#7a95b8] mb-4">Configured vs Triggered events</p>
                       <div className="h-[250px] w-full">
-                        {isConnected ? (
-                          <ResponsiveContainer width="100%" height="100%">
-                            <RadarChart cx="50%" cy="50%" outerRadius="70%" data={eventTypeData}>
-                              <PolarGrid stroke="#12233e" />
-                              <PolarAngleAxis dataKey="subject" tick={{ fill: '#7a95b8', fontSize: 10 }} />
-                              <PolarRadiusAxis angle={30} domain={[0, 150]} tick={false} axisLine={false} />
-                              <Radar name="Configured" dataKey="A" stroke="#4f8cff" fill="#4f8cff" fillOpacity={0.3} />
-                              <Radar name="Triggered" dataKey="B" stroke="#22c55e" fill="#22c55e" fillOpacity={0.3} />
-                              <Tooltip 
-                                contentStyle={{ backgroundColor: '#0d1a2e', borderColor: '#12233e', borderRadius: '8px' }}
-                              />
-                              <Legend iconType="circle" wrapperStyle={{ fontSize: '12px' }} />
-                            </RadarChart>
-                          </ResponsiveContainer>
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center text-[#7a95b8] text-sm">No data</div>
-                        )}
+                        <div className="w-full h-full flex items-center justify-center text-center text-[#7a95b8] text-sm px-6">No data recorded yet. Per-channel and per-event counts appear here once Slack deliveries are logged.</div>
                       </div>
                     </div>
                   </div>

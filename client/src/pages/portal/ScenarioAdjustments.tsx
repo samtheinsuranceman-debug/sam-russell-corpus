@@ -1,5 +1,6 @@
 // @ts-nocheck
 import React, { useState, useMemo, useCallback, useEffect } from "react";
+import { mulberry32, normal, MACRO_DEFAULT_SEED } from "@shared/macro/random";
 import { AppShell } from "@/components/AppShell";
 import { ExportToSlides } from "@/components/ExportToSlides";
 import { trpc } from "@/lib/trpc";
@@ -367,12 +368,12 @@ function computeProjection(params: {
     }
   }
 
+  // Seeded so the success figure is reproducible and does not change on re-render.
+  const mcRng = mulberry32(MACRO_DEFAULT_SEED);
   const monteCarloData = Array.from({ length: 100 }, (_, i) => {
     let finalValue = baseNetWorth;
     for(let y = 0; y < (retirementAge - currentAge); y++) {
-      const u1 = Math.random();
-      const u2 = Math.random();
-      const z0 = Math.sqrt(-2.0 * Math.log(u1)) * Math.cos(2.0 * Math.PI * u2);
+      const z0 = normal(mcRng);
       
       const vol = 0.10 + (aggression/100 * 0.15); // Higher aggression = higher volatility
       const randomReturn = netReturn + (z0 * vol);
