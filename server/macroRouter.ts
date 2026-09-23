@@ -19,7 +19,7 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { protectedProcedure, publicProcedure, router } from "./_core/trpc";
-import { isOwnerEmailAddress } from "./ownerGuard";
+import { isOwnerSession } from "./ownerGuard";
 import {
   MACRO_SOURCES,
   SOURCE_MINIMUMS,
@@ -185,9 +185,8 @@ async function observationSeries(minMonths = 12): Promise<{ series: Series[]; il
   return { series: illustrativeSeries(ALL_INDICATORS.slice(0, 40), 36), illustrative: true };
 }
 
-async function requireOwner(ctx: { user: { email?: string | null } | null }) {
-  const email = ctx.user?.email ?? undefined;
-  if (!email || !isOwnerEmailAddress(email)) throw new TRPCError({ code: "FORBIDDEN", message: "Owner only." });
+async function requireOwner(ctx: { user: { email?: string | null; openId?: string | null } | null }) {
+  if (!isOwnerSession(ctx.user)) throw new TRPCError({ code: "FORBIDDEN", message: "Owner only." });
 }
 
 async function persistRefresh(observations: Observation[], results: Array<{ sourceId: string; ok: boolean; detail: string; observations: Observation[] }>, statements: StatementDraft[] = []) {
