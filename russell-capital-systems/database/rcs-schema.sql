@@ -1,6 +1,6 @@
 -- Russell Capital Systems — complete database schema
 -- Generated from drizzle/schema.ts by scripts/export_schema_sql.sh; do not hand-edit.
--- Tables: 165
+-- Tables: 171
 -- Import: mysql -u USER -p DBNAME < database/rcs-schema.sql   (or phpMyAdmin → Import)
 -- The database itself must already exist (create it in cPanel → MySQL Databases).
 
@@ -1219,6 +1219,103 @@ CREATE TABLE `ltc_rate_filings` (
 	`addedBy` int,
 	`createdAt` timestamp NOT NULL DEFAULT (now()),
 	CONSTRAINT `ltc_rate_filings_id` PRIMARY KEY(`id`)
+);
+CREATE TABLE `macro_factor_scores` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`indicatorId` varchar(80) NOT NULL,
+	`verdict` varchar(10) NOT NULL DEFAULT 'pending',
+	`leadR` decimal(6,3),
+	`hitRate` decimal(6,4),
+	`r0` decimal(6,3),
+	`backtestN` int NOT NULL DEFAULT 0,
+	`backtestAsOf` varchar(10),
+	`reason` varchar(500),
+	`n` int NOT NULL DEFAULT 0,
+	`brierSum` decimal(12,6) NOT NULL DEFAULT '0',
+	`hits` int NOT NULL DEFAULT 0,
+	`lastScoredAsOf` varchar(10),
+	`updatedAt` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,
+	CONSTRAINT `macro_factor_scores_id` PRIMARY KEY(`id`),
+	CONSTRAINT `macro_factor_scores_indicatorId_unique` UNIQUE(`indicatorId`)
+);
+CREATE TABLE `macro_forecast_log` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`modelId` varchar(40) NOT NULL,
+	`asOf` varchar(10) NOT NULL,
+	`probability` decimal(7,6),
+	`low` decimal(7,6),
+	`high` decimal(7,6),
+	`confidence` int,
+	`grade` varchar(2),
+	`payloadJson` text NOT NULL,
+	`outcome` int,
+	`brier` decimal(7,6),
+	`scoredAt` timestamp,
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	CONSTRAINT `macro_forecast_log_id` PRIMARY KEY(`id`)
+);
+CREATE TABLE `macro_observations` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`indicatorId` varchar(80) NOT NULL,
+	`sourceId` varchar(80) NOT NULL,
+	`asOf` varchar(10) NOT NULL,
+	`value` decimal(18,6) NOT NULL,
+	`unit` varchar(40),
+	`note` varchar(500),
+	`origin` varchar(20) NOT NULL DEFAULT 'live',
+	`fetchedAt` timestamp NOT NULL DEFAULT (now()),
+	CONSTRAINT `macro_observations_id` PRIMARY KEY(`id`)
+);
+CREATE TABLE `macro_series_meta` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`indicatorId` varchar(80) NOT NULL,
+	`sourceId` varchar(80) NOT NULL,
+	`series` varchar(120) NOT NULL,
+	`earliestAsOf` varchar(10),
+	`latestAsOf` varchar(10),
+	`coverageYears` decimal(6,1) NOT NULL DEFAULT '0',
+	`points` int NOT NULL DEFAULT 0,
+	`status` varchar(20) NOT NULL DEFAULT 'unavailable',
+	`reason` varchar(500),
+	`droppedLastRun` int NOT NULL DEFAULT 0,
+	`updatedAt` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,
+	CONSTRAINT `macro_series_meta_id` PRIMARY KEY(`id`),
+	CONSTRAINT `macro_series_meta_indicatorId_unique` UNIQUE(`indicatorId`)
+);
+CREATE TABLE `macro_source_health` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`sourceId` varchar(80) NOT NULL,
+	`lastAttemptAt` timestamp,
+	`lastSuccessAt` timestamp,
+	`lastOk` boolean,
+	`lastDetail` varchar(500),
+	`failStreak` int NOT NULL DEFAULT 0,
+	`rowsLastRun` int NOT NULL DEFAULT 0,
+	`updatedAt` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,
+	CONSTRAINT `macro_source_health_id` PRIMARY KEY(`id`),
+	CONSTRAINT `macro_source_health_sourceId_unique` UNIQUE(`sourceId`)
+);
+CREATE TABLE `macro_statements` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`statementDate` varchar(10) NOT NULL,
+	`speaker` varchar(200) NOT NULL,
+	`channel` varchar(200) NOT NULL,
+	`category` varchar(40) NOT NULL,
+	`severity` varchar(20) NOT NULL,
+	`environment` varchar(40) NOT NULL,
+	`claim` text NOT NULL,
+	`outcome` varchar(20) NOT NULL DEFAULT 'pending',
+	`outcomeNote` text,
+	`outcomeSetBy` varchar(320),
+	`sourceId` varchar(80) NOT NULL,
+	`sourceUrl` varchar(1000),
+	`office` varchar(200),
+	`speakerQid` varchar(20),
+	`outcomeSourceUrl` varchar(1000),
+	`resolvedAt` varchar(10),
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	`updatedAt` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,
+	CONSTRAINT `macro_statements_id` PRIMARY KEY(`id`)
 );
 CREATE TABLE `market_data_points` (
 	`id` int AUTO_INCREMENT NOT NULL,

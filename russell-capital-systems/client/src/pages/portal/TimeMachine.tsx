@@ -9,6 +9,7 @@ import { Slider } from "@/components/ui/slider";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 import { Clock, AlertTriangle, ArrowRight, Zap, Calendar, Target, Share2 } from "lucide-react";
+import ForecastPanel from "@/components/ForecastPanel";
 
 
 function formatDollars(n: number): string {
@@ -104,6 +105,9 @@ export default function TimeMachine() {
     const costPerDay = costOfWaiting / (delayYears * 365);
     const costPerMonth = costOfWaiting / (delayYears * 12);
 
+    // The act-now path year by year, so the forecast overlay has a series to apply to.
+    const series = Array.from({ length: yearsToGrow }, (_, i) => ({ year: i + 1, value: compound(actNowAfterTax, s.actNow.growthRate, i + 1) }));
+
     return {
       scenario: s,
       principal,
@@ -113,6 +117,7 @@ export default function TimeMachine() {
       costPerDay,
       costPerMonth,
       yearsToGrow,
+      series,
     };
   }, [scenario, selectedClient, delayYears, nw, ira, age]);
 
@@ -185,6 +190,18 @@ export default function TimeMachine() {
               </p>
             </CardContent>
           </Card>
+
+          {/* Forecast overlay (off by default): the current forecast for this strategy's domain applied to
+              the act-now path over 20 / 30 / 40 years. MYGA is a rates product; the others ride equities. */}
+          <div className="mb-8">
+            <ForecastPanel
+              domain={scenario === "myga" ? "rates" : "equities"}
+              engine={`timeMachine:${scenario}`}
+              title="Apply the current forecast to the act-now path"
+              base={analysis.series}
+              baseRate={analysis.scenario.actNow.growthRate}
+            />
+          </div>
 
           {/* Side by Side Comparison */}
           <div className="grid gap-6 md:grid-cols-2 mb-8">

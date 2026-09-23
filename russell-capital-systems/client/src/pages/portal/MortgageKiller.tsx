@@ -46,11 +46,15 @@ import { GuidedWizard, GuidedModeToggle, type WizardStep } from "@/components/Gu
 import { ReportGenerator, type ReportSection } from "@/components/ReportGenerator";
 import { ExportToSlides } from "@/components/ExportToSlides";
 import { DataFeedInline } from "@/components/DataFeedBadge";
+import ForecastPanel from "@/components/ForecastPanel";
+import { HOME_APPRECIATION_RATE } from "@shared/mortgageKiller";
 import { trpc as trpcClient } from "@/lib/trpc";
 import { ExecutiveSummary, GoalsAccelerator, RecommendationSummary, DoNothingBaseline, TaxBracketPanel } from "@/components/ConsumerOutcomeBlocks";
 import { formatTaxCurrency } from "@shared/taxBracketEngine";
 import { RelatedCalculators } from "@/components/RelatedCalculators";
 import { ComplianceFooter } from "@/components/ComplianceFooter";
+import { useMacroScenario } from "@/components/MacroScenarioToggle";
+import { applyMacro } from "@shared/macro";
 import { HelocBeforeAfter } from "@/components/rooms/RoomVideoTile";
 
 const fmt = (n: number) => `$${Math.round(n).toLocaleString()}`;
@@ -129,6 +133,10 @@ export default function MortgageKiller() {
     interestReinvestYears: 20,
     clientAge: 45,
   });
+
+  // Global macro scenarios: the toggle panel on the Projection tab shifts the
+  // Monte Carlo return and volatility assumptions and shows its sources.
+  const macro = useMacroScenario();
 
   const [ibbotsonStartYear, setIbbotsonStartYear] = useState(IBBOTSON_DEFAULT_START_YEAR);
   const [useIbbotsonModel, setUseIbbotsonModel] = useState(true);
@@ -337,13 +345,13 @@ export default function MortgageKiller() {
       simulations: 1000,
       years: 30,
       initialValue: result.summary.totalInterestSaved,
-      ...MONTE_CARLO_PRESETS.iulModerate,
+      ...applyMacro({ ...MONTE_CARLO_PRESETS.iulModerate }, macro.adjustments),
       floorReturn: 0,
       capReturn: strategyParams.iulCreditRate,
       annualContribution: result.summary.annualIulPremium || 0,
       contributionGrowthRate: 0,
     });
-  }, [result, showMonteCarlo, strategyParams.iulCreditRate]);
+  }, [result, showMonteCarlo, strategyParams.iulCreditRate, macro.adjustments]);
 
   const [guidedMode, setGuidedMode] = useState(false);
 
@@ -1723,6 +1731,7 @@ export default function MortgageKiller() {
 
           {/* ─── TAB: 30-YEAR CASCADING PROJECTION ──────────────────────── */}
           <TabsContent value="projection" className="space-y-6 mt-6">
+            {macro.panel}
             {result && result.cascadingProjection && (
               <>
                 {/* Before-and-after videos, once the host has them */}
@@ -1757,6 +1766,17 @@ export default function MortgageKiller() {
                     </div>
                   </CardContent>
                 </Card>
+
+                {/* Forecast overlay (off by default): the housing engine's current forecast applied to this
+                    projection's home value over 20 / 30 / 40 years. When the ZIP-history toggle is on the page's
+                    own appreciation path is already a forecast, so the flat-rate preservation is skipped. */}
+                <ForecastPanel
+                  domain="housing"
+                  engine="mortgageKiller"
+                  title="Apply the current housing forecast to the home value"
+                  base={result.cascadingProjection.map((r: any) => ({ year: r.year, value: r.homeValue }))}
+                  baseRate={evidence.useZipAppreciation ? undefined : HOME_APPRECIATION_RATE}
+                />
 
                 {/* Net Worth Growth Graph */}
                 <Card>
