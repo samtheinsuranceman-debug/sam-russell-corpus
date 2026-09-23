@@ -39,6 +39,8 @@ export const TEXTURE_HEADPHONES_DBFS = -44;
 export const TEXTURE_SPEAKERS_DBFS = -46;
 export const FADE_IN_S = 1;
 export const FADE_OUT_S = 1;
+/** Shortest attack on any voice: no sharp onsets. */
+export const MIN_ATTACK_S = 0.02;
 /** A mute is effectively instant; this short ramp only avoids a click. */
 export const MUTE_RAMP_S = 0.06;
 /** Lowest fundamental used on any device (G3). */
@@ -113,7 +115,7 @@ function makeCue(rng: () => number, index: number, phase: CuePhase, root: number
     kind,
     notes,
     durationS,
-    attackS: kind === "bell" ? 0.01 : 0.04,
+    attackS: kind === "bell" ? MIN_ATTACK_S : 0.04,
     peakDbfs: pick(rng, PEAKS),
     pan: pick(rng, PANS),
     nextInS: Math.round((durationS + rest) * 100) / 100,
