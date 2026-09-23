@@ -99,18 +99,18 @@ export default function LifetimeGuaranteedIncome() {
 
         <ExecutiveSummary
           pageTitle="Lifetime Guaranteed Income"
-          whatItDoes="This calculator models guaranteed lifetime income streams from fixed and indexed annuities, showing you exactly how much monthly income you can lock in for life regardless of market conditions. It factors in your age, premium amount, and state-specific guaranty fund protections."
-          opportunities="Many clients overlook the power of combining multiple annuity types — a MYGA for guaranteed growth with an income annuity for lifetime payments. You may also be missing state guaranty fund coverage that effectively insures your annuity up to $250K-$500K depending on your state."
-          intent="To give you absolute clarity on what guaranteed income looks like — no market risk, no guesswork — so you can build a retirement floor that never drops."
-          takeaway="Guaranteed income eliminates the #1 retirement fear: running out of money. Even a portion of your portfolio in guaranteed income can transform your retirement confidence."
+          whatItDoes="This calculator models lifetime income from fixed and indexed annuity contracts, showing a hypothetical monthly income based on your age, premium and the product's published rider terms. Income guarantees are contractual and subject to the issuing insurer's claims-paying ability."
+          opportunities="Many clients overlook combining annuity types — a MYGA for a fixed rate over its guarantee term with an income annuity for lifetime payments. Each guarantee is backed by the issuing insurer, so compare insurers' financial strength ratings."
+          intent="To give you clarity on what contractual lifetime income looks like — income set by the contract, not by markets, subject to the insurer's claims-paying ability — so you can plan a retirement income floor."
+          takeaway="Lifetime income addresses a leading retirement worry: running out of money. Even a portion of your portfolio in guaranteed income can transform your retirement confidence."
           callToAction="Compare your current projected Social Security + pension income against your needs — then see how an annuity fills the gap."
           followUpQuestions={[
-            "What happens to my guaranteed income if the insurance company fails? (Hint: state guaranty funds)",
+            "How do I check the financial strength of the insurer behind my income guarantee?",
             "Should I ladder multiple annuities across different carriers for maximum protection?",
             "How does guaranteed annuity income interact with my Social Security optimization strategy?",
           ]}
         />
-        <GoalsAccelerator pageName="Lifetime Guaranteed Income" pageContext="Models guaranteed lifetime income from annuities with carrier comparison, state guaranty analysis, and income projections" />
+        <GoalsAccelerator pageName="Lifetime Guaranteed Income" pageContext="Models contractual lifetime income from annuities with carrier comparison and hypothetical income projections" />
         <TaxBracketPanel grossIncome={clientData?.annualIncome || 150000} filingStatus={clientData?.filingStatus || "single"} stateCode={clientData?.state || "TX"} />
         <RecommendationSummary
           headline="Guaranteed income eliminates market risk from your retirement"
@@ -256,15 +256,6 @@ export default function LifetimeGuaranteedIncome() {
                   </SelectContent>
                 </Select>
               </div>
-              <div className="flex items-center gap-3">
-                <div className="p-2 rounded bg-muted/10">
-                  <p className="text-xs text-muted-foreground">Annuity Guaranty Limit</p>
-                  <p className="text-lg font-bold text-amber-400">${(guaranty.annuityLimit / 1000).toFixed(0)}K</p>
-                </div>
-                <Badge variant="outline" className={`text-xs ${guaranty.tier === "Premium" ? "border-emerald-500/50 text-emerald-400" : guaranty.tier === "Enhanced" ? "border-blue-500/50 text-blue-400" : guaranty.tier === "Below Standard" ? "border-red-500/50 text-red-400" : "border-slate-500/50 text-slate-400"}`}>
-                  {guaranty.tier} Protection
-                </Badge>
-              </div>
               <div className="flex items-center">
                 <p className="text-xs text-muted-foreground">
                   <strong>{incomeProducts.length}</strong> income annuity products available in {getStateName(stateCode)}
@@ -380,7 +371,7 @@ export default function LifetimeGuaranteedIncome() {
                       </div>
                       <div className="flex justify-between py-1">
                         <span className="text-muted-foreground">0% Floor Protection</span>
-                        <span className="text-emerald-400">Yes — Never Lose Principal</span>
+                        <span className="text-emerald-400">Yes — no index losses credited (surrender charges apply)</span>
                       </div>
                     </div>
                   </div>
@@ -911,7 +902,7 @@ export default function LifetimeGuaranteedIncome() {
                   <div className="space-y-3 text-sm text-muted-foreground">
                     <p>
                       The Solar Strategy involves Roth converting your IRA/401k funds <strong>before</strong> purchasing the lifetime income annuity. 
-                      This one-time tax event creates a permanent tax-free income stream for life.
+                      The conversion is taxable in the year it happens; after that, qualified Roth distributions (age 59½ and the five-year rule met) are tax-free, including annuity income paid inside the Roth.
                     </p>
                     <div className="space-y-2 mt-3">
                       <div className="flex items-start gap-3">
@@ -920,7 +911,7 @@ export default function LifetimeGuaranteedIncome() {
                         </div>
                         <div>
                           <p className="font-medium text-foreground">Roth Convert Your IRA/401k</p>
-                          <p className="text-xs">Pay taxes once at today's known rates. The conversion process typically adds 22-28% additional growth to your principal base through tax-free compounding.</p>
+                          <p className="text-xs">Pay tax on the conversion at today's known rates. Converting does not add growth; the tax paid reduces what you have, and the benefit is that future qualified growth and income are tax-free.</p>
                         </div>
                       </div>
                       <div className="flex items-start gap-3">
@@ -929,7 +920,7 @@ export default function LifetimeGuaranteedIncome() {
                         </div>
                         <div>
                           <p className="font-medium text-foreground">Purchase Annuity with Roth Funds</p>
-                          <p className="text-xs">Your enhanced principal (original + 22-28% growth) goes into the annuity, creating a larger income base.</p>
+                          <p className="text-xs">The Roth funds buy the annuity inside the Roth IRA; income is contractual, subject to the insurer's claims-paying ability.</p>
                         </div>
                       </div>
                       <div className="flex items-start gap-3">
@@ -937,8 +928,8 @@ export default function LifetimeGuaranteedIncome() {
                           <span className="text-emerald-400 font-bold text-sm">3</span>
                         </div>
                         <div>
-                          <p className="font-medium text-foreground">Receive Tax-Free Income for Life</p>
-                          <p className="text-xs">Every dollar of your guaranteed lifetime income is 100% tax-free. No federal tax, no state tax, no surprises.</p>
+                          <p className="font-medium text-foreground">Receive Lifetime Income Inside the Roth</p>
+                          <p className="text-xs">Qualified Roth distributions are free of federal income tax (IRC §408A(d)); most states follow. Income paid by an annuity outside a Roth is generally taxable.</p>
                         </div>
                       </div>
                     </div>

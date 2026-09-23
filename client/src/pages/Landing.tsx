@@ -6,6 +6,8 @@ import { Link } from "wouter";
 import HomeLeadFactFinder from "@/components/HomeLeadFactFinder";
 import { SiteIdentity } from "@/components/SiteIdentity";
 import manifesto from "@shared/homeManifesto.json";
+import PolicyDisclosureLine from "@/components/PolicyDisclosureLine";
+import { HOMEPAGE_POLICY_KINDS } from "@shared/policyDisclosure";
 import { apiUrl } from "@/lib/api";
 
 // ============================================================
@@ -198,11 +200,21 @@ export default function Landing() {
                 <div className="rc-plate-shade" />
               </div>
               <div className="rc-plate-body container max-w-3xl">
-                {i === 0 && <p className="mb-8 text-[11px] font-extrabold uppercase tracking-[.26em] text-emerald-300/85">Proprietary technologies</p>}
+                {i === 0 && (
+                  <>
+                    <p className="mb-4 text-[11px] font-extrabold uppercase tracking-[.26em] text-emerald-300/85">Proprietary technologies</p>
+                    {/* NAIC Model 570: the claims below describe IUL and annuity engines, so the product is named before the first claim. */}
+                    <div className="mb-8 grid gap-2">
+                      {HOMEPAGE_POLICY_KINDS.map((kind) => (
+                        <PolicyDisclosureLine key={kind} kind={kind} className="flex items-start gap-2 rounded-lg border border-emerald-300/20 bg-black/40 px-3 py-2 text-xs text-white/75" />
+                      ))}
+                    </div>
+                  </>
+                )}
                 <ol className="grid gap-6">
                   {manifesto.claims.slice(plate.from, plate.to).map(({ ref, name, lead, detail }) => (
                     <li key={ref} id={`claim-${ref}`} className="rc-plaque">
-                      <p className="rc-plaque-eyebrow">Technology {ref} <span aria-hidden="true">·</span> Pending <span aria-hidden="true">·</span> Only at RCS</p>
+                      <p className="rc-plaque-eyebrow">Technology {ref} <span aria-hidden="true">·</span> {manifesto.techLabel} <span aria-hidden="true">·</span> Only at RCS</p>
                       <div className="rc-patent-title-wrap mt-3">
                         <h3 className="rc-patent-title text-[clamp(1.5rem,2.9vw,2.5rem)]">{name}</h3>
                         <svg className="rc-filament" viewBox="0 0 1000 14" preserveAspectRatio="none" aria-hidden="true"><path d="M0 7 C 120 1, 240 13, 360 7 S 600 1, 720 7 S 940 13, 1000 7" /></svg>

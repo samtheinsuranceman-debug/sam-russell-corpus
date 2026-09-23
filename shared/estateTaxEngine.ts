@@ -26,7 +26,7 @@ export interface EstateDeductions {
 }
 
 export interface GiftingStrategy {
-  annualGiftsPerRecipient: number; // $18,000 for 2024
+  annualGiftsPerRecipient: number; // default: TAX_RULES_2026.annualGiftExclusion ($19,000 for 2026)
   numberOfRecipients: number;
   yearsOfGifting: number;
   lifetimeGiftsUsed: number;       // amount of lifetime exemption already used

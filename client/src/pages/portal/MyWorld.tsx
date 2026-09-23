@@ -21,7 +21,7 @@ function WealthGarden() {
 ,
     { name: "IUL Redwood", emoji: "🌲", health: 88, age: "2 years", value: "$280K", type: "Protected Growth", stage: 3 },
 ,
-    { name: "MYGA Bamboo", emoji: "🎋", health: 100, age: "1 year", value: "$150K", type: "Guaranteed Growth", stage: 2 },
+    { name: "MYGA Bamboo", emoji: "🎋", health: 100, age: "1 year", value: "$150K", type: "Fixed Contract Rate", stage: 2 },
 ,
     { name: "Annuity Bonsai", emoji: "🌿", health: 72, age: "6 months", value: "$85K", type: "Income Stream", stage: 2 },
 ,

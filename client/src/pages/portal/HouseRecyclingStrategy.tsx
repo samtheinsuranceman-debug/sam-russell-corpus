@@ -1386,7 +1386,7 @@ export default function HouseRecyclingStrategy() {
               showsProjections
               showsPolicyLoans
               showsCashValues
-              additionalText="The 7.4% illustrated rate used in this calculator is within NAIC AG49 compliance limits. Historical index averages are significantly higher than the maximum illustrated rates permitted by regulators. Instead of showing a higher interest rate than allowable, we illustrate a very conservative HELOC rate between 0-4%. HELOC terms, rates, and availability vary by lender and are subject to credit approval. This tool is for educational purposes only and does not constitute financial, tax, or legal advice. Consult with a licensed financial professional before making any decisions."
+              additionalText="The 7.4% rate used in this calculator is an assumed crediting rate you can change, not a guarantee and not a policy illustration. Historical index averages are significantly higher than the maximum illustrated rates permitted by regulators. Instead of showing a higher interest rate than allowable, we illustrate a very conservative HELOC rate between 0-4%. HELOC terms, rates, and availability vary by lender and are subject to credit approval. This tool is for educational purposes only and does not constitute financial, tax, or legal advice. Consult with a licensed financial professional before making any decisions."
             />
           </>
         )}

@@ -178,10 +178,10 @@ export default function AtheneGuaranteedIncome() {
 
         <ExecutiveSummary
           pageTitle="Athene Guaranteed Income"
-          whatItDoes="This calculator models Athene\'s guaranteed income products, showing you exactly how much lifetime income you can lock in based on your premium, age, and selected product features. It includes bonus credits, income rider projections, and state-specific guaranty fund analysis."
-          opportunities="Athene\'s bonus credits on premium can add 5-15% to your accumulation value on day one — money that immediately begins compounding. Many clients also miss the power of deferring income start to dramatically increase their monthly payout."
+          whatItDoes="This calculator models Athene\'s guaranteed income products, showing you exactly how much lifetime income you can lock in based on your premium, age, and selected product features. It includes bonus credits (subject to vesting and surrender schedules) and income rider projections. Income guarantees are subject to Athene's claims-paying ability."
+          opportunities="Athene\'s premium bonus can add to your accumulation value, subject to a vesting or recapture schedule and surrender charges; a bonus product may carry lower caps or longer surrender periods. Many clients also miss the power of deferring income start to dramatically increase their monthly payout."
           intent="To show you the exact guaranteed income floor Athene products can create for your retirement."
-          takeaway="A guaranteed income floor from a highly-rated carrier like Athene means you never have to worry about outliving your money."
+          takeaway="A lifetime income rider pays income for life once elected, subject to Athene's claims-paying ability, so the income cannot run out while the contract is in force."
           callToAction="Compare Athene\'s guaranteed income against your retirement income gap."
           followUpQuestions={[
             "How much more income do I get by deferring my start date by 3-5 years?",

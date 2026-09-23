@@ -75,14 +75,6 @@ const DealRoomPage: React.FC = () => {
           )}
         </div>
 
-        {/* Page Insights Badge */}
-        <div className="mt-6 p-4 bg-[#141925] rounded-lg">
-          <h3 className="text-lg font-medium">Page Insights Score</h3>
-          <div className="flex items-center gap-2 mt-2">
-            <div className="w-16 h-2 bg-[#22c55e] rounded-full"></div>
-            <p className="text-gray-400">90/100 - Excellent</p>
-          </div>
-        </div>
 
         {/* Cross-Tool Integration */}
         <div className="mt-6 p-4 bg-[#141925] rounded-lg">

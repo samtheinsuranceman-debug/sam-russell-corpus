@@ -44,6 +44,12 @@ export interface MortgageKillerInput {
   policyLoanDragRate?: number;
   interestReinvestRate?: number;
   interestReinvestYears?: number;
+  /**
+   * Assumed annuity rate (decimal) for compounding the saved interest over 30 years. The visitor
+   * sets it; default MGA_RATE (6.25%, a real declared 5-year MYGA rate near the top of the market).
+   * No MYGA guarantees a rate for 30 years: terms run 3–10 years, so this is an assumption, not a guarantee.
+   */
+  assumedAnnuityRate?: number;
   clientAge?: number;
 
   // ── Evidence-driven paths (optional). When absent the engine falls back to its flat
@@ -694,7 +700,8 @@ export function calculateInterestSavings(
   currentSchedule: AmortizationRow[],
   acceleratedSchedule: AmortizationRow[],
   reinvestRate: number,
-  _reinvestYears: number
+  _reinvestYears: number,
+  annuityRate: number = MGA_RATE
 ): { totalInterestSaved: number; compoundedValue20yr: number; mgaAnnuityValue30yr: number; yearByYear: InterestSavingsRow[] } {
   const currentTotalInterest = currentSchedule.length > 0
     ? currentSchedule[currentSchedule.length - 1].cumulativeInterest : 0;
@@ -713,7 +720,7 @@ export function calculateInterestSavings(
     const yearSaved = Math.max(0, currentYearInterest - accelYearInterest);
     cumulativeSaved += yearSaved;
     compoundedValue = (compoundedValue + yearSaved) * (1 + reinvestRate);
-    mgaAnnuityValue = (mgaAnnuityValue + yearSaved) * (1 + MGA_RATE);
+    mgaAnnuityValue = (mgaAnnuityValue + yearSaved) * (1 + annuityRate);
     yearByYear.push({
       year: y,
       interestSaved: Math.round(yearSaved),
@@ -744,6 +751,7 @@ export function runMortgageKillerAnalysis(input: MortgageKillerInput): MortgageK
     helocRate = HELOC_RATE_DEFAULT, helocLtvPct = HELOC_LTV_DEFAULT,
     policyLoanPct = LIFE_LOAN_PCT, policyLoanDragRate = 0.05,
     interestReinvestRate = 0.07, interestReinvestYears = 20, clientAge = 45,
+    assumedAnnuityRate = MGA_RATE,
   } = input;
 
   // helocDrawPct is accepted for backward compat but not used in v4
@@ -792,7 +800,7 @@ export function runMortgageKillerAnalysis(input: MortgageKillerInput): MortgageK
   const accelTotalPayments = accelSchedule.reduce((s, r) => s + r.payment, 0);
 
   // 7. Interest savings
-  const interestSavings = calculateInterestSavings(currentSchedule, accelSchedule, interestReinvestRate, interestReinvestYears);
+  const interestSavings = calculateInterestSavings(currentSchedule, accelSchedule, interestReinvestRate, interestReinvestYears, assumedAnnuityRate);
 
   // 8. Summary
   const currentPayoffMonths = currentSchedule.length;

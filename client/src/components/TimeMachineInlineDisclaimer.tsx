@@ -2,8 +2,8 @@ import { Info } from "lucide-react";
 
 /**
  * Compact inline disclaimer for pages that show Time Machine overlay data.
- * Explains that TM values use a hypothetical pre-existing account at AG 49
- * compliant rates — not non-compliant illustrated rates.
+ * Explains that TM values use a hypothetical pre-existing account at an
+ * assumed crediting rate. It is not a carrier illustration.
  */
 export function TimeMachineInlineDisclaimer() {
   return (
@@ -11,7 +11,7 @@ export function TimeMachineInlineDisclaimer() {
       <Info className="w-4 h-4 mt-0.5 shrink-0 text-amber-400" />
       <div className="space-y-1">
         <p className="font-semibold text-amber-300 text-[11px]">
-          Time Machine Method — AG 49 Compliance Notice
+          Time Machine Method — What These Values Are
         </p>
         <p className="leading-relaxed">
           Time Machine (gold) values represent a <strong className="text-amber-300">hypothetical pre-existing account</strong> large

@@ -12,6 +12,7 @@ import { useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { ADVISOR_MODES, HORIZON_FACTS, horizonQuestion, type AdvisorMode } from "@shared/advisorModes";
+import AiAnswerNote from "@/components/AiAnswerNote";
 
 // The chips a person picks from; "The next twenty years" is offered after an answer, with permission, not picked cold.
 const PICKABLE_MODES = ADVISOR_MODES.filter((m) => m.id !== "horizon");
@@ -261,6 +262,7 @@ export default function VoiceAdvisor() {
               {mailStatus && <p className="mt-2 text-xs text-sky-200">{mailStatus}</p>}
             </div>
           )}
+          <AiAnswerNote />
           <p className="mt-2 text-[10px] leading-tight text-slate-500">
             Projections and education only — not tax, legal, or investment advice. Speech is transcribed in your browser; only the text of your question and saved profile are sent to the advisor.
           </p>

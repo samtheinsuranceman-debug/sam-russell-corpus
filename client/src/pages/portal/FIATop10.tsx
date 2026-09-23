@@ -133,7 +133,6 @@ export default function FIATop10() {
   const [selectedScenario, setSelectedScenario] = useState("base");
   const [highlightTop, setHighlightTop] = useState(true);
   const [colorScheme, setColorScheme] = useState("default");
-  const [showDisclaimers, setShowDisclaimers] = useState(true);
   const [exportFormat, setExportFormat] = useState("pdf");
 
   const allProducts = useMemo(() => getTopProductsForState(stateCode, "growth", 20), [stateCode]);
@@ -185,7 +184,7 @@ export default function FIATop10() {
       toast.success(
         `Updated! Showing top ${newProducts.length} accumulation annuities for ${getStateName(pendingState)}`,
         {
-          description: `Ranked by growth potential • ${newProducts[0]?.carrier} leads with ${newProducts[0]?.participationRate || 0}% participation`,
+          description: `Listed in the site's own illustrative order (not a rating or recommendation). Rates from the Feb 2026 source; confirm current rates with each insurer.`,
           duration: 4000,
         }
       );
@@ -300,10 +299,10 @@ export default function FIATop10() {
         <div className="flex justify-between items-start">
           <div>
             <h1 className="text-3xl font-bold flex items-center gap-2">
-              <Award className="w-8 h-8 text-amber-400" /> Top 10 Fixed Index Annuities — Accumulation
+              <Award className="w-8 h-8 text-amber-400" /> Fixed Index Annuities — Accumulation Comparison
             </h1>
             <p className="text-muted-foreground mt-2 text-lg">
-              Comprehensive state-specific FIA rankings for maximum growth potential
+              Russell Capital Systems' own illustrative comparison of fixed index annuity contracts available in your state. The order is ours, not an independent rating or a recommendation; caps and participation rates are from a Feb 2026 source, change monthly, and are set by each insurer. Projections are hypothetical, at the index return you assume.
             </p>
           </div>
           <div className="flex gap-2">
@@ -323,7 +322,7 @@ export default function FIATop10() {
                   ]
                 },
                 {
-                  title: "Top Recommended Products",
+                  title: "Products Compared (illustrative order, not a recommendation)",
                   items: projections.slice(0, 3).map((p, i) => ({
                     label: `#${i + 1} ${p.product.carrier}`,
                     value: `${p.product.product} (Projected: ${fmt(p.finalValue)})`
@@ -914,15 +913,15 @@ export default function FIATop10() {
           </TabsContent>
 
           <TabsContent value="compliance" className="space-y-6 mt-6">
-            {/* Table 6: State Guaranty & Compliance */}
-            <h3 className="text-xl font-semibold">State Compliance & Guaranty Association</h3>
+            {/* Table 6: State compliance. The guaranty-association column was removed 23 Sep 2026:
+                N.C. Gen. Stat. § 58-62-86 bars using the association in the sale of an annuity. */}
+            <h3 className="text-xl font-semibold">State Compliance</h3>
             <Card>
               <CardContent className="p-0">
                 <Table>
                   <TableHeader>
                     <TableRow>
                       <TableHead>State</TableHead>
-                      <TableHead>Guaranty Limit (Annuity)</TableHead>
                       <TableHead>Free Look Period</TableHead>
                       <TableHead>Suitability Standard</TableHead>
                       <TableHead className="text-right">Required Forms</TableHead>
@@ -931,8 +930,7 @@ export default function FIATop10() {
                   <TableBody>
                     <TableRow>
                       <TableCell className="font-medium">{getStateName(stateCode)}</TableCell>
-                      <TableCell className="text-emerald-400 font-bold">{fmt(guaranty?.annuityLimit || 250000)}</TableCell>
-                      <TableCell>30 Days (Senior)</TableCell>
+                      <TableCell>Varies by state and age; see the contract</TableCell>
                       <TableCell>NAIC Best Interest</TableCell>
                       <TableCell className="text-right">
                         <Badge variant="secondary">3 Required</Badge>
@@ -940,7 +938,6 @@ export default function FIATop10() {
                     </TableRow>
                     <TableRow>
                       <TableCell className="font-medium">Federal</TableCell>
-                      <TableCell>N/A</TableCell>
                       <TableCell>N/A</TableCell>
                       <TableCell>DOL PTE 2020-02</TableCell>
                       <TableCell className="text-right">
@@ -1017,11 +1014,6 @@ export default function FIATop10() {
           <Button variant="secondary"><Share2 className="w-4 h-4 mr-2" /> Share</Button>
           <Button variant="secondary"><Printer className="w-4 h-4 mr-2" /> Print</Button>
           
-          {/* Interactive 30: Disclaimer Toggle */}
-          <div className="flex items-center gap-2 ml-auto">
-            <Label>Show Disclaimers</Label>
-            <Switch checked={showDisclaimers} onCheckedChange={setShowDisclaimers} />
-          </div>
         </div>
 
       </div>

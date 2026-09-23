@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { TAX_RULES_2026 } from "@shared/taxRules";
 
 export default function DivorceILITStrategyPage() {
   const [activeTab, setActiveTab] = useState(0);
@@ -130,7 +131,7 @@ export default function DivorceILITStrategyPage() {
               Implementing an ILIT for divorce protection follows a structured roadmap to ensure legal compliance and financial efficacy. Step one involves a comprehensive assessment with Russell Capital Systems’ AI Strategy Engine, which analyzes your asset portfolio, income, and family dynamics to recommend the optimal trust type (Traditional ILIT, SLAT, or PLAT). Step two engages a qualified attorney to draft the irrevocable trust, incorporating provisions for divorce protection, such as treating an ex-spouse as predeceased. Step three sees the trustee purchase an IUL policy, often with a death benefit tailored to your estate planning goals.
             </p>
             <p className="mb-4">
-              In step four, the trust is funded via annual exclusion gifts—$18,000 per person in 2024—or lifetime exemption amounts, ensuring premiums are paid without triggering gift taxes. Step five requires sending Crummey notices to beneficiaries, qualifying the gifts for exclusion under IRS rules. Over time, in step six, the cash value builds tax-free within the trust, potentially reaching $500,000 on a $1 million policy over 20 years. Finally, in step seven, distributions for HEMS needs become available to designated beneficiaries, providing flexibility while maintaining asset protection.
+              In step four, the trust is funded via annual exclusion gifts—{`$${TAX_RULES_2026.annualGiftExclusion.toLocaleString()} per recipient in ${TAX_RULES_2026.taxYear}, Source: IRS Rev. Proc. 2025-32`}—or lifetime exemption amounts, ensuring premiums are paid without triggering gift taxes. Step five requires sending Crummey notices to beneficiaries, qualifying the gifts for exclusion under IRS rules. Over time, in step six, the cash value builds tax-deferred within the trust (before policy charges), potentially reaching $500,000 on a $1 million policy over 20 years. Finally, in step seven, distributions for HEMS needs become available to designated beneficiaries, providing flexibility while maintaining asset protection.
             </p>
             <p>
               Russell Capital Systems guides you through each step, using our AI Engine to model funding strategies, growth projections, and distribution impacts. Our platform ensures alignment with IRS regulations like the three-year lookback rule (IRC 2035) while optimizing for divorce and creditor protection. Partner with us to execute an ILIT strategy that secures your wealth against life’s uncertainties.

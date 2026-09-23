@@ -2,6 +2,7 @@ import { useState, useMemo } from "react";
 import { Link } from "wouter";
 import { Search, ChevronDown, ChevronUp, Zap, Tag, ArrowRight, User, DollarSign, TrendingUp } from "lucide-react";
 import strategiesData from "@/data/strategies.json";
+import HypotheticalCaseBanner from "@/components/HypotheticalCaseBanner";
 
 function getImpactColor(score: number) {
   if (score >= 12) return "text-red-400 bg-red-500/10 border-red-500/20";
@@ -43,6 +44,7 @@ export default function SecretSecrets() {
 
   return (
     <div className="space-y-8">
+      <HypotheticalCaseBanner />
       {/* Header */}
       <div className="relative overflow-hidden rounded-2xl border border-emerald-500/20 bg-gradient-to-br from-[#1a0d2e] via-[#0a1628] to-[#1a0d2e] p-8">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-emerald-500/10 via-transparent to-transparent" />

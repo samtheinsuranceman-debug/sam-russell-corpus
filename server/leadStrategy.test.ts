@@ -43,7 +43,10 @@ describe("lead strategy engine (illustrative, advisor-only)", () => {
   it("the visitor-facing teaser carries the pillars but no dollar figures", () => {
     const a = computeLeadAnalysis({ w2Income: 400_000, taxDeferredSelf: 500_000, homeEquity: 300_000, mortgageInterestOnlyMonthly: 3_000, mortgageYearsRemaining: 20 });
     expect(a.teaser.pillars.length).toBe(5);
-    expect(a.teaser.headline.toLowerCase()).toContain("divorce-proof");
+    expect(a.teaser.headline.toLowerCase()).toContain("divorce");
+    // Model 570: name the product; no absolute protection promise.
+    expect(a.teaser.headline.toLowerCase()).toContain("life insurance");
+    expect(a.teaser.headline.toLowerCase()).not.toContain("divorce-proof");
     const teaserText = JSON.stringify(a.teaser);
     // No large dollar numbers leaked into the qualitative teaser.
     expect(teaserText).not.toMatch(/\d{4,}/);

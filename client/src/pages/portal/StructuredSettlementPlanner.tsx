@@ -193,7 +193,7 @@ const StructuredSettlementPlanner = () => {
               </div>
               <div className="text-[#7a95b8] text-sm space-y-2">
                 <p>Evaluate factoring company buyout offers against long-term payment value.</p>
-                <p>Consider annuity provider credit ratings and state guaranty fund limits.</p>
+                <p>Consider the annuity provider's financial strength ratings.</p>
               </div>
             </div>
           )}
@@ -202,7 +202,7 @@ const StructuredSettlementPlanner = () => {
         {/* Additional Info */}
         <div className="mt-6 bg-[#0d1526] p-4 rounded-lg border border-[#1e3a5f] text-[#7a95b8] text-sm">
           <p>Commutation rights and factoring options should be reviewed with legal counsel.</p>
-          <p>State insurance guaranty funds may provide protection up to statutory limits.</p>
+          <p>Payments are backed by the claims-paying ability of the issuing insurance company.</p>
         </div>
       </div>
       <PageInsights section="StructuredSettlementPlanner" />

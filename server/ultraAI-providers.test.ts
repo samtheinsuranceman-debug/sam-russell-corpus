@@ -38,9 +38,12 @@ describe("Ultra AI orchestrator — eleven AI advisors", () => {
     expect(src).toContain("NO specific dollar amounts");
     expect(src).toContain("NO calculation");
     // …while still naming the strategy pillars the concierge may describe.
-    for (const pillar of ["accelerated mortgage payoff", "Roth-conversion", "oil & gas", "Index Universal Life", "divorce-proof"]) {
+    for (const pillar of ["accelerated mortgage payoff", "Roth-conversion", "oil & gas", "indexed universal life insurance", "divorce"]) {
       expect(src, pillar).toContain(pillar);
     }
+    // Model 570 / G.S. 58-63-15(1): no absolute protection promise, and the product named as life insurance.
+    expect(src).not.toContain("divorce-proof");
+    expect(src).toContain("AI_COMPLIANCE_FLOOR");
     // Not tax/legal/investment advice must be stated.
     expect(src).toContain("not tax, legal, or investment advice");
   });

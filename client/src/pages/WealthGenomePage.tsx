@@ -126,7 +126,7 @@ export default function WealthGenomePage() {
         )}
 
         <div className={`${CARD} p-6`}>
-          <h2 className="text-lg font-semibold text-white">The shape is the diagnosis. This is the formulary.</h2>
+          <h2 className="text-lg font-semibold text-white">The shape is the reading. This is the strategy list.</h2>
           <p className="mt-1 max-w-[62ch] text-sm leading-relaxed text-slate-400">
             Twenty-four strategies scored against this configuration — property, policies, credit arbitrage, tax,
             markets — each with the confidence beside the score, the gates shown separately from the score, and an

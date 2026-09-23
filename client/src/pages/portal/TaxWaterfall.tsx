@@ -24,7 +24,7 @@ import { PlatformEnhancements } from "@/components/PlatformEnhancements";
 import { ExecutiveSummary, GoalsAccelerator, RecommendationSummary, DoNothingBaseline, TaxBracketPanel } from "@/components/ConsumerOutcomeBlocks";
 import { IRMAA_2026, PART_B_STANDARD_MONTHLY_2026, irmaaTierIndex, type IrmaaFiling } from "@shared/irmaa";
 import { formatTaxCurrency, federalBrackets } from "@shared/taxBracketEngine";
-import { LTCG_THRESHOLDS_2026, ltcgBrackets2026 } from "@shared/taxRules";
+import { LTCG_THRESHOLDS_2026, ltcgBrackets2026, TAX_RULES_2026 } from "@shared/taxRules";
 import { uniformLifetimeDivisor } from "@shared/uniformLifetimeTable";
 import { RelatedCalculators } from "@/components/RelatedCalculators";
 import { ComplianceFooter } from "@/components/ComplianceFooter";
@@ -509,7 +509,7 @@ export default function TaxWaterfall() {
               {deductions.standardOrItemized === "itemized" && (
                 <>
                   <div><Label className="text-xs">Mortgage Interest</Label><NumberInput value={deductions.mortgageInterest} onChange={(v) => updateDeduction("mortgageInterest", v)} className="h-8 text-sm" min={0} step={1000} /></div>
-                  <div><Label className="text-xs">SALT (capped $10K)</Label><NumberInput value={deductions.saltDeduction} onChange={(v) => updateDeduction("saltDeduction", v)} className="h-8 text-sm" min={0} step={1000} /></div>
+                  <div><Label className="text-xs">{`SALT paid (${TAX_RULES_2026.taxYear} cap $${TAX_RULES_2026.salt.cap.toLocaleString()}, phasing down to $${TAX_RULES_2026.salt.floor.toLocaleString()} above $${TAX_RULES_2026.salt.phaseDownStartMagi.toLocaleString()} MAGI)`}</Label><NumberInput value={deductions.saltDeduction} onChange={(v) => updateDeduction("saltDeduction", v)} className="h-8 text-sm" min={0} step={1000} /></div>
                   <div><Label className="text-xs">Charitable Giving</Label><NumberInput value={deductions.charitableGiving} onChange={(v) => updateDeduction("charitableGiving", v)} className="h-8 text-sm" min={0} step={1000} /></div>
                 </>
               )}
@@ -532,7 +532,7 @@ export default function TaxWaterfall() {
               <div className="p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 space-y-2">
                 <Label className="text-xs font-semibold text-emerald-400 flex items-center gap-1"><PiggyBank className="w-3 h-3" /> IUL Tax-Free Income</Label>
                 <NumberInput value={iulTaxFreeIncome} onChange={setIulTaxFreeIncome} className="h-8 text-sm" min={0} step={5000} />
-                <p className="text-[10px] text-muted-foreground">Policy loans are not taxable income. This amount adds to take-home without increasing your tax bill.</p>
+                <p className="text-[10px] text-muted-foreground">Policy loans are generally not taxable income if the policy is not a modified endowment contract (MEC) and stays in force; loan interest accrues, and a lapse with a loan outstanding can be taxable. Hypothetical, based on your facts.</p>
               </div>
               {result && (
                 <div className="p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-xs space-y-1">
@@ -857,12 +857,12 @@ export default function TaxWaterfall() {
                         </div>
                       </div>
                       <div className="p-4 rounded-lg bg-gradient-to-r from-emerald-500/10 to-emerald-500/10 border border-emerald-500/20">
-                        <p className="text-sm font-semibold mb-2">Why IUL Policy Loans Win</p>
+                        <p className="text-sm font-semibold mb-2">Why IUL Policy Loans Can Help (Hypothetical)</p>
                         <ul className="text-xs text-muted-foreground space-y-1.5">
                           <li className="flex items-start gap-1.5"><span className="text-emerald-400 mt-0.5">&#x2713;</span> To receive {fmt(result.iulComparison.iulTaxFreeAmount)} tax-free, you would need to earn {fmt(result.iulComparison.taxableEquivalent)} in taxable income</li>
-                          <li className="flex items-start gap-1.5"><span className="text-emerald-400 mt-0.5">&#x2713;</span> That is {fmt(result.iulComparison.taxSaved)} per year in taxes you never pay</li>
+                          <li className="flex items-start gap-1.5"><span className="text-emerald-400 mt-0.5">&#x2713;</span> That is {fmt(result.iulComparison.taxSaved)} per year in taxes not owed on that income, if the policy is not a MEC and stays in force</li>
                           <li className="flex items-start gap-1.5"><span className="text-emerald-400 mt-0.5">&#x2713;</span> Over 20 years of retirement: {fmt(result.iulComparison.taxSaved * 20)} in total tax savings</li>
-                          <li className="flex items-start gap-1.5"><span className="text-emerald-400 mt-0.5">&#x2713;</span> No contribution limits, no early withdrawal penalties, no income restrictions</li>
+                          <li className="flex items-start gap-1.5"><span className="text-emerald-400 mt-0.5">&#x2713;</span> No income restrictions and no IRS dollar cap on premiums (within IRC §7702/7702A limits); policy charges and loan interest apply</li>
                           <li className="flex items-start gap-1.5"><span className="text-emerald-400 mt-0.5">&#x2713;</span> Death benefit passes to heirs income-tax-free</li>
                         </ul>
                       </div>
@@ -884,7 +884,7 @@ export default function TaxWaterfall() {
                         <AlertTriangle className="w-5 h-5 text-red-400 mt-0.5 shrink-0" />
                         <div>
                           <p className="text-sm font-medium text-red-400">The RMD Tax Bomb</p>
-                          <p className="text-xs text-muted-foreground mt-1">At age 73, the IRS forces withdrawals from traditional IRAs. As your balance grows at 6%, these forced distributions can push you into the 32-37% bracket — far higher than if you'd converted to Roth or used IUL earlier.</p>
+                          <p className="text-xs text-muted-foreground mt-1">At your required beginning age (73, or 75 if you were born in 1960 or later, under SECURE 2.0), the IRS requires withdrawals from traditional IRAs. As your balance grows at 6%, these forced distributions can push you into the 32-37% bracket — far higher than if you'd converted to Roth or used IUL earlier.</p>
                         </div>
                       </div>
                     </div>
@@ -1087,7 +1087,7 @@ export default function TaxWaterfall() {
                       <div className="p-3 rounded-lg bg-green-500/10">
                         <p className="text-xs text-green-400">IUL Advantage</p>
                         <p className="text-lg font-bold">0% Tax</p>
-                        <p className="text-xs text-muted-foreground">Policy loans avoid CG + NIIT entirely</p>
+                        <p className="text-xs text-muted-foreground">Non-MEC policy loans kept in force are not taxed as capital gains or NIIT</p>
                       </div>
                     </div>
                   </CardContent>

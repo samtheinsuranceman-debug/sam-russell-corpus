@@ -1,7 +1,7 @@
 // ============================================================
 // WHAT THE GENOME SAYS TO DO — /portal/genome-strategies.
 //
-// The solid on the Wealth Genome page is a diagnosis. This is the formulary:
+// The solid on the Wealth Genome page is a reading. This is the strategy list:
 // every strategy this firm can evaluate, scored against the configuration,
 // with the confidence shown beside every score and the gates shown separately
 // from the scores.
@@ -258,7 +258,7 @@ export default function GenomeStrategies() {
             What the Genome Says to Do
           </h1>
           <p className="mt-3 max-w-[66ch] text-[15px] leading-relaxed text-slate-300">
-            The solid on the genome page is a diagnosis. This is the formulary: every strategy this firm can
+            The solid on the genome page is a reading. This is the strategy list: every strategy this firm can
             evaluate, scored against the configuration, with the confidence shown beside every score — because a
             high fit built on four answers is a prompt to ask more questions, not a plan.
           </p>

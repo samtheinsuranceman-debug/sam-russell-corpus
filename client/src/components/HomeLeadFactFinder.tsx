@@ -21,7 +21,10 @@ import type { LiquidTaxability } from "@shared/leadTypes";
 //       substantiate it and it fits FINRA/state advertising rules.
 //   "illustrative"   — the compliance-safe variant with no client-results
 //       claim. Switch to this if the team prefers not to make that claim.
-const DISCLAIMER_MODE: "client-results" | "illustrative" = "client-results";
+// Set to "illustrative" 23 Sep 2026: the "best outcomes we have produced for some of our clients"
+// wording is an atypical-results claim with no stated typical result (16 CFR 255.2; Model 570 §5.Q)
+// and nothing on file substantiates it. Sam may switch back only with that substantiation.
+const DISCLAIMER_MODE: "client-results" | "illustrative" = "illustrative";
 
 const DISCLAIMERS = {
   "client-results":
@@ -187,7 +190,7 @@ export default function HomeLeadFactFinder() {
 
             <label className="mt-5 flex items-start gap-3 rounded-xl border border-emerald-200/20 bg-black/30 p-4 text-xs leading-relaxed text-white/70">
               <input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} className="mt-0.5 h-4 w-4 shrink-0 accent-emerald-400" aria-label="Consent to be contacted and to store this information" />
-              <span>I agree that Russell Capital Systems may store this information and contact me about a planning evaluation. This is general education, not tax, legal, or investment advice, and no figures shown are guarantees.</span>
+              <span>I agree that Russell Capital Systems may store this information and contact me about a planning evaluation. A licensed insurance agent may contact me, and the purpose may include offering life insurance or annuities. This is general education, not tax, legal, or investment advice, and no figures shown are guarantees.</span>
             </label>
 
             {error && <p role="alert" className="mt-3 text-sm text-red-400">{error}</p>}

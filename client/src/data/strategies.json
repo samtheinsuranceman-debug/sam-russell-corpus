@@ -65,7 +65,7 @@
       {
         "stepNumber": 4,
         "strategyName": "The Infinite IUL Arbitrage Vortex",
-        "action": "Execute a $3,500,000 HELOC draw to further fund IUL investments under IRC \u00a7163(h) for interest deductions, combined with a DST investment to defer taxes on real estate gains under IRC \u00a71031. Continue the 6-year principal-only mortgage repayment schedule, ensuring the strategy layers with prior steps to maximize the arbitrage vortex effect on the family's wealth.",
+        "action": "Execute a $3,500,000 HELOC draw to further fund IUL premiums under IRC \u00a7163(h) for interest deductions, combined with a DST investment to defer taxes on real estate gains under IRC \u00a71031. Continue the 6-year principal-only mortgage repayment schedule, ensuring the strategy layers with prior steps to maximize the arbitrage vortex effect on the family's wealth.",
         "dollarAmount": 3500000,
         "taxSaved": 350000,
         "netWorthBefore": 14771854,
@@ -160,7 +160,7 @@
       {
         "stepNumber": 4,
         "strategyName": "PPLI Shadow Empire Builder - Cash Balance Plan Layer",
-        "action": "Utilize $2,500,000 from HELOC proceeds to enhance IUL investments and implement a cash balance pension plan under IRC \u00a7412(e) for tax-deductible contributions, continuing principal-only mortgage reduction. This integrates with IRC \u00a77702 for life insurance compliance, projecting tax savings by deferring income on the plan's growth.",
+        "action": "Utilize $2,500,000 from HELOC proceeds to enhance IUL premiums and implement a cash balance pension plan under IRC \u00a7412(e) for tax-deductible contributions, continuing principal-only mortgage reduction. This integrates with IRC \u00a77702 for life insurance compliance, projecting tax savings by deferring income on the plan's growth.",
         "dollarAmount": 2500000,
         "taxSaved": 350000,
         "netWorthBefore": 12518355,
@@ -276,7 +276,7 @@
       {
         "stepNumber": 5,
         "strategyName": "Annuity Roth Conversion Catapult",
-        "action": "Draw $10,500,000 from HELOC for expanded IUL investments tied to Roth conversions, using IRC \u00a772(e) and \u00a77702 in conjunction with QSBS under IRC \u00a71202 for 100% gain exclusion. This positions the family's $49M net worth for long-term tax-free growth through business stock. Initiate further principal-only mortgage payback of $900,000 per IRC \u00a7163(h) on a 6-year plan.",
+        "action": "Draw $10,500,000 from HELOC for expanded IUL premiums tied to Roth conversions, using IRC \u00a772(e) and \u00a77702 in conjunction with QSBS under IRC \u00a71202 for 100% gain exclusion. This positions the family's $49M net worth for long-term tax-free growth through business stock. Initiate further principal-only mortgage payback of $900,000 per IRC \u00a7163(h) on a 6-year plan.",
         "dollarAmount": 10500000,
         "taxSaved": 900000,
         "netWorthBefore": 53481057,
@@ -413,7 +413,7 @@
       {
         "stepNumber": 4,
         "strategyName": "SLAT Insurance Wrapper Dominator",
-        "action": "Execute a HELOC draw of $750,000 to bolster IUL investments under IRC \u00a77702, and layer in a Grantor Retained Annuity Trust (GRAT) for $4,000,000 of assets to freeze gift taxes under IRC \u00a72702. This step transfers appreciating real estate interests while retaining annuity payments, building on the family's Florida developments. Accelerate mortgage principal reduction to maintain equity above 50%, citing IRC \u00a7163(h) for interest deductions.",
+        "action": "Execute a HELOC draw of $750,000 to bolster IUL premiums under IRC \u00a77702, and layer in a Grantor Retained Annuity Trust (GRAT) for $4,000,000 of assets to freeze gift taxes under IRC \u00a72702. This step transfers appreciating real estate interests while retaining annuity payments, building on the family's Florida developments. Accelerate mortgage principal reduction to maintain equity above 50%, citing IRC \u00a7163(h) for interest deductions.",
         "dollarAmount": 3500000,
         "taxSaved": 350000,
         "netWorthBefore": 18514478,
@@ -640,7 +640,7 @@
       {
         "stepNumber": 4,
         "strategyName": "FIA Solar Strategy Eclipse",
-        "action": "Draw $2,000,000 from HELOC to expand IUL investments within a DST for real estate holdings, allowing for tax-deferred exchanges and depreciation benefits. Governed by IRC \u00a71031 for like-kind exchanges and IRC \u00a7163(h) for interest deductions, the DST structure under IRC \u00a77701 enhances asset segmentation. This maneuver boosts net worth while deferring capital gains taxes through the integrated strategy.",
+        "action": "Draw $2,000,000 from HELOC to expand IUL premiums within a DST for real estate holdings, allowing for tax-deferred exchanges and depreciation benefits. Governed by IRC \u00a71031 for like-kind exchanges and IRC \u00a7163(h) for interest deductions, the DST structure under IRC \u00a77701 enhances asset segmentation. This maneuver boosts net worth while deferring capital gains taxes through the integrated strategy.",
         "dollarAmount": 2000000,
         "taxSaved": 220000,
         "netWorthBefore": 16192683,
@@ -754,7 +754,7 @@
       {
         "stepNumber": 3,
         "strategyName": "Charitable Lead Trust Tax Shredder",
-        "action": "Deploy $4,000,000 from the CLAT into a Delaware Statutory Trust (DST) for real estate exchange, deferring gains on $4,000,000 of appreciated assets via IRC \u00a71031 while using a HELOC draw of $1,000,000 to enhance the trust's liquidity for IUL investments. This step minimizes immediate tax on property swaps, achieving tax savings by layering with CLAT and starting principal-only payments, all under IRC \u00a7170 for charitable deductions.",
+        "action": "Deploy $4,000,000 from the CLAT into a Delaware Statutory Trust (DST) for real estate exchange, deferring gains on $4,000,000 of appreciated assets via IRC \u00a71031 while using a HELOC draw of $1,000,000 to enhance the trust's liquidity for IUL premiums. This step minimizes immediate tax on property swaps, achieving tax savings by layering with CLAT and starting principal-only payments, all under IRC \u00a7170 for charitable deductions.",
         "dollarAmount": 4000000,
         "taxSaved": 700000,
         "netWorthBefore": 22638630,
@@ -776,7 +776,7 @@
       {
         "stepNumber": 5,
         "strategyName": "Charitable Lead Trust Tax Shredder",
-        "action": "After deploying over 50% of equity, allocate $6,000,000 from DST proceeds into further IUL investments via a $1,500,000 HELOC draw, enhancing tax-deferred growth under IRC \u00a772(e) and \u00a77702 while continuing principal-only mortgage payments on a 5-year schedule. This step layers QSBS exclusions with CLAT deductions, saving taxes on $6,000,000 of growth and reducing mortgage balance under IRC \u00a7163(h).",
+        "action": "After deploying over 50% of equity, allocate $6,000,000 from DST proceeds into further IUL premiums via a $1,500,000 HELOC draw, enhancing tax-deferred growth under IRC \u00a772(e) and \u00a77702 while continuing principal-only mortgage payments on a 5-year schedule. This step layers QSBS exclusions with CLAT deductions, saving taxes on $6,000,000 of growth and reducing mortgage balance under IRC \u00a7163(h).",
         "dollarAmount": 6000000,
         "taxSaved": 900000,
         "netWorthBefore": 24613715,
@@ -857,7 +857,7 @@
       },
       {
         "stepNumber": 2,
-        "strategyName": "IUL Investment and CLAT Setup",
+        "strategyName": "IUL Premium and CLAT Setup",
         "action": "Use $4,000,000 from the HELOC to enhance the IUL policy and establish a CLAT with assets valued at $4,000,000, providing an immediate charitable deduction under IRC \u00a7170 to offset income and save taxes. This integrates premium financing for the IUL, ensuring the strategy aligns with IRC \u00a772(e) for growth, while the CLAT generates $180,000 in tax savings by transferring assets and reducing estate taxes under IRC \u00a72055.",
         "dollarAmount": 4000000,
         "taxSaved": 180000,
@@ -981,7 +981,7 @@
       {
         "stepNumber": 3,
         "strategyName": "IUL Infinite Banking Fortress",
-        "action": "Execute a $1,800,000 HELOC draw post-50% equity deployment to maximize IUL investments and accelerate principal-only mortgage repayment, incorporating a CRT for income stream and charitable deductions under IRC \u00a7664 to defer taxes on appreciated assets. This step enhances the family's wealth from $10,300,000 by converting equity into tax-advantaged growth, yielding over $300,000 in tax savings through charitable contributions. Align with IRC \u00a77702 to maintain policy status while reducing mortgage balance efficiently.",
+        "action": "Execute a $1,800,000 HELOC draw post-50% equity deployment to maximize IUL premiums and accelerate principal-only mortgage repayment, incorporating a CRT for income stream and charitable deductions under IRC \u00a7664 to defer taxes on appreciated assets. This step enhances the family's wealth from $10,300,000 by converting equity into tax-advantaged growth, yielding over $300,000 in tax savings through charitable contributions. Align with IRC \u00a77702 to maintain policy status while reducing mortgage balance efficiently.",
         "dollarAmount": 1800000,
         "taxSaved": 300000,
         "netWorthBefore": 9834143,
@@ -1083,7 +1083,7 @@
       {
         "stepNumber": 2,
         "strategyName": "NIMCRUT Wealth Accelerator",
-        "action": "Increase HELOC draw beyond 40% equity to $2,500,000 for additional IUL investments, initiating principal-only mortgage payments of $500,000 annually under IRC \u00a7163(h) for deductible interest; integrate a PPLI to enhance tax-free growth, citing IRC \u00a77702 for policy compliance, while layering in a Dynasty Trust to shield assets from estate taxes. This strategy reduces the family's taxable estate and projects $22.5 million net worth growth over five years.",
+        "action": "Increase HELOC draw beyond 40% equity to $2,500,000 for additional IUL premiums, initiating principal-only mortgage payments of $500,000 annually under IRC \u00a7163(h) for deductible interest; integrate a PPLI to enhance tax-free growth, citing IRC \u00a77702 for policy compliance, while layering in a Dynasty Trust to shield assets from estate taxes. This strategy reduces the family's taxable estate and projects $22.5 million net worth growth over five years.",
         "dollarAmount": 3500000,
         "taxSaved": 400000,
         "netWorthBefore": 22635653,
@@ -1127,7 +1127,7 @@
       {
         "stepNumber": 6,
         "strategyName": "NIMCRUT Wealth Accelerator",
-        "action": "Draw $4,800,000 via HELOC to maximize IUL investments for tax-deferred accumulation under IRC \u00a772(e), advancing the principal-only payback to a 6-year schedule per IRC \u00a7163(h); enhance with PPLI for elite tax benefits and fund Captive Insurance to cover family business risks, all nested within the Dynasty Trust to bypass estate taxes under IRC \u00a72601. This step projects a net worth increase by efficiently leveraging equity for wealth compounding.",
+        "action": "Draw $4,800,000 via HELOC to maximize IUL premiums for tax-deferred accumulation under IRC \u00a772(e), advancing the principal-only payback to a 6-year schedule per IRC \u00a7163(h); enhance with PPLI for elite tax benefits and fund Captive Insurance to cover family business risks, all nested within the Dynasty Trust to bypass estate taxes under IRC \u00a72601. This step projects a net worth increase by efficiently leveraging equity for wealth compounding.",
         "dollarAmount": 4800000,
         "taxSaved": 600000,
         "netWorthBefore": 25757671,
@@ -1207,7 +1207,7 @@
       {
         "stepNumber": 3,
         "strategyName": "Opportunity Zone Annuity Vortex",
-        "action": "Deploy $4,100,000 from additional HELOC draws after 50% equity is reached to expand IUL investments and initiate a 6-year principal-only payback schedule, incorporating QPRT for the $3,041,000 home under IRC \u00a72702 to freeze estate taxes; this integrates with Oil & Gas royalties for immediate deductions under IRC \u00a7612. The strategy vortices deferred taxes by holding QPRT assets in opportunity zones, saving $400,000 in estate taxes while the annuity's IRC \u00a772(e) provisions shield income.",
+        "action": "Deploy $4,100,000 from additional HELOC draws after 50% equity is reached to expand IUL premiums and initiate a 6-year principal-only payback schedule, incorporating QPRT for the $3,041,000 home under IRC \u00a72702 to freeze estate taxes; this integrates with Oil & Gas royalties for immediate deductions under IRC \u00a7612. The strategy vortices deferred taxes by holding QPRT assets in opportunity zones, saving $400,000 in estate taxes while the annuity's IRC \u00a772(e) provisions shield income.",
         "dollarAmount": 4100000,
         "taxSaved": 400000,
         "netWorthBefore": 18056099,
@@ -1401,7 +1401,7 @@
       {
         "stepNumber": 3,
         "strategyName": "IDGT Insurance Leverage Machine",
-        "action": "Execute a $5,789,000 HELOC draw for expanded IUL investments, citing IRC \u00a772(e) and \u00a77702 for tax-deferred benefits, while establishing a Family Limited Partnership (FLP) under IRC \u00a7761 to discount assets and reduce gift taxes. This step targets the remaining equity for principal-only payback on a 5-year schedule, integrating Opportunity Zone funds under IRC \u00a71400Z-2 for deferral. Monitor QSBS holdings to maximize exclusions.",
+        "action": "Execute a $5,789,000 HELOC draw for expanded IUL premiums, citing IRC \u00a772(e) and \u00a77702 for tax-deferred benefits, while establishing a Family Limited Partnership (FLP) under IRC \u00a7761 to discount assets and reduce gift taxes. This step targets the remaining equity for principal-only payback on a 5-year schedule, integrating Opportunity Zone funds under IRC \u00a71400Z-2 for deferral. Monitor QSBS holdings to maximize exclusions.",
         "dollarAmount": 5789000,
         "taxSaved": 650000,
         "netWorthBefore": 37596746,
@@ -1456,7 +1456,7 @@
       {
         "stepNumber": 8,
         "strategyName": "IDGT Insurance Leverage Machine",
-        "action": "Execute a $10,000,000 HELOC draw for maximized IUL investments under IRC \u00a772(e) and \u00a77702, layering in Opportunity Zone reinvestments under IRC \u00a71400Z-2 for capital gains deferral. Proceed with principal-only mortgage reduction under IRC \u00a7163(h), while using FLP to shield assets and CLAT for deduction benefits under IRC \u00a7170. This step targets full equity utilization for estate optimization.",
+        "action": "Execute a $10,000,000 HELOC draw for maximized IUL premiums under IRC \u00a772(e) and \u00a77702, layering in Opportunity Zone reinvestments under IRC \u00a71400Z-2 for capital gains deferral. Proceed with principal-only mortgage reduction under IRC \u00a7163(h), while using FLP to shield assets and CLAT for deduction benefits under IRC \u00a7170. This step targets full equity utilization for estate optimization.",
         "dollarAmount": 10000000,
         "taxSaved": 1150000,
         "netWorthBefore": 43932231,
@@ -1523,7 +1523,7 @@
       {
         "stepNumber": 1,
         "strategyName": "Short-Term Rental IUL Loop with Cost Segregation",
-        "action": "Draw a HELOC of $5,500,000 against the home equity to fund IUL premiums, leveraging IRC \u00a772(e) and \u00a77702 for tax-deferred growth within the policy, while applying cost segregation to depreciate short-term rental properties for accelerated deductions under IRC \u00a7168. This step reduces taxable income by allocating $5,500,000 towards IUL investments, enhancing cash value accumulation and providing tax savings through combined strategies.",
+        "action": "Draw a HELOC of $5,500,000 against the home equity to fund IUL premiums, leveraging IRC \u00a772(e) and \u00a77702 for tax-deferred growth within the policy, while applying cost segregation to depreciate short-term rental properties for accelerated deductions under IRC \u00a7168. This step reduces taxable income by allocating $5,500,000 towards IUL premiums, enhancing cash value accumulation and providing tax savings through combined strategies.",
         "dollarAmount": 5500000,
         "taxSaved": 350000,
         "netWorthBefore": 42300000,
@@ -1545,7 +1545,7 @@
       {
         "stepNumber": 3,
         "strategyName": "Short-Term Rental IUL Loop with SCIN",
-        "action": "Execute a HELOC draw of $7,000,000 to bolster IUL investments, referencing IRC \u00a772(e) and \u00a77702 for policy benefits, and implement a Self-Canceling Installment Note (SCIN) under IRC \u00a7453 to sell assets with built-in gains while deferring taxes. By allocating $7,000,000 to IUL via SCIN, this step optimizes estate planning and generates tax savings through deferred recognition.",
+        "action": "Execute a HELOC draw of $7,000,000 to bolster IUL premiums, referencing IRC \u00a772(e) and \u00a77702 for policy benefits, and implement a Self-Canceling Installment Note (SCIN) under IRC \u00a7453 to sell assets with built-in gains while deferring taxes. By allocating $7,000,000 to IUL via SCIN, this step optimizes estate planning and generates tax savings through deferred recognition.",
         "dollarAmount": 7000000,
         "taxSaved": 400000,
         "netWorthBefore": 43711142,
@@ -1904,7 +1904,7 @@
       {
         "stepNumber": 3,
         "strategyName": "HELOC Velocity IUL Arbitrage",
-        "action": "Draw $1,800,000 from HELOC to amplify IUL investments within an ILIT, claiming tax savings from IRC \u00a772(e) and \u00a77702, and integrating cost segregation for real estate assets to boost depreciation deductions under IRC \u00a7168. Layer in oil and gas partnerships for flow-through deductions under IRC \u00a7611, while continuing principal-only mortgage reductions of $250,000, supported by IRC \u00a7163(h) for interest benefits. This step optimizes equity deployment to exceed 50% threshold, enhancing overall tax efficiency.",
+        "action": "Draw $1,800,000 from HELOC to amplify IUL premiums within an ILIT, claiming tax savings from IRC \u00a772(e) and \u00a77702, and integrating cost segregation for real estate assets to boost depreciation deductions under IRC \u00a7168. Layer in oil and gas partnerships for flow-through deductions under IRC \u00a7611, while continuing principal-only mortgage reductions of $250,000, supported by IRC \u00a7163(h) for interest benefits. This step optimizes equity deployment to exceed 50% threshold, enhancing overall tax efficiency.",
         "dollarAmount": 1800000,
         "taxSaved": 400000,
         "netWorthBefore": 10484472,
@@ -2475,7 +2475,7 @@
       {
         "stepNumber": 4,
         "strategyName": "The NIMCRUT Legacy Accelerator",
-        "action": "Execute a $1,200,000 HELOC draw to fund further IUL investments via PPLI, accelerating the principal-only payback and incorporating a CLAT for charitable lead interests under IRC \u00a7170(f)(2), which provides additional deductions and $350,000 in tax savings. This layers with the existing SCIN structure under IRC \u00a72033 to optimize income streams. Continue the mortgage reduction strategy until the balance is significantly lowered.",
+        "action": "Execute a $1,200,000 HELOC draw to fund further IUL premiums via PPLI, accelerating the principal-only payback and incorporating a CLAT for charitable lead interests under IRC \u00a7170(f)(2), which provides additional deductions and $350,000 in tax savings. This layers with the existing SCIN structure under IRC \u00a72033 to optimize income streams. Continue the mortgage reduction strategy until the balance is significantly lowered.",
         "dollarAmount": 1200000,
         "taxSaved": 350000,
         "netWorthBefore": 5588064,
@@ -2917,7 +2917,7 @@
       {
         "stepNumber": 2,
         "strategyName": "Dynasty Trust Insurance Fortress - Mortgage Paydown",
-        "action": "Draw an additional $6,000,000 from HELOC beyond 40% equity to enhance IUL investments, initiating principal-only payback on the $4,298,000 mortgage over 6 years as per IRC \u00a7163(h), thereby deducting interest on qualified residence debt. This action optimizes cash flow for dynasty trust funding, saving on future estate taxes under IRC \u00a72036 related to transfers. Continue equity deployment to fortify the trust structure.",
+        "action": "Draw an additional $6,000,000 from HELOC beyond 40% equity to enhance IUL premiums, initiating principal-only payback on the $4,298,000 mortgage over 6 years as per IRC \u00a7163(h), thereby deducting interest on qualified residence debt. This action optimizes cash flow for dynasty trust funding, saving on future estate taxes under IRC \u00a72036 related to transfers. Continue equity deployment to fortify the trust structure.",
         "dollarAmount": 6000000,
         "taxSaved": 300000,
         "netWorthBefore": 45644793,
@@ -3054,7 +3054,7 @@
       {
         "stepNumber": 1,
         "strategyName": "The Cost Segregation Annuity Amplifier",
-        "action": "Draw a HELOC of $1,200,000, which is scaled up from 40% of equity, and allocate it as a premium for a PPLI policy to amplify tax-deferred growth under IRC \u00a772(e) and \u00a77702, while establishing a SLAT for asset protection. This step leverages cost segregation on the family home to accelerate depreciation deductions, reducing taxable income by $200,000 through the IUL investment. The PPLI will be structured to minimize estate taxes via IRC \u00a77702 exemptions.",
+        "action": "Draw a HELOC of $1,200,000, which is scaled up from 40% of equity, and allocate it as a premium for a PPLI policy to amplify tax-deferred growth under IRC \u00a772(e) and \u00a77702, while establishing a SLAT for asset protection. This step leverages cost segregation on the family home to accelerate depreciation deductions, reducing taxable income by $200,000 through the IUL premium. The PPLI will be structured to minimize estate taxes via IRC \u00a77702 exemptions.",
         "dollarAmount": 1200000,
         "taxSaved": 200000,
         "netWorthBefore": 9600000,
@@ -3821,7 +3821,7 @@
       {
         "stepNumber": 4,
         "strategyName": "Short-Term Rental IUL Infinite Loop",
-        "action": "Draw $9,100,000 from HELOC for expanded IUL investments, utilizing IRC \u00a77702 to maintain policy compliance while making principal-only mortgage payments of $700,000, with deductions under IRC \u00a7163(h); integrate Opportunity Zone investments to defer capital gains taxes as per IRC \u00a71400Z-2, alongside DST structures for real estate.",
+        "action": "Draw $9,100,000 from HELOC for expanded IUL premiums, utilizing IRC \u00a77702 to maintain policy compliance while making principal-only mortgage payments of $700,000, with deductions under IRC \u00a7163(h); integrate Opportunity Zone investments to defer capital gains taxes as per IRC \u00a71400Z-2, alongside DST structures for real estate.",
         "dollarAmount": 9100000,
         "taxSaved": 400000,
         "netWorthBefore": 50754574,
@@ -4295,7 +4295,7 @@
     "steps": [
       {
         "stepNumber": 1,
-        "strategyName": "HELOC Draw and IUL Investment",
+        "strategyName": "HELOC Draw and IUL Premium",
         "action": "Draw a HELOC of $3,408,000 against the home equity to fund an IUL premium, leveraging tax-deferred growth under IRC \u00a772(e) and \u00a77702 for potential arbitrage benefits. This step scales the Tanaka family's $28.4 million net worth by investing in a policy that builds cash value while maintaining mortgage interest deductions under IRC \u00a7163(h). The strategy layers in a 1031 Exchange for potential real estate reinvestment to enhance overall tax savings.",
         "dollarAmount": 3408000,
         "taxSaved": 250000,
@@ -4340,7 +4340,7 @@
       {
         "stepNumber": 5,
         "strategyName": "GRAT Wealth Transfer",
-        "action": "Draw HELOC funds of $7,000,000 to fund a GRAT under IRC \u00a72702, transferring appreciating assets to heirs at a reduced gift tax value while maintaining IUL investments for tax-deferred growth under IRC \u00a772(e). This aggressive step continues principal paydown, integrating Opportunity Zone investments to defer gains and enhance the mortgage arbitrage strategy. The family achieves significant estate tax savings by freezing asset values for future transfers.",
+        "action": "Draw HELOC funds of $7,000,000 to fund a GRAT under IRC \u00a72702, transferring appreciating assets to heirs at a reduced gift tax value while maintaining IUL premiums for tax-deferred growth under IRC \u00a772(e). This aggressive step continues principal paydown, integrating Opportunity Zone investments to defer gains and enhance the mortgage arbitrage strategy. The family achieves significant estate tax savings by freezing asset values for future transfers.",
         "dollarAmount": 7000000,
         "taxSaved": 450000,
         "netWorthBefore": 30547067,
@@ -4833,7 +4833,7 @@
       {
         "stepNumber": 2,
         "strategyName": "The NIMCRUT Income Shredder",
-        "action": "Increase HELOC draw beyond 40% equity to $850,000 for additional IUL investments, allowing for tax-deductible interest under IRC \u00a7163(h) while beginning principal-only mortgage payback on the existing $843,000 balance over 5 years. This action layers premium financing to amplify policy cash value, reducing taxable income. Incorporate oil and gas investments for depletion deductions under IRC \u00a7611 to further optimize tax savings.",
+        "action": "Increase HELOC draw beyond 40% equity to $850,000 for additional IUL premiums, allowing for tax-deductible interest under IRC \u00a7163(h) while beginning principal-only mortgage payback on the existing $843,000 balance over 5 years. This action layers premium financing to amplify policy cash value, reducing taxable income. Incorporate oil and gas investments for depletion deductions under IRC \u00a7611 to further optimize tax savings.",
         "dollarAmount": 850000,
         "taxSaved": 210000,
         "netWorthBefore": 6526108,
@@ -4995,7 +4995,7 @@
       {
         "stepNumber": 6,
         "strategyName": "CLAT-Leveraged Acceleration",
-        "action": "Increase the HELOC draw to $11,000,000 for IUL investments, integrated with a CLAT to direct annuity payments to charity under IRC \u00a7170, while continuing the 6-year principal-only payback on the mortgage. Layer in Opportunity Zone reinvestments for additional tax benefits under IRC \u00a71400Z-2, creating a tax-efficient cycle. The Lockwoods minimize exposure to capital gains and estate taxes through this structure.",
+        "action": "Increase the HELOC draw to $11,000,000 for IUL premiums, integrated with a CLAT to direct annuity payments to charity under IRC \u00a7170, while continuing the 6-year principal-only payback on the mortgage. Layer in Opportunity Zone reinvestments for additional tax benefits under IRC \u00a71400Z-2, creating a tax-efficient cycle. The Lockwoods minimize exposure to capital gains and estate taxes through this structure.",
         "dollarAmount": 11000000,
         "taxSaved": 1000000,
         "netWorthBefore": 51354722,
@@ -5423,7 +5423,7 @@
       {
         "stepNumber": 5,
         "strategyName": "The Short-Term Rental IUL Tax Shredder",
-        "action": "Utilize a $10,000,000 HELOC draw to bolster IUL investments, incorporating CRT for $10,000,000 in charitable contributions and deductions under IRC \u00a7170, combined with cost segregation for immediate tax relief. Advance principal-only payback on the mortgage per IRC \u00a7163(h), achieving tax-deferred growth in IUL under IRC \u00a77702; layer in Opportunity Zone deferrals under IRC \u00a71400Z-2.",
+        "action": "Utilize a $10,000,000 HELOC draw to bolster IUL premiums, incorporating CRT for $10,000,000 in charitable contributions and deductions under IRC \u00a7170, combined with cost segregation for immediate tax relief. Advance principal-only payback on the mortgage per IRC \u00a7163(h), achieving tax-deferred growth in IUL under IRC \u00a77702; layer in Opportunity Zone deferrals under IRC \u00a71400Z-2.",
         "dollarAmount": 10000000,
         "taxSaved": 400000,
         "netWorthBefore": 50956819,
@@ -5570,7 +5570,7 @@
       {
         "stepNumber": 5,
         "strategyName": "The PLAT Multi-Gen Wealth Fortress",
-        "action": "Fund an Irrevocable Life Insurance Trust (ILIT) with $8,000,000 from HELOC proceeds, excluding proceeds from estate taxes under IRC \u00a72042 and \u00a72035, while advancing IUL investments and mortgage principal payments per IRC \u00a7163(h). This step secures multi-generational wealth for the Stirling Family by placing $8M in trust, reducing taxable exposure and citing IRC \u00a72042 for life insurance exclusion.",
+        "action": "Fund an Irrevocable Life Insurance Trust (ILIT) with $8,000,000 from HELOC proceeds, excluding proceeds from estate taxes under IRC \u00a72042 and \u00a72035, while advancing IUL premiums and mortgage principal payments per IRC \u00a7163(h). This step secures multi-generational wealth for the Stirling Family by placing $8M in trust, reducing taxable exposure and citing IRC \u00a72042 for life insurance exclusion.",
         "dollarAmount": 8000000,
         "taxSaved": 650000,
         "netWorthBefore": 34107108,
@@ -5665,7 +5665,7 @@
       {
         "stepNumber": 2,
         "strategyName": "The Section 162 Bonus IUL Amplifier",
-        "action": "Increase HELOC draw to $1,800,000 beyond 40% equity and channel funds into IUL while starting principal-only mortgage repayments under IRC \u00a7163(h) for deductible interest. Layer in a CRT to convert appreciated assets into income streams with charitable deductions under IRC \u00a7664, reducing taxable estate. This action optimizes cash flow for further IUL investments, achieving additional tax savings by deferring gains.",
+        "action": "Increase HELOC draw to $1,800,000 beyond 40% equity and channel funds into IUL while starting principal-only mortgage repayments under IRC \u00a7163(h) for deductible interest. Layer in a CRT to convert appreciated assets into income streams with charitable deductions under IRC \u00a7664, reducing taxable estate. This action optimizes cash flow for further IUL premiums, achieving additional tax savings by deferring gains.",
         "dollarAmount": 1800000,
         "taxSaved": 250000,
         "netWorthBefore": 11931873,
@@ -5698,7 +5698,7 @@
       {
         "stepNumber": 5,
         "strategyName": "The Section 162 Bonus IUL Amplifier",
-        "action": "Draw $3,000,000 via HELOC to maximize IUL investments, utilizing Cash Balance Plan contributions under IRC \u00a7414 for tax-deductible employer contributions. Continue the principal-only payback on a 6-year schedule, integrated with ILIT funding under IRC \u00a72503 to exclude gifts from taxable estate. This step leverages tax-free growth in IUL to offset mortgage reduction costs, enhancing overall net worth.",
+        "action": "Draw $3,000,000 via HELOC to maximize IUL premiums, utilizing Cash Balance Plan contributions under IRC \u00a7414 for tax-deductible employer contributions. Continue the principal-only payback on a 6-year schedule, integrated with ILIT funding under IRC \u00a72503 to exclude gifts from taxable estate. This step leverages tax-free growth in IUL to offset mortgage reduction costs, enhancing overall net worth.",
         "dollarAmount": 3000000,
         "taxSaved": 400000,
         "netWorthBefore": 13300125,
@@ -6130,7 +6130,7 @@
       {
         "stepNumber": 4,
         "strategyName": "Captive Insurance Layering",
-        "action": "Draw an additional $2,000,000 via HELOC to expand IUL investments and establish a captive insurance company insuring family assets, deductible under IRC \u00a7831(b) for premiums paid; continue the principal-only mortgage repayment per the 5-6 year schedule under IRC \u00a7163(h), integrating this with the IUL for tax-efficient risk management. This aggressive move shields income and accelerates wealth growth within the hybrid strategy.",
+        "action": "Draw an additional $2,000,000 via HELOC to expand IUL premiums and establish a captive insurance company insuring family assets, deductible under IRC \u00a7831(b) for premiums paid; continue the principal-only mortgage repayment per the 5-6 year schedule under IRC \u00a7163(h), integrating this with the IUL for tax-efficient risk management. This aggressive move shields income and accelerates wealth growth within the hybrid strategy.",
         "dollarAmount": 2000000,
         "taxSaved": 220000,
         "netWorthBefore": 10247309,
@@ -6221,7 +6221,7 @@
       {
         "stepNumber": 3,
         "strategyName": "The Mortgage Killer Annuity Arbitrage",
-        "action": "Utilize $5,748,000 from HELOC proceeds to enhance IUL investments and initiate principal-only payments, referencing IRC \u00a71042 for potential ESOP integration to defer taxes on stock sales within the family business, while continuing the mortgage payback over 6 years to eliminate debt. This step layers ESOP benefits to the family's vascular surgery practice, optimizing net worth through tax-advantaged employee ownership.",
+        "action": "Utilize $5,748,000 from HELOC proceeds to enhance IUL premiums and initiate principal-only payments, referencing IRC \u00a71042 for potential ESOP integration to defer taxes on stock sales within the family business, while continuing the mortgage payback over 6 years to eliminate debt. This step layers ESOP benefits to the family's vascular surgery practice, optimizing net worth through tax-advantaged employee ownership.",
         "dollarAmount": 5748000,
         "taxSaved": 550000,
         "netWorthBefore": 49570833,
@@ -6336,7 +6336,7 @@
       {
         "stepNumber": 1,
         "strategyName": "ESOP-Annuity Succession Slayer",
-        "action": "Draw a HELOC of $2,092,800, representing 40% of the home equity, to fund IUL premiums, allowing tax-deferred growth on the policy cash value under IRC \u00a772(e) and ensuring compliance with life insurance contract definitions in IRC \u00a77702. This step leverages the family's $23,400,000 net worth to enhance liquidity while minimizing immediate tax liabilities. The IUL investment totals $3,000,000 in premiums paid.",
+        "action": "Draw a HELOC of $2,092,800, representing 40% of the home equity, to fund IUL premiums, allowing tax-deferred growth on the policy cash value under IRC \u00a772(e) and ensuring compliance with life insurance contract definitions in IRC \u00a77702. This step leverages the family's $23,400,000 net worth to enhance liquidity while minimizing immediate tax liabilities. The IUL premium totals $3,000,000 in premiums paid.",
         "dollarAmount": 3000000,
         "taxSaved": 200000,
         "netWorthBefore": 23400000,
@@ -6451,7 +6451,7 @@
       {
         "stepNumber": 1,
         "strategyName": "The Charitable Lead Trust IUL Booster",
-        "action": "Draw a HELOC of $2,340,000, which is 40% of the home equity, to fund an IUL premium within a CLAT for tax-efficient growth and charitable deductions; this leverages the policy's cash value under IRC \u00a772(e) and \u00a77702 for deferred taxation, while the CLAT provides an immediate charitable income tax deduction under IRC \u00a7170(f). The IUL investment aims to grow the Andersen family's assets while minimizing estate taxes through the trust structure.",
+        "action": "Draw a HELOC of $2,340,000, which is 40% of the home equity, to fund an IUL premium within a CLAT for tax-efficient growth and charitable deductions; this leverages the policy's cash value under IRC \u00a772(e) and \u00a77702 for deferred taxation, while the CLAT provides an immediate charitable income tax deduction under IRC \u00a7170(f). The IUL premium aims to grow the Andersen family's assets while minimizing estate taxes through the trust structure.",
         "dollarAmount": 2340000,
         "taxSaved": 250000,
         "netWorthBefore": 25000000,
@@ -6891,7 +6891,7 @@
       {
         "stepNumber": 6,
         "strategyName": "SCIN and IUL Optimization",
-        "action": "Draw $11,400,000 via HELOC for IUL investments and SCIN arrangements, reducing gift and estate taxes under IRC \u00a72701 while leveraging IUL for tax-free withdrawals per IRC \u00a77702. Integrate Opportunity Zone reinvestments to further defer taxes citing IRC \u00a71400Z-2, resulting in $500,000 in tax savings from structured notes and deferred gains. Escalate principal-only payments on the mortgage to align with the overall vortex strategy for complete payoff.",
+        "action": "Draw $11,400,000 via HELOC for IUL premiums and SCIN arrangements, reducing gift and estate taxes under IRC \u00a72701 while leveraging IUL for tax-free withdrawals per IRC \u00a77702. Integrate Opportunity Zone reinvestments to further defer taxes citing IRC \u00a71400Z-2, resulting in $500,000 in tax savings from structured notes and deferred gains. Escalate principal-only payments on the mortgage to align with the overall vortex strategy for complete payoff.",
         "dollarAmount": 11400000,
         "taxSaved": 500000,
         "netWorthBefore": 49087234,
@@ -6986,7 +6986,7 @@
       {
         "stepNumber": 2,
         "strategyName": "The SLAT Multi-Wrapper Dominator",
-        "action": "Draw $1,800,000 from HELOC exceeding 40% equity to enhance IUL investments and begin principal-only mortgage payback over 5 years, utilizing IRC \u00a7163(h) for mortgage interest deductions and \u00a772(e) to exclude policy gains. Layer in dynasty trusts for wealth transfer, ensuring tax-free gifts under IRC \u00a72503(b). This action reduces taxable estate while generating $1,800,000 in leveraged growth.",
+        "action": "Draw $1,800,000 from HELOC exceeding 40% equity to enhance IUL premiums and begin principal-only mortgage payback over 5 years, utilizing IRC \u00a7163(h) for mortgage interest deductions and \u00a772(e) to exclude policy gains. Layer in dynasty trusts for wealth transfer, ensuring tax-free gifts under IRC \u00a72503(b). This action reduces taxable estate while generating $1,800,000 in leveraged growth.",
         "dollarAmount": 1800000,
         "taxSaved": 250000,
         "netWorthBefore": 10385851,
@@ -7289,7 +7289,7 @@
       {
         "stepNumber": 1,
         "strategyName": "The IUL-HELOC Infinite Debt Vortex",
-        "action": "Draw $1,146,400 from the HELOC, representing 40% of the $2,866,000 home equity, and invest it directly as a premium into an Indexed Universal Life (IUL) policy for tax-deferred growth under IRC \u00a772(e) and IRC \u00a77702, while layering in cost segregation on the brewery properties to accelerate depreciation deductions. This step scales to the $33.2 million net worth by allocating $4,000,000 towards IUL investments, potentially saving on taxes through deferred income. Begin principal-only mortgage payments to maintain equity levels, citing IRC \u00a7163(h) for interest deductions.",
+        "action": "Draw $1,146,400 from the HELOC, representing 40% of the $2,866,000 home equity, and invest it directly as a premium into an Indexed Universal Life (IUL) policy for tax-deferred growth under IRC \u00a772(e) and IRC \u00a77702, while layering in cost segregation on the brewery properties to accelerate depreciation deductions. This step scales to the $33.2 million net worth by allocating $4,000,000 towards IUL premiums, potentially saving on taxes through deferred income. Begin principal-only mortgage payments to maintain equity levels, citing IRC \u00a7163(h) for interest deductions.",
         "dollarAmount": 4000000,
         "taxSaved": 211012,
         "netWorthBefore": 33200000,
@@ -7311,7 +7311,7 @@
       {
         "stepNumber": 3,
         "strategyName": "The IUL-HELOC Infinite Debt Vortex",
-        "action": "Execute a HELOC draw of $1,800,000 to fund further IUL investments, incorporating a Charitable Remainder Trust (CRT) on $6,000,000 of appreciated assets for immediate tax deductions under IRC \u00a7664, while maintaining the infinite debt cycle. This $6,500,000 scaled step from the $33.2 million net worth optimizes tax savings by donating brewery shares. Accelerate principal-only mortgage reductions, citing IRC \u00a7163(h) for ongoing interest benefits.",
+        "action": "Execute a HELOC draw of $1,800,000 to fund further IUL premiums, incorporating a Charitable Remainder Trust (CRT) on $6,000,000 of appreciated assets for immediate tax deductions under IRC \u00a7664, while maintaining the infinite debt cycle. This $6,500,000 scaled step from the $33.2 million net worth optimizes tax savings by donating brewery shares. Accelerate principal-only mortgage reductions, citing IRC \u00a7163(h) for ongoing interest benefits.",
         "dollarAmount": 6500000,
         "taxSaved": 230000,
         "netWorthBefore": 34186629,
@@ -7377,7 +7377,7 @@
       {
         "stepNumber": 9,
         "strategyName": "The IUL-HELOC Infinite Debt Vortex",
-        "action": "Increase HELOC draw to $3,100,000 for final IUL investments, layering cost segregation on remaining assets worth $6,300,000 under IRC \u00a7168 for depreciation acceleration. This $6,300,000 step optimizes the $33.2 million net worth through asset restructuring. Complete the principal-only payback nearing the 6-year mark, via IRC \u00a7163(h).",
+        "action": "Increase HELOC draw to $3,100,000 for final IUL premiums, layering cost segregation on remaining assets worth $6,300,000 under IRC \u00a7168 for depreciation acceleration. This $6,300,000 step optimizes the $33.2 million net worth through asset restructuring. Complete the principal-only payback nearing the 6-year mark, via IRC \u00a7163(h).",
         "dollarAmount": 6300000,
         "taxSaved": 290000,
         "netWorthBefore": 38534765,
@@ -7990,7 +7990,7 @@
       {
         "stepNumber": 4,
         "strategyName": "The Opportunity Zone MYGA Compounder",
-        "action": "Utilize a Dynasty Trust to manage $2,000,000 of compounded MYGA returns from Opportunity Zones, drawing HELOC of $900,000 for enhanced IUL investments and continuing principal-only payments; under IRC \u00a72632, this generation-skipping transfer saves $300,000 in taxes, while IRC \u00a772(e) ensures deferred taxation on the IUL gains.",
+        "action": "Utilize a Dynasty Trust to manage $2,000,000 of compounded MYGA returns from Opportunity Zones, drawing HELOC of $900,000 for enhanced IUL premiums and continuing principal-only payments; under IRC \u00a72632, this generation-skipping transfer saves $300,000 in taxes, while IRC \u00a772(e) ensures deferred taxation on the IUL gains.",
         "dollarAmount": 2000000,
         "taxSaved": 300000,
         "netWorthBefore": 8989818,
@@ -8431,7 +8431,7 @@
       {
         "stepNumber": 4,
         "strategyName": "Cost Segregation with Mortgage Reduction",
-        "action": "Draw $3,000,000 from HELOC to boost IUL investments and apply Cost Segregation to real estate assets for accelerated depreciation deductions under IRC \u00a7168, while executing principal-only payback of $300,000 citing IRC \u00a7163(h). This strategy enhances cash flow from depreciation savings integrated with IUL growth under IRC \u00a77702.",
+        "action": "Draw $3,000,000 from HELOC to boost IUL premiums and apply Cost Segregation to real estate assets for accelerated depreciation deductions under IRC \u00a7168, while executing principal-only payback of $300,000 citing IRC \u00a7163(h). This strategy enhances cash flow from depreciation savings integrated with IUL growth under IRC \u00a77702.",
         "dollarAmount": 3000000,
         "taxSaved": 180000,
         "netWorthBefore": 13172242,
@@ -8535,7 +8535,7 @@
       {
         "stepNumber": 5,
         "strategyName": "The IDGT Annuity Discount Dynamo",
-        "action": "Utilize $6,000,000 from HELOC for expanded IUL investments tied to the FLP, accelerating mortgage principal payback by $700,000, while incorporating ESOP shares to defer taxation on $2,000,000 of business assets under IRC \u00a7404. This step maximizes the dynamo effect by reinvesting HELOC proceeds into growth-oriented annuities, enhancing overall tax efficiency through combined entity structures, citing IRC \u00a7409 for ESOP asset transfers.",
+        "action": "Utilize $6,000,000 from HELOC for expanded IUL premiums tied to the FLP, accelerating mortgage principal payback by $700,000, while incorporating ESOP shares to defer taxation on $2,000,000 of business assets under IRC \u00a7404. This step maximizes the dynamo effect by reinvesting HELOC proceeds into growth-oriented annuities, enhancing overall tax efficiency through combined entity structures, citing IRC \u00a7409 for ESOP asset transfers.",
         "dollarAmount": 6000000,
         "taxSaved": 400000,
         "netWorthBefore": 35874279,
@@ -8646,7 +8646,7 @@
       {
         "stepNumber": 2,
         "strategyName": "The Mortgage Killer PPLI Annihilator",
-        "action": "Exceed 40% equity by drawing an additional $1,800,000 from HELOC for IUL investment, initiating principal-only mortgage payments of $3,000,000 under IRC \u00a7163(h) for interest deductions, and layering a 1031 exchange of business assets worth $3,000,000 to defer capital gains taxes under IRC \u00a71031. This action reduces the mortgage balance while enhancing net worth growth, yielding tax savings of $250,000 by avoiding immediate taxation on exchanged properties.",
+        "action": "Exceed 40% equity by drawing an additional $1,800,000 from HELOC for IUL premium, initiating principal-only mortgage payments of $3,000,000 under IRC \u00a7163(h) for interest deductions, and layering a 1031 exchange of business assets worth $3,000,000 to defer capital gains taxes under IRC \u00a71031. This action reduces the mortgage balance while enhancing net worth growth, yielding tax savings of $250,000 by avoiding immediate taxation on exchanged properties.",
         "dollarAmount": 3000000,
         "taxSaved": 250000,
         "netWorthBefore": 22151653,
@@ -8879,7 +8879,7 @@
       {
         "stepNumber": 2,
         "strategyName": "The Charitable Lead Trust IUL Legacy",
-        "action": "Draw $7,500,000 from HELOC exceeding 40% equity to enhance IUL investments, initiating principal-only mortgage payback over 5 years under IRC \u00a7163(h) for deductible interest. Incorporate SCIN to sell assets to the trust at a discounted rate, providing estate tax benefits under IRC \u00a72033. This reduces overall taxable income by layering Roth conversions for qualified distributions.",
+        "action": "Draw $7,500,000 from HELOC exceeding 40% equity to enhance IUL premiums, initiating principal-only mortgage payback over 5 years under IRC \u00a7163(h) for deductible interest. Incorporate SCIN to sell assets to the trust at a discounted rate, providing estate tax benefits under IRC \u00a72033. This reduces overall taxable income by layering Roth conversions for qualified distributions.",
         "dollarAmount": 7500000,
         "taxSaved": 300000,
         "netWorthBefore": 45091073,
@@ -8945,7 +8945,7 @@
       {
         "stepNumber": 8,
         "strategyName": "The Charitable Lead Trust IUL Legacy",
-        "action": "Draw $5,800,000 from HELOC for final IUL investments and SCIN arrangements, deferring recognition of gain under IRC \u00a7453. Enhance Charitable Lead Trust distributions for additional IRC \u00a7170 deductions, while converting $7,000,000 to Roth IRAs under IRC \u00a7408A to secure tax-free growth. Accelerate mortgage principal payback as per the established schedule.",
+        "action": "Draw $5,800,000 from HELOC for final IUL premiums and SCIN arrangements, deferring recognition of gain under IRC \u00a7453. Enhance Charitable Lead Trust distributions for additional IRC \u00a7170 deductions, while converting $7,000,000 to Roth IRAs under IRC \u00a7408A to secure tax-free growth. Accelerate mortgage principal payback as per the established schedule.",
         "dollarAmount": 5800000,
         "taxSaved": 600000,
         "netWorthBefore": 50998776,
@@ -9134,7 +9134,7 @@
       {
         "stepNumber": 1,
         "strategyName": "The BLAT Multi-Gen Tax Terminator",
-        "action": "Draw a HELOC of $714,800 (40% of equity) to fund an IUL premium totaling $1,800,000, allowing for tax-deferred growth on the policy under IRC \u00a772(e) and ensuring it qualifies as life insurance under IRC \u00a77702. This aggressive step leverages the family's landscaping empire cash flow to minimize immediate tax liabilities while building wealth. The IUL investment also integrates with an ILIT for estate tax reduction under IRC \u00a72042.",
+        "action": "Draw a HELOC of $714,800 (40% of equity) to fund an IUL premium totaling $1,800,000, allowing for tax-deferred growth on the policy under IRC \u00a772(e) and ensuring it qualifies as life insurance under IRC \u00a77702. This aggressive step leverages the family's landscaping empire cash flow to minimize immediate tax liabilities while building wealth. The IUL premium also integrates with an ILIT for estate tax reduction under IRC \u00a72042.",
         "dollarAmount": 1800000,
         "taxSaved": 250000,
         "netWorthBefore": 14300000,
@@ -9518,7 +9518,7 @@
       {
         "stepNumber": 3,
         "strategyName": "Cost Segregation on Property",
-        "action": "Apply cost segregation to the $2,494,000 home property, allocating $1,500,000 for accelerated depreciation under IRC \u00a7168 for immediate deductions, integrated with the NIMCRUT to offset income; this yields $250,000 in tax savings by shortening depreciation schedules, while using HELOC proceeds for IUL investments. Principal-only payments continue, reducing the mortgage by another $150,000 over 6 years, bolstering the family's tax-advantaged growth strategy.",
+        "action": "Apply cost segregation to the $2,494,000 home property, allocating $1,500,000 for accelerated depreciation under IRC \u00a7168 for immediate deductions, integrated with the NIMCRUT to offset income; this yields $250,000 in tax savings by shortening depreciation schedules, while using HELOC proceeds for IUL premiums. Principal-only payments continue, reducing the mortgage by another $150,000 over 6 years, bolstering the family's tax-advantaged growth strategy.",
         "dollarAmount": 1500000,
         "taxSaved": 250000,
         "netWorthBefore": 8380790,
@@ -9644,7 +9644,7 @@
       {
         "stepNumber": 4,
         "strategyName": "IUL-HELOC Infinite Arbitrage Engine with SLAT Structuring",
-        "action": "Draw $3,500,000 from HELOC to enhance IUL investments and establish spousal lifetime access trusts under IRC \u00a72503 for gift tax exclusions, integrating with the Cromwell's assets for tax-efficient transfers. Citing IRC \u00a7163(h) for deductible interest, this aggressive step advances principal-only payback and scales to net worth growth, ensuring the strategy continues until mortgage zero while layering SLATs for asset protection. Project tax savings to accelerate wealth compounding.",
+        "action": "Draw $3,500,000 from HELOC to enhance IUL premiums and establish spousal lifetime access trusts under IRC \u00a72503 for gift tax exclusions, integrating with the Cromwell's assets for tax-efficient transfers. Citing IRC \u00a7163(h) for deductible interest, this aggressive step advances principal-only payback and scales to net worth growth, ensuring the strategy continues until mortgage zero while layering SLATs for asset protection. Project tax savings to accelerate wealth compounding.",
         "dollarAmount": 3500000,
         "taxSaved": 400000,
         "netWorthBefore": 14916582,
@@ -9737,7 +9737,7 @@
       {
         "stepNumber": 4,
         "strategyName": "Dynasty Trust PPLI Wrapper Fortress with ESOP",
-        "action": "Expand the strategy by drawing $950,000 from HELOC to bolster IUL investments and continue the 6-year principal-only payback on the remaining mortgage, citing IRC \u00a772(e) for growth exemptions and IRC \u00a71042 for ESOP-related tax deferrals on the surgeon's practice shares. Implement an Employee Stock Ownership Plan (ESOP) to sell business interests tax-free, integrating it with the dynasty trust to defer taxes under IRC \u00a7409, while the PPLI wrapper shields assets. This aggressive step optimizes business exit strategies alongside real estate leverage.",
+        "action": "Expand the strategy by drawing $950,000 from HELOC to bolster IUL premiums and continue the 6-year principal-only payback on the remaining mortgage, citing IRC \u00a772(e) for growth exemptions and IRC \u00a71042 for ESOP-related tax deferrals on the surgeon's practice shares. Implement an Employee Stock Ownership Plan (ESOP) to sell business interests tax-free, integrating it with the dynasty trust to defer taxes under IRC \u00a7409, while the PPLI wrapper shields assets. This aggressive step optimizes business exit strategies alongside real estate leverage.",
         "dollarAmount": 950000,
         "taxSaved": 190000,
         "netWorthBefore": 5064074,
@@ -10327,7 +10327,7 @@
       {
         "stepNumber": 4,
         "strategyName": "The Section 162 Executive Bonus IUL Wrapper with SCIN",
-        "action": "Draw $3,500,000 from HELOC to enhance IUL investments under IRC \u00a772(e) and \u00a77702, continuing principal-only payback of $500,000 on the mortgage under IRC \u00a7163(h), now on a 6-year timeline. Integrate a SCIN to sell business assets worth $3,500,000 at a discounted rate under IRC \u00a7483, providing estate tax benefits and interest income deductions. This aggressive move saves taxes by shifting $3,500,000 in value outside the estate, yielding over $350,000 in immediate savings.",
+        "action": "Draw $3,500,000 from HELOC to enhance IUL premiums under IRC \u00a772(e) and \u00a77702, continuing principal-only payback of $500,000 on the mortgage under IRC \u00a7163(h), now on a 6-year timeline. Integrate a SCIN to sell business assets worth $3,500,000 at a discounted rate under IRC \u00a7483, providing estate tax benefits and interest income deductions. This aggressive move saves taxes by shifting $3,500,000 in value outside the estate, yielding over $350,000 in immediate savings.",
         "dollarAmount": 3500000,
         "taxSaved": 350000,
         "netWorthBefore": 19472202,
@@ -10407,7 +10407,7 @@
       {
         "stepNumber": 2,
         "strategyName": "1031 Exchange into DST for PPLI",
-        "action": "Execute a 1031 exchange of $5,000,000 in real estate assets into a Delaware Statutory Trust (DST) focused on Opportunity Zones, then use the proceeds to increase the PPLI premium, deferring taxes under IRC \u00a71031 and enhancing growth via IRC \u00a71400Z-2. This step integrates a Roth conversion of $1,200,000 in IRA assets to further shield income from taxation per IRC \u00a7408A. Continue HELOC draws above 40% equity for additional IUL investments, reducing mortgage balance by $500,000 through principal-only payments as per IRC \u00a7163(h).",
+        "action": "Execute a 1031 exchange of $5,000,000 in real estate assets into a Delaware Statutory Trust (DST) focused on Opportunity Zones, then use the proceeds to increase the PPLI premium, deferring taxes under IRC \u00a71031 and enhancing growth via IRC \u00a71400Z-2. This step integrates a Roth conversion of $1,200,000 in IRA assets to further shield income from taxation per IRC \u00a7408A. Continue HELOC draws above 40% equity for additional IUL premiums, reducing mortgage balance by $500,000 through principal-only payments as per IRC \u00a7163(h).",
         "dollarAmount": 5000000,
         "taxSaved": 300000,
         "netWorthBefore": 36752991,
@@ -11079,7 +11079,7 @@
       {
         "stepNumber": 7,
         "strategyName": "Oil and Gas Layering in Loop",
-        "action": "Draw HELOC of $3,100,000 to expand IUL investments and oil and gas ventures under IRC \u00a7611 and \u00a7613 for depletion allowances, while executing principal-only mortgage payments of $400,000 per IRC \u00a7163(h) to approach zero balance. This integrates the short-term rental strategy with energy investments, growing net worth to $27,700,000 and citing IRC \u00a772(e) for IUL tax deferral, alongside ESOP benefits under IRC \u00a71042 for diversified tax savings.",
+        "action": "Draw HELOC of $3,100,000 to expand IUL premiums and oil and gas ventures under IRC \u00a7611 and \u00a7613 for depletion allowances, while executing principal-only mortgage payments of $400,000 per IRC \u00a7163(h) to approach zero balance. This integrates the short-term rental strategy with energy investments, growing net worth to $27,700,000 and citing IRC \u00a772(e) for IUL tax deferral, alongside ESOP benefits under IRC \u00a71042 for diversified tax savings.",
         "dollarAmount": 3100000,
         "taxSaved": 550000,
         "netWorthBefore": 19349786,
@@ -11497,7 +11497,7 @@
       {
         "stepNumber": 1,
         "strategyName": "The PLAT Multi-Generational Annuity Engine",
-        "action": "Draw a HELOC of $2,708,400, which is 40% of home equity, to fund an IUL premium for tax-deferred growth, citing IRC \u00a772(e) and \u00a77702 for annuity rules. This step leverages the family's yacht dealership cash flow to maximize IUL benefits while preserving liquidity. The IUL investment is structured to build multi-generational wealth through tax-free withdrawals.",
+        "action": "Draw a HELOC of $2,708,400, which is 40% of home equity, to fund an IUL premium for tax-deferred growth, citing IRC \u00a772(e) and \u00a77702 for annuity rules. This step leverages the family's yacht dealership cash flow to maximize IUL benefits while preserving liquidity. The IUL premium is structured to build multi-generational wealth through tax-free withdrawals.",
         "dollarAmount": 2708400,
         "taxSaved": 250000,
         "netWorthBefore": 46300000,

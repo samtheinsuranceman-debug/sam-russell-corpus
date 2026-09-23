@@ -336,7 +336,8 @@
   <section class="words plate" aria-label="The horizon">
     <div class="plate-bg" aria-hidden="true"><picture><source media="(max-width:767px)" srcset="__IMG_CANYON__"><img class="plate-pic" src="__IMG_HORIZON__" alt="" aria-hidden="true" style="object-position:center 58%" loading="lazy" decoding="async"></picture><div class="plate-shade"></div></div>
     <div class="wrap">
-      <p class="kicker" style="margin-bottom:2rem">Proprietary technologies</p>
+      <p class="kicker" style="margin-bottom:1rem">Proprietary technologies</p>
+      <p id="productDisclosure" data-testid="policy-disclosure" style="margin:0 0 2rem;padding:.5rem .75rem;border:1px solid rgba(110,231,183,.2);border-radius:.5rem;background:rgba(0,0,0,.4);font-size:.75rem;line-height:1.5;color:rgba(255,255,255,.75)"></p>
       <ol class="claims" data-claims="0-1"></ol>
     </div>
   </section>
@@ -465,13 +466,13 @@
       <p class="subhead">Your financial picture</p>
       <div class="two" id="numFields"></div>
       <label class="f" style="margin-top:.75rem">Anything else about your goals?<textarea id="goals" rows="2" aria-label="Goals" style="margin-top:.3rem"></textarea></label>
-      <label class="consent"><input type="checkbox" id="consent" aria-label="Consent to be contacted and to store this information"><span>I agree that Russell Capital Systems may store this information and contact me about a planning evaluation. This is general education, not tax, legal, or investment advice, and no figures shown are guarantees.</span></label>
+      <label class="consent"><input type="checkbox" id="consent" aria-label="Consent to be contacted and to store this information"><span>I agree that Russell Capital Systems may store this information and contact me about a planning evaluation. A licensed insurance agent may contact me, and the purpose may include offering life insurance or annuities. This is general education, not tax, legal, or investment advice, and no figures shown are guarantees.</span></label>
       <div class="err" id="formErr" role="alert"></div>
       <button class="btn btn-primary" type="submit" style="width:100%;margin-top:.5rem">Show me the shape of my plan →</button>
     </form>
     <div class="glass result" id="result" style="max-width:52rem;margin:2.5rem auto 0">
       <p class="eyebrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>Your coordinated strategy</p>
-      <h3>Accelerated mortgage payoff + low tax liability + Roth conversion + oil &amp; gas drilling + trust-owned Index Universal Life — combined to help make your money divorce-proof.</h3>
+      <h3>Accelerated mortgage payoff + lower tax liability + Roth conversion + oil &amp; gas drilling + a trust-owned indexed universal life insurance policy — combined to help protect your money in divorce, depending on your state's law.</h3>
       <div class="pills" id="pills"></div>
       <p style="margin-top:1.25rem;font-size:.9rem;color:var(--muted)">General concepts and sequence only — the specific numbers, timing, and structure are worked out with a licensed advisor in your evaluation.</p>
       <div class="answer-ctas">
@@ -512,12 +513,13 @@
   const esc = (s) => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
   document.querySelectorAll("[data-slogan]").forEach(el => el.textContent = M.slogan);
   $("status").textContent = M.status;
-  const plaque = (c) => `<li id="claim-${c.ref}"><p class="tech">Technology ${c.ref} <span aria-hidden="true">·</span> Pending <span aria-hidden="true">·</span> Only at RCS</p><div class="title-wrap"><h3>${esc(c.name)}</h3><svg class="filament" viewBox="0 0 1000 14" preserveAspectRatio="none" aria-hidden="true"><path d="M0 7 C 120 1, 240 13, 360 7 S 600 1, 720 7 S 940 13, 1000 7"/></svg></div><p class="lead-line">${esc(c.lead)}</p><p class="detail">${esc(c.detail)}</p><a class="mech" href="#estimate">See the mechanism <span aria-hidden="true">→</span></a></li>`;
+  const plaque = (c) => `<li id="claim-${c.ref}"><p class="tech">Technology ${c.ref} <span aria-hidden="true">·</span> ${esc(M.techLabel)} <span aria-hidden="true">·</span> Only at RCS</p><div class="title-wrap"><h3>${esc(c.name)}</h3><svg class="filament" viewBox="0 0 1000 14" preserveAspectRatio="none" aria-hidden="true"><path d="M0 7 C 120 1, 240 13, 360 7 S 600 1, 720 7 S 940 13, 1000 7"/></svg></div><p class="lead-line">${esc(c.lead)}</p><p class="detail">${esc(c.detail)}</p><a class="mech" href="#estimate">See the mechanism <span aria-hidden="true">→</span></a></li>`;
   document.querySelectorAll("ol[data-claims]").forEach(ol => { const [a, b] = ol.dataset.claims.split("-").map(Number); ol.innerHTML = M.claims.slice(a, b).map(plaque).join(""); });
   $("disclaimer").textContent = M.disclaimer;
+  $("productDisclosure").textContent = M.productDisclosure;
   const audio = $("founderAudio"); audio.addEventListener("loadedmetadata", () => { $("voice").hidden = false; });
 
-  $("pills").innerHTML = ["Accelerated mortgage payoff","Lower tax liability","Roth-conversion sequencing","Oil &amp; gas drilling deduction","Trust-owned Index Universal Life"].map(p => `<div class="pill"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>${p}</div>`).join("");
+  $("pills").innerHTML = ["Accelerated mortgage payoff","Lower tax liability","Roth-conversion sequencing","Oil &amp; gas drilling deduction","Trust-owned indexed universal life insurance"].map(p => `<div class="pill"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>${p}</div>`).join("");
 
   /* estimator */
   const NUM = [["w2Income","Your W-2 earnings"],["estimatedTaxes","Your estimated annual taxes"],["spouseIncome","Spouse income"],["spouseTaxes","Spouse estimated taxes"],["studentDebt","Student debt owed"],["studentDebtRate","Student loan interest rate (%)"],["homeEquity","Home equity"],["mortgageBalance","Mortgage balance (if known)"],["mortgageRate","Mortgage rate (%)"],["mortgageIO","Interest-only payment / month"],["mortgageYears","Years remaining on mortgage"],["taxDeferredSelf","Your tax-deferred (IRA/401k/403b/TSP)"],["taxDeferredSpouse","Spouse tax-deferred"],["liquid","Total liquid investments (brokerage, etc.)"]];

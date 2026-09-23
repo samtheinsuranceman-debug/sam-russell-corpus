@@ -5,6 +5,7 @@ import { GraduationCap, DollarSign, TrendingUp, Shield, CheckCircle2, Calendar, 
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend, BarChart, Bar, ComposedChart, Line } from 'recharts';
 import { PageInsights } from "@/components/PageInsights";
 import { trpc } from "@/lib/trpc";
+import { TAX_RULES_2026 } from "@shared/taxRules";
 
 export default function Education529Planner() {
   const [annualContribution, setAnnualContribution] = useState(5000);
@@ -222,7 +223,7 @@ export default function Education529Planner() {
         <p>Ensure your 529 plan adheres to IRS regulations:</p>
         <ul>
           <li>IRC 529: Governs qualified tuition programs.</li>
-          <li>Section 2503(b): Annual exclusion for gifts up to $18,000 per donor per year.</li>
+          <li>Section 2503(b): Annual exclusion for gifts up to {`$${TAX_RULES_2026.annualGiftExclusion.toLocaleString()}`} per recipient in {TAX_RULES_2026.taxYear} (Source: IRS Rev. Proc. 2025-32).</li>
           <li>SECURE 2.0 Section 126: Allows Roth IRA rollovers with specific conditions.</li>
         </ul>
         <p>For detailed advice, consult a financial advisor.</p>

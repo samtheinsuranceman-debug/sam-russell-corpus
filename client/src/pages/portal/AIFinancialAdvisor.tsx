@@ -73,7 +73,7 @@ function UnaskedQuestions() {
               </div>
             </div>
           )}
-          {stage === "answered" && <p className="text-[11px] text-slate-500">Every answer is sealed on your Plan Ledger as signed advice with the facts it used. Directional education, not advice; your Russell Capital Systems advisor confirms every specific.</p>}
+          {stage === "answered" && <p className="text-[11px] text-slate-500">Every answer is sealed on your Plan Ledger with the facts it used. AI-generated, hypothetical education, not advice; your Russell Capital Systems advisor confirms every specific.</p>}
         </div>
       )}
     </section>

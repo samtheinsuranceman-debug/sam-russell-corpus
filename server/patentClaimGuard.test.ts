@@ -20,7 +20,14 @@
 import { describe, it, expect } from 'vitest';
 import { readFileSync, readdirSync, statSync } from 'fs';
 import { resolve, extname } from 'path';
-import { FORBIDDEN_WHEN_UNFILED, mayClaimPatentPending } from '../shared/patentStatus';
+import {
+  FORBIDDEN_WHEN_UNFILED,
+  FORBIDDEN_PATTERNS_WHEN_UNFILED,
+  FILED_APPLICATION_NUMBERS,
+  mayClaimPatentPending,
+  techStatusLabel,
+  patentClaimHits,
+} from '../shared/patentStatus';
 
 const root = resolve(__dirname, '..');
 
@@ -46,16 +53,15 @@ function walk(dir: string, out: string[] = []): string[] {
   return out;
 }
 
+const claimHits = patentClaimHits;
+
 function offences(): string[] {
   const found: string[] = [];
   for (const r of ROOTS) {
     for (const file of walk(resolve(root, r))) {
       const rel = file.slice(root.length + 1);
       if (EXEMPT.has(rel)) continue;
-      const text = readFileSync(file, 'utf-8').toLowerCase();
-      for (const phrase of FORBIDDEN_WHEN_UNFILED) {
-        if (text.includes(phrase)) found.push(`${rel}: "${phrase}"`);
-      }
+      for (const hit of claimHits(readFileSync(file, 'utf-8'))) found.push(`${rel}: ${hit}`);
     }
   }
   return found.sort();
@@ -83,7 +89,29 @@ describe('no surface claims a filing that does not exist', () => {
   it('would catch a violation if one were introduced', () => {
     // Proves the matcher works, without writing a bad file to disk.
     const sample = 'Our engines are Patent Pending and awaiting review.';
-    const hit = FORBIDDEN_WHEN_UNFILED.filter((p) => sample.toLowerCase().includes(p));
-    expect(hit).toContain('patent pending');
+    expect(claimHits(sample).join(' ')).toContain('patent pending');
+  });
+
+  it('catches the two forms that shipped past the old matcher', () => {
+    // Both were live on origin/master 279ca5f.
+    expect(claimHits('<p className="rc-plaque-eyebrow">Technology {ref} <span aria-hidden="true">·</span> Pending <span aria-hidden="true">·</span> Only at RCS</p>').length).toBeGreaterThan(0);
+    expect(claimHits('<div className="text-2xl">8 Patents</div>\n<div className="text-xs">Filed with USPTO</div>').length).toBeGreaterThan(0);
+    expect(claimHits('Technology 07 · Pending · Only at RCS').length).toBeGreaterThan(0);
+  });
+
+  it('does not fire on honest negations or unrelated uses of "pending"', () => {
+    expect(claimHits('No patent application is on file with the USPTO yet.')).toEqual([]);
+    expect(claimHits('Your loan application is pending review.')).toEqual([]);
+    expect(claimHits('Claims pending with the insurer are paid in order.')).toEqual([]);
+  });
+
+  it('keeps every forbidden phrase in lower case, so the list can never silently stop matching', () => {
+    for (const phrase of FORBIDDEN_WHEN_UNFILED) expect(phrase, phrase).toBe(phrase.toLowerCase());
+  });
+
+  it('switches wording only from the filed-numbers list', () => {
+    // The single switch: FILED_APPLICATION_NUMBERS, derived from APPLICATIONS in patentStatus.ts.
+    expect(FILED_APPLICATION_NUMBERS).toEqual([]);
+    expect(techStatusLabel('01')).toBe('Proprietary method');
   });
 });
