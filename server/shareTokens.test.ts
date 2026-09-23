@@ -23,3 +23,16 @@ describe("public share tokens", () => {
     expect(noDatabase().code).toBe("SERVICE_UNAVAILABLE");
   });
 });
+
+describe("share-token procedures with no database", () => {
+  it("a well-formed token answers 503 on the client portal and video endpoints, not a revoked-link 404", async () => {
+    const { appRouter } = await import("./routers");
+    const caller = appRouter.createCaller({ user: null, req: { protocol: "https", headers: {} }, res: { clearCookie() {} } } as any);
+    const token = "a".repeat(64);
+    const { getDb } = await import("./db");
+    if (await getDb()) return; // a database is attached: nothing to assert about outages
+    await expect(caller.clientPortal.view({ token })).rejects.toMatchObject({ code: "SERVICE_UNAVAILABLE" });
+    await expect(caller.videoProposal.getByShareToken({ token })).rejects.toMatchObject({ code: "SERVICE_UNAVAILABLE" });
+    await expect(caller.clientPortal.view({ token: "short" })).rejects.toMatchObject({ code: "NOT_FOUND" });
+  }, 120000);
+});

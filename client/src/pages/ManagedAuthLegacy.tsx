@@ -1,5 +1,6 @@
 import { startLogin } from "@/const";
 import { ArrowLeft, ArrowRight, ShieldCheck } from "lucide-react";
+import { PUBLIC_HOME_FALLBACK, useHomepageOpen } from "@/hooks/useHomepageOpen";
 
 const routeCopy: Record<string, { label: string; title: string; body: string }> = {
   "/register": {
@@ -26,6 +27,7 @@ const routeCopy: Record<string, { label: string; title: string; body: string }> 
 
 export default function ManagedAuthLegacy() {
   const copy = routeCopy[window.location.pathname] ?? routeCopy["/register"];
+  const homeOpen = useHomepageOpen();
 
   return (
     <div className="relative min-h-screen grid place-items-center bg-[#04100c] px-6 py-16 text-emerald-50">
@@ -43,12 +45,13 @@ export default function ManagedAuthLegacy() {
         <button
           type="button"
           onClick={() => startLogin("/portal/dashboard")}
-          className="mt-8 flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-500 px-5 py-3 font-semibold text-white shadow-lg shadow-emerald-950/40 transition duration-200 hover:bg-emerald-400 active:scale-[0.97]"
+          className="mt-8 flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-700 px-5 py-3 font-semibold text-white shadow-lg shadow-emerald-950/40 transition duration-200 hover:bg-emerald-800 active:scale-[0.97]"
         >
           Continue to secure sign in <ArrowRight className="h-5 w-5" />
         </button>
-        <a href="/" className="mt-5 flex items-center justify-center gap-2 text-sm text-emerald-200/55 hover:text-emerald-100">
-          <ArrowLeft className="h-4 w-4" /> Return to homepage
+        {/* While the homepage is gated, "/" bounces a signed-out visitor to /login. */}
+        <a href={homeOpen ? "/" : PUBLIC_HOME_FALLBACK.href} className="mt-5 flex items-center justify-center gap-2 text-sm text-emerald-200/70 hover:text-emerald-100">
+          <ArrowLeft className="h-4 w-4" /> {homeOpen ? "Return to homepage" : PUBLIC_HOME_FALLBACK.label}
         </a>
       </section>
     </div>
