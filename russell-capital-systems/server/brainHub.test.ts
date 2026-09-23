@@ -18,11 +18,13 @@ import {
 import { MCP_PRESETS, mcpPresetsByCategory } from "@shared/mcpPresets";
 import { environmentCredentials, environmentKeyNames } from "./providerRegistry";
 
-describe("the fifty-five brains", () => {
-  it("offers exactly MAX_BRAINS providers to the owner, and no internal gateway", () => {
-    expect(MAX_BRAINS).toBe(55);
-    expect(BRAIN_PROVIDERS).toHaveLength(MAX_BRAINS);
-    expect(PROVIDERS).toHaveLength(MAX_BRAINS);
+describe("the fifty-six brains", () => {
+  it("offers every catalogued provider to the owner within MAX_BRAINS, and no internal gateway", () => {
+    // The cap carries two slots of headroom for queued catalogue additions.
+    expect(MAX_BRAINS).toBe(58);
+    expect(PROVIDERS.length).toBeGreaterThanOrEqual(56);
+    expect(PROVIDERS.length).toBeLessThanOrEqual(MAX_BRAINS);
+    expect(BRAIN_PROVIDERS).toHaveLength(PROVIDERS.length);
     expect(getProvider("forge")).toBeUndefined();
   });
 
