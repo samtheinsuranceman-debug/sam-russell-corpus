@@ -192,20 +192,8 @@ export default function CommissionTracker() {
 
   const [interactionCount, setInteractionCount] = useState(0);
 
-  const historicalData = useMemo(() => {
-    return Array.from({ length: 12 }).map((_, i) => {
-      const month = new Date();
-      month.setMonth(month.getMonth() - (11 - i));
-      const baseVal = 50000 + (i * 15000) + (Math.random() * 20000);
-      return {
-        name: month.toLocaleString('default', { month: 'short' }),
-        life: Math.round(baseVal * 0.6),
-        annuity: Math.round(baseVal * 0.4),
-        total: Math.round(baseVal),
-        target: 150000
-      };
-    });
-  }, []);
+  // No commission records exist in the database, so there is no production history to chart.
+  // (This chart used to draw a randomly generated 12-month history.)
 
   const categoryData = useMemo(() => {
     const data = [
@@ -527,31 +515,11 @@ export default function CommissionTracker() {
                 <CardTitle className="text-white text-base flex items-center gap-2">
                   <LineChart className="w-4 h-4 text-blue-400" /> 12-Month Production Trend
                 </CardTitle>
-                <CardDescription>Historical vs Projected Commissions</CardDescription>
+                <CardDescription>Recorded commissions by month</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="h-[300px] w-full">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <AreaChart data={historicalData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
-                      <defs>
-                        <linearGradient id="colorTotal" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#10b981" stopOpacity={0.3}/>
-                          <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
-                        </linearGradient>
-                      </defs>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} />
-                      <XAxis dataKey="name" stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} />
-                      <YAxis stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value) => `$${value/1000}k`} />
-                      <RechartsTooltip 
-                        contentStyle={{ backgroundColor: '#1e293b', borderColor: '#334155', color: '#f8fafc' }}
-                        itemStyle={{ color: '#f8fafc' }}
-                        formatter={(value: number) => [`$${value.toLocaleString()}`, '']}
-                      />
-                      <Legend />
-                      <Area type="monotone" dataKey="total" name="Total Revenue" stroke="#10b981" fillOpacity={1} fill="url(#colorTotal)" />
-                      <Line type="monotone" dataKey="target" name="Monthly Target" stroke="#ef4444" strokeDasharray="5 5" dot={false} />
-                    </AreaChart>
-                  </ResponsiveContainer>
+                <div className="h-[300px] w-full flex items-center justify-center text-center text-sm text-slate-400 px-6">
+                  No commission records yet. Once paid commissions are recorded, your month-by-month production is charted here against your target.
                 </div>
               </CardContent>
             </Card>

@@ -38,7 +38,11 @@ function SwordIcon(props: any) {
   );
 }
 
-function getAutoQuests() {
+// Progress comes only from the user's own quest rows (experience.getActiveQuests), matched by title.
+// A quest with no recorded row shows 0 — never an invented figure.
+type QuestProgressLookup = (title: string) => number;
+
+function getAutoQuests(progressOf: QuestProgressLookup) {
   const now = new Date();
   const dayOfWeek = now.getDay();
   const weekOfYear = Math.ceil((now.getTime() - new Date(now.getFullYear(), 0, 1).getTime()) / 604800000);
@@ -65,13 +69,13 @@ function getAutoQuests() {
   const dailyStart = (dayOfWeek * 3) % dailyPool.length;
   const dailies = [0, 1, 2].map(i => {
     const q = dailyPool[(dailyStart + i) % dailyPool.length];
-    return { ...q, id: `daily-${i}`, type: "daily" as const, progress: Math.floor(Math.random() * q.max) };
+    return { ...q, id: `daily-${i}`, type: "daily" as const, progress: progressOf(q.title) };
   });
 
   const weeklyStart = (weekOfYear * 2) % weeklyPool.length;
   const weeklies = [0, 1].map(i => {
     const q = weeklyPool[(weeklyStart + i) % weeklyPool.length];
-    return { ...q, id: `weekly-${i}`, type: "weekly" as const, progress: Math.floor(Math.random() * q.max * 0.6) };
+    return { ...q, id: `weekly-${i}`, type: "weekly" as const, progress: progressOf(q.title) };
   });
 
   return { dailies, weeklies };
@@ -81,23 +85,23 @@ const EPIC_QUEST_CHAINS = [
   {
     id: "epic-chain-1", type: "epic" as const, title: "The Million Dollar Quest",
     desc: "Discover $1M in new wealth opportunities", xp: 2000,
-    progress: 650000, max: 1000000, icon: "💎", rarity: "epic" as const,
+    progress: 0, max: 1000000, icon: "💎", rarity: "epic" as const,
     chain: ["Find $250K", "Find $500K", "Find $750K", "Find $1M"],
-    chainProgress: 2,
+    chainProgress: 0,
   },
   {
     id: "epic-chain-2", type: "epic" as const, title: "Roth Conversion Master",
     desc: "Complete 50 Roth conversion analyses", xp: 3000,
-    progress: 32, max: 50, icon: "⚗️", rarity: "epic" as const,
+    progress: 0, max: 50, icon: "⚗️", rarity: "epic" as const,
     chain: ["10 Conversions", "25 Conversions", "40 Conversions", "50 Conversions"],
-    chainProgress: 2,
+    chainProgress: 0,
   },
   {
     id: "legendary-1", type: "legendary" as const, title: "Legendary Advisor",
     desc: "Reach Level 10 and close 100 deals", xp: 10000,
-    progress: 42, max: 100, icon: "⭐", rarity: "legendary" as const,
+    progress: 0, max: 100, icon: "⭐", rarity: "legendary" as const,
     chain: ["Level 5", "25 Deals", "Level 8", "50 Deals", "Level 10", "100 Deals"],
-    chainProgress: 3,
+    chainProgress: 0,
   },
 ];
 
@@ -245,14 +249,14 @@ function SlotMachineLoot() {
     setSpinning(true);
     setRevealed(null);
 
-    const reel = Array.from({ length: 20 }, () => LOOT_ITEMS[Math.floor(Math.random() * LOOT_ITEMS.length)].emoji);
+    const reel = Array.from({ length: 20 }, () => LOOT_ITEMS[Math.floor(Math.random() * LOOT_ITEMS.length)].emoji); // decorative
     setReelItems(reel);
 
-    const roll = Math.random() * 100;
+    const roll = Math.random() * 100; // decorative
     let picked: typeof LOOT_ITEMS[0];
     if (roll < 1) picked = LOOT_ITEMS.find(l => l.rarity === "legendary")!;
     else if (roll < 5) picked = LOOT_ITEMS.find(l => l.rarity === "epic")!;
-    else if (roll < 20) picked = LOOT_ITEMS[Math.floor(Math.random() * LOOT_ITEMS.filter(l => l.rarity === "rare").length + 3)];
+    else if (roll < 20) picked = LOOT_ITEMS[Math.floor(Math.random() * LOOT_ITEMS.filter(l => l.rarity === "rare").length + 3)]; // decorative
     else if (roll < 50) picked = LOOT_ITEMS.find(l => l.rarity === "uncommon")!;
     else picked = LOOT_ITEMS[0];
 
@@ -436,7 +440,12 @@ export default function Arena() {
   const xpDisplay = profile?.totalXp?.toLocaleString() ?? "0";
   const levelDisplay = profile?.level ?? 1;
 
-  const autoQuests = useMemo(() => getAutoQuests(), []);
+  const { data: activeQuests } = trpc.experience.getActiveQuests.useQuery(undefined, { retry: 1 });
+  const questProgress = useCallback<QuestProgressLookup>(
+    (title) => activeQuests?.find((q) => q.title === title)?.progress ?? 0,
+    [activeQuests],
+  );
+  const autoQuests = useMemo(() => getAutoQuests(questProgress), [questProgress]);
 
   return (
     <AppShell>
@@ -530,7 +539,7 @@ export default function Arena() {
                 <Badge variant="outline" className="text-[10px] border-emerald-500/30 text-emerald-400">Permanent</Badge>
               </h3>
               <div className="space-y-2">
-                {EPIC_QUEST_CHAINS.map(q => <QuestCard key={q.id} quest={q} />)}
+                {EPIC_QUEST_CHAINS.map(q => <QuestCard key={q.id} quest={{ ...q, progress: questProgress(q.title) }} />)}
               </div>
             </div>
           </TabsContent>
