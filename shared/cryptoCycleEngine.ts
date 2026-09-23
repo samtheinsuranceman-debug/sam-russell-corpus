@@ -92,7 +92,97 @@ export const BITCOIN_CYCLES: BitcoinCycle[] = [
   },
 ];
 
+// Where the cycle table comes from. Halving dates, heights and block rewards
+// are protocol facts; prices are market prints, and different exchanges and
+// indices print different numbers for the same day, so each is tied to the
+// publication that carries it. Where no publication matches the figure, the
+// note says so rather than leaving it looking sourced.
+
+/** halvingDate and blockReward for all four cycles, and the 2028 next halving. */
+const HALVING_SCHEDULE_SOURCE = {
+  label:
+    "CoinWarz, 'Bitcoin Halving Countdown': halving dates history by block height (210,000 on 2012-11-28, 25 BTC; 420,000 on 2016-07-09, 12.5 BTC; " +
+    "630,000 on 2020-05-11, 6.25 BTC; 840,000 on 2024-04-20, 3.125 BTC) and the next halving at block 1,050,000 projected for April 2028",
+  url: "https://www.coinwarz.com/bitcoin-halving",
+  asOf: "read 2026-09-23",
+};
+
+/** halvingPrice for cycles 1 to 3, and the supplyMined column. */
+const COINGECKO_HALVING_HISTORY_SOURCE = {
+  label:
+    "CoinGecko Research, 'Bitcoin Halving Price History': price at the first three halvings (about $12, about $650, about $8,727) " +
+    "and the 'Total BTC Mined (%)' column 75, 87.5, 93.75, 96.875",
+  url: "https://www.coingecko.com/research/publications/bitcoin-halving-price-history",
+  asOf: "published 2024-04-02; read 2026-09-23",
+  note:
+    "supplyMined follows CoinGecko's column, which is the share mined by the end of each epoch. At the halving block itself the protocol " +
+    "share is 50%, 75%, 87.5% and 93.75% (CoinGecko's own halving page: over 10 million of 21 million mined at the first halving).",
+};
+
+/** halvingPrice for cycle 4 and the halving-day table. */
+const BITCOIN_COM_PRICE_HISTORY_SOURCE = {
+  label: "Bitcoin.com, 'Bitcoin Price History: Charts, Trends, and Analysis': price on halving day about $63,800 (April 2024) and the 2021 peak of $68,789",
+  url: "https://www.bitcoin.com/get-started/bitcoin/basics/bitcoin-price-history/",
+  asOf: "published 2026-08-12; read 2026-09-23",
+};
+
+/** bullATH 19783 on 2017-12-17 and the 2015 and 2018 lows. */
+const DRAWDOWN_HISTORY_SOURCE = {
+  label:
+    "Paybis, 'Bitcoin Crash History': 2013 peak $1,163 (Nov 30, 2013) to $152 (Jan 2015); $19,783 (CoinDesk index, Dec 17, 2017) to $3,122 (Dec 2018); " +
+    "2011 fall from $31.50 to $2.01 (93.6%)",
+  url: "https://paybis.com/blog/bitcoin-crash-history/",
+  asOf: "published 2026-02-10; read 2026-09-23",
+  note:
+    "bullATH 1177 on 2013-11-29 matches no publication found: Bitstamp printed $1,163 on Nov 30, CoinGecko $1,127 on Nov 30 and CoinMarketCap $1,156.10 in December 2013. " +
+    "historicalGains 53650 (2011 low to 2013 peak) disagrees with about 58,000% computed from the $1.99 to $2.01 low and a $1,163 to $1,177 peak.",
+};
+
+/** bearATL 15460 on 2022-11-21. */
+const CNBC_2022_LOW_SOURCE = {
+  label: "CNBC, 'Bitcoin hits 2-year low as FTX collapse contagion fears linger': low of $15,480 per Coin Metrics, Nov 22, 2022 (U.S. time)",
+  url: "https://www.cnbc.com/2022/11/22/bitcoin-btc-hits-2-year-low-as-ftx-collapse-contagion-fears-linger.html",
+  asOf: "published 2022-11-22; read 2026-09-23",
+  note: "The code's 15,460 is $20 under this print; other trackers give $15,476 to $15,479 on Nov 21 (UTC).",
+};
+
+/** bullATH 126200 on 2025-10-06 (the $126,198 print, rounded) and the 2,500 billion market cap at that peak. */
+const ATH_2025_SOURCE = {
+  label: "Investor's Business Daily, 'Bitcoin Hits Record Above $126,000': record high of $126,198 on Oct 6, 2025, according to CoinMarketCap data",
+  url: "https://www.investors.com/news/bitcoin-hits-new-record-above-125000-crypto-prices-figure-coverage-buy-rating-figr-stock/",
+  asOf: "published 2025-10-06; read 2026-09-23",
+};
+
+/** bearATL 60000 on 2026-06-01. */
+const LOW_2026_SOURCE = {
+  label:
+    "CNBC, 'Bitcoin cracks $60,000, sinking to lowest level since October 2024' (low $59,099.25 on 2026-06-05) and " +
+    "'Bitcoin falls back under $60,000' (low $59,023.98 on 2026-06-24); BBC reported a fall to $60,000 on 2026-02-05",
+  url: "https://www.cnbc.com/2026/06/24/bitcoin-falls-back-under-60000-hitting-its-lowest-level-since-october-2024.html",
+  asOf: "read 2026-09-23",
+  note:
+    "The code's 60,000 on 2026-06-01 matches no print: the 2026 lows found are about $60,000 (Feb 5), $59,099 (Jun 5) and $59,024 (Jun 24), " +
+    "and IG cites Bloomberg for about $58,076 in late June. The cycle-4 bear market may not be over, so bearATL and bearDurationMonths 12 " +
+    "(October 2025 to June 2026 is about 8 months) are provisional.",
+};
+
+/** athMarketCap, pctDrop, pctGain and duration columns. */
+const CYCLE_ARITHMETIC_NOTE = {
+  label:
+    "Derived by the firm from the prices and dates above: athMarketCap is peak price times coins then outstanding, pctDropATHtoATL and " +
+    "pctGainATLtoNextATH are the percentage moves between the listed prints, and the durations are months between the listed dates",
+};
+
 // ─── Cycle Simulator ────────────────────────────────────────────────────────
+
+/** The simulator's shaping constants are the firm's model, not history. */
+const CYCLE_SIMULATOR_ASSUMPTIONS = [
+  { label: "Assumption: drawdown decay = 0.88 per cycle and gain decay = 0.38 per cycle, chosen by the firm to extend the shrinking drawdowns and gains in the cycle table; no external source" },
+  { label: "Assumption: floors of a 50% gain and a 30% drawdown per future cycle, chosen by the firm so the projection never implies a cycle with no bull or bear phase; no external source" },
+  { label: "Assumption: halving-day price = 1.3 times the prior low, chosen by the firm from the pattern in the cycle table; no external source" },
+  { label: "Assumption: supply for market cap = 20.5 million BTC, chosen by the firm as a round figure for coins outstanding in the projected cycles (21 million is the protocol cap); no external source" },
+  { label: "Assumption: fallback prices of $60,000 (low), $63,800 (halving) and $100,000 (no cycle matched), chosen by the firm to keep the price path defined outside the table; no external source" },
+] as const;
 
 export interface SimulatedCycle {
   cycle: number;
@@ -306,6 +396,54 @@ export interface AccumulationResult {
     propertyCount: number;
   }[];
 }
+
+// Where the accumulation engine's typed-in rates come from.
+
+/** loanRate 0.065 and the 0.065 interest charge on each property loan. */
+const MORTGAGE_RATE_SOURCE = {
+  label: "Freddie Mac, Primary Mortgage Market Survey, 30-Year Fixed Rate Mortgage Average (MORTGAGE30US), via FRED: 6.66% for the week of 2026-08-27",
+  url: "https://fred.stlouisfed.org/series/MORTGAGE30US",
+  asOf: "read 2026-09-23",
+  note:
+    "The engine's 6.5% is a round figure 0.16 points under the latest survey reading, and the survey prices owner-occupied loans; " +
+    "an investment or short-term rental loan is usually priced higher.",
+};
+
+/** 0.0364 straight-line depreciation after year one. */
+const DEPRECIATION_SOURCE = {
+  label:
+    "IRS Publication 946, 'How To Depreciate Property': residential rental property is recovered straight line over 27.5 years " +
+    "(1/27.5 = 3.64% a year); a dwelling unit does not include a unit in an establishment where more than half the units are used on a transient basis",
+  url: "https://www.irs.gov/publications/p946",
+  asOf: "2025 edition; read 2026-09-23",
+  note: "A short-term rental used on a transient basis may fall in the 39-year nonresidential class instead (about 2.56% a year); the client's tax adviser decides.",
+};
+
+/** netTaxSaved at the 37% bracket. */
+const TOP_BRACKET_SOURCE = {
+  label: "IRS Rev. Proc. 2025-32, section 4.01, 2026 tax rate tables: top marginal rate 37%",
+  url: "https://www.irs.gov/pub/irs-drop/rp-25-32.pdf",
+  asOf: "tax year 2026; read 2026-09-23",
+};
+
+/** Gold's 5% growth is checked against the long-run gold column. */
+const GOLD_RETURN_SOURCE = {
+  label:
+    "Aswath Damodaran, NYU Stern, 'Historical Returns on Stocks, Bonds and Bills: 1928-2025', Gold column: $100 in 1928 grew to $21,025 by 2025, " +
+    "a geometric average of 5.6% a year, above the engine's 5%",
+  url: "https://pages.stern.nyu.edu/~adamodar/New_Home_Page/datafile/histretSP.html",
+  asOf: "page updated January 5, 2026; read 2026-09-23",
+};
+
+/** The accumulation engine's strategy constants: the firm's choices, said in words. */
+const ACCUMULATION_ASSUMPTIONS = [
+  { label: "Assumption: 30% of rental income goes to bitcoin in bear phases and 60% of holdings are sold in bull phases, chosen by the firm as the strategy being illustrated; no external source" },
+  { label: "Assumption: maximum IUL loan = 90% of cash value, chosen by the firm as a typical carrier loan limit; the policy contract governs; no external source" },
+  { label: "Assumption: up to 50% of a year's crypto proceeds fund a property down payment, chosen by the firm as the strategy being illustrated; no external source" },
+  { label: "Assumption: rent grows 3% a year and silver 3% a year, chosen by the firm as rates near long-run inflation; no external source" },
+  { label: "Assumption: 5% cost on total debt in the cash-flow line, chosen by the firm as a blended borrowing cost; no external source" },
+  { label: "Assumption: each property is projected for 30 years, chosen by the firm to match the 30-year synthesis; no external source" },
+] as const;
 
 export function runCryptoAccumulation(input: CryptoAccumulationInput): AccumulationResult {
   const {
@@ -649,3 +787,23 @@ export function fmtCurrency(n: number): string {
 export function fmtPct(n: number): string {
   return `${n >= 0 ? "+" : ""}${n.toFixed(1)}%`;
 }
+
+// ─── Sources ────────────────────────────────────────────────────────────────
+
+/** Every source and declared assumption behind this engine, for the shell's source footer. */
+export const CRYPTO_CYCLE_SOURCES: readonly { label: string; url?: string; asOf?: string; note?: string }[] = [
+  HALVING_SCHEDULE_SOURCE,
+  COINGECKO_HALVING_HISTORY_SOURCE,
+  BITCOIN_COM_PRICE_HISTORY_SOURCE,
+  DRAWDOWN_HISTORY_SOURCE,
+  CNBC_2022_LOW_SOURCE,
+  ATH_2025_SOURCE,
+  LOW_2026_SOURCE,
+  CYCLE_ARITHMETIC_NOTE,
+  ...CYCLE_SIMULATOR_ASSUMPTIONS,
+  MORTGAGE_RATE_SOURCE,
+  DEPRECIATION_SOURCE,
+  TOP_BRACKET_SOURCE,
+  GOLD_RETURN_SOURCE,
+  ...ACCUMULATION_ASSUMPTIONS,
+];

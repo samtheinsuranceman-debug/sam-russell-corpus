@@ -35,9 +35,13 @@ type Loader = () => Promise<unknown>;
  * engine exports; `normalizeSources` turns it into `SourceRef[]`.
  */
 export const ENGINE_SOURCE_LOADERS: Record<string, Loader> = {
+  "shared/altCredit/simulator.ts": () => import("./altCredit/simulator").then(m => m.ALT_CREDIT_SIMULATOR_SOURCES),
   "shared/careerEngine.ts": () => import("./careerEngine").then(m => m.SOURCES),
+  "shared/carrierRatings.ts": () => import("./carrierRatings").then(m => m.CARRIER_RATINGS_SOURCES),
   "shared/creditCardSourcing.ts": () => import("./creditCardSourcing").then(m => m.CARD_SOURCES),
+  "shared/cryptoCycleEngine.ts": () => import("./cryptoCycleEngine").then(m => m.CRYPTO_CYCLE_SOURCES),
   "shared/erosion.ts": () => import("./erosion").then(m => m.EROSION_SOURCES),
+  "shared/historicalShocks.ts": () => import("./historicalShocks").then(m => m.HISTORICAL_SHOCKS_SOURCES),
   "shared/householdWealth.ts": () => import("./householdWealth").then(m => m.HOUSEHOLD_WEALTH_SOURCES),
   "shared/incomeForLife.ts": () => import("./incomeForLife").then(m => m.INCOME_SOURCES),
   "shared/indexCreditingData.ts": () => import("./indexCreditingData").then(m => m.INDEX_RETURN_SOURCES),
@@ -46,6 +50,7 @@ export const ENGINE_SOURCE_LOADERS: Record<string, Loader> = {
   "shared/longevityEngine.ts": () => import("./longevityEngine").then(m => m.LONGEVITY_SOURCES),
   "shared/ltcEngine.ts": () => import("./ltcEngine").then(m => m.LTC_SOURCES),
   "shared/macroEngine.ts": () => import("./macroEngine").then(m => m.MACRO_SOURCES),
+  "shared/monteCarloEngine.ts": () => import("./monteCarloEngine").then(m => m.MONTE_CARLO_SOURCES),
   "shared/mortgageKiller.ts": () => import("./mortgageKiller").then(m => m.MORTGAGE_KILLER_SOURCES),
   "shared/mortgageLedger.ts": () => import("./mortgageLedger").then(m => m.MORTGAGE_LEDGER_SOURCES),
   "shared/multiPropertyMyga.ts": () => import("./multiPropertyMyga").then(m => m.MULTI_PROPERTY_MYGA_SOURCES),
