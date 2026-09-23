@@ -229,7 +229,7 @@ export const FLOOR_ROOMS: Record<FloorId, readonly Room[]> = {
       { path: "/portal/income-floor-strategy", label: "Income floor" },
       { path: "/portal/social-security", label: "Social Security" },
     ] },
-    { label: "Tax-free advantaged", audience: "household", links: [
+    { label: "Tax-Free-Advantaged", audience: "household", links: [
       { path: "/portal/iul-engine", label: "IUL" },
       { path: "/portal/roth-conversion", label: "Roth" },
       { path: "/portal/iul-vs-roth", label: "Compare" },
