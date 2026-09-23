@@ -315,6 +315,11 @@ export default function ClientSelfServicePortal() {
           </div>
         ) : (
           <div className="overflow-x-auto">
+            {/* Portal status, last login and engagement are not recorded per client, so they are not shown.
+                They used to be assigned by row position and by a random draw. */}
+            <p className="text-xs text-[#7a95b8] mb-3">
+              Portal status, last login and engagement score are not tracked per client yet. They will appear in this table once portal sign-ins are recorded.
+            </p>
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="border-b border-[#12233e] text-xs uppercase tracking-wider text-[#7a95b8]">
@@ -332,18 +337,11 @@ export default function ClientSelfServicePortal() {
                   <th className="p-3 cursor-pointer hover:text-white transition-colors" onClick={() => handleSort('email')}>
                     Contact {sortField === 'email' && (sortDirection === 'asc' ? '↑' : '↓')}
                   </th>
-                  <th className="p-3">Portal Status</th>
-                  <th className="p-3">Last Login</th>
-                  <th className="p-3">Engagement Score</th>
                   <th className="p-3 text-right">Actions</th>
                 </tr>
               </thead>
               <tbody className="text-sm">
                 {filteredClients.map((client: any, i: number) => {
-                  const isActive = i % 3 !== 0;
-                  const isPending = i % 3 === 0 && i % 2 === 0;
-                  const score = Math.floor(Math.random() * 100);
-                  
                   return (
                     <React.Fragment key={client.id}>
                       <tr className="border-b border-[#12233e]/50 hover:bg-[#12233e]/20 transition-colors">
@@ -367,29 +365,6 @@ export default function ClientSelfServicePortal() {
                           <div className="flex flex-col">
                             <span>{client.email}</span>
                             <span className="text-xs">{client.phone || "No phone"}</span>
-                          </div>
-                        </td>
-                        <td className="p-3">
-                          <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                            isActive ? 'bg-[#22c55e]/10 text-[#22c55e]' : 
-                            isPending ? 'bg-[#f0c040]/10 text-[#f0c040]' : 
-                            'bg-[#ef4444]/10 text-[#ef4444]'
-                          }`}>
-                            {isActive ? 'Active' : isPending ? 'Pending' : 'Inactive'}
-                          </span>
-                        </td>
-                        <td className="p-3 text-[#7a95b8]">
-                          {isActive ? `${Math.floor(Math.random() * 14) + 1} days ago` : 'Never'}
-                        </td>
-                        <td className="p-3">
-                          <div className="flex items-center gap-2">
-                            <div className="w-16 h-2 bg-[#12233e] rounded-full overflow-hidden">
-                              <div 
-                                className="h-full bg-[#3b82f6]" 
-                                style={{ width: `${score}%` }}
-                              />
-                            </div>
-                            <span className="text-xs text-[#7a95b8]">{score}/100</span>
                           </div>
                         </td>
                         <td className="p-3 text-right">
@@ -419,7 +394,7 @@ export default function ClientSelfServicePortal() {
                       </tr>
                       {expandedRow === String(client.id) && (
                         <tr className="bg-[#060d19]/50 border-b border-[#12233e]">
-                          <td colSpan={7} className="p-4">
+                          <td colSpan={4} className="p-4">
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                               <div className="bg-[#0d1a2e] p-4 rounded-lg border border-[#12233e]">
                                 <h4 className="text-sm font-medium text-white mb-2">Recent Activity</h4>

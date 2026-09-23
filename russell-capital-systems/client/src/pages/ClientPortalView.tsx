@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { useState, useMemo } from "react";
 import { SP500_ARITHMETIC_MEAN, SP500_ANNUAL_STDEV } from "@shared/monteCarloEngine";
+import { mulberry32, normal, MACRO_DEFAULT_SEED } from "@shared/macro/random";
 
 const CATEGORY_LABELS: Record<string, string> = {
   TAX_RETURN: "Tax Return",
@@ -153,14 +154,14 @@ function MonteCarloSummary({ iulProjection, primaryColor }: { iulProjection: any
     const COI_RATE = 0.05;
     const years = iulProjection.length;
     const allFinals: number[] = [];
+    // Seeded so the same illustration always prints the same percentiles.
+    const rng = mulberry32(MACRO_DEFAULT_SEED);
 
     for (let s = 0; s < SIMS; s++) {
       let av = 0;
       for (let y = 0; y < years; y++) {
         const premium = iulProjection[y].premium;
-        const u1 = Math.random();
-        const u2 = Math.random();
-        const z = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+        const z = normal(rng);
         const randomReturn = Math.max(0, AVG_RETURN + VOL * z);
         av += premium * (1 - LOAD_FEE);
         av += av * randomReturn;

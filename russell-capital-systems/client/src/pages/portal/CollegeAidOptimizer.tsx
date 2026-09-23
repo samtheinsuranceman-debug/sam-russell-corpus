@@ -98,14 +98,22 @@ const CollegeAidOptimizer = () => {
   }, [needBasedIncome, needBasedAssets]);
 
   const calculateFundingTimeline = useMemo(() => {
-    // Generate timeline array
-    const timeline = [];
-    for (let year = new Date().getFullYear(); year <= child2Year; year++) {
-      timeline.push({ year, funding: Math.random() * 10000 }); // Placeholder
+    // Tuition due each year: every child in school that year pays the entered annual cost,
+    // grown at the entered inflation rate from this year. Computed only from the inputs above.
+    const thisYear = new Date().getFullYear();
+    const starts = [child1Year, child2Year].filter((y) => Number.isFinite(y) && y > 0);
+    if (starts.length === 0) return [];
+    const years = Math.max(1, yearsToComplete);
+    const first = Math.min(thisYear, ...starts);
+    const last = Math.max(...starts) + years - 1;
+    const timeline: { year: number; funding: number }[] = [];
+    for (let year = first; year <= last && year - first < 60; year++) {
+      const inSchool = starts.filter((s) => year >= s && year < s + years).length;
+      const cost = tuitionPerYear * Math.pow(1 + inflationRate, Math.max(0, year - thisYear));
+      timeline.push({ year, funding: Math.round(inSchool * cost) });
     }
-    setFundingTimeline(timeline);
     return timeline;
-  }, [child1Year, child2Year]);
+  }, [child1Year, child2Year, tuitionPerYear, inflationRate, yearsToComplete]);
 
   const calculateSuperfundProjection = useMemo(() => {
     // Project 529 superfunding
@@ -207,7 +215,7 @@ const CollegeAidOptimizer = () => {
             <YAxis />
             <Tooltip />
             <Legend />
-            <Line type="monotone" dataKey="funding" stroke="#a855f7" />
+            <Line type="monotone" dataKey="funding" name="Tuition due that year ($)" stroke="#a855f7" />
           </LineChart>
         </ResponsiveContainer>
       </div>

@@ -33,13 +33,13 @@ interface ClientHealth {
   totalAUM: number;
   status: "healthy" | "attention" | "critical";
   riskTolerance: string;
-  age: number;
-  annualIncome: number;
-  netWorth: number;
-  engagementScore: number;
-  satisfactionScore: number;
-  loyaltyIndex: number;
-  churnRisk: number;
+  age: number | null;
+  annualIncome: number | null;
+  netWorth: number | null;
+  engagementScore: number | null;
+  satisfactionScore: number | null;
+  loyaltyIndex: number | null;
+  churnRisk: number | null;
   nextScheduledReview: string;
   primaryGoal: string;
   lastMeetingNotes: string;
@@ -220,109 +220,49 @@ export default function ClientHealthDashboard() {
   const [bulkAction, setBulkAction] = useState("");
   const [selectedClients, setSelectedClients] = useState<number[]>([]);
 
-  const historicalHealthData = useMemo(() => {
-    return Array.from({ length: 12 }).map((_, i) => {
-      const month = new Date();
-      month.setMonth(month.getMonth() - 11 + i);
-      return {
-        month: month.toLocaleDateString('en-US', { month: 'short' }),
-        avgScore: 75 + Math.random() * 15 - (i < 6 ? 5 : 0),
-        criticalCount: Math.floor(10 - Math.random() * 5 + (i < 4 ? 3 : 0)),
-        healthyCount: Math.floor(40 + Math.random() * 20 + (i > 8 ? 10 : 0)),
-        attentionCount: Math.floor(20 + Math.random() * 10),
-      };
-    });
-  }, []);
-
-  const aumByAgeGroup = useMemo(() => [
-    { ageGroup: "< 35", aum: 2.5, clients: 15 },
-    { ageGroup: "35-45", aum: 8.2, clients: 32 },
-    { ageGroup: "46-55", aum: 15.7, clients: 45 },
-    { ageGroup: "56-65", aum: 28.4, clients: 49 },
-    { ageGroup: "66-75", aum: 22.1, clients: 30 },
-    { ageGroup: "> 75", aum: 12.8, clients: 28 },
-  ], []);
-
-  const riskVsReturnData = useMemo(() => {
-    return Array.from({ length: 50 }).map((_, i) => ({
-      id: i,
-      name: `Portfolio ${i+1}`,
-      risk: 5 + Math.random() * 15,
-      return: 4 + Math.random() * 12,
-      size: 10 + Math.random() * 40,
-      type: ["Conservative", "Moderate", "Aggressive", "Income", "Growth"][Math.floor(Math.random() * 5)]
-    }));
-  }, []);
-
-  const engagementMetrics = useMemo(() => [
-    { subject: 'Meetings', A: 85, B: 65, fullMark: 100 },
-    { subject: 'Portal Logins', A: 70, B: 45, fullMark: 100 },
-    { subject: 'Email Opens', A: 92, B: 75, fullMark: 100 },
-    { subject: 'Document Uploads', A: 60, B: 30, fullMark: 100 },
-    { subject: 'Event Attendance', A: 45, B: 20, fullMark: 100 },
-    { subject: 'Referrals', A: 35, B: 15, fullMark: 100 },
-  ], []);
-
-  const revenueForecast = useMemo(() => {
-    return Array.from({ length: 6 }).map((_, i) => {
-      const month = new Date();
-      month.setMonth(month.getMonth() + i);
-      const base = 150000 + (i * 5000);
-      return {
-        month: month.toLocaleDateString('en-US', { month: 'short', year: '2-digit' }),
-        recurring: base * 0.8,
-        projected: base * 0.15,
-        upside: base * 0.1,
-        total: base * 1.05
-      };
-    });
-  }, []);
+  // No health-score history, engagement tracking or revenue model is recorded, so those
+  // charts render an empty state rather than generated or hard-coded series.
 
   const clientHealthData: ClientHealth[] = useMemo(() => {
     if (!clients) return [];
     return clients.map((c) => {
       const alerts: Alert[] = [];
-      const age = c.age ?? Math.floor(30 + Math.random() * 50);
-      const income = c.annualIncome ?? (50000 + Math.random() * 200000);
-      const netWorth = c.netWorth ?? (income * (2 + Math.random() * 8));
-      const lastContactDate = c.updatedAt ? new Date(c.updatedAt) : new Date(Date.now() - Math.random() * 10000000000);
+      // Only recorded fields. Anything the client record does not hold stays null and is shown as "Not recorded".
+      const num = (v: unknown): number | null => { const n = Number(v); return v == null || v === "" || !Number.isFinite(n) ? null : n; };
+      const age = num(c.age);
+      const income = num(c.annualIncome) ?? num(c.income);
+      const netWorth = num(c.totalNetWorth);
+      const lastContactDate = new Date(c.updatedAt ?? c.createdAt);
       const daysSinceContact = Math.floor((Date.now() - lastContactDate.getTime()) / (1000 * 60 * 60 * 24));
+
+      const riskTolerance = c.riskTolerance || "Not set";
+      const engagementScore = null;
+      const satisfactionScore = null;
+      const loyaltyIndex = null;
+      const churnRisk = null;
+
+      if (age != null && age >= 58 && age < 60) alerts.push({ id: `a1-${c.id}`, type: "milestone", priority: "high", title: "Approaching 59½ — Penalty-Free Withdrawals", description: `Client is ${age}, nearing penalty-free IRA withdrawal eligibility.`, action: "Schedule distribution planning meeting", createdAt: new Date().toISOString(), isRead: false, dueDate: new Date(Date.now() + 86400000 * 7).toISOString(), assignedTo: "Advisor" });
+      if (age != null && age >= 62 && age < 63) alerts.push({ id: `a2-${c.id}`, type: "milestone", priority: "high", title: "Social Security Eligible", description: "Client can begin claiming Social Security benefits.", action: "Run Social Security optimization analysis", createdAt: new Date().toISOString(), isRead: false, dueDate: new Date(Date.now() + 86400000 * 14).toISOString(), assignedTo: "Planner" });
+      if (age != null && age >= 64 && age < 66) alerts.push({ id: `a3-${c.id}`, type: "milestone", priority: "high", title: "Medicare Enrollment Window", description: "Client approaching Medicare eligibility at 65.", action: "Review Medicare options and IRMAA impact", createdAt: new Date().toISOString(), isRead: false, dueDate: new Date(Date.now() + 86400000 * 5).toISOString(), assignedTo: "Advisor" });
+      if (age != null && age >= 72 && age < 74) alerts.push({ id: `a4-${c.id}`, type: "compliance", priority: "high", title: "RMD Requirement Approaching", description: "Required Minimum Distributions begin at age 73.", action: "Calculate RMD amounts and plan distributions", createdAt: new Date().toISOString(), isRead: false, dueDate: new Date(Date.now() + 86400000 * 30).toISOString(), assignedTo: "Ops Team" });
+
+      if (daysSinceContact > 60) alerts.push({ id: `a5-${c.id}`, type: "engagement", priority: daysSinceContact > 90 ? "high" : "medium", title: `Record Not Updated in ${daysSinceContact} Days`, description: "The client record has not been updated in this time.", action: "Schedule check-in call or send personalized email", createdAt: new Date().toISOString(), isRead: false, dueDate: new Date(Date.now() + 86400000 * 2).toISOString(), assignedTo: "Advisor" });
+
+      if (income != null && income > 150000 && !(num(c.rothBalance) ?? 0)) alerts.push({ id: `a7-${c.id}`, type: "opportunity", priority: "medium", title: "Roth Conversion Opportunity", description: "High-income client without Roth IRA — backdoor Roth or conversion may be beneficial.", action: "Run Roth conversion analysis", createdAt: new Date().toISOString(), isRead: false, dueDate: new Date(Date.now() + 86400000 * 21).toISOString(), assignedTo: "Planner" });
+      if ((num(c.iraBalance) ?? 0) > 300000 && age != null && age >= 55) alerts.push({ id: `a8-${c.id}`, type: "opportunity", priority: "high", title: "Large Traditional IRA — Tax Bomb Risk", description: `IRA balance of $${((num(c.iraBalance) ?? 0) / 1000).toFixed(0)}K may create significant RMD tax burden.`, action: "Create Roth conversion ladder strategy", createdAt: new Date().toISOString(), isRead: false, dueDate: new Date(Date.now() + 86400000 * 14).toISOString(), assignedTo: "Advisor" });
       
-      const riskTolerance = c.riskTolerance || ["Conservative", "Moderate", "Aggressive"][Math.floor(Math.random() * 3)];
-      const engagementScore = Math.floor(40 + Math.random() * 60);
-      const satisfactionScore = Math.floor(60 + Math.random() * 40);
-      const loyaltyIndex = Math.floor(50 + Math.random() * 50);
-      const churnRisk = Math.floor(Math.random() * 100);
-
-      if (age >= 58 && age < 60) alerts.push({ id: `a1-${c.id}`, type: "milestone", priority: "high", title: "Approaching 59½ — Penalty-Free Withdrawals", description: `Client is ${age}, nearing penalty-free IRA withdrawal eligibility.`, action: "Schedule distribution planning meeting", createdAt: new Date().toISOString(), isRead: false, dueDate: new Date(Date.now() + 86400000 * 7).toISOString(), assignedTo: "Advisor" });
-      if (age >= 62 && age < 63) alerts.push({ id: `a2-${c.id}`, type: "milestone", priority: "high", title: "Social Security Eligible", description: "Client can begin claiming Social Security benefits.", action: "Run Social Security optimization analysis", createdAt: new Date().toISOString(), isRead: false, dueDate: new Date(Date.now() + 86400000 * 14).toISOString(), assignedTo: "Planner" });
-      if (age >= 64 && age < 66) alerts.push({ id: `a3-${c.id}`, type: "milestone", priority: "high", title: "Medicare Enrollment Window", description: "Client approaching Medicare eligibility at 65.", action: "Review Medicare options and IRMAA impact", createdAt: new Date().toISOString(), isRead: false, dueDate: new Date(Date.now() + 86400000 * 5).toISOString(), assignedTo: "Advisor" });
-      if (age >= 72 && age < 74) alerts.push({ id: `a4-${c.id}`, type: "compliance", priority: "high", title: "RMD Requirement Approaching", description: "Required Minimum Distributions begin at age 73.", action: "Calculate RMD amounts and plan distributions", createdAt: new Date().toISOString(), isRead: false, dueDate: new Date(Date.now() + 86400000 * 30).toISOString(), assignedTo: "Ops Team" });
-
-      if (daysSinceContact > 60) alerts.push({ id: `a5-${c.id}`, type: "engagement", priority: daysSinceContact > 90 ? "high" : "medium", title: `No Contact in ${daysSinceContact} Days`, description: "Client may be at risk of disengagement or attrition.", action: "Schedule check-in call or send personalized email", createdAt: new Date().toISOString(), isRead: false, dueDate: new Date(Date.now() + 86400000 * 2).toISOString(), assignedTo: "Advisor" });
-      if (engagementScore < 50) alerts.push({ id: `a6-${c.id}`, type: "engagement", priority: "medium", title: "Low Portal Engagement", description: "Client hasn't logged into the portal in 6 months.", action: "Send portal feature highlight email", createdAt: new Date().toISOString(), isRead: false, dueDate: new Date(Date.now() + 86400000 * 10).toISOString(), assignedTo: "Marketing" });
-
-      if (income > 150000 && !(c.rothIra > 0)) alerts.push({ id: `a7-${c.id}`, type: "opportunity", priority: "medium", title: "Roth Conversion Opportunity", description: "High-income client without Roth IRA — backdoor Roth or conversion may be beneficial.", action: "Run Roth conversion analysis", createdAt: new Date().toISOString(), isRead: false, dueDate: new Date(Date.now() + 86400000 * 21).toISOString(), assignedTo: "Planner" });
-      if ((c.traditionalIra ?? 0) > 300000 && age >= 55) alerts.push({ id: `a8-${c.id}`, type: "opportunity", priority: "high", title: "Large Traditional IRA — Tax Bomb Risk", description: `IRA balance of $${((c.traditionalIra ?? 0) / 1000).toFixed(0)}K may create significant RMD tax burden.`, action: "Create Roth conversion ladder strategy", createdAt: new Date().toISOString(), isRead: false, dueDate: new Date(Date.now() + 86400000 * 14).toISOString(), assignedTo: "Advisor" });
       
-      if (churnRisk > 75) alerts.push({ id: `a9-${c.id}`, type: "risk", priority: "high", title: "High Attrition Risk", description: "AI model indicates 75%+ probability of client churn.", action: "Immediate retention intervention required", createdAt: new Date().toISOString(), isRead: false, dueDate: new Date(Date.now() + 86400000 * 1).toISOString(), assignedTo: "Senior Partner" });
-      
-      if (Math.random() > 0.8) alerts.push({ id: `a10-${c.id}`, type: "portfolio", priority: "medium", title: "Portfolio Drift", description: "Asset allocation has drifted >5% from target.", action: "Review and rebalance portfolio", createdAt: new Date().toISOString(), isRead: false, dueDate: new Date(Date.now() + 86400000 * 7).toISOString(), assignedTo: "Trader" });
 
-      const totalAUM = (c.traditionalIra ?? 0) + (c.rothIra ?? 0) + (c.retirement401k ?? 0) + (c.taxableAccounts ?? 0) || (Math.random() * 2000000 + 100000);
+      const totalAUM = (num(c.iraBalance) ?? 0) + (num(c.rothBalance) ?? 0) + (num(c.k401Balance) ?? 0) + (num(c.taxableAssets) ?? 0);
       
       let scoreBase = 100;
       scoreBase -= alerts.filter((a) => a.priority === "high").length * 15;
       scoreBase -= alerts.filter((a) => a.priority === "medium").length * 5;
       scoreBase -= daysSinceContact > 90 ? 20 : daysSinceContact > 30 ? 10 : 0;
-      scoreBase -= (100 - engagementScore) * 0.2;
-      scoreBase -= churnRisk > 50 ? 15 : 0;
       
       const score = Math.max(0, Math.min(100, Math.round(scoreBase)));
       const status = score >= 75 ? "healthy" : score >= 50 ? "attention" : "critical";
 
-      const nextReviewDate = new Date();
-      nextReviewDate.setMonth(nextReviewDate.getMonth() + Math.floor(Math.random() * 6) + 1);
 
       return { 
         id: c.id, 
@@ -341,12 +281,24 @@ export default function ClientHealthDashboard() {
         satisfactionScore,
         loyaltyIndex,
         churnRisk,
-        nextScheduledReview: nextReviewDate.toLocaleDateString(),
-        primaryGoal: ["Retirement", "Wealth Transfer", "Tax Mitigation", "Philanthropy", "Education Funding"][Math.floor(Math.random() * 5)],
-        lastMeetingNotes: "Discussed Q3 performance and adjusted fixed income allocation. Client expressed concerns about inflation."
+        nextScheduledReview: "Not scheduled",
+        primaryGoal: "Not recorded",
+        lastMeetingNotes: c.notes ?? ""
       };
     });
   }, [clients]);
+
+  const aumByAgeGroup = useMemo(() => {
+    const bands = [
+      { ageGroup: "< 35", min: 0, max: 35 }, { ageGroup: "35-45", min: 35, max: 46 },
+      { ageGroup: "46-55", min: 46, max: 56 }, { ageGroup: "56-65", min: 56, max: 66 },
+      { ageGroup: "66-75", min: 66, max: 76 }, { ageGroup: "> 75", min: 76, max: 200 },
+    ];
+    return bands.map((b) => {
+      const inBand = clientHealthData.filter((c) => c.age != null && c.age >= b.min && c.age < b.max);
+      return { ageGroup: b.ageGroup, aum: +(inBand.reduce((s, c) => s + c.totalAUM, 0) / 1_000_000).toFixed(2), clients: inBand.length };
+    });
+  }, [clientHealthData]);
 
   const filteredAndSortedData = useMemo(() => {
     let data = clientHealthData;
@@ -391,9 +343,9 @@ export default function ClientHealthDashboard() {
       criticalClients: clientHealthData.filter((c) => c.status === "critical").length,
       avgScore: Math.round(clientHealthData.reduce((s, c) => s + c.score, 0) / clientHealthData.length),
       totalAUM: clientHealthData.reduce((s, c) => s + c.totalAUM, 0),
-      avgAge: Math.round(clientHealthData.reduce((s, c) => s + c.age, 0) / clientHealthData.length),
-      avgEngagement: Math.round(clientHealthData.reduce((s, c) => s + c.engagementScore, 0) / clientHealthData.length),
-      totalChurnRisk: clientHealthData.filter((c) => c.churnRisk > 70).length
+      avgAge: (() => { const a = clientHealthData.filter((c) => c.age != null); return a.length ? Math.round(a.reduce((s, c) => s + (c.age ?? 0), 0) / a.length) : 0; })(),
+      avgEngagement: null,
+      totalChurnRisk: null
     };
   }, [clientHealthData]);
 
@@ -458,7 +410,7 @@ export default function ClientHealthDashboard() {
     try {
       const headers = [
         "ID", "Client Name", "Health Score", "Status", "Total AUM", "Age", "Risk Tolerance", 
-        "Primary Goal", "Last Contact", "Days Since Contact", "Engagement Score", "Churn Risk %",
+        "Primary Goal", "Last Contact", "Days Since Contact", "Engagement Score (not tracked)", "Churn Risk % (not tracked)",
         "Total Alerts", "High Priority Alerts"
       ];
       
@@ -468,13 +420,13 @@ export default function ClientHealthDashboard() {
         c.score.toString(),
         c.status,
         c.totalAUM.toFixed(2),
-        c.age.toString(),
+        c.age == null ? "" : c.age.toString(),
         c.riskTolerance,
         `"${c.primaryGoal}"`,
         c.lastContact,
         c.daysSinceContact.toString(),
-        c.engagementScore.toString(),
-        c.churnRisk.toString(),
+        "",
+        "",
         c.alerts.length.toString(),
         c.alerts.filter((a) => a.priority === "high").length.toString()
       ]);
@@ -613,46 +565,15 @@ export default function ClientHealthDashboard() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Recharts Chart 1: AreaChart */}
           <Card title="Health Score Trend (12 Months)" icon={TrendingUp}>
-            <div className="h-72">
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={historicalHealthData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-                  <defs>
-                    <linearGradient id="colorScore" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.8}/>
-                      <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#12233e" vertical={false} />
-                  <XAxis dataKey="month" stroke="#7a95b8" fontSize={12} tickLine={false} axisLine={false} />
-                  <YAxis stroke="#7a95b8" fontSize={12} tickLine={false} axisLine={false} domain={[40, 100]} />
-                  <RTooltip 
-                    contentStyle={{ background: "#060d19", border: "1px solid #12233e", borderRadius: "0.75rem", color: "#fff" }}
-                    itemStyle={{ color: "#fff" }}
-                  />
-                  <Area type="monotone" dataKey="avgScore" name="Avg Health Score" stroke="#3b82f6" fillOpacity={1} fill="url(#colorScore)" />
-                </AreaChart>
-              </ResponsiveContainer>
+            <div className="h-72 flex items-center justify-center text-center text-sm text-[#7a95b8] px-6">
+              No health-score history is recorded yet. Once scores are saved over time, the trend is charted here.
             </div>
           </Card>
 
           {/* Recharts Chart 2: ComposedChart */}
           <Card title="Client Status Transitions" icon={Activity}>
-            <div className="h-72">
-              <ResponsiveContainer width="100%" height="100%">
-                <ComposedChart data={historicalHealthData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#12233e" vertical={false} />
-                  <XAxis dataKey="month" stroke="#7a95b8" fontSize={12} tickLine={false} axisLine={false} />
-                  <YAxis stroke="#7a95b8" fontSize={12} tickLine={false} axisLine={false} />
-                  <RTooltip 
-                    contentStyle={{ background: "#060d19", border: "1px solid #12233e", borderRadius: "0.75rem", color: "#fff" }}
-                  />
-                  <Legend wrapperStyle={{ paddingTop: "20px" }} />
-                  <Bar dataKey="healthyCount" name="Healthy" stackId="a" fill="#22c55e" radius={[0, 0, 4, 4]} />
-                  <Bar dataKey="attentionCount" name="Attention" stackId="a" fill="#f0c040" />
-                  <Bar dataKey="criticalCount" name="Critical" stackId="a" fill="#ef4444" radius={[4, 4, 0, 0]} />
-                  <Line type="monotone" dataKey="avgScore" name="Avg Score Trend" stroke="#fff" strokeWidth={2} dot={{ r: 4 }} />
-                </ComposedChart>
-              </ResponsiveContainer>
+            <div className="h-72 flex items-center justify-center text-center text-sm text-[#7a95b8] px-6">
+              Status transitions need recorded history, which is not kept yet. They will appear here once it is.
             </div>
           </Card>
         </div>
@@ -682,22 +603,8 @@ export default function ClientHealthDashboard() {
           </Card>
 
           <Card title="Revenue Forecast Model" icon={TrendingUp}>
-            <div className="h-72">
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={revenueForecast} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#12233e" vertical={false} />
-                  <XAxis dataKey="month" stroke="#7a95b8" fontSize={12} tickLine={false} axisLine={false} />
-                  <YAxis stroke="#7a95b8" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(val) => `$${(val/1000).toFixed(0)}k`} />
-                  <RTooltip 
-                    contentStyle={{ background: "#060d19", border: "1px solid #12233e", borderRadius: "0.75rem", color: "#fff" }}
-                    formatter={(value: number) => [`$${value.toLocaleString()}`, undefined]}
-                  />
-                  <Legend />
-                  <Area type="monotone" dataKey="recurring" name="Recurring Rev" stackId="1" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.6} />
-                  <Area type="monotone" dataKey="projected" name="Projected New" stackId="1" stroke="#10b981" fill="#10b981" fillOpacity={0.6} />
-                  <Area type="monotone" dataKey="upside" name="Upside Potential" stackId="1" stroke="#f59e0b" fill="#f59e0b" fillOpacity={0.6} />
-                </AreaChart>
-              </ResponsiveContainer>
+            <div className="h-72 flex items-center justify-center text-center text-sm text-[#7a95b8] px-6">
+              No revenue model is connected. A forecast will appear here once revenue is recorded.
             </div>
           </Card>
         </div>
@@ -749,20 +656,8 @@ export default function ClientHealthDashboard() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Recharts Chart 5: RadarChart for Engagement */}
           <Card title="Engagement Vector Analysis" icon={Heart}>
-            <div className="h-72">
-              <ResponsiveContainer width="100%" height="100%">
-                <RadarChart cx="50%" cy="50%" outerRadius="80%" data={engagementMetrics}>
-                  <PolarGrid stroke="#12233e" />
-                  <PolarAngleAxis dataKey="subject" tick={{ fill: '#7a95b8', fontSize: 12 }} />
-                  <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
-                  <Radar name="Top Tier Clients" dataKey="A" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.5} />
-                  <Radar name="At-Risk Clients" dataKey="B" stroke="#ef4444" fill="#ef4444" fillOpacity={0.5} />
-                  <Legend />
-                  <RTooltip 
-                    contentStyle={{ background: "#060d19", border: "1px solid #12233e", borderRadius: "0.75rem", color: "#fff" }}
-                  />
-                </RadarChart>
-              </ResponsiveContainer>
+            <div className="h-72 flex items-center justify-center text-center text-sm text-[#7a95b8] px-6">
+              Engagement (meetings, portal logins, email opens, events, referrals) is not tracked per client yet. It will be charted here once it is.
             </div>
           </Card>
 
@@ -823,12 +718,11 @@ export default function ClientHealthDashboard() {
               <div>
                 <div className="font-medium text-white flex items-center gap-2">
                   {client.name}
-                  {client.churnRisk > 70 && <Badge variant="danger" className="ml-2 text-[10px] py-0 px-1.5">High Risk</Badge>}
                 </div>
                 <div className="text-xs text-[#7a95b8] mt-1 flex items-center gap-2">
                   <span>ID: {client.id}</span>
                   <span className="w-1 h-1 rounded-full bg-[#3b82f6]"></span>
-                  <span>{client.age} yrs</span>
+                  <span>{client.age == null ? "Age not recorded" : `${client.age} yrs`}</span>
                   <span className="w-1 h-1 rounded-full bg-[#3b82f6]"></span>
                   <span>{client.riskTolerance}</span>
                 </div>
@@ -911,35 +805,18 @@ export default function ClientHealthDashboard() {
                     Client Intelligence Profile
                   </h4>
                   
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="bg-[#060d19] p-3 rounded-lg border border-[#12233e]">
-                      <div className="text-xs text-[#7a95b8] mb-1">Engagement Score</div>
-                      <div className="flex items-center gap-2">
-                        <span className={`text-lg font-bold ${client.engagementScore >= 70 ? "text-green-400" : client.engagementScore >= 40 ? "text-yellow-400" : "text-red-400"}`}>
-                          {client.engagementScore}
-                        </span>
-                        <TrendingUp className="h-3 w-3 text-green-400" />
-                      </div>
-                    </div>
-                    <div className="bg-[#060d19] p-3 rounded-lg border border-[#12233e]">
-                      <div className="text-xs text-[#7a95b8] mb-1">Churn Probability</div>
-                      <div className="flex items-center gap-2">
-                        <span className={`text-lg font-bold ${client.churnRisk <= 20 ? "text-green-400" : client.churnRisk <= 50 ? "text-yellow-400" : "text-red-400"}`}>
-                          {client.churnRisk}%
-                        </span>
-                        {client.churnRisk > 50 && <AlertTriangle className="h-3 w-3 text-red-400" />}
-                      </div>
-                    </div>
+                  <div className="bg-[#060d19] p-3 rounded-lg border border-[#12233e] text-xs text-[#7a95b8]">
+                    Engagement and churn scores are not tracked yet. They will appear here once portal logins, meetings and email activity are recorded per client.
                   </div>
-                  
+
                   <div className="bg-[#060d19] p-3 rounded-lg border border-[#12233e] space-y-2">
                     <div className="flex justify-between text-sm">
                       <span className="text-[#7a95b8]">Annual Income:</span>
-                      <span className="text-white font-medium">{formatCurrency(client.annualIncome)}</span>
+                      <span className="text-white font-medium">{client.annualIncome == null ? "Not recorded" : formatCurrency(client.annualIncome)}</span>
                     </div>
                     <div className="flex justify-between text-sm">
                       <span className="text-[#7a95b8]">Est. Net Worth:</span>
-                      <span className="text-white font-medium">{formatCurrency(client.netWorth)}</span>
+                      <span className="text-white font-medium">{client.netWorth == null ? "Not recorded" : formatCurrency(client.netWorth)}</span>
                     </div>
                     <div className="flex justify-between text-sm">
                       <span className="text-[#7a95b8]">Next Review:</span>
@@ -948,9 +825,9 @@ export default function ClientHealthDashboard() {
                   </div>
                   
                   <div className="bg-[#060d19] p-3 rounded-lg border border-[#12233e]">
-                    <div className="text-xs text-[#7a95b8] mb-2">Last Meeting Notes</div>
+                    <div className="text-xs text-[#7a95b8] mb-2">Client Notes</div>
                     <p className="text-sm text-[#c8d8ec] italic border-l-2 border-[#3b82f6] pl-2 py-1">
-                      "{client.lastMeetingNotes}"
+                      {client.lastMeetingNotes ? `"${client.lastMeetingNotes}"` : "No notes on the client record."}
                     </p>
                   </div>
                 </div>
@@ -1122,7 +999,7 @@ export default function ClientHealthDashboard() {
                     title: "Risk Breakdown",
                     items: [
                       { label: "Critical Clients", value: metrics.criticalClients.toString() },
-                      { label: "High Churn Risk Clients", value: metrics.totalChurnRisk.toString() },
+                      { label: "High Churn Risk Clients", value: "Not tracked" },
                       { label: "Avg Days Since Contact", value: Math.round(clientHealthData.reduce((s, c) => s + c.daysSinceContact, 0) / clientHealthData.length).toString() }
                     ]
                   }
@@ -1491,12 +1368,10 @@ export default function ClientHealthDashboard() {
                         <div className="bg-[#060d19] rounded-lg p-3 border border-[#12233e]">
                           <div className="text-xs text-[#7a95b8] mb-1">Engagement Risk</div>
                           <div className="flex items-end gap-2">
-                            <span className={`text-2xl font-bold leading-none ${client.churnRisk <= 20 ? "text-green-400" : client.churnRisk <= 50 ? "text-yellow-400" : "text-red-400"}`}>
-                              {client.churnRisk}%
-                            </span>
+                            <span className="text-sm text-[#7a95b8] leading-none">Not tracked</span>
                           </div>
                           <div className="mt-2 text-xs text-[#7a95b8] flex items-center gap-1">
-                            <Clock className="h-3 w-3" /> Contact: {client.daysSinceContact}d ago
+                            <Clock className="h-3 w-3" /> Record updated: {client.daysSinceContact}d ago
                           </div>
                         </div>
                       </div>

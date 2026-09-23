@@ -56,9 +56,9 @@ function CosmosCanvas() {
       // Class 3: Supergiants (large, wide halo, 4-point diffraction)
       // Class 4: Hypergiants (huge, intense glow, 6-point diffraction, color-shifted)
       const stars = Array.from({ length: 300 }, () => {
-        const z = Math.random(); // 0=far, 1=near
+        const z = Math.random(); // 0=far, 1=near // decorative
         // Weighted class distribution: many dim, few bright
-        const classRoll = Math.random();
+        const classRoll = Math.random(); // decorative
         const luminosityClass = classRoll < 0.35 ? 0
           : classRoll < 0.60 ? 1
           : classRoll < 0.80 ? 2
@@ -74,39 +74,39 @@ function CosmosCanvas() {
           { sizeMin: 3.5, sizeMax: 5.5, opacityBase: 0.75, opacityZ: 0.25, haloMult: 6.0, spikeType: 6, pulseMin: 0.1, pulseMax: 0.3, hueShift: 40 },
         ][luminosityClass];
 
-        const size = classProps.sizeMin + Math.random() * (classProps.sizeMax - classProps.sizeMin);
-        const speed = (0.02 + z * 0.1) * (Math.random() > 0.5 ? 1 : -1);
+        const size = classProps.sizeMin + Math.random() * (classProps.sizeMax - classProps.sizeMin); // decorative
+        const speed = (0.02 + z * 0.1) * (Math.random() > 0.5 ? 1 : -1); // decorative
         // Hypergiants tend toward warm white/gold, dwarfs toward cool blue
-        const baseHue = luminosityClass >= 3 ? 180 + Math.random() * 40 : 190 + Math.random() * 70;
+        const baseHue = luminosityClass >= 3 ? 180 + Math.random() * 40 : 190 + Math.random() * 70; // decorative
 
         return {
-          x: Math.random() * canvas.width,
-          y: Math.random() * canvas.height,
+          x: Math.random() * canvas.width, // decorative
+          y: Math.random() * canvas.height, // decorative
           z,
           size,
           luminosityClass,
           baseOpacity: classProps.opacityBase + z * classProps.opacityZ,
           haloMult: classProps.haloMult,
           spikeType: classProps.spikeType as 0 | 4 | 6,
-          vx: speed * (Math.random() - 0.5),
-          vy: speed * (Math.random() - 0.5) * 0.5,
-          vz: (Math.random() - 0.5) * 0.0006,
-          pulseSpeed: classProps.pulseMin + Math.random() * (classProps.pulseMax - classProps.pulseMin),
-          pulsePhase: Math.random() * Math.PI * 2,
+          vx: speed * (Math.random() - 0.5), // decorative
+          vy: speed * (Math.random() - 0.5) * 0.5, // decorative
+          vz: (Math.random() - 0.5) * 0.0006, // decorative
+          pulseSpeed: classProps.pulseMin + Math.random() * (classProps.pulseMax - classProps.pulseMin), // decorative
+          pulsePhase: Math.random() * Math.PI * 2, // decorative
           hue: baseHue + classProps.hueShift,
         };
       });
 
       // 7 nebula clouds — UNMISTAKABLE colored clouds
       const nebulae = Array.from({ length: 7 }, (_, i) => ({
-        x: (canvas.width * (i + 0.5)) / 7 + (Math.random() - 0.5) * 150,
-        y: canvas.height * 0.15 + Math.random() * canvas.height * 0.7,
-        radius: 120 + Math.random() * 180, // Smaller = more concentrated = more visible
+        x: (canvas.width * (i + 0.5)) / 7 + (Math.random() - 0.5) * 150, // decorative
+        y: canvas.height * 0.15 + Math.random() * canvas.height * 0.7, // decorative
+        radius: 120 + Math.random() * 180, // Smaller = more concentrated = more visible // decorative
         hue: [210, 270, 170, 300, 195, 245, 160][i],
-        opacity: 0.30 + Math.random() * 0.20, // 30-50% — you WILL see these
-        vx: (Math.random() - 0.5) * 0.15,
-        vy: (Math.random() - 0.5) * 0.12,
-        pulsePhase: Math.random() * Math.PI * 2,
+        opacity: 0.30 + Math.random() * 0.20, // 30-50% — you WILL see these // decorative
+        vx: (Math.random() - 0.5) * 0.15, // decorative
+        vy: (Math.random() - 0.5) * 0.12, // decorative
+        pulsePhase: Math.random() * Math.PI * 2, // decorative
       }));
 
       stateRef.current = {
@@ -150,8 +150,8 @@ function CosmosCanvas() {
         star.x += star.vx;
         star.y += star.vy;
         star.z += star.vz;
-        if (star.z < 0) { star.z = 1; star.x = Math.random() * canvas.width; star.y = Math.random() * canvas.height; }
-        if (star.z > 1) { star.z = 0; star.x = Math.random() * canvas.width; star.y = Math.random() * canvas.height; }
+        if (star.z < 0) { star.z = 1; star.x = Math.random() * canvas.width; star.y = Math.random() * canvas.height; } // decorative
+        if (star.z > 1) { star.z = 0; star.x = Math.random() * canvas.width; star.y = Math.random() * canvas.height; } // decorative
         if (star.x < -30) star.x = canvas.width + 30;
         if (star.x > canvas.width + 30) star.x = -30;
         if (star.y < -30) star.y = canvas.height + 30;
@@ -266,17 +266,17 @@ function CosmosCanvas() {
       }
 
       // Shooting stars — spawn every 2-4 seconds
-      if (s.time - s.lastShoot > 2 + Math.random() * 2) {
+      if (s.time - s.lastShoot > 2 + Math.random() * 2) { // decorative
         s.lastShoot = s.time;
-        const fromRight = Math.random() > 0.5;
+        const fromRight = Math.random() > 0.5; // decorative
         s.shootingStars.push({
-          x: fromRight ? canvas.width * (0.3 + Math.random() * 0.7) : Math.random() * canvas.width * 0.7,
-          y: Math.random() * canvas.height * 0.4,
-          vx: (fromRight ? -1 : 1) * (7 + Math.random() * 8),
-          vy: 3 + Math.random() * 5,
+          x: fromRight ? canvas.width * (0.3 + Math.random() * 0.7) : Math.random() * canvas.width * 0.7, // decorative
+          y: Math.random() * canvas.height * 0.4, // decorative
+          vx: (fromRight ? -1 : 1) * (7 + Math.random() * 8), // decorative
+          vy: 3 + Math.random() * 5, // decorative
           life: 0,
-          maxLife: 35 + Math.random() * 35,
-          size: 1.5 + Math.random() * 2,
+          maxLife: 35 + Math.random() * 35, // decorative
+          size: 1.5 + Math.random() * 2, // decorative
         });
       }
 
@@ -393,12 +393,12 @@ function FloatingDepthField() {
         content: text,
         x: (i * 4.7 + 3) % 90,
         y: (i * 5.3 + 4) % 85,
-        z: Math.random(),
+        z: Math.random(), // decorative
         zDuration: 14 + (i % 6) * 3,
         driftX: (i % 2 === 0 ? 1 : -1) * (8 + (i % 5) * 4),
         driftY: (i % 3 === 0 ? -1 : 1) * (5 + (i % 4) * 3),
         delay: i * 0.8,
-        size: 0.7 + Math.random() * 0.5,
+        size: 0.7 + Math.random() * 0.5, // decorative
       });
     });
 
@@ -410,7 +410,7 @@ function FloatingDepthField() {
         src: photo.src,
         x: i === 0 ? 15 : 70, // left and right sides
         y: i === 0 ? 25 : 55,
-        z: 0.5 + Math.random() * 0.3,
+        z: 0.5 + Math.random() * 0.3, // decorative
         zDuration: 20 + i * 5,
         driftX: (i % 2 === 0 ? 1 : -1) * 12,
         driftY: (i % 2 === 0 ? -1 : 1) * 8,
