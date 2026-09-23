@@ -52,7 +52,7 @@ import {
   setPassphrase,
   unlock,
 } from "./vaultAccess";
-import { isOwnerEmailAddress } from "./ownerGuard";
+import { isOwnerSession } from "./ownerGuard";
 import { customProviders, mcpServers } from "../drizzle/schema";
 import { handshake, slugify, validateMcpUrl, McpError } from "./mcpClient";
 import { mcpStatus, refreshTools } from "./mcpRegistry";
@@ -144,8 +144,7 @@ export function environmentMcpSlots(): Array<{ slug: string; label: string; url:
 
 /** Owner-tier verified session. The outer door. */
 const ownerProcedure = protectedProcedure.use(async ({ ctx, next }) => {
-  const email = ctx.user?.email ?? "";
-  if (!isOwnerEmailAddress(email)) {
+  if (!isOwnerSession(ctx.user)) {
     throw new TRPCError({ code: "FORBIDDEN", message: "Owner access required." });
   }
   return next();
@@ -167,7 +166,7 @@ export const vaultRouter = router({
    * from this router. Drives whether the hidden hub control renders at all.
    */
   whoami: protectedProcedure.query(({ ctx }) => ({
-    owner: isOwnerEmailAddress(ctx.user.email ?? ""),
+    owner: isOwnerSession(ctx.user),
   })),
 
   /**
