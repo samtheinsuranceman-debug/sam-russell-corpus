@@ -259,12 +259,6 @@ export default function LifetimeGuaranteedIncome() {
               <div className="flex items-center">
                 <p className="text-xs text-muted-foreground">
                   <strong>{incomeProducts.length}</strong> income annuity products available in {getStateName(stateCode)}
-                  {splitRec.splitCount > 1 && (
-                    <span className="block mt-1 text-amber-400">
-                      <AlertTriangle className="w-3 h-3 inline mr-1" />
-                      Consider splitting across {splitRec.splitCount} carriers
-                    </span>
-                  )}
                 </p>
               </div>
             </div>

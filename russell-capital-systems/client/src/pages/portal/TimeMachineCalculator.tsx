@@ -5,7 +5,7 @@
  * It combines:
  *   1. Compounding Calculator (how time turns an assumed 7.5% into 28-80% effective returns)
  *   2. Dual Illustration (Boring vs Historical 30-year performance)
- *   3. Generational Ownership Transfer (policy continues across lifetimes)
+ *   3. Generational Ownership Transfer (ownership changes while the insured lives; the policy ends at the insured's death)
  *   4. Loan Arbitrage Analysis (5% loan rate, +0.5% positive arbitrage)
  *
  * COLOR STRATEGY:
@@ -1023,7 +1023,7 @@ export default function TimeMachineCalculator() {
               <div className="mt-4 p-3 rounded-lg bg-emerald-950/20 border border-emerald-600/30">
                 <p className="text-xs text-emerald-200/80 leading-relaxed">
                   <strong className="text-emerald-300">Key Insight:</strong> An IUL policy is permanent life insurance: it ends when the insured
-                  dies and pays an income-tax-free death benefit (IRC §101(a)). What can serve the next generations is that death benefit,
+                  dies and pays a death benefit that is generally income-tax-free (IRC §101(a)). What can serve the next generations is that death benefit,
                   for example paid to a trust. The longer a policy runs, the larger each year's credit at the same assumed rate;
                   {" "}{fmt(totalPremiums)} in premiums is shown here at the rate you set, hypothetically and before policy charges.
                 </p>

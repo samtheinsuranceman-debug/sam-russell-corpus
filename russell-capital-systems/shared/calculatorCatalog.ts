@@ -133,7 +133,7 @@ export const CALCULATORS: readonly CalculatorEntry[] = [
   { path: "/portal/tax-brackets", name: "Tax Bracket Visualizer", category: "tax",
     blurb: "Every bracket, every threshold, and how close you are to the next edge.",
     engine: "shared/taxBracketEngine.ts", keywords: ["bracket", "threshold"] },
-  { path: "/portal/tax-combos", name: "Tax-Free Wealth Combinations", category: "tax", featured: true,
+  { path: "/portal/tax-combos", name: "Tax-Efficient Wealth Combinations", category: "tax", featured: true,
     blurb: "Which tax mechanisms stack legally, which cancel each other, and the order they have to run in.",
     keywords: ["combination", "stack", "tax free", "combo"] },
   { path: "/portal/tax-opportunities", name: "Tax Opportunity Detector", category: "tax",

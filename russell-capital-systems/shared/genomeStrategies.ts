@@ -321,7 +321,7 @@ export const STRATEGIES: readonly Strategy[] = [
     ],
     gates: [
       { id: 'surrender-survivable', requirement: 'The money can stay put for the whole surrender period', factorId: 'liquidity-need', test: { direction: 'atMost', score: -1.5 }, why: 'Surrender charges on money that has to come out early can exceed everything the contract earned. A contract broken early is a loss, not a change of mind.' },
-      { id: 'carrier-strength', requirement: 'A carrier whose claims-paying strength supports a multi-decade promise', why: 'The guarantee is the carrier\'s, not an index\'s and not a regulator\'s. Rating and state guaranty limits both have to be looked at by name.', external: true },
+      { id: 'carrier-strength', requirement: 'A carrier whose claims-paying strength supports a multi-decade promise', why: 'The guarantee is the carrier\'s, not an index\'s and not a regulator\'s. The insurer\'s financial strength rating has to be looked at by name.', external: true },
     ],
     allocation: (fit) => ({
       minPct: Math.max(0, Math.round((fit - 35) * 0.30)),

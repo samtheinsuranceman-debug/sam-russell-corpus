@@ -91,7 +91,7 @@ const COMPARISON_FEATURES = [
   {
     category: "Access & Withdrawals",
     features: [
-      { feature: "Access to Policy Value", iul: "Policy loans against part of the cash surrender value (carriers typically allow 80–90%), at any age; loan interest accrues and surrender charges apply in early years", roth: "No — can only withdraw CONTRIBUTIONS tax-free before 59½. EARNINGS are locked until 59½ AND 5-year rule met", iulWins: true },
+      { feature: "Access to Policy Value", iul: "Policy loans against part of the cash surrender value (carriers typically allow 80–90%), at any age; loan interest accrues and surrender charges apply in early years", roth: "Contributions can be withdrawn tax-free any time; earnings withdrawn before 59½ and the 5-year rule are taxed and may carry a 10% penalty", iulWins: true },
       { feature: "Early Withdrawal Penalty", iul: "No IRS age penalty on loans from a non-MEC policy; a MEC's loans are taxable and carry a 10% penalty before 59½ (IRC §72(v)); surrender charges may apply", roth: "10% penalty on EARNINGS before age 59½ + income tax", iulWins: true },
       { feature: "5-Year Waiting Rule", iul: "No 5-year rule, but early cash value is small after charges and surrender charges", roth: "Must wait 5 years from first contribution for tax-free earnings withdrawal", iulWins: true },
       { feature: "Age 59½ Restriction", iul: "No age restrictions on accessing funds", roth: "Earnings locked until 59½ (plus 5-year rule)", iulWins: true },
@@ -101,7 +101,7 @@ const COMPARISON_FEATURES = [
   {
     category: "Tax Treatment",
     features: [
-      { feature: "Tax-Free Growth", iul: "Yes — illustrated policy value grows tax-deferred", roth: "Yes — grows tax-free", iulWins: false },
+      { feature: "Tax-Deferred Growth", iul: "Yes — cash value grows tax-deferred inside the policy", roth: "Yes — grows tax-free when withdrawals are qualified", iulWins: false },
       { feature: "Tax-Free Income", iul: "Via policy loans, only if the policy is not a MEC and stays in force; a lapse with a loan outstanding can be taxable", roth: "Yes — but only after 59½ AND 5-year rule", iulWins: true },
       { feature: "Tax-Free Death Benefit", iul: "Yes — income tax-free to beneficiaries", roth: "Inherited Roth is tax-free but must be distributed within 10 years (SECURE Act)", iulWins: true },
     ],
@@ -110,7 +110,7 @@ const COMPARISON_FEATURES = [
     category: "Protection & Benefits",
     features: [
       { feature: "Downside Market Protection", iul: "0% floor on index credits in a down year (policy charges still reduce the account value)", roth: "No protection — full market exposure and loss risk", iulWins: true },
-      { feature: "Death Benefit", iul: "Income-tax-free death benefit (IRC §101(a)); the multiple of premium depends on age, health and funding", roth: "Only account balance — no leverage", iulWins: true },
+      { feature: "Death Benefit", iul: "Generally income-tax-free death benefit (IRC §101(a); transfer-for-value exceptions apply); the multiple of premium depends on age, health and funding", roth: "Only account balance — no leverage", iulWins: true },
       { feature: "Long-Term Care Rider", iul: "Available on some policies; terms vary by carrier and rider", roth: "Not available", iulWins: true },
       { feature: "Creditor Protection", iul: "Protected in most states", roth: "Varies by state — limited protection", iulWins: true },
       { feature: "Chronic Illness Accelerated Benefit", iul: "Available — access death benefit while living", roth: "Not available", iulWins: true },

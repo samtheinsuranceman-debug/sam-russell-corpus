@@ -177,8 +177,9 @@ export default function ClientReportBuilder() {
                 </div>
                 <div className="flex items-center gap-6 pt-6">
                   <div className="flex items-center gap-2">
-                    <Checkbox id="disclaimer" checked={includeDisclaimer} onCheckedChange={(v) => setIncludeDisclaimer(!!v)} />
-                    <Label htmlFor="disclaimer" className="text-sm">Include Disclaimer</Label>
+                    {/* Disclaimers are always included in a generated report. */}
+                    <Checkbox id="disclaimer" checked disabled />
+                    <Label htmlFor="disclaimer" className="text-sm">Disclaimer (always included)</Label>
                   </div>
                   <div className="flex items-center gap-2">
                     <Checkbox id="branding" checked={includeBranding} onCheckedChange={(v) => setIncludeBranding(!!v)} />

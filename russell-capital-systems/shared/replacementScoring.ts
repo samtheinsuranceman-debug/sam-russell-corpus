@@ -420,40 +420,11 @@ function scoreCarrierStrength(contract: ExistingContract, bestCandidate: Annuity
   };
 }
 
-function scoreStateGuarantyHeadroom(contract: ExistingContract, stateCode: StateCode): ReplacementFactor {
-  const guaranty = getStateGuaranty(stateCode);
-  const annuityLimit = guaranty.annuityLimit;
-  const headroom = annuityLimit - contract.accountValue;
-  const utilizationPct = (contract.accountValue / annuityLimit) * 100;
-
-  if (utilizationPct > 90) {
-    return {
-      name: "State Guaranty Headroom",
-      points: 10,
-      maxPoints: 10,
-      explanation: `Account value ($${contract.accountValue.toLocaleString()}) uses ${utilizationPct.toFixed(0)}% of ${stateCode}'s $${annuityLimit.toLocaleString()} guaranty limit. Consider splitting across carriers for full protection.`,
-      direction: "replace",
-    };
-  }
-
-  if (utilizationPct > 70) {
-    return {
-      name: "State Guaranty Headroom",
-      points: 5,
-      maxPoints: 10,
-      explanation: `Account uses ${utilizationPct.toFixed(0)}% of state guaranty ($${headroom.toLocaleString()} headroom). Approaching limit — monitor as value grows.`,
-      direction: "neutral",
-    };
-  }
-
-  return {
-    name: "State Guaranty Headroom",
-    points: 0,
-    maxPoints: 10,
-    explanation: `Well within ${stateCode} guaranty limit ($${headroom.toLocaleString()} headroom). No concern.`,
-    direction: "neutral",
-  };
-}
+// scoreStateGuarantyHeadroom was removed 23 Sep 2026. It scored up to 10 points toward REPLACING a
+// contract when the account value neared the state guaranty association limit. N.C. Gen. Stat.
+// § 58-62-86 bars using the association in the sale or solicitation of an annuity, and a replacement
+// score is exactly that. Diversification across insurers, if wanted, should rest on financial-strength
+// ratings (see scoreCarrierStrength), never on the association.
 
 function scoreTimingAndAge(contract: ExistingContract): ReplacementFactor {
   const yearsToIncome = Math.max(0, 65 - contract.clientAge);
@@ -830,7 +801,6 @@ export function scoreReplacementOpportunity(
     scoreBonusOpportunity(contract, bestCandidate),
     scoreIncomeImprovement(contract, bestCandidate),
     scoreCarrierStrength(contract, bestCandidate),
-    scoreStateGuarantyHeadroom(contract, stateCode),
     scoreTimingAndAge(contract),
   ];
 

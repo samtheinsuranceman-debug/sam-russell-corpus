@@ -1501,7 +1501,7 @@ export default function MortgageKillerV3() {
                 <div className="bg-amber-500/10 border border-amber-500/20 rounded-lg p-3 mt-3">
                   <p className="text-xs text-amber-200">
                     <strong>Total Tax Modeled as Reduced or Deferred (hypothetical):</strong> {fmt(projection.summary.capGainsTax + projection.summary.estateTax + projection.summary.cumulativeTaxSaved)} —
-                    combining capital gains deferral ({fmt(projection.summary.capGainsTax)}), estate tax elimination ({fmt(projection.summary.estateTax)}),
+                    combining capital gains deferral ({fmt(projection.summary.capGainsTax)}), estate tax reduction ({fmt(projection.summary.estateTax)}),
                     and annual deductions ({fmt(projection.summary.cumulativeTaxSaved)}).
                   </p>
                 </div>

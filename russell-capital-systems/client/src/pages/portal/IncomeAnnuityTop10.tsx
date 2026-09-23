@@ -383,20 +383,8 @@ export default function IncomeAnnuityTop10() {
           </CardContent>
         </Card>
 
-        {/* ─── CARRIER SPLIT WARNING ─── */}
-        {splitRec.splitCount > 1 && (
-          <Card className="border-amber-500/50">
-            <CardContent className="pt-4">
-              <div className="flex items-start gap-3">
-                <AlertTriangle className="w-5 h-5 text-amber-600 mt-0.5 shrink-0" />
-                <div>
-                  <h4 className="font-semibold text-amber-600">Carrier Split Recommended</h4>
-                  <p className="text-sm text-muted-foreground mt-1">{splitRec.recommendation}</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        )}
+        {/* The "Carrier Split Recommended" card was removed 23 Sep 2026: it sized the split to the state
+            guaranty association limit (N.C. Gen. Stat. § 58-62-86). */}
 
         {/* ─── TABS ─── */}
         <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-4">

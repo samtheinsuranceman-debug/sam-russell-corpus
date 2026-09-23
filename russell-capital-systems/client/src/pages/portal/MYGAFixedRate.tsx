@@ -550,7 +550,7 @@ function MYGAvsSP500Section({ premium, mygaRate }: { premium: number; mygaRate: 
               </thead>
               <tbody>
                 {[
-                  { factor: "Principal Protection", myga: "100% guaranteed", sp500: "None — can lose 38%+ in a year", winner: "myga" },
+                  { factor: "Principal Protection", myga: "Guaranteed by the contract for the term (claims-paying ability; surrender charges/MVA apply)", sp500: "None — can lose 38%+ in a year", winner: "myga" },
                   { factor: "Average Annual Return", myga: `${fmtPct(mygaRate)} guaranteed`, sp500: `~${fmtPct(ROLLING_AVERAGES[20].avg)} historical avg`, winner: "sp500" },
                   { factor: "Worst 5-Year Outcome", myga: `+${fmtPct(mygaRate * 5)} total (guaranteed)`, sp500: `${fmtPct(ROLLING_AVERAGES[5].worst * 5)} total`, winner: "myga" },
                   { factor: "Tax Treatment", myga: "Tax-deferred growth", sp500: "Dividends & gains taxed annually", winner: "myga" },
@@ -988,11 +988,12 @@ export default function MYGAFixedRate() {
                 <Lock className="w-4 h-4 mr-1" /> Guaranteed Fixed Rate
               </Badge>
               <Badge variant="outline" className="text-green-600 border-green-600">
-                <Shield className="w-3 h-3 mr-1" /> 100% Principal Protected
+                <Shield className="w-3 h-3 mr-1" /> Principal guaranteed for the term*
               </Badge>
               <Badge variant="outline" className="text-blue-600 border-blue-600">
-                <Star className="w-3 h-3 mr-1" /> 6.25% Guaranteed
+                <Star className="w-3 h-3 mr-1" /> 6.25% for the term*
               </Badge>
+              <span className="text-[10px] text-muted-foreground">*For the guarantee term only, subject to surrender charges, any market value adjustment and the issuing insurer's claims-paying ability.</span>
             </div>
             <div className="flex items-center gap-2">
               <ExportToSlides
