@@ -188,7 +188,7 @@ export function optimizeTaxes(input: TaxOptimizerInput): TaxOptimizerResult {
     { key: "costSegDepreciation", label: "Additional depreciation (cost segregation)", authority: "IRC §§167, 168; passive limits §469", patch: { costSeg }, amount: costSeg,
       note: input.realEstateProfessional ? "Real estate professional: rental losses offset other income." : "Not a real estate professional: depreciation offsets rental income only; any excess is a suspended passive loss (§469)." },
     { key: "rothConversion", label: "Roth conversion", authority: "IRC §408A(d)(3)", patch: { roth }, amount: roth,
-      note: "Adds taxable income this year in exchange for tax-free growth later; shown as a cost." },
+      note: "Adds taxable income this year in exchange for no tax on qualified withdrawals later; shown as a cost." },
   ];
 
   let applied: Applied = { ...zero };

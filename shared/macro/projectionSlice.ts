@@ -25,7 +25,11 @@ export function sliceProjection(h: ProjectionHorizon, years: number): Projection
   return { ...h, years: n, path, confidentYears: Math.min(n, h.confidentYears) };
 }
 
-/** A calculator that takes one set of assumptions for its whole horizon: the confidence-weighted average over the projected years. */
+/**
+ * A calculator that takes one set of assumptions for its whole horizon: the plain mean
+ * of the per-year adjustments over the projected years (each year's deltas are already
+ * scaled by that year's confidence weight in projectionHorizon).
+ */
 export function averageAdjustments(horizon: ProjectionHorizon): MacroAdjustments {
   const n = horizon.path.length || 1;
   const sum = (f: (p: ProjectionYear) => number) => horizon.path.reduce((s, p) => s + f(p), 0) / n;

@@ -71,7 +71,7 @@
  *     `REVERSE_WALK_ATLAS.md`.
  *
  * Standing rules honoured: every threshold is a rules row with source and
- * asOf; no DeepSeek; no secrets; iteration via `Array.from` (no downlevel
+ * asOf; no banned provider (BANNED_PROVIDER_PATTERN); no secrets; iteration via `Array.from` (no downlevel
  * iteration needed).
  */
 import type { Assumption } from "./assumptions";

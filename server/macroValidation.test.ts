@@ -367,8 +367,8 @@ describe("findings: schema, bhQ and the headline", () => {
     expect(validateFinding("not an object").valid).toBe(false);
   });
 
-  it("refuses non-American model families", () => {
-    expect(validateFinding({ ...good, model: "deepseek" }).valid).toBe(false);
+  it("refuses model families not on the allow-list", () => {
+    expect(validateFinding({ ...good, model: "acme" }).valid).toBe(false);
     expect(validateFinding({ ...good, model: "Google" }).valid).toBe(true);
   });
 
