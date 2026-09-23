@@ -31,6 +31,8 @@ const SiteMapOverlay = lazy(() => import("./components/SiteMapOverlay"));
 const AdvisorNudge = lazy(() => import("./components/AdvisorNudge"));
 const SiteMapPage = lazy(() => import("./pages/portal/SiteMapPage"));
 const SamuelGoldman = lazy(() => import("./pages/portal/SamuelGoldman"));
+const GenomeIntake = lazy(() => import("./pages/portal/GenomeIntake"));
+const ColdStartOverlay = lazy(() => import("./components/firstLogin/ColdStartOverlay"));
 const SourcesPage = lazy(() => import("./pages/portal/Sources"));
 
 // Public pages — lazy-loaded to reduce initial bundle
@@ -928,6 +930,7 @@ function Router() {
       {/* Site map + the hive front door (22 Sep 2026) */}
       <Route path="/portal/map" component={gated(SiteMapPage, "/portal/map")} />
       <Route path="/portal/samuel-goldman" component={gated(SamuelGoldman, "/portal/samuel-goldman")} />
+      <Route path="/portal/genome-intake" component={gated(GenomeIntake, "/portal/genome-intake")} />
       <Route path="/portal/sources" component={gated(SourcesPage, "/portal/sources")} />
       {/* ─── PR-3b: pages ported from russell-capital-app ─── */}
       <Route path="/portal/retirement-advantage" component={gated(RetirementAdvantage, "/portal/retirement-advantage")} />
@@ -1084,6 +1087,8 @@ function App() {
                 <Suspense fallback={null}><SiteMapOverlay /></Suspense>
                 {/* Samuel Goldman speaks after the second page open */}
                 <Suspense fallback={null}><AdvisorNudge /></Suspense>
+                {/* First login after the Door: cream field, the stills, then START HERE (owner preview until GENOME_INTAKE_LIVE) */}
+                <Suspense fallback={null}><ColdStartOverlay /></Suspense>
               </PredictiveProvider>
             </SiteMapProvider>
             {/* The every-page AI voice advisor — speak on any page, the AI

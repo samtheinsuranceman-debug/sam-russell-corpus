@@ -15,7 +15,7 @@ import {
   Ghost, Radio, Dna, Archive, GitBranch, Waves, Megaphone, Image,
   Sword, Volume2, Video, User
 } from "lucide-react";
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect, useMemo, useCallback, useId, useRef } from "react";
 import { useEntrainment } from "@/contexts/EntrainmentEngine";
 import { useDisclaimer } from "@/contexts/DisclaimerContext";
 import { Link, useLocation } from "wouter";
@@ -40,6 +40,9 @@ import { RoomVideoTile } from "@/components/rooms/RoomVideoTile";
 import PredictiveFooter from "@/components/PredictiveFooter";
 import EngineSourcesFooter from "@/components/EngineSourcesFooter";
 import PolicyDisclosureLine from "@/components/PolicyDisclosureLine";
+import { FloorBottomBar, FloorIndex, FloorPanel, FloorStairs, navModeFromUrl, setNavMode, useFloorNav, useNavMode, type FloorNavEntry, type NavMode } from "@/components/FloorNav";
+import { viewerAudience, type Audience } from "@shared/floors";
+import { NOT_IN_NAVIGATION } from "@shared/hiddenRoutes";
 
 /* ═══════════════════════════════════════════════════════════════════
    COLOR-CODED NAVIGATION — Intuitive categories with visual coding
@@ -728,6 +731,127 @@ const BOTTOM_TABS = [
   { path: "/portal/arena", label: "Arena", icon: Trophy },
 ];
 
+/**
+ * The rail flattened for the four-floor nav (FloorNav.tsx, shared/floors.ts).
+ * The same pages and labels as NAV_SECTIONS: the floors only rearrange them,
+ * so every page the rail reaches stays reachable from a floor's index. Pages
+ * the owner keeps out of every menu (shared/hiddenRoutes.ts) stay out here too.
+ */
+const NAV_ENTRIES: FloorNavEntry[] = NAV_SECTIONS.flatMap((section) => [
+  ...(section.items ?? []).map((i) => ({ path: i.path, label: i.label, section: section.label, icon: i.icon })),
+  ...(section.subgroups ?? []).flatMap((sg) =>
+    sg.items.map((i) => ({ path: i.path, label: i.label, section: section.label, subLabel: sg.subLabel, icon: i.icon })),
+  ),
+]).filter((e) => !(e.path in NOT_IN_NAVIGATION));
+
+/**
+ * Who is looking: the owner and admins see everything, everyone else the
+ * household view (see viewerAudience for the future advisor role).
+ */
+function useNavViewer(): { viewer: Audience; privileged: boolean } {
+  const { user, isAuthenticated } = useAuth();
+  const whoami = trpc.vault.whoami.useQuery(undefined, { enabled: isAuthenticated, retry: false, staleTime: 5 * 60_000 });
+  const privileged = user?.role === "admin" || whoami.data?.owner === true;
+  return { viewer: viewerAudience({ role: user?.role, isOwner: whoami.data?.owner === true }), privileged };
+}
+
+/**
+ * Switch between the classic rail and the four floors, for this browser.
+ * On the classic rail only the owner and admins see it (a preview); on the
+ * floors everyone does, so nobody is stuck in a layout they did not choose.
+ */
+function NavModeToggle({ mode }: { mode: NavMode }) {
+  const { privileged } = useNavViewer();
+  if (mode === "classic" && !privileged) return null;
+  const next: NavMode = mode === "floors" ? "classic" : "floors";
+  return (
+    <button
+      type="button"
+      onClick={() => setNavMode(next)}
+      className="rc-sidebar-item w-full text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-amber-400"
+      title={mode === "floors" ? "Return to the left-hand menu" : "Preview the four floors: Body, Wound, Work, Talk. Only this browser changes."}
+    >
+      <Layers size={12} aria-hidden="true" />
+      {mode === "floors" ? "Back to the classic menu" : "Preview four floors"}
+    </button>
+  );
+}
+
+/**
+ * The floors' account menu: active client, disclosures, sign in or out, the
+ * owner's vault and the nav switch. What the rail's footer held, behind one word.
+ * `inline` renders it straight into the phone sheet instead of a popover.
+ */
+function FloorAccountMenu({ mode, inline = false }: { mode: NavMode; inline?: boolean }) {
+  const { user, isAuthenticated, logout } = useAuth();
+  const [location] = useLocation();
+  const [open, setOpen] = useState(false);
+  const panelId = useId();
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") { setOpen(false); buttonRef.current?.focus(); }
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [open]);
+
+  const body = (
+    <div className="rounded-xl border border-white/10 bg-[#0b1629] text-left">
+      <WorkspaceSwitcher />
+      <ActiveClientSelector />
+      <div className="px-3 py-1.5 border-b border-[#12233e]">
+        <DisclaimerToggle />
+      </div>
+      <div className="p-2">
+        <NavModeToggle mode={mode} />
+        {isAuthenticated && user ? (
+          <>
+            <div className="px-2 py-1 text-[11px] text-slate-300 truncate">{user.name ?? user.email ?? ""}</div>
+            <button type="button" onClick={() => logout()} className="rc-sidebar-item w-full text-left">
+              <LogOut size={12} aria-hidden="true" />
+              Sign out
+            </button>
+            <HiddenBrainVault />
+          </>
+        ) : (
+          <a href={getLoginUrl(location)} className="rc-sidebar-item w-full text-left inline-flex items-center gap-2">
+            <LogOut size={12} className="rotate-180" aria-hidden="true" />
+            Sign in
+          </a>
+        )}
+      </div>
+    </div>
+  );
+
+  if (inline) return <div className="w-full">{body}</div>;
+
+  return (
+    <div className="relative">
+      <button
+        ref={buttonRef}
+        type="button"
+        className="rc-floor-link"
+        aria-expanded={open}
+        aria-controls={panelId}
+        onClick={() => setOpen((o) => !o)}
+      >
+        {isAuthenticated ? "Account" : "Sign in"}
+      </button>
+      {open && (
+        <>
+          <div className="fixed inset-0 z-40" aria-hidden="true" onClick={() => setOpen(false)} />
+          <div id={panelId} className="absolute right-0 top-full mt-2 w-72 z-50">
+            {body}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
 function DisclaimerToggle() {
   const { showDisclaimers, setShowDisclaimers } = useDisclaimer();
   return (
@@ -1320,6 +1444,8 @@ function Sidebar({ open, onClose }: { open: boolean; onClose: () => void }) {
                 <LogOut size={12} />
                 Sign out
               </button>
+              {/* Owner and admins: preview the four floors. Renders nothing for anyone else. */}
+              <NavModeToggle mode="classic" />
               {/* Owner only: the hidden brain vault. Renders nothing for anyone else. */}
               <HiddenBrainVault />
             </>
@@ -1617,22 +1743,45 @@ export function AppShell({ children, title: _title, subtitle: _subtitle }: { chi
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [location] = useLocation();
   const room = useRoom();
+  // The four floors replace the rail only when the flag is on (default off).
+  const navMode = useNavMode();
+  const floors = navMode === "floors";
+  const { viewer, privileged } = useNavViewer();
+  const floorState = useFloorNav(NAV_ENTRIES, viewer);
+  // A ?nav=floors preview link switches the nav only for the owner and admins.
+  const urlModeApplied = useRef(false);
+  useEffect(() => {
+    if (!privileged || urlModeApplied.current) return;
+    urlModeApplied.current = true;
+    const fromUrl = navModeFromUrl();
+    if (fromUrl) setNavMode(fromUrl);
+  }, [privileged]);
+  // Favourites stay one keystroke away: they head the All tools index.
+  const { isAuthenticated } = useAuth();
+  const { data: favorites } = trpc.favorites.list.useQuery(undefined, { staleTime: 30_000, enabled: floors && isAuthenticated, retry: false });
+  const favoriteLinks = useMemo(
+    () => (favorites ?? []).map((f: { path: string; label: string }) => ({ path: f.path, label: f.label })),
+    [favorites],
+  );
 
   return (
-    <div className="rc-portal-theme min-h-screen relative">
-      <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+    <div className="rc-portal-theme min-h-screen relative" data-nav={floors ? "floors" : "classic"}>
+      {!floors && <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />}
 
       <div className="rc-main">
         {/* Top bar */}
         <header className="rc-topbar">
-          <button
-            className="md:hidden rc-btn rc-btn-ghost p-2"
-            onClick={() => setSidebarOpen(true)}
-          >
-            <Menu size={20} />
-          </button>
+          {!floors && (
+            <button
+              className="md:hidden rc-btn rc-btn-ghost p-2"
+              onClick={() => setSidebarOpen(true)}
+              aria-label="Open the menu"
+            >
+              <Menu size={20} />
+            </button>
+          )}
           <GlobalSearch />
-          <div className="flex-1" />
+          {floors ? <FloorStairs state={floorState} /> : <div className="flex-1" />}
           <AudioToggle />
           <ThemeToggle />
           <NotificationBell />
@@ -1641,6 +1790,7 @@ export function AppShell({ children, title: _title, subtitle: _subtitle }: { chi
             Home
           </Link>
         </header>
+        {floors && <FloorPanel state={floorState} utilities={<FloorAccountMenu mode={navMode} />} />}
         <Breadcrumbs />
 
         {/* Sub-tab awareness disclaimer */}
@@ -1684,7 +1834,12 @@ export function AppShell({ children, title: _title, subtitle: _subtitle }: { chi
       <SessionTimeout />
       <TrialCountdownWidget />
 
-      {/* Mobile bottom tabs */}
+      {floors && <FloorIndex state={floorState} favorites={favoriteLinks} />}
+
+      {/* Mobile: the four words at the bottom when the floors are on, else the classic tabs */}
+      {floors ? (
+        <FloorBottomBar state={floorState} utilities={<FloorAccountMenu mode={navMode} inline />} />
+      ) : (
       <nav className="rc-bottom-tabs">
         {BOTTOM_TABS.map((tab) => {
           const Icon = tab.icon;
@@ -1697,6 +1852,7 @@ export function AppShell({ children, title: _title, subtitle: _subtitle }: { chi
           );
         })}
       </nav>
+      )}
     </div>
   );
 }

@@ -11,6 +11,7 @@ import { registerMailRoutes } from "./mailer";
 import { registerSmsRoutes } from "./sms";
 import { registerWhispererRoutes, registerZoomWebhook, startWhispererScheduler } from "../whisperer";
 import { registerScheduledRoutes, startFollowupScheduler } from "../followups";
+import { startGenomeRawSweep } from "../genomeIntakeDb";
 import { registerEventRoutes } from "../automations";
 import { startHarvestSchedule } from "../forecastSources";
 import { startPulseSchedule } from "../power";
@@ -121,6 +122,17 @@ async function startServer() {
       res.status(500).json({ error: e?.message ?? "roll call failed" });
     }
   });
+  // Wealth Genome raw-answer sweep, on demand (the process also runs it every
+  // five minutes): deletes every raw genome answer past its expiry.
+  //   GET /api/cron/genome-raw-sweep?secret=$CRON_SECRET
+  app.get("/api/cron/genome-raw-sweep", async (_req, res) => {
+    try {
+      const { runGenomeRawSweep } = await import("../genomeIntakeDb");
+      res.json({ at: new Date().toISOString(), ...(await runGenomeRawSweep()) });
+    } catch (e: any) {
+      res.status(500).json({ error: e?.message ?? "genome sweep failed" });
+    }
+  });
   registerStorageProxy(app);
   registerOwnerLoginRoutes(app);
   registerRoomVideoRoutes(app);
@@ -166,6 +178,8 @@ async function startServer() {
     console.log(`Server running on http://localhost:${port}/`);
     // Lead follow-up automation ticks every minute (FOLLOWUPS_DISABLED=1 turns it off).
     startFollowupScheduler();
+    // Wealth Genome: raw answers past their expiry are deleted every five minutes (GENOME_SWEEP_DISABLED=1 turns it off).
+    if (startGenomeRawSweep()) console.log("[genome] raw-answer sweep running");
     // AI Whisperer: every 20 s, a live call whose five-minute cycle is due gets its objection reports and its text (WHISPERER_DISABLED=1 turns it off).
     if (startWhispererScheduler()) console.log("[whisperer] cycle scheduler running");
     // Erosion engine: EROSION_HARVEST_DAYS=7 has the AI council re-read every forecaster weekly (off unless set).

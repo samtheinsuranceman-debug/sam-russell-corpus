@@ -44,6 +44,7 @@ import { unaskedRouter } from "./unaskedRouter";
 import { siteHealthRouter } from "./siteHealthRouter";
 import { hiveRouter } from "./hiveRouter";
 import { siteMapRouter } from "./siteMapRouter";
+import { genomeIntakeRouter } from "./genomeIntakeRouter";
 import { forecastRouter } from "./forecastRouter";
 import { arrivalRouter } from "./arrivalRouter";
 import { sourcesRouter } from "./sourcesRouter";
@@ -427,6 +428,7 @@ export const appRouter = router({
   siteHealth: siteHealthRouter,
   hive: hiveRouter,
   siteMap: siteMapRouter,
+  genomeIntake: genomeIntakeRouter,
   forecast: forecastRouter,
   arrival: arrivalRouter,
   sources: sourcesRouter,
