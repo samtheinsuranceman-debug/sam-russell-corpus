@@ -54,6 +54,7 @@
  *   6. Surrender charge, surrender value, death benefit, lapse test.
  */
 import { corridorFactor, IRC_7702_CORRIDOR_SOURCE } from './irc7702';
+import { POLICY_DISCLOSURE } from './policyDisclosure';
 
 /* ------------------------------------------------------------------ *
  * Year series: an array by policy year, or a schedule by year band
@@ -390,7 +391,22 @@ function validate(input: LedgerIulInput): string | null {
   if (input.loans) {
     const l = input.loans;
     if (!(l.limit.limitPct >= 0 && l.limit.limitPct <= 100)) return 'The loan limit percentage must be between 0 and 100.';
-    if (resolveYearSeries(l.chargedRatePct, input.years).values.some((v) => v < 0)) return 'A loan rate cannot be negative.';
+    // A loan-rate year the caller leaves out is not a free year: refuse it, as for charges.
+    const charged = resolveYearSeries(l.chargedRatePct, input.years);
+    const cGap = charged.covered.indexOf(false);
+    if (cGap >= 0) return `No loan rate was supplied for policy year ${cGap + 1}. Supply the charged loan rate for every year of the run.`;
+    if (charged.values.some((v) => v < 0)) return 'A loan rate cannot be negative.';
+    if (l.type === 'fixed') {
+      const credited = resolveYearSeries(l.creditedOnLoanedPct, input.years);
+      const kGap = credited.covered.indexOf(false);
+      if (kGap >= 0) return `No credited-on-loaned rate was supplied for policy year ${kGap + 1}. A fixed loan needs the rate its collateral earns for every year of the run.`;
+      if (credited.values.some((v) => v < 0)) return 'A credited-on-loaned rate cannot be negative.';
+    }
+    if (l.type === 'wash' && l.creditedOnLoanedPct) {
+      const credited = resolveYearSeries(l.creditedOnLoanedPct, input.years);
+      const kGap = credited.covered.indexOf(false);
+      if (kGap >= 0) return `No credited-on-loaned rate was supplied for policy year ${kGap + 1}. Supply it for every year, or leave it out to credit the charged rate.`;
+    }
   }
   return null;
 }
@@ -436,6 +452,7 @@ export function runLedgerIul(input: LedgerIulInput): LedgerIulRun {
   const rates = Array.from({ length: N }, (_, i) => input.assumedCreditingRatePct * mult[i] + bonusPct[i]);
 
   const notes: string[] = [
+    POLICY_DISCLOSURE.life,
     'Mechanics from caller-supplied charge dollars and an assumed rate. Not an illustration; not guaranteed.',
     'Charges are held at the supplied dollars and do not respond to changes in the net amount at risk.',
   ];
@@ -443,6 +460,9 @@ export function runLedgerIul(input: LedgerIulInput): LedgerIulRun {
   if (rider.kind === 'waiver' && rider.raisesLoanValue === 'unconfirmed') {
     loanValueBasisUnconfirmed = true;
     notes.push("The early-value waiver's effect on the loan value is not confirmed by the contract; loans were limited on the unadjusted surrender charge.");
+    if (!sc.some((v) => v > 0)) {
+      notes.push('No unadjusted surrender charge was supplied, so the loan value equals the account value. An illustration with the waiver prints surrender value = cash value; take the unadjusted schedule from the matched illustration without the rider.');
+    }
   }
   if (rider.kind === 'sve') notes.push('SVE: the adjusted surrender charge applies only to a full, non-1035 surrender. Loans, partial surrenders and the lapse test use the unadjusted charge.');
   if (movesCollateral) notes.push('Fixed and wash loans move the loaned value out of the indexed accounts; it earns the credited-on-loaned rate, not the index.');
