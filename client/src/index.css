@@ -2040,12 +2040,12 @@ html[data-quiet] .rc-integral { display: none; }
 
 /* ═══════════════════════════════════════════════════════════════════════════
    FOUR FLOORS — Body, Wound, Work, Talk (client/src/components/FloorNav.tsx)
-   Only applies under .rc-floors, which the shell sets when the nav flag is on.
+   Only applies under [data-nav="floors"], which the shell sets when the nav flag is on.
    Colours are checked against the shell background #060f20 for WCAG 2.2 AA:
    #e2e8f0 text 15.6:1, #94a3b8 muted 7.4:1, #6ee7b7 mint 12.8:1,
    focus ring #fbbf24 11.2:1.
    ═══════════════════════════════════════════════════════════════════════════ */
-.rc-floors .rc-main { margin-left: 0; }
+[data-nav="floors"] .rc-main { margin-left: 0; }
 
 .rc-stairs-wrap { flex: 1 1 auto; display: flex; justify-content: center; min-width: 0; }
 .rc-stairs { display: flex; align-items: baseline; gap: 28px; }
@@ -2150,7 +2150,7 @@ html[data-quiet] .rc-integral { display: none; }
 /* Phone: the four words move to the bottom, each opens its floor as a sheet. */
 .rc-floors-bottom { display: none; }
 @media (max-width: 768px) {
-  .rc-floors .rc-stairs-wrap, .rc-floors .rc-floor-panel { display: none; }
+  [data-nav="floors"] .rc-stairs-wrap, [data-nav="floors"] .rc-floor-panel { display: none; }
   .rc-floors-bottom {
     position: fixed; left: 0; right: 0; bottom: 0; z-index: 50;
     display: flex; justify-content: space-around; align-items: stretch;
