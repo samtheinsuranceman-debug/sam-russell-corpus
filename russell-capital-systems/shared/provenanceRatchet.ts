@@ -20,11 +20,6 @@
 
 /** Engines that carry typed-in numeric literals and name no institution, URL, dated source or exported source constant. */
 export const ZERO_SOURCE_ENGINES: readonly string[] = [
-  "shared/accessControl.ts",
-  "shared/advisorModes.ts",
-  "shared/firewall.ts",
-  "shared/genomeStrategyFit.ts",
-  "shared/regulatorySandbox.ts",
 ];
 
 /** Engines with Math.random() in a value path. chainEngine uses it for step ids only (cosmetic, D47). */
@@ -35,25 +30,6 @@ export const UNSEEDED_RANDOM_ENGINES: readonly string[] = [
 /** Catalogue engines with no loader in shared/engineSources.ts, so the shell cannot print their sources yet. */
 export const CATALOGUE_ENGINES_WITHOUT_SHELL_SOURCES: readonly string[] = [
   "server/outsideForces.ts",
-  "shared/balancedIndexedAccount.ts",
-  "shared/clientFactFinder.ts",
-  "shared/compositeMind.ts",
-  "shared/cycleEngine.ts",
-  "shared/forgiveness.ts",
-  "shared/genomeStrategyFit.ts",
-  "shared/householdGenome.ts",
-  "shared/liquidityRoutes.ts",
-  "shared/mechanismDossiers.ts",
-  "shared/nlpBrain.ts",
-  "shared/pageRatings.ts",
-  "shared/policyMechanics.ts",
-  "shared/provenance.ts",
-  "shared/retirementDNA.ts",
-  "shared/sequencePlanner.ts",
-  "shared/taxSchedule.ts",
-  "shared/thresholds.ts",
-  "shared/ultraEngine.ts",
-  "shared/wealthGenomeFactors.ts",
 ];
 
 /** Pages and components that import an engine and print no source, and whose route the shell does not cover. */
@@ -75,7 +51,6 @@ export const PAGES_PRINTING_NO_SOURCE: readonly string[] = [
   "client/src/pages/MassiveCalculatorsPage.tsx",
   "client/src/pages/SpecialtyIndexPage.tsx",
   "client/src/pages/TrialLogin.tsx",
-  "client/src/pages/UltraCalculatorPage.tsx",
   "client/src/pages/portal/AIFinancialAdvisor.tsx",
   "client/src/pages/portal/AIPolicyReviewGap.tsx",
   "client/src/pages/portal/AdvisorIncomeCalculator.tsx",
@@ -99,8 +74,6 @@ export const PAGES_PRINTING_NO_SOURCE: readonly string[] = [
   "client/src/pages/portal/EstateTax.tsx",
   "client/src/pages/portal/FIACollateralStrategy.tsx",
   "client/src/pages/portal/FIATop10.tsx",
-  "client/src/pages/portal/FinancialAssessment.tsx",
-  "client/src/pages/portal/GenomeStrategies.tsx",
   "client/src/pages/portal/GrowthAnnuities.tsx",
   "client/src/pages/portal/HotIncome.tsx",
   "client/src/pages/portal/HouseRecyclingStrategy.tsx",
@@ -111,12 +84,9 @@ export const PAGES_PRINTING_NO_SOURCE: readonly string[] = [
   "client/src/pages/portal/IncomeAnnuityTop10.tsx",
   "client/src/pages/portal/IncomeGapAnalyzer.tsx",
   "client/src/pages/portal/IncomeTimeline.tsx",
-  "client/src/pages/portal/IndexStrategyComparison.tsx",
-  "client/src/pages/portal/InfiniteBanking.tsx",
   "client/src/pages/portal/InflationAnalysis.tsx",
   "client/src/pages/portal/MarketScenarioStressTest.tsx",
   "client/src/pages/portal/MechanismDetail.tsx",
-  "client/src/pages/portal/Mechanisms.tsx",
   "client/src/pages/portal/MedicareIRMAA.tsx",
   "client/src/pages/portal/MultiGenWealthTransfer.tsx",
   "client/src/pages/portal/MultiScenarioPlayZone.tsx",
@@ -133,7 +103,6 @@ export const PAGES_PRINTING_NO_SOURCE: readonly string[] = [
   "client/src/pages/portal/SavedScenariosHub.tsx",
   "client/src/pages/portal/ScenarioAdjustments.tsx",
   "client/src/pages/portal/ScenarioSideBySide.tsx",
-  "client/src/pages/portal/SequencePlanner.tsx",
   "client/src/pages/portal/SocialSecurityOptimizer.tsx",
   "client/src/pages/portal/Sphere.tsx",
   "client/src/pages/portal/StrategyCompare.tsx",
@@ -144,7 +113,6 @@ export const PAGES_PRINTING_NO_SOURCE: readonly string[] = [
   "client/src/pages/portal/TaxOpportunityDetector.tsx",
   "client/src/pages/portal/TaxReturnUpload.tsx",
   "client/src/pages/portal/ThomasGoldman.tsx",
-  "client/src/pages/portal/Thresholds.tsx",
   "client/src/pages/portal/TimeMachineAG49.tsx",
   "client/src/pages/portal/TimeMachineCalculator.tsx",
   "client/src/pages/portal/TimeMachineMethod.tsx",

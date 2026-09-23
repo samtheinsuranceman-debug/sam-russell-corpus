@@ -296,3 +296,27 @@ export const PROVENANCE_PROMISE = [
   "Anything we assumed is marked as an assumption — if nobody knows a number, we say nobody knows it.",
   "The arithmetic is written out so you can redo it by hand and find our mistake.",
 ] as const;
+
+/**
+ * The sources the shell prints for this page: every step the traces mark as
+ * sourced, rule or assumption, with its document, URL and date where the step
+ * carries them. Built from FIGURE_TRACES, so a new trace is printed without a
+ * second edit. Input steps are the worked example's own statement figures and
+ * are named as such.
+ */
+export const PROVENANCE_SOURCES: readonly { label: string; url?: string; asOf?: string; note?: string }[] = (() => {
+  const seen = new Set<string>();
+  const out: { label: string; url?: string; asOf?: string; note?: string }[] = [];
+  for (const t of FIGURE_TRACES) {
+    for (const s of t.steps) {
+      if (s.kind !== "sourced" && s.kind !== "rule" && s.kind !== "assumption") continue;
+      const label = `${t.page}, ${s.label}: ${s.from}`;
+      if (seen.has(label)) continue;
+      seen.add(label);
+      out.push({ label, ...(s.url ? { url: s.url } : {}), ...(s.asOf ? { asOf: s.asOf } : {}) });
+    }
+  }
+  out.push({ label: `${QBI_SOURCE.thresholds} (${QBI_SOURCE.statute})`, url: QBI_SOURCE.url, asOf: "read 2026-09-17" });
+  out.push({ label: "The worked examples' inputs (a mortgage statement, a practice's income and wages) are illustrative figures a client would type in, labelled as inputs on the page; no external source" });
+  return out;
+})();

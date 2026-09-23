@@ -506,3 +506,22 @@ export const VARIANT_COUNT = THRESHOLDS.reduce((n, t) => n + t.variants.length, 
 
 export const THRESHOLDS_DISCLOSURE =
   'Every figure carries the page it was read from and the date. Lender programme figures are market reports unless the source is the lender\'s own page, and they move weekly; statutory figures are the code. A variant marked evidence 5 is a report, not a promise — confirm it in a written term sheet before a plan depends on it. Nothing here lowers a counterparty\'s contract term; where a threshold is fixed, the file says so and names the authority.';
+
+/**
+ * The sources the shell prints: every page a standard, variant or fixed rule
+ * above was read from, researched 2026-09-18. Built from THRESHOLDS so a new
+ * threshold is printed without a second edit. The evidence score (statute 10,
+ * lender page 8, market report 5) travels in the note.
+ */
+export const THRESHOLDS_SOURCES: readonly { label: string; url?: string; asOf?: string; note?: string }[] = (() => {
+  const asOf = 'researched 2026-09-18';
+  const out: { label: string; url?: string; asOf?: string; note?: string }[] = [];
+  for (const t of THRESHOLDS) {
+    out.push({ label: `${t.name}: standard ${t.standard} ${t.unit}`, url: t.standardSource, asOf });
+    for (const v of t.variants) {
+      out.push({ label: `${t.name}, ${v.name}: ${v.value} ${t.unit} (${v.providedBy})`, url: v.source, asOf, note: `evidence ${v.evidence} of 10` });
+    }
+    if (t.fixed) out.push({ label: `${t.name}, cannot be moved: ${t.fixed.authority}`, url: t.fixed.source, asOf, note: t.fixed.reason });
+  }
+  return out;
+})();
