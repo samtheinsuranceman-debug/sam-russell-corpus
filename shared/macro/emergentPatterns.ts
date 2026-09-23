@@ -617,6 +617,193 @@ export function applyFactorVerdicts(indicators: Indicator[], verdicts: FactorVer
   });
 }
 
+// ═══════════════════════════════════════════════════════════════════════════
+// Archaeology (owner's ask, 23 Sep 2026): domino chains, loudest movers,
+// regime splits — the scans that find what no pairwise correlation shows.
+// ═══════════════════════════════════════════════════════════════════════════
+
+export type DominoChain = {
+  /** Series ids in causal order. */
+  path: string[];
+  /** Lag at each link, months. */
+  lags: number[];
+  totalLagMonths: number;
+  /** Product of the link correlations (sign carries through). */
+  strength: number;
+  /** Minimum link confidence. */
+  confidence: number;
+  reading: string;
+};
+
+/**
+ * Chain lead-lag findings into dominoes: A→B (lag k1) and B→C (lag k2) become
+ * A→B→C with lag k1+k2, when each link's |r| clears the threshold. Cycles are
+ * refused; chains are ranked by |strength|. This is the "domino effect" scan:
+ * a five-link chain such as fed funds → dollar → foreign holdings → term
+ * premium → mortgage rate is invisible to any pairwise table.
+ */
+export function dominoChains(leads: PairFinding[], opts: { maxLinks?: number; minAbsR?: number; maxChains?: number } = {}): DominoChain[] {
+  const maxLinks = opts.maxLinks ?? 5;
+  const minAbsR = opts.minAbsR ?? 0.3;
+  const links = leads.filter(f => f.kind === "lead-lag" && Math.abs(f.r) >= minAbsR && f.lag >= 1);
+  const byLeader = new Map<string, PairFinding[]>();
+  for (const l of links) byLeader.set(l.a, [...(byLeader.get(l.a) ?? []), l]);
+  const chains: DominoChain[] = [];
+  const walk = (path: string[], lags: number[], strength: number, confidence: number) => {
+    if (path.length >= 3) {
+      chains.push({ path: [...path], lags: [...lags], totalLagMonths: lags.reduce((s, x) => s + x, 0), strength: round3(strength), confidence, reading: path.map((id, i) => (i === 0 ? nameOf(id) : `→ (${lags[i - 1]} m) ${nameOf(id)}`)).join(" ") });
+    }
+    if (path.length >= maxLinks) return;
+    for (const next of byLeader.get(path[path.length - 1]) ?? []) {
+      if (path.includes(next.b)) continue;
+      walk([...path, next.b], [...lags, next.lag], strength * next.r, Math.min(confidence, next.confidence));
+    }
+  };
+  for (const first of links) walk([first.a, first.b], [first.lag], first.r, first.confidence);
+  chains.sort((x, y) => Math.abs(y.strength) - Math.abs(x.strength) || y.path.length - x.path.length);
+  // Keep the longest chain per distinct path prefix so sub-chains do not crowd out their parents.
+  const seen = new Set<string>();
+  const out: DominoChain[] = [];
+  for (const ch of chains) {
+    const key = ch.path.join(">");
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push(ch);
+    if (out.length >= (opts.maxChains ?? 25)) break;
+  }
+  return out;
+}
+
+export type TurningPoint = { asOf: IsoDate; kind: "peak" | "trough"; value: number };
+
+/**
+ * Turning points of a rate series on a monthly grid: a peak is a month whose
+ * value is the highest of the surrounding ±window months and at least
+ * `minSwing` above the following trough; troughs symmetrically. This is how
+ * the archaeology finds "the change in interest rates" without a human
+ * naming the dates.
+ */
+export function turningPoints(points: MonthlyPoint[], opts: { window?: number; minSwing?: number } = {}): TurningPoint[] {
+  const window = opts.window ?? 6;
+  const minSwing = opts.minSwing ?? 1;
+  const m = monthEndPoints(points);
+  const out: TurningPoint[] = [];
+  for (let i = window; i < m.length - window; i++) {
+    const v = m[i].value;
+    const around = m.slice(i - window, i + window + 1).map(p => p.value);
+    const isPeak = v === Math.max(...around) && around.filter(x => x === v).length === 1;
+    const isTrough = v === Math.min(...around) && around.filter(x => x === v).length === 1;
+    if (!isPeak && !isTrough) continue;
+    const after = m.slice(i + 1, i + 1 + 24).map(p => p.value);
+    const swing = isPeak ? v - Math.min(...after) : Math.max(...after) - v;
+    if (!Number.isFinite(swing) || swing < minSwing) continue;
+    const last = out[out.length - 1];
+    if (last && last.kind === (isPeak ? "peak" : "trough")) continue; // peaks and troughs must alternate
+    out.push({ asOf: m[i].asOf, kind: isPeak ? "peak" : "trough", value: v });
+  }
+  return out;
+}
+
+export type LoudestMover = { indicatorId: string; name: string; z: number; awareness: Indicator["awareness"] };
+export type LoudestReport = { turningPoint: TurningPoint; movers: LoudestMover[] };
+
+/**
+ * "Screamed the loudest": for each turning point of the reference series,
+ * every other series' move over the preceding `lookback` months expressed as
+ * a z-score against its own history of such moves. The ones at the top are the
+ * ones that were shouting before the turn, whether or not anyone was listening;
+ * the awareness tag says whether anyone was.
+ */
+export function loudestBeforeTurns(series: Series[], referenceId: string, opts: { lookback?: number; window?: number; minSwing?: number; top?: number } = {}): LoudestReport[] {
+  const lookback = opts.lookback ?? 6;
+  const top = opts.top ?? 8;
+  const ref = series.find(s => s.indicatorId === referenceId);
+  if (!ref) return [];
+  const { keys, matrix } = alignMonthly(series);
+  const idx = new Map(keys.map((k, i) => [k, i]));
+  const tps = turningPoints(ref.points.map(p => ({ asOf: p.asOf, value: p.value })), { window: opts.window, minSwing: opts.minSwing });
+  // Distribution of lookback-month changes per series, for the z-score.
+  const changeStats = new Map<string, { mean: number; sd: number }>();
+  matrix.forEach((row, id) => {
+    const ch: number[] = [];
+    for (let t = lookback; t < row.length; t++) {
+      const a = row[t - lookback];
+      const b = row[t];
+      if (a === null || b === null || a === undefined || b === undefined) continue;
+      ch.push(b - a);
+    }
+    if (ch.length < 12) return;
+    const mean = ch.reduce((s, x) => s + x, 0) / ch.length;
+    const sd = Math.sqrt(ch.reduce((s, x) => s + (x - mean) ** 2, 0) / ch.length) || 1;
+    changeStats.set(id, { mean, sd });
+  });
+  const out: LoudestReport[] = [];
+  for (const tp of tps) {
+    const t = idx.get(monthKey(tp.asOf));
+    if (t === undefined || t < lookback) continue;
+    const movers: LoudestMover[] = [];
+    matrix.forEach((row, id) => {
+      if (id === referenceId) return;
+      const st = changeStats.get(id);
+      const a = row[t - lookback];
+      const b = row[t];
+      if (!st || a === null || b === null || a === undefined || b === undefined) return;
+      const z = (b - a - st.mean) / st.sd;
+      movers.push({ indicatorId: id, name: nameOf(id), z: round3(z), awareness: INDICATOR_BY_ID.get(id)?.awareness ?? "structural" });
+    });
+    movers.sort((x, y) => Math.abs(y.z) - Math.abs(x.z));
+    out.push({ turningPoint: tp, movers: movers.slice(0, top) });
+  }
+  return out;
+}
+
+/**
+ * Regime split: the same lead-lag measured separately when the reference
+ * series was rising and when it was falling. An asymmetry (card rates follow
+ * hikes but not cuts, H30) is a signal a pooled correlation hides.
+ */
+export function regimeSplit(leader: MonthlyPoint[], follower: MonthlyPoint[], reference: MonthlyPoint[], lag: number): { rising: { r: number; n: number }; falling: { r: number; n: number }; asymmetry: number } {
+  const L = new Map(monthEndPoints(leader).map(p => [monthKey(p.asOf), p.value]));
+  const F = new Map(monthEndPoints(follower).map(p => [monthKey(p.asOf), p.value]));
+  const R = monthEndPoints(reference);
+  const rx: number[] = [], ry: number[] = [], fx: number[] = [], fy: number[] = [];
+  for (let i = 12; i < R.length; i++) {
+    const k = monthKey(R[i].asOf);
+    const dir = R[i].value - R[i - 12].value;
+    const [y, m] = k.split("-").map(Number);
+    const ahead = new Date(Date.UTC(y, m - 1 + lag, 1)).toISOString().slice(0, 7);
+    const lv = L.get(k);
+    const fv = F.get(ahead);
+    const fv0 = F.get(k);
+    if (lv === undefined || fv === undefined || fv0 === undefined) continue;
+    if (dir > 0) {
+      rx.push(lv);
+      ry.push(fv - fv0);
+    } else if (dir < 0) {
+      fx.push(lv);
+      fy.push(fv - fv0);
+    }
+  }
+  const rising = { r: rx.length >= 6 ? round3(pearson(rx, ry)) : 0, n: rx.length };
+  const falling = { r: fx.length >= 6 ? round3(pearson(fx, fy)) : 0, n: fx.length };
+  return { rising, falling, asymmetry: round3(rising.r - falling.r) };
+}
+
+/** Latest reading of each series as a z-score against its own full history — the prediction grid's input. */
+export function latestZScores(series: Series[]): Map<string, number> {
+  const out = new Map<string, number>();
+  for (const s of series) {
+    const vals = s.points.map(p => p.value).filter(v => Number.isFinite(v));
+    if (vals.length < 12) continue;
+    const mean = vals.reduce((a, b) => a + b, 0) / vals.length;
+    const sd = Math.sqrt(vals.reduce((a, b) => a + (b - mean) ** 2, 0) / vals.length);
+    const last = [...s.points].sort((a, b) => (a.asOf < b.asOf ? -1 : 1))[s.points.length - 1];
+    if (!last || !sd) continue;
+    out.set(s.indicatorId, round3((last.value - mean) / sd));
+  }
+  return out;
+}
+
 /** Coverage in years between two dates, one decimal. */
 export function coverageYears(earliest: IsoDate | null, latest: IsoDate | null): number {
   if (!earliest || !latest) return 0;

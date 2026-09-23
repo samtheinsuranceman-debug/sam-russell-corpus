@@ -27,15 +27,35 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Globe, Landmark, Ship, Flame, ChevronDown, ChevronUp, Info } from "lucide-react";
 import { NEUTRAL_ADJUSTMENTS } from "@shared/macro/neutral";
+import { averageAdjustments } from "@shared/macro/projectionSlice";
 import type { MacroAdjustments, MacroToggles } from "@shared/macro/types";
+import type { ProjectionHorizon } from "@shared/macro/projection";
 import { cn } from "@/lib/utils";
 
 export type MacroScenarioState = {
   toggles: MacroToggles;
+  /** Year-1 adjustments (full scenario), for calculators that take one set of assumptions. */
   adjustments: MacroAdjustments;
+  /** Confidence-weighted average over the calculator's horizon — the honest single number for a whole-horizon calculator. */
+  averaged: MacroAdjustments;
+  /** The projection path: confidence, grade and applied deltas per year; null until the server answers. */
+  horizon: ProjectionHorizon | null;
+  /** Adjustments for a given projected year (1-based); neutral beyond the confident years. */
+  forYear: (year: number) => MacroAdjustments;
+  /** How many years the platform projects with confidence for this calculator. */
+  confidentYears: number;
   loading: boolean;
   active: boolean;
   panel: ReactElement;
+};
+
+export type MacroScenarioOptions = {
+  /** The calculator's own horizon in years (default 30); the projection path is computed to it. */
+  years?: number;
+  /** Shown in the projection report. */
+  calculator?: string;
+  /** Start collapsed (the default on a calculator page: optional, off, out of the way). */
+  compact?: boolean;
 };
 
 const STRESS_CHOICES: Array<{ iso3: string; name: string }> = [
@@ -53,23 +73,41 @@ const STRESS_CHOICES: Array<{ iso3: string; name: string }> = [
   { iso3: "ZAF", name: "South Africa" },
 ];
 
-export function useMacroScenario(initial: MacroToggles = {}): MacroScenarioState {
+export function useMacroScenario(initial: MacroToggles = {}, opts: MacroScenarioOptions = {}): MacroScenarioState {
   const [toggles, setToggles] = useState<MacroToggles>(initial);
+  const years = Math.max(1, Math.min(60, Math.round(opts.years ?? 30)));
   const active = Boolean(toggles.treasuryLiquidation || toggles.petrodollarErosion || (toggles.sovereignStress && toggles.sovereignStress.countries.length) || toggles.taiwan);
   const q = trpc.macro.adjustments.useQuery({ toggles, full: false }, { enabled: active, staleTime: 60_000 });
+  // The projection path is asked for whenever a scenario is on (and once, neutral, so the panel can say how far the measured state reaches).
+  const p = trpc.macro.projection.useQuery({ toggles, years, full: false }, { staleTime: 60_000 });
   const adjustments = active && q.data ? q.data : NEUTRAL_ADJUSTMENTS;
-  const panel = useMemo(() => <MacroScenarioToggle toggles={toggles} onToggles={setToggles} adjustments={adjustments} loading={active && q.isLoading} />, [toggles, adjustments, active, q.isLoading]);
-  return { toggles, adjustments, loading: active && q.isLoading, active, panel };
+  const horizon = p.data ?? null;
+  const averaged = useMemo(() => (active && horizon ? averageAdjustments(horizon) : NEUTRAL_ADJUSTMENTS), [active, horizon]);
+  const forYear = useMemo(() => (year: number): MacroAdjustments => {
+    if (!active || !horizon) return NEUTRAL_ADJUSTMENTS;
+    const row = horizon.path[Math.max(0, Math.min(horizon.path.length - 1, Math.round(year) - 1))];
+    return row ? row.adjustments : NEUTRAL_ADJUSTMENTS;
+  }, [active, horizon]);
+  const confidentYears = horizon ? horizon.confidentYears : 0;
+  const loading = (active && q.isLoading) || p.isLoading;
+  const panel = useMemo(
+    () => <MacroScenarioToggle toggles={toggles} onToggles={setToggles} adjustments={adjustments} horizon={horizon} years={years} calculator={opts.calculator} loading={loading} compact={opts.compact ?? true} />,
+    [toggles, adjustments, horizon, years, opts.calculator, loading, opts.compact],
+  );
+  return { toggles, adjustments, averaged, horizon, forYear, confidentYears, loading, active, panel };
 }
 
 export function MacroScenarioToggle(props: {
   toggles: MacroToggles;
   onToggles: (t: MacroToggles) => void;
   adjustments: MacroAdjustments;
+  horizon?: ProjectionHorizon | null;
+  years?: number;
+  calculator?: string;
   loading?: boolean;
   compact?: boolean;
 }) {
-  const { toggles, onToggles, adjustments, loading } = props;
+  const { toggles, onToggles, adjustments, loading, horizon } = props;
   const [open, setOpen] = useState(!props.compact);
   const active = adjustments !== NEUTRAL_ADJUSTMENTS && adjustments.rationale[0] !== NEUTRAL_ADJUSTMENTS.rationale[0];
 
@@ -89,6 +127,8 @@ export function MacroScenarioToggle(props: {
         <span className="flex items-center gap-2 font-semibold tracking-wide text-yellow-200">
           <Globe className="h-4 w-4" /> Global Macro Scenarios
           {active && <Badge className="bg-yellow-400/20 text-yellow-100">applied</Badge>}
+          {!active && <Badge variant="outline" className="border-emerald-400/30 text-emerald-200/70">optional · off</Badge>}
+          {horizon && <span className="text-xs font-normal text-emerald-200/70">projects with confidence for {horizon.confidentYears} of {horizon.years} yrs (year 1: {horizon.year1.grade})</span>}
           {loading && <span className="text-xs text-emerald-200/70">recomputing…</span>}
         </span>
         {open ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
@@ -207,9 +247,53 @@ export function MacroScenarioToggle(props: {
               <p className="mt-2 text-[11px] text-emerald-200/60">Sources: {adjustments.sourceIds.join(", ")} · model confidence {adjustments.confidence}/100</p>
             )}
           </div>
+
+          {/* Projection horizon: how far the platform is willing to project, and the report */}
+          {horizon && (
+            <div className="md:col-span-2 rounded-lg border border-emerald-400/15 bg-black/20 p-3">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <span className="text-xs font-semibold uppercase tracking-wider text-yellow-200/90">Projection horizon</span>
+                <span className="text-xs text-emerald-200/70">Year 1 confidence {horizon.year1.confidence} ({horizon.year1.grade}) = min(measured {horizon.year1.measured}, scenario {horizon.year1.scenario}) · applied for {horizon.confidentYears} of {horizon.years} years · beyond that the calculator's own assumptions stand</span>
+              </div>
+              <div className="mt-2 flex flex-wrap gap-1">
+                {horizon.path.slice(0, Math.min(horizon.path.length, 30)).map(p => (
+                  <span key={p.year} title={`Year ${p.year}: confidence ${p.confidence} (${p.grade}); ${p.basis}`} className={cn("rounded px-1.5 py-0.5 font-mono text-[10px]", p.applied ? "bg-yellow-400/20 text-yellow-100" : p.confidence >= 30 ? "bg-emerald-900/50 text-emerald-100" : "bg-emerald-950/60 text-emerald-200/50")}>
+                    {p.year}:{p.grade}
+                  </span>
+                ))}
+                {horizon.path.length > 30 && <span className="text-[10px] text-emerald-200/50">… to year {horizon.path.length}</span>}
+              </div>
+              <ul className="mt-2 space-y-0.5 text-[11px] text-emerald-100/70">
+                {horizon.rationale.slice(-3).map((r, i) => <li key={i}>{r}</li>)}
+              </ul>
+              <ProjectionReportLink toggles={toggles} years={props.years ?? horizon.years} calculator={props.calculator} />
+            </div>
+          )}
         </div>
       )}
     </div>
+  );
+}
+
+/** Fetches the projection report on demand and offers it as a markdown download. */
+function ProjectionReportLink({ toggles, years, calculator }: { toggles: MacroToggles; years: number; calculator?: string }) {
+  const [wanted, setWanted] = useState(false);
+  const r = trpc.macro.projectionReport.useQuery({ toggles, years, calculator }, { enabled: wanted, staleTime: 60_000 });
+  useEffect(() => {
+    if (!wanted || !r.data) return;
+    const blob = new Blob([r.data.markdown], { type: "text/markdown" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `projection-report-${(calculator ?? "calculator").toLowerCase().replace(/[^a-z0-9]+/g, "-")}.md`;
+    a.click();
+    URL.revokeObjectURL(url);
+    setWanted(false);
+  }, [wanted, r.data, calculator]);
+  return (
+    <Button size="sm" variant="outline" className="mt-2 border-yellow-400/30 text-yellow-100" onClick={() => setWanted(true)} disabled={wanted && r.isLoading}>
+      {wanted && r.isLoading ? "Preparing the report…" : "Download the projection confidence report (markdown, with references)"}
+    </Button>
   );
 }
 
