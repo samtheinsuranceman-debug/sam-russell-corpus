@@ -3268,3 +3268,138 @@ export const hiveMemoryEvents = mysqlTable("hive_memory_events", {
   byUserTime: index("hive_memory_events_user_time").on(t.userId, t.createdAt),
 }));
 export type HiveMemoryEventRow = typeof hiveMemoryEvents.$inferSelect;
+
+// ─── Global Macro Intelligence (ported from claude/global-economic-prediction-2b2oev @ 6e65668) ───
+export const macroObservations = mysqlTable("macro_observations", {
+  id:          int("id").autoincrement().primaryKey(),
+  /** Indicator id from shared/macro/indicators.ts (or a connector series id such as "fred:DGS10"). */
+  indicatorId: varchar("indicatorId", { length: 80 }).notNull(),
+  /** Source id from shared/macro/sources.ts. */
+  sourceId:    varchar("sourceId", { length: 80 }).notNull(),
+  /** Date the reading is effective, per the source. YYYY-MM-DD. */
+  asOf:        varchar("asOf", { length: 10 }).notNull(),
+  value:       decimal("value", { precision: 18, scale: 6 }).notNull(),
+  unit:        varchar("unit", { length: 40 }),
+  note:        varchar("note", { length: 500 }),
+  /** live | cached | manual | seed */
+  origin:      varchar("origin", { length: 20 }).default("live").notNull(),
+  fetchedAt:   timestamp("fetchedAt").defaultNow().notNull(),
+});
+export type MacroObservation = typeof macroObservations.$inferSelect;
+export type InsertMacroObservation = typeof macroObservations.$inferInsert;
+
+// ─── Macro Source Health ─────────────────────────────────────────────────────
+// One row per source: when it last answered, whether it did, and the last
+// error. The Sources tab reads this so nobody has to guess which feed is dead.
+export const macroSourceHealth = mysqlTable("macro_source_health", {
+  id:           int("id").autoincrement().primaryKey(),
+  sourceId:     varchar("sourceId", { length: 80 }).notNull().unique(),
+  lastAttemptAt: timestamp("lastAttemptAt"),
+  lastSuccessAt: timestamp("lastSuccessAt"),
+  lastOk:       boolean("lastOk"),
+  lastDetail:   varchar("lastDetail", { length: 500 }),
+  /** Consecutive failures; the page turns the row amber at 3 and red at 7. */
+  failStreak:   int("failStreak").default(0).notNull(),
+  rowsLastRun:  int("rowsLastRun").default(0).notNull(),
+  updatedAt:    timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type MacroSourceHealth = typeof macroSourceHealth.$inferSelect;
+
+// ─── Macro Statements ────────────────────────────────────────────────────────
+// Declared positions from official channels, with the outcome attached later.
+// The seed ledger in shared/macro/statementFollowThrough.ts is the 1979–2026
+// history; this table takes what the refresh appends from today on.
+export const macroStatements = mysqlTable("macro_statements", {
+  id:          int("id").autoincrement().primaryKey(),
+  statementDate: varchar("statementDate", { length: 10 }).notNull(),
+  speaker:     varchar("speaker", { length: 200 }).notNull(),
+  channel:     varchar("channel", { length: 200 }).notNull(),
+  category:    varchar("category", { length: 40 }).notNull(),
+  severity:    varchar("severity", { length: 20 }).notNull(),
+  environment: varchar("environment", { length: 40 }).notNull(),
+  claim:       text("claim").notNull(),
+  /** followed | partial | not-followed | reversed | pending */
+  outcome:     varchar("outcome", { length: 20 }).default("pending").notNull(),
+  outcomeNote: text("outcomeNote"),
+  outcomeSetBy: varchar("outcomeSetBy", { length: 320 }),
+  sourceId:    varchar("sourceId", { length: 80 }).notNull(),
+  /** Citation for the claim. Required: the router refuses a statement without one (W8). */
+  sourceUrl:   varchar("sourceUrl", { length: 1000 }),
+  /** W8 — any person or institution: the office held when the claim was made, and the Wikidata item of the speaker when resolved. */
+  office:      varchar("office", { length: 200 }),
+  speakerQid:  varchar("speakerQid", { length: 20 }),
+  /** Citation for the outcome. Required for any outcome other than pending. */
+  outcomeSourceUrl: varchar("outcomeSourceUrl", { length: 1000 }),
+  /** Date the outcome was resolved, YYYY-MM-DD. */
+  resolvedAt:  varchar("resolvedAt", { length: 10 }),
+  createdAt:   timestamp("createdAt").defaultNow().notNull(),
+  updatedAt:   timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type MacroStatement = typeof macroStatements.$inferSelect;
+
+// ─── Macro Forecast Log ──────────────────────────────────────────────────────
+// Every daily assessment is written down so the model can be scored against
+// what happened. A forecast nobody can look up a year later is not a forecast.
+export const macroForecastLog = mysqlTable("macro_forecast_log", {
+  id:          int("id").autoincrement().primaryKey(),
+  /** liquidation-JP | liquidation-CN | taiwan | petrodollar | debt */
+  modelId:     varchar("modelId", { length: 40 }).notNull(),
+  asOf:        varchar("asOf", { length: 10 }).notNull(),
+  probability: decimal("probability", { precision: 7, scale: 6 }),
+  low:         decimal("low", { precision: 7, scale: 6 }),
+  high:        decimal("high", { precision: 7, scale: 6 }),
+  confidence:  int("confidence"),
+  grade:       varchar("grade", { length: 2 }),
+  /** Full assessment as JSON, drivers included. */
+  payloadJson: text("payloadJson").notNull(),
+  /** W8 scoring: set when the forecast's horizon passed and it was scored against the stored target. */
+  outcome:     int("outcome"),
+  brier:       decimal("brier", { precision: 7, scale: 6 }),
+  scoredAt:    timestamp("scoredAt"),
+  createdAt:   timestamp("createdAt").defaultNow().notNull(),
+});
+export type MacroForecastEntry = typeof macroForecastLog.$inferSelect;
+
+// ─── Macro Series Meta (W8) ──────────────────────────────────────────────────
+// One row per stored series: how far back it goes, how many points, and
+// whether the last pull answered. The brief prints earliestAsOf and
+// coverageYears so "forty years" is a number, not a claim.
+export const macroSeriesMeta = mysqlTable("macro_series_meta", {
+  id:           int("id").autoincrement().primaryKey(),
+  indicatorId:  varchar("indicatorId", { length: 80 }).notNull().unique(),
+  sourceId:     varchar("sourceId", { length: 80 }).notNull(),
+  /** Connector series key, e.g. "fred:T10Y3M". */
+  series:       varchar("series", { length: 120 }).notNull(),
+  earliestAsOf: varchar("earliestAsOf", { length: 10 }),
+  latestAsOf:   varchar("latestAsOf", { length: 10 }),
+  coverageYears: decimal("coverageYears", { precision: 6, scale: 1 }).default("0").notNull(),
+  points:       int("points").default(0).notNull(),
+  /** live | cached | unavailable */
+  status:       varchar("status", { length: 20 }).default("unavailable").notNull(),
+  reason:       varchar("reason", { length: 500 }),
+  droppedLastRun: int("droppedLastRun").default(0).notNull(),
+  updatedAt:    timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type MacroSeriesMeta = typeof macroSeriesMeta.$inferSelect;
+
+// ─── Macro Factor Scores (W8) ────────────────────────────────────────────────
+// One row per factor: the backtest verdict (signal / context / pending) with
+// the lead correlation and hit rate it rests on, and the running Brier score
+// of the live daily forecasts. Thomas quotes both beside any probability.
+export const macroFactorScores = mysqlTable("macro_factor_scores", {
+  id:           int("id").autoincrement().primaryKey(),
+  indicatorId:  varchar("indicatorId", { length: 80 }).notNull().unique(),
+  verdict:      varchar("verdict", { length: 10 }).default("pending").notNull(),
+  leadR:        decimal("leadR", { precision: 6, scale: 3 }),
+  hitRate:      decimal("hitRate", { precision: 6, scale: 4 }),
+  r0:           decimal("r0", { precision: 6, scale: 3 }),
+  backtestN:    int("backtestN").default(0).notNull(),
+  backtestAsOf: varchar("backtestAsOf", { length: 10 }),
+  reason:       varchar("reason", { length: 500 }),
+  /** Running Brier: n scored forecasts, sum of Brier scores, directional hits. */
+  n:            int("n").default(0).notNull(),
+  brierSum:     decimal("brierSum", { precision: 12, scale: 6 }).default("0").notNull(),
+  hits:         int("hits").default(0).notNull(),
+  lastScoredAsOf: varchar("lastScoredAsOf", { length: 10 }),
+  updatedAt:    timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});

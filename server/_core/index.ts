@@ -20,6 +20,7 @@ import { startCareerSchedule } from "../careerData";
 import { startHazardSchedule } from "../rentalEnterprise";
 import { appRouter } from "../routers";
 import { createContext } from "./context";
+import { cronGuard } from "./cronGuard";
 import { serveStatic, setupVite } from "./vite";
 import { registerSiteHardening, registerSiteRoutes } from "./siteHardening";
 import { registerVitalsRoutes } from "../vitals";
@@ -65,6 +66,40 @@ async function startServer() {
   // Configure body parser with larger size limit for file uploads
   app.use(express.json({ limit: "50mb" }));
   app.use(express.urlencoded({ limit: "50mb", extended: true }));
+
+  // ─── Cron endpoints fail closed ───────────────────────────────────────
+  // Every /api/cron/* handler answers 503 while CRON_SECRET is unset and 403
+  // on a wrong secret (board D23). "Unset" means "disabled", never "open".
+  app.use("/api/cron", cronGuard);
+
+  // The macro layer reads FRED through the trunk's own transport (keyed JSON or
+  // keyless CSV, memoised, persisted): port step 4 / board D21. Series the
+  // trunk does not list return null and the layer's own connector handles them.
+  {
+    const { setBenchmarkProvider } = await import("../macroConnectors");
+    const { getBenchmark, FRED_SERIES } = await import("./fred");
+    setBenchmarkProvider(async (series) => {
+      if (!(series in FRED_SERIES)) return null;
+      const b = await getBenchmark(series as keyof typeof FRED_SERIES);
+      return b.source === "unavailable" ? null : { value: b.value, asOf: b.asOf };
+    });
+  }
+
+  // Daily macro-intelligence refresh: pulls every source connector (core +
+  // the 25-domain expansion + the factor histories), stores observations,
+  // series coverage and source health, backtests the factors, logs and scores
+  // the day's forecasts. Railway cron or any external scheduler:
+  //   GET /api/cron/macro-refresh?secret=$CRON_SECRET   (every 24h)
+  app.get("/api/cron/macro-refresh", async (req, res) => {
+    try {
+      const { runMacroRefresh } = await import("../macroRouter");
+      const only = typeof req.query.only === "string" ? req.query.only.split(",").filter(Boolean) : undefined;
+      const result = await runMacroRefresh({ only });
+      res.json(result);
+    } catch (e: any) {
+      res.status(500).json({ error: e?.message ?? "macro refresh failed" });
+    }
+  });
   registerStorageProxy(app);
   registerOAuthRoutes(app);
   registerOwnerLoginRoutes(app);
