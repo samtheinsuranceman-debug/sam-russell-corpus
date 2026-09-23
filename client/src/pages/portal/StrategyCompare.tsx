@@ -42,6 +42,7 @@ import { ExecutiveSummary, GoalsAccelerator, RecommendationSummary, DoNothingBas
 import { formatTaxCurrency } from "@shared/taxBracketEngine";
 import { RelatedCalculators } from "@/components/RelatedCalculators";
 import { ComplianceFooter } from "@/components/ComplianceFooter";
+import { SP500_ARITHMETIC_MEAN, SP500_ANNUAL_STDEV } from "@shared/monteCarloEngine";
 
 /* ── Strategy definitions ── */
 const ALL_STRATEGIES = [
@@ -79,7 +80,8 @@ function runMonteCarlo(iulProjection: any[], sims = 300) {
       const loadFee = row.loadFee ?? 0;
       const coi = row.coi ?? 0;
       const policyLoan = row.policyLoan ?? 0;
-      const rawReturn = 0.10 + 0.15 * boxMuller();
+      // S&P 500 arithmetic mean 11.86% and SD 19.40%, Damodaran histretSP 1928-2025 (read 2026-09-23); see shared/monteCarloEngine.ts
+      const rawReturn = SP500_ARITHMETIC_MEAN + SP500_ANNUAL_STDEV * boxMuller();
       const effectiveReturn = Math.max(0, rawReturn);
       acctVal += premium - loadFee;
       acctVal *= (1 + effectiveReturn);

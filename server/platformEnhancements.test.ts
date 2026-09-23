@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { runMonteCarlo, MONTE_CARLO_PRESETS, compareScenarios } from "../shared/monteCarloEngine";
+import { runMonteCarlo, MONTE_CARLO_PRESETS, compareScenarios, SP500_ARITHMETIC_MEAN, SP500_ANNUAL_STDEV } from "../shared/monteCarloEngine";
 
 describe("Monte Carlo Engine", () => {
   it("runs a basic simulation with default preset", () => {
@@ -90,6 +90,20 @@ describe("Monte Carlo Engine", () => {
     expect(result.samplePaths).toBeDefined();
     expect(result.samplePaths.length).toBeGreaterThan(0);
     expect(result.samplePaths.length).toBeLessThanOrEqual(20);
+  });
+
+  it("sp500 preset draws from the arithmetic mean and standard deviation (Damodaran 1928-2025)", () => {
+    // Arithmetic mean 11.855%, sample SD 19.40%, geometric 10.02% over the 98 annual rows of histretSP.
+    expect(SP500_ARITHMETIC_MEAN).toBe(0.1186);
+    expect(SP500_ANNUAL_STDEV).toBe(0.194);
+    expect(MONTE_CARLO_PRESETS.sp500.expectedReturn).toBe(SP500_ARITHMETIC_MEAN);
+    expect(MONTE_CARLO_PRESETS.sp500.volatility).toBe(SP500_ANNUAL_STDEV);
+    // The median path of a normal draw with these inputs compounds near the 10% geometric average, not 11.86%.
+    const years = 30;
+    const r = runMonteCarlo({ simulations: 2000, years, initialValue: 100000, expectedReturn: SP500_ARITHMETIC_MEAN, volatility: SP500_ANNUAL_STDEV });
+    const medianCagr = Math.pow(r.summary.median / 100000, 1 / years) - 1;
+    expect(medianCagr).toBeGreaterThan(0.085);
+    expect(medianCagr).toBeLessThan(0.115);
   });
 });
 

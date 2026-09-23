@@ -57,7 +57,7 @@ const FITCH_SCALE_SOURCE = {
   asOf: "read 2026-09-23",
 };
 
-/** comdexScore and the 95 / 90 / 80 / 70 bands in getComdexDescription. */
+/** comdexScore and the 90 / 80 / 70 / 60 / 50 / 40 bands in COMDEX_BANDS and getComdexDescription. */
 const COMDEX_SOURCE = {
   label:
     "Comdex Ranking (VitalSigns, EbixExchange), as explained in 'Understanding an Insurance Carrier's Ratings and Comdex' (Gateway Financial Group): " +
@@ -66,8 +66,9 @@ const COMDEX_SOURCE = {
   url: "https://www.gatewayfinancial.biz/wp-content/uploads/sites/196/2022/01/Understanding-an-Insurance-Carriers-Ratings-and-Comdex.pdf",
   asOf: "ratings as of 2020-07-01, document 2021; read 2026-09-23",
   note:
-    "The 95, 90 and 80 bands ('top 5%, 10%, 20%') follow directly from the percentile definition. The last band calls every score under 70 " +
-    "'average', but a percentile of 50 is the middle, so a score well under 50 is below average, not average.",
+    "Ebix publishes the Comdex number, not band names. The bands in COMDEX_BANDS follow from the percentile definition: 90-100 Excellent " +
+    "(top 10%), 80-89 Very Good (top 20%), 70-79 Good (top 30%), 60-69 Above Average, 50-59 Average (a percentile of 50 is the middle), " +
+    "40-49 Below Average, under 40 Weak. The earlier table labelled every score under 70 'average', which put a 30 and a 65 in one band.",
 };
 
 /** The placeholder carriers' own figures. */
@@ -254,12 +255,29 @@ export function getRatingColor(rating: string): string {
   return '#ef4444';
 }
 
+/**
+ * Seven bands over the Comdex percentile. Ebix (VitalSigns) publishes the Comdex as a 1-100 percentile
+ * ranking only; the band names are descriptive of that percentile (see COMDEX_SOURCE): 50 is the middle of
+ * rated insurers, so 50-59 is average, 60-69 is above it and 40-49 below it.
+ */
+export const COMDEX_BANDS: readonly { min: number; label: string; description: string }[] = [
+  { min: 90, label: 'Excellent', description: 'top 10% of rated insurers' },
+  { min: 80, label: 'Very Good', description: 'top 20% of rated insurers' },
+  { min: 70, label: 'Good', description: 'top 30% of rated insurers' },
+  { min: 60, label: 'Above Average', description: 'upper half of rated insurers' },
+  { min: 50, label: 'Average', description: 'around the middle of rated insurers' },
+  { min: 40, label: 'Below Average', description: 'lower half of rated insurers' },
+  { min: -Infinity, label: 'Weak', description: 'bottom 40% of rated insurers' },
+];
+
+/** The band label for a Comdex score: Excellent, Very Good, Good, Above Average, Average, Below Average or Weak. */
+export function getComdexLabel(score: number): string {
+  return (COMDEX_BANDS.find(b => score >= b.min) ?? COMDEX_BANDS[COMDEX_BANDS.length - 1]).label;
+}
+
 export function getComdexDescription(score: number): string {
-  if (score >= 95) return 'Elite — Top 5% of all rated insurers';
-  if (score >= 90) return 'Superior — Top 10% of all rated insurers';
-  if (score >= 80) return 'Excellent — Top 20% of all rated insurers';
-  if (score >= 70) return 'Good — Above average financial strength';
-  return 'Fair — Average financial strength';
+  const band = COMDEX_BANDS.find(b => score >= b.min) ?? COMDEX_BANDS[COMDEX_BANDS.length - 1];
+  return `${band.label} — ${band.description.charAt(0).toUpperCase()}${band.description.slice(1)}`;
 }
 
 /** Every source and declared assumption behind the ratings table, for the shell's source footer. */

@@ -25,7 +25,7 @@ import { PageInsights } from "@/components/PageInsights";
 import { useStrategy } from "@/contexts/StrategyContext";
 import { StrategyFlowBanner } from "@/components/StrategyFlowBanner";
 import { MonteCarloChart } from "@/components/MonteCarloChart";
-import { runMonteCarlo, MONTE_CARLO_PRESETS } from "@shared/monteCarloEngine";
+import { runMonteCarlo, MONTE_CARLO_PRESETS, SP500_ANNUAL_STDEV } from "@shared/monteCarloEngine";
 import { GuidedModeToggle } from "@/components/GuidedWizard";
 import { ReportGenerator, type ReportSection } from "@/components/ReportGenerator";
 import { ExportToSlides } from "@/components/ExportToSlides";
@@ -633,7 +633,8 @@ export default function RothConversionSTR() {
   const sensitivityGrid = useMemo(() => {
     if (!result) return null;
     const returnRates = [0.06, 0.07, 0.08, 0.09, 0.10, 0.11, 0.12];
-    const volatilities = [0.10, 0.12, 0.15, 0.18, 0.20];
+    // Base column is the S&P 500 sample SD, 19.40% (Damodaran histretSP 1928-2025, read 2026-09-23); see shared/monteCarloEngine.ts
+    const volatilities = [0.10, 0.12, 0.15, SP500_ANNUAL_STDEV, 0.24];
     const years = result.iulProjection.length;
     const SIMS = 200; // per cell
     const rows: { returnRate: number; cells: { vol: number; value: number; isBase: boolean }[] }[] = [];
@@ -664,7 +665,7 @@ export default function RothConversionSTR() {
         }
         finalValues.sort((a, b) => a - b);
         const median = finalValues[Math.floor(finalValues.length / 2)];
-        cells.push({ vol, value: Math.round(median), isBase: ret === 0.10 && vol === 0.15 });
+        cells.push({ vol, value: Math.round(median), isBase: ret === 0.10 && vol === SP500_ANNUAL_STDEV });
       }
       rows.push({ returnRate: ret, cells });
     }
@@ -690,7 +691,8 @@ export default function RothConversionSTR() {
     const baseReturn = result.iulParams.avgReturn;
     const years = result.iulProjection.length;
     const SIMS = 500;
-    const VOLATILITY = 0.15; // S&P 500 historical vol ~15%
+    // S&P 500 sample SD of annual returns, 19.40%, Damodaran histretSP 1928-2025 (read 2026-09-23); see shared/monteCarloEngine.ts
+    const VOLATILITY = SP500_ANNUAL_STDEV;
     const percentiles = [10, 25, 50, 75, 90];
 
     const allPaths: number[][] = [];
@@ -1130,7 +1132,7 @@ export default function RothConversionSTR() {
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-white font-semibold flex items-center gap-2">
                 <Shuffle size={16} className="text-emerald-400" /> Monte Carlo Simulation
-                <span className="text-[#7a95b8] text-xs font-normal">(500 simulations, 15% S&P 500 volatility, 0% IUL floor)</span>
+                <span className="text-[#7a95b8] text-xs font-normal">(500 simulations, 19.4% S&P 500 volatility, 0% IUL floor)</span>
               </h3>
               <button onClick={() => setShowMonteCarlo(false)} className="text-[#7a95b8] hover:text-white text-xs">✕ Close</button>
             </div>
@@ -1180,7 +1182,7 @@ export default function RothConversionSTR() {
               </div>
             </div>
             <div className="mt-3 p-3 rounded-lg bg-emerald-500/5 border border-emerald-500/15 text-xs text-[#7a95b8]">
-              <strong className="text-emerald-400">How to read:</strong> The green line shows the base case (fixed 10% return). The purple bands show the probability distribution across 500 simulated paths using 15% annual volatility (historical S&P 500). The IUL floor of 0% prevents negative returns. Wider bands = more uncertainty in later years.
+              <strong className="text-emerald-400">How to read:</strong> The green line shows the base case (fixed 10% return). The purple bands show the probability distribution across 500 simulated paths using 19.4% annual volatility (historical S&P 500, 1928–2025). The IUL floor of 0% prevents negative returns. Wider bands = more uncertainty in later years.
             </div>
           </div>
         )}
@@ -1204,9 +1206,9 @@ export default function RothConversionSTR() {
                     </th>
                     {sensitivityGrid.volatilities.map((v) => (
                       <th key={v} className={`p-2 text-center border border-[#12233e] font-medium ${
-                        v === 0.15 ? 'bg-cyan-500/10 text-cyan-400' : 'bg-[#0b1628] text-[#7a95b8]'
+                        v === SP500_ANNUAL_STDEV ? 'bg-cyan-500/10 text-cyan-400' : 'bg-[#0b1628] text-[#7a95b8]'
                       }`}>
-                        {(v * 100).toFixed(0)}%
+                        {Number.isInteger(Math.round(v * 1000) / 10) ? (v * 100).toFixed(0) : (v * 100).toFixed(1)}%
                       </th>
                     ))}
                   </tr>
@@ -1242,7 +1244,7 @@ export default function RothConversionSTR() {
               <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-blue-500/10 inline-block" /> Medium</span>
               <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-orange-500/10 inline-block" /> Low</span>
               <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-red-500/10 inline-block" /> Worst</span>
-              <span className="ml-auto">Highlighted cell = base case (10% return, 15% volatility)</span>
+              <span className="ml-auto">Highlighted cell = base case (10% return, 19.4% volatility)</span>
             </div>
             <div className="mt-3 p-3 rounded-lg bg-cyan-500/5 border border-cyan-500/15 text-xs text-[#7a95b8]">
               <strong className="text-cyan-400">How to read:</strong> Each cell shows the median IUL illustrated policy value (account value minus cumulative loan balance) at year {result?.inputs?.iulYears ?? 20} across {sensitivityGrid.rows.length * sensitivityGrid.volatilities.length} return-rate × volatility scenarios. Higher returns and lower volatility produce better outcomes. The highlighted cell represents the base case assumptions.
