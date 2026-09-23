@@ -47,6 +47,73 @@ const LTC_PAYOUT_RATE = 0.04;
 const LTC_DURATION_MONTHS = 24;
 const HOME_APPRECIATION_RATE = 0.05;
 
+// ─── Where these numbers come from ──────────────────────────────────────────
+// Every typed-in number in this file is listed here: a named, dated source, or
+// an assumption the firm chose and says it chose. None of these objects is
+// read by the arithmetic.
+
+/** RE_APPRECIATION and HOME_APPRECIATION_RATE = 0.05. */
+const HOME_APPRECIATION_SOURCE = {
+  label: "U.S. Federal Housing Finance Agency, All-Transactions House Price Index for the United States (USSTHPI, via FRED): 60.04 in 1975 Q1 to 719.87 in 2026 Q2, a compound 4.97% a year, which rounds to the 5% used here",
+  url: "https://fred.stlouisfed.org/series/USSTHPI",
+  asOf: "2026 Q2 observation, read 2026-09-23",
+  note: "The same index compounds to 3.36% a year over the 20 years to 2026 Q2 and 6.81% over the 10 years to 2026 Q2; 5% is the full-history figure, not a recent one.",
+};
+
+/** INTEREST_COMPOUND_RATE = 0.0625: saved interest parked in a fixed annuity. */
+const INTEREST_COMPOUND_SOURCE = {
+  label: "AnnuityRatesHQ, 5-Year MYGA Rates full rate table (CANNEX feed, $100,000 premium, 118 rates across 59 carriers): top rate 6.45%, market average 5.16%, median 5.20%, with 6.25% declared by two carriers",
+  url: "https://annuityrateshq.com/myga/rates/5-year",
+  asOf: "table as of 2026-09-18, read 2026-09-23",
+  note: "6.25% is a real declared 5-year rate near the top of the market, about 1.1 points above the market average; compounding it for 40 to 50 years assumes it can be renewed at that level.",
+};
+
+/** helocRate default 0.085 in runMortgageKiller and runHouseholdSimulation; 0.06 fallback in the grandchild HELOC tracker. */
+const HELOC_RATE_SOURCE = {
+  label: "Bankrate Monitor National Index, Home Equity Line of Credit rate (BRMHELOC01, via FRED): 7.29% for the week of 2026-09-02",
+  url: "https://fred.stlouisfed.org/series/BRMHELOC01",
+  asOf: "2026-09-02 observation, read 2026-09-23",
+  note: "The 8.5% default is 1.21 points above this national average, and the 6% fallback used for the grandchildren's HELOC tracker is 1.29 points below it. Not changed; flagged for review.",
+};
+const PRIME_RATE_SOURCE = {
+  label: "Board of Governors of the Federal Reserve System, H.15 Selected Interest Rates, Bank Prime Loan Rate (DPRIME, via FRED): 6.75% on 2026-09-02",
+  url: "https://fred.stlouisfed.org/series/DPRIME",
+  asOf: "2026-09-02 observation, read 2026-09-23",
+  note: "The 8.5% HELOC default equals prime plus 1.75 points; that margin is the firm's assumption.",
+};
+
+/** GROWTH_RATE = 0.075. The header calls it the NAIC AG 49 maximum; the guideline states a formula, not a number. */
+const AG49_SOURCE = {
+  label: "NAIC, Actuarial Guideline XLIX-A, The Application of the Life Illustrations Model Regulation to Policies with Index-Based Interest, Section 4 (illustrated scale) and Section 6 (policy loan leverage)",
+  url: "https://content.naic.org/sites/default/files/inline-files/AG%2049A%28posted%29.pdf",
+  asOf: "guideline effective for policies sold on or after 2020-12-14, read 2026-09-23",
+  note: "AG 49-A caps the illustrated rate at the lesser of the benchmark index account lookback average and 145% of the insurer's net investment earnings rate, per carrier and per year; it names no 7.5% figure. Section 6 limits the illustrated loan arbitrage to 50 basis points, which matches the header's +0.5% note.",
+};
+
+/** The 1.05 death benefit floor in simulatePolicy (accountValue * 1.05). */
+const CORRIDOR_SOURCE = {
+  label: "26 U.S. Code Section 7702(d)(2), cash value corridor applicable percentages: 250% to age 40, falling to 105% for ages 75 to 90 and 100% at 95 (Cornell Legal Information Institute)",
+  url: "https://www.law.cornell.edu/uscode/text/26/7702",
+  asOf: "read 2026-09-23",
+  note: "The code floors the death benefit at 105% of account value at every age; the statute requires 105% only at attained ages 75 to 90 and more at younger ages (for example 250% to age 40). Not changed; flagged for review.",
+};
+
+const HOUSEHOLD_WEALTH_ASSUMPTIONS = [
+  { label: "Assumption: IUL growth = 7.5% a year (GROWTH_RATE), chosen by the firm as an illustration rate; see the NAIC AG 49-A note, the carrier's filed maximum governs; no external source for the figure itself" },
+  { label: "Assumption: policy loan cost = 5% a year (LOAN_DRAG), chosen by the firm to approximate a carrier loan rate; no external source" },
+  { label: "Assumption: premium load = 6% (LOAD_FEE), chosen by the firm as a generic illustration, not any carrier's filed charge; no external source" },
+  { label: "Assumption: policy loan = 80% of surrender value (LOANABLE_PCT), chosen by the firm to keep a cushion against lapse; the carrier's contract sets the true limit; no external source" },
+  { label: "Assumption: HELOC loan-to-value = 70% (HELOC_LTV), chosen by the firm to leave headroom below the 80% combined LTV most lenders quote; no external source" },
+  { label: "Assumption: premiums paid for at most 5 years (MAX_PREMIUM_YEARS), chosen by the firm as the strategy's funding schedule; no external source" },
+  { label: "Assumption: spouse premium and death benefit = 80% of the primary's (SPOUSE_PREMIUM_RATIO), chosen by the firm; no external source" },
+  { label: "Assumption: child and grandchild premiums and death benefits = 50% of the generation above (CHILD_DB_RATIO, GRANDCHILD_DB_RATIO), chosen by the firm so a parent's cover is at least twice a child's; no external source" },
+  { label: "Assumption: rental income = 5% of property value a year when enabled (RENTAL_YIELD), chosen by the firm as a gross yield; no external source" },
+  { label: "Assumption: long-term care rider pays 4% of the death benefit spread over 24 months (LTC_PAYOUT_RATE, LTC_DURATION_MONTHS), chosen by the firm as a generic rider; the rider contract governs; no external source" },
+  { label: "Assumption: surrender charge starts at 9% of account value in year 1 and falls by 1 point a year to zero in year 10, chosen by the firm as a generic schedule; no external source" },
+  { label: "Assumption: after the premium years, 80% of each year's interest credit is applied to mortgage principal and 20% passed down as excess; grandchildren receive half the parents' excess plus the children's; chosen by the firm; no external source" },
+  { label: "Assumption: 50-year simulation when none is entered, a 30-year cascade and a 40-year interest growth table, chosen by the firm to span three generations; no external source" },
+];
+
 // ─── Types ───────────────────────────────────────────────────────────────────
 
 export interface PolicyHolder {
@@ -946,3 +1013,16 @@ export function formatCurrency(value: number): string {
 export function formatFullCurrency(value: number): string {
   return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(value);
 }
+
+// ─── Sources ─────────────────────────────────────────────────────────────────
+
+/** Every source and declared assumption behind the typed-in numbers in this engine, for the page to print. */
+export const HOUSEHOLD_WEALTH_SOURCES: readonly { label: string; url?: string; asOf?: string; note?: string }[] = [
+  HOME_APPRECIATION_SOURCE,
+  INTEREST_COMPOUND_SOURCE,
+  HELOC_RATE_SOURCE,
+  PRIME_RATE_SOURCE,
+  AG49_SOURCE,
+  CORRIDOR_SOURCE,
+  ...HOUSEHOLD_WEALTH_ASSUMPTIONS,
+];
