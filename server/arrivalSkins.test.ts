@@ -199,3 +199,30 @@ describe("feature flag", () => {
     expect(arrivalSkinsEnabled({ ownerPreview: false, isOwner: true })).toBe(false);
   });
 });
+
+describe("first visit and legibility", () => {
+  it("visit 1 wears the house skin (C major cream and mint) for every household", async () => {
+    const { SKIN_REGISTRY: reg } = await import("@shared/arrivalSkins");
+    expect(reg.houseSkin).toBe("c-major-cream");
+    for (let u = 0; u < 50; u++) expect(selectSkin(reg, `user:${u}`).skin.id).toBe("c-major-cream");
+  });
+
+  it("text on the band is at least 4.5:1 everywhere, including the filament-tinted edge (WCAG 1.4.3)", async () => {
+    const { fieldEdgeColour } = await import("@shared/arrivalSkins");
+    for (const s of SKIN_REGISTRY.skins) {
+      expect(contrastRatio(s.field, s.ink), s.id).toBeGreaterThanOrEqual(7);
+      expect(contrastRatio(fieldEdgeColour(s), s.ink), `${s.id} edge`).toBeGreaterThanOrEqual(4.5);
+      // "Enter with sound" is field-coloured text on an ink button.
+      expect(contrastRatio(s.ink, s.field), `${s.id} button`).toBeGreaterThanOrEqual(4.5);
+    }
+  });
+
+  it("the band draws text in full-strength ink only, and its motion stops within 5 s with a visible control", async () => {
+    const { readFileSync } = await import("node:fs");
+    const src = readFileSync(new URL("../client/src/components/ArrivalField.tsx", import.meta.url), "utf8");
+    expect(src).not.toMatch(/\$\{skin\.ink\}[0-9A-Fa-f]{2}`/);
+    expect(src).toMatch(/FILAMENT_MOTION_S = [1-5]\b/);
+    expect(src).toContain("Pause motion");
+    expect(src).toContain("prefers-reduced-motion");
+  });
+});
