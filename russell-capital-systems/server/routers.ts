@@ -8,6 +8,7 @@ import { invokeLLM } from "./_core/llm";
 import { invokePortalAI } from "./portalAI";
 import { ultraRouter } from "./ultraAI";
 import { aiStackRouter } from "./aiStackRouter";
+import { macroRouter } from "./macroRouter";
 import { thomasGoldmanRouter } from "./thomasGoldmanRouter";
 import { vaultRouter } from "./vaultRouter";
 import { leadsRouter } from "./leadsRouter";
@@ -347,6 +348,8 @@ export const appRouter = router({
   aiStack: aiStackRouter,
   /** The AI advisor (ADVISOR_NAME in shared/aiAdvisor.ts) — behind the blue microphone. */
   thomas: thomasGoldmanRouter,
+  /** Global Macro Intelligence: Treasury liquidation, petrodollar, sovereign debt, Taiwan — daily, sourced, confidence-scored. */
+  macro: macroRouter,
   /** Brain Hub: encrypted vault for forty brains + forty MCP servers. Owner only. */
   vault: vaultRouter,
   planningCases: planningCasesRouter,
