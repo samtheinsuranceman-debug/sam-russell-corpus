@@ -1,11 +1,12 @@
 import React from 'react';
 import { Link } from 'wouter';
+import { NOT_IN_NAVIGATION } from '@shared/hiddenRoutes';
 
 const ExplorePage: React.FC = () => {
   const subPages = [
     { path: '/portal/black-mirror', title: 'Black Mirror', description: 'See the dark side of financial inaction — what happens if you do nothing.', icon: '🪞' },
     { path: '/portal/social', title: 'Social Narcotic', description: 'Gamified social features that make financial planning addictive.', icon: '🎮' },
-  ];
+  ].filter((p) => !(p.path in NOT_IN_NAVIGATION)); // hidden pages are not advertised (shared/hiddenRoutes.ts)
 
   return (
     <div className="min-h-screen bg-[#0a0f1a] text-white p-8 font-sans">
@@ -28,6 +29,9 @@ const ExplorePage: React.FC = () => {
               <p className="text-gray-400 text-sm">{page.description}</p>
             </Link>
           ))}
+          {subPages.length === 0 && (
+            <p className="text-gray-400 text-sm">No Explore tools are published right now.</p>
+          )}
         </div>
 
         {/* AI Strategy Engine Integration */}
@@ -55,7 +59,7 @@ const ExplorePage: React.FC = () => {
               <p className="text-gray-400 text-sm">Explore tools connect to the full 248+ calculator ecosystem via StrategyContext, ensuring every insight flows into your holistic financial strategy.</p>
             </div>
           </div>
-          <Link href="/portal/ai-brain" className="mt-6 inline-block bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors">
+          <Link href="/portal/ai-brain-hub" className="mt-6 inline-block bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors">
             Open AI Brain Hub →
           </Link>
         </div>
@@ -100,7 +104,7 @@ const ExplorePage: React.FC = () => {
               <a href="/portal/ai-assist" className="px-4 py-2 bg-emerald-500/20 text-emerald-400 rounded-lg text-sm hover:bg-emerald-500/30 transition-all">
                 Send to AI Advisor →
               </a>
-              <a href="/portal/ai-brain" className="px-4 py-2 bg-emerald-500/20 text-emerald-400 rounded-lg text-sm hover:bg-emerald-500/30 transition-all">
+              <a href="/portal/ai-brain-hub" className="px-4 py-2 bg-emerald-500/20 text-emerald-400 rounded-lg text-sm hover:bg-emerald-500/30 transition-all">
                 View AI Brain Hub →
               </a>
             </div>

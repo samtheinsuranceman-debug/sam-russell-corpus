@@ -89,7 +89,7 @@ const AIBrainAdvisorConnector: React.FC<AIBrainAdvisorConnectorProps> = ({
           Send to AI Advisor
         </a>
         <a
-          href="/portal/ai-brain"
+          href="/portal/ai-brain-hub"
           className="block bg-gray-700 hover:bg-gray-600 text-white py-2 rounded-md text-center font-medium transition-colors"
         >
           View in AI Brain Hub

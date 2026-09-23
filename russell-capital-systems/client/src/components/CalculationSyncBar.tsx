@@ -159,6 +159,7 @@ export function CalculationSyncBar() {
                     </div>
                   </div>
                   <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                    {path && (
                     <Button
                       size="sm"
                       variant="ghost"
@@ -167,6 +168,7 @@ export function CalculationSyncBar() {
                     >
                       <ArrowRight className="w-3 h-3" />
                     </Button>
+                    )}
                     <Button
                       size="sm"
                       variant="ghost"
