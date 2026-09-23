@@ -15,16 +15,23 @@ import { Link } from "wouter";
 import { ExportToSlides } from "@/components/ExportToSlides";
 import { BarChart, LineChart, PieChart, AreaChart, RadarChart, ComposedChart, ResponsiveContainer, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Bar, Line, Pie, Cell, Area, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis } from "recharts";
 
-const generateMockTimeSeriesData = (days: number) => {
+/** Daily team activity from the real user_sessions and page_activity_logs rows. */
+const buildTimeSeriesData = (
+  days: number,
+  sessions: { userId: number; loginAt: string | Date }[] = [],
+  pageActivity: { enteredAt: string | Date }[] = [],
+) => {
+  const dayKey = (d: Date) => `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
   return Array.from({ length: days }).map((_, i) => {
     const date = new Date();
     date.setDate(date.getDate() - (days - 1 - i));
+    const key = dayKey(date);
+    const daySessions = sessions.filter((s) => dayKey(new Date(s.loginAt)) === key);
     return {
       date: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-      activeUsers: Math.floor(Math.random() * 50) + 10,
-      sessions: Math.floor(Math.random() * 100) + 20,
-      pageViews: Math.floor(Math.random() * 300) + 50,
-      conversions: Math.floor(Math.random() * 10) + 1,
+      activeUsers: new Set(daySessions.map((s) => s.userId)).size,
+      sessions: daySessions.length,
+      pageViews: pageActivity.filter((p) => dayKey(new Date(p.enteredAt)) === key).length,
     };
   });
 };
@@ -72,7 +79,7 @@ export default function TeamManagement() {
   );
   const teamActivity = trpc.agency.getTeamActivity.useQuery(
     { teamId: selectedTeamId!, days: parseInt(dateRange) },
-    { enabled: !!selectedTeamId && activeTab === "activity" }
+    { enabled: !!selectedTeamId && (activeTab === "activity" || activeTab === "dashboard") }
   );
   const legalDocs = trpc.agency.listLegalDocuments.useQuery(
     { teamId: selectedTeamId ?? undefined },
@@ -211,11 +218,13 @@ export default function TeamManagement() {
         }, {})
       ).sort((a, b) => b[1] - a[1]).slice(0, 5);
       
-      const performanceScore = Math.floor(Math.random() * 40) + 60;
-      const clientsManaged = Math.floor(Math.random() * 50) + 10;
-      const aum = Math.floor(Math.random() * 10000000) + 1000000;
-      const complianceScore = Math.floor(Math.random() * 20) + 80;
-      
+      // Performance, clients managed, AUM and compliance are not recorded per agent,
+      // so they are left unknown rather than generated.
+      const performanceScore = null as number | null;
+      const clientsManaged = null as number | null;
+      const aum = null as number | null;
+      const complianceScore = null as number | null;
+
       return {
         ...m,
         sessionCount: agentSessions.length,
@@ -283,7 +292,15 @@ export default function TeamManagement() {
 
   const totalPages = Math.ceil(filteredMembers.length / itemsPerPage);
 
-  const timeSeriesData = useMemo(() => generateMockTimeSeriesData(parseInt(dateRange)), [dateRange]);
+  const timeSeriesData = useMemo(
+    () => buildTimeSeriesData(parseInt(dateRange), teamActivity.data?.sessions, teamActivity.data?.pageActivity),
+    [dateRange, teamActivity.data],
+  );
+  const pageViewChange = useMemo(() => {
+    const last = timeSeriesData.slice(-7).reduce((s, d) => s + d.pageViews, 0);
+    const prior = timeSeriesData.slice(-14, -7).reduce((s, d) => s + d.pageViews, 0);
+    return prior > 0 ? ((last - prior) / prior) * 100 : null;
+  }, [timeSeriesData]);
   
   const roleDistributionData = useMemo(() => {
     if (!teamMembers.data) return [];
@@ -307,28 +324,18 @@ export default function TeamManagement() {
   
   const performanceRadarData = useMemo(() => {
     if (activitySummary.length === 0) return [];
-    const topAgents = [...activitySummary].sort((a, b) => b.performanceScore - a.performanceScore).slice(0, 5);
-    
+    const topAgents = [...activitySummary].sort((a, b) => b.sessionCount - a.sessionCount).slice(0, 5);
+    const maxSessions = Math.max(1, ...topAgents.map((a) => a.sessionCount));
+    const maxViews = Math.max(1, ...topAgents.map((a) => a.totalPageViews));
+    // Share of the busiest agent's sessions and page views, from real activity rows.
     return topAgents.map((agent) => ({
       subject: agent.userName.split(' ')[0],
-      A: agent.performanceScore,
-      B: agent.complianceScore,
-      C: Math.min(100, agent.sessionCount * 2),
+      A: Math.round((agent.sessionCount / maxSessions) * 100),
+      B: Math.round((agent.totalPageViews / maxViews) * 100),
       fullMark: 100,
     }));
   }, [activitySummary]);
 
-  const teamMetricsData = useMemo(() => {
-    return [
-      { name: 'Jan', aum: 4000, revenue: 2400, clients: 46 },
-      { name: 'Feb', aum: 3000, revenue: 1398, clients: 40 },
-      { name: 'Mar', aum: 2000, revenue: 9800, clients: 43 },
-      { name: 'Apr', aum: 2780, revenue: 3908, clients: 30 },
-      { name: 'May', aum: 1890, revenue: 4800, clients: 36 },
-      { name: 'Jun', aum: 2390, revenue: 3800, clients: 49 },
-      { name: 'Jul', aum: 3490, revenue: 4300, clients: 33 },
-    ];
-  }, []);
 
   const selectedMemberDetails = useMemo(() => {
     if (!selectedMemberId || !teamMembers.data) return null;
@@ -381,9 +388,9 @@ export default function TeamManagement() {
               },
               {
                 title: "Top Performers",
-                items: activitySummary.sort((a, b) => b.performanceScore - a.performanceScore).slice(0, 3).map((a) => ({
+                items: [...activitySummary].sort((a, b) => b.sessionCount - a.sessionCount).slice(0, 3).map((a) => ({
                   label: a.userName,
-                  value: `Score: ${a.performanceScore} | AUM: $${(a.aum / 1000000).toFixed(1)}M`
+                  value: `Sessions: ${a.sessionCount} | Page views: ${a.totalPageViews}`
                 }))
               }
             ]}
@@ -554,10 +561,10 @@ export default function TeamManagement() {
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-muted-foreground">Avg Compliance</span>
-                  <span className="font-semibold text-emerald-500">94%</span>
+                  <span className="font-semibold text-muted-foreground">Not tracked</span>
                 </div>
                 <div className="w-full bg-muted rounded-full h-2 mt-2">
-                  <div className="bg-emerald-500 h-2 rounded-full" style={{ width: '94%' }}></div>
+                  <div className="bg-emerald-500 h-2 rounded-full" style={{ width: '0%' }}></div>
                 </div>
               </CardContent>
             </Card>
@@ -660,12 +667,7 @@ export default function TeamManagement() {
                             <Users className="w-5 h-5 text-blue-500" />
                           </div>
                         </div>
-                        <div className="mt-4 flex items-center text-sm">
-                          <span className="text-emerald-500 flex items-center font-medium">
-                            <ArrowUpRight className="w-4 h-4 mr-1" /> +12%
-                          </span>
-                          <span className="text-muted-foreground ml-2">vs last month</span>
-                        </div>
+                        <div className="mt-4 text-xs text-muted-foreground">Month-over-month change is not tracked</div>
                       </CardContent>
                     </Card>
                     <Card>
@@ -681,12 +683,7 @@ export default function TeamManagement() {
                             <Activity className="w-5 h-5 text-emerald-500" />
                           </div>
                         </div>
-                        <div className="mt-4 flex items-center text-sm">
-                          <span className="text-emerald-500 flex items-center font-medium">
-                            <ArrowUpRight className="w-4 h-4 mr-1" /> +24%
-                          </span>
-                          <span className="text-muted-foreground ml-2">vs last month</span>
-                        </div>
+                        <div className="mt-4 text-xs text-muted-foreground">Month-over-month change is not tracked</div>
                       </CardContent>
                     </Card>
                     <Card>
@@ -695,19 +692,14 @@ export default function TeamManagement() {
                           <div>
                             <p className="text-sm font-medium text-muted-foreground">Total AUM</p>
                             <h3 className="text-3xl font-bold mt-2">
-                              ${(activitySummary.reduce((s, a) => s + (a.aum || 0), 0) / 1000000).toFixed(1)}M
+                              —
                             </h3>
                           </div>
                           <div className="p-3 bg-emerald-500/10 rounded-lg">
                             <TrendingUp className="w-5 h-5 text-emerald-500" />
                           </div>
                         </div>
-                        <div className="mt-4 flex items-center text-sm">
-                          <span className="text-emerald-500 flex items-center font-medium">
-                            <ArrowUpRight className="w-4 h-4 mr-1" /> +8%
-                          </span>
-                          <span className="text-muted-foreground ml-2">vs last month</span>
-                        </div>
+                        <div className="mt-4 text-xs text-muted-foreground">Month-over-month change is not tracked</div>
                       </CardContent>
                     </Card>
                     <Card>
@@ -715,18 +707,13 @@ export default function TeamManagement() {
                         <div className="flex justify-between items-start">
                           <div>
                             <p className="text-sm font-medium text-muted-foreground">Compliance Score</p>
-                            <h3 className="text-3xl font-bold mt-2">94/100</h3>
+                            <h3 className="text-3xl font-bold mt-2">—</h3>
                           </div>
                           <div className="p-3 bg-amber-500/10 rounded-lg">
                             <ShieldCheck className="w-5 h-5 text-amber-500" />
                           </div>
                         </div>
-                        <div className="mt-4 flex items-center text-sm">
-                          <span className="text-destructive flex items-center font-medium">
-                            <ArrowDownRight className="w-4 h-4 mr-1" /> -2%
-                          </span>
-                          <span className="text-muted-foreground ml-2">vs last month</span>
-                        </div>
+                        <div className="mt-4 text-xs text-muted-foreground">Month-over-month change is not tracked</div>
                       </CardContent>
                     </Card>
                   </div>
@@ -783,20 +770,10 @@ export default function TeamManagement() {
                       </CardHeader>
                       <CardContent>
                         <div className="h-[300px] w-full">
-                          <ResponsiveContainer width="100%" height="100%">
-                            <ComposedChart data={teamMetricsData} margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
-                              <CartesianGrid stroke="#f5f5f5" strokeDasharray="3 3" vertical={false} />
-                              <XAxis dataKey="name" stroke="#888888" fontSize={12} tickLine={false} axisLine={false} />
-                              <YAxis yAxisId="left" stroke="#888888" fontSize={12} tickLine={false} axisLine={false} />
-                              <YAxis yAxisId="right" orientation="right" stroke="#888888" fontSize={12} tickLine={false} axisLine={false} />
-                              <Tooltip 
-                                contentStyle={{ backgroundColor: 'rgba(255, 255, 255, 0.9)', borderRadius: '8px', border: '1px solid #e5e7eb' }}
-                              />
-                              <Legend />
-                              <Bar yAxisId="left" dataKey="revenue" name="Revenue ($K)" barSize={20} fill="#10b981" radius={[4, 4, 0, 0]} />
-                              <Line yAxisId="right" type="monotone" dataKey="aum" name="AUM ($M)" stroke="#10b981" strokeWidth={3} dot={{ r: 4 }} />
-                            </ComposedChart>
-                          </ResponsiveContainer>
+                          <div className="h-full flex flex-col items-center justify-center text-center text-muted-foreground border border-dashed rounded-lg px-6">
+                            <p className="text-sm font-medium">No revenue or AUM data recorded for this team</p>
+                            <p className="text-xs mt-1">Monthly revenue and AUM will chart here once agent production is tracked.</p>
+                          </div>
                         </div>
                       </CardContent>
                     </Card>
@@ -857,8 +834,8 @@ export default function TeamManagement() {
                                 <PolarGrid stroke="#e5e7eb" />
                                 <PolarAngleAxis dataKey="subject" tick={{ fill: '#6b7280', fontSize: 10 }} />
                                 <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
-                                <Radar name="Performance" dataKey="A" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.5} />
-                                <Radar name="Compliance" dataKey="B" stroke="#10b981" fill="#10b981" fillOpacity={0.5} />
+                                <Radar name="Sessions (% of top agent)" dataKey="A" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.5} />
+                                <Radar name="Page views (% of top agent)" dataKey="B" stroke="#10b981" fill="#10b981" fillOpacity={0.5} />
                                 <Tooltip />
                                 <Legend wrapperStyle={{ fontSize: '12px' }} />
                               </RadarChart>
@@ -1317,8 +1294,8 @@ export default function TeamManagement() {
                               </div>
                               <div className="p-3 rounded-lg bg-muted/30 border border-border/50 flex flex-col items-center justify-center text-center">
                                 <TrendingUp className="w-5 h-5 text-emerald-500 mb-1" />
-                                <p className="text-2xl font-bold">{agent.performanceScore}<span className="text-sm font-normal text-muted-foreground">/100</span></p>
-                                <p className="text-xs text-muted-foreground">Engagement Score</p>
+                                <p className="text-2xl font-bold">{agent.sessionCount > 0 ? Math.round(agent.totalDuration / agent.sessionCount / 60) : 0}<span className="text-sm font-normal text-muted-foreground">m</span></p>
+                                <p className="text-xs text-muted-foreground">Avg Session</p>
                               </div>
                             </div>
                             
@@ -1439,7 +1416,7 @@ export default function TeamManagement() {
                           <Award className="w-5 h-5 text-amber-500" />
                           Team Leaderboard
                         </CardTitle>
-                        <CardDescription>Top performing agents based on composite score</CardDescription>
+                        <CardDescription>Agents ranked by recorded sessions in the selected range</CardDescription>
                       </CardHeader>
                       <CardContent>
                         <div className="overflow-x-auto">
@@ -1448,12 +1425,12 @@ export default function TeamManagement() {
                               <tr>
                                 <th className="px-4 py-3 font-medium rounded-tl-lg w-12">Rank</th>
                                 <th className="px-4 py-3 font-medium">Agent</th>
-                                <th className="px-4 py-3 font-medium text-right">Score</th>
-                                <th className="px-4 py-3 font-medium text-right rounded-tr-lg">AUM</th>
+                                <th className="px-4 py-3 font-medium text-right">Sessions</th>
+                                <th className="px-4 py-3 font-medium text-right rounded-tr-lg">Time Spent</th>
                               </tr>
                             </thead>
                             <tbody>
-                              {activitySummary.sort((a, b) => b.performanceScore - a.performanceScore).map((agent, i) => (
+                              {[...activitySummary].sort((a, b) => b.sessionCount - a.sessionCount).map((agent, i) => (
                                 <tr key={agent.id} className="border-b border-border/50 hover:bg-muted/20">
                                   <td className="px-4 py-3 font-bold text-center">
                                     {i === 0 ? <span className="text-amber-500 text-lg">1</span> : 
@@ -1464,11 +1441,11 @@ export default function TeamManagement() {
                                   <td className="px-4 py-3 font-medium">{agent.userName}</td>
                                   <td className="px-4 py-3 text-right">
                                     <Badge variant="outline" className={i < 3 ? "bg-emerald-500/10 text-emerald-700 border-emerald-200" : ""}>
-                                      {agent.performanceScore}
+                                      {agent.sessionCount}
                                     </Badge>
                                   </td>
                                   <td className="px-4 py-3 text-right font-mono text-muted-foreground">
-                                    ${(agent.aum / 1000000).toFixed(1)}M
+                                    {Math.round(agent.totalDuration / 60)}m
                                   </td>
                                 </tr>
                               ))}
@@ -1494,13 +1471,13 @@ export default function TeamManagement() {
                               <XAxis dataKey="date" hide />
                               <YAxis hide />
                               <Tooltip />
-                              <Line type="monotone" dataKey="conversions" stroke="#10b981" strokeWidth={3} dot={{ r: 4, fill: '#10b981', strokeWidth: 2, stroke: '#fff' }} activeDot={{ r: 6 }} />
+                              <Line type="monotone" dataKey="pageViews" name="Page views" stroke="#10b981" strokeWidth={3} dot={{ r: 4, fill: '#10b981', strokeWidth: 2, stroke: '#fff' }} activeDot={{ r: 6 }} />
                             </LineChart>
                           </ResponsiveContainer>
                         </div>
                         <div className="mt-4 text-center">
-                          <p className="text-3xl font-bold text-emerald-500">+14.2%</p>
-                          <p className="text-sm text-muted-foreground">Conversion growth (14d)</p>
+                          <p className="text-3xl font-bold text-emerald-500">{pageViewChange === null ? "—" : `${pageViewChange >= 0 ? "+" : ""}${pageViewChange.toFixed(1)}%`}</p>
+                          <p className="text-sm text-muted-foreground">Page views, last 7 days vs prior 7</p>
                         </div>
                       </CardContent>
                     </Card>
@@ -1717,16 +1694,16 @@ export default function TeamManagement() {
                 <h3 className="text-lg font-semibold border-b pb-2">Performance Metrics</h3>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   <div className="p-4 bg-muted/30 rounded-lg border text-center">
-                    <p className="text-sm text-muted-foreground mb-1">Score</p>
-                    <p className="text-2xl font-bold text-emerald-600">{selectedMemberDetails.activity?.performanceScore || 0}</p>
+                    <p className="text-sm text-muted-foreground mb-1">Page Views</p>
+                    <p className="text-2xl font-bold text-emerald-600">{selectedMemberDetails.activity?.totalPageViews || 0}</p>
                   </div>
                   <div className="p-4 bg-muted/30 rounded-lg border text-center">
                     <p className="text-sm text-muted-foreground mb-1">AUM</p>
-                    <p className="text-2xl font-bold text-blue-600">${((selectedMemberDetails.activity?.aum || 0) / 1000000).toFixed(1)}M</p>
+                    <p className="text-2xl font-bold text-muted-foreground" title="Not tracked per agent">—</p>
                   </div>
                   <div className="p-4 bg-muted/30 rounded-lg border text-center">
                     <p className="text-sm text-muted-foreground mb-1">Clients</p>
-                    <p className="text-2xl font-bold text-emerald-600">{selectedMemberDetails.activity?.clientsManaged || 0}</p>
+                    <p className="text-2xl font-bold text-muted-foreground" title="Not tracked per agent">—</p>
                   </div>
                   <div className="p-4 bg-muted/30 rounded-lg border text-center">
                     <p className="text-sm text-muted-foreground mb-1">Sessions</p>

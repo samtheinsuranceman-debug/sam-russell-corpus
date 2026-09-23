@@ -159,19 +159,12 @@ export default function RussellNumber() {
             <Card className="mt-8 max-w-5xl mx-auto border-border/30">
               <CardHeader><CardTitle className="text-lg flex items-center gap-2"><TrendingUp className="w-5 h-5 text-emerald-400" /> Russell Number History</CardTitle></CardHeader>
               <CardContent>
-                <div className="h-48 flex items-end gap-1 px-4">
-                  {Array.from({ length: 30 }, (_, i) => {
-                    const base = russellNumber?.score ?? 500;
-                    const v = Math.sin(i * 0.3) * 50 + Math.random() * 30;
-                    const day = Math.max(0, Math.min(1000, base - 100 + (i * 3) + v));
-                    const h = (day / 1000) * 100;
-                    return (
-                      <div key={i} className="flex-1 flex flex-col items-center gap-1">
-                        <div className={`w-full rounded-t transition-all ${i === 29 ? "bg-emerald-500" : "bg-emerald-500/30 hover:bg-emerald-500/50"}`} style={{ height: `${h}%` }} title={`Day ${i + 1}: ${Math.round(day)}`} />
-                        {(i === 0 || i === 14 || i === 29) && <span className="text-[10px] text-muted-foreground">{i === 0 ? "30d" : i === 14 ? "15d" : "Today"}</span>}
-                      </div>
-                    );
-                  })}
+                {/* No score snapshots are stored, so there is no real history to chart. */}
+                <div className="h-48 flex flex-col items-center justify-center text-center px-4 border border-dashed border-border/40 rounded-lg">
+                  <p className="text-sm font-medium text-white">No history recorded yet</p>
+                  <p className="text-xs text-muted-foreground mt-1 max-w-md">
+                    Your Russell Number is computed live from your profile and client list. Daily snapshots are not stored yet, so a 30-day history will appear here once they are.
+                  </p>
                 </div>
               </CardContent>
             </Card>

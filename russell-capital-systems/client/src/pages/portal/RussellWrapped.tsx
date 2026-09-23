@@ -137,10 +137,10 @@ export default function RussellWrapped() {
                 key={i}
                 className="absolute w-1 h-1 bg-white/20 rounded-full animate-pulse"
                 style={{
-                  left: `${Math.random() * 100}%`,
-                  top: `${Math.random() * 100}%`,
-                  animationDelay: `${Math.random() * 3}s`,
-                  animationDuration: `${2 + Math.random() * 3}s`,
+                  left: `${Math.random() * 100}%`, // decorative
+                  top: `${Math.random() * 100}%`, // decorative
+                  animationDelay: `${Math.random() * 3}s`, // decorative
+                  animationDuration: `${2 + Math.random() * 3}s`, // decorative
                 }}
               />
             ))}

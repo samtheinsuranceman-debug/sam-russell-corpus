@@ -67,6 +67,7 @@ import {
   userPortalPreferences,
 } from "../drizzle/schema";
 import { ENV } from "./_core/env";
+import { describeUserAgent } from "@shared/userAgent";
 import { randomBytes } from "crypto";
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -881,6 +882,13 @@ export async function getStaleClients(workspaceId: number, staleDays = 30) {
     email: clients.email,
     phone: clients.phone,
     createdAt: clients.createdAt,
+    state: clients.state,
+    riskTolerance: clients.riskTolerance,
+    totalNetWorth: clients.totalNetWorth,
+    iraBalance: clients.iraBalance,
+    rothBalance: clients.rothBalance,
+    taxableAssets: clients.taxableAssets,
+    k401Balance: clients.k401Balance,
   }).from(clients).where(eq(clients.workspaceId, workspaceId));
 
   // Get last activity per client from both notes and activity log
@@ -3358,10 +3366,129 @@ export async function getDistinctSessionUsers() {
     userId: userSessions.userId,
     userName: userSessions.userName,
     userEmail: userSessions.userEmail,
+    sessionCount: sql<number>`COUNT(*)`,
+    lastLoginAt: sql<string | null>`MAX(${userSessions.loginAt})`,
+    activeSessions: sql<number>`SUM(CASE WHEN ${userSessions.isActive} THEN 1 ELSE 0 END)`,
   }).from(userSessions)
     .groupBy(userSessions.userId, userSessions.userName, userSessions.userEmail)
     .orderBy(userSessions.userName);
-  return rows;
+  return rows.map((r) => ({
+    ...r,
+    sessionCount: Number(r.sessionCount ?? 0),
+    activeSessions: Number(r.activeSessions ?? 0),
+  }));
+}
+
+/**
+ * Website usage aggregates for the admin usage page, computed from the real
+ * user_sessions and page_activity_logs rows of the last `days` days. Anything
+ * the platform does not record (geography, page-load timings, failed logins)
+ * is absent here rather than estimated.
+ */
+export async function getWebsiteUsageAnalytics(days = 30) {
+  const empty = {
+    days,
+    traffic: [] as { date: string; visitors: number; sessions: number; pageviews: number; singlePageSessions: number }[],
+    devices: [] as { name: string; value: number }[],
+    browsers: [] as { name: string; value: number }[],
+    hourly: [] as { hour: string; activeUsers: number; avgSessionLength: number }[],
+    weekdayLogins: [] as { day: string; logins: number }[],
+    topPages: [] as { page: string; views: number; uniqueVisitors: number; avgSeconds: number; singlePageSessionShare: number }[],
+    activeSessions: [] as { sessionId: number; userName: string; loginAt: Date; currentPage: string | null; durationSecs: number }[],
+  };
+  const db = await getDb();
+  if (!db) return empty;
+  const since = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
+  const sessions = await db.select().from(userSessions).where(gte(userSessions.loginAt, since));
+  const pages = await db.select().from(pageActivityLogs).where(gte(pageActivityLogs.enteredAt, since));
+
+  const pad = (n: number) => String(n).padStart(2, "0");
+  const dayKey = (d: Date) => `${d.getUTCFullYear()}-${pad(d.getUTCMonth() + 1)}-${pad(d.getUTCDate())}`;
+  const pagesBySession = new Map<number, number>();
+  for (const p of pages) pagesBySession.set(p.sessionId, (pagesBySession.get(p.sessionId) ?? 0) + 1);
+
+  const traffic = Array.from({ length: days }, (_, i) => {
+    const d = new Date(Date.now() - (days - 1 - i) * 24 * 60 * 60 * 1000);
+    const key = dayKey(d);
+    const daySessions = sessions.filter((s) => dayKey(new Date(s.loginAt)) === key);
+    return {
+      date: key.slice(5),
+      visitors: new Set(daySessions.map((s) => s.userId)).size,
+      sessions: daySessions.length,
+      pageviews: pages.filter((p) => dayKey(new Date(p.enteredAt)) === key).length,
+      singlePageSessions: daySessions.filter((s) => (pagesBySession.get(s.id) ?? 0) <= 1).length,
+    };
+  });
+
+  const tally = (values: string[]) => {
+    const counts = new Map<string, number>();
+    for (const v of values) counts.set(v, (counts.get(v) ?? 0) + 1);
+    return Array.from(counts.entries()).map(([name, value]) => ({ name, value })).sort((a, b) => b.value - a.value);
+  };
+  const uas = sessions.map((s) => describeUserAgent(s.userAgent));
+  const devices = tally(uas.map((u) => u.device));
+  const browserCounts = tally(uas.map((u) => u.browser));
+  const browsers = browserCounts.map((b) => ({ name: b.name, value: sessions.length ? Math.round((b.value / sessions.length) * 1000) / 10 : 0 }));
+
+  const hourly = Array.from({ length: 24 }, (_, h) => {
+    const hs = sessions.filter((s) => new Date(s.loginAt).getUTCHours() === h);
+    const withDuration = hs.filter((s) => s.durationSecs != null);
+    return {
+      hour: `${h}:00`,
+      activeUsers: new Set(hs.map((s) => s.userId)).size,
+      avgSessionLength: withDuration.length ? Math.round(withDuration.reduce((a, s) => a + (s.durationSecs ?? 0), 0) / withDuration.length) : 0,
+    };
+  });
+
+  const weekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
+  const weekdayLogins = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day, idx) => ({
+    day,
+    logins: sessions.filter((s) => new Date(s.loginAt).getTime() >= weekAgo && new Date(s.loginAt).getUTCDay() === idx).length,
+  }));
+
+  const byPath = new Map<string, { views: number; users: Set<number>; seconds: number; timed: number; sessions: Set<number> }>();
+  for (const p of pages) {
+    const e = byPath.get(p.pagePath) ?? { views: 0, users: new Set<number>(), seconds: 0, timed: 0, sessions: new Set<number>() };
+    e.views += 1;
+    e.users.add(p.userId);
+    e.sessions.add(p.sessionId);
+    if (p.durationSecs != null) { e.seconds += p.durationSecs; e.timed += 1; }
+    byPath.set(p.pagePath, e);
+  }
+  const topPages = Array.from(byPath.entries())
+    .map(([page, e]) => {
+      const sessionIds = Array.from(e.sessions);
+      const single = sessionIds.filter((id) => (pagesBySession.get(id) ?? 0) <= 1).length;
+      return {
+        page,
+        views: e.views,
+        uniqueVisitors: e.users.size,
+        avgSeconds: e.timed ? Math.round(e.seconds / e.timed) : 0,
+        singlePageSessionShare: sessionIds.length ? Math.round((single / sessionIds.length) * 100) : 0,
+      };
+    })
+    .sort((a, b) => b.views - a.views)
+    .slice(0, 10);
+
+  const lastPageBySession = new Map<number, { path: string; at: number }>();
+  for (const p of pages) {
+    const at = new Date(p.enteredAt).getTime();
+    const prev = lastPageBySession.get(p.sessionId);
+    if (!prev || at > prev.at) lastPageBySession.set(p.sessionId, { path: p.pageTitle || p.pagePath, at });
+  }
+  const activeSessions = sessions
+    .filter((s) => s.isActive)
+    .sort((a, b) => new Date(b.loginAt).getTime() - new Date(a.loginAt).getTime())
+    .slice(0, 20)
+    .map((s) => ({
+      sessionId: s.id,
+      userName: s.userName,
+      loginAt: s.loginAt,
+      currentPage: lastPageBySession.get(s.id)?.path ?? null,
+      durationSecs: Math.max(0, Math.round((Date.now() - new Date(s.loginAt).getTime()) / 1000)),
+    }));
+
+  return { days, traffic, devices, browsers, hourly, weekdayLogins, topPages, activeSessions };
 }
 
 // ── Page Activity Logs ────────────────────────────────────────────────────────
@@ -4044,6 +4171,61 @@ export async function getTopPages(limit = 20) {
     ORDER BY visits DESC
     LIMIT ${limit}
   `).then(([rows]) => (rows as unknown) as any[]);
+}
+
+export type OwnerActivityRange = "24h" | "7d" | "30d" | "12m";
+
+/**
+ * Real activity per time bucket, read from page_activity_logs (page views and
+ * distinct users) and trial_logins (logins). A bucket with no rows is zero,
+ * never invented. Bucket keys are UTC.
+ */
+export async function getOwnerActivityTimeline(range: OwnerActivityRange) {
+  const now = new Date();
+  const bucketCount = range === "24h" ? 24 : range === "7d" ? 7 : range === "30d" ? 30 : 12;
+  const pad = (n: number) => String(n).padStart(2, "0");
+  const keyOf = (d: Date) =>
+    range === "24h"
+      ? `${d.getUTCFullYear()}-${pad(d.getUTCMonth() + 1)}-${pad(d.getUTCDate())} ${pad(d.getUTCHours())}:00`
+      : range === "12m"
+        ? `${d.getUTCFullYear()}-${pad(d.getUTCMonth() + 1)}`
+        : `${d.getUTCFullYear()}-${pad(d.getUTCMonth() + 1)}-${pad(d.getUTCDate())}`;
+  const buckets: { name: string; visitors: number; active: number; logins: number }[] = [];
+  for (let i = bucketCount - 1; i >= 0; i--) {
+    const d = new Date(now);
+    if (range === "24h") d.setUTCHours(d.getUTCHours() - i);
+    else if (range === "12m") { d.setUTCDate(1); d.setUTCMonth(d.getUTCMonth() - i); }
+    else d.setUTCDate(d.getUTCDate() - i);
+    buckets.push({ name: keyOf(d), visitors: 0, active: 0, logins: 0 });
+  }
+
+  const db = await getDb();
+  if (!db) return buckets;
+  const fmt = range === "24h" ? "%Y-%m-%d %H:00" : range === "12m" ? "%Y-%m" : "%Y-%m-%d";
+  const since = new Date(now);
+  if (range === "24h") since.setUTCHours(since.getUTCHours() - 24);
+  else if (range === "12m") { since.setUTCDate(1); since.setUTCMonth(since.getUTCMonth() - 12); }
+  else since.setUTCDate(since.getUTCDate() - bucketCount);
+
+  const [pageRows] = (await db.execute(sql`
+    SELECT DATE_FORMAT(createdAt, ${fmt}) AS bucket, COUNT(*) AS visits, COUNT(DISTINCT userId) AS users
+    FROM page_activity_logs WHERE createdAt >= ${since} GROUP BY bucket
+  `)) as unknown as [Array<{ bucket: string; visits: number; users: number }>];
+  const [loginRows] = (await db.execute(sql`
+    SELECT DATE_FORMAT(createdAt, ${fmt}) AS bucket, COUNT(*) AS logins
+    FROM trial_logins WHERE createdAt >= ${since} GROUP BY bucket
+  `)) as unknown as [Array<{ bucket: string; logins: number }>];
+
+  const byKey = new Map(buckets.map((row) => [row.name, row]));
+  for (const r of pageRows ?? []) {
+    const row = byKey.get(String(r.bucket));
+    if (row) { row.visitors = Number(r.visits); row.active = Number(r.users); }
+  }
+  for (const r of loginRows ?? []) {
+    const row = byKey.get(String(r.bucket));
+    if (row) row.logins = Number(r.logins);
+  }
+  return buckets;
 }
 
 export async function getRecentLogins(limit = 50) {
