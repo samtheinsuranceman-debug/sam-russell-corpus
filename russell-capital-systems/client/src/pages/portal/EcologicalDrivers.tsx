@@ -3,7 +3,7 @@ import { useState, useMemo } from "react";
 
 import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/_core/hooks/useAuth";
-import { PieChartIcon, Pie, Cell as PieCell, ScatterChart, Scatter, ZAxis } from "recharts";
+import { Pie, Cell as PieCell, ScatterChart, Scatter, ZAxis } from "recharts";
 
 import {
   BarChart, Bar, LineChart, Line, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar,

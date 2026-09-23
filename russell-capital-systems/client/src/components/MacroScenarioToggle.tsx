@@ -26,7 +26,8 @@ import { Slider } from "@/components/ui/slider";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Globe, Landmark, Ship, Flame, ChevronDown, ChevronUp, Info } from "lucide-react";
-import { NEUTRAL_ADJUSTMENTS, type MacroAdjustments, type MacroToggles } from "@shared/macro";
+import { NEUTRAL_ADJUSTMENTS } from "@shared/macro/neutral";
+import type { MacroAdjustments, MacroToggles } from "@shared/macro/types";
 import { cn } from "@/lib/utils";
 
 export type MacroScenarioState = {

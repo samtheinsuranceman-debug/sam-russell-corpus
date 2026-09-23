@@ -62,7 +62,7 @@ const TOUR_STEPS = [
     icon: FlaskConical,
     color: "text-blue-400",
     bgColor: "from-blue-500/20 to-indigo-500/20",
-    path: "/portal/strategy-lab",
+    path: "/portal/strategy",
   },
 ];
 

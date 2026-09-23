@@ -74,10 +74,14 @@ describe("Batch 8 — Wire remaining 4 experience pages", () => {
       expect(STRATEGY_COLORS["war-room"]).toBeDefined();
     });
 
-    it("STRATEGY_PATHS includes live-copilot, social-narcotic, war-room", async () => {
+    it("STRATEGY_PATHS includes live-copilot and war-room, and no hidden page", async () => {
       const { STRATEGY_PATHS } = await import("../client/src/contexts/StrategyContext");
-      expect(STRATEGY_PATHS["live-copilot"]).toBe("/portal/live-copilot");
-      expect(STRATEGY_PATHS["social-narcotic"]).toBe("/portal/social-narcotic");
+      const { NOT_IN_NAVIGATION } = await import("../shared/hiddenRoutes");
+      // The real route (App.tsx): /portal/live-copilot never existed.
+      expect(STRATEGY_PATHS["live-copilot"]).toBe("/portal/co-pilot");
+      // Social Narcotic's page (/portal/social) is hidden by the owner, so it is not linked.
+      expect(STRATEGY_PATHS["social-narcotic"]).toBeUndefined();
+      for (const p of Object.values(STRATEGY_PATHS)) expect(p! in NOT_IN_NAVIGATION, p).toBe(false);
       expect(STRATEGY_PATHS["war-room"]).toBe("/portal/war-room");
     });
   });

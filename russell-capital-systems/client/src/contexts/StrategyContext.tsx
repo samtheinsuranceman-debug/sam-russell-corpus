@@ -969,28 +969,30 @@ export const STRATEGY_COLORS: Record<StrategyType, string> = {
   "war-room": "red",
 };
 /** Map strategy type to its calculator page path */
-export const STRATEGY_PATHS: Record<StrategyType, string> = {
+/**
+ * Where each strategy's page lives. Strategies whose page the owner has hidden
+ * (shared/hiddenRoutes.ts: black-mirror, social) have no entry, so nothing links to them.
+ */
+export const STRATEGY_PATHS: Partial<Record<StrategyType, string>> = {
   "mortgage-killer": "/portal/mortgage-killer",
   "iul-projection": "/portal/iul-historical",
   "roth-conversion": "/portal/roth-conversion",
   "myga-waterfall": "/portal/myga-fixed-rate",
   "tax-waterfall": "/portal/tax-waterfall",
-  "retirement-income": "/portal/retirement-income",
+  "retirement-income": "/portal/retirement-projection",
   "premium-financing": "/portal/premium-financing",
   "real-estate-mogul": "/portal/real-estate-mogul",
-  "inflation-analysis": "/portal/inflation-analysis",
+  "inflation-analysis": "/portal/inflation",
   "social-security": "/portal/social-security",
   "annuity-income": "/portal/athene-guaranteed-income",
   "estate-tax": "/portal/estate-tax",
-  "fia-collateral": "/portal/fia-collateral-strategy",
+  "fia-collateral": "/portal/fia-collateral",
   "hot-income": "/portal/hot-income",
   "time-machine": "/portal/time-machine",
   "lifetime-income": "/portal/lifetime-income",
-  "black-mirror": "/portal/black-mirror",
   "endgame": "/portal/endgame",
   "dynamic-tax": "/portal/tax-waterfall",
   "advisor-income": "/portal/advisor-income-calculator",
-  "live-copilot": "/portal/live-copilot",
-  "social-narcotic": "/portal/social-narcotic",
+  "live-copilot": "/portal/co-pilot",
   "war-room": "/portal/war-room",
 };

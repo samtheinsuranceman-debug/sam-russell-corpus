@@ -119,7 +119,7 @@ export default function SpecialtyPage() {
 }
 
 function Stat({ label, value, sub }: { label: string; value: string; sub?: ReactNode }) {
-  return <div className="rounded-xl border border-white/10 bg-black/20 p-3"><div className="text-[11px] text-white/50">{label}</div><div className="text-base font-semibold text-white">{value}</div>{sub && <div className="text-[10px] text-white/40">{sub}</div>}</div>;
+  return <div className="rounded-xl border border-white/10 bg-black/20 p-3"><div className="text-[11px] text-white/50">{label}</div><div className="text-base font-semibold text-white">{value}</div>{sub && <div className="text-[10px] text-white/60">{sub}</div>}</div>;
 }
 
 // ─── The cost of becoming one ───────────────────────────────────────────────
@@ -142,13 +142,13 @@ function CostCard({ path, nces, attendingMean }: { path: NonNullable<ReturnType<
       <p className="mt-1 text-xs text-white/60">Type the degree's tuition (the AAMC, CODA and ABA workbooks in the sources list publish it by school) and your living cost; the federal graduate rate for each year of the degree is applied automatically, interest capitalised each year. Then what the residency years forgo against what you could have earned, compounded, and the loan growing meanwhile.</p>
       {pubLast && <p className="mt-1 text-[11px] text-white/50">For scale, NCES's national average for an undergraduate year (tuition, fees, room and board, four-year): public {usd(pubLast.value)} and private {usd(privLast?.value)} in {pubLast.year}-{String(pubLast.year + 1).slice(2)}; the record on this host runs from {pub!.startYear}-{String(pub!.startYear + 1).slice(2)}.</p>}
       <div className="mt-3 grid gap-3 md:grid-cols-5 text-[11px] text-white/70">
-        <label>Degree start year<input type="number" className={INPUT} value={x.startYear} onChange={(e) => set("startYear", Number(e.target.value))} /><span className="text-white/40">federal graduate rate {rateNow != null ? `${rateNow}%` : "variable; pre-2006"}</span></label>
+        <label>Degree start year<input type="number" className={INPUT} value={x.startYear} onChange={(e) => set("startYear", Number(e.target.value))} /><span className="text-white/60">federal graduate rate {rateNow != null ? `${rateNow}%` : "variable; pre-2006"}</span></label>
         <label>Tuition and fees, year one<input type="number" step={1000} className={INPUT} value={x.tuitionPerYear} onChange={(e) => set("tuitionPerYear", Number(e.target.value))} /></label>
         <label>Living costs, year one<input type="number" step={1000} className={INPUT} value={x.livingPerYear} onChange={(e) => set("livingPerYear", Number(e.target.value))} /></label>
         <label>Cost growth % / yr<input type="number" step={0.5} className={INPUT} value={x.costGrowthPct} onChange={(e) => set("costGrowthPct", Number(e.target.value))} /></label>
         <label>Share borrowed (0–1)<input type="number" step={0.05} min={0} max={1} className={INPUT} value={x.borrowedShare} onChange={(e) => set("borrowedShare", Number(e.target.value))} /></label>
-        <label>Resident stipend / yr<input type="number" step={1000} className={INPUT} value={x.stipendPerYear} onChange={(e) => set("stipendPerYear", Number(e.target.value))} /><span className="text-white/40">AAMC survey, in the sources</span></label>
-        <label>Attending income<input type="number" step={1000} className={INPUT} value={attending} onChange={(e) => set("attendingSalary", Number(e.target.value))} /><span className="text-white/40">{attendingMean ? "BLS mean prefilled" : "type it"}</span></label>
+        <label>Resident stipend / yr<input type="number" step={1000} className={INPUT} value={x.stipendPerYear} onChange={(e) => set("stipendPerYear", Number(e.target.value))} /><span className="text-white/60">AAMC survey, in the sources</span></label>
+        <label>Attending income<input type="number" step={1000} className={INPUT} value={attending} onChange={(e) => set("attendingSalary", Number(e.target.value))} /><span className="text-white/60">{attendingMean ? "BLS mean prefilled" : "type it"}</span></label>
         <label>What you could earn instead<input type="number" step={1000} className={INPUT} value={x.alternativeSalary} onChange={(e) => set("alternativeSalary", Number(e.target.value))} /></label>
         <label>Return on forgone dollars %<input type="number" step={0.5} className={INPUT} value={x.investReturnPct} onChange={(e) => set("investReturnPct", Number(e.target.value))} /></label>
         <label>Repayment term, years<input type="number" className={INPUT} value={x.termYears} onChange={(e) => set("termYears", Number(e.target.value))} /></label>
@@ -204,7 +204,7 @@ function PeerCard({ slug, plural, state }: { slug: string; plural: string; state
               <Stat label="Versus peers' net hour" value={r.peers.hourly.median == null ? "waiting for five peers" : `${pct(r.peers.hourly.percentile)} percentile`} sub={r.peers.hourly.median == null ? "" : `peers' median ${usd(r.peers.hourly.median)}`} />
             </div>
           )}
-          <div className="grid gap-1 text-xs text-white/70 sm:grid-cols-2">{r.peers.fields.map((f) => <div key={f.key}>{f.label}: <span className="text-white">{f.value.toLocaleString("en-US")}</span>{f.median == null ? <span className="text-white/40"> · peers: not enough yet ({f.n})</span> : <span> · {pct(f.percentile)} percentile of {f.n} peers, median {f.median.toLocaleString("en-US")}</span>}</div>)}</div>
+          <div className="grid gap-1 text-xs text-white/70 sm:grid-cols-2">{r.peers.fields.map((f) => <div key={f.key}>{f.label}: <span className="text-white">{f.value.toLocaleString("en-US")}</span>{f.median == null ? <span className="text-white/60"> · peers: not enough yet ({f.n})</span> : <span> · {pct(f.percentile)} percentile of {f.n} peers, median {f.median.toLocaleString("en-US")}</span>}</div>)}</div>
           <p className="text-[11px] text-white/50">{r.note}</p>
         </div>
       )}

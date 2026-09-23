@@ -24,6 +24,8 @@ export const NOT_IN_NAVIGATION: Record<string, string> = {
     "Hidden by the owner (23 Sep 2026): the Enterprise Admin page fails to load (missing imports) and its analytics had no real data behind them.",
   "/portal/enterprise":
     "Hidden by the owner (23 Sep 2026): the same Enterprise Admin page as /portal/admin, which fails to load and had no real analytics behind it.",
+  "/portal/genome-intake":
+    "The Wealth Genome intake (consent, then the mind and money questions). Reached from the START HERE plate after sign-in and from the Wealth Genome page, never from a menu: it is behind GENOME_INTAKE_LIVE until counsel has reviewed it, and only the owner can open it as a preview.",
   "/portal/social":
     "Hidden by the owner (23 Sep 2026): a concept page with fictional live advisors, viewer counts and chat, labelled as sample data.",
 };

@@ -1,5 +1,6 @@
 import { HELOC_RATE_DEFAULT } from "@shared/marketRateDefaults";
 import { TRPCError } from "@trpc/server";
+import { assertShareToken, noDatabase } from "./_core/shareTokens";
 import { createHash, randomBytes, randomUUID } from "crypto";
 import { z } from "zod";
 import { COOKIE_NAME } from "@shared/const";
@@ -44,7 +45,9 @@ import { unaskedRouter } from "./unaskedRouter";
 import { siteHealthRouter } from "./siteHealthRouter";
 import { hiveRouter } from "./hiveRouter";
 import { siteMapRouter } from "./siteMapRouter";
+import { genomeIntakeRouter } from "./genomeIntakeRouter";
 import { forecastRouter } from "./forecastRouter";
+import { arrivalRouter } from "./arrivalRouter";
 import { sourcesRouter } from "./sourcesRouter";
 import { hiveGroundingMessages } from "./hiveGround";
 import { integrationRouter } from "./integrationRouter";
@@ -428,7 +431,9 @@ export const appRouter = router({
   siteHealth: siteHealthRouter,
   hive: hiveRouter,
   siteMap: siteMapRouter,
+  genomeIntake: genomeIntakeRouter,
   forecast: forecastRouter,
+  arrival: arrivalRouter,
   sources: sourcesRouter,
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),
@@ -1617,8 +1622,9 @@ Keep it personal, specific with dollar amounts, and actionable. Use their actual
 
     /** Public: Get deck by share token — no auth required. Expired shares are refused. */
     getByShareToken: publicProcedure.input(z.object({ token: z.string() })).query(async ({ input }) => {
+      assertShareToken(input.token, "shared deck");
       const db = await getDb();
-      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+      if (!db) throw noDatabase();
       const { savedSlideDecks } = await import("../drizzle/schema");
       const { eq } = await import("drizzle-orm");
       const share = await getSlideShareByToken(input.token);
@@ -2659,6 +2665,9 @@ Keep it personal, specific with dollar amounts, and actionable. Use their actual
     }),
     // Public procedure for client-facing portal access (enhanced with portfolio + meetings)
     view: publicProcedure.input(z.object({ token: z.string() })).query(async ({ input }) => {
+      assertShareToken(input.token, "client portal");
+      // A database outage must not look like a revoked link: 503, not "invalid or expired".
+      if (!(await getDb())) throw noDatabase();
       const tokenRow = await validatePortalToken(input.token);
       if (!tokenRow) throw new TRPCError({ code: "NOT_FOUND", message: "Invalid or expired portal link" });
       const data = await getClientPortalDataEnhanced(tokenRow.clientId, tokenRow.workspaceId);
@@ -4329,9 +4338,11 @@ Keep it personal, specific with dollar amounts, and actionable. Use their actual
     }),
 
     getByToken: publicProcedure.input(z.object({ token: z.string() })).query(async ({ input }) => {
-      const db = (await getDb())!;
+      assertShareToken(input.token, "shared projection");
+      const db = await getDb();
+      if (!db) throw noDatabase();
       const [row] = await db.select().from(sharedProjections).where(eq(sharedProjections.token, input.token)).limit(1);
-      if (!row) return null;
+      if (!row) throw new TRPCError({ code: "NOT_FOUND", message: "This shared projection link does not exist or has been removed." });
       if (new Date(row.expiresAt) < new Date()) return { expired: true, data: null };
       // Increment view count
       await db!.update(sharedProjections).set({ viewCount: (row.viewCount ?? 0) + 1, lastViewedAt: new Date() }).where(eq(sharedProjections.id, row.id));
@@ -9413,6 +9424,8 @@ If a field cannot be determined, use 0 for numbers and "unknown" for strings. Be
     }),
     // Public endpoint for client portal video viewing
     getByShareToken: publicProcedure.input(z.object({ token: z.string() })).query(async ({ input }) => {
+      assertShareToken(input.token, "video");
+      if (!(await getDb())) throw noDatabase(); // outage = 503, not "video not found"
       const { getVideoProposalByShareToken, getVideoProposalChapters } = await import("./db");
       const proposal = await getVideoProposalByShareToken(input.token);
       if (!proposal || proposal.status !== "completed") throw new TRPCError({ code: "NOT_FOUND", message: "Video not found or not ready" });
