@@ -3382,7 +3382,7 @@ All 28 pass — including the bundle-leak check and the client-import boundary. 
 
 ### 588 · OWNER — 2026-09-18T13:44:06.252Z
 
-`← result` }); }); describe("Rejected Passwords", () => { it("rejects old Mike1248(?)", () => { expect(isValidPassword("Mike1248(?)").valid).toBe(false); }); it("rejects old Welcome@1", () => { expect(isValidPassword("Welcome@1").valid).toBe(false); }); it("rejects empty string", () => { expect(isValidPassword("").valid).toBe(false); }); it("rejects random passwords", () => { expect(isValidPassword("password123").valid).toBe(false); }); }); describe("Email Authorization", () => { it("authorizes samtheinsur…
+`← result` }); }); describe("Rejected Passwords", () => { it("rejects old [password redacted]", () => { expect(isValidPassword("[password redacted]").valid).toBe(false); }); it("rejects old Welcome@1", () => { expect(isValidPassword("Welcome@1").valid).toBe(false); }); it("rejects empty string", () => { expect(isValidPassword("").valid).toBe(false); }); it("rejects random passwords", () => { expect(isValidPassword("password123").valid).toBe(false); }); }); describe("Email Authorization", () => { it("authorizes samtheinsur…
 
 ### 589 · CLAUDE — 2026-09-18T13:44:18.883Z
 
