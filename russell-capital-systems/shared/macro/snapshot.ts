@@ -73,17 +73,16 @@ export const JAPAN_POSITION = {
   sourceIds: ["jp-mof-reserves", "jp-mof-intervention", "jp-japantimes", "bloomberg-energy"],
 } as const;
 
-/** China's position. */
+/**
+ * China's position, as U.S. data measure it. Reserve and gold totals are not
+ * carried here: no figure is taken from a SAFE or PBOC release (owner's order,
+ * 23 Sep 2026); the refresh job reads them from China's row in IMF IFS.
+ */
 export const CHINA_POSITION = {
-  fxReserves: 3438.3, // USD bn, end-Aug 2026
-  fxReservesAsOf: "2026-08-31" as IsoDate,
-  goldOunces: 76.73, // million troy oz
-  goldTonnes: 2386.57,
-  goldValueUsdBn: 350.08,
-  goldStreakMonths: 22,
-  goldMonthlyAddOz: 0.65, // million oz, Aug 2026
-  goldAsOf: "2026-08-31" as IsoDate,
-  sourceIds: ["cn-safe-reserves", "cn-pboc-gold"],
+  ticHoldings: 618.0, // USD bn, TIC Table 5, end-Jul 2026
+  ticThreeMonthChange: -33.1, // USD bn, 651.1 → 618.0
+  ticAsOf: "2026-07-31" as IsoDate,
+  sourceIds: ["us-tic-mfh"],
 } as const;
 
 /** Oil settlement shares, % of global crude trade. Contested; ranges kept. */
@@ -237,16 +236,7 @@ export const SEED_OBSERVATIONS: Observation[] = [
 
   { indicatorId: "cn-tic-mom", asOf: "2026-07-31", value: -33.1, sourceId: "us-tic-mfh", note: "651.1 → 618.0" },
   { indicatorId: "cn-tic-plus-belgium-hk", asOf: "2026-07-31", value: -60.3, sourceId: "us-tic-mfh", note: "China −33.1, Belgium −11.8 (Jul), HK ~−15" },
-  { indicatorId: "cn-pboc-gold-streak", asOf: "2026-08-31", value: 22, sourceId: "cn-pboc-gold" },
-  { indicatorId: "cn-safe-reserves-change", asOf: "2026-08-31", value: 19.5, sourceId: "cn-safe-reserves", note: "valuation-driven rise" },
-  { indicatorId: "cn-cips-volume-growth", asOf: "2026-06-30", value: 28, sourceId: "cn-cips" },
   { indicatorId: "cn-us-sanction-escalation", asOf: "2026-09-15", value: 2, sourceId: "ofac" },
-  { indicatorId: "cn-mofcom-countermeasures", asOf: "2026-09-15", value: 3, sourceId: "cn-mofcom" },
-  { indicatorId: "cn-mfa-dollar-rhetoric", asOf: "2026-09-15", value: 3, sourceId: "cn-mofa" },
-  { indicatorId: "cn-state-media-threat", asOf: "2026-09-15", value: 4, sourceId: "cn-global-times" },
-  { indicatorId: "cn-cny-pressure", asOf: "2026-09-19", value: 120, sourceId: "cn-pboc-mpc" },
-  { indicatorId: "cn-npc-law-financial-security", asOf: "2026-09-19", value: 0, sourceId: "cn-npc" },
-  { indicatorId: "cn-ust-share-of-reserves", asOf: "2026-08-31", value: 18, sourceId: "us-tic-mfh", note: "618 / 3,438" },
 
   { indicatorId: "oil-nonusd-share", asOf: "2026-03-31", value: 20, sourceId: "atlantic-council-dollar" },
   { indicatorId: "oil-cny-share", asOf: "2026-03-31", value: 7, sourceId: "platts" },
@@ -261,14 +251,11 @@ export const SEED_OBSERVATIONS: Observation[] = [
 
   { indicatorId: "tw-pla-ships-30d", asOf: "2026-07-31", value: 244, sourceId: "tw-mnd-daily", note: "record month" },
   { indicatorId: "tw-pla-aircraft-30d", asOf: "2026-08-31", value: 410, sourceId: "tw-mnd-daily" },
-  { indicatorId: "tw-large-exercise", asOf: "2026-09-19", value: 0, sourceId: "cn-mod", note: "Justice Mission 2025 was the last named one" },
   { indicatorId: "tw-odni-assessment", asOf: "2026-03-25", value: 1, sourceId: "us-odni-ata", note: "no fixed timeline; invasion high-risk" },
   { indicatorId: "tw-kinmen-cga-incursions", asOf: "2026-08-31", value: 9, sourceId: "tw-cga" },
   { indicatorId: "tw-lloyds-listing", asOf: "2026-09-01", value: 0, sourceId: "lloyds-jwc", note: "not listed" },
   { indicatorId: "tw-prediction-market", asOf: "2026-09-19", value: 9, sourceId: "polymarket-taiwan" },
-  { indicatorId: "tw-cn-gold-purchases", asOf: "2026-08-31", value: 20.2, sourceId: "cn-pboc-gold" },
   { indicatorId: "tw-cn-ust-reduction", asOf: "2026-07-31", value: 33.1, sourceId: "us-tic-mfh" },
   { indicatorId: "tw-us-cn-mil-mil-channel", asOf: "2026-09-01", value: 1, sourceId: "us-dod-cmpr" },
   { indicatorId: "tw-strait-transits", asOf: "2026-08-31", value: 240, sourceId: "csis-china-power", note: "vessels/day, normal range" },
-  { indicatorId: "tw-cn-us-trade-truce", asOf: "2026-09-01", value: 1, sourceId: "cn-mofcom" },
 ];

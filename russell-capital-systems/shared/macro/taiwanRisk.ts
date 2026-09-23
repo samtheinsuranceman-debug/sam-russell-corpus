@@ -104,8 +104,6 @@ export function taiwanEvidence(observations: Observation[]): Evidence[] {
     "tw-us-cn-mil-mil-channel": { neutral: 0.5, span: 0.5 },
     "tw-strait-transits": { neutral: 240, span: 60 },
     "tw-cn-us-trade-truce": { neutral: 0.5, span: 0.5 },
-    "tw-tao-rhetoric-index": { neutral: 50, span: 40 },
-    "tw-anti-secession-invocation": { neutral: 0, span: 1 },
     "tw-war-risk-premium": { neutral: 0.05, span: 0.3 },
     "tw-twd-reserves": { neutral: 0, span: 15 },
   };
