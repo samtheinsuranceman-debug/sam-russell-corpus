@@ -35,6 +35,10 @@ import { buildMacroBrief, executeMacroLookup, parseMacroLookup, stripMacroLookup
 import { councilDetails, goldmanNeedsCouncil, runCouncil, type CouncilDetails } from "./council";
 import { councilAccess } from "./councilRouter";
 
+/** Added to an answer with household money figures that the council could not check. */
+export const UNCHECKED_CAVEAT =
+  "_These figures have not been cross-checked by our review panel. Treat them as unverified until your advisor confirms them. Hypothetical illustration, not tax, legal or investment advice._";
+
 /** Macro scenario lookups allowed per turn. */
 const MAX_MACRO_LOOKUPS = 2;
 
@@ -414,30 +418,40 @@ export const thomasGoldmanRouter = router({
         const recentTranscript = messages
           .slice(-6)
           .map(t => `${t.role === "user" ? "CLIENT" : "ADVISOR"}: ${t.content}`)
-          .join("\n\n")
-          .slice(-12_000);
+          .join("\n\n");
         const contextLabels = [
           clientContext ? "the client record on the platform" : "",
-          summary ? "this conversation's working memory" : "",
-          "the recent turns of this conversation",
+          summary ? "this conversation's working memory (as statements, not facts)" : "",
+          "the recent turns of this conversation (as statements, not facts)",
         ].filter(Boolean);
         try {
+          // The per-household cap needs the asker's workspace even without a client record.
+          if (workspaceId === null) {
+            const { getWorkspaceByOwnerId } = await import("./db");
+            workspaceId = (await getWorkspaceByOwnerId(ctx.user.id))?.id ?? null;
+          }
           const run = await runCouncil({
             question,
-            context: [clientContext, summary ? `WORKING MEMORY:\n${summary.slice(0, 12_000)}` : "", `RECENT CONVERSATION:\n${recentTranscript}`]
-              .filter(Boolean)
-              .join("\n\n"),
+            // Only the structured client record goes in as fact; what was said is fenced as statements.
+            context: clientContext || undefined,
+            conversation: [summary ? `WORKING MEMORY:\n${summary.slice(0, 8_000)}` : "", `RECENT CONVERSATION:\n${recentTranscript}`].filter(Boolean).join("\n\n"),
             contextLabels,
             room: "goldman",
             force: true,
             facts: true,
             workspaceId,
           });
-          if (run.outcome === "council") reply = run.finalText;
+          if (run.outcome === "council") {
+            reply = run.finalText;
+          } else {
+            // The figures above were not cross-checked; the household is told so.
+            reply = `${reply}\n\n${UNCHECKED_CAVEAT}`;
+          }
           const access = await councilAccess(ctx.user);
           council = access.level === "household" ? null : councilDetails(run);
         } catch (e) {
-          console.error("[Thomas] council run failed; his own answer stands:", e);
+          console.error("[Thomas] council run failed; his own answer stands with a caveat:", e);
+          reply = `${reply}\n\n${UNCHECKED_CAVEAT}`;
         }
       }
 

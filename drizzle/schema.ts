@@ -3405,10 +3405,12 @@ export const macroFactorScores = mysqlTable("macro_factor_scores", {
 });
 
 // ─── The Council: multi-model consensus audit (0086_council_runs) ────────────
-// Added 23 Sep 2026. One row per council run. Holds a SHA-256 of the question,
-// never its text, and the workspace id as the only link to a household: which
-// models spoke, their latencies and token counts, and the judge's JSON.
+// Added 23 Sep 2026. One row per council run. Holds a keyed hash of the
+// question, never its text, and the workspace id as the only link to a
+// household: which models spoke, their latencies and token counts, and a
+// summary of the judge's verdict (counts, confidence, digest) — never its text.
 export type CouncilPanelLogJson = Array<{
+  label?: string;
   providerId: string;
   model: string;
   ok: boolean;
