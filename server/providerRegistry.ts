@@ -189,16 +189,18 @@ const CONVENTIONAL_ENV_NAMES: Record<string, string[]> = {
   ovhcloud: ["OVH_AI_ENDPOINTS_ACCESS_TOKEN"],
   ionos: ["IONOS_API_TOKEN"],
   upstage: ["UPSTAGE_API_KEY"],
-  // Tier 5, added 23 Sep 2026.
-  inception: ["INCEPTION_API_KEY"],
+  // Tier 5, added 23 Sep 2026. The extra spellings are the names the owner
+  // typed into Railway; the dashboard cannot rename a variable, so the code
+  // reads both rather than making him re-enter the key.
+  inception: ["INCEPTION_API_KEY", "INCEPTIONLABS_API_KEY"],
   venice: ["VENICE_API_KEY"],
   featherless: ["FEATHERLESS_API_KEY"],
   parasail: ["PARASAIL_API_KEY"],
-  arcee: ["ARCEE_API_KEY", "ARCEE_TOKEN"],
+  arcee: ["ARCEE_API_KEY", "ARCEE_TOKEN", "ACREE_API_KEY"],
   wandb: ["WANDB_API_KEY"],
   vultr: ["VULTR_INFERENCE_API_KEY"],
   edenai: ["EDENAI_API_KEY", "EDEN_AI_API_KEY"],
-  sarvam: ["SARVAM_API_KEY"],
+  sarvam: ["SARVAM_API_KEY", "SAVRAM_API_KEY", "Savram_API_Key"],
   krutrim: ["KRUTRIM_API_KEY"],
   "naver-clova": ["CLOVASTUDIO_API_KEY", "CLOVA_STUDIO_API_KEY"],
   plamo: ["PLAMO_API_KEY"],

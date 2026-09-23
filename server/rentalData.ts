@@ -168,7 +168,9 @@ export async function readSafmr(fiscalYear: number): Promise<Parsed[]> {
   return parseSafmrRows(xlsxRows(Buffer.from(await res.arrayBuffer())), fiscalYear);
 }
 export async function readAcs(vintageEndYear: number, env: NodeJS.ProcessEnv = process.env): Promise<Parsed[]> {
-  const key = env.CENSUS_API_KEY ? `&key=${env.CENSUS_API_KEY}` : "";
+  // CENSUSDATA_API_KEY is the name the owner gave it on Railway; both work.
+  const censusKey = env.CENSUS_API_KEY?.trim() || env.CENSUSDATA_API_KEY?.trim();
+  const key = censusKey ? `&key=${censusKey}` : "";
   const res = await _fetch(RENTAL_SOURCES[2].url.replace("{year}", String(vintageEndYear)) + key);
   if (!res.ok) throw new Error(`Census ACS ${vintageEndYear} responded ${res.status}`);
   return parseAcs(JSON.parse(await res.text()) as string[][], vintageEndYear);
