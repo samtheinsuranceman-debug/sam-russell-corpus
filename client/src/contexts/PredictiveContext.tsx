@@ -10,7 +10,7 @@
  */
 import { createContext, useContext, type ReactNode } from "react";
 import { useMacroScenario, type MacroScenarioState } from "@/components/MacroScenarioToggle";
-import { NEUTRAL_ADJUSTMENTS } from "@shared/macro";
+import { NEUTRAL_ADJUSTMENTS } from "@shared/macro/neutral";
 
 const PredictiveContext = createContext<MacroScenarioState | null>(null);
 

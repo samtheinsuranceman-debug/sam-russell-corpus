@@ -7,6 +7,9 @@ import { useState } from "react";
 import { Link } from "wouter";
 import { AppShell } from "@/components/AppShell";
 import { trpc } from "@/lib/trpc";
+import GenomeMapPanel from "@/components/genome/GenomeMapPanel";
+import { PREVIEW_BADGE } from "@shared/genomeIntake";
+import { START_HERE_LINK } from "@shared/firstLoginColdStart";
 import { Activity, ArrowRight, ChevronRight, Dna, Lightbulb, ListChecks } from "lucide-react";
 
 const CARD = "rounded-2xl border border-emerald-400/20 bg-white/[0.04]";
@@ -21,6 +24,10 @@ function tone(score: number) {
 
 export default function WealthGenomePage() {
   const genome = trpc.factFinder.genome.useQuery(undefined, { refetchOnWindowFocus: false });
+  // The mind-and-money map from the START HERE intake: this household's only.
+  const intake = trpc.genomeIntake.status.useQuery(undefined, { refetchOnWindowFocus: false, retry: false });
+  const myMap = trpc.genomeIntake.myMap.useQuery(undefined, { refetchOnWindowFocus: false, retry: false });
+  const withdraw = trpc.genomeIntake.withdraw.useMutation({ onSuccess: () => { void myMap.refetch(); void intake.refetch(); } });
   const [tab, setTab] = useState<(typeof TABS)[number]>("Genome Overview");
   const [selected, setSelected] = useState<string | null>(null);
   const g = genome.data;
@@ -50,6 +57,34 @@ export default function WealthGenomePage() {
             </div>
           )}
         </div>
+
+        {myMap.data ? (
+          <div className={`${CARD} p-6`}>
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <div>
+                <h2 className="text-lg font-semibold text-white">Your mind-and-money map</h2>
+                <p className="mt-1 text-xs text-slate-400">Written {new Date(myMap.data.updatedAt).toLocaleDateString()} from the Start Here questions. The raw answers about how you think and feel were destroyed; your advisor sees this map as background only.</p>
+              </div>
+              {intake.data?.preview && <span className="rounded-full border border-amber-300/40 px-3 py-1 text-[11px] font-semibold text-amber-200">{PREVIEW_BADGE}</span>}
+            </div>
+            <div className="mt-4"><GenomeMapPanel map={myMap.data.map} reflections={myMap.data.reflections} /></div>
+            <div className="mt-4 flex flex-wrap gap-4 text-sm">
+              <Link href={START_HERE_LINK.href} className="font-semibold text-emerald-300 hover:underline">Retake it</Link>
+              <button type="button" className="text-slate-400 hover:text-white hover:underline disabled:opacity-50" disabled={withdraw.isPending}
+                onClick={() => { if (window.confirm("Withdraw your consent and delete this map? Financial facts stay in your household file.")) withdraw.mutate(); }}>
+                Withdraw consent and delete the map
+              </button>
+            </div>
+          </div>
+        ) : intake.data?.eligible ? (
+          <div className={`${CARD} flex flex-wrap items-center justify-between gap-3 p-5`}>
+            <div>
+              <p className="text-sm font-semibold text-white">{START_HERE_LINK.label} · Wealth Genome</p>
+              <p className="text-xs text-slate-400">Optional. A few questions about how you decide under pressure, then a map. Answers about how you think and feel are destroyed.</p>
+            </div>
+            <Link href={START_HERE_LINK.href} className="rounded-lg bg-emerald-500 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-400">{START_HERE_LINK.label} <ArrowRight size={14} className="ml-1 inline" /></Link>
+          </div>
+        ) : null}
 
         <div className="flex flex-wrap gap-2">
           {TABS.map((t) => (

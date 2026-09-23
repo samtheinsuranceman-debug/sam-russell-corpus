@@ -66,7 +66,10 @@ export async function buildReport(env: Env = process.env): Promise<{ generatedAt
   const origin = siteOrigin(facts, env);
   const home = await selfFetch("/");
   const headers = home?.headers ?? new Headers();
-  const asset = await selfFetch("/assets/app.css");
+  const homeHtml = home && home.ok ? await home.text() : "";
+  // The stylesheet name is content-hashed at build (app-XXXXXXXX.css); read it from the page.
+  const cssHref = homeHtml.match(/href="(\/assets\/app[^"]*\.css)"/)?.[1] ?? "/assets/app.css";
+  const asset = await selfFetch(cssHref);
   const robots = await selfFetch("/robots.txt");
   const sitemap = await selfFetch("/sitemap.xml");
   const sitemapBody = sitemap && sitemap.ok ? await sitemap.text() : "";
@@ -80,7 +83,6 @@ export async function buildReport(env: Env = process.env): Promise<{ generatedAt
   const dist = distDir();
   const images = imageInventory(dist);
   const routes = loadRoutePatterns(dist);
-  const homeHtml = home && home.ok ? await home.text() : "";
 
   // Internal links every page relies on must resolve to a declared route.
   const linkTargets = Array.from(new Set([...PUBLIC_PAGES.map((p) => p.path), ...SPHERE_PAGES.map((p) => p.path)]));
@@ -152,7 +154,7 @@ export async function buildReport(env: Env = process.env): Promise<{ generatedAt
     { id: "speed", title: "6. Speed & Mobile Performance", items: [
       item("speed-responsive", "Fully responsive / mobile-friendly design", "pass", "Tailwind breakpoints on every page; the viewport meta allows pinch-zoom."),
       item("speed-cwv", "Core Web Vitals monitored", cwv === null ? "warn" : cwv ? "pass" : "fail", vitals.samples ? `${vitals.samples} field samples in 28 days: ${vitals.overall.map((m) => `${m.metric} p75 ${m.p75 === null ? "—" : m.metric === "CLS" ? m.p75.toFixed(3) : Math.round(m.p75) + " ms"} (${m.rating ?? "n/a"})`).join(", ")}.` : "Collecting: the browser posts LCP, CLS, INP, FCP and TTFB from real visits to /api/vitals.", { link: "https://pagespeed.web.dev/" }),
-      item("speed-compression", "Browser and server caching enabled", asset?.headers.get("cache-control")?.includes("max-age") && (home?.headers.get("content-encoding") || asset?.headers.get("content-encoding")) ? "pass" : "warn", `Cache-Control on app.css: ${asset?.headers.get("cache-control") ?? "missing"}; encoding: ${home?.headers.get("content-encoding") ?? asset?.headers.get("content-encoding") ?? "none"}. Hashed chunks are immutable for a year.`),
+      item("speed-compression", "Browser and server caching enabled", asset?.headers.get("cache-control")?.includes("max-age") && (home?.headers.get("content-encoding") || asset?.headers.get("content-encoding")) ? "pass" : "warn", `Cache-Control on ${cssHref}: ${asset?.headers.get("cache-control") ?? "missing"}; encoding: ${home?.headers.get("content-encoding") ?? asset?.headers.get("content-encoding") ?? "none"}. Hashed chunks are immutable for a year.`),
       item("speed-bundles", "CSS/JavaScript optimized", "pass", "Minified, tree-shaken, code-split bundles; Tailwind compiled to one purged stylesheet."),
       item("speed-scripts", "Unnecessary scripts and plugins removed", "pass", "Third-party scripts load only when their key is set (GA, PostHog, Sentry, Intercom); nothing else is embedded."),
       item("speed-testing", "Tested on desktop, tablet and mobile", "manual", "The Playwright QA harness renders desktop and phone viewports before each release.", { action: "Run PageSpeed Insights on / and /calculators after each deploy." }),

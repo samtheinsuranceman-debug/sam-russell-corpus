@@ -9,7 +9,7 @@ export default function AdministratorPortal() {
   const { user, isAuthenticated, loading } = useAuth();
   const isAdmin = user?.role === "admin";
   return (
-    <main className="flex min-h-screen items-center justify-center bg-[#060f20] p-6 text-white">
+    <div className="flex min-h-screen items-center justify-center bg-[#060f20] p-6 text-white">
       <Card className="w-full max-w-xl border-emerald-400/20 bg-slate-950/80">
         <CardHeader><ShieldCheck className="mb-4 h-10 w-10 text-emerald-300" /><CardTitle>Administrator Access</CardTitle></CardHeader>
         <CardContent className="space-y-5 text-slate-300">
@@ -19,10 +19,10 @@ export default function AdministratorPortal() {
           ) : !isAdmin ? (
             <div className="rounded-xl border border-amber-400/25 bg-amber-950/25 p-4 text-amber-100">Your account does not have the administrator role.</div>
           ) : (
-            <Link href="/portal/enterprise-admin"><Button>Open Enterprise Admin <ArrowRight className="ml-2 h-4 w-4" /></Button></Link>
+            <Link href="/portal/team-management"><Button>Open Team Management <ArrowRight className="ml-2 h-4 w-4" /></Button></Link>
           )}
         </CardContent>
       </Card>
-    </main>
+    </div>
   );
 }

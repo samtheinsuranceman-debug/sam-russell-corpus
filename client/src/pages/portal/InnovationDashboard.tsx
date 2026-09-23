@@ -13,7 +13,7 @@ interface ToolCard {
   id: string;
   name: string;
   description: string;
-  route: string;
+  route: string; // "" when the engine has no page yet (status "coming-soon")
   icon: React.ElementType;
   category: "compliance" | "analysis" | "planning" | "practice" | "client";
   patentId: string;
@@ -23,33 +23,33 @@ interface ToolCard {
 }
 
 const TOOLS: ToolCard[] = [
-  { id: "si-001", name: "IUL Compliance Engine", description: "Dynamic illustration compliance checking against state-specific AG49 regulations with automated flagging", route: "/portal/iul-compliance-engine", icon: Shield, category: "compliance", patentId: "SI-001", patentScore: 82, status: "active", tier: 1 },
-  { id: "si-002", name: "Multi-Carrier IUL Optimizer", description: "Side-by-side carrier comparison with cap rates, participation rates, and projected cash value analysis", route: "/portal/multi-carrier-iul-optimizer", icon: Layers, category: "analysis", patentId: "SI-002", patentScore: 88, status: "active", tier: 1 },
-  { id: "si-003", name: "Policy Replacement Analyzer", description: "1035 exchange analysis with surrender charge impact, tax implications, and suitability scoring", route: "/portal/policy-replacement-analyzer", icon: Scale, category: "analysis", patentId: "SI-003", patentScore: 85, status: "active", tier: 1 },
-  { id: "si-004", name: "Premium Financing Arbitrage", description: "Spread analysis between loan rates and IUL crediting with collateral optimization", route: "/portal/premium-financing-arbitrage", icon: TrendingUp, category: "planning", patentId: "SI-004", patentScore: 78, status: "active", tier: 2 },
-  { id: "si-005", name: "Living Benefits Probability", description: "Actuarial probability modeling for chronic, critical, and terminal illness rider utilization", route: "/portal/living-benefits-probability", icon: Heart, category: "analysis", patentId: "SI-005", patentScore: 80, status: "active", tier: 1 },
-  { id: "si-006", name: "Tax Code Change Simulator", description: "Model impact of proposed tax legislation on client portfolios and IUL strategies", route: "/portal/tax-code-change-simulator", icon: FileText, category: "planning", patentId: "SI-006", patentScore: 72, status: "active", tier: 2 },
-  { id: "si-007", name: "Behavioral Bias Detector", description: "Identify loss aversion, anchoring, recency bias and other cognitive biases in client decisions", route: "/portal/behavioral-bias-detector", icon: Brain, category: "client", patentId: "SI-007", patentScore: 75, status: "active", tier: 2 },
-  { id: "si-008", name: "CRT Wealth Replacement", description: "Charitable Remainder Trust + IUL wealth replacement strategy calculator with tax optimization", route: "/portal/crt-wealth-replacement", icon: Calculator, category: "planning", patentId: "SI-008", patentScore: 83, status: "active", tier: 1 },
-  { id: "si-009", name: "Social Security Bridge", description: "Optimize SS claiming age using IUL cash value as bridge income with breakeven analysis", route: "/portal/social-security-bridge", icon: Clock, category: "planning", patentId: "SI-009", patentScore: 86, status: "active", tier: 1 },
-  { id: "si-010", name: "State Tax Migration Planner", description: "Compare state tax burdens and model savings from relocation across all 50 states", route: "/portal/state-tax-migration", icon: Globe, category: "planning", patentId: "SI-010", patentScore: 74, status: "active", tier: 2 },
-  { id: "si-011", name: "Captive Insurance + IUL", description: "Model captive insurance premium deductions flowing into IUL for business owners", route: "/portal/captive-insurance-iul", icon: Building2, category: "planning", patentId: "SI-011", patentScore: 80, status: "active", tier: 1 },
-  { id: "si-012", name: "Divorce Financial Impact", description: "Model asset division, alimony, child support, and insurance policy splitting scenarios", route: "/portal/divorce-financial-impact", icon: Scale, category: "client", patentId: "SI-012", patentScore: 77, status: "active", tier: 2 },
-  { id: "si-013", name: "Disability Gap Analysis", description: "Calculate income replacement gaps and recommend supplemental disability coverage", route: "/portal/disability-gap-analysis", icon: AlertTriangle, category: "client", patentId: "SI-013", patentScore: 75, status: "active", tier: 2 },
-  { id: "si-014", name: "Family Tree Financial Map", description: "Multi-generational wealth mapping with estate flow visualization and planning", route: "/portal/family-tree-financial", icon: TreePine, category: "planning", patentId: "SI-014", patentScore: 72, status: "active", tier: 2 },
-  { id: "si-015", name: "Generational Wealth Sim", description: "Dynasty trust + IUL simulation across 3 generations with estate tax optimization", route: "/portal/generational-wealth-sim", icon: Users, category: "planning", patentId: "SI-015", patentScore: 80, status: "active", tier: 1 },
-  { id: "si-016", name: "Carrier Strength Monitor", description: "Real-time carrier financial ratings, claims-paying ability, and risk assessment", route: "/portal/carrier-strength-monitor", icon: Activity, category: "compliance", patentId: "SI-016", patentScore: 76, status: "active", tier: 2 },
-  { id: "si-017", name: "Succession Valuation", description: "Practice valuation using revenue multiples, DCF, and comparable sales analysis", route: "/portal/succession-valuation", icon: Award, category: "practice", patentId: "SI-017", patentScore: 79, status: "active", tier: 2 },
-  { id: "si-018", name: "Commission Optimizer", description: "Route product placements to maximize advisor compensation while maintaining suitability", route: "/portal/commission-optimizer", icon: Coins, category: "practice", patentId: "SI-018", patentScore: 75, status: "active", tier: 2 },
-  { id: "si-019", name: "Peer Benchmarking Intel", description: "Compare your practice metrics against industry benchmarks and top performers", route: "/portal/peer-benchmarking-intel", icon: BarChart3, category: "practice", patentId: "SI-019", patentScore: 74, status: "active", tier: 2 },
-  { id: "si-020", name: "CE Credit Tracker", description: "Track continuing education requirements by state with renewal deadline alerts", route: "/portal/ce-credit-tracker", icon: BookOpen, category: "compliance", patentId: "SI-020", patentScore: 73, status: "active", tier: 3 },
-  { id: "si-021", name: "Compliance Doc Generator", description: "Auto-generate suitability letters, needs analyses, and compliance documentation", route: "/portal/compliance-doc-generator", icon: FileCheck, category: "compliance", patentId: "SI-021", patentScore: 77, status: "active", tier: 2 },
-  { id: "si-022", name: "Client Retention Predictor", description: "ML-powered churn prediction with proactive intervention recommendations", route: "/portal/client-retention-predictor", icon: UserCheck, category: "client", patentId: "SI-022", patentScore: 74, status: "active", tier: 2 },
-  { id: "si-023", name: "Prospect Qualification", description: "Score and rank prospects by conversion probability and lifetime value potential", route: "/portal/prospect-qualification", icon: Target, category: "practice", patentId: "SI-023", patentScore: 76, status: "active", tier: 2 },
-  { id: "si-024", name: "Multi-Currency Wealth", description: "Cross-border wealth optimization for clients with international assets", route: "/portal/multi-currency-wealth", icon: Globe, category: "planning", patentId: "SI-024", patentScore: 72, status: "active", tier: 3 },
-  { id: "si-025", name: "Annuity Hidden Fee Detector", description: "Dissect annuity contracts to reveal M&E charges, fund expenses, and surrender penalties", route: "/portal/annuity-hidden-fee", icon: Search, category: "analysis", patentId: "SI-025", patentScore: 70, status: "active", tier: 3 },
-  { id: "si-026", name: "Client Onboarding Workflow", description: "Automated onboarding pipeline with document collection, KYC, and suitability assessment", route: "/portal/client-onboarding-workflow", icon: Rocket, category: "practice", patentId: "SI-026", patentScore: 70, status: "active", tier: 3 },
-  { id: "si-027", name: "Retirement Gap Calculator", description: "Inflation-adjusted retirement income gap analysis with IUL distribution modeling", route: "/portal/retirement-gap-inflation", icon: Calculator, category: "planning", patentId: "SI-027", patentScore: 68, status: "active", tier: 3 },
+  { id: "si-001", name: "IUL Compliance Engine", description: "Dynamic illustration compliance checking against state-specific AG49 regulations with automated flagging", route: "", icon: Shield, category: "compliance", patentId: "SI-001", patentScore: 82, status: "coming-soon", tier: 1 },
+  { id: "si-002", name: "Multi-Carrier IUL Optimizer", description: "Side-by-side carrier comparison with cap rates, participation rates, and projected cash value analysis", route: "/portal/carrier-comparison", icon: Layers, category: "analysis", patentId: "SI-002", patentScore: 88, status: "active", tier: 1 },
+  { id: "si-003", name: "Policy Replacement Analyzer", description: "1035 exchange analysis with surrender charge impact, tax implications, and suitability scoring", route: "", icon: Scale, category: "analysis", patentId: "SI-003", patentScore: 85, status: "coming-soon", tier: 1 },
+  { id: "si-004", name: "Premium Financing Arbitrage", description: "Spread analysis between loan rates and IUL crediting with collateral optimization", route: "/portal/premium-financing", icon: TrendingUp, category: "planning", patentId: "SI-004", patentScore: 78, status: "active", tier: 2 },
+  { id: "si-005", name: "Living Benefits Probability", description: "Actuarial probability modeling for chronic, critical, and terminal illness rider utilization", route: "", icon: Heart, category: "analysis", patentId: "SI-005", patentScore: 80, status: "coming-soon", tier: 1 },
+  { id: "si-006", name: "Tax Code Change Simulator", description: "Model impact of proposed tax legislation on client portfolios and IUL strategies", route: "", icon: FileText, category: "planning", patentId: "SI-006", patentScore: 72, status: "coming-soon", tier: 2 },
+  { id: "si-007", name: "Behavioral Bias Detector", description: "Identify loss aversion, anchoring, recency bias and other cognitive biases in client decisions", route: "", icon: Brain, category: "client", patentId: "SI-007", patentScore: 75, status: "coming-soon", tier: 2 },
+  { id: "si-008", name: "CRT Wealth Replacement", description: "Charitable Remainder Trust + IUL wealth replacement strategy calculator with tax optimization", route: "", icon: Calculator, category: "planning", patentId: "SI-008", patentScore: 83, status: "coming-soon", tier: 1 },
+  { id: "si-009", name: "Social Security Bridge", description: "Optimize SS claiming age using IUL cash value as bridge income with breakeven analysis", route: "/portal/social-security", icon: Clock, category: "planning", patentId: "SI-009", patentScore: 86, status: "active", tier: 1 },
+  { id: "si-010", name: "State Tax Migration Planner", description: "Compare state tax burdens and model savings from relocation across all 50 states", route: "", icon: Globe, category: "planning", patentId: "SI-010", patentScore: 74, status: "coming-soon", tier: 2 },
+  { id: "si-011", name: "Captive Insurance + IUL", description: "Model captive insurance premium deductions flowing into IUL for business owners", route: "/portal/captive-insurance-planner", icon: Building2, category: "planning", patentId: "SI-011", patentScore: 80, status: "active", tier: 1 },
+  { id: "si-012", name: "Divorce Financial Impact", description: "Model asset division, alimony, child support, and insurance policy splitting scenarios", route: "/portal/divorce-financial", icon: Scale, category: "client", patentId: "SI-012", patentScore: 77, status: "active", tier: 2 },
+  { id: "si-013", name: "Disability Gap Analysis", description: "Calculate income replacement gaps and recommend supplemental disability coverage", route: "/portal/disability-gap-analyzer", icon: AlertTriangle, category: "client", patentId: "SI-013", patentScore: 75, status: "active", tier: 2 },
+  { id: "si-014", name: "Family Tree Financial Map", description: "Multi-generational wealth mapping with estate flow visualization and planning", route: "", icon: TreePine, category: "planning", patentId: "SI-014", patentScore: 72, status: "coming-soon", tier: 2 },
+  { id: "si-015", name: "Generational Wealth Sim", description: "Dynasty trust + IUL simulation across 3 generations with estate tax optimization", route: "/portal/multi-gen-wealth", icon: Users, category: "planning", patentId: "SI-015", patentScore: 80, status: "active", tier: 1 },
+  { id: "si-016", name: "Carrier Strength Monitor", description: "Real-time carrier financial ratings, claims-paying ability, and risk assessment", route: "/portal/carrier-ratings", icon: Activity, category: "compliance", patentId: "SI-016", patentScore: 76, status: "active", tier: 2 },
+  { id: "si-017", name: "Succession Valuation", description: "Practice valuation using revenue multiples, DCF, and comparable sales analysis", route: "/portal/practice-valuation", icon: Award, category: "practice", patentId: "SI-017", patentScore: 79, status: "active", tier: 2 },
+  { id: "si-018", name: "Commission Optimizer", description: "Route product placements to maximize advisor compensation while maintaining suitability", route: "", icon: Coins, category: "practice", patentId: "SI-018", patentScore: 75, status: "coming-soon", tier: 2 },
+  { id: "si-019", name: "Peer Benchmarking Intel", description: "Compare your practice metrics against industry benchmarks and top performers", route: "", icon: BarChart3, category: "practice", patentId: "SI-019", patentScore: 74, status: "coming-soon", tier: 2 },
+  { id: "si-020", name: "CE Credit Tracker", description: "Track continuing education requirements by state with renewal deadline alerts", route: "/portal/certifications", icon: BookOpen, category: "compliance", patentId: "SI-020", patentScore: 73, status: "active", tier: 3 },
+  { id: "si-021", name: "Compliance Doc Generator", description: "Auto-generate suitability letters, needs analyses, and compliance documentation", route: "/portal/compliance-reports", icon: FileCheck, category: "compliance", patentId: "SI-021", patentScore: 77, status: "active", tier: 2 },
+  { id: "si-022", name: "Client Retention Predictor", description: "ML-powered churn prediction with proactive intervention recommendations", route: "", icon: UserCheck, category: "client", patentId: "SI-022", patentScore: 74, status: "coming-soon", tier: 2 },
+  { id: "si-023", name: "Prospect Qualification", description: "Score and rank prospects by conversion probability and lifetime value potential", route: "", icon: Target, category: "practice", patentId: "SI-023", patentScore: 76, status: "coming-soon", tier: 2 },
+  { id: "si-024", name: "Multi-Currency Wealth", description: "Cross-border wealth optimization for clients with international assets", route: "", icon: Globe, category: "planning", patentId: "SI-024", patentScore: 72, status: "coming-soon", tier: 3 },
+  { id: "si-025", name: "Annuity Hidden Fee Detector", description: "Dissect annuity contracts to reveal M&E charges, fund expenses, and surrender penalties", route: "/portal/fee-transparency", icon: Search, category: "analysis", patentId: "SI-025", patentScore: 70, status: "active", tier: 3 },
+  { id: "si-026", name: "Client Onboarding Workflow", description: "Automated onboarding pipeline with document collection, KYC, and suitability assessment", route: "/portal/client-onboarding-auto", icon: Rocket, category: "practice", patentId: "SI-026", patentScore: 70, status: "active", tier: 3 },
+  { id: "si-027", name: "Retirement Gap Calculator", description: "Inflation-adjusted retirement income gap analysis with IUL distribution modeling", route: "/portal/income-gap", icon: Calculator, category: "planning", patentId: "SI-027", patentScore: 68, status: "active", tier: 3 },
 ];
 
 const CATEGORIES = [
@@ -179,7 +179,7 @@ export default function InnovationDashboard() {
             <Card
               key={tool.id}
               className="bg-[#0d1526]/40 border-[#1e3a5f]/50 hover:border-emerald-500/40 transition-all duration-300 cursor-pointer group hover:shadow-lg hover:shadow-emerald-500/5"
-              onClick={() => navigate(tool.route)}
+              onClick={() => { if (tool.route) navigate(tool.route); }}
             >
               <CardHeader className="pb-2">
                 <div className="flex items-start justify-between">
@@ -213,6 +213,7 @@ export default function InnovationDashboard() {
                   <Badge className={`${getStatusColor(tool.status)} text-[10px]`}>
                     {tool.status === "active" ? "● Live" : tool.status === "beta" ? "◐ Beta" : "○ Soon"}
                   </Badge>
+                  {tool.route ? (
                   <Button
                     variant="ghost"
                     size="sm"
@@ -220,6 +221,9 @@ export default function InnovationDashboard() {
                   >
                     Launch <ChevronRight className="w-3 h-3 ml-1" />
                   </Button>
+                  ) : (
+                    <span className="text-[10px] text-slate-500">No page yet</span>
+                  )}
                 </div>
               </CardContent>
             </Card>

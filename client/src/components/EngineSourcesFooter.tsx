@@ -62,7 +62,7 @@ export default function EngineSourcesFooter({ path }: { path: string }) {
       >
         <BookOpen className="h-4 w-4 text-amber-300" aria-hidden />
         <span className="text-sm font-semibold text-white">Where these numbers come from</span>
-        <span className="ml-1 text-xs text-slate-500">{caption}</span>
+        <span className="ml-1 text-xs text-slate-400">{caption}</span>
         {open ? <ChevronUp className="ml-auto h-4 w-4 text-slate-400" aria-hidden /> : <ChevronDown className="ml-auto h-4 w-4 text-slate-400" aria-hidden />}
       </button>
 
@@ -83,7 +83,7 @@ export default function EngineSourcesFooter({ path }: { path: string }) {
             <ol className="space-y-2">
               {sources.map((s, i) => (
                 <li key={`${s.label}-${i}`} className="flex gap-2 text-slate-300">
-                  <span className="w-5 shrink-0 text-right text-slate-500">{i + 1}.</span>
+                  <span className="w-5 shrink-0 text-right text-slate-400">{i + 1}.</span>
                   <span>
                     {s.kind === "assumption" ? (
                       <span data-testid="engine-source-assumption" className="italic text-slate-400">{s.label}</span>
@@ -94,9 +94,9 @@ export default function EngineSourcesFooter({ path }: { path: string }) {
                     ) : (
                       s.label
                     )}
-                    {s.asOf && <span className="ml-2 text-xs text-slate-500">as of {s.asOf}</span>}
+                    {s.asOf && <span className="ml-2 text-xs text-slate-400">as of {s.asOf}</span>}
                     {s.defect && <span className="block text-xs text-amber-300">Not a source yet: {s.defect}.</span>}
-                    {s.note && <span className="block text-xs text-slate-500">{s.note}</span>}
+                    {s.note && <span className="block text-xs text-slate-400">{s.note}</span>}
                   </span>
                 </li>
               ))}
