@@ -1,4 +1,5 @@
 import { NOT_IN_NAVIGATION } from "../shared/hiddenRoutes";
+import { FLOORS, floorOf } from "../shared/floors";
 import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
@@ -140,5 +141,38 @@ describe('the menu can be searched', () => {
 
   it('renders the sections through the filter, not the raw list', () => {
     expect(navSrc).toMatch(/\) : filteredSections\.map\(/);
+  });
+});
+
+/**
+ * The four floors (Body, Wound, Work, Talk) replace the rail when the nav flag
+ * is on. They are built from the same NAV_SECTIONS list, and every entry lands
+ * on exactly one floor's "All tools" index, so turning the flag on cannot
+ * strand a page the rail reaches. Details in server/floorNav.test.ts.
+ */
+describe('the four floors reach every page the rail reaches', () => {
+  it('builds the floor index from NAV_SECTIONS itself, not a second list', () => {
+    expect(navSrc).toMatch(/const NAV_ENTRIES: FloorNavEntry\[\] = NAV_SECTIONS\.flatMap\(/);
+    expect(navSrc).toMatch(/useFloorNav\(NAV_ENTRIES, viewer\)/);
+    expect(navSrc).toMatch(/\{floors && <FloorIndex state=\{floorState\}/);
+  });
+
+  it('puts every portal route the rail reaches on exactly one floor', () => {
+    const sectionOf: Record<string, { section: string; subLabel?: string }> = {};
+    let section = '';
+    let subLabel: string | undefined;
+    for (const line of navBlock.split('\n')) {
+      const sec = /^\s{4}label:\s*"([^"]+)",$/.exec(line);
+      if (sec) { section = sec[1]; subLabel = undefined; continue; }
+      const sub = /subLabel:\s*"([^"]+)"/.exec(line);
+      if (sub) { subLabel = sub[1]; continue; }
+      const item = /path:\s*"([^"]+)"/.exec(line);
+      if (item) sectionOf[item[1]] = { section, subLabel };
+    }
+    const offFloor = portalRoutes.filter((r) => {
+      const where = sectionOf[r];
+      return !where || FLOORS.indexOf(floorOf({ path: r, ...where })) === -1;
+    });
+    expect(offFloor, `routes the four floors cannot reach:\n  ${offFloor.join('\n  ')}`).toEqual([]);
   });
 });
