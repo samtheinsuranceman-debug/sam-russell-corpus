@@ -200,9 +200,10 @@ export default function ExistingAnnuities() {
               Your Existing Annuities
             </h1>
             <p className="text-muted-foreground max-w-3xl mx-auto">
-              Discover how surrendering your current taxable annuity and Roth converting at 0% tax liability — 
-              even with early surrender penalties — can result in <strong className="text-amber-400">significantly more</strong> guaranteed 
-              lifetime income that is <strong className="text-emerald-400">100% tax-free</strong>.
+              Model surrendering your current taxable annuity and converting to a Roth — the conversion is taxable income in
+              the year it happens, and surrender penalties apply — to see whether the result could be <strong className="text-amber-400">more</strong> contractual
+              lifetime income, paid as <strong className="text-emerald-400">qualified Roth distributions that are free of income tax</strong> once age 59½ and the
+              five-year rule are met. Hypothetical, based on your facts; subject to the insurer's claims-paying ability.
             </p>
           </div>
           <div className="flex items-center gap-2">
@@ -485,10 +486,10 @@ export default function ExistingAnnuities() {
                 </Card>
                 <Card className="bg-emerald-500/10 border-emerald-500/30">
                   <CardContent className="p-4 text-center">
-                    <p className="text-xs text-muted-foreground">New Tax-Free Monthly</p>
+                    <p className="text-xs text-muted-foreground">New Monthly (qualified Roth distributions)</p>
                     <p className="text-2xl font-bold text-emerald-400">{fmt(result.newIncome.monthlyTaxFreeIncome)}</p>
                     <Badge variant="outline" className="mt-1 text-emerald-400 border-emerald-500/30">
-                      0% tax — forever
+                      No income tax once qualified
                     </Badge>
                   </CardContent>
                 </Card>
@@ -530,7 +531,7 @@ export default function ExistingAnnuities() {
                       { label: "Current Surrender Value", value: result.rothConversion.surrenderValue, color: "bg-blue-500", textColor: "text-blue-400" },
                       { label: `Surrender Penalty (${surrenderPenaltyPercent}%)`, value: -result.rothConversion.surrenderPenalty, color: "bg-red-500", textColor: "text-red-400" },
                       { label: "Net After Penalty", value: result.rothConversion.netProceedsAfterPenalty, color: "bg-yellow-500", textColor: "text-yellow-400" },
-                      { label: "Roth Conversion Tax Cost", value: -result.rothConversion.conversionTaxCost, color: "bg-red-500", textColor: "text-emerald-400", note: "0% strategy" },
+                      { label: "Roth Conversion Tax Cost", value: -result.rothConversion.conversionTaxCost, color: "bg-red-500", textColor: "text-emerald-400", note: "taxable; paid from other funds in this model" },
                       { label: `Solar Strategy Growth (+${solarGrowthPercent}%)`, value: result.rothConversion.solarGrowthAmount, color: "bg-amber-500", textColor: "text-amber-400" },
                       { label: `Premium Bonus (+${premiumBonusPercent}%)`, value: result.rothConversion.premiumBonusAmount, color: "bg-emerald-500", textColor: "text-emerald-400" },
                     ].map((item, i) => {
@@ -669,11 +670,11 @@ export default function ExistingAnnuities() {
               <CardHeader>
                 <CardTitle className="text-lg flex items-center gap-2">
                   <TrendingUp className="w-5 h-5 text-amber-400" />
-                  40-Year Tax Fluctuation: Taxable vs. Tax-Free Income
+                  40-Year Tax Scenario (Hypothetical): Taxable vs. Qualified Roth Income
                 </CardTitle>
                 <p className="text-sm text-muted-foreground mt-1">
-                  Federal tax rates fluctuate between 20-45% over 40 years based on economic cycles, 
-                  debt levels, and political changes. Your tax-free income remains constant.
+                  Hypothetical: a scenario in which federal rates move between 20% and 45% over 40 years (an assumption, not a forecast).
+                  Qualified Roth distributions are not affected by those rates; the conversion tax is paid once, up front.
                 </p>
               </CardHeader>
               <CardContent>
@@ -791,9 +792,9 @@ export default function ExistingAnnuities() {
                   <div>
                     <h3 className="font-semibold text-amber-400 mb-1">The Unpredictability Tax</h3>
                     <p className="text-sm text-muted-foreground">
-                      Over 40 years, tax rates will fluctuate dramatically. Some years you'll keep more, 
-                      some years the government takes nearly half. With tax-free income, you keep 
-                      <strong className="text-emerald-400"> 100% every single year</strong>. 
+                      Over 40 years tax rates may change. In this hypothetical scenario, taxable income is taxed at the assumed
+                      rate each year, while qualified Roth distributions are
+                      <strong className="text-emerald-400"> not taxed</strong> (the conversion tax was paid up front). 
                       The cumulative difference is <strong className="text-amber-400">
                         {result.taxFluctuationTimeline.length > 0 ? fmt(result.taxFluctuationTimeline[result.taxFluctuationTimeline.length - 1].cumulativeDifference) : "$0"}
                       </strong> more in your pocket over your lifetime.

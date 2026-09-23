@@ -109,7 +109,7 @@ const ADVANTAGES: Advantage[] = [
     purchasingPower: "Avoiding RMDs means avoiding the tax cascade: higher bracket + IRMAA surcharges + Social Security taxation. A retiree with $1M in traditional IRA faces $37,700 in forced RMDs at 73 — potentially costing $12,000+ in taxes and surcharges they wouldn't otherwise owe.",
     flexibility: "Total control over distribution timing. Take nothing during high-income years, take more during low-income years. Coordinate with Social Security claiming strategy, Roth conversions, and capital gains harvesting without RMD interference.",
     usefulness: "Essential for anyone with $500K+ in traditional retirement accounts who wants to avoid the RMD tax trap. Particularly valuable for those who don't need the income but are forced to take it.",
-    example: "Robert and Linda Park, ages 74 and 71, have $1.8M in IRAs generating $70,600 in forced RMDs. This pushes them into the 24% bracket and triggers $4,800/year in IRMAA surcharges. Their $600K IUL provides $45K/year with zero tax impact and zero effect on their Medicare premiums.",
+    example: "Robert and Linda Park, ages 74 and 71, have $1.8M in IRAs generating $70,600 in forced RMDs. This pushes them into the 24% bracket and triggers $4,800/year in IRMAA surcharges. In this hypothetical, their $600K IUL provides $45K/year in policy loans that are not taxable income (non-MEC, kept in force) and do not count toward the Medicare IRMAA calculation.",
     irsCode: "IRC §401(a)(9) (RMD Rules — IUL exempt), IRC §72(e) (Life Insurance Distribution Rules)",
     stressTestData: [
       { year: 1, traditional: 100000, iul: 100000 },

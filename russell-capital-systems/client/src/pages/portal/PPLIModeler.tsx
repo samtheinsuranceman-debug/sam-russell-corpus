@@ -53,7 +53,7 @@ export default function PPLIModeler() {
             <DollarSign className="text-indigo-400 mr-4" size={24} />
             <div>
               <h3 className="text-xl font-bold">No Annual Tax Drag</h3>
-              <p>Achieve 0% tax on growth compared to up to 37% on ordinary income in taxable accounts.</p>
+              <p>Growth inside a properly structured PPLI policy is not taxed while it stays inside the policy (IRC §7702), compared with up to 37% on ordinary income in taxable accounts; MEC and investor-control rules apply.</p>
             </div>
           </div>
           <div className="bg-[#0d1526] p-6 rounded-lg shadow-lg flex items-center transition-transform hover:scale-105">

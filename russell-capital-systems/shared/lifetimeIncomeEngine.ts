@@ -431,7 +431,7 @@ export interface ExistingAnnuityResult {
     surrenderValue: number;
     surrenderPenalty: number;
     netProceedsAfterPenalty: number;
-    conversionTaxCost: number; // $0 if using 0% bracket strategy
+    conversionTaxCost: number; // federal + state tax on the conversion; $0 only if the account is already Roth
     premiumBonusPercent: number;
     premiumBonusAmount: number;
     totalAfterBonus: number;
@@ -555,8 +555,16 @@ export function analyzeExistingAnnuity(input: ExistingAnnuityInput): ExistingAnn
   const netAfterPenalty = currentSurrenderValue - surrenderPenalty;
   
   // ─── Roth Conversion Analysis ───
-  // Assume 0% tax liability strategy (using deductions, losses, QCD, etc.)
-  const conversionTaxCost = 0; // 0% tax liability Roth conversion strategy
+  // A Roth conversion is taxable income in the year it happens (IRC §408A(d)(3)). This used to be
+  // hard-coded to $0 ("0% tax liability strategy"), which stated the law wrongly. It is now the
+  // federal + state tax on converting the net proceeds on top of the household's other income.
+  // In this model the tax is paid from other funds, so the converted principal is unchanged;
+  // deductions that may offset it are for the CPA to confirm, not assumed here.
+  const conversionTaxCost = isTaxable
+    ? calculateFederalTax(otherTaxableIncome + netAfterPenalty, filingStatus)
+      - calculateFederalTax(otherTaxableIncome, filingStatus)
+      + netAfterPenalty * stateTaxRate
+    : 0;
   const premiumBonusAmount = netAfterPenalty * premiumBonusPercent;
   const totalAfterBonus = netAfterPenalty + premiumBonusAmount;
   const solarGrowthAmount = netAfterPenalty * solarGrowthPercent;

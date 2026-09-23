@@ -625,7 +625,7 @@ export default function GrowthAnnuities() {
                     <p className="text-xs text-muted-foreground">
                       If your current annuity hasn't been Roth converted, it hasn't been maximized for full earning potential.
                       All gains remain tax-deferred — meaning you'll owe taxes on every dollar you withdraw.
-                      By Roth converting first, all future gains become <strong>100% tax-free</strong>.
+                      Converting to a Roth is taxable in the year it happens; after that, gains withdrawn as <strong>qualified Roth distributions</strong> (age 59½ and the five-year rule met) are free of income tax.
                     </p>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -889,11 +889,11 @@ export default function GrowthAnnuities() {
                     <div className="bg-emerald-500/5 border border-emerald-500/20 rounded-lg p-4">
                       <p className="text-sm font-semibold text-emerald-400 mb-2">The Strategy</p>
                       <p className="text-sm text-muted-foreground">
-                        By taking a {form.surrenderPenaltyPct}% early surrender penalty to Roth convert the funds at
-                        <strong> 0% tax liability</strong> (through proper tax planning), then receiving an additional
-                        tax-free bonus of <strong>{form.premiumBonusPct}%</strong> on top of the surrender value —
-                        the math more than makes up for any early penalties or surrender charges.
-                        All future gains are then <strong>100% tax-free, not tax-deferred</strong> like traditional annuities.
+                        This hypothetical takes a {form.surrenderPenaltyPct}% early surrender penalty and converts the funds to a Roth.
+                        The conversion is <strong>taxable income</strong> in the year it happens; deductions may offset part of it if you
+                        qualify, which your CPA must confirm. A premium bonus of <strong>{form.premiumBonusPct}%</strong> (subject to vesting
+                        and surrender schedules) is added on top of the surrender value, and the model tests whether that outweighs the penalties.
+                        Future gains withdrawn as <strong>qualified Roth distributions</strong> are free of income tax, instead of tax-deferred.
                       </p>
                     </div>
 
@@ -948,7 +948,7 @@ export default function GrowthAnnuities() {
                         ({result.rothConversion.netGainOverOriginal >= 0 ? "+" : ""}{fmt(result.rothConversion.netGainOverOriginal)})
                       </p>
                       <p className="text-xs text-muted-foreground mt-1">
-                        Plus ALL future gains are now 100% tax-free forever
+                        Future gains are free of income tax when withdrawn as qualified Roth distributions
                       </p>
                     </div>
                   </CardContent>
@@ -990,7 +990,7 @@ export default function GrowthAnnuities() {
                       </div>
                       <p className="text-xs text-muted-foreground mt-3 italic">
                         Traditional column shows after-tax value assuming {form.currentTaxBracket}% tax rate on gains at withdrawal.
-                        Roth column is 100% tax-free — every dollar is yours to keep.
+                        Roth column assumes qualified distributions (age 59½ and the five-year rule met), which are free of income tax; the conversion tax is not shown here.
                       </p>
                     </CardContent>
                   </Card>
