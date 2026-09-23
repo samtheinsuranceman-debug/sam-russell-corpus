@@ -35,6 +35,8 @@ export const LIFE_POLICY_PATHS: readonly string[] = [
   "/portal/policy-cost-lab",
   "/portal/policy-review",
   "/portal/policy-loans",
+  "/portal/early-cash-value",
+  "/portal/credit-line-sequencing",
   "/portal/premium-financing",
   "/portal/index-strategies",
   "/portal/mortgage-killer",

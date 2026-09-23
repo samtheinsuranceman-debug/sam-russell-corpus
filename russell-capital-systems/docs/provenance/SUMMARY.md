@@ -1,18 +1,18 @@
-# Provenance census — summary (tree `d360a2f`)
+# Provenance census — summary (tree `9ea1fc0`)
 
 Every count below is computed from the tree; none is typed. `server/provenanceCensus.test.ts` fails the build if any list grows.
 
 | Count | Value |
 |---|---|
-| Engines censused | 97 (37 via catalogue bindings, 89 via memory-bank modules, union) |
+| Engines censused | 98 (39 via catalogue bindings, 89 via memory-bank modules, union) |
 | **Engines with zero sources** | **0** (of which 0 carry 20+ typed-in numeric literals) |
 | **Catalogue engines whose sources the shell cannot print yet** | **1** |
 | **Engines with unseeded randomness** | **1** |
-| **Pages that import an engine and print no source** | **82** of 120 |
+| **Pages that import an engine and print no source** | **82** of 122 |
 | Engines with hard-coded years older than 2025 | 50 |
 | Engines that simulate | 21 |
 | Engines on a live feed seam | 9 |
-| Engines imported by no page and no router | 10 |
+| Engines imported by no page and no router | 9 |
 
 ## Engines with zero sources
 
