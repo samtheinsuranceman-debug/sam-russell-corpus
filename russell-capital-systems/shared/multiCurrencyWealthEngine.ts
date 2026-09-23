@@ -20,6 +20,12 @@ export interface CurrencyPair {
   exchangeRate: number;
   volatility: number;      // Annual std dev
   correlation: number;     // With USD
+  /**
+   * ASSUMPTION, set by the visitor: the yearly drift of this currency against the base
+   * (0.01 = the foreign currency gains 1 % a year). Overrides the input-level
+   * assumedFxDriftPerYear for this pair. Not a forecast.
+   */
+  assumedDriftPerYear?: number;
 }
 
 export interface MultiCurrencyInput {
@@ -29,6 +35,13 @@ export interface MultiCurrencyInput {
   projectionYears: number;
   rebalanceFrequency: "monthly" | "quarterly" | "annually";
   hedgingCostPercent: number;
+  /**
+   * ASSUMPTION, set by the visitor: the yearly drift of every foreign currency against the
+   * base currency, as a decimal (-0.02 = foreign currencies lose 2 % a year). Default 0:
+   * no direction is forecast. It drives the currency gain/loss and so the hedged vs
+   * unhedged comparison. Deterministic: the same inputs always give the same figures.
+   */
+  assumedFxDriftPerYear?: number;
 }
 
 export interface CurrencyYearProjection {
@@ -48,6 +61,8 @@ export interface MultiCurrencyResult {
   optimalAllocation: { currency: string; percent: number }[];
   hedgingRecommendation: string;
   taxTreatyBenefits: string[];
+  /** The FX drift used, stated as the assumption it is. */
+  fxAssumption: { driftPerYear: number; perPair: Record<string, number>; label: string };
   totalHedgingCost: number;
 }
 
@@ -71,6 +86,9 @@ export function getDefaultCurrencyPairs(): CurrencyPair[] {
  */
 export function optimizeMultiCurrency(input: MultiCurrencyInput): MultiCurrencyResult {
   const projections: CurrencyYearProjection[] = [];
+  // Clamp to a sane band so a typo (e.g. 5 for 5 %) cannot compound into nonsense.
+  const clampDrift = (v: unknown) => { const n = Number(v ?? 0); return Number.isFinite(n) ? Math.max(-0.5, Math.min(0.5, n)) : 0; };
+  const defaultDrift = clampDrift(input.assumedFxDriftPerYear);
   let totalHedgingCost = 0;
 
   // Convert all assets to base currency
@@ -92,9 +110,11 @@ export function optimizeMultiCurrency(input: MultiCurrencyInput): MultiCurrencyR
       const baseVal = baseValues[i];
       const grown = baseVal * Math.pow(1 + asset.annualReturn, y);
 
-      // Currency fluctuation (random walk with drift)
-      const pair = input.currencyPairs.find(p => p.from === asset.currency);
-      const fxChange = pair ? (Math.random() - 0.5) * pair.volatility * 2 : 0;
+      // Currency movement: the visitor's assumed drift, compounded. Deterministic — never a
+      // random draw that changes on every call. Base-currency assets have no FX movement.
+      const pair = asset.currency === input.baseCurrency ? undefined : input.currencyPairs.find(p => p.from === asset.currency);
+      const drift = asset.currency === input.baseCurrency ? 0 : (pair?.assumedDriftPerYear != null ? clampDrift(pair.assumedDriftPerYear) : defaultDrift);
+      const fxChange = Math.pow(1 + drift, y) - 1;
       const unhedgedVal = grown * (1 + fxChange);
       const hedgedVal = grown; // Hedged = no currency impact
 
@@ -155,5 +175,12 @@ export function optimizeMultiCurrency(input: MultiCurrencyInput): MultiCurrencyR
     hedgingRecommendation: hedgingRec,
     taxTreatyBenefits: treaties,
     totalHedgingCost: Math.round(totalHedgingCost),
+    fxAssumption: {
+      driftPerYear: defaultDrift,
+      perPair: Object.fromEntries(input.currencyPairs.filter(p => p.assumedDriftPerYear != null).map(p => [p.from, clampDrift(p.assumedDriftPerYear)])),
+      label: defaultDrift === 0 && input.currencyPairs.every(p => p.assumedDriftPerYear == null)
+        ? "Assumption: exchange rates held flat (0 % drift a year). No currency direction is forecast; set assumedFxDriftPerYear to test one."
+        : `Assumption: foreign currencies drift ${(defaultDrift * 100).toFixed(2)} % a year against ${input.baseCurrency}${input.currencyPairs.some(p => p.assumedDriftPerYear != null) ? " (some pairs overridden)" : ""}. Set by you, not a forecast.`,
+    },
   };
 }

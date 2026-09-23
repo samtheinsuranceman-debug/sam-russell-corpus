@@ -21,7 +21,7 @@ function requestedReturnPath() {
   return value.startsWith("/") && !value.startsWith("//") ? value : "/portal/dashboard";
 }
 
-type AuthMode = { ownerLogin: boolean; ownerTotp?: boolean; guestLogin?: boolean };
+type AuthMode = { ownerLogin: boolean; ownerTotp?: boolean; guestLogin?: boolean; gateHomepage?: boolean };
 const NO_MODE: AuthMode = { ownerLogin: false, guestLogin: false };
 
 export default function Login() {
@@ -84,10 +84,10 @@ export default function Login() {
   }
 
   const input = "mt-1 w-full rounded-xl border border-emerald-300/25 bg-black/30 px-4 py-3 text-white placeholder:text-emerald-100/35 focus:border-emerald-300 focus:outline-none";
-  const tabBtn = (active: boolean) => `flex-1 rounded-lg px-3 py-2 text-sm font-semibold transition ${active ? "bg-emerald-500 text-white" : "text-emerald-100/60 hover:text-emerald-100"}`;
+  const tabBtn = (active: boolean) => `flex-1 rounded-lg px-3 py-2 text-sm font-semibold transition ${active ? "bg-emerald-700 text-white" : "text-emerald-100/60 hover:text-emerald-100"}`;
 
   return (
-    <main className="min-h-screen grid lg:grid-cols-[1.05fr_.95fr] bg-[#04100c] text-white">
+    <div className="min-h-screen grid lg:grid-cols-[1.05fr_.95fr] bg-[#04100c] text-white">
       <section className="relative hidden overflow-hidden border-r border-emerald-400/15 lg:block">
         <img src="/rcs-city-glass.webp" alt="Green-lit skyscrapers at night above a dark river" className="absolute inset-0 h-full w-full object-cover object-center brightness-[.7] saturate-[1.15]" loading="lazy" decoding="async" />
         <div className="absolute inset-0 opacity-50 bg-[radial-gradient(circle_at_28%_20%,rgba(16,185,129,.34),transparent_32%),radial-gradient(circle_at_70%_70%,rgba(34,197,94,.16),transparent_30%),linear-gradient(155deg,#04100c,#071411_55%,#050b0a)]" />
@@ -110,7 +110,7 @@ export default function Login() {
           <div className="mt-4 grid grid-cols-3 gap-2" role="group" aria-label="Who is signing in">
             {(Object.keys(INTAKE_ROLES) as IntakeRole[]).map((r) => (
               <button key={r} type="button" onClick={() => pickRole(r)} aria-pressed={role === r} data-testid={`login-role-${r}`}
-                className={`rounded-xl border px-3 py-2.5 text-sm font-semibold transition ${role === r ? "border-emerald-300 bg-emerald-500 text-white" : "border-emerald-300/25 bg-black/30 text-emerald-100/75 hover:border-emerald-300/60 hover:text-white"}`}>
+                className={`rounded-xl border px-3 py-2.5 text-sm font-semibold transition ${role === r ? "border-emerald-300 bg-emerald-700 text-white" : "border-emerald-300/25 bg-black/30 text-emerald-100/75 hover:border-emerald-300/60 hover:text-white"}`}>
                 {INTAKE_ROLES[r].loginLabel}
               </button>
             ))}
@@ -163,7 +163,7 @@ export default function Login() {
 
               {error && <p role="alert" className="mt-3 text-sm text-red-300">{error}</p>}
               <button type="submit" disabled={busy || !allAccepted}
-                className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-500 px-5 py-3 font-semibold text-white shadow-lg shadow-emerald-950/40 transition duration-200 hover:bg-emerald-400 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-50">
+                className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-700 px-5 py-3 font-semibold text-white shadow-lg shadow-emerald-950/40 transition duration-200 hover:bg-emerald-800 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-50">
                 {busy ? "Signing in…" : allAccepted ? "Enter the site" : `Check all ${LOGIN_DISCLAIMERS.length} to continue`} <ArrowRight className="h-5 w-5" />
               </button>
             </form>
@@ -175,9 +175,15 @@ export default function Login() {
             </p>
           )}
 
-          <a href="/" className="mt-5 block text-center text-sm text-emerald-200/55 hover:text-emerald-100">Return to homepage</a>
+          {/* While the homepage is gated, "/" sends a signed-out visitor straight back here, so the
+              way out goes to the public calculator catalogue instead (shared/seo.ts PUBLIC_PAGES). */}
+          {mode?.gateHomepage === false ? (
+            <a href="/" className="mt-5 block text-center text-sm text-emerald-200/55 hover:text-emerald-100">Return to homepage</a>
+          ) : (
+            <a href="/calculators" className="mt-5 block text-center text-sm text-emerald-200/55 hover:text-emerald-100">Browse the free calculators</a>
+          )}
         </div>
       </section>
-    </main>
+    </div>
   );
 }
