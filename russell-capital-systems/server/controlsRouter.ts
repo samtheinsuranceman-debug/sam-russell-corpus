@@ -307,8 +307,8 @@ const provenanceRouter = router({
     return listProvenance(ids.clientId!, ids.workspaceId!);
   }),
   verify: protectedProcedure.input(z.object({ clientId: z.number().int().positive(), documentId: z.number().int().positive() })).query(async ({ ctx, input }) => {
-    await resolve(ctx, input);
-    const p = await provenanceForDocument(input.documentId);
+    const { ids } = await resolve(ctx, input);
+    const p = await provenanceForDocument(input.documentId, ids.clientId!, ids.workspaceId!);
     if (!p) return { found: false as const };
     const expected = signProvenance({ documentId: p.documentId, sha256: p.sha256, uploadedAt: p.signedAt.toISOString(), uploadedBy: p.uploadedByName ?? "" });
     return { found: true as const, verified: expected === p.signature, sha256: p.sha256, version: p.version, signedAt: p.signedAt, consistency: p.consistency };
