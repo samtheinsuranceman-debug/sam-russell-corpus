@@ -1,8 +1,7 @@
-// @ts-nocheck
 
 import React, { useState, useMemo } from 'react';
 import { HeartPulse, DollarSign, TrendingUp, Target, Calendar, Percent, ArrowRight, Shield, CheckCircle2, AlertTriangle, Home, Lock } from 'lucide-react';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend, AreaChart, Area, ComposedChart, Line } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend, AreaChart, Area, ComposedChart, Line, LineChart } from 'recharts';
 import { PageInsights } from "@/components/PageInsights";
 
 export default function LongTermCareHybrid() {
@@ -175,7 +174,7 @@ export default function LongTermCareHybrid() {
       <footer style={{ textAlign: 'center', marginTop: '40px', color: '#5ee6d4' }}>
         <p>Disclaimer: This is for educational purposes. Consult professionals for personalized advice.</p>
       </footer>
-      <PageInsights section="long-term-care-hybrid" />
+      <PageInsights pageId="long-term-care-hybrid" />
     </div>
   );
 }

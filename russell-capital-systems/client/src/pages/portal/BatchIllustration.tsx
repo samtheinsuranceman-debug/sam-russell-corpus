@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { AppShell } from "@/components/AppShell";
 import { NumberInput } from "@/components/NumberInput";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
@@ -92,13 +91,8 @@ const CHART_COLORS = [
 export default function BatchIllustration() {
   const { user } = useAuth();
   
-  const { data: batchScheduleData } = trpc.batchSchedule.getSchedule.useQuery(undefined, { enabled: !!user });
   const { data: clientsData } = trpc.clients.list.useQuery(undefined, { enabled: !!user });
   const { data: carriersData } = trpc.carrierQuotes.list.useQuery(undefined, { enabled: !!user });
-  const { data: riskData } = trpc.riskProfile.getProfile.useQuery(undefined, { enabled: !!user });
-  const { data: analyticsData } = trpc.strategyAnalytics.getMetrics.useQuery(undefined, { enabled: !!user });
-  const { data: leaderboardData } = trpc.leaderboard.getRankings.useQuery(undefined, { enabled: !!user });
-  const { data: complianceData } = trpc.complianceTracking.getStatus.useQuery(undefined, { enabled: !!user });
   const { data: notificationsData } = trpc.activity.list.useQuery(undefined, { enabled: !!user });
 
   // The worksheet starts empty: rows are what the advisor enters. No client names,
@@ -767,7 +761,7 @@ export default function BatchIllustration() {
                       {premiumData.length > 0 ? (
                         <ResponsiveContainer width="100%" height="100%">
                           {chartType === 'bar' ? (
-                            <RechartsBarChart data={premiumData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                            <BarChart data={premiumData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                               <CartesianGrid strokeDasharray="3 3" stroke="#12233e" vertical={false} />
                               <XAxis dataKey="name" stroke="#7a95b8" tick={{ fontSize: 11 }} />
                               <YAxis stroke="#7a95b8" tickFormatter={(val) => `$${val/1000}k`} tick={{ fontSize: 11 }} />
@@ -778,7 +772,7 @@ export default function BatchIllustration() {
                               <Legend iconType="circle" />
                               <Bar dataKey="premium" name="Current Premium" fill="#3b82f6" radius={[4, 4, 0, 0]} maxBarSize={40} />
                               <Bar dataKey="target" name="Target Premium" fill="#10b981" radius={[4, 4, 0, 0]} maxBarSize={40} />
-                            </RechartsBarChart>
+                            </BarChart>
                           ) : (
                             <ComposedChart data={premiumData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                               <CartesianGrid strokeDasharray="3 3" stroke="#12233e" vertical={false} />
@@ -1077,15 +1071,15 @@ export default function BatchIllustration() {
                           </div>
                           <div className="space-y-2">
                             <Label>Age</Label>
-                            <NumberInput value={newRowData.age || 45} onChange={(e) => setNewRowData({...newRowData, age: v})} className="bg-[#0d1a2e] border-[#12233e]" />
+                            <NumberInput value={newRowData.age || 45} onChange={(v) => setNewRowData({...newRowData, age: v})} className="bg-[#0d1a2e] border-[#12233e]" />
                           </div>
                           <div className="space-y-2">
                             <Label>Premium ($)</Label>
-                            <NumberInput value={newRowData.premium || 50000} onChange={(e) => setNewRowData({...newRowData, premium: v})} className="bg-[#0d1a2e] border-[#12233e]" />
+                            <NumberInput value={newRowData.premium || 50000} onChange={(v) => setNewRowData({...newRowData, premium: v})} className="bg-[#0d1a2e] border-[#12233e]" />
                           </div>
                           <div className="space-y-2">
                             <Label>Duration (Years)</Label>
-                            <NumberInput value={newRowData.years || 10} onChange={(e) => setNewRowData({...newRowData, years: v})} className="bg-[#0d1a2e] border-[#12233e]" />
+                            <NumberInput value={newRowData.years || 10} onChange={(v) => setNewRowData({...newRowData, years: v})} className="bg-[#0d1a2e] border-[#12233e]" />
                           </div>
                           <div className="space-y-2">
                             <Label>Product Type</Label>

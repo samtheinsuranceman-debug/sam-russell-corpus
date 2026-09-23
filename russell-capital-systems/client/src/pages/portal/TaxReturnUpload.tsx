@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { AppShell } from "@/components/AppShell";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -68,11 +67,19 @@ const fmt = (n: number) => n.toLocaleString("en-US", { style: "currency", curren
 const pct = (n: number) => `${(n * 100).toFixed(1)}%`;
 const num = (n: number) => n.toLocaleString("en-US");
 
+const TAX_RETURN_STRATEGY_TYPE = "tax_return_extraction";
+
+interface TaxHistoryItem {
+  id: string;
+  taxYear: number;
+  data: TaxExtraction;
+}
+
 const COLORS = ['#10b981', '#3b82f6', '#f59e0b', '#10b981', '#ef4444', '#06b6d4', '#f97316', '#ec4899'];
 
 export default function TaxReturnUpload() {
   const { user } = useAuth();
-  const { selectedClientId } = useClientData();
+  const { selectedClientId, data: clientData } = useClientData();
   const [file, setFile] = useState<File | null>(null);
   const [extracting, setExtracting] = useState(false);
   const [extraction, setExtraction] = useState<TaxExtraction | null>(null);
@@ -104,11 +111,23 @@ export default function TaxReturnUpload() {
   const [selectedHistoryId, setSelectedHistoryId] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<"standard" | "detailed" | "expert">("standard");
 
-  const { data: clientsList = [] } = trpc.clients.list.useQuery(undefined, { retry: false });
-  const { data: taxHistory = [] } = trpc.taxReturnOcr.getHistory.useQuery({ clientId: clientId || 0 }, { enabled: !!clientId });
-  const { data: taxStrategies = [] } = trpc.strategy.list.useQuery({ type: 'tax' });
-  const { data: complianceRules = [] } = trpc.compliance.getRules.useQuery({ category: 'tax' });
-  const { data: aiInsights = [] } = trpc.ai.getTaxInsights.useQuery({ clientId: clientId || 0 }, { enabled: !!clientId && !!extraction });
+  const utils = trpc.useUtils();
+  const { data: clientsList = [] } = trpc.clients.list.useQuery(undefined, { retry: false, enabled: !!user });
+  // Saved extractions for this client live in saved_strategies under TAX_RETURN_STRATEGY_TYPE.
+  const { data: savedForClient } = trpc.savedStrategies.list.useQuery(
+    { clientId: clientId || 0 },
+    { enabled: !!user && !!clientId },
+  );
+  const taxHistory = useMemo<TaxHistoryItem[]>(
+    () =>
+      (savedForClient ?? [])
+        .filter((r) => r.strategyType === TAX_RETURN_STRATEGY_TYPE)
+        .map((r) => {
+          const data = r.inputsJson as TaxExtraction;
+          return { id: String(r.id), taxYear: Number(data?.taxYear) || 0, data };
+        }),
+    [savedForClient],
+  );
   
   const uploadMut = trpc.taxReturnOcr.uploadAndExtract.useMutation({
     onSuccess: (data: any) => {
@@ -118,6 +137,7 @@ export default function TaxReturnUpload() {
       setExtracting(false);
       setActiveTab("results");
       toast.success("Tax return data extracted successfully!");
+      if (autoSave) saveExtraction(data.extracted);
     },
     onError: (err: any) => {
       setError(err.message);
@@ -126,8 +146,11 @@ export default function TaxReturnUpload() {
     },
   });
 
-  const saveMut = trpc.taxReturnOcr.saveExtraction.useMutation({
-    onSuccess: () => toast.success("Tax data saved to client profile"),
+  const saveMut = trpc.savedStrategies.save.useMutation({
+    onSuccess: () => {
+      toast.success("Tax data saved to client profile");
+      utils.savedStrategies.list.invalidate();
+    },
     onError: () => toast.error("Failed to save tax data")
   });
 
@@ -172,18 +195,30 @@ export default function TaxReturnUpload() {
   };
 
   const handleSave = () => {
-    if (extraction && clientId) {
-      saveMut.mutate({
-        clientId,
-        data: extraction,
-        notes,
-        taxYear: extraction.taxYear
-      });
-    }
+    if (extraction) saveExtraction(extraction);
   };
 
+  function saveExtraction(extraction: TaxExtraction) {
+    if (clientId) {
+      saveMut.mutate({
+        clientId,
+        clientName: clientsList.find((c) => c.id === clientId)?.name ?? undefined,
+        strategyType: TAX_RETURN_STRATEGY_TYPE,
+        strategyLabel: `Tax return ${extraction.taxYear}`,
+        inputsJson: extraction,
+        summaryJson: {
+          taxYear: extraction.taxYear,
+          adjustedGrossIncome: extraction.adjustedGrossIncome,
+          totalTaxLiability: extraction.totalTaxLiability,
+          effectiveTaxRate: extraction.effectiveTaxRate,
+        },
+        notes: notes || undefined,
+      });
+    }
+  }
+
   const handleLoadHistory = (id: string) => {
-    const historyItem = taxHistory.find((h) => h.id === id);
+    const historyItem = taxHistory.find((h: TaxHistoryItem) => h.id === id);
     if (historyItem) {
       setExtraction(historyItem.data);
       setActiveTab("results");
@@ -258,7 +293,7 @@ export default function TaxReturnUpload() {
 
   const historicalComparisonData = useMemo(() => {
     if (!extraction || !taxHistory.length) return [];
-    const history = [...taxHistory].sort((a, b) => a.taxYear - b.taxYear).slice(-5);
+    const history: Array<Pick<TaxHistoryItem, "taxYear" | "data">> = [...taxHistory].sort((a, b) => a.taxYear - b.taxYear).slice(-5);
     
     if (!history.find((h) => h.taxYear === extraction.taxYear)) {
       history.push({ taxYear: extraction.taxYear, data: extraction });
@@ -413,7 +448,7 @@ export default function TaxReturnUpload() {
             <CardContent>
               <ScrollArea className="h-[180px]">
                 <div className="space-y-2 pr-4">
-                  {taxHistory.map((history) => (
+                  {taxHistory.map((history: TaxHistoryItem) => (
                     <div key={history.id} className="flex items-center justify-between p-3 rounded-lg bg-gray-800/50 border border-gray-700/50 hover:bg-gray-800 transition-colors">
                       <div>
                         <p className="text-white font-medium">Tax Year {history.taxYear}</p>

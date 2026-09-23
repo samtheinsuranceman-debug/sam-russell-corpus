@@ -1,8 +1,7 @@
-// @ts-nocheck
 
 import React, { useState, useMemo } from 'react';
 import { Heart, DollarSign, TrendingUp, Target, Calendar, Percent, ArrowRight, Shield, CheckCircle2, AlertTriangle, Globe, Users } from 'lucide-react';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend, PieChart, Pie, Cell, AreaChart, Area } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend, PieChart, Pie, Cell, AreaChart, Area, LineChart, Line } from 'recharts';
 import { PageInsights } from "@/components/PageInsights";
 
 const COLORS = ['#10B981', '#6366f1', '#EC4899', '#F59E0B', '#3B82F6']; // Emerald and purple accents with others for variety
@@ -203,12 +202,12 @@ export default function PhilanthropyImpactDashboard() {
           </div>
           <p className="mb-4 text-[#94a3b8]">Plan for wills, trusts, and endowments over time.</p>
           <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={sampleLegacyGivingData}>  {/* Assuming LineChart is available or use Area as fallback */}
+            <LineChart data={sampleLegacyGivingData}>
               <XAxis dataKey="year" stroke="#fff" />
               <YAxis stroke="#fff" />
               <Tooltip />
               <Line type="monotone" dataKey="amount" stroke="#6366f1" />
-            </LineChart>  {/* Note: LineChart not imported, using Area as per imports */}
+            </LineChart>
           </ResponsiveContainer>
           <div className="mt-4 flex items-center">
             <CheckCircle2 size={24} color="#10B981" />
@@ -242,7 +241,7 @@ export default function PhilanthropyImpactDashboard() {
       <footer className="mt-8 text-center text-gray-500">
         <p>Powered by Philanthropy Insights © 2024</p>
       </footer>
-      <PageInsights section="philanthropy-impact-dashboard" />
+      <PageInsights pageId="philanthropy-impact-dashboard" />
     </div>
   );
 }
