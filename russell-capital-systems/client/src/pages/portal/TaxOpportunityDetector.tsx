@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useState, useMemo, useEffect, useCallback } from "react";
 import { AppShell } from "@/components/AppShell";
 import { trpc } from "@/lib/trpc";
@@ -88,18 +87,12 @@ const COLORS = ['#22c55e', '#f0c040', '#3b82f6', '#ef4444', '#a855f7', '#ec4899'
 
 export default function TaxOpportunityDetector() {
   const { user } = useAuth();
-  const { selectedClientId } = useClientData();
+  const { selectedClientId, setSelectedClientId, data: clientData } = useClientData();
   const [clientId, setClientId] = useState<number | null>(selectedClientId ?? null);
   
-  const { data: clients } = trpc.clients.list.useQuery();
-  const { data: taxHistory } = trpc.taxReturnOcr.getHistory.useQuery({ clientId: clientId ?? 0 }, { enabled: !!clientId });
-  const { data: recommendations } = trpc.recommendations.list.useQuery({ clientId: clientId ?? 0 }, { enabled: !!clientId });
-  const { data: strategyAnalytics } = trpc.strategyAnalytics.getMetrics.useQuery({ clientId: clientId ?? 0 }, { enabled: !!clientId });
-  const { data: marketData } = trpc.marketData.getLatest.useQuery();
-  
+  const { data: clients } = trpc.clients.list.useQuery(undefined, { enabled: !!user });
+
   const saveStrategyMutation = trpc.savedStrategies.save.useMutation();
-  const generateReportMutation = trpc.reports.generateTaxReport.useMutation();
-  const addNoteMutation = trpc.notes.add.useMutation();
   const createActivityMutation = trpc.activity.create.useMutation();
   
   const [manualIncome, setManualIncome] = useState<number>(0);
@@ -137,7 +130,7 @@ export default function TaxOpportunityDetector() {
   const age = manualAge || Number(client?.age || 0);
   const iraBalance = traditionalIra || Number(client?.iraBalance || 0);
   const rothBalance = rothIra || Number(client?.rothBalance || 0);
-  const brokerage = brokerageBalance || Number(client?.brokerageBalance || 0);
+  const brokerage = brokerageBalance || Number(client?.taxableAssets || 0);
   const gains = capitalGains || 0;
   const losses = capitalLosses || 0;
   const mortgage = mortgageInterest || 0;
@@ -182,19 +175,12 @@ export default function TaxOpportunityDetector() {
         createActivityMutation.mutate({
           clientId,
           type: "TAX_ANALYSIS",
-          description: "Ran Tax Opportunity Detector",
-          metadata: { income, marginalRate }
+          details: `Ran Tax Opportunity Detector (income $${income.toLocaleString()}, marginal rate ${(marginalRate * 100).toFixed(0)}%)`,
         });
       }
     }, 1500);
   }, [clientId, income, marginalRate, createActivityMutation]);
 
-  const handleExportCSV = useCallback(() => {
-    toast.success("Exporting to CSV...", {
-      description: "Your comprehensive tax opportunities report will download shortly."
-    });
-  }, []);
-  
   const handleSaveStrategy = useCallback(() => {
     if (!clientId) {
       toast.error("Please select a client first");
@@ -203,35 +189,22 @@ export default function TaxOpportunityDetector() {
     
     saveStrategyMutation.mutate({
       clientId,
-      name: "Tax Optimization Plan " + new Date().toISOString().split('T')[0],
-      type: "TAX",
-      data: {
-        income,
-        marginalRate,
-        opportunities: selectedOpps
-      }
+      clientName: client?.name,
+      strategyType: "TAX",
+      strategyLabel: "Tax Optimization Plan " + new Date().toISOString().split('T')[0],
+      inputsJson: { income, marginalRate },
+      summaryJson: { opportunities: selectedOpps },
+      portalOrigin: "tax-opportunities",
     }, {
       onSuccess: () => toast.success("Strategy saved successfully"),
       onError: () => toast.error("Failed to save strategy")
     });
-  }, [clientId, income, marginalRate, selectedOpps, saveStrategyMutation]);
+  }, [clientId, client, income, marginalRate, selectedOpps, saveStrategyMutation]);
 
+  // Print dialog: the browser saves the rendered analysis as a PDF.
   const handleGenerateReport = useCallback(() => {
-    if (!clientId) {
-      toast.error("Please select a client first");
-      return;
-    }
-    
-    generateReportMutation.mutate({
-      clientId,
-      type: "TAX_OPPORTUNITY",
-      format: "PDF",
-      includeCharts: true
-    }, {
-      onSuccess: () => toast.success("Report generation started. You will be notified when it's ready."),
-      onError: () => toast.error("Failed to generate report")
-    });
-  }, [clientId, generateReportMutation]);
+    window.print();
+  }, []);
 
   const toggleOppSelection = useCallback((id: string) => {
     setSelectedOpps(prev => 
@@ -637,7 +610,7 @@ export default function TaxOpportunityDetector() {
               <select 
                 className="rc-input w-full bg-[#060d19] border-[#12233e] text-white rounded-lg p-2.5"
                 value={clientId?.toString() ?? ""} 
-                onChange={(e) => setClientId(Number(e.target.value))}
+                onChange={(e) => { const id = Number(e.target.value); setClientId(id || null); setSelectedClientId(id || null); }}
               >
                 <option value="">Auto-fill from client...</option>
                 {clients?.map((c) => (
@@ -712,7 +685,7 @@ export default function TaxOpportunityDetector() {
               <div className="space-y-2">
                 <label className="text-xs font-medium text-[#7a95b8] uppercase tracking-wider">Taxable Brokerage</label>
                 <NumberInput 
-                  placeholder={client?.brokerageBalance?.toString() || "0"} 
+                  placeholder={client?.taxableAssets?.toString() || "0"} 
                   value={brokerageBalance} 
                   onChange={setBrokerageBalance} 
                   className="rc-input bg-[#060d19] border-[#12233e] text-white" 

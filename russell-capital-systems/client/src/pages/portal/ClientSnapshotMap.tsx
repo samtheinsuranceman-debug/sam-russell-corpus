@@ -1,6 +1,6 @@
-// @ts-nocheck
 import { useState, useMemo } from "react";
 import { AppShell } from "@/components/AppShell";
+import { useAuth } from "@/_core/hooks/useAuth";
 import { PieChart, Pie, Cell, BarChart, Bar, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip as RTooltip, ResponsiveContainer } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -86,8 +86,9 @@ interface AssetNode {
 }
 
 export default function ClientSnapshotMap() {
-  const { selectedClientId } = useClientData();
-  const { data: clients, isLoading: clientsLoading } = trpc.clients.list.useQuery();
+  const { selectedClientId, setSelectedClientId, data: clientData } = useClientData();
+  const { user } = useAuth();
+  const { data: clients, isLoading: clientsLoading } = trpc.clients.list.useQuery(undefined, { enabled: !!user });
   const [clientId, setClientId] = useState<number | null>(selectedClientId ?? null);
   const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set(["assets", "income", "liabilities"]));
 
@@ -315,7 +316,7 @@ export default function ClientSnapshotMap() {
         {/* Client Selector */}
         <div className="rc-card">
           <div className="flex items-center gap-4 flex-wrap">
-            <Select value={clientId?.toString() ?? ""} onValueChange={(v) => setClientId(Number(v))}>
+            <Select value={clientId?.toString() ?? ""} onValueChange={(v) => { const id = Number(v); setClientId(id); setSelectedClientId(id); }}>
               <SelectTrigger className="w-[300px] bg-slate-900/50 border-slate-600/50 text-white">
                 <SelectValue placeholder="Select a client..." />
               </SelectTrigger>

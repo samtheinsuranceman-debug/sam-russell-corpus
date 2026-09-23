@@ -1,6 +1,6 @@
-// @ts-nocheck
 import { useState, useMemo, useEffect, useCallback } from "react";
 import { useClientData, FactFinderBadge } from "@/contexts/ClientDataContext";
+import { Tooltip as UITooltip, TooltipTrigger as UITooltipTrigger, TooltipContent as UITooltipContent } from "@/components/ui/tooltip";
 import { AppShell } from "@/components/AppShell";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -232,10 +232,10 @@ const generateCategoryData = (vitals: VitalSign[]) => {
     counts[v.category] += 1;
   });
 
-  return Object.keys(categories).map((key) => ({
+  return (Object.keys(categories) as Array<keyof typeof categories>).map((key) => ({
     name: key.charAt(0).toUpperCase() + key.slice(1),
-    value: counts[key] > 0 ? Math.round(categories[key as keyof typeof categories] / counts[key as keyof typeof counts]) : 0,
-    fill: CATEGORY_COLORS[key as keyof typeof CATEGORY_COLORS]
+    value: counts[key] > 0 ? Math.round(categories[key] / counts[key]) : 0,
+    fill: CATEGORY_COLORS[key]
   }));
 };
 
@@ -263,13 +263,7 @@ export default function FinancialVitalsScorecard() {
   const { user } = useAuth();
   const { data: clientData } = useClientData();
   
-  const { data: clients } = trpc.clients.list.useQuery();
-  const { data: notes } = trpc.notes.list.useQuery({ limit: 5 });
-  const { data: activity } = trpc.activity.list.useQuery({ limit: 5 });
-  const { data: dashboard } = trpc.dashboard.stats.useQuery();
-  const { data: riskProfile } = trpc.riskProfile.get.useQuery();
-  const { data: goals } = trpc.goals.list.useQuery();
-  const { data: recommendations } = trpc.recommendations.list.useQuery();
+  const { data: clients, isLoading: isClientsLoading } = trpc.clients.list.useQuery(undefined, { enabled: !!user });
 
   const [selectedClientId, setSelectedClientId] = useState<string>("");
   const [activeTab, setActiveTab] = useState("overview");
@@ -739,9 +733,12 @@ export default function FinancialVitalsScorecard() {
                   </div>
                   <div className="rc-stat-label text-base text-white font-medium mb-2 flex items-center gap-2">
                     {vital.name}
-                    <Tooltip content={vital.description}>
-                      <Info className="w-3.5 h-3.5 text-[#7a95b8] cursor-help" />
-                    </Tooltip>
+                    <UITooltip>
+                      <UITooltipTrigger asChild>
+                        <Info className="w-3.5 h-3.5 text-[#7a95b8] cursor-help" />
+                      </UITooltipTrigger>
+                      <UITooltipContent>{vital.description}</UITooltipContent>
+                    </UITooltip>
                   </div>
                   
                   <div className="space-y-2 mt-4">

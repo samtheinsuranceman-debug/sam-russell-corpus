@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useState, useMemo, useEffect, useCallback } from "react";
 import { 
   PieChart, Pie, Cell, BarChart, Bar, AreaChart, Area, XAxis, YAxis, CartesianGrid, 
@@ -47,6 +46,7 @@ import {
   FolderOpen,
   Monitor,
   RefreshCw,
+  MousePointerClick,
 } from "lucide-react";
 import SlideComments from "@/components/SlideComments";
 import SlideSharing from "@/components/SlideSharing";
@@ -65,10 +65,21 @@ export default function MySlides() {
   const isPaid = tier === "owner" || tier === "unlimited" || tier === "subscriber" || tier === "trial";
 
   const { data: decks } = trpc.slides.list.useQuery(undefined, { enabled: isPaid });
-  const { data: analytics } = trpc.strategyAnalytics.getOverview.useQuery(undefined, { enabled: isPaid });
   const { data: recentActivity } = trpc.activity.getRecent.useQuery({ limit: 10 }, { enabled: isPaid });
-  const { data: userStats } = trpc.dashboard.stats.useQuery(undefined, { enabled: isPaid });
   const { data: teamMembers } = trpc.team.members.useQuery(undefined, { enabled: isPaid });
+
+  // Stars are a per-browser bookmark: the deck table has no star column, so they are kept
+  // in this browser's storage, keyed by user.
+  const starKey = `rc_starred_decks_${user?.id ?? "anon"}`;
+  const [starredIds, setStarredIds] = useState<Set<number>>(new Set());
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(starKey);
+      setStarredIds(new Set(raw ? (JSON.parse(raw) as number[]) : []));
+    } catch {
+      setStarredIds(new Set());
+    }
+  }, [starKey]);
   
   const utils = trpc.useUtils();
   const deleteMut = trpc.slides.delete.useMutation({
@@ -92,17 +103,13 @@ export default function MySlides() {
     },
     onError: (e) => toast.error("PPTX generation failed", { description: e.message }),
   });
-  const duplicateMut = trpc.slides.duplicate.useMutation({
+  // Duplicate = save a new deck with the same slides.
+  const duplicateMut = trpc.slides.save.useMutation({
     onSuccess: () => {
       utils.slides.list.invalidate();
       toast.success("Deck duplicated");
     },
     onError: (e) => toast.error("Failed to duplicate", { description: e.message }),
-  });
-  const starMut = trpc.slides.toggleStar.useMutation({
-    onSuccess: () => {
-      utils.slides.list.invalidate();
-    },
   });
 
   const [search, setSearch] = useState("");
@@ -202,12 +209,30 @@ export default function MySlides() {
   }, [editTitle, updateMut]);
 
   const handleDuplicate = useCallback((id: number) => {
-    duplicateMut.mutate({ id });
-  }, [duplicateMut]);
+    const deck = decks?.find((d) => d.id === id);
+    if (!deck) return;
+    duplicateMut.mutate({
+      title: `${deck.title} (copy)`.slice(0, 500),
+      toolName: deck.toolName,
+      clientName: deck.clientName ?? undefined,
+      audience: deck.audience,
+      slides: deck.slides,
+    });
+  }, [decks, duplicateMut]);
 
   const handleToggleStar = useCallback((id: number) => {
-    starMut.mutate({ id });
-  }, [starMut]);
+    setStarredIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      try {
+        localStorage.setItem(starKey, JSON.stringify(Array.from(next)));
+      } catch {
+        /* storage unavailable: the star lasts for this visit only */
+      }
+      return next;
+    });
+  }, [starKey]);
 
   const handleNextSlide = useCallback(() => {
     if (!previewDeck) return;
@@ -309,7 +334,7 @@ export default function MySlides() {
       );
     }
     
-    if (activeTab === "starred") result = result.filter((d) => d.isStarred);
+    if (activeTab === "starred") result = result.filter((d) => starredIds.has(d.id));
     if (activeTab === "recent") {
       const weekAgo = new Date();
       weekAgo.setDate(weekAgo.getDate() - 7);
@@ -386,7 +411,7 @@ export default function MySlides() {
                 {audienceLabel[deck.audience] || deck.audience}
               </Badge>
               <Button variant="ghost" size="icon" className="h-5 w-5" onClick={() => handleToggleStar(deck.id)}>
-                <Star className={`h-3 w-3 ${deck.isStarred ? 'fill-amber-400 text-amber-400' : 'text-zinc-500'}`} />
+                <Star className={`h-3 w-3 ${starredIds.has(deck.id) ? 'fill-amber-400 text-amber-400' : 'text-zinc-500'}`} />
               </Button>
             </div>
           </div>
@@ -500,7 +525,7 @@ export default function MySlides() {
             ) : (
               <div className="flex items-center gap-2">
                 <p className="text-sm font-semibold truncate cursor-pointer hover:text-emerald-400" onClick={() => handlePreview(deck)}>{deck.title}</p>
-                {deck.isStarred && <Star className="h-3 w-3 fill-amber-400 text-amber-400 shrink-0" />}
+                {starredIds.has(deck.id) && <Star className="h-3 w-3 fill-amber-400 text-amber-400 shrink-0" />}
               </div>
             )}
             <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground mt-0.5">
@@ -936,7 +961,7 @@ export default function MySlides() {
                         </tr>
                       </thead>
                       <tbody>
-                        {decks.filter((d) => d.isStarred).slice(0, 5).map((d, i) => (
+                        {decks.filter((d) => starredIds.has(d.id)).slice(0, 5).map((d, i) => (
                           <tr key={d.id} className="border-b border-zinc-800 hover:bg-zinc-800/30">
                             <td className="px-4 py-3 font-medium text-white truncate max-w-[150px]">{d.title}</td>
                             <td className="px-4 py-3 text-zinc-300">{d.slideCount}</td>
@@ -944,7 +969,7 @@ export default function MySlides() {
                             <td className="px-4 py-3 text-zinc-400">{fmt(d.createdAt)}</td>
                           </tr>
                         ))}
-                        {decks.filter((d) => d.isStarred).length === 0 && (
+                        {decks.filter((d) => starredIds.has(d.id)).length === 0 && (
                           <tr><td colSpan={4} className="px-4 py-4 text-center text-zinc-500">No starred decks yet</td></tr>
                         )}
                       </tbody>
@@ -970,19 +995,17 @@ export default function MySlides() {
                         </tr>
                       </thead>
                       <tbody>
-                        {(recentActivity || [
-                          { id: 1, action: "Created Deck", item: "Q3 Strategy Review", user: "You", time: "2 hours ago" },
-                          { id: 2, action: "Exported PPTX", item: "Client Onboarding", user: "You", time: "5 hours ago" },
-                          { id: 3, action: "Shared", item: "Risk Assessment", user: "Sarah J.", time: "1 day ago" },
-                          { id: 4, action: "Commented", item: "Tax Planning", user: "Mike T.", time: "2 days ago" },
-                        ]).map((act: any, i: number) => (
-                          <tr key={act.id || i} className="border-b border-zinc-800 hover:bg-zinc-800/30">
+                        {(recentActivity ?? []).map((act) => (
+                          <tr key={act.id} className="border-b border-zinc-800 hover:bg-zinc-800/30">
                             <td className="px-4 py-3 font-medium text-emerald-400">{act.action}</td>
-                            <td className="px-4 py-3 text-white truncate max-w-[120px]">{act.item}</td>
-                            <td className="px-4 py-3 text-zinc-300">{act.user}</td>
-                            <td className="px-4 py-3 text-zinc-400 text-xs">{act.time}</td>
+                            <td className="px-4 py-3 text-white truncate max-w-[120px]">{act.clientName ?? act.summary ?? "—"}</td>
+                            <td className="px-4 py-3 text-zinc-300">{act.actorName ?? "—"}</td>
+                            <td className="px-4 py-3 text-zinc-400 text-xs">{fmt(act.createdAt)}</td>
                           </tr>
                         ))}
+                        {(recentActivity ?? []).length === 0 && (
+                          <tr><td colSpan={4} className="px-4 py-4 text-center text-zinc-500">No activity recorded yet</td></tr>
+                        )}
                       </tbody>
                     </table>
                   </div>
@@ -1086,48 +1109,46 @@ export default function MySlides() {
                         <tr>
                           <th className="px-4 py-2 rounded-tl-md">Member</th>
                           <th className="px-4 py-2">Role</th>
-                          <th className="px-4 py-2">Shared Decks</th>
+                          <th className="px-4 py-2">Decks in Library</th>
                           <th className="px-4 py-2 rounded-tr-md">Status</th>
                         </tr>
                       </thead>
                       <tbody>
-                        {(teamMembers || [
-                          { id: 1, name: "Sarah Jenkins", role: "Advisor", shared: 12, status: "Active" },
-                          { id: 2, name: "Michael Thomas", role: "Analyst", shared: 8, status: "Active" },
-                          { id: 3, name: "Emily Chen", role: "Manager", shared: 24, status: "Away" },
-                          { id: 4, name: "David Wilson", role: "Assistant", shared: 3, status: "Offline" },
-                        ]).map((member: any, i: number) => (
-                          <tr key={member.id || i} className="border-b border-zinc-800 hover:bg-zinc-800/30">
-                            <td className="px-4 py-3 font-medium text-white flex items-center gap-2">
-                              <div className="w-6 h-6 rounded-full bg-zinc-700 flex items-center justify-center text-xs">{member.name.charAt(0)}</div>
-                              {member.name}
-                            </td>
-                            <td className="px-4 py-3 text-zinc-300">{member.role}</td>
-                            <td className="px-4 py-3 text-zinc-300">{member.shared}</td>
-                            <td className="px-4 py-3">
-                              <span className={`inline-flex items-center gap-1.5 rounded-full px-2 py-1 text-[10px] font-medium ${
-                                member.status === 'Active' ? 'bg-emerald-500/10 text-emerald-400' : 
-                                member.status === 'Away' ? 'bg-amber-500/10 text-amber-400' : 'bg-zinc-500/10 text-zinc-400'
-                              }`}>
-                                <span className={`h-1.5 w-1.5 rounded-full ${
-                                  member.status === 'Active' ? 'bg-emerald-400' : 
-                                  member.status === 'Away' ? 'bg-amber-400' : 'bg-zinc-400'
-                                }`}></span>
-                                {member.status}
-                              </span>
-                            </td>
-                          </tr>
-                        ))}
+                        {(teamMembers ?? []).map((member) => {
+                          const name = member.userName || [member.userFirstName, member.userLastName].filter(Boolean).join(" ") || member.userEmail || "Member";
+                          const deckCount = decks.filter((d) => d.userId === member.userId).length;
+                          return (
+                            <tr key={member.id} className="border-b border-zinc-800 hover:bg-zinc-800/30">
+                              <td className="px-4 py-3 font-medium text-white flex items-center gap-2">
+                                <div className="w-6 h-6 rounded-full bg-zinc-700 flex items-center justify-center text-xs">{name.charAt(0)}</div>
+                                {name}
+                              </td>
+                              <td className="px-4 py-3 text-zinc-300">{member.role}</td>
+                              <td className="px-4 py-3 text-zinc-300">{deckCount}</td>
+                              <td className="px-4 py-3">
+                                <span className={`inline-flex items-center gap-1.5 rounded-full px-2 py-1 text-[10px] font-medium ${
+                                  member.status === 'ACTIVE' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-zinc-500/10 text-zinc-400'
+                                }`}>
+                                  <span className={`h-1.5 w-1.5 rounded-full ${member.status === 'ACTIVE' ? 'bg-emerald-400' : 'bg-zinc-400'}`}></span>
+                                  {member.status}
+                                </span>
+                              </td>
+                            </tr>
+                          );
+                        })}
+                        {(teamMembers ?? []).length === 0 && (
+                          <tr><td colSpan={4} className="px-4 py-4 text-center text-zinc-500">No team members yet</td></tr>
+                        )}
                       </tbody>
                     </table>
                   </div>
                 </CardContent>
               </Card>
 
-              {/* Table 6: System Analytics (tRPC data) */}
+              {/* Table 6: Library metrics, counted from the decks above */}
               <Card className="bg-zinc-900/50 border-zinc-800">
                 <CardHeader>
-                  <CardTitle className="text-base flex items-center gap-2"><Monitor className="h-4 w-4 text-indigo-400" /> System Metrics</CardTitle>
+                  <CardTitle className="text-base flex items-center gap-2"><Monitor className="h-4 w-4 text-indigo-400" /> Library Metrics</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="overflow-x-auto">
@@ -1135,29 +1156,19 @@ export default function MySlides() {
                       <thead className="text-xs text-zinc-400 uppercase bg-zinc-800/50">
                         <tr>
                           <th className="px-4 py-2 rounded-tl-md">Metric</th>
-                          <th className="px-4 py-2">Value</th>
-                          <th className="px-4 py-2">Trend</th>
-                          <th className="px-4 py-2 rounded-tr-md">Status</th>
+                          <th className="px-4 py-2 rounded-tr-md">Value</th>
                         </tr>
                       </thead>
                       <tbody>
-                        {(analytics || [
-                          { id: 1, name: "Storage Used", value: "1.2 GB", trend: "+5%", status: "Healthy" },
-                          { id: 2, name: "API Calls", value: "4,230", trend: "+12%", status: "Healthy" },
-                          { id: 3, name: "Avg Gen Time", value: "4.2s", trend: "-0.5s", status: "Optimal" },
-                          { id: 4, name: "Export Rate", value: "68%", trend: "+2%", status: "Good" },
-                        ]).map((metric: any, i: number) => (
-                          <tr key={metric.id || i} className="border-b border-zinc-800 hover:bg-zinc-800/30">
+                        {[
+                          { name: "Decks", value: decks.length.toLocaleString() },
+                          { name: "Slides", value: decks.reduce((sum, d) => sum + (d.slideCount || 0), 0).toLocaleString() },
+                          { name: "Decks for a named client", value: decks.filter((d) => d.clientName).length.toLocaleString() },
+                          { name: "Tools used", value: new Set(decks.map((d) => d.toolName)).size.toLocaleString() },
+                        ].map((metric) => (
+                          <tr key={metric.name} className="border-b border-zinc-800 hover:bg-zinc-800/30">
                             <td className="px-4 py-3 font-medium text-white">{metric.name}</td>
                             <td className="px-4 py-3 text-zinc-300 font-mono">{metric.value}</td>
-                            <td className={`px-4 py-3 text-xs ${metric.trend.startsWith('+') ? 'text-emerald-400' : 'text-emerald-400'}`}>
-                              {metric.trend}
-                            </td>
-                            <td className="px-4 py-3">
-                              <Badge variant="outline" className="text-[10px] border-emerald-500/30 text-emerald-400 bg-emerald-500/10">
-                                {metric.status}
-                              </Badge>
-                            </td>
                           </tr>
                         ))}
                       </tbody>
@@ -1196,7 +1207,7 @@ export default function MySlides() {
                   <DialogTitle className="text-white flex items-center gap-2 text-xl">
                     <Presentation className="w-5 h-5 text-emerald-400" />
                     {previewDeck?.title}
-                    {previewDeck?.isStarred && <Star className="h-4 w-4 fill-amber-400 text-amber-400" />}
+                    {previewDeck && starredIds.has(previewDeck.id) && <Star className="h-4 w-4 fill-amber-400 text-amber-400" />}
                   </DialogTitle>
                   <DialogDescription className="text-zinc-400 mt-1 flex items-center gap-3">
                     <span className="flex items-center gap-1"><LayoutGrid className="h-3 w-3" /> {previewDeck?.slideCount} slides</span>

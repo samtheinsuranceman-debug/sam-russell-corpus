@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { AppShell } from "@/components/AppShell";
 import { ExportToSlides } from "@/components/ExportToSlides";
 import { NumberInput } from "@/components/NumberInput";
@@ -26,9 +25,10 @@ import {
   Home,
   Wallet,
   Activity,
+  PieChart as PieChartIcon,
 } from "lucide-react";
 import { toast } from "sonner";
-import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, LineChart, Line, Pie, Cell, AreaChart, Area, RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ComposedChart } from "recharts";
+import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, LineChart, Line, PieChart, Pie, Cell, AreaChart, Area, RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ComposedChart } from "recharts";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -73,8 +73,6 @@ export default function OnboardingWizardV2() {
   const clientsMut = trpc.clients.create.useMutation();
   const notesMut = trpc.notes.create.useMutation();
   const activityMut = trpc.activity.log.useMutation();
-  const dashboardQ = trpc.dashboard.stats.useQuery(undefined, { enabled: false });
-  const pipelineQ = trpc.pipeline.getDeals.useQuery(undefined, { enabled: false });
 
   const next = () => {
     if (step === 2) {
@@ -580,7 +578,7 @@ const AdditionalDataSection = () => {
                     </div>
                   ) : (
                     <div className="flex flex-col items-center justify-center h-[200px] text-[#7a95b8]">
-                      <PieChart className="w-12 h-12 mb-2 opacity-50" />
+                      <PieChartIcon className="w-12 h-12 mb-2 opacity-50" />
                       <p>Enter values to see distribution</p>
                     </div>
                   )}
