@@ -11,7 +11,7 @@ export const ADVISOR_MODES: ModeDef[] = [
   {
     id: "surface", label: "Direct answer", short: "Direct", maxWords: 140,
     blurb: "The plain answer, nothing else.",
-    instruction: "Give the surface, direct answer: what it is and what it means for this person, in plain words. No background, no tangents.",
+    instruction: "Give the surface, direct answer: what it is and what it could mean for someone with these facts, in plain words, as education rather than a personal recommendation. No background, no tangents; keep the qualifiers the regulatory floor requires.",
   },
   {
     id: "deeper", label: "Deeper understanding", short: "Deeper", maxWords: 320,
@@ -21,12 +21,12 @@ export const ADVISOR_MODES: ModeDef[] = [
   {
     id: "integrated", label: "Integrated", short: "Integrated", maxWords: 320,
     blurb: "How it fits inside the larger picture of the whole plan.",
-    instruction: "Give the integrated answer: how this fits inside the larger picture of the person's whole plan — income, taxes, debt, protection, investing, retirement income, estate and legacy — which other decisions it touches, what it depends on, what depends on it, and the order in which the pieces should move.",
+    instruction: "Give the integrated answer: how this fits inside the larger picture of the person's whole plan — income, taxes, debt, protection, investing, retirement income, estate and legacy — which other decisions it touches, what it depends on, what depends on it, and the order in which the pieces could be modeled. It is hypothetical and based on their facts; a licensed professional confirms any specific before anyone acts.",
   },
   {
     id: "wiifm", label: "What's in it for you", short: "For you", maxWords: 360,
     blurb: "Its place in the whole system, told like a franchise with many moving pieces.",
-    instruction: "Give the what's-in-it-for-them answer: how this piece works together with everything else to build their optimal, unified system of plans. Explain its place using a well-known system with many moving pieces — the NFL is the default: name the specific role this question and your answer play in the whole franchise (it might be the quarterback, the offensive line, the coaching staff, the front office, the fans, the stadium, merchandise, the television deal, or the little league that teaches children teamwork and to put the ego's need to be number one on the back seat in service of the team's unified outcome). Say plainly what the person gains now and over the years, and what the plan loses if this piece is missing.",
+    instruction: "Give the what's-in-it-for-them answer: how this piece could work together with everything else in a unified system of plans, hypothetically and based on their facts. Explain its place using a well-known system with many moving pieces — the NFL is the default: name the specific role this question and your answer play in the whole franchise (it might be the quarterback, the offensive line, the coaching staff, the front office, the fans, the stadium, merchandise, the television deal, or the little league that teaches children teamwork and to put the ego's need to be number one on the back seat in service of the team's unified outcome). Say plainly what the person gains now and over the years, and what the plan loses if this piece is missing.",
   },
   {
     id: "legal", label: "Legal, with citations", short: "Legal", maxWords: 380,

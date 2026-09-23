@@ -292,7 +292,7 @@ export const ROUTE_SOURCES: Record<string, RouteSources> = {
       IRS_GIFT_FAQ,
       ESTATE_RATE_SCHEDULE,
       {
-        label: "Not corrected yet: the gifting copy ('$18,000 per recipient in 2024', and the $18,000 default gift) is the 2024 annual exclusion; for 2025 and 2026 it is $19,000. The computed figures use the current rule set. Not changed; flagged for review.",
+        label: "The gifting copy and the default gift (corrected 23 Sep 2026) now read the annual exclusion from shared/taxRules.ts (TAX_RULES_2026.annualGiftExclusion, $19,000 for 2026, Rev. Proc. 2025-32).",
       },
     ],
   },
@@ -317,7 +317,7 @@ export const ROUTE_SOURCES: Record<string, RouteSources> = {
     engines: ["shared/taxBracketEngine.ts"],
     sources: [
       { ...IRS_ESTATE_BY_YEAR, note: "The page's current-law exclusion is the 2026 figure, $15,000,000 per person, read from shared/taxRules.ts. Its 'What if Congress halves the exemption' option is labelled a hypothetical, not scheduled law." },
-      { ...IRS_GIFT_FAQ, note: "The page's '$18,000/person/year in 2024' matches; the figure for 2025 and 2026 is $19,000." },
+      { ...IRS_GIFT_FAQ, note: "The page's annual-exclusion line now reads TAX_RULES_2026.annualGiftExclusion ($19,000 for 2026)." },
       ESTATE_RATE_SCHEDULE,
       INHERITED_TEN_YEAR,
       { label: "Not sourced: the claim that 70% of wealth transfers fail by the second generation and 90% by the third is widely repeated but no primary study is attached here; treat it as anecdote" },

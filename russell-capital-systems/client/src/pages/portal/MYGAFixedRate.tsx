@@ -105,42 +105,7 @@ function generateProjection(premium: number, guarRate: number, minRate: number, 
   return data;
 }
 
-/* ─── FDIC vs STATE GUARANTY COMPARISON ─── */
-const SAFETY_COMPARISON = [
-  {
-    feature: "Coverage Limit",
-    fdic: "$250,000 per depositor, per bank, per ownership category",
-    insurance: "$250,000–$500,000+ per policy depending on state (many states cover $300K–$500K for annuities)",
-    winner: "insurance",
-  },
-  {
-    feature: "What Backs the Guarantee",
-    fdic: "Federal government (U.S. Treasury) — but only up to the $250K limit",
-    insurance: "Insurance company's own reserves + state guaranty association + reinsurance treaties",
-    winner: "insurance",
-  },
-  {
-    feature: "Reserve Requirements",
-    fdic: "Banks required to hold ~8-10% capital ratio. Remaining 90%+ is lent out or invested.",
-    insurance: "Insurance companies must hold dollar-for-dollar reserves (100%+) for every policy obligation. Regulated by state insurance departments.",
-    winner: "insurance",
-  },
-  {
-    feature: "What Happens If Institution Fails",
-    fdic: "FDIC pays up to $250K. Amounts above $250K may be lost entirely. Recovery can take weeks to months.",
-    insurance: "State guaranty association steps in. Another insurance company typically assumes the policies. Policyholders rarely lose any money.",
-    winner: "insurance",
-  },
-  {
-    feature: "Historical Failures",
-    fdic: "563 bank failures since 2001. Silicon Valley Bank ($209B), Signature Bank ($110B), First Republic ($229B) — all in 2023 alone.",
-    insurance: "Extremely rare. When Executive Life failed (1991), policyholders recovered 70-100% of their money through guaranty associations.",
-    winner: "insurance",
-  },
-];
-
-/* ─── STATE GUARANTY LIMITS (Top 15 states) ─── */
-/* STATE_LIMITS and MYGA_RATES now come from shared/annuityData.ts */
+/* MYGA_RATES come from shared/annuityData.ts. */
 
 const fmt = (n: number) => new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(n);
 const fmtPct = (n: number) => `${n.toFixed(2)}%`;
@@ -207,7 +172,7 @@ const ROLLING_AVERAGES = computeRollingAverages();
 
 /* ─── MYGA BENEFITS & FEATURES ─── */
 const MYGA_BENEFITS = [
-  { title: "100% Principal Protection", desc: "Your deposit can never lose value. The insurance company guarantees your principal regardless of market conditions.", icon: "shield" },
+  { title: "Contractual Principal Guarantee", desc: "The contract guarantees your principal for the term, subject to surrender charges, any market value adjustment, and the insurer's claims-paying ability.", icon: "shield" },
   { title: "Guaranteed Fixed Rate", desc: "Lock in a rate (currently 5.50%–6.25%) for the entire term. No surprises, no market dependency.", icon: "lock" },
   { title: "Tax-Deferred Growth", desc: "No annual taxes on interest earned. Your money compounds faster than taxable alternatives like CDs or savings accounts.", icon: "dollar" },
   { title: "Creditor Protection", desc: "In most states, annuities are shielded from lawsuits, judgments, and bankruptcy proceedings.", icon: "shield" },
@@ -585,7 +550,7 @@ function MYGAvsSP500Section({ premium, mygaRate }: { premium: number; mygaRate: 
               </thead>
               <tbody>
                 {[
-                  { factor: "Principal Protection", myga: "100% guaranteed", sp500: "None — can lose 38%+ in a year", winner: "myga" },
+                  { factor: "Principal Protection", myga: "Guaranteed by the contract for the term (claims-paying ability; surrender charges/MVA apply)", sp500: "None — can lose 38%+ in a year", winner: "myga" },
                   { factor: "Average Annual Return", myga: `${fmtPct(mygaRate)} guaranteed`, sp500: `~${fmtPct(ROLLING_AVERAGES[20].avg)} historical avg`, winner: "sp500" },
                   { factor: "Worst 5-Year Outcome", myga: `+${fmtPct(mygaRate * 5)} total (guaranteed)`, sp500: `${fmtPct(ROLLING_AVERAGES[5].worst * 5)} total`, winner: "myga" },
                   { factor: "Tax Treatment", myga: "Tax-deferred growth", sp500: "Dividends & gains taxed annually", winner: "myga" },
@@ -595,7 +560,7 @@ function MYGAvsSP500Section({ premium, mygaRate }: { premium: number; mygaRate: 
                   { factor: "Inflation Protection", myga: "Limited — fixed rate may trail inflation", sp500: "Historically outpaces inflation", winner: "sp500" },
                   { factor: "Estate Transfer", myga: "Bypasses probate (named beneficiary)", sp500: "Step-up in basis at death", winner: "tie" },
                   { factor: "Emotional Stress", myga: "Zero — rate is guaranteed", sp500: "High — requires discipline in crashes", winner: "myga" },
-                  { factor: "Income Predictability", myga: "100% predictable", sp500: "Variable — depends on market", winner: "myga" },
+                  { factor: "Income Predictability", myga: "Fixed rate for the term (claims-paying ability)", sp500: "Variable — depends on market", winner: "myga" },
                   { factor: "Upside Potential", myga: "Capped at guaranteed rate", sp500: "Unlimited — 29%+ in strong years", winner: "sp500" },
                 ].map((row, i) => (
                   <tr key={i} className="border-b hover:bg-muted/50">
@@ -1023,11 +988,12 @@ export default function MYGAFixedRate() {
                 <Lock className="w-4 h-4 mr-1" /> Guaranteed Fixed Rate
               </Badge>
               <Badge variant="outline" className="text-green-600 border-green-600">
-                <Shield className="w-3 h-3 mr-1" /> 100% Principal Protected
+                <Shield className="w-3 h-3 mr-1" /> Principal guaranteed for the term*
               </Badge>
               <Badge variant="outline" className="text-blue-600 border-blue-600">
-                <Star className="w-3 h-3 mr-1" /> 6.25% Guaranteed
+                <Star className="w-3 h-3 mr-1" /> 6.25% for the term*
               </Badge>
+              <span className="text-[10px] text-muted-foreground">*For the guarantee term only, subject to surrender charges, any market value adjustment and the issuing insurer's claims-paying ability.</span>
             </div>
             <div className="flex items-center gap-2">
               <ExportToSlides
@@ -1042,25 +1008,16 @@ export default function MYGAFixedRate() {
                       { label: "Interest Earned (5 Years)", value: fmt(year5Value - premium) },
                     ]
                   },
-                  {
-                    title: "State Guaranty",
-                    items: [
-                      { label: "State", value: getStateName(stateCode) },
-                      { label: "Annuity Guaranty Limit", value: fmt(guaranty.annuityLimit) },
-                      { label: "Guaranty Tier", value: guaranty.tier },
-                      { label: "Recommended Carrier Split", value: String(splitRec.splitCount) },
-                    ]
-                  }
                 ]}
               />
             </div>
           </div>
           <h1 className="text-2xl md:text-3xl font-bold">Amazing MYGA Waterfall</h1>
           <p className="text-muted-foreground max-w-3xl">
-            The safest way to grow your money with a <strong>guaranteed fixed interest rate</strong>.
-            Like a CD from a bank, but with <strong>higher rates, tax-deferred growth, and stronger protection</strong>.
-            Your principal is 100% guaranteed by the insurance company — no market risk, no interest rate risk,
-            no credit risk during the guarantee period.
+            A multi-year guaranteed annuity (MYGA) is an annuity contract with a <strong>fixed interest rate guaranteed for a set term</strong>
+            (typically 3–10 years) and <strong>tax-deferred growth</strong>. The contract guarantees principal and the stated rate for the term,
+            subject to surrender charges, any market value adjustment, and the claims-paying ability of the issuing insurer.
+            It is not a bank deposit and is not FDIC-insured. Values beyond the guarantee term are hypothetical, at the renewal rate you assume.
           </p>
         </div>
 
@@ -1110,22 +1067,6 @@ export default function MYGAFixedRate() {
                   </p>
                 )}
               </div>
-              <div className="flex items-center gap-3">
-                <div className="p-2 rounded bg-muted/10">
-                  <p className="text-xs text-muted-foreground">Annuity Guaranty</p>
-                  <p className="text-lg font-bold text-emerald-400">{fmt(guaranty.annuityLimit)}</p>
-                </div>
-                <Badge variant="outline" className={`text-xs ${guaranty.tier === "Premium" ? "border-emerald-500/50 text-emerald-400" : guaranty.tier === "Enhanced" ? "border-blue-500/50 text-blue-400" : guaranty.tier === "Below Standard" ? "border-red-500/50 text-red-400" : "border-slate-500/50 text-slate-400"}`}>
-                  {guaranty.tier}
-                </Badge>
-              </div>
-              {splitRec.splitCount > 1 && (
-                <div className="flex items-center">
-                  <Badge variant="outline" className="border-amber-500/30 text-amber-400 text-xs">
-                    <AlertTriangle className="w-3 h-3 mr-1" /> Split across {splitRec.splitCount} carriers recommended
-                  </Badge>
-                </div>
-              )}
             </div>
           </CardContent>
         </Card>
@@ -1172,11 +1113,8 @@ export default function MYGAFixedRate() {
             <TabsTrigger value="illustration" className="text-xs sm:text-sm">
               <BarChart3 className="w-4 h-4 mr-1" /> Growth Illustration
             </TabsTrigger>
-            <TabsTrigger value="safety" className="text-xs sm:text-sm">
-              <Shield className="w-4 h-4 mr-1" /> Insurance vs FDIC
-            </TabsTrigger>
-            <TabsTrigger value="guaranty" className="text-xs sm:text-sm">
-              <Landmark className="w-4 h-4 mr-1" /> State Guaranty
+            <TabsTrigger value="protection" className="text-xs sm:text-sm">
+              <Shield className="w-4 h-4 mr-1" /> What Backs a MYGA
             </TabsTrigger>
             <TabsTrigger value="rates" className="text-xs sm:text-sm">
               <TrendingUp className="w-4 h-4 mr-1" /> Current Rates
@@ -1222,7 +1160,7 @@ export default function MYGAFixedRate() {
                       "The insurance company guarantees a fixed interest rate for the entire term (e.g., 6.25% for 5 years)",
                       "Your money grows tax-deferred — you pay no taxes until you withdraw",
                       "At the end of the guarantee period, you can renew at a new rate, withdraw, or roll into another annuity (1035 exchange)",
-                      "Your principal is 100% guaranteed — it can never go down",
+                      "Principal is guaranteed by the contract, subject to surrender charges, any market value adjustment, and the insurer's claims-paying ability",
                       "Most MYGAs allow 10% penalty-free withdrawals annually after the first year",
                     ].map((item, i) => (
                       <div key={i} className="flex items-start gap-3 p-3 rounded-lg bg-muted/50">
@@ -1236,14 +1174,14 @@ export default function MYGAFixedRate() {
 
                   <div className="space-y-4">
                     <h3 className="font-semibold text-lg flex items-center gap-2">
-                      <Star className="w-5 h-5 text-amber-600" /> Why Choose a MYGA Over a Bank CD?
+                      <Star className="w-5 h-5 text-amber-600" /> How a MYGA Differs From a Bank CD
                     </h3>
                     {[
-                      { title: "Higher Rates", desc: "MYGAs consistently offer 1-2% higher rates than bank CDs for the same term length" },
+                      { title: "Rates", desc: "MYGA rates are set by each insurer and have often been higher than bank CD rates for similar terms; compare current rates before buying" },
                       { title: "Tax-Deferred Growth", desc: "No annual taxes on interest earned — your money compounds faster than a taxable CD" },
-                      { title: "Stronger Protection", desc: "Insurance company reserves are more conservative than bank reserves (see Safety tab)" },
-                      { title: "Creditor Protection", desc: "In most states, annuities are protected from lawsuits, judgments, and bankruptcy" },
-                      { title: "No Market Risk", desc: "Unlike stocks, bonds, or even some bank investments, your rate is locked and guaranteed" },
+                      { title: "Different Protection", desc: "A CD is a bank deposit insured by the FDIC; a MYGA is an insurance contract backed by the issuing insurer's claims-paying ability, not the FDIC" },
+                      { title: "Creditor Protection", desc: "Some states exempt annuities from creditors to a degree; the rules vary widely, so confirm with an attorney" },
+                      { title: "No Index Exposure", desc: "The rate is set by the contract for the guarantee term, not by markets; surrender charges and any market value adjustment apply to early withdrawals" },
                       { title: "Estate Planning", desc: "Named beneficiaries bypass probate — your heirs receive funds directly" },
                     ].map((item, i) => (
                       <div key={i} className="p-3 rounded-lg border bg-card">
@@ -1273,9 +1211,7 @@ export default function MYGAFixedRate() {
                           {[
                             { feature: "5-Year Rate (2025)", myga: "5.50% – 6.25%", cd: "4.00% – 4.75%", mygaWins: true },
                             { feature: "Tax Treatment", myga: "Tax-deferred", cd: "Taxed annually", mygaWins: true },
-                            { feature: "FDIC/Guaranty Coverage", myga: "$250K–$500K (state)", cd: "$250K (federal)", mygaWins: true },
-                            { feature: "Reserve Requirements", myga: "100%+ of obligations", cd: "8-10% capital ratio", mygaWins: true },
-                            { feature: "Creditor Protection", myga: "Yes (most states)", cd: "No", mygaWins: true },
+                                                                                    { feature: "Creditor Protection", myga: "Varies by state", cd: "Varies by state", mygaWins: false },
                             { feature: "Probate Avoidance", myga: "Yes (named beneficiary)", cd: "No (goes through estate)", mygaWins: true },
                             { feature: "Early Withdrawal", myga: "10% free/yr, then surrender charge", cd: "Early withdrawal penalty", mygaWins: false },
                             { feature: "Minimum Deposit", myga: "$10,000–$25,000", cd: "$500–$1,000", mygaWins: false },
@@ -1305,11 +1241,11 @@ export default function MYGAFixedRate() {
                   </h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {[
-                      "Retirees seeking safe, predictable growth",
+                      "Retirees seeking predictable, contract-set growth",
                       "Anyone with large CD balances earning lower rates",
                       "Pre-retirees building a guaranteed income floor",
                       "High-net-worth individuals needing creditor protection",
-                      "People who want tax-deferred growth on safe money",
+                      "People who want tax-deferred growth at a fixed contractual rate",
                       "Anyone uncomfortable with stock market volatility",
                       "Estate planners wanting to avoid probate",
                       "Business owners protecting assets from lawsuits",
@@ -1419,7 +1355,7 @@ export default function MYGAFixedRate() {
                       <div className="text-xs text-blue-600 font-semibold">
                         +{fmt(year10Value - premium)} total growth
                       </div>
-                      <div className="text-xs text-muted-foreground mt-1">Can renew or 1035 exchange</div>
+                      <div className="text-xs text-muted-foreground mt-1">Hypothetical renewal at the same rate; can renew or 1035 exchange</div>
                     </CardContent>
                   </Card>
                   <Card className="bg-gradient-to-br from-amber-50 to-yellow-50 dark:from-amber-950/30 dark:to-yellow-950/30">
@@ -1429,7 +1365,7 @@ export default function MYGAFixedRate() {
                       <div className="text-xs text-amber-600 font-semibold">
                         {((year20Value / premium - 1) * 100).toFixed(1)}% total return
                       </div>
-                      <div className="text-xs text-muted-foreground mt-1">Conservative guaranteed growth</div>
+                      <div className="text-xs text-muted-foreground mt-1">Hypothetical: assumes renewal at the same rate after the guarantee term</div>
                     </CardContent>
                   </Card>
                 </div>
@@ -1446,319 +1382,14 @@ export default function MYGAFixedRate() {
             </Card>
           </TabsContent>
 
-          {/* ═══════════ TAB 3: INSURANCE vs FDIC SAFETY ═══════════ */}
-          <TabsContent value="safety" className="space-y-4">
+          {/* The "Insurance vs FDIC" and "State Guaranty" tabs were removed 23 Sep 2026. They sold the
+              annuity on the state guaranty association (barred by N.C. Gen. Stat. § 58-62-86) and compared it
+              to bank deposits in ways Model 570 §5.D / 11 NCAC 12 .0426(b) forbid. */}
+          <TabsContent value="protection" className="space-y-4">
             <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Shield className="w-5 h-5 text-green-600" />
-                  Why Your Money Is Safer with an Insurance Company Than a Bank
-                </CardTitle>
-                <p className="text-sm text-muted-foreground">
-                  Most people assume FDIC-insured banks are the safest place for their money. The reality is that
-                  insurance companies have <strong>stronger reserve requirements, better regulatory oversight,
-                  and a superior track record</strong> of protecting policyholders.
-                </p>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                {/* The big picture */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <Card className="border-2 border-red-200 dark:border-red-800">
-                    <CardContent className="pt-4">
-                      <div className="text-center mb-4">
-                        <div className="w-16 h-16 rounded-full bg-red-100 dark:bg-red-900 flex items-center justify-center mx-auto">
-                          <Building2 className="w-8 h-8 text-red-600" />
-                        </div>
-                        <h3 className="font-bold text-lg mt-2">Banks (FDIC)</h3>
-                        <Badge className="bg-red-100 text-red-700 mt-1">Higher Risk</Badge>
-                      </div>
-                      <div className="space-y-3 text-sm">
-                        <div className="flex items-start gap-2">
-                          <XCircle className="w-4 h-4 text-red-500 mt-0.5 shrink-0" />
-                          <span>Hold only <strong>8-10%</strong> of deposits in reserves — the rest is lent out</span>
-                        </div>
-                        <div className="flex items-start gap-2">
-                          <XCircle className="w-4 h-4 text-red-500 mt-0.5 shrink-0" />
-                          <span>Invest in risky commercial loans, real estate, and derivatives</span>
-                        </div>
-                        <div className="flex items-start gap-2">
-                          <XCircle className="w-4 h-4 text-red-500 mt-0.5 shrink-0" />
-                          <span><strong>563 bank failures</strong> since 2001 — 3 major failures in 2023 alone</span>
-                        </div>
-                        <div className="flex items-start gap-2">
-                          <XCircle className="w-4 h-4 text-red-500 mt-0.5 shrink-0" />
-                          <span>FDIC covers only <strong>$250,000</strong> per depositor per bank</span>
-                        </div>
-                        <div className="flex items-start gap-2">
-                          <XCircle className="w-4 h-4 text-red-500 mt-0.5 shrink-0" />
-                          <span>No creditor protection — deposits can be seized by lawsuits</span>
-                        </div>
-                        <div className="flex items-start gap-2">
-                          <XCircle className="w-4 h-4 text-red-500 mt-0.5 shrink-0" />
-                          <span>Interest taxed annually as ordinary income</span>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  <Card className="border-2 border-green-200 dark:border-green-800">
-                    <CardContent className="pt-4">
-                      <div className="text-center mb-4">
-                        <div className="w-16 h-16 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center mx-auto">
-                          <Shield className="w-8 h-8 text-green-600" />
-                        </div>
-                        <h3 className="font-bold text-lg mt-2">Insurance Companies</h3>
-                        <Badge className="bg-green-100 text-green-700 mt-1">Safer</Badge>
-                      </div>
-                      <div className="space-y-3 text-sm">
-                        <div className="flex items-start gap-2">
-                          <CheckCircle2 className="w-4 h-4 text-green-600 mt-0.5 shrink-0" />
-                          <span>Must hold <strong>100%+ reserves</strong> for every dollar of obligations</span>
-                        </div>
-                        <div className="flex items-start gap-2">
-                          <CheckCircle2 className="w-4 h-4 text-green-600 mt-0.5 shrink-0" />
-                          <span>Invest primarily in <strong>investment-grade bonds</strong> (70%+) and government securities</span>
-                        </div>
-                        <div className="flex items-start gap-2">
-                          <CheckCircle2 className="w-4 h-4 text-green-600 mt-0.5 shrink-0" />
-                          <span>Insurance company failures are <strong>extremely rare</strong> — policyholders almost always made whole</span>
-                        </div>
-                        <div className="flex items-start gap-2">
-                          <CheckCircle2 className="w-4 h-4 text-green-600 mt-0.5 shrink-0" />
-                          <span>State guaranty covers <strong>$250K–$500K</strong> per policy (varies by state)</span>
-                        </div>
-                        <div className="flex items-start gap-2">
-                          <CheckCircle2 className="w-4 h-4 text-green-600 mt-0.5 shrink-0" />
-                          <span><strong>Creditor protection</strong> in most states — shielded from lawsuits</span>
-                        </div>
-                        <div className="flex items-start gap-2">
-                          <CheckCircle2 className="w-4 h-4 text-green-600 mt-0.5 shrink-0" />
-                          <span><strong>Tax-deferred growth</strong> — no annual taxes on interest earned</span>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-
-                {/* Detailed comparison table */}
-                <div className="overflow-x-auto">
-                  <table className="w-full text-sm border-collapse">
-                    <thead>
-                      <tr className="border-b-2 border-green-600">
-                        <th className="text-left p-3 font-semibold">Category</th>
-                        <th className="text-left p-3 font-semibold text-red-600">
-                          <Building2 className="w-4 h-4 inline mr-1" /> Banks (FDIC)
-                        </th>
-                        <th className="text-left p-3 font-semibold text-green-600">
-                          <Shield className="w-4 h-4 inline mr-1" /> Insurance Companies
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {SAFETY_COMPARISON.map((row, i) => (
-                        <tr key={i} className="border-b hover:bg-muted/50">
-                          <td className="p-3 font-medium align-top whitespace-nowrap">{row.feature}</td>
-                          <td className={`p-3 align-top ${row.winner === "fdic" ? "text-green-600" : "text-muted-foreground"}`}>
-                            {row.fdic}
-                          </td>
-                          <td className={`p-3 align-top ${row.winner === "insurance" ? "font-medium" : "text-muted-foreground"}`}>
-                            {row.winner === "insurance" && <CheckCircle2 className="w-4 h-4 text-green-600 inline mr-1" />}
-                            {row.insurance}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-
-                {/* Reserve requirement visualization */}
-                <Card className="border-2 border-blue-200 dark:border-blue-800">
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-lg flex items-center gap-2">
-                      <Scale className="w-5 h-5 text-blue-600" />
-                      Reserve Requirements: The Critical Difference
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div>
-                        <h4 className="font-semibold text-red-600 mb-2">Bank: For Every $100 Deposited</h4>
-                        <div className="space-y-2">
-                          <div className="flex items-center gap-2">
-                            <div className="h-6 bg-red-200 dark:bg-red-900 rounded" style={{ width: "8%" }} />
-                            <div className="h-6 bg-red-500 rounded flex-1 flex items-center justify-center text-white text-xs font-semibold">
-                              $90–92 Lent Out (Loans, Real Estate, Derivatives)
-                            </div>
-                          </div>
-                          <div className="text-xs text-muted-foreground">
-                            Only $8–10 kept in reserves. If loans default, your deposits are at risk above $250K FDIC limit.
-                          </div>
-                        </div>
-                      </div>
-                      <div>
-                        <h4 className="font-semibold text-green-600 mb-2">Insurance Co: For Every $100 in Obligations</h4>
-                        <div className="space-y-2">
-                          <div className="flex items-center gap-2">
-                            <div className="h-6 bg-green-500 rounded flex-1 flex items-center justify-center text-white text-xs font-semibold">
-                              $100+ Held in Reserves (Bonds, Gov Securities)
-                            </div>
-                          </div>
-                          <div className="text-xs text-muted-foreground">
-                            Dollar-for-dollar reserves required by law. Invested in safe, investment-grade assets. Your money is fully backed.
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* Bank failures callout */}
-                <div className="bg-red-50 dark:bg-red-950/30 rounded-lg p-6">
-                  <h3 className="font-semibold text-lg mb-3 flex items-center gap-2">
-                    <AlertTriangle className="w-5 h-5 text-red-600" /> Recent Bank Failures — A Wake-Up Call
-                  </h3>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    {[
-                      { name: "Silicon Valley Bank", assets: "$209 Billion", year: "March 2023", note: "Largest failure since 2008" },
-                      { name: "First Republic Bank", assets: "$229 Billion", year: "May 2023", note: "2nd largest in US history" },
-                      { name: "Signature Bank", assets: "$110 Billion", year: "March 2023", note: "3rd largest in US history" },
-                    ].map((bank) => (
-                      <Card key={bank.name} className="border-red-200 dark:border-red-800">
-                        <CardContent className="pt-4 text-center">
-                          <div className="font-bold text-red-600">{bank.name}</div>
-                          <div className="text-xl font-bold mt-1">{bank.assets}</div>
-                          <div className="text-xs text-muted-foreground">{bank.year}</div>
-                          <div className="text-xs text-red-500 mt-1">{bank.note}</div>
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
-                  <p className="text-sm mt-4">
-                    <strong>563 banks have failed since 2001.</strong> Depositors with balances above the $250,000 FDIC limit
-                    faced uncertainty and potential losses. In contrast, insurance company failures are extremely rare,
-                    and when they do occur, state guaranty associations ensure policyholders are made whole.
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          {/* ═══════════ TAB 4: STATE GUARANTY ASSOCIATIONS ═══════════ */}
-          <TabsContent value="guaranty" className="space-y-4">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Landmark className="w-5 h-5 text-blue-600" />
-                  State Guaranty Association Coverage
-                </CardTitle>
-                <p className="text-sm text-muted-foreground">
-                  Every state has a guaranty association that protects policyholders if an insurance company
-                  becomes insolvent. Coverage limits vary by state — many states provide <strong>$300,000–$500,000</strong> per
-                  annuity contract, exceeding the $250,000 FDIC limit.
-                </p>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="bg-blue-50 dark:bg-blue-950/30 rounded-lg p-4 flex items-start gap-3">
-                  <Info className="w-5 h-5 text-blue-600 mt-0.5 shrink-0" />
-                  <div className="text-sm">
-                    <strong>How It Works:</strong> If an insurance company fails, the state guaranty association
-                    steps in to transfer policies to a healthy insurer. Policyholders typically continue receiving
-                    benefits without interruption, up to the state coverage limit. This is funded by assessments
-                    on all insurance companies operating in that state — creating a collective safety net.
-                  </div>
-                </div>
-
-                <div className="overflow-x-auto">
-                  <table className="w-full text-sm border-collapse">
-                    <thead>
-                      <tr className="border-b-2 border-blue-600">
-                        <th className="text-left p-2 font-semibold">State</th>
-                        <th className="text-right p-2 font-semibold">Annuity Coverage</th>
-                        <th className="text-right p-2 font-semibold">Life Insurance Coverage</th>
-                        <th className="text-center p-2 font-semibold">vs FDIC ($250K)</th>
-                        <th className="text-center p-2 font-semibold">Rating</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {/* Highlight selected state first, then show all states */}
-                      {US_STATES.map((s) => {
-                        const g = getStateGuaranty(s.code as StateCode);
-                        const isSelected = s.code === stateCode;
-                        return (
-                          <tr key={s.code} className={`border-b hover:bg-muted/50 ${isSelected ? "bg-emerald-50 dark:bg-emerald-950/20 font-semibold" : g.annuityLimit >= 500000 ? "bg-green-50 dark:bg-green-950/10" : ""}`}>
-                            <td className="p-2 font-medium">
-                              {isSelected && <MapPin className="w-3 h-3 inline mr-1 text-emerald-500" />}
-                              {s.name}
-                            </td>
-                            <td className="p-2 text-right font-mono">{fmt(g.annuityLimit)}</td>
-                            <td className="p-2 text-right font-mono">{fmt(g.lifeDeathBenefit)}</td>
-                            <td className="p-2 text-center">
-                              {g.annuityLimit > 250000 ? (
-                                <Badge className="bg-green-600 text-white text-xs">
-                                  +{fmt(g.annuityLimit - 250000)} more
-                                </Badge>
-                              ) : (
-                                <Badge variant="outline" className="text-xs">Equal</Badge>
-                              )}
-                            </td>
-                            <td className="p-2 text-center">
-                              <Badge variant="outline" className={
-                                g.tier === "Premium" ? "text-green-600 border-green-600" :
-                                g.tier === "Enhanced" ? "text-blue-600 border-blue-600" :
-                                g.tier === "Below Standard" ? "text-red-600 border-red-600" :
-                                "text-gray-600 border-gray-600"
-                              }>
-                                {g.tier}
-                              </Badge>
-                            </td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
-                </div>
-
-                <div className="bg-green-50 dark:bg-green-950/30 rounded-lg p-4 flex items-start gap-3">
-                  <CheckCircle2 className="w-5 h-5 text-green-600 mt-0.5 shrink-0" />
-                  <div className="text-sm">
-                    <strong>Pro Tip for Large Deposits:</strong> For clients with deposits exceeding the state
-                    guaranty limit, you can split the premium across multiple insurance companies — each policy
-                    gets its own coverage limit. For example, a $2M deposit in New York could be split into
-                    4 policies of $500K each across 4 different carriers, giving you $2M in full guaranty coverage.
-                    This is the same strategy used with FDIC limits across multiple banks, but with higher per-policy limits.
-                  </div>
-                </div>
-
-                {/* How guaranty associations differ from FDIC */}
-                <Card className="border-2 border-amber-200 dark:border-amber-800">
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-lg">Key Differences: State Guaranty vs FDIC</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {[
-                        { title: "Funding Source", guaranty: "Assessments on all insurance companies in the state — industry-funded safety net", fdic: "Insurance premiums paid by member banks to the FDIC fund" },
-                        { title: "Coverage Trigger", guaranty: "When an insurer is declared insolvent by the state insurance commissioner", fdic: "When a bank is closed by its chartering authority" },
-                        { title: "Resolution Process", guaranty: "Policies are typically transferred to a healthy insurer — benefits continue", fdic: "Deposits up to $250K are paid out, usually within days" },
-                        { title: "Coverage Scope", guaranty: "Annuities, life insurance, health insurance, long-term care", fdic: "Checking, savings, CDs, money market accounts only" },
-                      ].map((item, i) => (
-                        <div key={i} className="p-3 rounded-lg border bg-card">
-                          <div className="font-semibold text-sm mb-2">{item.title}</div>
-                          <div className="text-xs space-y-1">
-                            <div className="flex items-start gap-2">
-                              <Shield className="w-3 h-3 text-green-600 mt-0.5 shrink-0" />
-                              <span><strong>Guaranty:</strong> {item.guaranty}</span>
-                            </div>
-                            <div className="flex items-start gap-2">
-                              <Building2 className="w-3 h-3 text-blue-600 mt-0.5 shrink-0" />
-                              <span><strong>FDIC:</strong> {item.fdic}</span>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
+              <CardContent className="pt-6 text-sm text-muted-foreground space-y-2">
+                <p>A MYGA is an annuity contract issued by an insurance company. It is not a bank deposit and is not FDIC-insured.</p>
+                <p>The contract guarantees principal and the stated rate for the guarantee term, subject to surrender charges, any market value adjustment, and the claims-paying ability of the issuing insurer. Check the insurer's financial strength ratings (for example AM Best) before you buy.</p>
               </CardContent>
             </Card>
           </TabsContent>
@@ -1922,7 +1553,7 @@ export default function MYGAFixedRate() {
                         </thead>
                         <tbody>
                           {[
-                            { product: "5-Year MYGA", rate: "6.25%", tax: "Tax-Deferred", liquidity: "10% free/yr", protection: "State Guaranty", highlight: true },
+                            { product: "5-Year MYGA", rate: "6.25%", tax: "Tax-Deferred", liquidity: "10% free/yr", protection: "Insurer's claims-paying ability", highlight: true },
                             { product: "5-Year Bank CD", rate: "4.25%", tax: "Taxed Annually", liquidity: "Penalty for early", protection: "FDIC $250K", highlight: false },
                             { product: "High-Yield Savings", rate: "4.50%", tax: "Taxed Annually", liquidity: "Fully Liquid", protection: "FDIC $250K", highlight: false },
                             { product: "5-Year Treasury", rate: "4.10%", tax: "State Tax-Free", liquidity: "Sell at market", protection: "US Gov't", highlight: false },
@@ -2809,7 +2440,7 @@ export default function MYGAFixedRate() {
           variant="full"
           showsProjections
           showsCashValues
-          additionalText="MYGA rates shown are current as of the illustration date and are subject to change. The guaranteed rate applies for the initial guarantee period only; after that period, the minimum guaranteed rate applies unless renewed at a higher rate. State guaranty association coverage limits vary by state and are subject to change. This comparison is for educational purposes and does not constitute legal or financial advice. Consult your financial advisor for personalized recommendations."
+          additionalText="MYGA rates shown are current as of the illustration date and are subject to change. The guaranteed rate applies for the initial guarantee period only; after that period, the minimum guaranteed rate applies unless renewed at a higher rate. Guarantees are subject to the claims-paying ability of the issuing insurer. This comparison is for educational purposes and does not constitute legal or financial advice. Consult your financial advisor for personalized recommendations."
         />
       </div>
           <PageInsights pageId="myga-fixed-rate" />

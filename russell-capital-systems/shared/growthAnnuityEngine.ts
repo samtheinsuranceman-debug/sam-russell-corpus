@@ -226,7 +226,7 @@ export const ETF_VS_TRADITIONAL: ComparisonPoint[] = [
   },
   {
     category: "Downside Protection",
-    managedETF: "0% floor — you never lose principal regardless of market performance",
+    managedETF: "0% floor — no index losses credited; surrender charges apply to early withdrawals",
     traditionalIndex: "0% floor — same downside protection",
     advantage: "neutral",
   },

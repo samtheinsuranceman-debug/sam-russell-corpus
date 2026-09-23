@@ -52,6 +52,28 @@ export const LIFE_POLICY_PATHS: readonly string[] = [
   "/portal/time-machine-ag49",
   "/portal/time-machine-calculator",
   "/portal/time-machine-method",
+  // Added 23 Sep 2026 (copy-compliance fix, audits P12-A/B): routes whose pages
+  // run on or promote a life insurance policy but did not carry the line.
+  "/ultra-calculator",
+  "/portal/iul-loan-optimizer",
+  "/portal/physicians-edge",
+  "/portal/tax-waterfall",
+  "/portal/tax-advantaged-growth",
+  "/portal/mortgage-killer-v2",
+  "/portal/infinity-banking",
+  "/portal/family-bank",
+  "/portal/ppli-modeler",
+  "/portal/executive-bonus",
+  "/portal/key-person-insurance",
+  "/portal/ilit-analyzer",
+  "/portal/long-term-care-hybrid",
+  "/portal/house-recycling",
+  "/portal/estate-flow",
+  "/portal/divorce-calculator",
+  "/portal/ibbotson-charts",
+  "/portal/index-backtester",
+  "/portal/retirement-advantage",
+  "/portal/ecological-drivers",
 ];
 
 /** Routes whose mechanics run on an annuity contract. */
@@ -62,7 +84,31 @@ export const ANNUITY_PATHS: readonly string[] = [
   "/portal/myga-waterfall",
   "/portal/annuity-explorer",
   "/portal/income-annuity",
+  // Added 23 Sep 2026 (copy-compliance fix, audits P12-A/B).
+  "/portal/athene-guaranteed-income",
+  "/portal/hot-income",
+  "/portal/growth-annuities",
+  "/portal/lifetime-income",
+  "/portal/income-for-life",
+  "/portal/annuity-waterfall",
+  "/portal/axonic-sp500",
+  "/portal/athene-pe-plus15",
+  "/portal/income-annuity-top10",
+  "/portal/existing-annuities",
+  "/portal/hybrid-income-floor",
+  "/portal/income-floor-strategy",
+  "/portal/annuity-accumulation-db",
+  "/portal/annuity-memory",
 ];
+
+/**
+ * The homepage describes both kinds of product (IUL claims and FIA claims), so
+ * it carries both lines, in this order. Rendered by Landing.tsx through
+ * PolicyDisclosureLine and by the static live page from homeManifesto.json's
+ * productDisclosure, which server/copyComplianceGuard.test.ts pins to these
+ * strings.
+ */
+export const HOMEPAGE_POLICY_KINDS: readonly PolicyKind[] = ["life", "annuity"];
 
 /** The policy kind behind a route, or null when the page runs on no policy. */
 export function policyKindForPath(path: string): PolicyKind | null {

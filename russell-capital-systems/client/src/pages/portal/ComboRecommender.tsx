@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "wouter";
 import { Brain, User, Target, Loader2, ArrowRight, Sparkles } from "lucide-react";
 import { trpc } from "@/lib/trpc";
+import AiAnswerNote from "@/components/AiAnswerNote";
 
 const COMBOS_URL = "https://d2xsxph8kpxj0f.cloudfront.net/310519663488147919/k6Jb8r8EmU3emMqZxg5jdm/combos_9e44bb5c.json";
 
@@ -212,6 +213,7 @@ export default function ComboRecommender() {
                 <Brain className="w-4 h-4" /> AI Strategy Analysis
               </h3>
               <div className="text-sm text-gray-300 whitespace-pre-wrap leading-relaxed">{aiAnalysis}</div>
+              <AiAnswerNote />
             </div>
           )}
         </div>

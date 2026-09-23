@@ -255,7 +255,7 @@ export const A_MUTUAL_INDEX_OPTIONS: IndexOption[] = [
     spread: 0,
     strategyCharge: 0,
     bonus: 0,
-    description: 'Fixed 4.25% guaranteed interest. No market exposure.',
+    description: 'Fixed account: 4.25% declared rate (the carrier may change it; only the contract minimum is guaranteed). No index exposure.',
     availableFrom: 1994,
   },
   {
@@ -354,7 +354,7 @@ export const A_PLUS_MUTUAL_LIFE_INDEX_OPTIONS: IndexOption[] = [
     spread: 0,
     strategyCharge: 0,
     bonus: 0,
-    description: 'Fixed 4.0% guaranteed interest. No market exposure.',
+    description: 'Fixed account: 4.0% declared rate (the carrier may change it; only the contract minimum is guaranteed). No index exposure.',
     availableFrom: 1994,
   },
   {
@@ -478,7 +478,7 @@ export const A_MINUS_MUTUAL_INDEX_OPTIONS: IndexOption[] = [
     spread: 0,
     strategyCharge: 0,
     bonus: 0,
-    description: 'Fixed 3.75% guaranteed interest. No market exposure.',
+    description: 'Fixed account: 3.75% declared rate (the carrier may change it; only the contract minimum is guaranteed). No index exposure.',
     availableFrom: 1994,
   },
   {

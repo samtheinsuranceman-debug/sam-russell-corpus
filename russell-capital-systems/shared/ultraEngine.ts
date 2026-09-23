@@ -602,7 +602,7 @@ export const MODULE_CATALOG: Record<ModuleKey, { name: string; whenNecessary: st
   },
   incomeAnnuity: {
     name: "Income Annuity",
-    whenNecessary: "Clients wanting a guaranteed-style income floor in later windows.",
+    whenNecessary: "Clients wanting a contractual annuity income floor in later windows (subject to the insurer's claims-paying ability).",
     benefit: "Converts a lump sum into level lifetime-style income beginning in the year you choose.",
   },
   crypto: {

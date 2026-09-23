@@ -4,6 +4,7 @@ import React, { useState, useMemo } from 'react';
 import { Heart, DollarSign, TrendingUp, Target, Calendar, Percent, ArrowRight, Shield, CheckCircle2, AlertTriangle, Users, Lock } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend, BarChart, Bar, PieChart, Pie, Cell } from 'recharts';
 import { PageInsights } from "@/components/PageInsights";
+import { TAX_RULES_2026 } from "@shared/taxRules";
 
 export default function SpecialNeedsPlanner() {
   const [annualContribution, setAnnualContribution] = useState(0);
@@ -26,7 +27,7 @@ export default function SpecialNeedsPlanner() {
   }, [initialCost, inflationRate]);
 
   const ableAccountData = useMemo(() => {
-    const annualLimit = 18000;
+    const annualLimit = TAX_RULES_2026.annualGiftExclusion; // ABLE contribution limit = annual gift exclusion (IRC §529A(b)(2)(B))
     const ssiLimit = 100000;
     const optimized = Math.min(annualContribution, annualLimit);
     const totalWithSsi = Math.min(optimized + ssiAmount, ssiLimit);
@@ -58,7 +59,7 @@ export default function SpecialNeedsPlanner() {
       
       <section style={{ marginBottom: '40px' }}>
         <h2 style={{ color: '#00b4d8' }}><DollarSign size={24} /> ABLE Account Optimizer</h2>
-        <p>Optimize contributions (annual limit: $18K, SSI limit: $100K) per IRC 529A ABLE.</p>
+        <p>Optimize contributions (annual limit: {`$${TAX_RULES_2026.annualGiftExclusion.toLocaleString()}`} in {TAX_RULES_2026.taxYear}, equal to the annual gift exclusion; SSI limit: $100K) per IRC 529A ABLE. Source: IRS Rev. Proc. 2025-32.</p>
         <input 
           type="number" 
           placeholder="Annual Contribution" 

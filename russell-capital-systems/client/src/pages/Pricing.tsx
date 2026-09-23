@@ -357,7 +357,7 @@ export default function Pricing() {
         <div className="container py-12">
           <div className="text-center mb-8">
             <h2 className="text-2xl font-bold text-white mb-2">Secure Payment Processing</h2>
-            <p className="text-[#7a95b8] text-sm">All payments processed securely through Stripe. Your data is encrypted and never stored on our servers.</p>
+            <p className="text-[#7a95b8] text-sm">All payments are processed securely through Stripe; card details are never stored on our servers. Client and planning data you enter is stored on our servers so your work is saved.</p>
           </div>
           <div className="flex flex-wrap items-center justify-center gap-4 max-w-2xl mx-auto">
             {[
@@ -534,7 +534,7 @@ export default function Pricing() {
               { q: "Is there a free trial?", a: "Yes! All plans include a 14-day free trial. No credit card required to start. You'll only be charged after the trial period ends." },
               { q: "Can I upgrade or downgrade my plan?", a: "Absolutely. You can change your plan at any time from the Billing page. Upgrades take effect immediately, and downgrades take effect at the end of your current billing period." },
               { q: "Are payments refundable?", a: "No. All subscription payments are non-refundable. By subscribing, you agree that all charges are final. Cancellations take effect at the end of the current billing period, and you retain access until that date." },
-              { q: "Is my data secure?", a: "Yes. We use 256-bit SSL encryption, and all payment processing is handled by Stripe (PCI DSS Level 1 compliant). Your financial data is never stored on our servers." },
+              { q: "Is my data secure?", a: "Yes. We use 256-bit SSL encryption, and all payment processing is handled by Stripe (PCI DSS Level 1 compliant). Card details go to Stripe and never touch our servers; the client and planning data you enter is stored on our servers so your work is saved, and you can ask us to delete it." },
             ].map((faq) => (
               <div key={faq.q} className="rounded-xl border border-[#12233e] bg-[#0a1929] p-5">
                 <div className="text-white font-semibold mb-2">{faq.q}</div>

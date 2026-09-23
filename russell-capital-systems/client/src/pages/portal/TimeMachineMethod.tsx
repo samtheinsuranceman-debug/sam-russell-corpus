@@ -108,7 +108,7 @@ const AG49_TOOLTIP = {
   },
   rateHover: (rate: number, calYear: number) =>
     rate === 0
-      ? `${calYear}: 0% floor protection activated. The index returned negative this year, but the IUL floor guaranteed no loss. This is one of the most powerful features of indexed crediting.`
+      ? `${calYear}: 0% floor applied. The index returned negative this year, so the hypothetical credit was 0% rather than negative; policy charges would still have reduced the account value.`
       : `${calYear}: ${fmtPct(rate * 100)} credited after applying the strategy's cap, floor, participation rate, and spread to the actual index return. This is the rate that would have been credited to a real policy in ${calYear}.`,
 };
 

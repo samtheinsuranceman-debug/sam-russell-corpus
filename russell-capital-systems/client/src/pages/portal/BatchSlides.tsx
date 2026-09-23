@@ -98,7 +98,8 @@ export default function BatchSlides() {
   const [activeTab, setActiveTab] = useState("generate");
   
   const [showAdvanced, setShowAdvanced] = useState(false);
-  const [includeDisclaimer, setIncludeDisclaimer] = useState(true);
+  // Client decks always carry the disclaimer (copy-compliance review S-a).
+  const includeDisclaimer = true;
   const [includeCover, setIncludeCover] = useState(true);
   const [includeAgenda, setIncludeAgenda] = useState(true);
   const [customFooter, setCustomFooter] = useState("");
@@ -929,8 +930,8 @@ export default function BatchSlides() {
                             <Switch checked={includeAgenda} onCheckedChange={setIncludeAgenda} className="data-[state=checked]:bg-[#22c55e]" />
                           </div>
                           <div className="flex items-center justify-between">
-                            <Label className="text-sm text-[#c8d8ec]">Include Disclaimer</Label>
-                            <Switch checked={includeDisclaimer} onCheckedChange={setIncludeDisclaimer} className="data-[state=checked]:bg-[#22c55e]" />
+                            <Label className="text-sm text-[#c8d8ec]">Disclaimer</Label>
+                            <span className="text-xs text-[#22c55e]">Always included</span>
                           </div>
                           <div className="flex items-center justify-between">
                             <Label className="text-sm text-[#c8d8ec]">Email Notification</Label>

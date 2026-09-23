@@ -35,6 +35,7 @@ import {
   DollarSign,
   Feather,
 } from "lucide-react";
+import AiAnswerNote from "@/components/AiAnswerNote";
 
 
 interface AssetDistribution {
@@ -671,6 +672,7 @@ export default function WillWriter() {
               <div className="prose prose-invert max-w-none prose-headings:text-amber-400 prose-strong:text-white prose-p:text-gray-300">
                 <Streamdown>{generatedDoc}</Streamdown>
               </div>
+              <AiAnswerNote />
             </CardContent>
           </Card>
 

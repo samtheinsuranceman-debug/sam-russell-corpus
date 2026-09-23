@@ -304,7 +304,7 @@
   {
     "id": 5,
     "title": "Premium Financing Black Hole",
-    "description": "For the 42-year-old Fitzgerald Family, a hedge fund manager in Illinois starting with $4,425,000, the Premium Financing Black Hole strategy leverages low-rate loans under IRC \u00a7163 to fund life policies for arbitrage gains. This approach aligns with their financial expertise, turning borrowed capital into tax-deductible growth opportunities. It elevates their net worth to $4,538,000, offering a sophisticated tool for wealth management in a high-tax state.",
+    "description": "For the 42-year-old Fitzgerald Family, a hedge fund manager in Illinois starting with $4,425,000, the Premium Financing Black Hole strategy leverages low-rate loans to fund life policies for arbitrage gains. This approach aligns with their financial expertise, turning borrowed capital into growth opportunities. It elevates their net worth to $4,538,000, offering a sophisticated tool for wealth management in a high-tax state. Tax note: interest on money borrowed to buy life insurance or an annuity is generally not deductible (IRC \u00a7264(a)), and policy-loan or HELOC interest used for personal purposes is generally not deductible (IRC \u00a7163(h)); interest traced to a rental or business use may be. Consult a tax professional.",
     "impactScore": 11,
     "ircCodes": [
       "7702",
@@ -331,7 +331,7 @@
     "steps": [
       {
         "stepNumber": 1,
-        "action": "The Fitzgerald Family secures collateralized loans for overfunded life policies under IRC \u00a7163, investing $50,000 at 1-3% rates for deductible interest, saving $10,000 in taxes through arbitrage spreads. This step explains the tax mechanism in plain English by using borrowed funds to fund policies with higher returns, building a base for cash flow recycling. Their net worth rises from $4,425,000 to $4,436,000, establishing the premium financing structure.",
+        "action": "The Fitzgerald Family secures collateralized loans for overfunded life policies, investing $50,000 at 1-3% rates saving $10,000 in taxes through arbitrage spreads. This step explains the tax mechanism in plain English by using borrowed funds to fund policies with higher returns, building a base for cash flow recycling. Their net worth rises from $4,425,000 to $4,436,000, establishing the premium financing structure. Tax note: interest on money borrowed to buy life insurance or an annuity is generally not deductible (IRC \u00a7264(a)), and policy-loan or HELOC interest used for personal purposes is generally not deductible (IRC \u00a7163(h)); interest traced to a rental or business use may be. Consult a tax professional.",
         "dollarAmount": 50000,
         "taxSaved": 10000,
         "netWorthBefore": 4425000,
@@ -339,7 +339,7 @@
       },
       {
         "stepNumber": 2,
-        "action": "Building on the first loan, the Fitzgerald Family adds $50,000 to the policies under IRC \u00a7163, yielding $19,000 in tax savings by repaying via policy dividends. This action enhances the black hole effect by exploiting interest deductions, directly linking to initial leveraging. Their net worth increases from $4,436,000 to $4,459,000, amplifying returns.",
+        "action": "Building on the first loan, the Fitzgerald Family adds $50,000 to the policies, yielding $19,000 in tax savings by repaying via policy dividends. This action enhances the black hole effect by using borrowed capital, directly linking to initial leveraging. Their net worth increases from $4,436,000 to $4,459,000, amplifying returns. Tax note: interest on money borrowed to buy life insurance or an annuity is generally not deductible (IRC \u00a7264(a)), and policy-loan or HELOC interest used for personal purposes is generally not deductible (IRC \u00a7163(h)); interest traced to a rental or business use may be. Consult a tax professional.",
         "dollarAmount": 50000,
         "taxSaved": 19000,
         "netWorthBefore": 4436000,
@@ -347,7 +347,7 @@
       },
       {
         "stepNumber": 3,
-        "action": "The Fitzgerald Family continues with another $50,000 investment, building on prior policies under IRC \u00a7163 for $29,000 in savings, which clarifies the mechanism through compounded arbitrage. This step extends the strategy by using policy loans for further funding, as their net worth advances to $4,493,000.",
+        "action": "The Fitzgerald Family continues with another $50,000 investment, building on prior policies for $29,000 in savings, which clarifies the mechanism through compounded arbitrage. This step extends the strategy by using policy loans for further funding, as their net worth advances to $4,493,000. Tax note: interest on money borrowed to buy life insurance or an annuity is generally not deductible (IRC \u00a7264(a)), and policy-loan or HELOC interest used for personal purposes is generally not deductible (IRC \u00a7163(h)); interest traced to a rental or business use may be. Consult a tax professional.",
         "dollarAmount": 50000,
         "taxSaved": 29000,
         "netWorthBefore": 4459000,
@@ -1212,7 +1212,7 @@
   {
     "id": 17,
     "title": "HELOC Velocity IUL Arbitrage",
-    "description": "For the Prescott Family, a Biotech Founder in Minnesota with a starting net worth of $5,992,000, the HELOC Velocity IUL Arbitrage strategy leverages IRC \u00a7163(h) and \u00a772(e) to annihilate debts through tax-free loans and deductions, creating profitable spreads. This approach can erase $10M+ mortgages in 7-10 years, growing their wealth to $6,145,000. Tailored to their age of 54, it offers a dynamic way to manage real estate and business finances.",
+    "description": "For the Prescott Family, a Biotech Founder in Minnesota with a starting net worth of $5,992,000, the HELOC Velocity IUL Arbitrage strategy leverages IRC \u00a7163(h) and \u00a772(e) to annihilate debts through policy loans, creating profitable spreads. This approach can erase $10M+ mortgages in 7-10 years, growing their wealth to $6,145,000. Tailored to their age of 54, it offers a dynamic way to manage real estate and business finances. Tax note: interest on money borrowed to buy life insurance or an annuity is generally not deductible (IRC \u00a7264(a)), and policy-loan or HELOC interest used for personal purposes is generally not deductible (IRC \u00a7163(h)); interest traced to a rental or business use may be. Consult a tax professional.",
     "impactScore": 11,
     "ircCodes": [
       "10M",
@@ -1239,7 +1239,7 @@
     "steps": [
       {
         "stepNumber": 1,
-        "action": "The Prescott Family initiates velocity banking with a HELOC, drawing $50,000 to overfund an IUL, increasing net worth from $5,992,000 to $5,999,000 and saving $10,000 in taxes under IRC \u00a7163(h). This mechanism allows mortgage interest deductions paired with tax-free IUL loans, creating spreads. As the first step, it sets up the debt annihilation cycle.",
+        "action": "The Prescott Family initiates velocity banking with a HELOC, drawing $50,000 to overfund an IUL, increasing net worth from $5,992,000 to $5,999,000 and saving $10,000 in taxes. This mechanism allows mortgage interest deductions paired with tax-free IUL loans, creating spreads. As the first step, it sets up the debt annihilation cycle. Tax note: interest on money borrowed to buy life insurance or an annuity is generally not deductible (IRC \u00a7264(a)), and policy-loan or HELOC interest used for personal purposes is generally not deductible (IRC \u00a7163(h)); interest traced to a rental or business use may be. Consult a tax professional.",
         "dollarAmount": 50000,
         "taxSaved": 10000,
         "netWorthBefore": 5992000,
@@ -1255,7 +1255,7 @@
       },
       {
         "stepNumber": 3,
-        "action": "The Prescott Family continues by cycling another $50,000 through the HELOC-IUL loop, boosting net worth from $6,014,000 to $6,036,000 and saving $30,000 in taxes under IRC \u00a7163(h). This action erases mortgages faster, building on the prior loans. It layers benefits by compounding the arbitrage mechanism.",
+        "action": "The Prescott Family continues by cycling another $50,000 through the HELOC-IUL loop, boosting net worth from $6,014,000 to $6,036,000 and saving $30,000 in taxes. This action erases mortgages faster, building on the prior loans. It layers benefits by compounding the arbitrage mechanism. Tax note: interest on money borrowed to buy life insurance or an annuity is generally not deductible (IRC \u00a7264(a)), and policy-loan or HELOC interest used for personal purposes is generally not deductible (IRC \u00a7163(h)); interest traced to a rental or business use may be. Consult a tax professional.",
         "dollarAmount": 50000,
         "taxSaved": 30000,
         "netWorthBefore": 6014000,
@@ -2794,7 +2794,7 @@
   {
     "id": 37,
     "title": "The Mortgage Killer Arbitrage Assault",
-    "description": "As a restaurant chain owner in Massachusetts with a starting net worth of $9,930,000, the Tanaka Family can employ HELOC velocity banking paired with IUL arbitrage under IRC Section 163(h) to pay off mortgages faster. This approach, tailored to their age of 44 and real estate holdings, uses tax-free loans for amplified returns. They achieve a final net worth of $10,184,000, effectively minimizing tax liabilities.",
+    "description": "As a restaurant chain owner in Massachusetts with a starting net worth of $9,930,000, the Tanaka Family can employ HELOC velocity banking paired with IUL arbitrage to pay off mortgages faster. This approach, tailored to their age of 44 and real estate holdings, uses tax-free loans for amplified returns. They achieve a final net worth of $10,184,000, effectively minimizing tax liabilities. Tax note: interest on money borrowed to buy life insurance or an annuity is generally not deductible (IRC \u00a7264(a)), and policy-loan or HELOC interest used for personal purposes is generally not deductible (IRC \u00a7163(h)); interest traced to a rental or business use may be. Consult a tax professional.",
     "impactScore": 10,
     "ircCodes": [
       "163(h)",
@@ -2820,7 +2820,7 @@
     "steps": [
       {
         "stepNumber": 1,
-        "action": "The Tanaka Family, as restaurant chain owners, uses HELOC velocity banking with a $50,000 draw at 4%, starting the arbitrage assault. Under IRC Section 163(h), they deduct interest while investing in IUL for 7-10% returns, saving $25,000 in taxes by offsetting mortgage costs. This foundational step builds their net worth from $9,930,000 to $9,947,000, setting up for tax-free loans.",
+        "action": "The Tanaka Family, as restaurant chain owners, uses HELOC velocity banking with a $50,000 draw at 4%, starting the arbitrage assault. Under IRC Section 163(h), they deduct interest while investing in IUL for 7-10% returns, saving $25,000 in taxes by offsetting mortgage costs. This foundational step builds their net worth from $9,930,000 to $9,947,000, setting up for tax-free loans. Tax note: interest on money borrowed to buy life insurance or an annuity is generally not deductible (IRC \u00a7264(a)), and policy-loan or HELOC interest used for personal purposes is generally not deductible (IRC \u00a7163(h)); interest traced to a rental or business use may be. Consult a tax professional.",
         "dollarAmount": 50000,
         "taxSaved": 25000,
         "netWorthBefore": 9930000,
@@ -2828,7 +2828,7 @@
       },
       {
         "stepNumber": 2,
-        "action": "Building on the HELOC draw, the Tanaka Family overfunds IUL with another $50,000, borrowing policy cash at 0% net under IRC Section 163(h). This explains the arbitrage mechanism of higher returns minus loan costs, saving $49,000 and advancing debt reduction. Their net worth increases to $9,981,000, enhancing the strategy.",
+        "action": "Building on the HELOC draw, the Tanaka Family overfunds IUL with another $50,000, borrowing policy cash at 0% net. This explains the arbitrage mechanism of higher returns minus loan costs, saving $49,000 and advancing debt reduction. Their net worth increases to $9,981,000, enhancing the strategy. Tax note: interest on money borrowed to buy life insurance or an annuity is generally not deductible (IRC \u00a7264(a)), and policy-loan or HELOC interest used for personal purposes is generally not deductible (IRC \u00a7163(h)); interest traced to a rental or business use may be. Consult a tax professional.",
         "dollarAmount": 50000,
         "taxSaved": 49000,
         "netWorthBefore": 9947000,
@@ -2836,7 +2836,7 @@
       },
       {
         "stepNumber": 3,
-        "action": "Advancing further, the Tanaka Family applies tax-free loans to mortgage principal with $50,000 more, leveraging IRC Section 163(h) for deductions. This step builds on prior investments, saving $74,000 in taxes through accelerated payoff. Their net worth rises to $10,032,000, optimizing real estate leverage.",
+        "action": "Advancing further, the Tanaka Family applies tax-free loans to mortgage principal with $50,000 more, leveraging IRC Section 163(h) for deductions. This step builds on prior investments, saving $74,000 in taxes through accelerated payoff. Their net worth rises to $10,032,000, optimizing real estate leverage. Tax note: interest on money borrowed to buy life insurance or an annuity is generally not deductible (IRC \u00a7264(a)), and policy-loan or HELOC interest used for personal purposes is generally not deductible (IRC \u00a7163(h)); interest traced to a rental or business use may be. Consult a tax professional.",
         "dollarAmount": 50000,
         "taxSaved": 74000,
         "netWorthBefore": 9981000,
@@ -2844,7 +2844,7 @@
       },
       {
         "stepNumber": 4,
-        "action": "Continuing the process, the Tanaka Family invests $55,000 in IUL arbitrage, under IRC Section 163(h). This illustrates compounded savings of $100,000, building on earlier steps for mortgage annihilation. Their net worth grows to $10,100,000, strengthening the assault.",
+        "action": "Continuing the process, the Tanaka Family invests $55,000 in IUL arbitrage,. This illustrates compounded savings of $100,000, building on earlier steps for mortgage annihilation. Their net worth grows to $10,100,000, strengthening the assault. Tax note: interest on money borrowed to buy life insurance or an annuity is generally not deductible (IRC \u00a7264(a)), and policy-loan or HELOC interest used for personal purposes is generally not deductible (IRC \u00a7163(h)); interest traced to a rental or business use may be. Consult a tax professional.",
         "dollarAmount": 55000,
         "taxSaved": 100000,
         "netWorthBefore": 10032000,
@@ -2852,7 +2852,7 @@
       },
       {
         "stepNumber": 5,
-        "action": "Concluding the plan, the Tanaka Family finalizes with a $56,000 allocation, fully utilizing IRC Section 163(h) for interest deductions. This builds on all prior actions, saving $126,000 in taxes. Their net worth ends at $10,184,000, completing the strategy.",
+        "action": "Concluding the plan, the Tanaka Family finalizes with a $56,000 allocation, fully utilizing IRC Section 163(h) for interest deductions. This builds on all prior actions, saving $126,000 in taxes. Their net worth ends at $10,184,000, completing the strategy. Tax note: interest on money borrowed to buy life insurance or an annuity is generally not deductible (IRC \u00a7264(a)), and policy-loan or HELOC interest used for personal purposes is generally not deductible (IRC \u00a7163(h)); interest traced to a rental or business use may be. Consult a tax professional.",
         "dollarAmount": 56000,
         "taxSaved": 126000,
         "netWorthBefore": 10100000,
@@ -4156,7 +4156,7 @@
       },
       {
         "stepNumber": 2,
-        "action": "Building on the FIA funding, the Salazar Family uses $50,000 in payouts for HELOC swaps, claiming interest deductions under IRC Section 163(h), which reduces taxable income on mortgage interest. This action enhances the first step by cycling funds for faster payoffs, saving $74,000 and detailing how deductions lower overall taxes. Their net worth rises to $15,311,000, improving their real estate leverage.",
+        "action": "Building on the FIA funding, the Salazar Family uses $50,000 in payouts for HELOC swaps, claiming interest deductions under IRC Section 163(h), which reduces taxable income on mortgage interest. This action enhances the first step by cycling funds for faster payoffs, saving $74,000 and detailing how deductions lower overall taxes. Their net worth rises to $15,311,000, improving their real estate leverage. Tax note: interest on money borrowed to buy life insurance or an annuity is generally not deductible (IRC \u00a7264(a)), and policy-loan or HELOC interest used for personal purposes is generally not deductible (IRC \u00a7163(h)); interest traced to a rental or business use may be. Consult a tax professional.",
         "dollarAmount": 50000,
         "taxSaved": 74000,
         "netWorthBefore": 15274000,
@@ -4545,7 +4545,7 @@
       },
       {
         "stepNumber": 2,
-        "action": "Building on the overfunding, the Herrera Family pledges IUL values for $69,000 in loans, integrating with HELOCs under IRC Section 163 for deductions, enhancing the arbitrage opportunity. This action saves $131,000 by detailing tax-free borrowing versus high returns, directly from the policy. Their net worth rises to $17,442,000, advancing their New Jersey business strategy.",
+        "action": "Building on the overfunding, the Herrera Family pledges IUL values for $69,000 in loans, integrating with HELOCs for deductions, enhancing the arbitrage opportunity. This action saves $131,000 by detailing tax-free borrowing versus high returns, directly from the policy. Their net worth rises to $17,442,000, advancing their New Jersey business strategy. Tax note: interest on money borrowed to buy life insurance or an annuity is generally not deductible (IRC \u00a7264(a)), and policy-loan or HELOC interest used for personal purposes is generally not deductible (IRC \u00a7163(h)); interest traced to a rental or business use may be. Consult a tax professional.",
         "dollarAmount": 69000,
         "taxSaved": 131000,
         "netWorthBefore": 17353000,
@@ -7039,7 +7039,7 @@
   {
     "id": 92,
     "title": "The Mortgage Killer Arbitrage with FIA Riders",
-    "description": "The Ogawa Family, as sleep medicine specialists in Minnesota, can leverage the Mortgage Killer Arbitrage with FIA Riders to efficiently pay off their mortgage using tax-deferred annuity withdrawals, aligning with their high-income profession for optimal financial management. This strategy exploits IRC Sections 72 and 163 to deduct interest while crediting the FIA at 5-7%, helping them grow their net worth from $39,833,000 to $40,852,000. Tailored to their needs, it provides a secure path for real estate leverage and tax savings through guaranteed income streams.",
+    "description": "The Ogawa Family, as sleep medicine specialists in Minnesota, can leverage the Mortgage Killer Arbitrage with FIA Riders to efficiently pay off their mortgage using tax-deferred annuity withdrawals, aligning with their high-income profession for optimal financial management. This strategy exploits IRC Sections 72 and 163 to deduct interest while crediting the FIA at 5-7%, helping them grow their net worth from $39,833,000 to $40,852,000. Tailored to their needs, it provides a secure path for real estate leverage and tax savings through guaranteed income streams. Tax note: interest on money borrowed to buy life insurance or an annuity is generally not deductible (IRC \u00a7264(a)), and policy-loan or HELOC interest used for personal purposes is generally not deductible (IRC \u00a7163(h)); interest traced to a rental or business use may be. Consult a tax professional.",
     "impactScore": 11,
     "ircCodes": [
       "163",
@@ -7066,7 +7066,7 @@
     "steps": [
       {
         "stepNumber": 1,
-        "action": "The Ogawa Family starts by funding a Fixed Indexed Annuity (FIA) with $50,000, generating guaranteed withdrawals that are tax-deferred under IRC Section 72, and using these to accelerate mortgage payoffs while saving $152,000 in taxes by deducting interest via Section 163. This initial step establishes a foundation for velocity banking by crediting the FIA at 5-7%, allowing tax-free growth inside the annuity. It sets up the subsequent steps by creating withdrawable funds for mortgage reduction.",
+        "action": "The Ogawa Family starts by funding a Fixed Indexed Annuity (FIA) with $50,000, generating guaranteed withdrawals that are tax-deferred under IRC Section 72, and using these to accelerate mortgage payoffs while saving $152,000 in taxes in this hypothetical. This initial step establishes a foundation for velocity banking by crediting the FIA at 5-7%, allowing tax-free growth inside the annuity. It sets up the subsequent steps by creating withdrawable funds for mortgage reduction. Tax note: interest on money borrowed to buy life insurance or an annuity is generally not deductible (IRC \u00a7264(a)), and policy-loan or HELOC interest used for personal purposes is generally not deductible (IRC \u00a7163(h)); interest traced to a rental or business use may be. Consult a tax professional.",
         "dollarAmount": 50000,
         "taxSaved": 152000,
         "netWorthBefore": 39833000,
@@ -7074,7 +7074,7 @@
       },
       {
         "stepNumber": 2,
-        "action": "Building on the FIA funding, the Ogawa Family withdraws and applies $105,000 from the annuity to pay down their high-interest mortgage, enhancing tax savings of $304,000 through continued IRC Section 163 deductions, which compounds the benefits from the first step's deferred growth. This explains the tax mechanism by showing how tax-deferred withdrawals reduce taxable income while the FIA credits accumulate. It directly leads to faster equity buildup in their property for further leveraging.",
+        "action": "Building on the FIA funding, the Ogawa Family withdraws and applies $105,000 from the annuity to pay down their high-interest mortgage, enhancing tax savings of $304,000 through continued deductions, which compounds the benefits from the first step's deferred growth. This explains the tax mechanism by showing how tax-deferred withdrawals reduce taxable income while the FIA credits accumulate. It directly leads to faster equity buildup in their property for further leveraging. Tax note: interest on money borrowed to buy life insurance or an annuity is generally not deductible (IRC \u00a7264(a)), and policy-loan or HELOC interest used for personal purposes is generally not deductible (IRC \u00a7163(h)); interest traced to a rental or business use may be. Consult a tax professional.",
         "dollarAmount": 105000,
         "taxSaved": 304000,
         "netWorthBefore": 39901000,
@@ -7082,7 +7082,7 @@
       },
       {
         "stepNumber": 3,
-        "action": "The Ogawa Family escalates by withdrawing $179,000 from the FIA, applying it to mortgage acceleration and claiming $457,000 in tax savings via IRC Section 163, building on previous withdrawals to increase the velocity banking effect. This step illustrates how the tax-deferred status under Section 72 allows for larger deductions on mortgage interest, enhancing overall savings. It prepares for more aggressive payoff strategies in the next phases.",
+        "action": "The Ogawa Family escalates by withdrawing $179,000 from the FIA, applying it to mortgage acceleration and claiming $457,000 in tax savings in this hypothetical, building on previous withdrawals to increase the velocity banking effect. This step illustrates the tax-deferred status of the annuity under Section 72. It prepares for more aggressive payoff strategies in the next phases. Tax note: interest on money borrowed to buy life insurance or an annuity is generally not deductible (IRC \u00a7264(a)), and policy-loan or HELOC interest used for personal purposes is generally not deductible (IRC \u00a7163(h)); interest traced to a rental or business use may be. Consult a tax professional.",
         "dollarAmount": 179000,
         "taxSaved": 457000,
         "netWorthBefore": 40037000,
@@ -7090,7 +7090,7 @@
       },
       {
         "stepNumber": 4,
-        "action": "Continuing from prior actions, the Ogawa Family uses $167,000 from the FIA for mortgage payments, securing $613,000 in tax savings through IRC Section 163 deductions, which layers on the equity gains from earlier steps. This tax mechanism in plain English means they borrow tax-free from the annuity to reduce high-interest debt, amplifying net worth growth. It builds toward final mortgage elimination and maximized FIA benefits.",
+        "action": "Continuing from prior actions, the Ogawa Family uses $167,000 from the FIA for mortgage payments, securing $613,000 in tax savings through deductions, which layers on the equity gains from earlier steps. This tax mechanism in plain English means they borrow tax-free from the annuity to reduce high-interest debt, amplifying net worth growth. It builds toward final mortgage elimination and maximized FIA benefits. Tax note: interest on money borrowed to buy life insurance or an annuity is generally not deductible (IRC \u00a7264(a)), and policy-loan or HELOC interest used for personal purposes is generally not deductible (IRC \u00a7163(h)); interest traced to a rental or business use may be. Consult a tax professional.",
         "dollarAmount": 167000,
         "taxSaved": 613000,
         "netWorthBefore": 40241000,

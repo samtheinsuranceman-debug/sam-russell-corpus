@@ -11,6 +11,7 @@ import {
 } from "recharts";
 import combosData from "@/data/combos.json";
 import { federalBrackets, FEDERAL_RATES_SOURCE } from "@shared/taxBracketEngine";
+import HypotheticalCaseBanner from "@/components/HypotheticalCaseBanner";
 
 const BRACKET_COLORS = ["#22c55e", "#84cc16", "#f59e0b", "#f97316", "#ef4444", "#dc2626", "#991b1b"];
 import { PDFExportButton } from "@/components/PDFExport";
@@ -417,6 +418,7 @@ export default function ComboDetail() {
 
   return (
     <div className="space-y-8 max-w-6xl mx-auto">
+      <HypotheticalCaseBanner />
       {/* Back nav */}
       <div className="flex items-center justify-between">
         <Link href="/portal/tax-combos" className="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-emerald-400 transition-colors">

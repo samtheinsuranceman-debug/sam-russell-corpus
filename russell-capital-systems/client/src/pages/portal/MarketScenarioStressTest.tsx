@@ -143,7 +143,6 @@ export default function MarketScenarioStressTest() {
   const [stressLevel, setStressLevel] = useState(50);
   const [portfolioMultiplier, setPortfolioMultiplier] = useState(1);
   const [showMitigation, setShowMitigation] = useState(true);
-  const [showDisclaimer, setShowDisclaimer] = useState(true);
   const [animateCharts, setAnimateCharts] = useState(true);
   const [selectedAssetClass, setSelectedAssetClass] = useState<string | null>(null);
   const [hoveredDataPoint, setHoveredDataPoint] = useState<any>(null);
@@ -1342,18 +1341,10 @@ export default function MarketScenarioStressTest() {
                             </Button>
                           </div>
                           
-                          <div className="w-full flex justify-between items-center mb-4">
-                            <span className="text-sm text-[#7a95b8]">Include regulatory disclaimers</span>
-                            <Button variant="ghost" size="sm" onClick={() => setShowDisclaimer(!showDisclaimer)} className="h-6 px-2 text-xs border border-[#12233e]">
-                              {showDisclaimer ? "Hide" : "Show"}
-                            </Button>
+                          {/* Disclosures always render; the old Hide/Show switch was removed 23 Sep 2026. */}
+                          <div className="w-full animate-in fade-in">
+                            <NAICDisclaimer />
                           </div>
-                          
-                          {showDisclaimer && (
-                            <div className="w-full animate-in fade-in">
-                              <NAICDisclaimer />
-                            </div>
-                          )}
                         </div>
                       </div>
                     </div>

@@ -42,6 +42,7 @@ import { formatTaxCurrency } from "@shared/taxBracketEngine";
 import { RelatedCalculators } from "@/components/RelatedCalculators";
 import { ComplianceFooter } from "@/components/ComplianceFooter";
 import { rulesForYear } from "@shared/taxRules";
+import { TAX_RULES_2026 } from "@shared/taxRules";
 
 const fmt = (n: number) => n >= 1000000 ? `$${(n / 1000000).toFixed(1)}M` : `$${Math.round(n).toLocaleString()}`;
 const fmtPct = (n: number) => `${n.toFixed(1)}%`;
@@ -128,7 +129,7 @@ function buildGenerations(client: any, growthRate: number, inflationRate: number
       estateTaxRate: estateTaxRate,
       trustStructures: ["Revocable Living Trust", "ILIT", "SLAT"],
       strategies: [
-        "Maximize annual gift tax exclusion ($18,000/person/year in 2024)",
+        `Maximize annual gift tax exclusion ($${TAX_RULES_2026.annualGiftExclusion.toLocaleString()}/person/year in ${TAX_RULES_2026.taxYear})`,
         "Fund 529 education plans for grandchildren (5-year front-loading)",
         "Establish Irrevocable Life Insurance Trust (ILIT) to remove death benefit from estate",
         "Consider Grantor Retained Annuity Trust (GRAT) for appreciating assets",
@@ -280,7 +281,6 @@ export default function MultiGenWealthTransfer() {
   const [isSimulating, setIsSimulating] = useState(false);
   const [simulationProgress, setSimulationProgress] = useState(0);
   const [activeScenarioId, setActiveScenarioId] = useState<string>("");
-  const [showDisclaimer, setShowDisclaimer] = useState(true);
   const [chartType, setChartType] = useState<'area' | 'line' | 'composed'>('area');
   const [includeInsurance, setIncludeInsurance] = useState(true);
   const [includeRealEstate, setIncludeRealEstate] = useState(true);
@@ -1142,7 +1142,7 @@ export default function MultiGenWealthTransfer() {
                         The primary causes are a breakdown in family communication, lack of financial education for heirs, and absence of a shared family mission.
                         A comprehensive wealth transfer plan addresses all three pillars: financial optimization, family governance, and philanthropic purpose.
                       </p>
-                      {showDisclaimer && <NAICDisclaimer />}
+                      <NAICDisclaimer />
                     </div>
                   </div>
                 )}

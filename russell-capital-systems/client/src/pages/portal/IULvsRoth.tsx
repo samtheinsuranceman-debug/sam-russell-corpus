@@ -83,17 +83,17 @@ const COMPARISON_FEATURES = [
   {
     category: "Contribution Limits",
     features: [
-      { feature: "Annual Contribution Limit", iul: "UNLIMITED", roth: `$${ROTH_LIMITS.contributionUnder50.toLocaleString()} ($${ROTH_LIMITS.contributionOver50.toLocaleString()} if 50+)`, iulWins: true },
+      { feature: "Annual Contribution Limit", iul: "No IRS dollar cap, but premiums are limited by IRC §7702/7702A (above the 7-pay limit the policy becomes a MEC and loses tax-free loans) and by underwriting", roth: `$${ROTH_LIMITS.contributionUnder50.toLocaleString()} ($${ROTH_LIMITS.contributionOver50.toLocaleString()} if 50+)`, iulWins: true },
       { feature: "Income Eligibility Limits", iul: "No income limits", roth: `Phased out: $${(ROTH_LIMITS.incomePhaseOutSingleStart / 1000).toFixed(0)}K-$${(ROTH_LIMITS.incomePhaseOutSingleEnd / 1000).toFixed(0)}K (Single), $${(ROTH_LIMITS.incomePhaseOutMarriedStart / 1000).toFixed(0)}K-$${(ROTH_LIMITS.incomePhaseOutMarriedEnd / 1000).toFixed(0)}K (Married)`, iulWins: true },
-      { feature: "Lifetime Contribution Cap", iul: "No cap — fund as much as you want", roth: "Limited by annual caps × years", iulWins: true },
+      { feature: "Lifetime Contribution Cap", iul: "Limited by the death benefit and the IRC §7702 guideline premium / cash value tests", roth: "Limited by annual caps × years", iulWins: false },
     ],
   },
   {
     category: "Access & Withdrawals",
     features: [
-      { feature: "Access to Full Illustrated Policy Value", iul: "Yes — borrow against 100% of illustrated policy value via policy loans at any age", roth: "No — can only withdraw CONTRIBUTIONS tax-free before 59½. EARNINGS are locked until 59½ AND 5-year rule met", iulWins: true },
-      { feature: "Early Withdrawal Penalty", iul: "NONE — policy loans are not withdrawals, no penalties ever", roth: "10% penalty on EARNINGS before age 59½ + income tax", iulWins: true },
-      { feature: "5-Year Waiting Rule", iul: "No waiting period — access illustrated policy value immediately", roth: "Must wait 5 years from first contribution for tax-free earnings withdrawal", iulWins: true },
+      { feature: "Access to Policy Value", iul: "Policy loans against part of the cash surrender value (carriers typically allow 80–90%), at any age; loan interest accrues and surrender charges apply in early years", roth: "Contributions can be withdrawn tax-free any time; earnings withdrawn before 59½ and the 5-year rule are taxed and may carry a 10% penalty", iulWins: true },
+      { feature: "Early Withdrawal Penalty", iul: "No IRS age penalty on loans from a non-MEC policy; a MEC's loans are taxable and carry a 10% penalty before 59½ (IRC §72(v)); surrender charges may apply", roth: "10% penalty on EARNINGS before age 59½ + income tax", iulWins: true },
+      { feature: "5-Year Waiting Rule", iul: "No 5-year rule, but early cash value is small after charges and surrender charges", roth: "Must wait 5 years from first contribution for tax-free earnings withdrawal", iulWins: true },
       { feature: "Age 59½ Restriction", iul: "No age restrictions on accessing funds", roth: "Earnings locked until 59½ (plus 5-year rule)", iulWins: true },
       { feature: "Required Minimum Distributions", iul: "No RMDs ever", roth: "No RMDs (advantage shared)", iulWins: false },
     ],
@@ -101,17 +101,17 @@ const COMPARISON_FEATURES = [
   {
     category: "Tax Treatment",
     features: [
-      { feature: "Tax-Free Growth", iul: "Yes — illustrated policy value grows tax-deferred", roth: "Yes — grows tax-free", iulWins: false },
-      { feature: "Tax-Free Income", iul: "Yes — via policy loans (not reported as income)", roth: "Yes — but only after 59½ AND 5-year rule", iulWins: true },
+      { feature: "Tax-Deferred Growth", iul: "Yes — cash value grows tax-deferred inside the policy", roth: "Yes — grows tax-free when withdrawals are qualified", iulWins: false },
+      { feature: "Tax-Free Income", iul: "Via policy loans, only if the policy is not a MEC and stays in force; a lapse with a loan outstanding can be taxable", roth: "Yes — but only after 59½ AND 5-year rule", iulWins: true },
       { feature: "Tax-Free Death Benefit", iul: "Yes — income tax-free to beneficiaries", roth: "Inherited Roth is tax-free but must be distributed within 10 years (SECURE Act)", iulWins: true },
     ],
   },
   {
     category: "Protection & Benefits",
     features: [
-      { feature: "Downside Market Protection", iul: "0% floor — never lose money in a down market", roth: "No protection — full market exposure and loss risk", iulWins: true },
-      { feature: "Death Benefit", iul: "Immediate leveraged death benefit (often 10-20x first premium)", roth: "Only account balance — no leverage", iulWins: true },
-      { feature: "Long-Term Care Rider", iul: "Available — 4% of death benefit monthly for chronic illness", roth: "Not available", iulWins: true },
+      { feature: "Downside Market Protection", iul: "0% floor on index credits in a down year (policy charges still reduce the account value)", roth: "No protection — full market exposure and loss risk", iulWins: true },
+      { feature: "Death Benefit", iul: "Generally income-tax-free death benefit (IRC §101(a); transfer-for-value exceptions apply); the multiple of premium depends on age, health and funding", roth: "Only account balance — no leverage", iulWins: true },
+      { feature: "Long-Term Care Rider", iul: "Available on some policies; terms vary by carrier and rider", roth: "Not available", iulWins: true },
       { feature: "Creditor Protection", iul: "Protected in most states", roth: "Varies by state — limited protection", iulWins: true },
       { feature: "Chronic Illness Accelerated Benefit", iul: "Available — access death benefit while living", roth: "Not available", iulWins: true },
     ],
@@ -201,7 +201,7 @@ export default function IULvsRoth() {
           clearInterval(interval);
           setIsSimulating(false);
           compareMut.mutate({ age, annualContribution, years, iulRate, rothRate });
-          toast.success("Mega Roth comparison complete!");
+          toast.success("IUL vs Roth comparison complete!");
           return 100;
         }
         return prev + 10;
@@ -498,10 +498,10 @@ export default function IULvsRoth() {
           <div>
             <h1 className="text-3xl font-black text-white flex items-center gap-3">
               <Scale className="w-8 h-8 text-emerald-400" />
-              The "Mega Roth IRA" Strategy
+              IUL Life Insurance vs. Roth IRA
             </h1>
             <p className="text-zinc-400 mt-1">
-              Why high-income earners use Indexed Universal Life (IUL) to bypass Roth IRA restrictions.
+              A hypothetical comparison, based on your facts, of indexed universal life (IUL) insurance and a Roth IRA for high-income earners. IUL is permanent life insurance, not an IRA; it has policy charges, and its tax treatment depends on staying in force and not becoming a MEC.
             </p>
           </div>
           <div className="flex items-center gap-2">
@@ -662,15 +662,15 @@ export default function IULvsRoth() {
                   <Card className="border-emerald-500/30 bg-emerald-950/10">
                     <CardHeader className="pb-2">
                       <CardTitle className="text-lg flex items-center gap-2 text-emerald-400">
-                        <Shield className="w-5 h-5" /> IUL "Mega Roth"
+                        <Shield className="w-5 h-5" /> IUL (Permanent Life Insurance)
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
                       <ul className="space-y-3">
-                        <li className="flex items-start gap-2 text-sm"><CheckCircle2 className="w-4 h-4 text-emerald-500 mt-0.5 shrink-0" /> <span><strong>Unlimited</strong> contributions</span></li>
+                        <li className="flex items-start gap-2 text-sm"><CheckCircle2 className="w-4 h-4 text-emerald-500 mt-0.5 shrink-0" /> <span><strong>No IRS dollar cap</strong> on premiums, within IRC §7702/7702A limits</span></li>
                         <li className="flex items-start gap-2 text-sm"><CheckCircle2 className="w-4 h-4 text-emerald-500 mt-0.5 shrink-0" /> <span><strong>No income limits</strong> for participation</span></li>
-                        <li className="flex items-start gap-2 text-sm"><CheckCircle2 className="w-4 h-4 text-emerald-500 mt-0.5 shrink-0" /> <span><strong>Zero penalties</strong> for early access</span></li>
-                        <li className="flex items-start gap-2 text-sm"><CheckCircle2 className="w-4 h-4 text-emerald-500 mt-0.5 shrink-0" /> <span><strong>0% floor</strong> protects against market loss</span></li>
+                        <li className="flex items-start gap-2 text-sm"><CheckCircle2 className="w-4 h-4 text-emerald-500 mt-0.5 shrink-0" /> <span><strong>No age penalty</strong> on loans from a non-MEC policy (loan interest and surrender charges apply)</span></li>
+                        <li className="flex items-start gap-2 text-sm"><CheckCircle2 className="w-4 h-4 text-emerald-500 mt-0.5 shrink-0" /> <span><strong>0% floor</strong> on index credits (charges still apply)</span></li>
                       </ul>
                     </CardContent>
                   </Card>
@@ -884,8 +884,8 @@ export default function IULvsRoth() {
                         <CheckCircle2 className="w-4 h-4" /> IUL Liquidity (Green Line)
                       </h4>
                       <p className="text-sm text-zinc-300">
-                        You can access up to 80-90% of your cash value at <strong>any age</strong> via policy loans. 
-                        These loans are tax-free and penalty-free. Your money continues to grow as if you never touched it (arbitrage).
+                        Carriers typically let you borrow 80-90% of the cash surrender value at <strong>any age</strong> via policy loans.
+                        Loans are income-tax-free only if the policy is not a MEC and stays in force. Whether the loaned value keeps being credited depends on the loan type and the spread between the loan rate and the credited rate, which can be negative.
                       </p>
                     </div>
                     <div className="w-px bg-zinc-800 hidden md:block"></div>
@@ -994,7 +994,7 @@ export default function IULvsRoth() {
                       <YAxis tickFormatter={(v) => fmtM(v)} tick={{ fill: "#a1a1aa" }} />
                       <Tooltip content={<DualChartTooltip />} />
                       <Legend />
-                      <Bar dataKey="iulIncome" name="IUL Tax-Free Income" stackId="a" fill="#22c55e" radius={[0, 0, 4, 4]} />
+                      <Bar dataKey="iulIncome" name="IUL Policy-Loan Income (non-MEC, in force)" stackId="a" fill="#22c55e" radius={[0, 0, 4, 4]} />
                       {includeSocialSecurity && <Bar dataKey="ssIncome" name="Social Security" stackId="a" fill="#a855f7" radius={[4, 4, 0, 0]} />}
                       
                       <Bar dataKey="rothIncome" name="Roth Tax-Free Income" stackId="b" fill="#3b82f6" radius={[0, 0, 4, 4]} />
@@ -1066,7 +1066,7 @@ export default function IULvsRoth() {
                     <TableHeader className="hidden md:table-header-group">
                       <TableRow>
                         <TableHead className="w-1/3">Feature</TableHead>
-                        <TableHead className="w-1/3 text-emerald-400">IUL "Mega Roth"</TableHead>
+                        <TableHead className="w-1/3 text-emerald-400">IUL Life Insurance</TableHead>
                         <TableHead className="w-1/3 text-blue-400">Roth IRA</TableHead>
                       </TableRow>
                     </TableHeader>
@@ -1095,10 +1095,10 @@ export default function IULvsRoth() {
                 <h2 className="text-2xl font-black text-white">The Bottom Line for High Earners</h2>
                 <p className="text-zinc-300 max-w-4xl mx-auto text-lg leading-relaxed">
                   The Roth IRA was designed for average savers with average incomes. If you earn over {fmt(filingStatus === "married" ? ROTH_LIMITS.incomePhaseOutMarriedEnd : ROTH_LIMITS.incomePhaseOutSingleEnd)}, you <span className="text-red-400 font-bold">cannot contribute directly</span>. 
-                  Even if you do a backdoor Roth, you're limited to a meager {fmt(ROTH_LIMITS.contributionUnder50)}/year, and your earnings are locked with a <span className="text-red-400 font-bold">10% penalty</span> until age 59½.
+                  A backdoor Roth is limited to {fmt(ROTH_LIMITS.contributionUnder50)}/year (a mega-backdoor Roth through a 401(k) plan that allows after-tax contributions can add more), and your earnings are locked with a <span className="text-red-400 font-bold">10% penalty</span> until age 59½.
                 </p>
                 <p className="text-emerald-400 max-w-4xl mx-auto text-lg leading-relaxed font-medium mt-4">
-                  The IUL operates as a "Mega Roth IRA" — unlimited contributions, no income limits, no age restrictions, no early withdrawal penalties, and full access to your cash value at any age via tax-free loans. For high-income earners, it's the ultimate wealth-building vehicle.
+                  IUL is life insurance, not an IRA. It has no income limits and no IRS dollar cap on premiums (within IRC §7702/7702A), and policy loans from a non-MEC policy kept in force can be income-tax-free at any age. In return it carries cost-of-insurance and other policy charges, surrender charges, loan interest and lapse risk. For some high-income earners who also need the death benefit, it can complement a Roth. This comparison is hypothetical and based on your facts.
                 </p>
               </CardContent>
             </Card>

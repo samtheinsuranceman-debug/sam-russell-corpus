@@ -11,6 +11,7 @@ import { Streamdown } from "@/components/StreamdownLite";
 import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { ExportToSlides } from "@/components/ExportToSlides";
+import AiAnswerNote from "@/components/AiAnswerNote";
 
 const DOC_TYPES = [
   "MESSAGING_LIBRARY", "OBJECTION_GUIDE", "OFFER_POSITIONING",
@@ -391,6 +392,7 @@ function AIKnowledgeQuerySection() {
               <button className="text-xs text-muted-foreground hover:text-white" onClick={clearAnswer}><X size={14} /></button>
             </div>
             <div className="text-sm text-[#c8d6e5] leading-relaxed"><Streamdown>{answer}</Streamdown></div>
+            <AiAnswerNote />
           </div>
         )}
       </div>

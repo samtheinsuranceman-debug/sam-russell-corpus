@@ -699,12 +699,9 @@ export default function AnnuityAccumulationDB() {
               {guaranty.phone}
             </span>
           </div>
-          {splitRec.splitCount > 1 && (
-            <div className="mt-2 p-2 rounded bg-[#f0c040]/10 border border-[#f0c040]/20 text-xs text-[#f0c040] flex items-center gap-2">
-              <AlertTriangle className="w-4 h-4 shrink-0" />
-              {splitRec.recommendation}
-            </div>
-          )}
+          <p className="mt-2 text-xs text-[#7a95b8]">
+            Advisor reference only. The state guaranty association may not be used in the sale or solicitation of an annuity (N.C. Gen. Stat. § 58-62-86).
+          </p>
         </div>
 
         {/* Tabs */}

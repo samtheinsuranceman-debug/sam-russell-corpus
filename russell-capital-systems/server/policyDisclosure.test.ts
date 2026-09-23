@@ -35,7 +35,8 @@ describe("policy disclosure", () => {
       expect(policyKindForPath(p), p).toBe("life");
     }
     expect(policyKindForPath("/portal/myga-waterfall")).toBe("annuity");
-    expect(policyKindForPath("/portal/tax-waterfall")).toBeNull();
+    // tax-waterfall now carries the line (it models IUL policy loans); a page that runs on no policy stays null.
+    expect(policyKindForPath("/portal/forgiveness")).toBeNull();
     expect(policyKindForPath("/portal/mortgage-killer?tab=x")).toBe("life");
     for (const p of [...LIFE_POLICY_PATHS, ...ANNUITY_PATHS]) {
       // Mechanism dossiers are served by one parameter route.
@@ -46,6 +47,12 @@ describe("policy disclosure", () => {
 
   it("is mounted by the app shell", () => {
     expect(shellSrc).toMatch(/<PolicyDisclosureLine path=\{location\} \/>/);
+  });
+
+  it("is also mounted by gated(), so listed routes that render outside the app shell still show it", () => {
+    // TimeMachineAG49, MortgageKillerV3, IulProjectionPage and MygaWaterfallPage have no AppShell.
+    const gatedFn = appSrc.slice(appSrc.indexOf("function gated("), appSrc.indexOf("function FrontDoor("));
+    expect(gatedFn).toContain("<PolicyDisclosureSlot>");
   });
 });
 

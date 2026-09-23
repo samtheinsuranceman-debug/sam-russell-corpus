@@ -73,17 +73,21 @@ const SINGLE_37_START = TAX_RULES_2026.brackets.single[5]!.upTo!;
 // Pre-built tax scenarios based on current legislative proposals
 const BUILT_IN_SCENARIOS: TaxScenario[] = [
   {
-    name: "TCJA Sunset (2026)",
-    description: "Tax Cuts and Jobs Act provisions expire, reverting to pre-2018 rates",
+    // Not current law. P.L. 119-21 (OBBBA, 4 Jul 2025) made the 2018 rate structure permanent
+    // (IRC §1(j)) and set the estate exclusion at $15M indexed, so no sunset happens in 2026.
+    // Kept only as a labelled what-if: Congress raising rates back to pre-2018 levels.
+    name: "Hypothetical: Rates Return to Pre-2018 Levels",
+    description: "Hypothetical, not current law: Congress raises rates back to pre-2018 levels (P.L. 119-21 made the 2018 structure permanent)",
     changes: [
       { category: "income", description: "Top rate reverts 37% → 39.6%", currentValue: 0.37, proposedValue: 0.396, affectedBrackets: [`$${(SINGLE_37_START + 1).toLocaleString("en-US")}+`] },
       { category: "estate", description: `Estate exemption cut ~$${(TAX_RULES_2026.estateBasicExclusion / 1e6).toFixed(1)}M → ~$7M`, currentValue: TAX_RULES_2026.estateBasicExclusion, proposedValue: 7000000, affectedBrackets: ["All estates"] },
       { category: "deduction", description: `SALT deduction cap removed ($${Math.round(TAX_RULES_2026.salt.cap / 1000)}K → unlimited)`, currentValue: TAX_RULES_2026.salt.cap, proposedValue: 999999, affectedBrackets: ["Itemizers"] },
       { category: "deduction", description: "Standard deduction reduced", currentValue: TAX_RULES_2026.standardDeduction.joint, proposedValue: 24800, affectedBrackets: ["All filers"] },
     ],
-    effectiveYear: 2026,
+    effectiveYear: 2027,
     sunsetYear: null,
-    probability: 65,
+    // An assumption for weighting only; no legislation proposing this is pending.
+    probability: 10,
   },
   {
     name: "Wealth Tax Proposal",
@@ -246,12 +250,12 @@ export function simulateTaxChanges(
   const probWeighted = results.reduce((s, r) => s + r.totalImpact * (r.scenario.probability / 100), 0);
 
   const urgentActions: string[] = [];
-  const tcjaSunset = results.find(r => r.scenario.name.includes("TCJA"));
-  if (tcjaSunset && tcjaSunset.totalImpact > 50000) {
-    urgentActions.push(`URGENT: TCJA sunset could cost $${tcjaSunset.totalImpact.toLocaleString()} — act before 2026`);
+  const revert = results.find(r => r.scenario.name.includes("Pre-2018"));
+  if (revert && revert.totalImpact > 50000) {
+    urgentActions.push(`Hypothetical: if Congress restored pre-2018 rates, this could cost $${revert.totalImpact.toLocaleString()} a year. Not current law; review with your CPA.`);
   }
-  if (client.estateValue > 7000000) {
-    urgentActions.push("Estate exemption may halve in 2026 — complete gifting strategies NOW");
+  if (client.estateValue > TAX_RULES_2026.estateBasicExclusion) {
+    urgentActions.push(`Estate above the ${TAX_RULES_2026.taxYear} exclusion ($${(TAX_RULES_2026.estateBasicExclusion / 1e6).toFixed(0)}M, P.L. 119-21): review gifting strategies with your estate attorney`);
   }
   urgentActions.push("Schedule annual tax planning review to adapt to legislative changes");
 

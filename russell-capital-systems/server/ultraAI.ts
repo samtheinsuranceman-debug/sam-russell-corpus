@@ -30,6 +30,7 @@ import { anthropicHeaders } from "./_core/anthropic";
 import { MODULE_CATALOG, type ModuleKey } from "@shared/ultraEngine";
 import { ADVISOR_MODES, MODE_IDS, SINGLE_MODES, modeDef, type AdvisorMode } from "@shared/advisorModes";
 import { STR_PROTOCOL, strApiLine as strApiLineFor } from "@shared/strSources";
+import { AI_COMPLIANCE_FLOOR } from "@shared/aiCompliance";
 const strApiLine = () => strApiLineFor(process.env);
 import { buildAnswerPdf } from "./answerPdf";
 import { mailMode, sendMail } from "./_core/mailer";
@@ -147,11 +148,12 @@ export function configuredProviders(): Provider[] {
 }
 
 export const ADVISOR_SYSTEM =
+  AI_COMPLIANCE_FLOOR + "\n\n" +
   "You are the AI planning advisor inside Russell Capital Systems' Ultra Calculator. " +
   "You explain financial projection scenarios in plain language. You NEVER guarantee returns, " +
   "never give individualized tax or legal advice (recommend licensed professionals for that), " +
-  "label every number as a projection under stated assumptions, and never invent facts about " +
-  "the client that were not provided. " + STR_PROTOCOL;
+  "label every number as a hypothetical projection under stated assumptions, based on the facts " +
+  "the client gave, and never invent facts about the client that were not provided. " + STR_PROTOCOL;
 
 /**
  * The advisor's system prompt with the language layer attached. Callers that
@@ -178,13 +180,16 @@ export function advisorSystemFor(question: string, profileSummary?: string): str
 // and NO step-by-step numeric sequences. The detailed math lives behind the
 // planning estimator and the licensed-advisor review, never in a public answer.
 const PUBLIC_TEASER_SYSTEM_BASE =
+  AI_COMPLIANCE_FLOOR + "\n\n" +
   "You are the AI concierge on the Russell Capital Systems PUBLIC homepage, speaking to a prospective " +
   "client — often a physician, psychiatrist, or surgeon — who may know nothing about the firm yet. " +
   "Explain, in warm and confident plain language, the KINDS of strategies and the general FRAME that " +
   "could apply to their situation: accelerated mortgage payoff, lowering tax liability, Roth-conversion " +
-  "sequencing, oil & gas drilling deductions, and trust-owned Index Universal Life used together — a " +
-  "coordinated combination designed to help make wealth resilient and hard to touch ('divorce-proof'). " +
-  "Talk about the IDEA of combining strategies in a sequence and why coordination beats any single tactic. " +
+  "sequencing, oil & gas drilling deductions, and a trust-owned indexed universal life insurance policy " +
+  "(permanent life insurance issued by an insurance company) used together — a coordinated combination " +
+  "designed to help make wealth more resilient, including in a divorce, depending on the state's law. " +
+  "Talk about the IDEA of combining strategies in a sequence and why coordinating them can matter more " +
+  "than any single tactic. Describe every outcome as hypothetical and based on their facts. " +
   "HARD RULES — never break these: reveal NO specific dollar amounts, NO percentages, NO calculation " +
   "formulas, NO exact number-of-combinations, NO named internal parameters, and NO step-by-step numeric " +
   "instructions. Keep it to concepts, frames, and general sequences only. Never guarantee any outcome. " +
@@ -259,14 +264,14 @@ export function ruleBasedPlan(facts: {
     module: "trustIUL",
     status: facts.wantsProtection ? "necessary" : "optional",
     reason: facts.wantsProtection
-      ? "Divorce/creditor protection and tax-advantaged income were requested — the trust-owned IUL is the protection-first vehicle in this strategy."
-      : "Valuable for tax-free income layering and living benefits, but not required by the stated goals.",
+      ? "Divorce/creditor protection and tax-advantaged income were requested — the trust-owned IUL life insurance policy is the protection-first piece in this strategy, subject to state law."
+      : "Useful for policy-loan income layering (income-tax-free only if the policy is not a MEC and stays in force) and living benefits, but not required by the stated goals.",
   });
   out.push({
     module: "incomeAnnuity",
     status: facts.wantsGuaranteedIncome ? "necessary" : "optional",
     reason: facts.wantsGuaranteedIncome
-      ? "A guaranteed-style income floor was requested."
+      ? "A contractual income floor was requested (an annuity's income, subject to the insurer's claims-paying ability)."
       : "Adds an income floor in later windows; include it if sequence-of-returns risk worries the client.",
   });
   return out;
@@ -491,8 +496,9 @@ export const ultraRouter = router({
         answer: answer ??
           "Our AI concierge isn't switched on yet — but a Russell Capital Systems advisor can walk you " +
           "through how accelerated mortgage payoff, tax-liability reduction, Roth-conversion sequencing, " +
-          "oil & gas deductions, and trust-owned Index Universal Life combine into one coordinated plan. " +
-          "Complete the short estimator below and book a thorough evaluation.",
+          "oil & gas deductions, and a trust-owned indexed universal life insurance policy can be modeled " +
+          "together as one coordinated plan, hypothetically and based on your facts. This is education, not " +
+          "tax, legal or investment advice. Complete the short estimator below and book a thorough evaluation.",
         contributors,
         contributorCount: contributors.length,
         configured: team.length > 0,

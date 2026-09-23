@@ -12,6 +12,7 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import { EntrainmentProvider } from "./contexts/EntrainmentEngine";
 import ComplianceGate from "./components/ComplianceGate";
 import ManagedAuthGuard from "./components/ManagedAuthGuard";
+import { PolicyDisclosureSlot } from "./components/PolicyDisclosureLine";
 import EntranceGate from "./components/EntranceGate";
 import { SkipToContent, FocusRingStyles } from "@/components/AccessibilityHelpers";
 import TrialTimer from "./components/TrialTimer";
@@ -513,7 +514,10 @@ function gated(Component: React.ComponentType<any>, returnPath: string) {
     return (
       <ManagedAuthGuard returnPath={returnPath}>
         <ComplianceGate returnTo={returnPath}>
-          <Component {...props} />
+          {/* The NAIC Model 570 product line for policy routes, printed here when the page has no AppShell to print it. */}
+          <PolicyDisclosureSlot>
+            <Component {...props} />
+          </PolicyDisclosureSlot>
           <Suspense fallback={null}><ChainDock /></Suspense>
         </ComplianceGate>
       </ManagedAuthGuard>
