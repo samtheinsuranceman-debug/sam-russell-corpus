@@ -1,8 +1,8 @@
 {
-  "tree": "d360a2f",
+  "tree": "9ea1fc0",
   "summary": {
     "engines": 97,
-    "enginesFromCatalogue": 37,
+    "enginesFromCatalogue": 38,
     "enginesFromMemoryBank": 89,
     "enginesMissingOnDisk": [],
     "counts": {
@@ -11,10 +11,10 @@
       "enginesWithHardCodedYearsOlderThan2025": 50,
       "enginesWithUnseededRandomness": 1,
       "pagesImportingAnEngineWithNoProvenanceOnPage": 82,
-      "pagesImportingAnEngine": 120,
-      "enginesThatSimulate": 21,
+      "pagesImportingAnEngine": 122,
+      "enginesThatSimulate": 22,
       "enginesOnALiveFeed": 9,
-      "enginesImportedByNoPageAndNoRouter": 10,
+      "enginesImportedByNoPageAndNoRouter": 9,
       "enginesWithoutShellSources": 1
     },
     "lists": {
@@ -165,7 +165,6 @@
         "shared/earlyCashValue.ts",
         "shared/historicalShocks.ts",
         "shared/livingRiskProfile.ts",
-        "shared/lookbackIntegrity.ts",
         "shared/nlpBrain.ts",
         "shared/regulatorySandbox.ts",
         "shared/retirementDNA.ts",
@@ -1095,7 +1094,7 @@
     {
       "engine": "shared/calculatorCatalog.ts",
       "exists": true,
-      "lines": 497,
+      "lines": 500,
       "cataloguePages": [],
       "memoryGroups": [
         "instruments"
@@ -2436,7 +2435,6 @@
       "sources": [
         "6.25% is a real declared 5-year rate near the top of the market, about 1.1 points above the market average; compounding it for 40 to 50 years assumes it can …",
         "AG 49-A caps the illustrated rate at the lesser of the benchmark index account lookback average and 145% of the insurer's net investment earnings rate, per c…",
-        "Assumption: IUL growth = 7.5% a year (GROWTH_RATE), chosen by the firm as an illustration rate; see the NAIC AG 49-A note, the carrier's filed maximum govern…",
         "Assumption: surrender charge starts at 9% of account value in year 1 and falls by 1 point a year to zero in year 10, chosen by the firm as a generic schedule…",
         "Bankrate Monitor National Index, Home Equity Line of Credit rate (BRMHELOC01, via FRED): 7.29% for the week of 2026-09-02",
         "Board of Governors of the Federal Reserve System, H.15 Selected Interest Rates, Bank Prime Loan Rate (DPRIME, via FRED): 6.75% on 2026-09-02",
@@ -2504,8 +2502,7 @@
       ],
       "sources": [
         "Based on Ibbotson SBBI historical data. Research-based estimates only — not guaranteed.",
-        "Projections are based on Roger Ibbotson's historical S&P 500 data (SBBI) and",
-        "current cap rates, and other factors. The 7.5% cap rate reflects the NAIC"
+        "Projections are based on Roger Ibbotson's historical S&P 500 data (SBBI) and"
       ],
       "sourceFields": [],
       "sourceExports": [],
@@ -2642,6 +2639,8 @@
         "markets"
       ],
       "pages": [
+        "client/src/pages/portal/IULHistoricalPerformance.tsx",
+        "client/src/pages/portal/LookbackIntegrity.tsx",
         "client/src/pages/portal/ThomasGoldman.tsx"
       ],
       "serverImporters": [
@@ -2713,8 +2712,11 @@
         "markers": []
       },
       "liveFeed": [],
-      "provenanceOnPage": false,
-      "provenancePages": [],
+      "provenanceOnPage": true,
+      "provenancePages": [
+        "client/src/pages/portal/IULHistoricalPerformance.tsx",
+        "client/src/pages/portal/LookbackIntegrity.tsx"
+      ],
       "hardCodedYears": [
         2000,
         2001,
@@ -3229,42 +3231,66 @@
     {
       "engine": "shared/lookbackIntegrity.ts",
       "exists": true,
-      "lines": 220,
-      "cataloguePages": [],
+      "lines": 461,
+      "cataloguePages": [
+        "/portal/lookback-integrity"
+      ],
       "memoryGroups": [
         "insurance-mechanics"
       ],
-      "pages": [],
+      "pages": [
+        "client/src/components/LookbackIntegrityBadge.tsx",
+        "client/src/pages/portal/IULHistoricalPerformance.tsx",
+        "client/src/pages/portal/LookbackIntegrity.tsx"
+      ],
       "serverImporters": [],
       "sources": [
+        "ChartRow, S&P 500 Returns by Year",
         "Figures are Nationwide's own published look-backs from the Accumulator II 2020 rate guide",
         "Nationwide's best 20-year allocation",
-        "Nationwide's strongest allocation"
+        "Nationwide's strongest allocation",
+        "Nationwide, Accumulator II 2020 IUL rate guide, FLM-1491AO.10 (02/25)",
+        "Nationwide, Accumulator II 2020 IUL rate guide, FLM-1491AO.10 (02/25), index disclosures",
+        "S&P 500 calendar-year price returns, 1994-2025 (total return less dividend)",
+        "export LOOKBACK_INTEGRITY_SOURCES",
+        "https://chartrow.com/sp500/returns"
       ],
-      "sourceFields": [],
-      "sourceExports": [],
+      "sourceFields": [
+        "*_SOURCE",
+        "url:"
+      ],
+      "sourceExports": [
+        "LOOKBACK_INTEGRITY_SOURCES"
+      ],
       "lookback": [
+        "1994–2025",
         "2006–2025"
       ],
       "simulation": {
-        "seeded": null,
+        "seeded": false,
         "unseededRandom": false,
         "runs": [],
         "seeds": [],
         "bootstrapBlock": null,
-        "markers": []
+        "markers": [
+          "percentile"
+        ]
       },
       "liveFeed": [],
-      "provenanceOnPage": false,
-      "provenancePages": [],
+      "provenanceOnPage": true,
+      "provenancePages": [
+        "client/src/components/LookbackIntegrityBadge.tsx",
+        "client/src/pages/portal/IULHistoricalPerformance.tsx",
+        "client/src/pages/portal/LookbackIntegrity.tsx"
+      ],
       "hardCodedYears": [
         2006,
         2020,
         2022,
         2025
       ],
-      "numericConstants": 6,
-      "shellSourced": false
+      "numericConstants": 17,
+      "shellSourced": true
     },
     {
       "engine": "shared/ltcEngine.ts",
@@ -3680,7 +3706,6 @@
       ],
       "sources": [
         "6.25% is a real declared rate near the top of the market, about 1.1 points above the market average; it is not a typical rate.",
-        "Assumption: IUL credit rate = 7.5% a year (iulCreditRate default), chosen by the firm as an illustration rate; see the NAIC AG 49-A note, the carrier's filed…",
         "Bankrate Monitor National Index, Home Equity Line of Credit rate (BRMHELOC01, via FRED): 7.29% for the week of 2026-09-02",
         "Board of Governors of the Federal Reserve System, H.15 Selected Interest Rates, Bank Prime Loan Rate (DPRIME, via FRED): 6.75% on 2026-09-02",
         "Freddie Mac, Primary Mortgage Market Survey, 30-Year Fixed Rate Mortgage Average in the United States (MORTGAGE30US, via FRED): 6.66% for the week ending 202…",
@@ -4250,8 +4275,8 @@
         "Pacific Life",
         "RATES NOT IN THE DOCUMENT. This illustration runs 'Policy Distributions 0' — no loans are illustrated — so no loan rate table is populated. The same gap appe…",
         "Securian / Minnesota Life",
-        "Securian / Minnesota Life Balanced Growth Accumulator III illustration, Case ID 29335303 — fixed loan charged 4.00% constant, credited 3.00% years 1-10 and 4…",
-        "Securian / Minnesota Life Balanced Growth Accumulator III illustration, Case ID 29335303, for M. Corrales age 65 Preferred Non-Tobacco",
+        "Securian / Minnesota Life Balanced Growth Accumulator III illustration, one client case (de-identified) — fixed loan charged 4.00% constant, credited 3.00% y…",
+        "Securian / Minnesota Life Balanced Growth Accumulator III illustration, one client case (de-identified): issue age 65, Preferred Non-Tobacco",
         "Securian: fixed 4.00% charged against 3.00% then 4.00% credited; indexed 4.75% into a separate loan account; variable capped 1.5% above the fixed account rate.",
         "Variable interest rate loan: varies with the Moody's Corporate Bond Yield Average, capped at 1.5% above the current fixed account crediting rate",
         "Variable: the loan amount REMAINS in your current fixed or indexed accounts. This is the true participating loan here. Charged rate floats with Moody's, capp…",
@@ -4286,7 +4311,7 @@
         2022,
         2025
       ],
-      "numericConstants": 76,
+      "numericConstants": 72,
       "shellSourced": true
     },
     {
