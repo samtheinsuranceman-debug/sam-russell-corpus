@@ -577,3 +577,22 @@ export const LIQUIDITY_DISCLOSURE =
   "irreversible; each one states its own weaknesses before its strengths for that reason. Terms move constantly — every description " +
   "carries the date it was read from the company's own published material, and anything past that date must be re-checked directly " +
   "with the company. Confirm any structure with your own attorney and CPA before acting on it.";
+
+/**
+ * The sources the shell prints: every provider page each route was described
+ * from, with the date it was read, built from LIQUIDITY_ROUTES so a provider
+ * added to a route is printed without a second edit. A page named under more
+ * than one route is printed once.
+ */
+export const LIQUIDITY_ROUTES_SOURCES: readonly { label: string; url?: string; asOf?: string; note?: string }[] = (() => {
+  const seen = new Set<string>();
+  const out: { label: string; url?: string; asOf?: string; note?: string }[] = [];
+  for (const r of LIQUIDITY_ROUTES) {
+    for (const p of r.providers) {
+      if (seen.has(p.url)) continue;
+      seen.add(p.url);
+      out.push({ label: `${p.name} (${r.name})`, url: p.url, asOf: `read ${r.asOf}`, note: p.note });
+    }
+  }
+  return out;
+})();

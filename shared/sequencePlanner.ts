@@ -45,8 +45,8 @@
 // is selling part of the portfolio.
 // ============================================================
 
-import { MECHANISMS, type MechanismId } from './cycleEngine';
-import { threshold, bestVariant } from './thresholds';
+import { CYCLE_ENGINE_SOURCES, MECHANISMS, type MechanismId } from './cycleEngine';
+import { THRESHOLDS_SOURCES, threshold, bestVariant } from './thresholds';
 
 /* ───────────────────────── situation ───────────────────────── */
 
@@ -717,3 +717,22 @@ export function describeSequence(moves: readonly MoveId[]): string {
 
 export const PLANNER_DISCLOSURE =
   'Every stage figure is computed from the mechanism parameters in the cycle engine and the threshold registry, with the variant that set it named on the stage. Appreciation, rent, rates and uplift are the household\'s inputs and can be wrong; the arithmetic that follows from them is not an opinion. A plan that routes around a covenant does so by acting on a different property, which is what the covenant permits. No stage here lowers a contract term.';
+
+/* ───────────────────────── sources ───────────────────────── */
+
+/**
+ * The sources the shell prints. A stage's numbers come from cycleEngine's
+ * mechanism parameters and the threshold registry, so their sources are
+ * printed here as those engines give them. The planner's own typed-in
+ * figures follow, declared as assumptions.
+ */
+export const SEQUENCE_PLANNER_SOURCES: readonly { label: string; url?: string; asOf?: string; note?: string }[] = [
+  ...THRESHOLDS_SOURCES,
+  ...CYCLE_ENGINE_SOURCES,
+  { label: 'Assumption: the two example households (thirty rentals; one home and a first rental) are illustrative starting situations the reader replaces; no external source' },
+  { label: 'Assumption: policy funding in the planner takes 30% of monthly surplus up to $4,000, credits 4.5% a year, accrues loan interest at 5.5% a year, and puts 65% of premium into cash value before month 60 and 97% after; typed into the planner, no external source recorded' },
+  { label: 'Assumption: a blanket refinance lends 70% of pool value and needs coverage of 1.2 above ten properties (1.0 otherwise), at a 6.5% to 9% cost of capital; typed into the planner, no external source recorded' },
+  { label: 'Assumption: an equity share advances 20% of the primary\'s value and settles at 1.8 times that share of the appreciated value; typed into the planner, no external source recorded' },
+  { label: 'Assumption: a seller-financed sale is priced 3% over value with 10% down and an 8.5% note, a seller-financed purchase at 95% of value with 10% down, and a sale costs 6% of value; typed into the planner, no external source recorded' },
+  { label: 'Assumption: an acquisition costs 80% of the average rental value all in, and rent defaults to 0.8% of value a month when none is entered; typed into the planner, no external source recorded' },
+];

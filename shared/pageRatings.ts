@@ -89,3 +89,12 @@ export function rating(path: string): PageRating | undefined {
 }
 
 export const RATED_COUNT = PAGE_RATINGS.length;
+
+/**
+ * The ratings above are judgments, not measurements, and are declared as such
+ * so the shell does not print them as if they had a source.
+ */
+export const PAGE_RATINGS_SOURCES: readonly { label: string; url?: string; asOf?: string; note?: string }[] = [
+  { label: "Assumption: every value and frequency rating (1 to 10) in the page ratings is the firm's own editorial judgment of what a page is worth to a household it suits and how often an ordinary household needs it; no external source" },
+  { label: "The \"Live:\" items (FRED CPI, SSA COLA and bend points, CMS IRMAA thresholds, A.M. Best and S&P ratings, the SSA period life table) name data a page should be wired to; they are to-do items, not figures this module uses" },
+];
