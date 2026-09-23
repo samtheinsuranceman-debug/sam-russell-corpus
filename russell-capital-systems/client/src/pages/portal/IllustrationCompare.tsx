@@ -1,6 +1,4 @@
-// @ts-nocheck
-import { RelatedCalculators } from "@/components/RelatedCalculators";
-import { useState, useCallback, useRef, useEffect, useMemo } from "react";
+import React, { useState, useCallback, useRef, useEffect, useMemo } from "react";
 import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
@@ -24,6 +22,7 @@ import { Tooltip as UITooltip, TooltipContent, TooltipProvider, TooltipTrigger }
 import { Separator } from "@/components/ui/separator";
 import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 import {
   Upload,
@@ -49,6 +48,7 @@ import {
   Target,
   ArrowRight,
   Briefcase,
+  User,
 } from "lucide-react";
 
 import {
@@ -74,7 +74,7 @@ const num = (v: number) => Math.round(v).toLocaleString();
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d', '#ffc658', '#8dd1e1'];
 
 export default function IllustrationCompare() {
-  const { clientData } = useClientData();
+  const { data: clientData } = useClientData();
   const { user } = useAuth();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -114,13 +114,6 @@ export default function IllustrationCompare() {
     { uploadId: selectedId!, overrideRate: overrideRate ?? undefined },
     { enabled: !!selectedId }
   );
-  
-  const clientsQuery = trpc.clients.list.useQuery({ limit: 10 });
-  const aiInsightsQuery = trpc.ai.generateInsights.useQuery({ topic: "illustration_comparison" }, { enabled: !!selectedId });
-  const marketDataQuery = trpc.marketData.getLatest.useQuery();
-  const notesQuery = trpc.notes.list.useQuery({ entityType: "illustration", entityId: selectedId ?? 0 }, { enabled: !!selectedId });
-  const dashboardStatsQuery = trpc.dashboard.stats.useQuery();
-  const complianceQuery = trpc.compliance.checkStatus.useQuery({ type: "illustration" });
 
   useEffect(() => {
     if (statusQuery.data && statusQuery.data.status !== "extracting") {
@@ -287,7 +280,7 @@ export default function IllustrationCompare() {
           <CardContent className="p-4 flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-muted-foreground">Data Points</p>
-              <h3 className="text-2xl font-bold">{comparison.years.length * 3}</h3>
+              <h3 className="text-2xl font-bold">{comparison.fullComparison.length * 3}</h3>
             </div>
             <div className="p-3 rounded-full bg-emerald-100 text-emerald-600">
               <Database className="h-5 w-5" />
@@ -747,9 +740,10 @@ export default function IllustrationCompare() {
             <>
               {renderComparisonMetrics()}
 
+              {/* Tabs wraps the whole card: the triggers sit in the header, the panels in the content. */}
+              <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
               <Card>
                 <CardHeader className="pb-0 border-b">
-                  <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
                     <div className="flex items-center justify-between">
                       <TabsList className="bg-transparent h-12 p-0 border-none">
                         <TabsTrigger 
@@ -794,7 +788,6 @@ export default function IllustrationCompare() {
                         </div>
                       )}
                     </div>
-                  </Tabs>
                 </CardHeader>
                 
                 <CardContent className="p-6">
@@ -1107,9 +1100,9 @@ export default function IllustrationCompare() {
                               </TableRow>
                             </TableHeader>
                             <TableBody>
-                              {(showFullTable ? comparison.years : comparison.years.slice(0, 10)).map((y, i) => {
-                                const diff = y.engineAccumValue - y.carrierAccumValue;
-                                const pctDiff = y.carrierAccumValue > 0 ? (diff / y.carrierAccumValue) * 100 : 0;
+                              {(showFullTable ? comparison.fullComparison : comparison.fullComparison.slice(0, 10)).map((y, i) => {
+                                const diff = y.engineCV - y.illustrationCV;
+                                const pctDiff = y.illustrationCV > 0 ? (diff / y.illustrationCV) * 100 : 0;
                                 const isWithinTolerance = Math.abs(pctDiff) <= 5;
                                 const isExpanded = expandedRows[y.year];
 
@@ -1117,8 +1110,8 @@ export default function IllustrationCompare() {
                                   <React.Fragment key={y.year}>
                                     <TableRow className={i % 2 === 0 ? "bg-background" : "bg-muted/20"}>
                                       <TableCell className="font-medium">{y.year}</TableCell>
-                                      <TableCell className="text-right">{fmt(y.carrierAccumValue)}</TableCell>
-                                      <TableCell className="text-right">{fmt(y.engineAccumValue)}</TableCell>
+                                      <TableCell className="text-right">{fmt(y.illustrationCV)}</TableCell>
+                                      <TableCell className="text-right">{fmt(y.engineCV)}</TableCell>
                                       <TableCell className={`text-right ${diff > 0 ? "text-green-600" : diff < 0 ? "text-red-600" : ""}`}>
                                         {diff > 0 ? "+" : ""}{fmt(diff)}
                                       </TableCell>
@@ -1144,15 +1137,15 @@ export default function IllustrationCompare() {
                                           <div className="p-4 grid grid-cols-3 gap-4 border-b">
                                             <div>
                                               <p className="text-xs text-muted-foreground mb-1">Carrier Death Benefit</p>
-                                              <p className="font-medium">{fmt(y.carrierAccumValue * 1.5)}</p>
+                                              <p className="font-medium">{fmt(y.illustrationDB)}</p>
                                             </div>
                                             <div>
-                                              <p className="text-xs text-muted-foreground mb-1">Engine Death Benefit</p>
-                                              <p className="font-medium">{fmt(y.engineAccumValue * 1.5)}</p>
+                                              <p className="text-xs text-muted-foreground mb-1">Carrier Surrender Value</p>
+                                              <p className="font-medium">{fmt(y.illustrationSV)}</p>
                                             </div>
                                             <div>
-                                              <p className="text-xs text-muted-foreground mb-1">Surrender Value</p>
-                                              <p className="font-medium">{fmt(y.carrierAccumValue * 0.95)}</p>
+                                              <p className="text-xs text-muted-foreground mb-1">Engine Surrender Value</p>
+                                              <p className="font-medium">{fmt(y.engineSV)}</p>
                                             </div>
                                           </div>
                                         </TableCell>
@@ -1406,33 +1399,10 @@ export default function IllustrationCompare() {
                       </CardFooter>
                     </Card>
                     
-                    <h3 className="text-lg font-medium mb-4 mt-8">Recommended Alternatives</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      {[1, 2, 3].map((i) => (
-                        <Card key={i} className="shadow-none border">
-                          <CardHeader className="pb-2">
-                            <CardTitle className="text-base">Alternative Carrier {String.fromCharCode(64 + i)}</CardTitle>
-                            <CardDescription>IUL Accumulator Product</CardDescription>
-                          </CardHeader>
-                          <CardContent>
-                            <div className="space-y-2 text-sm">
-                              <div className="flex justify-between">
-                                <span className="text-muted-foreground">Proj. CV (Yr 20)</span>
-                                <span className="font-medium">{fmt(comparison.years[19]?.engineAccumValue * (1 + (i * 0.02)) || 0)}</span>
-                              </div>
-                              <div className="flex justify-between">
-                                <span className="text-muted-foreground">S&P Cap</span>
-                                <span className="font-medium">{10 + (i * 0.25)}%</span>
-                              </div>
-                            </div>
-                            <Button variant="outline" size="sm" className="w-full mt-4">Run Comparison</Button>
-                          </CardContent>
-                        </Card>
-                      ))}
-                    </div>
                   </TabsContent>
                 </CardContent>
               </Card>
+              </Tabs>
             </>
           ) : null}
         </div>

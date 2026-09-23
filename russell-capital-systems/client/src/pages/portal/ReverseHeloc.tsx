@@ -1,6 +1,3 @@
-// @ts-nocheck
-import { trpc } from "@/lib/trpc";
-import { useAuth } from "@/_core/hooks/useAuth";
 import { NumberInput } from "@/components/NumberInput";
 import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
@@ -13,7 +10,7 @@ import { NAICDisclaimer } from "@/components/NAICDisclaimer";
 import {
   Home, DollarSign, TrendingUp, Fuel, Droplets, Banknote,
   Shield, ArrowRight, Zap, PiggyBank, Landmark, 
-  CheckCircle2, AlertTriangle,
+  CheckCircle2, AlertTriangle, BarChart3,
 } from "lucide-react";
 import {
   RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis, PieChart, Pie, Cell, AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid,
@@ -36,14 +33,7 @@ import { HelocBeforeAfter } from "@/components/rooms/RoomVideoTile";
 const fmt = (n: number) => "$" + Math.abs(n).toLocaleString("en-US", { maximumFractionDigits: 0 });
 
 export default function ReverseHeloc() {
-  const { clientData } = useClientData();
-  
-  const { user } = useAuth();
-  const clientsQuery = trpc.clients.list.useQuery();
-  const notesQuery = trpc.notes.list.useQuery({ clientId: 0 });
-  const activityQuery = trpc.activity.list.useQuery();
-  const dashboardQuery = trpc.dashboard.get.useQuery();
-  const pipelineQuery = trpc.pipeline.list.useQuery();
+  const { data: clientData } = useClientData();
 
   const defaults = getDefaultReverseHelocInput();
 
@@ -290,7 +280,6 @@ export default function ReverseHeloc() {
           <TabsTrigger value="charts">Charts</TabsTrigger>
           <TabsTrigger value="projection">Projection</TabsTrigger>
           <TabsTrigger value="summary">Summary</TabsTrigger>
-          <TabsTrigger value="extra">Extra</TabsTrigger>
         </TabsList>
 
         {/* ═══════ TAB 1: CALCULATOR — Input Controls ═══════ */}
@@ -341,7 +330,7 @@ export default function ReverseHeloc() {
                 </div>
                 <div>
                   <Label className="text-xs">IUL Growth Rate (%)</Label>
-                  <NumberInput value={iulGrowthRate} onChange={setIulGrowthRate} min={5} max={15} step={0.5} />
+                  <NumberInput value={iulGrowthRate} onChange={setIulGrowthRate} min={0} step={0.5} />
                 </div>
               </CardContent>
             </Card>
@@ -799,226 +788,6 @@ export default function ReverseHeloc() {
         </TabsContent>
       </Tabs>
 
-        {/* Extra Interactive Elements & Tables */}
-        <TabsContent value="extra" className="space-y-4">
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Data Table 1</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex gap-2 mb-4">
-                <Button variant="outline">Action 1</Button>
-                <Button variant="outline">Action 2</Button>
-                <Button variant="outline">Action 3</Button>
-                <Button variant="outline">Action 4</Button>
-                <Button variant="outline">Action 5</Button>
-              </div>
-              <table className="w-full text-xs">
-                <thead>
-                  <tr>
-                    <th>Col 1</th>
-                    <th>Col 2</th>
-                    <th>Col 3</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>Data 1</td>
-                    <td>Data 2</td>
-                    <td>Data 3</td>
-                  </tr>
-                  <tr>
-                    <td>Data 4</td>
-                    <td>Data 5</td>
-                    <td>Data 6</td>
-                  </tr>
-                </tbody>
-              </table>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Data Table 2</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex gap-2 mb-4">
-                <Button variant="outline">Action 1</Button>
-                <Button variant="outline">Action 2</Button>
-                <Button variant="outline">Action 3</Button>
-                <Button variant="outline">Action 4</Button>
-                <Button variant="outline">Action 5</Button>
-              </div>
-              <table className="w-full text-xs">
-                <thead>
-                  <tr>
-                    <th>Col 1</th>
-                    <th>Col 2</th>
-                    <th>Col 3</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>Data 1</td>
-                    <td>Data 2</td>
-                    <td>Data 3</td>
-                  </tr>
-                  <tr>
-                    <td>Data 4</td>
-                    <td>Data 5</td>
-                    <td>Data 6</td>
-                  </tr>
-                </tbody>
-              </table>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Data Table 3</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex gap-2 mb-4">
-                <Button variant="outline">Action 1</Button>
-                <Button variant="outline">Action 2</Button>
-                <Button variant="outline">Action 3</Button>
-                <Button variant="outline">Action 4</Button>
-                <Button variant="outline">Action 5</Button>
-              </div>
-              <table className="w-full text-xs">
-                <thead>
-                  <tr>
-                    <th>Col 1</th>
-                    <th>Col 2</th>
-                    <th>Col 3</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>Data 1</td>
-                    <td>Data 2</td>
-                    <td>Data 3</td>
-                  </tr>
-                  <tr>
-                    <td>Data 4</td>
-                    <td>Data 5</td>
-                    <td>Data 6</td>
-                  </tr>
-                </tbody>
-              </table>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Data Table 4</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex gap-2 mb-4">
-                <Button variant="outline">Action 1</Button>
-                <Button variant="outline">Action 2</Button>
-                <Button variant="outline">Action 3</Button>
-                <Button variant="outline">Action 4</Button>
-                <Button variant="outline">Action 5</Button>
-              </div>
-              <table className="w-full text-xs">
-                <thead>
-                  <tr>
-                    <th>Col 1</th>
-                    <th>Col 2</th>
-                    <th>Col 3</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>Data 1</td>
-                    <td>Data 2</td>
-                    <td>Data 3</td>
-                  </tr>
-                  <tr>
-                    <td>Data 4</td>
-                    <td>Data 5</td>
-                    <td>Data 6</td>
-                  </tr>
-                </tbody>
-              </table>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Data Table 5</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex gap-2 mb-4">
-                <Button variant="outline">Action 1</Button>
-                <Button variant="outline">Action 2</Button>
-                <Button variant="outline">Action 3</Button>
-                <Button variant="outline">Action 4</Button>
-                <Button variant="outline">Action 5</Button>
-              </div>
-              <table className="w-full text-xs">
-                <thead>
-                  <tr>
-                    <th>Col 1</th>
-                    <th>Col 2</th>
-                    <th>Col 3</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>Data 1</td>
-                    <td>Data 2</td>
-                    <td>Data 3</td>
-                  </tr>
-                  <tr>
-                    <td>Data 4</td>
-                    <td>Data 5</td>
-                    <td>Data 6</td>
-                  </tr>
-                </tbody>
-              </table>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Data Table 6</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex gap-2 mb-4">
-                <Button variant="outline">Action 1</Button>
-                <Button variant="outline">Action 2</Button>
-                <Button variant="outline">Action 3</Button>
-                <Button variant="outline">Action 4</Button>
-                <Button variant="outline">Action 5</Button>
-              </div>
-              <table className="w-full text-xs">
-                <thead>
-                  <tr>
-                    <th>Col 1</th>
-                    <th>Col 2</th>
-                    <th>Col 3</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>Data 1</td>
-                    <td>Data 2</td>
-                    <td>Data 3</td>
-                  </tr>
-                  <tr>
-                    <td>Data 4</td>
-                    <td>Data 5</td>
-                    <td>Data 6</td>
-                  </tr>
-                </tbody>
-              </table>
-            </CardContent>
-          </Card>
-
-        </TabsContent>
 
       {/* Disclaimer at bottom */}
       <NAICDisclaimer variant="footer" showsProjections showsCashValues showsPolicyLoans />

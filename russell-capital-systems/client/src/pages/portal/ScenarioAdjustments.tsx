@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useState, useMemo, useCallback, useEffect } from "react";
 import { mulberry32, normal, MACRO_DEFAULT_SEED } from "@shared/macro/random";
 import { AppShell } from "@/components/AppShell";
@@ -42,7 +41,7 @@ import { Slider } from "@/components/ui/slider";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
-import { ExecutiveSummary, GoalsAccelerator, RecommendationSummary, DoNothingBaseline, TaxBracketPanel } from "@/components/ConsumerOutcomeBlocks";
+import { ExecutiveSummary, GoalsAccelerator, TaxBracketPanel } from "@/components/ConsumerOutcomeBlocks";
 import { useClientData } from "@/contexts/ClientDataContext";
 import { formatTaxCurrency } from "@shared/taxBracketEngine";
 import { RelatedCalculators } from "@/components/RelatedCalculators";
@@ -390,13 +389,9 @@ function computeProjection(params: {
   const payoffYear = payoffData[payoffData.length - 1]?.year ?? startYear + 20;
 
   const allocationData = [{ name: 'Equities', value: baseNetWorth * (equityAlloc/100), color: '#3b82f6', current: equityAlloc - 5, target: equityAlloc },
-,
     { name: 'Fixed Income', value: baseNetWorth * (Math.max(0, fixedAlloc)/100), color: '#94a3b8', current: Math.max(0, fixedAlloc) + 5, target: Math.max(0, fixedAlloc) },
-,
     { name: 'Crypto/Digital', value: baseNetWorth * (cryptoAlloc/100), color: '#f59e0b', current: cryptoAlloc - 2, target: cryptoAlloc },
-,
     { name: 'Alternatives', value: baseNetWorth * (alternativeAlloc/100), color: '#10b981', current: alternativeAlloc + 2, target: alternativeAlloc },
-,
   ].filter((d) => d.value > 0);
 
   const riskData = [
@@ -417,42 +412,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
       <div className="text-slate-400 font-medium mb-2 border-b border-slate-700/50 pb-1">{label}</div>
       <div className="space-y-1.5">
 
-        {/* ═══ CONSUMER OUTCOME BLOCKS — Flagship Tier ═══ */}
-        {/* Related Calculators Toggle */}
-        <RelatedCalculators currentPage="ScenarioAdjustments" />
-
-        <ExecutiveSummary
-          pageTitle="Scenario Adjustments"
-          whatItDoes="This market analysis tool provides institutional-grade analysis of your financial situation, modeling multiple scenarios and projecting outcomes based on your specific inputs. It transforms complex market analysis concepts into clear, actionable insights with dollar-quantified recommendations."
-          opportunities="Historical data shows that strategic index allocation with downside protection consistently outperforms both pure equity and pure fixed strategies over 10+ year periods."
-          intent="To give you the same caliber of market analysis analysis that institutional investors and ultra-high-net-worth families receive — now accessible to every client."
-          takeaway="Understanding your market analysis options with precise dollar amounts empowers you to make confident decisions that compound into significant wealth over time."
-          callToAction="Enter your numbers and see exactly how market analysis strategies can improve your financial outcome."
-          followUpQuestions={[
-            "How does this market analysis strategy interact with my other financial plans?",
-            "What\'s the single biggest market analysis opportunity I\'m currently missing?",
-            "How would my results change if I started this strategy 5 years earlier?",
-          ]}
-        />
-        <GoalsAccelerator pageName="Scenario Adjustments" pageContext="Scenario Adjustments — market analysis modeling with projections and scenario analysis" />
-        <TaxBracketPanel grossIncome={clientData?.annualIncome || 150000} filingStatus={clientData?.filingStatus || "single"} stateCode={clientData?.state || "TX"} />
-        <RecommendationSummary
-          headline="This market analysis strategy can significantly improve your financial outcome"
-          detail="Based on your profile, implementing the recommended market analysis approach could generate substantial savings and growth over your planning horizon."
-          dollarBenefit={280000}
-          timeHorizon="20 years"
-          confidence="high"
-          nextStep="Review with your advisor"
-        />
-        <DoNothingBaseline
-          metrics={[
-            { label: "Risk-Adjusted Return", doNothing: 5.2, recommended: 8.4, format: "percent" },
-            { label: "Downside Protection", doNothing: 0, recommended: 100, format: "percent" },
-            { label: "20-Year Growth", doNothing: 450000, recommended: 730000, format: "currency" },
-          ]}
-          summary="Without taking action on market analysis, you leave significant value on the table that compounds into a major opportunity cost over time."
-        />
-        {payload.map((p) => (
+        {payload.map((p: any) => (
           <div key={p.name} className="flex items-center justify-between gap-4 text-sm">
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 rounded-full shadow-sm" style={{ background: p.color }} />
@@ -471,7 +431,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 };
 
 export default function ScenarioAdjustments() {
-  const { clientData } = useClientData();
+  const { data: clientData } = useClientData();
   const { user } = useAuth();
   const utils = trpc.useUtils();
   
@@ -487,20 +447,12 @@ export default function ScenarioAdjustments() {
   );
   const savedScenarios = savedScenariosQuery.data;
 
-  const strategyAnalyticsQuery = trpc.strategyAnalytics.getOverview.useQuery(
+  // Risk-profile snapshots come back newest first; the latest one seeds the aggression slider.
+  const riskHistoryQuery = trpc.riskProfile.getHistory.useQuery(
     { clientId: selectedClientId! },
     { enabled: !!selectedClientId }
   );
-  const analyticsData = strategyAnalyticsQuery.data;
-
-  const marketDataQuery = trpc.marketData.getLatest.useQuery(undefined, { staleTime: 300_000 });
-  const marketData = marketDataQuery.data;
-
-  const riskProfileQuery = trpc.riskProfile.getByClient.useQuery(
-    { clientId: selectedClientId! },
-    { enabled: !!selectedClientId }
-  );
-  const riskProfile = riskProfileQuery.data;
+  const riskProfile = riskHistoryQuery.data?.[0];
 
   const saveMutation = trpc.scenario.save.useMutation({
     onSuccess: () => {
@@ -518,10 +470,6 @@ export default function ScenarioAdjustments() {
       utils.scenario.listByClient.invalidate({ clientId: selectedClientId! });
       toast.success("Scenario deleted");
     },
-  });
-
-  const exportMutation = trpc.strategyExport.generatePdf.useMutation({
-    onSuccess: () => toast.success("PDF generated successfully"),
   });
 
   const [aggression, setAggression] = useState(65);
@@ -555,8 +503,8 @@ export default function ScenarioAdjustments() {
   }, [selectedClient]);
 
   useEffect(() => {
-    if (riskProfile && riskProfile.score) {
-      setAggression(riskProfile.score);
+    if (riskProfile && riskProfile.overallScore) {
+      setAggression(riskProfile.overallScore);
     }
   }, [riskProfile]);
 
@@ -662,7 +610,7 @@ export default function ScenarioAdjustments() {
     legacy: baseNetWorth * Math.pow(1.06 + (i*0.01), 30) * 0.8
   })) || [];
 
-  if (!clients || !marketData) {
+  if (!clients) {
     return (
       <AppShell>
         <div className="flex items-center justify-center h-[80vh]">
@@ -1297,6 +1245,29 @@ export default function ScenarioAdjustments() {
         </div>
       </div>
       
+      <div className="space-y-6 px-4 pt-6">
+        {/* Related Calculators Toggle */}
+        <RelatedCalculators currentPage="ScenarioAdjustments" />
+
+        <ExecutiveSummary
+          pageTitle="Scenario Adjustments"
+          whatItDoes="This market analysis tool provides institutional-grade analysis of your financial situation, modeling multiple scenarios and projecting outcomes based on your specific inputs. It transforms complex market analysis concepts into clear, actionable insights with dollar-quantified recommendations."
+          opportunities="Historical data shows that strategic index allocation with downside protection consistently outperforms both pure equity and pure fixed strategies over 10+ year periods."
+          intent="To give you the same caliber of market analysis analysis that institutional investors and ultra-high-net-worth families receive — now accessible to every client."
+          takeaway="Understanding your market analysis options with precise dollar amounts empowers you to make confident decisions that compound into significant wealth over time."
+          callToAction="Enter your numbers and see exactly how market analysis strategies can improve your financial outcome."
+          followUpQuestions={[
+            "How does this market analysis strategy interact with my other financial plans?",
+            "What\'s the single biggest market analysis opportunity I\'m currently missing?",
+            "How would my results change if I started this strategy 5 years earlier?",
+          ]}
+        />
+        <GoalsAccelerator pageName="Scenario Adjustments" pageContext="Scenario Adjustments — market analysis modeling with projections and scenario analysis" />
+        {clientData?.annualIncome ? (
+          <TaxBracketPanel grossIncome={clientData.annualIncome} filingStatus={clientData.filingStatus} stateCode={clientData.state || undefined} />
+        ) : null}
+      </div>
+
       <div className="mt-auto pt-6 border-t border-slate-800">
         <NAICDisclaimer variant="compact" showsProjections />
       </div>

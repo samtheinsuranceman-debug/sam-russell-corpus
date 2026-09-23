@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { AppShell } from "@/components/AppShell";
 import { NAICDisclaimer } from "@/components/NAICDisclaimer";
 import { NumberInput } from "@/components/NumberInput";
@@ -25,7 +24,7 @@ import {
   Activity,
   Settings,
 } from "lucide-react";
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend, BarChart, Bar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ComposedChart, Line, PieChart, Pie, Cell } from "recharts";
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend, BarChart, Bar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ComposedChart, Line, LineChart, PieChart, Pie, Cell } from "recharts";
 import { toast } from "sonner";
 import { TimeMachineToggle, useTimeMachine } from "@/components/TimeMachineToggle";
 import { TimeMachineInlineDisclaimer } from "@/components/TimeMachineInlineDisclaimer";
@@ -87,11 +86,6 @@ export default function PolicyLoans() {
   const optimizeMut = trpc.policyLoanOptimizer.optimize.useMutation();
   const compareMut = trpc.policyLoanOptimizer.compareStrategies.useMutation();
 
-  const clientsQ = trpc.clients.list.useQuery();
-  const activityQ = trpc.activity.getRecent.useQuery();
-  const dashboardQ = trpc.dashboard.stats.useQuery();
-  const pipelineQ = trpc.pipeline.getStages.useQuery();
-  const notesMut = trpc.notes.create.useMutation();
 
   const mapFormToInput = () => ({
     currentCashValue: form.currentCashValue,
@@ -221,7 +215,7 @@ export default function PolicyLoans() {
     return (
       <div className="bg-popover text-popover-foreground border rounded-lg p-3 shadow-lg max-w-xs">
         <p className="font-semibold text-sm mb-2">Age {label}</p>
-        {payload.map((entry) => {
+        {payload.map((entry: any) => {
           const isTM = entry.dataKey.startsWith("tm");
           return (
             <div key={entry.dataKey} className="flex justify-between gap-4 text-xs mb-1">

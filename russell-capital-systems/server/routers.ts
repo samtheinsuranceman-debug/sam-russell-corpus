@@ -6,6 +6,7 @@ import { COOKIE_NAME } from "@shared/const";
 import { SYSTEM_PREAMBLE, CLIENT_FACING_PREAMBLE, BRAND_SYSTEM_IDENTITY } from "@shared/branding";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { invokeLLM } from "./_core/llm";
+import { decodePdfUpload, extractPdfText, isPdf, loadPdfFromUrl, readPdfAsJson, readerErrorMessage } from "./pdfReader";
 import { invokePortalAI } from "./portalAI";
 import { ultraRouter } from "./ultraAI";
 import { aiStackRouter } from "./aiStackRouter";
@@ -4427,12 +4428,15 @@ Keep it personal, specific with dollar amounts, and actionable. Use their actual
 
     list: protectedProcedure.input(z.object({
       clientId: z.number().optional(),
+      /** Only scenarios saved with exactly this tag (calculators tag scenarios with their own name). */
+      tag: z.string().max(500).optional(),
     }).optional()).query(async ({ ctx, input }) => {
       const ws = await getWorkspaceForUser(ctx.user.id);
       if (!ws) return [];
       const db = (await getDb())!;
       const conditions = [eq(savedScenarios.workspaceId, ws.id)];
       if (input?.clientId) conditions.push(eq(savedScenarios.clientId, input.clientId));
+      if (input?.tag) conditions.push(eq(savedScenarios.tags, input.tag));
       return db.select().from(savedScenarios)
         .where(and(...conditions))
         .orderBy(desc(savedScenarios.createdAt))
@@ -5355,7 +5359,8 @@ Keep it personal, specific with dollar amounts, and actionable. Use their actual
       clientId: z.number().optional(),
     })).mutation(async ({ ctx, input }) => {
       const ws = await getOrCreateWorkspace(ctx.user.id, ctx.user.name ?? "Workspace", `ws-${ctx.user.id}`);
-      const buffer = Buffer.from(input.fileDataBase64, "base64");
+      const buffer = decodePdfUpload(input.fileDataBase64);
+      if (!isPdf(buffer)) throw new TRPCError({ code: "BAD_REQUEST", message: "Please upload a PDF file." });
       const suffix = randomBytes(6).toString("hex");
       const safeFileName = input.fileName.replace(/[^a-zA-Z0-9._-]/g, "_");
       const fileKey = `illustrations/${ws.id}/${suffix}-${safeFileName}`;
@@ -5374,11 +5379,13 @@ Keep it personal, specific with dollar amounts, and actionable. Use their actual
 
       const uploadId = inserted.insertId;
 
-      // Kick off LLM extraction asynchronously
+      // Kick off extraction asynchronously: the PDF's text is read here and sent
+      // through the Brain Hub chain (server/pdfReader.ts).
       (async () => {
         try {
-          const extractionResult = await invokeLLM({
-            messages: [
+          const extracted = await readPdfAsJson({
+            bytes: buffer,
+            system: [
               ...(await hiveGroundingMessages(ctx)),
               {
                 role: "system",
@@ -5410,20 +5417,11 @@ Keep it personal, specific with dollar amounts, and actionable. Use their actual
 }
 Extract ALL years shown in the illustration. Use the ILLUSTRATED (non-guaranteed) column values. If a field is not found, use null. Return ONLY the JSON object, no other text.`
               },
-              {
-                role: "user",
-                content: [
-                  { type: "text", text: "Please extract the structured data from this insurance illustration PDF:" },
-                  { type: "file_url", file_url: { url: fileUrl, mime_type: "application/pdf" } }
-                ]
-              }
             ],
+            instruction: "Please extract the structured data from this insurance illustration PDF:",
             response_format: { type: "json_object" },
+            maxTokens: 16_000,
           });
-
-          const content = extractionResult.choices[0]?.message?.content;
-          const contentStr = typeof content === "string" ? content : Array.isArray(content) ? content.map((c: any) => c.type === "text" ? c.text : "").join("") : "";
-          const extracted = JSON.parse(contentStr);
 
           await db!.update(illustrationUploads).set({
             carrier: extracted.carrier ?? null,
@@ -5439,11 +5437,13 @@ Extract ALL years shown in the illustration. Use the ILLUSTRATED (non-guaranteed
             yearByYear: extracted.yearByYear ?? [],
             status: "ready",
           }).where(eq(illustrationUploads.id, Number(uploadId)));
-        } catch (err: any) {
-          console.error("[IllustrationExtract] Error:", err.message);
+        } catch (err: unknown) {
+          // The document's text never reaches the log: only our own message does.
+          const message = readerErrorMessage(err);
+          console.error("[IllustrationExtract] Error:", message);
           await db!.update(illustrationUploads).set({
             status: "error",
-            errorMessage: err.message?.slice(0, 500) ?? "Unknown extraction error",
+            errorMessage: message.slice(0, 500),
           }).where(eq(illustrationUploads.id, Number(uploadId)));
         }
       })();
@@ -6384,15 +6384,19 @@ Return a JSON object with:
         return { sent: true as const };
       }),
 
-    // Extract mortgage statement data via LLM
+    // Extract mortgage statement data. The statement is a file this user uploaded ("/files/mortgage-statements/<user>/…")
+    // or a public https URL they typed; its text is read here and sent through
+    // the Brain Hub chain (server/pdfReader.ts).
     extractStatement: protectedProcedure
       .input(z.object({
-        fileUrl: z.string().url(),
-        fileName: z.string(),
+        fileUrl: z.string().min(1).max(2048).refine(v => v.startsWith("/files/") || /^https:\/\//i.test(v), "Must be an uploaded file or an https URL"),
+        fileName: z.string().max(255),
       }))
       .mutation(async ({ ctx, input }) => {
-        const response = await invokeLLM({
-          messages: [
+        const bytes = await loadPdfFromUrl(input.fileUrl, { ownedKeyPrefixes: [`mortgage-statements/${ctx.user.id}/`], allowExternal: true });
+        return readPdfAsJson({
+          bytes,
+          system: [
             ...(await hiveGroundingMessages(ctx)),
             {
               role: "system",
@@ -6411,14 +6415,8 @@ Return a JSON object with:
 }
 If a field cannot be determined, use 0 for numbers and "Unknown" for strings. Be precise with the interest rate — convert percentage to decimal.`
             },
-            {
-              role: "user",
-              content: [
-                { type: "text", text: `Please extract the mortgage data from this statement: ${input.fileName}` },
-                { type: "file_url", file_url: { url: input.fileUrl, mime_type: "application/pdf" } },
-              ],
-            },
           ],
+          instruction: `Please extract the mortgage data from this statement: ${input.fileName}`,
           response_format: {
             type: "json_schema",
             json_schema: {
@@ -6444,14 +6442,6 @@ If a field cannot be determined, use 0 for numbers and "Unknown" for strings. Be
             },
           },
         });
-        const rawContent = response.choices?.[0]?.message?.content;
-        if (!rawContent) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Failed to extract mortgage data" });
-        const content = typeof rawContent === "string" ? rawContent : JSON.stringify(rawContent);
-        try {
-          return JSON.parse(content);
-        } catch {
-          throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Invalid extraction result" });
-        }
       }),
 
     // Upload mortgage statement to S3
@@ -6462,9 +6452,9 @@ If a field cannot be determined, use 0 for numbers and "Unknown" for strings. Be
         contentType: z.string().default("application/pdf"),
       }))
       .mutation(async ({ ctx, input }) => {
-        const buffer = Buffer.from(input.fileBase64, "base64");
+        const buffer = decodePdfUpload(input.fileBase64);
         const suffix = randomBytes(6).toString("hex");
-        const key = `mortgage-statements/${ctx.user.id}/${suffix}-${input.fileName}`;
+        const key = `mortgage-statements/${ctx.user.id}/${suffix}-${input.fileName.replace(/[^a-zA-Z0-9._-]/g, "_")}`;
         const { url } = await storagePut(key, buffer, input.contentType);
         return { url, key };
       }),
@@ -7867,10 +7857,12 @@ If a field cannot be determined, use 0 for numbers and "Unknown" for strings. Be
     })).mutation(async ({ ctx, input }) => {
       const ws = await getWorkspaceForUser(ctx.user.id);
       if (!ws) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Workspace not found" });
+      // Read the text layer first: a scan or a non-PDF is refused before anything is stored.
+      const buffer = decodePdfUpload(input.fileBase64);
+      const doc = await extractPdfText(buffer);
       // Upload to S3
-      const buffer = Buffer.from(input.fileBase64, "base64");
       const suffix = randomBytes(6).toString("hex");
-      const key = `tax-returns/${ws.id}/${input.clientId}/${suffix}-${input.fileName}`;
+      const key = `tax-returns/${ws.id}/${input.clientId}/${suffix}-${input.fileName.replace(/[^a-zA-Z0-9._-]/g, "_")}`;
       const { url } = await storagePut(key, buffer, input.contentType);
       // Save as client document
       await uploadClientDocument({
@@ -7880,9 +7872,10 @@ If a field cannot be determined, use 0 for numbers and "Unknown" for strings. Be
         category: "TAX_RETURN", uploadedBy: ctx.user.id,
         uploadedByName: ctx.user.name ?? ctx.user.email ?? "Unknown",
       });
-      // Extract data via LLM
-      const response = await invokeLLM({
-        messages: [
+      // Extract data: the text goes through the Brain Hub chain (server/pdfReader.ts)
+      const extracted = await readPdfAsJson({
+        doc,
+        system: [
           ...(await hiveGroundingMessages(ctx)),
           {
             role: "system",
@@ -7918,14 +7911,8 @@ If a field cannot be determined, use 0 for numbers and "Unknown" for strings. Be
 }
 If a field cannot be determined, use 0 for numbers and "unknown" for strings. Be precise with rates — convert percentage to decimal.`
           },
-          {
-            role: "user",
-            content: [
-              { type: "text", text: `Please extract the tax return data from this document: ${input.fileName}` },
-              { type: "file_url", file_url: { url, mime_type: "application/pdf" } },
-            ],
-          },
         ],
+        instruction: `Please extract the tax return data from this document: ${input.fileName}`,
         response_format: {
           type: "json_schema",
           json_schema: {
@@ -7968,54 +7955,39 @@ If a field cannot be determined, use 0 for numbers and "unknown" for strings. Be
           },
         },
       });
-      const rawContent = response.choices?.[0]?.message?.content;
-      if (!rawContent) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Failed to extract tax return data" });
-      const content = typeof rawContent === "string" ? rawContent : JSON.stringify(rawContent);
-      try {
-        const extracted = JSON.parse(content);
-        // Log activity
-        await logClientActivity({
-          clientId: input.clientId, workspaceId: ws.id,
-          action: "TAX_RETURN_EXTRACTED",
-          actorName: ctx.user.name ?? ctx.user.email ?? "Unknown",
-          actorUserId: ctx.user.id,
-          summary: `Tax return extracted: ${extracted.taxYear} ${extracted.filingStatus} — AGI $${extracted.adjustedGrossIncome?.toLocaleString()}`,
-          metadata: { taxYear: extracted.taxYear, filingStatus: extracted.filingStatus, agi: extracted.adjustedGrossIncome },
-        });
-        return { fileUrl: url, extracted };
-      } catch {
-        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Invalid extraction result" });
-      }
+      // Log activity
+      await logClientActivity({
+        clientId: input.clientId, workspaceId: ws.id,
+        action: "TAX_RETURN_EXTRACTED",
+        actorName: ctx.user.name ?? ctx.user.email ?? "Unknown",
+        actorUserId: ctx.user.id,
+        summary: `Tax return extracted: ${extracted.taxYear} ${extracted.filingStatus} — AGI $${extracted.adjustedGrossIncome?.toLocaleString()}`,
+        metadata: { taxYear: extracted.taxYear, filingStatus: extracted.filingStatus, agi: extracted.adjustedGrossIncome },
+      });
+      return { fileUrl: url, extracted };
     }),
 
-    // Extract from already-uploaded document URL
+    // Extract from a document already uploaded to this workspace ("/files/tax-returns/<ws>/…"
+    // or "/files/docs/<ws>/…"); its text goes through the Brain Hub chain (server/pdfReader.ts).
     extractFromUrl: protectedProcedure.input(z.object({
-      fileUrl: z.string().url(),
-      fileName: z.string(),
+      fileUrl: z.string().min(1).max(2048).refine(v => v.startsWith("/files/") || /^https:\/\//i.test(v), "Must be an uploaded file URL"),
+      fileName: z.string().max(255),
     })).mutation(async ({ ctx, input }) => {
-      const response = await invokeLLM({
-        messages: [
+      const ws = await getWorkspaceForUser(ctx.user.id);
+      if (!ws) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Workspace not found" });
+      const bytes = await loadPdfFromUrl(input.fileUrl, { ownedKeyPrefixes: [`tax-returns/${ws.id}/`, `docs/${ws.id}/`] });
+      return readPdfAsJson({
+        bytes,
+        system: [
           ...(await hiveGroundingMessages(ctx)),
           {
             role: "system",
             content: `${SYSTEM_PREAMBLE} You are a tax return data extractor. Extract key financial data from this tax document. Return ONLY valid JSON with keys: filingStatus, taxYear, grossIncome, adjustedGrossIncome, taxableIncome, totalTaxLiability, effectiveTaxRate, marginalTaxBracket, wagesAndSalaries, interestIncome, dividendIncome, capitalGains, businessIncome, rentalIncome, socialSecurityIncome, retirementDistributions, totalDeductions, stateAndLocalTaxes, mortgageInterest, charitableContributions, dependents, primaryFilerName, spouseName. Use 0 for unknown numbers, "unknown" for unknown strings.`
           },
-          {
-            role: "user",
-            content: [
-              { type: "text", text: `Extract tax return data from: ${input.fileName}` },
-              { type: "file_url", file_url: { url: input.fileUrl, mime_type: "application/pdf" } },
-            ],
-          },
         ],
+        instruction: `Extract tax return data from: ${input.fileName}`,
+        response_format: { type: "json_object" },
       });
-      const rawContent = response.choices?.[0]?.message?.content;
-      if (!rawContent) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Failed to extract" });
-      try {
-        return JSON.parse(typeof rawContent === "string" ? rawContent : "{}");
-      } catch {
-        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Invalid extraction" });
-      }
     }),
   }),
 

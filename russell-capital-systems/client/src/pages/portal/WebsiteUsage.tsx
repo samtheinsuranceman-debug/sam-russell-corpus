@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/_core/hooks/useAuth";
@@ -238,21 +237,6 @@ export default function WebsiteUsage() {
   
   const { data: users, refetch: refetchUsers } = trpc.websiteUsage.listUsers.useQuery(
     { password: password || "" },
-    { enabled: !!password }
-  );
-
-  const { data: activeSessionsData } = trpc.websiteUsage.listUsers.useQuery(
-    { password: password || "" },
-    { enabled: !!password && autoRefresh }
-  );
-
-  const { data: systemStatus } = trpc.compliance.getComplianceStatus.useQuery(
-    undefined,
-    { enabled: !!password }
-  );
-
-  const { data: analyticsData } = trpc.dashboard.getOverview.useQuery(
-    undefined,
     { enabled: !!password }
   );
 
@@ -1330,7 +1314,7 @@ function SidebarItem({ icon, label, active, onClick }: { icon: React.ReactNode, 
       }`}
     >
       <div className={active ? 'text-blue-400' : 'text-slate-500'}>
-        {React.cloneElement(icon as React.ReactElement, { className: "h-4 w-4" })}
+        {React.cloneElement(icon as React.ReactElement<{ className?: string }>, { className: "h-4 w-4" })}
       </div>
       {label}
     </button>
@@ -1419,7 +1403,7 @@ function UserDetailView({ password, userId, userName, userEmail, onBack }: {
 }) {
   const [selectedSessionId, setSelectedSessionId] = useState<number | null>(null);
 
-  const { data: sessions } =
+  const { data: sessions, isLoading: sessionsLoading } =
     trpc.websiteUsage.getUserSessions.useQuery({ password, userId });
 
   const { data: signatures } =

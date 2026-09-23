@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { AppShell } from "@/components/AppShell";
 import { trpc } from "@/lib/trpc";
@@ -178,6 +177,14 @@ const ProgressBar = ({ value, max = 100, colorClass = "bg-blue-500", label, show
   );
 };
 
+/** Labels for the "Action Type" options in the schedule dialog; the label is the meeting title. */
+const MEETING_TYPE_LABELS: Record<string, string> = {
+  review: "Annual Review",
+  checkin: "Quick Check-in Call",
+  planning: "Financial Planning",
+  intervention: "Risk Intervention",
+};
+
 export default function ClientHealthDashboard() {
   const { user } = useAuth();
   
@@ -187,7 +194,7 @@ export default function ClientHealthDashboard() {
   const { data: complianceAlerts } = trpc.complianceAlerts.list.useQuery();
   
   const resolveAlert = trpc.complianceAlerts.resolve.useMutation();
-  const scheduleMeeting = trpc.meetings.schedule.useMutation();
+  const scheduleMeeting = trpc.meetings.create.useMutation();
   const addNote = trpc.notes.create.useMutation();
 
   const [filterStatus, setFilterStatus] = useState<string>("all");
@@ -486,7 +493,7 @@ export default function ClientHealthDashboard() {
     addNote.mutate({
       clientId: selectedClient.id,
       content: noteText,
-      type: "health_review"
+      noteType: "GENERAL"
     }, {
       onSuccess: () => {
         setNoteText("");
@@ -501,9 +508,10 @@ export default function ClientHealthDashboard() {
     
     scheduleMeeting.mutate({
       clientId: selectedClient.id,
-      date: meetingDate,
-      type: meetingType,
-      notes: meetingNotes
+      title: MEETING_TYPE_LABELS[meetingType] ?? "Client meeting",
+      scheduledAt: new Date(meetingDate),
+      meetingType: meetingType === "checkin" ? "PHONE" : undefined,
+      notes: meetingNotes.trim() || undefined,
     }, {
       onSuccess: () => {
         setShowMeetingModal(false);
@@ -1545,10 +1553,10 @@ export default function ClientHealthDashboard() {
                     <Activity className="h-4 w-4" /> Recommended Topics:
                   </div>
                   <ul className="list-disc list-inside text-[#c8d8ec] space-y-1 ml-1">
-                    {client.alerts.slice(0, 3).map((a: any, i: number) => (
+                    {selectedClient.alerts.slice(0, 3).map((a: any, i: number) => (
                       <li key={i} className="truncate">{a.title}</li>
                     ))}
-                    {client.alerts.length === 0 && <li>General portfolio review and relationship building</li>}
+                    {selectedClient.alerts.length === 0 && <li>General portfolio review and relationship building</li>}
                   </ul>
                 </div>
 

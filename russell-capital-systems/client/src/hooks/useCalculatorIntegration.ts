@@ -1,15 +1,15 @@
-// @ts-nocheck
 /**
  * useCalculatorIntegration — Reusable hook that wires any calculator page to the backend.
  * Provides:
- * 1. Client selector (load real client data)
- * 2. Save/load scenarios via tRPC
- * 3. Audit logging for compliance
+ * 1. Client selector (the workspace's real clients, clients.list)
+ * 2. Save/load scenarios, stored in saved_scenarios through the scenarios router and
+ *    tagged with the calculator's name so each calculator lists only its own
+ * 3. Audit logging for compliance (complianceAudit.logCalculation)
  * 4. StrategyContext publishing
  */
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback } from "react";
 import { trpc } from "@/lib/trpc";
-import { useStrategy, StrategyType } from "@/contexts/StrategyContext";
+import { useStrategy, type StrategyType, type StrategyResult } from "@/contexts/StrategyContext";
 import { useAuth } from "@/_core/hooks/useAuth";
 
 export interface CalculatorIntegrationConfig {
@@ -20,7 +20,7 @@ export interface CalculatorIntegrationConfig {
 export function useCalculatorIntegration(config: CalculatorIntegrationConfig) {
   const { calculatorName, strategyType } = config;
   const { user } = useAuth();
-  const { publishResult, getResult } = useStrategy();
+  const { publishResult, results: strategyResults } = useStrategy();
 
   // Client selector state
   const [selectedClientId, setSelectedClientId] = useState<number | null>(null);
@@ -31,102 +31,102 @@ export function useCalculatorIntegration(config: CalculatorIntegrationConfig) {
   const [isSaving, setIsSaving] = useState(false);
   const [lastSavedAt, setLastSavedAt] = useState<Date | null>(null);
 
-  // Client list query
-  const clientsQuery = trpc.clients?.list?.useQuery?.(undefined, {
+  const clientsQuery = trpc.clients.list.useQuery(undefined, {
     enabled: !!user,
     staleTime: 60_000,
   });
 
-  // Saved scenarios query
-  const scenariosQuery = trpc.complianceAudit?.getScenarios?.useQuery?.(
-    { calculatorType: calculatorName },
-    { enabled: !!user, staleTime: 30_000 }
+  // Saved scenarios for this calculator only.
+  const scenariosQuery = trpc.scenarios.list.useQuery(
+    { tag: calculatorName },
+    { enabled: !!user, staleTime: 30_000 },
   );
 
-  // Save scenario mutation
-  const saveScenarioMutation = trpc.complianceAudit?.saveScenario?.useMutation?.({
+  const saveScenarioMutation = trpc.scenarios.save.useMutation({
     onSuccess: () => {
       setLastSavedAt(new Date());
       setIsSaving(false);
-      scenariosQuery?.refetch?.();
+      void scenariosQuery.refetch();
     },
     onError: () => setIsSaving(false),
   });
 
-  // Audit log mutation
-  const logCalculationMutation = trpc.complianceAudit?.logCalculation?.useMutation?.();
+  const logCalculationMutation = trpc.complianceAudit.logCalculation.useMutation();
 
-  // Select a client
   const selectClient = useCallback((clientId: number, clientName: string) => {
     setSelectedClientId(clientId);
     setSelectedClientName(clientName);
   }, []);
 
-  // Save scenario
-  const saveScenario = useCallback(async (inputs: Record<string, any>, results: Record<string, any>) => {
-    if (!saveScenarioMutation) return;
-    setIsSaving(true);
-    try {
-      await saveScenarioMutation.mutateAsync({
-        name: scenarioName || `${calculatorName} - ${new Date().toLocaleDateString()}`,
-        calculatorType: calculatorName,
-        clientId: selectedClientId ?? undefined,
-        inputs,
-        results,
-      });
-    } catch (e) {
-      setIsSaving(false);
-    }
-  }, [saveScenarioMutation, scenarioName, calculatorName, selectedClientId]);
+  const saveScenario = useCallback(
+    async (inputs: Record<string, unknown>, results: Record<string, unknown>) => {
+      setIsSaving(true);
+      try {
+        await saveScenarioMutation.mutateAsync({
+          name: scenarioName || `${calculatorName} - ${new Date().toLocaleDateString()}`,
+          clientId: selectedClientId ?? undefined,
+          inputs,
+          projectionData: results,
+          tags: calculatorName,
+        });
+      } catch {
+        setIsSaving(false);
+      }
+    },
+    [saveScenarioMutation, scenarioName, calculatorName, selectedClientId],
+  );
 
-  // Log calculation for compliance
-  const logCalculation = useCallback(async (inputs: Record<string, any>, results: Record<string, any>) => {
-    if (!logCalculationMutation) return;
-    try {
-      await logCalculationMutation.mutateAsync({
-        calculatorType: calculatorName,
-        clientId: selectedClientId ?? undefined,
-        inputs,
-        results,
-        complianceNotes: `Calculated via ${calculatorName} for ${selectedClientName || "no client selected"}`,
-      });
-    } catch (e) {
-      // Non-critical
-    }
-  }, [logCalculationMutation, calculatorName, selectedClientId, selectedClientName]);
+  const logCalculation = useCallback(
+    async (inputs: Record<string, unknown>, results: Record<string, unknown>) => {
+      try {
+        await logCalculationMutation.mutateAsync({
+          calculationType: calculatorName,
+          clientId: selectedClientId ?? undefined,
+          clientName: selectedClientName || undefined,
+          pagePath: typeof window !== "undefined" ? window.location.pathname : undefined,
+          inputs,
+          outputs: results,
+          summary: `Calculated via ${calculatorName} for ${selectedClientName || "no client selected"}`,
+        });
+      } catch {
+        // Non-critical
+      }
+    },
+    [logCalculationMutation, calculatorName, selectedClientId, selectedClientName],
+  );
 
   // Publish results to StrategyContext for cross-calculator sync
-  const publishToStrategy = useCallback((results: Record<string, any>) => {
-    publishResult(strategyType, {
-      label: `${calculatorName}${selectedClientName ? ` - ${selectedClientName}` : ""}`,
-      ...results,
-    });
-  }, [publishResult, strategyType, calculatorName, selectedClientName]);
+  const publishToStrategy = useCallback(
+    (results: Record<string, unknown>) => {
+      publishResult({
+        type: strategyType,
+        data: { label: `${calculatorName}${selectedClientName ? ` - ${selectedClientName}` : ""}`, ...results },
+      } as unknown as StrategyResult);
+    },
+    [publishResult, strategyType, calculatorName, selectedClientName],
+  );
 
-  // Get data from another calculator
-  const getFromStrategy = useCallback((type: StrategyType) => {
-    return getResult(type);
-  }, [getResult]);
+  const getFromStrategy = useCallback((type: StrategyType) => strategyResults[type], [strategyResults]);
 
-  // Load scenario
-  const loadScenario = useCallback((scenario: any) => {
-    if (scenario?.inputs) {
-      return scenario.inputs;
-    }
-    return null;
-  }, []);
+  const loadScenario = useCallback(
+    (scenario: { inputs?: unknown } | null | undefined): Record<string, unknown> | null => {
+      const inputs = scenario?.inputs;
+      return inputs && typeof inputs === "object" ? (inputs as Record<string, unknown>) : null;
+    },
+    [],
+  );
 
   return {
     // Client selector
-    clients: clientsQuery?.data ?? [],
-    clientsLoading: clientsQuery?.isLoading ?? false,
+    clients: clientsQuery.data ?? [],
+    clientsLoading: clientsQuery.isLoading && !!user,
     selectedClientId,
     selectedClientName,
     selectClient,
 
     // Scenario management
-    scenarios: scenariosQuery?.data ?? [],
-    scenariosLoading: scenariosQuery?.isLoading ?? false,
+    scenarios: scenariosQuery.data ?? [],
+    scenariosLoading: scenariosQuery.isLoading && !!user,
     scenarioName,
     setScenarioName,
     saveScenario,
