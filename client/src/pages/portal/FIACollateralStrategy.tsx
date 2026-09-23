@@ -1,7 +1,6 @@
-// @ts-nocheck
 import { useCalculatorIntegration } from "@/hooks/useCalculatorIntegration";
 import { ClientSelectorBar } from "@/components/ClientSelectorBar";
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import { GenerateOutcomeTab } from "@/components/GenerateOutcomeTab";
 import { CalculationSyncBar } from "@/components/CalculationSyncBar";
 import { useStrategy } from "@/contexts/StrategyContext";
@@ -63,23 +62,6 @@ function ProductCard({ product, selected, onSelect }: { product: FIAProduct; sel
       onClick={onSelect}
     >
 
-      {/* Backend Integration Bar */}
-      <ClientSelectorBar
-        clients={calcIntegration.clients}
-        clientsLoading={calcIntegration.clientsLoading}
-        selectedClientId={calcIntegration.selectedClientId}
-        selectedClientName={calcIntegration.selectedClientName}
-        onSelectClient={calcIntegration.selectClient}
-        scenarios={calcIntegration.scenarios}
-        scenariosLoading={calcIntegration.scenariosLoading}
-        scenarioName={calcIntegration.scenarioName}
-        onSetScenarioName={calcIntegration.setScenarioName}
-        onSave={() => calcIntegration.saveScenario({}, {})}
-        onLoad={(s) => calcIntegration.loadScenario(s)}
-        isSaving={calcIntegration.isSaving}
-        lastSavedAt={calcIntegration.lastSavedAt}
-        calculatorName="FIACollateralStrategy"
-      />
       <CardContent className="p-4">
         <div className="flex items-start justify-between mb-2">
           <div>
@@ -172,26 +154,35 @@ export default function FIACollateralStrategy() {
     strategyType: "fia-collateral",
   });
 
-  const { clientData } = useClientData();
-  const [input, setInput] = useState<FIAWaterfallInput>(() => {
-    const defaults = getDefaultFIAInput();
-    if (clientData) {
-      defaults.annualIncome = clientData.annualIncome || defaults.annualIncome;
-      defaults.homeValue = clientData.homeValue || defaults.homeValue;
-      defaults.mortgageBalance = clientData.mortgageBalance || defaults.mortgageBalance;
-      defaults.clientAge = clientData.age || defaults.clientAge;
-    }
-    return defaults;
-  });
+  const { data: clientData } = useClientData();
+  const [input, setInput] = useState<FIAWaterfallInput>(() => getDefaultFIAInput());
+  // Rate the premium would earn if it were simply left where it is. Set by the visitor.
+  const [doNothingRate, setDoNothingRate] = useState(4);
+
+  // Prefill from the selected client's Fact Finder once it has loaded.
+  useEffect(() => {
+    if (!clientData) return;
+    setInput((prev) => ({
+      ...prev,
+      annualIncome: clientData.annualIncome || prev.annualIncome,
+      homeValue: clientData.homeValue || prev.homeValue,
+      mortgageBalance: clientData.mortgageBalance || prev.mortgageBalance,
+      clientAge: clientData.age || prev.clientAge,
+    }));
+  }, [clientData]);
   const [showComparison, setShowComparison] = useState(false);
 
-  const update = useCallback((key: string, value: any) => {
+  const update = useCallback(<K extends keyof FIAWaterfallInput>(key: K, value: FIAWaterfallInput[K]) => {
     setInput(prev => ({ ...prev, [key]: value }));
   }, []);
 
   const result = useMemo(() => runFIAWaterfall(input), [input]);
   const combos = useMemo(() => showComparison ? runAllCombinations(input) : [], [input, showComparison]);
   const { summary, projection, collateralProduct, incomeProduct } = result;
+  const firstYearCreditedPct =
+    projection[0] && projection[0].collateralStartValue > 0
+      ? (projection[0].collateralCredited / projection[0].collateralStartValue) * 100
+      : 0;
 
   const waterfallData = projection.map(r => ({
     year: r.year,
@@ -226,6 +217,29 @@ export default function FIACollateralStrategy() {
     <AppShell>
       <div className="container max-w-7xl py-6 space-y-6">
         <CalculationSyncBar />
+        {/* Backend Integration Bar */}
+        <ClientSelectorBar
+          clients={calcIntegration.clients}
+          clientsLoading={calcIntegration.clientsLoading}
+          selectedClientId={calcIntegration.selectedClientId}
+          selectedClientName={calcIntegration.selectedClientName}
+          onSelectClient={calcIntegration.selectClient}
+          scenarios={calcIntegration.scenarios}
+          scenariosLoading={calcIntegration.scenariosLoading}
+          scenarioName={calcIntegration.scenarioName}
+          onSetScenarioName={calcIntegration.setScenarioName}
+          onSave={() => calcIntegration.saveScenario({ ...input, doNothingRate }, { ...summary })}
+          onLoad={(s) => {
+            const saved = calcIntegration.loadScenario(s) as (Partial<FIAWaterfallInput> & { doNothingRate?: number }) | null;
+            if (!saved) return;
+            const { doNothingRate: savedRate, ...savedInput } = saved;
+            setInput((prev) => ({ ...prev, ...savedInput }));
+            if (typeof savedRate === "number") setDoNothingRate(savedRate);
+          }}
+          isSaving={calcIntegration.isSaving}
+          lastSavedAt={calcIntegration.lastSavedAt}
+          calculatorName="FIACollateralStrategy"
+        />
         {/* Header */}
         <div className="flex items-center justify-between flex-wrap gap-4">
           <div>
@@ -241,15 +255,37 @@ export default function FIACollateralStrategy() {
           </div>
           <div className="flex items-center gap-2">
             <FactFinderBadge />
-            <ExportToSlides pageTitle="FIA Collateral Strategy" pageContent={pageContent} />
+            <ExportToSlides
+              toolName="FIA Collateral Strategy"
+              getSections={() => [
+                {
+                  title: "Structure",
+                  items: [
+                    { label: "Collateral sleeve", value: `${fmt(summary.collateralPremium)} (${collateralProduct.name})` },
+                    { label: "Income sleeve", value: `${fmt(summary.incomePremium)} (${incomeProduct.name})` },
+                    { label: "Max loan", value: fmt(summary.maxLoanAmount) },
+                  ],
+                },
+                {
+                  title: `Results over ${input.projectionYears} years`,
+                  items: [
+                    { label: "Total net benefit", value: fmt(summary.totalNetBenefit) },
+                    { label: "Tax savings", value: fmt(summary.totalTaxSavings) },
+                    { label: "HELOC payoff", value: summary.helocPayoffYear ? `Year ${summary.helocPayoffYear}` : "N/A" },
+                    { label: "Estimated annual income", value: fmt(summary.estimatedAnnualIncome) },
+                  ],
+                },
+              ]}
+              getBullets={() => [pageContent]}
+            />
           </div>
         </div>
 
         {/* Executive Summary */}
         <ExecutiveSummary
           pageTitle="FIA Collateral & Income Strategy"
-          summary="This page models a split-ticket annuity strategy: one FIA contract optimized for bank collateral (maximum loan-to-value), and a separate FIA contract optimized for guaranteed lifetime income. The bank loan funds oil & gas investments whose tax depreciation pays down your HELOC."
-          whatYouCanLearn="How to structure two FIA contracts to simultaneously maximize borrowing power AND lifetime income without compromising either. Compare 9 product combinations across 6 carrier products."
+          whatItDoes="This page models a split-ticket annuity strategy: one FIA contract optimized for bank collateral (maximum loan-to-value), and a separate FIA contract optimized for guaranteed lifetime income. The bank loan funds oil & gas investments whose tax depreciation pays down your HELOC."
+          takeaway="How to structure two FIA contracts to simultaneously maximize borrowing power AND lifetime income without compromising either. Compare 9 product combinations across 6 carrier products."
           opportunities="Most advisors use a single annuity for both collateral and income — compromising both. Split-ticket structure can increase probable loan size by 15-25% while preserving full income rider benefits."
           intent="To give you a side-by-side comparison of the best collateral and income FIA products available, with realistic LTV bands based on bank underwriting analysis."
           callToAction="Select your preferred collateral and income products, adjust the allocation split, and compare all 9 combinations to find your optimal strategy."
@@ -259,7 +295,7 @@ export default function FIACollateralStrategy() {
             "How many years until the O&G tax savings fully pay off the HELOC?",
           ]}
         />
-        <GoalsAccelerator pageTitle="FIA Collateral Strategy" pageContent={pageContent} />
+        <GoalsAccelerator pageName="FIA Collateral Strategy" pageContext={pageContent} />
 
         <Tabs defaultValue="products" className="space-y-4">
           <TabsList className="bg-gray-900/50 p-1 flex-wrap h-auto">
@@ -285,8 +321,8 @@ export default function FIACollateralStrategy() {
               <CardContent className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div>
-                    <Label>Total Premium</Label>
-                    <NumberInput value={input.totalPremium} onChange={v => update("totalPremium", v)} prefix="$" />
+                    <Label>Total Premium ($)</Label>
+                    <NumberInput value={input.totalPremium} onChange={v => update("totalPremium", v)} />
                   </div>
                   <div>
                     <Label>Collateral Allocation: {(input.collateralAllocation * 100).toFixed(0)}%</Label>
@@ -302,22 +338,22 @@ export default function FIACollateralStrategy() {
                     </div>
                   </div>
                   <div>
-                    <Label>Assumed Index Return</Label>
-                    <NumberInput value={input.assumedIndexReturn} onChange={v => update("assumedIndexReturn", v)} suffix="%" />
+                    <Label>Assumed Index Return (%)</Label>
+                    <NumberInput value={input.assumedIndexReturn} onChange={v => update("assumedIndexReturn", v)} />
                   </div>
                 </div>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   <div>
-                    <Label>Bank Loan Rate</Label>
-                    <NumberInput value={input.bankLoanRate} onChange={v => update("bankLoanRate", v)} suffix="%" />
+                    <Label>Bank Loan Rate (%)</Label>
+                    <NumberInput value={input.bankLoanRate} onChange={v => update("bankLoanRate", v)} />
                   </div>
                   <div>
-                    <Label>O&G Return Rate</Label>
-                    <NumberInput value={input.oilGasReturnRate} onChange={v => update("oilGasReturnRate", v)} suffix="%" />
+                    <Label>O&G Return Rate (%)</Label>
+                    <NumberInput value={input.oilGasReturnRate} onChange={v => update("oilGasReturnRate", v)} />
                   </div>
                   <div>
-                    <Label>Annual Income</Label>
-                    <NumberInput value={input.annualIncome} onChange={v => update("annualIncome", v)} prefix="$" />
+                    <Label>Annual Income ($)</Label>
+                    <NumberInput value={input.annualIncome} onChange={v => update("annualIncome", v)} />
                   </div>
                   <div>
                     <Label>Client Age</Label>
@@ -326,20 +362,20 @@ export default function FIACollateralStrategy() {
                 </div>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   <div>
-                    <Label>Federal Tax Rate</Label>
-                    <NumberInput value={input.federalTaxRate} onChange={v => update("federalTaxRate", v)} suffix="%" />
+                    <Label>Federal Tax Rate (%)</Label>
+                    <NumberInput value={input.federalTaxRate} onChange={v => update("federalTaxRate", v)} />
                   </div>
                   <div>
-                    <Label>State Tax Rate</Label>
-                    <NumberInput value={input.stateTaxRate} onChange={v => update("stateTaxRate", v)} suffix="%" />
+                    <Label>State Tax Rate (%)</Label>
+                    <NumberInput value={input.stateTaxRate} onChange={v => update("stateTaxRate", v)} />
                   </div>
                   <div>
-                    <Label>Home Value</Label>
-                    <NumberInput value={input.homeValue} onChange={v => update("homeValue", v)} prefix="$" />
+                    <Label>Home Value ($)</Label>
+                    <NumberInput value={input.homeValue} onChange={v => update("homeValue", v)} />
                   </div>
                   <div>
-                    <Label>Mortgage Balance</Label>
-                    <NumberInput value={input.mortgageBalance} onChange={v => update("mortgageBalance", v)} prefix="$" />
+                    <Label>Mortgage Balance ($)</Label>
+                    <NumberInput value={input.mortgageBalance} onChange={v => update("mortgageBalance", v)} />
                   </div>
                 </div>
               </CardContent>
@@ -547,11 +583,9 @@ export default function FIACollateralStrategy() {
 
             {/* Tax Bracket Panel */}
             <TaxBracketPanel
-              annualIncome={input.annualIncome}
-              federalRate={input.federalTaxRate}
-              stateRate={input.stateTaxRate}
-              deductions={summary.totalTaxSavings / input.projectionYears}
-              strategyName="FIA Collateral Strategy"
+              grossIncome={input.annualIncome}
+              proposedIncome={Math.max(0, input.annualIncome - summary.totalTaxSavings / Math.max(1, input.projectionYears))}
+              projectionYears={input.projectionYears}
             />
           </TabsContent>
 
@@ -693,31 +727,59 @@ export default function FIACollateralStrategy() {
             <GenerateOutcomeTab
               strategyType="fia-collateral"
               hasResults={!!result}
-              resultData={result ? { fiaAccountValue: result.finalValue || 800000, collateralLoanAmount: result.loanAmount || 500000, netArbitrage: result.arbitrage || 25000, annualCrediting: result.creditRate || 6.5, loanInterestRate: result.loanRate || 4.5, projectionData: [] } : null}
-              metrics={result ? [{ label: "FIA Value", value: result.finalValue || 800000, highlight: true }, { label: "Loan Amount", value: result.loanAmount || 500000 }, { label: "Net Arbitrage", value: result.arbitrage || 25000 }, { label: "Credit Rate", value: (result.creditRate || 6.5) / 100, format: "percent" }] : []}
+              resultData={{
+                fiaAccountValue: summary.finalCollateralValue,
+                collateralLoanAmount: summary.maxLoanAmount,
+                netArbitrage: summary.totalNetBenefit,
+                annualCrediting: firstYearCreditedPct,
+                loanInterestRate: input.bankLoanRate,
+                projectionData: projection.map((r) => ({
+                  year: r.year,
+                  accountValue: Math.round(r.collateralEndValue),
+                  loanBalance: Math.round(r.bankLoanBalance),
+                  netValue: Math.round(r.totalBenefit),
+                })),
+              }}
+              metrics={[
+                { label: "Collateral Value", value: summary.finalCollateralValue, highlight: true },
+                { label: "Loan Amount", value: summary.maxLoanAmount },
+                { label: "Net Benefit", value: summary.totalNetBenefit },
+                { label: "Year-1 Credited Rate", value: firstYearCreditedPct / 100, format: "percent" },
+              ]}
             />
           </TabsContent>
         </Tabs>
 
         {/* Recommendation Summary */}
         <RecommendationSummary
-          strategyName="FIA Collateral & Income Strategy"
-          totalBenefit={summary.totalNetBenefit}
-          annualTaxSavings={summary.totalTaxSavings / input.projectionYears}
-          yearsToPayoff={summary.helocPayoffYear}
-          recommendation={`Deploy ${fmt(summary.collateralPremium)} into ${collateralProduct.fullName} (collateral sleeve) and ${fmt(summary.incomePremium)} into ${incomeProduct.fullName} (income sleeve). This generates a ${fmt(summary.maxLoanAmount)} bank loan for O&G investment, producing ${fmt(summary.totalOilGasIncome)} in cumulative income and ${fmt(summary.totalTaxSavings)} in tax savings over ${input.projectionYears} years. Estimated lifetime income: ${fmt(summary.estimatedAnnualIncome)}/year.`}
+          headline="FIA Collateral & Income Strategy"
+          detail={`Deploy ${fmt(summary.collateralPremium)} into ${collateralProduct.fullName} (collateral sleeve) and ${fmt(summary.incomePremium)} into ${incomeProduct.fullName} (income sleeve). This generates a ${fmt(summary.maxLoanAmount)} bank loan for O&G investment, producing ${fmt(summary.totalOilGasIncome)} in cumulative income and ${fmt(summary.totalTaxSavings)} in tax savings over ${input.projectionYears} years. Estimated lifetime income: ${fmt(summary.estimatedAnnualIncome)}/year.${summary.helocPayoffYear ? ` HELOC paid off in year ${summary.helocPayoffYear}.` : ""}`}
+          dollarBenefit={summary.totalNetBenefit}
+          timeHorizon={`${input.projectionYears} years`}
         />
 
         {/* Do Nothing Baseline */}
+        <Card>
+          <CardContent className="pt-4">
+            <Label>Do-nothing comparison rate (%)</Label>
+            <NumberInput value={doNothingRate} onChange={(v) => setDoNothingRate(Number(v) || 0)} step={0.1} />
+          </CardContent>
+        </Card>
         <DoNothingBaseline
-          doNothingValue={input.totalPremium * Math.pow(1.04, input.projectionYears)}
-          strategyValue={summary.totalNetBenefit + input.totalPremium}
-          years={input.projectionYears}
-          doNothingLabel="Leave in CDs at 4%"
-          strategyLabel="FIA Split-Ticket + O&G + Tax Savings"
+          doNothingLabel={`Premium left at ${doNothingRate}%`}
+          recommendedLabel="FIA Split-Ticket + O&G + Tax Savings"
+          metrics={[
+            {
+              label: `Value after ${input.projectionYears} years`,
+              doNothing: input.totalPremium * Math.pow(1 + doNothingRate / 100, input.projectionYears),
+              recommended: summary.totalNetBenefit + input.totalPremium,
+              format: "currency",
+              higherIsBetter: true,
+            },
+          ]}
         />
 
-        <PageInsights pageName="FIA Collateral Strategy" />
+        <PageInsights pageId="fia-collateral" />
         <RelatedCalculators currentPage="FIACollateralStrategy" />
         <NAICDisclaimer />
       </div>

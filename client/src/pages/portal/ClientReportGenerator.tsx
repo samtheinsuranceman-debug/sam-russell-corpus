@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { NumberInput } from "@/components/NumberInput";
 import { useState, useMemo, useEffect } from "react";
 import { AppShell } from "@/components/AppShell";
@@ -36,13 +35,9 @@ import {
 } from "recharts";
 
 const REPORT_SECTIONS = [{ id: "cover", label: "Cover Page", icon: FileText, description: "Branded cover with client name, advisor info, and date" },
-,
   { id: "executive", label: "Executive Summary", icon: Eye, description: "System-generated summary of key findings and recommendations" },
-,
   { id: "netWorth", label: "Net Worth Analysis", icon: DollarSign, description: "Current assets, liabilities, and net worth breakdown" },
-,
   { id: "taxWaterfall", label: "Tax Waterfall Analysis", icon: BarChart3, description: "Income flow through tax brackets with optimization strategies" },
-,
   { id: "iulProjection", label: "IUL Illustration", icon: TrendingUp, description: "Indexed Universal Life policy projection with credited rates" }
 ];
 
@@ -61,8 +56,6 @@ export default function ClientReportGenerator() {
   const clientsQuery = trpc.clients.list.useQuery();
   const notesQuery = trpc.notes.list.useQuery({ clientId: 0 });
   const activityQuery = trpc.activity.list.useQuery();
-  const reportMutation = trpc.reports.create.useMutation();
-  const settingsQuery = trpc.workspace.getSettings.useQuery();
 
   const [clientName, setClientName] = useState("John & Jane Smith");
   const [clientAge, setClientAge] = useState<number>(55);
@@ -199,20 +192,11 @@ export default function ClientReportGenerator() {
   const activeSections = REPORT_SECTIONS.filter((s) => selectedSections[s.id]);
   const currentTheme = REPORT_THEMES.find((t) => t.id === selectedTheme) || REPORT_THEMES[0];
 
+  // The report is assembled in the browser from the sections chosen above; there is no
+  // server-side report store, so generating opens the preview to print or save as PDF.
   const handleGenerate = () => {
-    setIsGenerating(true);
-    reportMutation.mutate({
-      title: `Client Report - ${clientName}`,
-      content: "Report generated",
-      type: "client_report"
-    }, {
-      onSettled: () => {
-        setTimeout(() => {
-          setIsGenerating(false);
-          setPreviewMode(true);
-        }, 2000);
-      }
-    });
+    setIsGenerating(false);
+    setPreviewMode(true);
   };
 
   const toggleSection = (id: string) => {

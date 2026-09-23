@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { GenerateOutcomeTab } from "@/components/GenerateOutcomeTab";
 import { CalculationSyncBar } from "@/components/CalculationSyncBar";
@@ -43,6 +42,7 @@ import { IbbotsonYearSelector } from "@/components/IbbotsonYearSelector";
 import { SP500_ANNUAL_RETURNS as IBBOTSON_RETURNS, IBBOTSON_DEFAULT_START_YEAR, IBBOTSON_START_YEAR, IBBOTSON_END_YEAR, IBBOTSON_SHORT_DISCLAIMER } from "@shared/ibbotsonModel";
 import { PageInsights } from "@/components/PageInsights";
 import { trpc } from "@/lib/trpc";
+import { toast } from "sonner";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { ExecutiveSummary, GoalsAccelerator, RecommendationSummary, DoNothingBaseline, TaxBracketPanel } from "@/components/ConsumerOutcomeBlocks";
 import { formatTaxCurrency } from "@shared/taxBracketEngine";
@@ -52,39 +52,19 @@ import { LookbackIntegrityBadge } from "@/components/LookbackIntegrityBadge";
 import { creditedSeries } from "@shared/lookbackIntegrity";
 import { RAW_INDEX_RETURNS } from "@shared/indexCreditingData";
 
-const SP500_ANNUAL_RETURNS = [{ year: 2001, beginValue: 1320.28, endValue: 1148.08, rawReturn: -13.04 },
-,
-  { year: 2002, beginValue: 1148.08, endValue: 879.82, rawReturn: -23.37 },
-,
-  { year: 2003, beginValue: 879.82, endValue: 1111.92, rawReturn: 26.38 },
-,
-  { year: 2004, beginValue: 1111.92, endValue: 1211.92, rawReturn: 8.99 },
-,
-  { year: 2005, beginValue: 1211.92, endValue: 1248.29, rawReturn: 3.00 }
-];
+// S&P 500 annual price returns 2001 onward, from the sourced series in shared/indexCreditingData.
+const SP500_ANNUAL_RETURNS: { year: number; rawReturn: number }[] = Object.entries(RAW_INDEX_RETURNS.SP500 ?? {})
+  .map(([y, r]) => ({ year: Number(y), rawReturn: r }))
+  .filter((r) => r.year >= 2001)
+  .sort((a, b) => a.year - b.year);
 
-const CAP_RATE_HISTORY = [{ year: 2001, capRate: 14.00 },
-, { year: 2002, capRate: 14.00 },
-, { year: 2003, capRate: 13.50 },
-,
-  { year: 2004, capRate: 13.50 },
-, { year: 2005, capRate: 13.00 }
-];
-
-const MOCK_ALLOCATIONS = [
+// An example split across crediting options. The weights are hypothetical, not a recommendation;
+// the page's own cap and participation inputs are shown against the index options.
+const EXAMPLE_ALLOCATIONS = [
   { name: "S&P 500 1-Year PtP", value: 60, color: "#3b82f6" },
   { name: "Nasdaq 100 1-Year PtP", value: 20, color: "#10b981" },
   { name: "Euro Stoxx 50 1-Year PtP", value: 10, color: "#ec4899" },
-  { name: "Fixed Account", value: 10, color: "#10b981" },
-];
-
-const MOCK_RADAR_DATA = [
-  { subject: "Upside Potential", A: 85, B: 60, fullMark: 100 },
-  { subject: "Downside Protection", A: 100, B: 40, fullMark: 100 },
-  { subject: "Liquidity", A: 70, B: 90, fullMark: 100 },
-  { subject: "Tax Efficiency", A: 95, B: 50, fullMark: 100 },
-  { subject: "Death Benefit", A: 100, B: 20, fullMark: 100 },
-  { subject: "Fees", A: 40, B: 80, fullMark: 100 },
+  { name: "Fixed Account", value: 10, color: "#f59e0b" },
 ];
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d'];
@@ -102,11 +82,10 @@ export default function IULHistoricalPerformance() {
   const { user } = useAuth();
   const { data: clientData } = useClientData();
   
-  const { data: clientsData } = trpc.clients.list.useQuery();
-  const { data: marketData } = trpc.marketData.getSP500.useQuery(undefined, { enabled: false });
-  const { data: strategyData } = trpc.strategy.getSaved.useQuery(undefined, { enabled: false });
-  const { data: complianceData } = trpc.compliance.check.useQuery(undefined, { enabled: false });
-  const saveStrategyMutation = trpc.strategy.save.useMutation();
+  const saveScenarioMutation = trpc.scenarios.save.useMutation({
+    onSuccess: () => toast.success("Scenario saved"),
+    onError: (e) => toast.error(e.message),
+  });
   const logActivityMutation = trpc.activity.log.useMutation();
 
   const [activeTab, setActiveTab] = useState("performance");
@@ -114,7 +93,6 @@ export default function IULHistoricalPerformance() {
   const [floorRate, setFloorRate] = useState(0.0);
   const [participationRate, setParticipationRate] = useState(100);
   const [guaranteedMin, setGuaranteedMin] = useState(0.25);
-  const [useHistoricalCaps, setUseHistoricalCaps] = useState(false);
   const [useIbbotsonRange, setUseIbbotsonRange] = useState(false);
   const [ibbotsonStartYear, setIbbotsonStartYear] = useState(IBBOTSON_DEFAULT_START_YEAR);
   const [showAdvanced, setShowAdvanced] = useState(false);
@@ -136,25 +114,12 @@ export default function IULHistoricalPerformance() {
     if (!clientData) return;
   }, [clientData]);
 
-  const handleSaveScenario = useCallback(() => {
-    saveStrategyMutation.mutate({
-      name: scenarioName,
-      type: "IUL",
-      parameters: { capRate, floorRate, participationRate }
-    });
-    logActivityMutation.mutate({
-      action: "Saved IUL Scenario",
-      details: `Saved scenario: ${scenarioName}`
-    });
-  }, [scenarioName, capRate, floorRate, participationRate, saveStrategyMutation, logActivityMutation]);
-
   const handleReset = useCallback(() => {
     setCapRate(12.0);
     setFloorRate(0.0);
     setParticipationRate(100);
     setSpreadRate(0.0);
     setIndexMultiplier(1.0);
-    setUseHistoricalCaps(false);
     setShowFees(false);
   }, []);
 
@@ -184,15 +149,14 @@ export default function IULHistoricalPerformance() {
     const sourceData = useIbbotsonRange
       ? Object.entries(IBBOTSON_RETURNS)
           .filter(([y]) => Number(y) >= ibbotsonStartYear)
-          .map(([y, ret]) => ({ year: Number(y), beginValue: 0, endValue: 0, rawReturn: ret * 100 }))
+          .map(([y, ret]) => ({ year: Number(y), rawReturn: ret * 100 }))
       : SP500_ANNUAL_RETURNS;
       
     let cumulativeValue = 100000;
     let cumulativeRaw = 100000;
     
     return sourceData.map((row) => {
-      const historicalCap = CAP_RATE_HISTORY.find((c) => c.year === row.year);
-      const effectiveCap = useHistoricalCaps && historicalCap ? historicalCap.capRate : capRate;
+      const effectiveCap = capRate;
       const effectiveFloor = Math.max(floorRate, guaranteedMin);
       
       let adjustedRaw = (row.rawReturn * indexMultiplier) - spreadRate;
@@ -216,7 +180,7 @@ export default function IULHistoricalPerformance() {
         adjustedRaw
       };
     });
-  }, [capRate, floorRate, participationRate, guaranteedMin, useHistoricalCaps, useIbbotsonRange, ibbotsonStartYear, indexMultiplier, spreadRate, showFees, feeRate]);
+  }, [capRate, floorRate, participationRate, guaranteedMin, useIbbotsonRange, ibbotsonStartYear, indexMultiplier, spreadRate, showFees, feeRate]);
 
   const stats = useMemo(() => {
     const credited = historicalData.map((d) => d.creditedRate);
@@ -233,6 +197,19 @@ export default function IULHistoricalPerformance() {
     
     return { avgCredited, avgRaw, yearsProtected, totalProtection, yearsCapped, maxDrawdown, bestYear };
   }, [historicalData]);
+
+  const handleSaveScenario = useCallback(() => {
+    saveScenarioMutation.mutate({
+      name: scenarioName,
+      inputs: { capRate, floorRate, participationRate, guaranteedMin, indexMultiplier, spreadRate, showFees, feeRate },
+      projectionData: { avgCredited: stats.avgCredited, avgRaw: stats.avgRaw, yearsProtected: stats.yearsProtected },
+      tags: "IULHistoricalPerformance",
+    });
+    logActivityMutation.mutate({
+      action: "Saved IUL Scenario",
+      details: `Saved scenario: ${scenarioName}`
+    });
+  }, [scenarioName, capRate, floorRate, participationRate, guaranteedMin, indexMultiplier, spreadRate, showFees, feeRate, stats, saveScenarioMutation, logActivityMutation]);
 
   // Look-back integrity: the window this page shows, ranked among every window of
   // the same length in the sourced S&P 500 price series, credited on this page's terms.
@@ -263,8 +240,7 @@ export default function IULHistoricalPerformance() {
     }));
   }, [tm.enabled, tmOverlay, boringAccumulation]);
 
-  const allocationData = useMemo(() => MOCK_ALLOCATIONS, []);
-  const radarData = useMemo(() => MOCK_RADAR_DATA, []);
+  const allocationData = EXAMPLE_ALLOCATIONS;
 
   const feeImpactData = useMemo(() => {
     return historicalData.slice(0, 10).map((d) => ({
@@ -287,7 +263,7 @@ export default function IULHistoricalPerformance() {
     
     return periods.map((p) => {
       const data = historicalData.filter((d) => d.year >= p.start && d.year <= p.end);
-      if (data.length === 0) return { period: p.name, avgIndex: 0, avgCredited: 0, volatility: 0 };
+      if (data.length === 0) return { period: p.name, avgIndex: 0, avgCredited: 0, indexVolatility: 0, creditedVolatility: 0 };
       
       const avgIndex = data.reduce((sum, d) => sum + d.rawReturn, 0) / data.length;
       const avgCredited = data.reduce((sum, d) => sum + d.creditedRate, 0) / data.length;
@@ -364,8 +340,25 @@ export default function IULHistoricalPerformance() {
           </div>
           <div className="flex items-center gap-2">
             <ExportToSlides
-              defaultTitle="IUL Historical Performance"
-              elementId="iul-historical-content"
+              toolName="IUL Historical Performance"
+              getSections={() => [
+                {
+                  title: "Crediting terms",
+                  items: [
+                    { label: "Cap", value: `${capRate.toFixed(2)}%` },
+                    { label: "Floor", value: `${Math.max(floorRate, guaranteedMin).toFixed(2)}%` },
+                    { label: "Participation", value: `${participationRate}%` },
+                  ],
+                },
+                {
+                  title: "Historical results",
+                  items: [
+                    { label: "Average credited", value: `${stats.avgCredited.toFixed(2)}%` },
+                    { label: "Average index", value: `${stats.avgRaw.toFixed(2)}%` },
+                    { label: "Years floor protected", value: String(stats.yearsProtected) },
+                  ],
+                },
+              ]}
             />
             <Button variant="outline" className="gap-2" onClick={handleReset}>
               <RefreshCw className="w-4 h-4" /> Reset
@@ -378,20 +371,15 @@ export default function IULHistoricalPerformance() {
           <div className="flex items-center gap-4 p-3 bg-slate-800/50 border border-slate-700 rounded-lg">
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 font-bold">
-                {clientData.firstName?.[0]}{clientData.lastName?.[0]}
+                {(clientData.clientName || "?").slice(0, 1)}
               </div>
               <div>
-                <p className="text-sm font-medium text-white">{clientData.firstName} {clientData.lastName}</p>
+                <p className="text-sm font-medium text-white">{clientData.clientName}</p>
                 <p className="text-xs text-slate-400">Client Analysis</p>
               </div>
             </div>
             <div className="h-8 w-px bg-slate-700 mx-2" />
             <FactFinderBadge />
-            <div className="ml-auto flex items-center gap-2">
-              <Badge variant="outline" className="bg-slate-900 text-slate-300">
-                Risk Profile: Moderate
-              </Badge>
-            </div>
           </div>
         )}
 
@@ -414,16 +402,6 @@ export default function IULHistoricalPerformance() {
                     Advanced Options
                   </Label>
                 </div>
-                <div className="flex items-center gap-2">
-                  <Switch
-                    id="use-historical-caps"
-                    checked={useHistoricalCaps}
-                    onCheckedChange={setUseHistoricalCaps}
-                  />
-                  <Label htmlFor="use-historical-caps" className="text-xs text-slate-400 cursor-pointer">
-                    Use Historical Caps
-                  </Label>
-                </div>
               </div>
             </div>
           </CardHeader>
@@ -440,8 +418,6 @@ export default function IULHistoricalPerformance() {
                   max={20}
                   step={0.25}
                   onValueChange={([v]) => setCapRate(v)}
-                  disabled={useHistoricalCaps}
-                  className={useHistoricalCaps ? "opacity-50" : ""}
                 />
                 <p className="text-[10px] text-slate-500">Maximum credited rate</p>
               </div>
@@ -488,7 +464,7 @@ export default function IULHistoricalPerformance() {
                   <Button 
                     size="sm" 
                     onClick={handleSaveScenario}
-                    disabled={saveStrategyMutation.isPending}
+                    disabled={!user || saveScenarioMutation.isPending}
                     className="h-9 px-3 bg-blue-600 hover:bg-blue-700"
                   >
                     Save
@@ -598,7 +574,7 @@ export default function IULHistoricalPerformance() {
             startYear={lookbackWindow.start}
             years={lookbackWindow.years}
             market={RAW_INDEX_RETURNS.SP500}
-            seriesLabel={`S&P 500 price return 1994–2025 (ChartRow), credited at this page's cap, floor, participation, spread and fee${useHistoricalCaps ? "; historical caps are not applied to the comparison" : ""}`}
+            seriesLabel={`S&P 500 price return 1994–2025 (ChartRow), credited at this page's cap, floor, participation, spread and fee`}
           />
         )}
 
@@ -951,7 +927,7 @@ export default function IULHistoricalPerformance() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <Card className="border-slate-700/50 bg-slate-800/30">
                 <CardHeader>
-                  <CardTitle className="text-sm text-slate-300">Sample Strategy Allocation</CardTitle>
+                  <CardTitle className="text-sm text-slate-300">Example Allocation (hypothetical weights)</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="h-[300px]">
@@ -981,26 +957,6 @@ export default function IULHistoricalPerformance() {
                 </CardContent>
               </Card>
 
-              <Card className="border-slate-700/50 bg-slate-800/30">
-                <CardHeader>
-                  <CardTitle className="text-sm text-slate-300">Strategy Profile Comparison</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="h-[300px]">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <RadarChart cx="50%" cy="50%" outerRadius="80%" data={radarData}>
-                        <PolarGrid stroke="#334155" />
-                        <PolarAngleAxis dataKey="subject" tick={{ fill: "#94a3b8", fontSize: 10 }} />
-                        <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
-                        <Radar name="IUL Policy" dataKey="A" stroke="#22c55e" fill="#22c55e" fillOpacity={0.3} />
-                        <Radar name="Taxable Brokerage" dataKey="B" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.3} />
-                        <Legend />
-                        <Tooltip contentStyle={{ background: "#0f172a", border: "1px solid #334155", borderRadius: 8 }} />
-                      </RadarChart>
-                    </ResponsiveContainer>
-                  </div>
-                </CardContent>
-              </Card>
             </div>
             
             <Card className="border-slate-700/50 bg-slate-800/30">
@@ -1013,8 +969,8 @@ export default function IULHistoricalPerformance() {
                     <tr className="border-b border-slate-700">
                       <th className="text-left p-3 text-slate-400">Strategy Option</th>
                       <th className="text-left p-3 text-slate-400">Index</th>
-                      <th className="text-right p-3 text-slate-400">Current Cap</th>
-                      <th className="text-right p-3 text-slate-400">Par Rate</th>
+                      <th className="text-right p-3 text-slate-400">Cap (your input)</th>
+                      <th className="text-right p-3 text-slate-400">Par Rate (your input)</th>
                       <th className="text-right p-3 text-slate-400">Allocation</th>
                     </tr>
                   </thead>
@@ -1026,8 +982,8 @@ export default function IULHistoricalPerformance() {
                           {row.name}
                         </td>
                         <td className="p-3 text-slate-400">{row.name.split(' ')[0]}</td>
-                        <td className="p-3 text-right text-amber-400">{row.name.includes('Fixed') ? 'N/A' : '12.00%'}</td>
-                        <td className="p-3 text-right text-blue-400">{row.name.includes('Fixed') ? 'N/A' : '100%'}</td>
+                        <td className="p-3 text-right text-amber-400">{row.name.includes('Fixed') ? 'N/A' : `${capRate.toFixed(2)}%`}</td>
+                        <td className="p-3 text-right text-blue-400">{row.name.includes('Fixed') ? 'N/A' : `${participationRate}%`}</td>
                         <td className="p-3 text-right text-green-400 font-medium">{row.value}%</td>
                       </tr>
                     ))}
