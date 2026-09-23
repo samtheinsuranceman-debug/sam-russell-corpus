@@ -19,8 +19,13 @@
  * So: one env var, set once, never rotated on your schedule. Every provider
  * key after that is managed in the UI.
  *
- * Generate one with:
- *     node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
+ * Its value is any passcode the owner types: a sentence, a phrase, a string
+ * of words. There is no format and no minimum. The passcode is stretched to
+ * the 32-byte AES key with scrypt (fixed salt, since there is exactly one
+ * master key per deployment), so a memorable phrase and a random blob both
+ * work. A value that already is a 32-byte key in base64 or hex (the form the
+ * generator command used to print) is used as the key directly, so a vault
+ * set up under the old rule keeps opening its rows.
  *
  * ─── IF YOU LOSE IT ─────────────────────────────────────────────────────────
  *
@@ -29,13 +34,25 @@
  * keep the master key somewhere you keep other irreplaceable things, and do
  * not rotate it casually.
  */
-import { createCipheriv, createDecipheriv, randomBytes, timingSafeEqual } from "crypto";
+import { createCipheriv, createDecipheriv, randomBytes, scryptSync, timingSafeEqual } from "crypto";
 
 const ALGORITHM = "aes-256-gcm";
 const IV_BYTES = 12; // 96-bit nonce, the size GCM is specified for
 const TAG_BYTES = 16;
 const KEY_BYTES = 32;
 const VERSION = "v1";
+/** Domain separation for the passcode stretch. Changing it re-keys every vault. */
+const PASSCODE_SALT = "russell-capital-systems/rcs-vault/v1";
+/** scrypt work factor: ~50 ms once per process, then cached. */
+const SCRYPT_COST = 16384;
+
+/** The 64-hex and 43-chars-plus-pad base64 forms the old generator printed. */
+const HEX_KEY = /^[0-9a-fA-F]{64}$/;
+const BASE64_KEY = /^[A-Za-z0-9+/]{43}=$/;
+
+/** One derivation per distinct passcode per process. */
+let cachedFor: string | null = null;
+let cachedKey: Buffer | null = null;
 
 export class VaultUnavailableError extends Error {
   readonly code = "VAULT_UNAVAILABLE";
@@ -46,32 +63,35 @@ export class VaultUnavailableError extends Error {
 }
 
 /**
- * Read and validate the master key.
+ * Read the master key.
  *
- * Accepts base64 or hex. Throws rather than falling back to a derived or
- * default key — a vault that silently encrypts with a guessable key is worse
- * than one that refuses to start, because it looks like it is working.
+ * Any non-empty value works. A value in the exact 32-byte base64 or hex form
+ * is taken as the key itself (vaults set up before passcodes were accepted);
+ * anything else is a passcode and is stretched with scrypt. Throws only when
+ * the variable is missing — a vault that silently falls back to a derived
+ * default is worse than one that refuses to start, because it looks like it
+ * is working.
  */
 function masterKey(): Buffer {
   const raw = process.env.RCS_VAULT_KEY?.trim();
   if (!raw) {
     throw new VaultUnavailableError(
-      "RCS_VAULT_KEY is not set. Generate one with: node -e \"console.log(require('crypto').randomBytes(32).toString('base64'))\" and set it in your deployment environment.",
+      "RCS_VAULT_KEY is not set. Set it to any passcode you choose (a phrase, a sentence, anything) in your deployment environment.",
     );
   }
+  if (cachedFor === raw && cachedKey) return cachedKey;
 
   let key: Buffer;
-  if (/^[0-9a-fA-F]{64}$/.test(raw)) {
+  if (HEX_KEY.test(raw)) {
     key = Buffer.from(raw, "hex");
-  } else {
+  } else if (BASE64_KEY.test(raw) && Buffer.from(raw, "base64").length === KEY_BYTES) {
     key = Buffer.from(raw, "base64");
+  } else {
+    key = scryptSync(raw, PASSCODE_SALT, KEY_BYTES, { N: SCRYPT_COST, r: 8, p: 1 });
   }
 
-  if (key.length !== KEY_BYTES) {
-    throw new VaultUnavailableError(
-      `RCS_VAULT_KEY must decode to exactly ${KEY_BYTES} bytes (got ${key.length}). Generate a new one with: node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"`,
-    );
-  }
+  cachedFor = raw;
+  cachedKey = key;
   return key;
 }
 

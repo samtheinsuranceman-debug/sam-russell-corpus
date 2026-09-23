@@ -120,15 +120,61 @@ describe("Secret vault — master key validation", () => {
     }
   });
 
-  it("rejects a master key of the wrong length", async () => {
-    process.env.RCS_VAULT_KEY = Buffer.from("too-short").toString("base64");
+  it("accepts any passcode the owner types, with no format or length rule", async () => {
+    // The owner's rule: no required word count, no required shape. A phrase
+    // with spaces and punctuation, a short word, a long sentence — all work.
+    for (const passcode of ["my dog ate the mortgage in 2019!", "x", "The quick brown fox jumps over the lazy dog, forty times over, and never once complains about it."]) {
+      process.env.RCS_VAULT_KEY = passcode;
+      try {
+        const { isVaultConfigured, selfTest, encryptSecret, decryptSecret } = await vault();
+        expect(isVaultConfigured(), passcode).toBe(true);
+        expect(selfTest().ok, passcode).toBe(true);
+        const sealed = encryptSecret("sk-ant-secret-value-here", "anthropic");
+        expect(decryptSecret(sealed, "anthropic")).toBe("sk-ant-secret-value-here");
+      } finally {
+        process.env.RCS_VAULT_KEY = GOOD_KEY;
+      }
+    }
+  });
+
+  it("derives a different key from a different passcode, and the same key from the same one", async () => {
+    process.env.RCS_VAULT_KEY = "first passcode";
+    let sealed: string;
     try {
-      const { isVaultConfigured, vaultUnavailableReason } = await vault();
-      expect(isVaultConfigured()).toBe(false);
-      expect(vaultUnavailableReason()).toMatch(/32 bytes/);
+      const { encryptSecret } = await vault();
+      sealed = encryptSecret("sk-ant-secret-value-here", "anthropic");
     } finally {
       process.env.RCS_VAULT_KEY = GOOD_KEY;
     }
+    process.env.RCS_VAULT_KEY = "second passcode";
+    try {
+      const { decryptSecret } = await vault();
+      expect(() => decryptSecret(sealed, "anthropic")).toThrow(/different RCS_VAULT_KEY/i);
+    } finally {
+      process.env.RCS_VAULT_KEY = GOOD_KEY;
+    }
+    process.env.RCS_VAULT_KEY = "first passcode";
+    try {
+      const { decryptSecret } = await vault();
+      expect(decryptSecret(sealed, "anthropic")).toBe("sk-ant-secret-value-here");
+    } finally {
+      process.env.RCS_VAULT_KEY = GOOD_KEY;
+    }
+  });
+
+  it("uses a 32-byte base64 value as the key itself, so an older vault still opens", async () => {
+    // Under the old rule the generator printed exactly this form. Rows sealed
+    // under it must keep opening: the value is the key, not a passcode.
+    const { createCipheriv } = await import("crypto");
+    const keyBytes = Buffer.from(GOOD_KEY, "base64");
+    expect(keyBytes.length).toBe(32);
+    const iv = randomBytes(12);
+    const cipher = createCipheriv("aes-256-gcm", keyBytes, iv);
+    cipher.setAAD(Buffer.from("anthropic", "utf8"));
+    const ct = Buffer.concat([cipher.update("sk-ant-old-row", "utf8"), cipher.final()]);
+    const sealed = ["v1", iv.toString("base64"), ct.toString("base64"), cipher.getAuthTag().toString("base64")].join(":");
+    const { decryptSecret } = await vault();
+    expect(decryptSecret(sealed, "anthropic")).toBe("sk-ant-old-row");
   });
 
   it("accepts a hex master key as well as base64", async () => {
