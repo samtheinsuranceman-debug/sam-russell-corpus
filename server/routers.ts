@@ -135,6 +135,7 @@ import { engineChainingRouter } from "./engineChainingRouter";
 import { intakeRouter } from "./intakeRouter";
 import { whispererRouter } from "./whisperer";
 import { voiceRouter } from "./voiceRouter";
+import { videoGenRouter } from "./videoGenRouter";
 import { notifyOwner } from "./_core/notification";
 import { ENV } from "./_core/env";
 import { sendInvitationEmail, sendStaleClientDigest, sendStrategyNotification, sendProjectionFollowUp, sendQuoteRequestNotification, sendDriftAlertEmail } from "./email";
@@ -404,6 +405,7 @@ export const appRouter = router({
   intake: intakeRouter,
   whisperer: whispererRouter,
   voice: voiceRouter,
+  videoGen: videoGenRouter,
   ultra: ultraRouter,
   leads: leadsRouter,
   factFinder: factFinderRouter,

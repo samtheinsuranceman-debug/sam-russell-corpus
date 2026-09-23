@@ -215,11 +215,14 @@ async function callOpenAiCompatible(o: ProviderCallOptions): Promise<ProviderCal
 
   const headers: Record<string, string> = {
     "content-type": "application/json",
-    authorization: `Bearer ${apiKey}`,
     // Some gateways (Public AI among them) refuse a request with no
     // User-Agent as bot traffic; the rest ignore it.
     "user-agent": "RussellCapitalSystems/1.0 (+https://russellcapitalsystems.com)",
   };
+  // Most take a bearer token; a provider that names its own header (Portkey)
+  // gets the key there and no Authorization header at all.
+  if (provider.authHeader) headers[provider.authHeader] = apiKey;
+  else headers.authorization = `Bearer ${apiKey}`;
   // OpenRouter asks callers to identify themselves; it affects rate limits.
   if (provider.id === "openrouter") {
     headers["HTTP-Referer"] = "https://russellcapitalsystems.com";

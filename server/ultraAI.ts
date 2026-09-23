@@ -511,7 +511,7 @@ export const ultraRouter = router({
     .mutation(async ({ input }) => {
       try {
         const r = await synthesize(input.text);
-        if (!r) return { ok: false as const, reason: "Voice output not configured (HEYGEN_VOICE_NAME/ID with HEYGEN_API_KEY, or ELEVENLABS_API_KEY + ELEVENLABS_VOICE_ID)." };
+        if (!r) return { ok: false as const, reason: "Voice output not configured (HEYGEN_VOICE_NAME/ID with HEYGEN_API_KEY, ELEVENLABS_API_KEY + ELEVENLABS_VOICE_ID, or CARTESIA_API_KEY + CARTESIA_VOICE_ID)." };
         return { ok: true as const, audioBase64: r.audio.toString("base64"), mimeType: r.mimeType, via: r.via, voiceId: r.voiceId, fallback: r.fallback ?? null };
       } catch (e) {
         return { ok: false as const, reason: `voice service error: ${String((e as Error).message ?? e).slice(0, 160)}` };

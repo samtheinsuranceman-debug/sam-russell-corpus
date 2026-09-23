@@ -5,8 +5,10 @@
 // Resolution order:
 //   1. the Voice Studio's pick (site_settings: voice.provider + voice.id)
 //   2. the environment: VOICE_PROVIDER=heygen with HEYGEN_VOICE_ID, or
-//      HEYGEN_VOICE_NAME resolved against the workspace's private voices
+//      HEYGEN_VOICE_NAME resolved against the workspace's private voices;
+//      VOICE_PROVIDER=cartesia with CARTESIA_VOICE_ID
 //   3. ELEVENLABS_VOICE_ID
+//   4. CARTESIA_VOICE_ID (with CARTESIA_API_KEY)
 // Every place that speaks asks activeVoice() at call time, so a change
 // in the studio takes effect at once, with no redeploy. The settings
 // table creates itself on first use.
@@ -14,7 +16,15 @@
 import { sql } from "drizzle-orm";
 import { getDb } from "./db";
 
-export type VoiceProvider = "elevenlabs" | "heygen";
+export type VoiceProvider = "elevenlabs" | "heygen" | "cartesia";
+export const VOICE_PROVIDERS = ["elevenlabs", "heygen", "cartesia"] as const satisfies readonly VoiceProvider[];
+
+/** The key each provider needs on the host. */
+export function providerKeySet(provider: VoiceProvider, env: NodeJS.ProcessEnv = process.env): boolean {
+  if (provider === "heygen") return Boolean(env.HEYGEN_API_KEY);
+  if (provider === "cartesia") return Boolean(env.CARTESIA_API_KEY);
+  return Boolean(env.ELEVENLABS_API_KEY);
+}
 export type VoiceRef = { provider: VoiceProvider; voiceId: string; name?: string };
 
 const BOOTSTRAP = `CREATE TABLE IF NOT EXISTS \`site_settings\` (
@@ -67,7 +77,7 @@ export async function studioVoice(): Promise<VoiceRef | null> {
   let ref: VoiceRef | null = null;
   try {
     const [provider, id, legacy] = await Promise.all([getSiteSetting(PROVIDER_KEY), getSiteSetting(ID_KEY), getSiteSetting(LEGACY_KEY)]);
-    if (id && (provider === "heygen" || provider === "elevenlabs")) ref = { provider, voiceId: id };
+    if (id && (VOICE_PROVIDERS as readonly string[]).includes(provider ?? "")) ref = { provider: provider as VoiceProvider, voiceId: id };
     else if (legacy) ref = { provider: "elevenlabs", voiceId: legacy };
   } catch { /* no database */ }
   pickCache = { ref, at: Date.now() };
@@ -86,7 +96,10 @@ export async function environmentVoice(env: NodeJS.ProcessEnv = process.env): Pr
       console.warn(`[voice] HEYGEN_VOICE_NAME "${env.HEYGEN_VOICE_NAME}" not found among private HeyGen voices; using ElevenLabs`);
     }
   }
+  const wantCartesia = (env.VOICE_PROVIDER ?? "").toLowerCase() === "cartesia";
+  if (wantCartesia && env.CARTESIA_API_KEY && env.CARTESIA_VOICE_ID) return { provider: "cartesia", voiceId: env.CARTESIA_VOICE_ID };
   if (env.ELEVENLABS_API_KEY && env.ELEVENLABS_VOICE_ID) return { provider: "elevenlabs", voiceId: env.ELEVENLABS_VOICE_ID };
+  if (env.CARTESIA_API_KEY && env.CARTESIA_VOICE_ID) return { provider: "cartesia", voiceId: env.CARTESIA_VOICE_ID };
   return null;
 }
 
@@ -118,7 +131,7 @@ export async function setActiveVoiceId(id: string | null): Promise<boolean> {
 export async function voiceOutConfigured(env: NodeJS.ProcessEnv = process.env): Promise<boolean> {
   const ref = await activeVoice(env);
   if (!ref) return false;
-  return ref.provider === "heygen" ? Boolean(env.HEYGEN_API_KEY) : Boolean(env.ELEVENLABS_API_KEY);
+  return providerKeySet(ref.provider, env);
 }
 
 /** Where the active voice came from, for the studio's status line. */
