@@ -81,7 +81,10 @@ export async function recordDocumentProvenance(ids: Ids, input: {
   const sha256 = sha256Hex(input.bytes);
   const uploadedAt = new Date().toISOString();
   const signature = signProvenance({ documentId: input.documentId, sha256, uploadedAt, uploadedBy: input.uploadedByName });
-  const prev = input.supersedesDocumentId ? await provenanceForDocument(input.supersedesDocumentId) : null;
+  // The superseded document must be this client's, in this workspace.
+  const prev = input.supersedesDocumentId && ids.clientId != null && ids.workspaceId != null
+    ? await provenanceForDocument(input.supersedesDocumentId, ids.clientId, ids.workspaceId)
+    : null;
   const version = (prev?.version ?? 0) + 1;
   const estate = ["ESTATE_PLAN", "TRUST_DOCUMENT", "LEGAL_AGREEMENT"].includes(input.category);
   const issues = estate ? checkEstateConsistency(input.metadata ?? null, input.facts ?? {}) : [];
