@@ -1,6 +1,8 @@
+import { rulesForYear } from "./taxRules";
 // ─── Estate Tax Calculation Engine ──────────────────────────────────────────
 // Comprehensive federal estate tax calculator with progressive brackets,
-// ILIT planning, gifting strategies, 2026 sunset analysis, wealth projections
+// ILIT planning, gifting strategies, current-law 2026 exclusion comparison (the TCJA
+// sunset was cancelled by P.L. 119-21), wealth projections
 // to age 100, and life insurance coverage needs analysis.
 
 export interface EstateAssets {
@@ -62,9 +64,15 @@ const FEDERAL_BRACKETS = [
   { min: 1000000, max: Infinity, rate: 0.40 },
 ];
 
-export const CURRENT_EXEMPTION = 13610000; // 2024/2025
-export const SUNSET_EXEMPTION = 7000000;   // 2026+ (approximate)
-export const ANNUAL_GIFT_EXCLUSION = 18000; // 2024
+// From the versioned rule set (shared/taxRules.ts). These three lines carried the 2024
+// exclusion, a "2026 sunset to ~$7M" and the 2024 gift exclusion; P.L. 119-21 (OBBBA,
+// July 2025) set the 2026 basic exclusion at $15,000,000, indexed, so the sunset never
+// happens. The sunsetAnalysis shape is kept for the page; it now compares this year's
+// exclusion with 2026's under current law.
+const RULE_YEAR = new Date().getFullYear();
+export const CURRENT_EXEMPTION = rulesForYear(RULE_YEAR).estateBasicExclusion;
+export const SUNSET_EXEMPTION = rulesForYear(Math.max(RULE_YEAR, 2026)).estateBasicExclusion;
+export const ANNUAL_GIFT_EXCLUSION = rulesForYear(RULE_YEAR).annualGiftExclusion;
 
 export interface BracketBreakdown {
   bracket: string;

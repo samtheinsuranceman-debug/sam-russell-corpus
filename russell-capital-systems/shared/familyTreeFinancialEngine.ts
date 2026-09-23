@@ -1,3 +1,4 @@
+import { currentRules } from "./taxRules";
 /**
  * SISTER INVENTION SI-014: Client Family Tree Financial Mapping
  * Patent Reference: Extends PAT-004 (Household Wealth Engine)
@@ -94,7 +95,7 @@ export function analyzeFamilyTree(members: FamilyMember[]): FamilyTreeResult {
   primaryMembers.forEach(parent => {
     // Annual exclusion gifts to children
     children.forEach(child => {
-      const giftAmount = 18000; // 2024 annual exclusion
+      const giftAmount = currentRules().annualGiftExclusion; // versioned rule set (was a 2024 literal)
       transferPaths.push({
         from: parent.name,
         to: child.name,

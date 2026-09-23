@@ -1,3 +1,4 @@
+import { rulesForYear } from "./taxRules";
 /**
  * SISTER INVENTION SI-032: Multi-Generational Wealth Transfer Simulation Engine with
  * Dynasty Trust Modeling, Generation-Skipping Transfer Tax Optimization, and 100-Year
@@ -32,8 +33,12 @@ export const GST_EXEMPTION_CURRENT = 15_000_000;
 export const GST_TAX_RATE = 0.40;
 /** Top federal estate tax rate, IRC § 2001(c). */
 export const ESTATE_TAX_RATE = 0.40;
-/** Pre-TCJA basic exclusion, restored if the current law sunsets. */
-export const SUNSET_EXEMPTION = 7_500_000;
+/**
+ * The 2026 basic exclusion under current law, from the versioned rule set: P.L. 119-21
+ * (July 2025) set it at $15,000,000 indexed, so the TCJA sunset to ~$7.5M no longer
+ * exists. The name is kept for the scenario table and existing imports.
+ */
+export const SUNSET_EXEMPTION = rulesForYear(2026).estateBasicExclusion;
 
 export type TaxLawScenario = "current_law_sunset" | "permanent_extension" | "increased_rates";
 
@@ -51,7 +56,7 @@ export interface TaxLawAssumption {
 export const TAX_LAW_SCENARIOS: TaxLawAssumption[] = [
   {
     scenario: "current_law_sunset",
-    label: "Current law sunsets — exemption reverts",
+    label: "Current law (P.L. 119-21): $15M exclusion, indexed — no sunset",
     exemption: SUNSET_EXEMPTION,
     estateRate: 0.40,
     gstRate: 0.40,
