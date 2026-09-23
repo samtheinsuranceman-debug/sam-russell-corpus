@@ -19,7 +19,7 @@
  * faces a rate-limited, locking passphrase check.
  *
  * The key is sixteen words (see shared/vaultKey.ts), or a passphrase of at
- * least 32 characters. Stored as a bcrypt hash; the key itself is never
+ * least 12 characters. Stored as a bcrypt hash; the key itself is never
  * written anywhere, including the audit log.
  */
 import bcrypt from "bcryptjs";
@@ -37,7 +37,7 @@ import {
 
 /**
  * Two accepted shapes: the sixteen-word key the hub generates (preferred), or
- * a free-text passphrase of at least 32 characters. Both are normalised —
+ * a free-text passphrase of at least 12 characters. Both are normalised —
  * case, spacing and punctuation between words do not matter — before hashing.
  */
 export const MIN_PASSPHRASE_LENGTH = VAULT_PASSPHRASE_MIN_LENGTH;
@@ -159,8 +159,8 @@ export async function setPassphrase(opts: {
       `Use the ${KEY_WORD_COUNT}-word key the hub generated, or a passphrase of at least ${MIN_PASSPHRASE_LENGTH} characters. Yours is ${passphrase.length}.`,
     );
   }
-  // Length is the defence here, but 32 repetitions of one character is 32
-  // characters of nothing.
+  // Length is part of the defence, but twelve repetitions of one character
+  // is twelve characters of nothing.
   if (!isWordKey && new Set(passphrase).size < 8) {
     throw new VaultAccessError(
       "TOO_SIMPLE",

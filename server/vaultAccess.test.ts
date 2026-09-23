@@ -37,8 +37,8 @@ describe("Vault access — default state is locked", () => {
 });
 
 describe("Vault access — the policy constants are set to something defensible", () => {
-  it("requires the 32-character minimum passphrase", () => {
-    expect(MIN_PASSPHRASE_LENGTH).toBe(32);
+  it("requires the 12-character minimum passphrase", () => {
+    expect(MIN_PASSPHRASE_LENGTH).toBe(12);
   });
 
   it("expires an unlock rather than leaving it open indefinitely", () => {
