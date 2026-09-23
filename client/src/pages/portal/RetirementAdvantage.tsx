@@ -83,9 +83,9 @@ const ADVANTAGES: Advantage[] = [
     details: "The indexed crediting mechanism links cash value growth to a market index (typically S&P 500) without direct market investment. When the index rises, you earn a portion of the gain up to a cap rate. When it falls, your floor (typically 0-1%) prevents any loss to your accumulated value. This asymmetric return profile means you participate in bull markets while sitting out bear markets entirely.",
     purchasingPower: "By avoiding the devastating effects of sequence-of-returns risk, IUL cash values maintain purchasing power even through market downturns. A retiree who avoided the 2008 crash (-37%) and 2022 correction (-19%) would have 40-60% more purchasing power than a fully invested portfolio.",
     flexibility: "Policyholders can choose from multiple crediting strategies — S&P 500, Nasdaq, fixed rate, or hybrid — and reallocate annually without tax consequences. This allows tactical positioning without triggering capital gains.",
-    usefulness: "Critical for retirees who cannot afford to lose 30-40% of their nest egg in a single year. The 0% floor eliminates the #1 retirement killer: sequence-of-returns risk during the distribution phase.",
-    example: "Michael Torres, age 58, shifted $400K from his volatile stock portfolio into an IUL in 2019. During the 2020 COVID crash, his IUL credited 0% (floor) while his remaining stocks dropped 34%. By 2024, his IUL had recovered and grown 28% cumulatively while his stock portfolio was still 8% below its 2020 peak.",
-    irsCode: "IRC §7702A (Modified Endowment Contract rules), State Insurance Guaranty Association protections",
+    usefulness: "Important for retirees who cannot afford to lose 30-40% of their nest egg in a single year. The 0% floor on index credits reduces sequence-of-returns risk from index losses during the distribution phase; policy charges still apply.",
+    example: "Hypothetical: a 58-year-old (call him Michael) moves $400K from a volatile stock portfolio into an IUL life insurance policy in 2019. In the 2020 COVID crash, the policy's index credit is 0% (floor) while the remaining stocks drop 34%. By 2024, his IUL had recovered and grown 28% cumulatively while his stock portfolio was still 8% below its 2020 peak.",
+    irsCode: "IRC §7702A (Modified Endowment Contract rules)",
     stressTestData: [
       { year: 1, traditional: 100000, iul: 100000 },
       { year: 5, traditional: 85000, iul: 115000 },
@@ -109,7 +109,7 @@ const ADVANTAGES: Advantage[] = [
     purchasingPower: "Avoiding RMDs means avoiding the tax cascade: higher bracket + IRMAA surcharges + Social Security taxation. A retiree with $1M in traditional IRA faces $37,700 in forced RMDs at 73 — potentially costing $12,000+ in taxes and surcharges they wouldn't otherwise owe.",
     flexibility: "Total control over distribution timing. Take nothing during high-income years, take more during low-income years. Coordinate with Social Security claiming strategy, Roth conversions, and capital gains harvesting without RMD interference.",
     usefulness: "Essential for anyone with $500K+ in traditional retirement accounts who wants to avoid the RMD tax trap. Particularly valuable for those who don't need the income but are forced to take it.",
-    example: "Robert and Linda Park, ages 74 and 71, have $1.8M in IRAs generating $70,600 in forced RMDs. This pushes them into the 24% bracket and triggers $4,800/year in IRMAA surcharges. Their $600K IUL provides $45K/year with zero tax impact and zero effect on their Medicare premiums.",
+    example: "Robert and Linda Park, ages 74 and 71, have $1.8M in IRAs generating $70,600 in forced RMDs. This pushes them into the 24% bracket and triggers $4,800/year in IRMAA surcharges. In this hypothetical, their $600K IUL provides $45K/year in policy loans that are not taxable income (non-MEC, kept in force) and do not count toward the Medicare IRMAA calculation.",
     irsCode: "IRC §401(a)(9) (RMD Rules — IUL exempt), IRC §72(e) (Life Insurance Distribution Rules)",
     stressTestData: [
       { year: 1, traditional: 100000, iul: 100000 },
@@ -156,7 +156,7 @@ const ADVANTAGES: Advantage[] = [
     purchasingPower: "A $1M death benefit with a chronic illness rider provides up to $20K-$40K/month in tax-free LTC benefits. Traditional LTC insurance with equivalent coverage would cost $5,000-$12,000/year in premiums — money that provides zero return if care is never needed.",
     flexibility: "If you never need LTC, the full death benefit passes to heirs tax-free. If you do need care, you access the benefit tax-free. This \"use it or lose nothing\" structure eliminates the biggest objection to traditional LTC insurance.",
     usefulness: "With 70% of people over 65 needing some form of long-term care, this rider transforms IUL from a financial planning tool into a comprehensive retirement safety net covering income, growth, legacy, AND healthcare.",
-    example: "Patricia Nguyen, age 72, was diagnosed with Alzheimer's. Her $800K IUL death benefit with chronic illness rider now provides $24K/month tax-free for her care at a memory care facility. Her family avoids the $288K/year out-of-pocket cost that would have depleted her savings in 3 years.",
+    example: "Hypothetical: a 72-year-old policyholder qualifies for chronic-illness benefits. A chronic illness rider on her $800K IUL may accelerate part of the death benefit to help pay for memory care; the amount, the discount the insurer applies and the tax treatment (IRC §101(g)) depend on the rider. Accelerated benefits reduce the death benefit.",
     irsCode: "IRC §101(g) (Accelerated Death Benefits), IRC §7702B (Qualified LTC Insurance)",
     stressTestData: [
       { year: 1, traditional: 0, iul: 24000 },
@@ -241,7 +241,7 @@ const ADVANTAGES: Advantage[] = [
     score: 7,
     summary: "IUL cash value can fund college expenses without affecting financial aid eligibility (unlike 529 plans and savings accounts), while the remaining value continues growing for retirement.",
     details: "The FAFSA formula counts 529 plans as parental assets (reducing aid by 5.64% of value) and student savings at 20%. IUL cash values are not reported on FAFSA at all. This means a family with $200K in IUL cash value appears $200K \"poorer\" on financial aid applications than a family with $200K in a 529. Additionally, IUL withdrawals for college don't trigger the income penalty that 529 non-qualified withdrawals do.",
-    purchasingPower: "A family with $200K in IUL vs. 529 could qualify for $8,000-$15,000 more in annual financial aid. Over 4 years, that's $32K-$60K in additional grants and subsidized loans — effectively free money.",
+    purchasingPower: "A family with $200K in IUL vs. 529 could qualify for $8,000-$15,000 more in annual financial aid. Over 4 years, that could be $32K-$60K in additional aid under the FAFSA's treatment of cash value (hypothetical; CSS Profile schools may count cash value, and aid rules change).",
     flexibility: "If the child doesn't attend college, the money continues growing tax-free for retirement. No 10% penalty for non-education use (unlike 529). Can fund any expense — not limited to qualified education costs.",
     usefulness: "Ideal for families earning $80K-$250K who are in the financial aid \"donut hole\" — too wealthy for need-based aid but not wealthy enough to pay full tuition. The IUL creates a dual-purpose vehicle: college + retirement.",
     example: "The Johnson family funded $15K/year into an IUL for 18 years ($270K total). When their daughter entered college, they withdrew $35K/year tax-free for 4 years ($140K) while qualifying for $12K/year in need-based aid. The remaining $280K in cash value continues growing for retirement.",
@@ -258,11 +258,11 @@ const ADVANTAGES: Advantage[] = [
   },
   {
     id: 10,
-    title: "Infinite Banking & Self-Financing System",
+    title: "Policy-Loan Strategy (Self-Financing)",
     icon: TrendingUp,
     score: 8,
-    summary: "IUL enables the Infinite Banking Concept — using policy loans to self-finance major purchases while the full cash value continues earning indexed returns, creating a perpetual wealth-building cycle.",
-    details: "When you borrow against your IUL cash value, the insurance company uses your cash value as collateral but your money stays invested and continues earning indexed returns. You pay loan interest (typically 5-6%), but your cash value earns 6-8% — creating positive arbitrage. Every purchase you finance through your IUL (cars, vacations, business investments, real estate down payments) earns you money instead of costing you interest paid to banks.",
+    summary: "A policy-loan strategy: borrowing from the insurer with IUL cash value as collateral to finance major purchases. Loan interest accrues; depending on the loan type, the unloaned (or full) value continues to be credited per the contract.",
+    details: "When you borrow against your IUL cash value, the insurer lends you its money and holds your cash value as collateral. You pay the insurer loan interest; the collateral continues to be credited under the contract's terms. If the credited rate exceeds the loan rate the spread is positive, and if not it is negative — neither is guaranteed. Unpaid loans reduce the death benefit, and a lapse with loans outstanding can be taxable. This is hypothetical and based on the rates you set.",
     purchasingPower: "Over a lifetime, the average American pays $300K+ in interest to banks (mortgages, car loans, credit cards). Redirecting even half of that through IUL policy loans means the interest goes back into your own wealth-building system. A family that self-finances $500K in purchases over 30 years can generate an additional $200K-$400K in retirement wealth.",
     flexibility: "Borrow for any purpose — no application, no credit check, no approval process. Repay on your own schedule (or not at all — the loan is repaid from the death benefit). Access funds within 3-5 business days.",
     usefulness: "Revolutionary for business owners and high-income professionals who regularly need capital for investments, equipment, or opportunities. Turns every purchase into a wealth-building event instead of a wealth-depleting one.",
@@ -508,7 +508,7 @@ export default function RetirementAdvantage() {
                     <div className="bg-[#0a0f1a]/50 rounded-lg p-4 border border-amber-500/20">
                       <h4 className="text-amber-400 font-semibold text-sm mb-2 flex items-center gap-2">
                         <Briefcase className="w-4 h-4" />
-                        Real-World Client Example
+                        Hypothetical Example (not a real client)
                       </h4>
                       <p className="text-[#94a3b8] text-sm leading-relaxed">
                         {adv.example}
@@ -593,7 +593,7 @@ export default function RetirementAdvantage() {
               optimization system. Tax-free income, downside protection, no RMDs,
               estate planning, living benefits, mortgage elimination, Social
               Security optimization, creditor protection, college funding, and
-              infinite banking — all in a single financial vehicle.
+              policy loans — all in one permanent life insurance policy, with its charges and conditions.
             </p>
             <div className="flex items-center justify-center gap-6 mt-4">
               <div className="text-center">

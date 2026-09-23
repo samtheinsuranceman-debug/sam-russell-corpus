@@ -39,6 +39,7 @@ import {
   PolarRadiusAxis,
   Legend,
 } from "recharts";
+import { TAX_RULES_2026 } from "@shared/taxRules";
 
 // ─── TRUST TYPE DATA ────────────────────────────────────────────────
 interface TrustType {
@@ -97,7 +98,7 @@ const TRUST_TYPES: TrustType[] = [
       { code: "IRC §2042", title: "Incidents of Ownership", relevance: "If the insured holds any incidents of ownership (right to change beneficiary, borrow against policy, etc.), the death benefit is included in the taxable estate. The ILIT eliminates this by making the trust the owner." },
       { code: "IRC §2035", title: "Three-Year Rule", relevance: "Transfers of life insurance within 3 years of death are pulled back into the estate. This is why ILITs must be established well in advance — not as a deathbed strategy." },
       { code: "IRC §2036", title: "Retained Life Estate", relevance: "If the grantor retains the right to income or use of transferred property, it's included in the estate. Properly structured ILITs ensure the grantor has zero control." },
-      { code: "IRC §2503(b)", title: "Annual Gift Tax Exclusion", relevance: "Premium payments to the ILIT qualify for the $18,000/$36,000 annual exclusion through Crummey withdrawal notices to beneficiaries." },
+      { code: "IRC §2503(b)", title: "Annual Gift Tax Exclusion", relevance: `Premium payments to the ILIT qualify for the $${TAX_RULES_2026.annualGiftExclusion.toLocaleString()}/$${(TAX_RULES_2026.annualGiftExclusion * 2).toLocaleString()} (${TAX_RULES_2026.taxYear}) annual exclusion through Crummey withdrawal notices to beneficiaries.` },
       { code: "IRC §101(a)", title: "Death Benefit Exclusion", relevance: "Life insurance death benefits are income tax-free to beneficiaries. Combined with ILIT ownership, this creates a completely tax-free wealth transfer." },
     ],
     benefits: [

@@ -84,7 +84,8 @@ export default function AdvancedReporting() {
   const [reportFormat, setReportFormat] = useState("pdf");
   const [includeCover, setIncludeCover] = useState(true);
   const [includeTOC, setIncludeTOC] = useState(true);
-  const [includeDisclaimers, setIncludeDisclaimers] = useState(true);
+  // Reports always carry the disclaimers (copy-compliance review S-a).
+  const includeDisclaimers = true;
   const [watermark, setWatermark] = useState("Draft");
   const [pageSize, setPageSize] = useState("letter");
   const [orientation, setOrientation] = useState("portrait");
@@ -421,13 +422,9 @@ export default function AdvancedReporting() {
                         </button>
                       </div>
                       <div className="flex items-center justify-between p-3 rounded-lg bg-[#060d19] border border-[#12233e]">
-                        <span className="text-sm text-[#c8d8ec]">Include Disclaimers</span>
-                        <button 
-                          className={`w-10 h-5 rounded-full relative transition-colors ${includeDisclaimers ? 'bg-[#22c55e]' : 'bg-[#12233e]'}`}
-                          onClick={() => setIncludeDisclaimers(!includeDisclaimers)}
-                        >
-                          <span className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white transition-transform ${includeDisclaimers ? 'translate-x-5' : 'translate-x-0'}`} />
-                        </button>
+                        <span className="text-sm text-[#c8d8ec]">Disclaimers</span>
+                        {/* Always included in a generated report; the old on/off switch was removed 23 Sep 2026. */}
+                        <span className="text-xs text-[#22c55e]">Always included</span>
                       </div>
                     </>
                   )}

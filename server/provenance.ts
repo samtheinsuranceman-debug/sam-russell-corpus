@@ -7,8 +7,8 @@
 // the document newer than the last beneficiary review. Conflicts surface at
 // upload time, not at probate.
 // ============================================================
-import { createHash, createHmac } from "node:crypto";
-import { adviceSigningKey } from "./advice";
+import { createHash, createHmac, timingSafeEqual } from "node:crypto";
+import { adviceSigningKey, legacyAdviceVerifyKeys } from "./advice";
 import { recordEvent } from "./ledger";
 import { insertProvenance, provenanceForDocument, type Ids } from "./controlsDb";
 
@@ -39,8 +39,19 @@ export function sha256Hex(buf: Buffer | Uint8Array | string): string {
   return createHash("sha256").update(buf).digest("hex");
 }
 
-export function signProvenance(fields: { documentId: number; sha256: string; uploadedAt: string; uploadedBy: string }, secret = adviceSigningKey()): string {
+export type ProvenanceFields = { documentId: number; sha256: string; uploadedAt: string; uploadedBy: string };
+
+export function signProvenance(fields: ProvenanceFields, secret = adviceSigningKey()): string {
   return createHmac("sha256", secret || "unsigned").update(`${fields.documentId}|${fields.sha256}|${fields.uploadedAt}|${fields.uploadedBy}`).digest("hex");
+}
+
+/** Recomputes a stored provenance signature; pre-separation records verify with the legacy key only. */
+export function verifyProvenance(fields: ProvenanceFields, signature: string, secret = adviceSigningKey(), legacyKeys: string[] = secret === adviceSigningKey() ? legacyAdviceVerifyKeys() : []): boolean {
+  const given = Buffer.from(String(signature ?? ""), "hex");
+  return [secret, ...legacyKeys].some((k) => {
+    const expected = Buffer.from(signProvenance(fields, k), "hex");
+    return expected.length === given.length && timingSafeEqual(expected, given);
+  });
 }
 
 function nameIn(list: string[] | undefined, name: string | null | undefined): boolean {

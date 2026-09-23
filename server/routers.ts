@@ -5,6 +5,7 @@ import { createHash, randomBytes, randomUUID } from "crypto";
 import { z } from "zod";
 import { COOKIE_NAME } from "@shared/const";
 import { SYSTEM_PREAMBLE, CLIENT_FACING_PREAMBLE, BRAND_SYSTEM_IDENTITY } from "@shared/branding";
+import { AI_COMPLIANCE_FLOOR } from "@shared/aiCompliance";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { invokeLLM } from "./_core/llm";
 import { assertDeckInWorkspace, isHostSession } from "./workspaceScope";
@@ -379,6 +380,8 @@ const mortgageKillerInputSchema = z.object({
   policyLoanPct: z.number().min(0.10).max(0.95).default(0.80),
   policyLoanDragRate: z.number().min(0.01).max(0.10).default(0.05),
   interestReinvestRate: z.number().min(0.01).max(0.20).default(0.07),
+  /** Assumed annuity (MYGA) rate the visitor sets for compounding saved interest; not a guarantee past the contract term. */
+  assumedAnnuityRate: z.number().min(0).max(0.12).optional(),
   interestReinvestYears: z.number().min(5).max(40).default(20),
   clientAge: z.number().min(18).max(80).default(45),
 });
@@ -1272,6 +1275,7 @@ All content must be branded as Russell Capital Systems™.`;
         speakerNotes: z.string(),
         layout: z.string(),
       })),
+      /** Accepted for older clients and ignored: the disclaimer slide is always added. */
       includeDisclaimer: z.boolean().default(true),
     })).mutation(async ({ ctx, input }) => {
       const PptxGenJS = (await import("pptxgenjs")).default;
@@ -1365,12 +1369,12 @@ All content must be branded as Russell Capital Systems™.`;
         }
       }
 
-      // Disclaimer slide
-      if (input.includeDisclaimer) {
+      // Disclaimer slide: always added. A client deck may not drop it (copy-compliance review S-a).
+      {
         const ds = pptx.addSlide({ masterName: "RC_MASTER" });
         ds.addText("Disclaimer", { x: 0.8, y: 1.0, w: 8.4, h: 0.6, fontSize: 22, bold: true, color: BRAND.gold, fontFace: titleFont });
         ds.addText(
-          "This presentation is for educational and informational purposes only. It does not constitute financial, tax, or legal advice. Past performance does not guarantee future results. Consult with a qualified financial professional before making any investment decisions.",
+          "This presentation is for educational and informational purposes only. Every figure is hypothetical and based on the facts provided; it is not a guarantee and does not constitute financial, tax, or legal advice. Life insurance and annuities are issued by insurance companies, and guarantees are subject to the claims-paying ability of the issuing insurer. Past performance does not guarantee future results. Consult with a qualified professional before acting.",
           { x: 0.8, y: 1.8, w: 8.4, h: 2.0, fontSize: 11, color: BRAND.lightGray, fontFace: bodyFont, lineSpacingMultiple: 1.6 }
         );
         ds.addText("Russell Capital Systems™ — Turn Capital Into Income™", { x: 0.8, y: 4.0, w: 8.4, h: 0.4, fontSize: 12, color: BRAND.emerald, fontFace: bodyFont, align: "center" });
@@ -1679,7 +1683,7 @@ Keep it personal, specific with dollar amounts, and actionable. Use their actual
               ...(await hiveGroundingMessages(ctx)),
               {
                 role: "system",
-                content: `You are a presentation designer for Russell Capital Systems\u2122. Generate a ${input.slideCount}-slide deck about "${input.topic}" personalized for this client. Return JSON: { "slides": [{ "title": string, "subtitle": string, "bullets": string[], "speakerNotes": string, "layout": "title"|"content"|"metrics"|"comparison"|"summary" }] }`,
+                content: `${AI_COMPLIANCE_FLOOR}\n\nYou are a presentation designer for Russell Capital Systems\u2122. Every slide that shows a figure labels it hypothetical. Generate a ${input.slideCount}-slide deck about "${input.topic}" personalized for this client. Return JSON: { "slides": [{ "title": string, "subtitle": string, "bullets": string[], "speakerNotes": string, "layout": "title"|"content"|"metrics"|"comparison"|"summary" }] }`,
               },
               { role: "user", content: `Client: ${clientContext}\n\nTopic: ${input.topic}\nAudience: ${input.audience}\nSlides: ${input.slideCount}` },
             ],
@@ -9745,7 +9749,7 @@ If a field cannot be determined, use 0 for numbers and "unknown" for strings. Be
               ...(await hiveGroundingMessages(ctx)),
               {
                 role: "system",
-                content: `You are a financial report generator for Russell Capital Systems. Generate a professional HTML report with inline CSS styling. Use dark theme (bg: #0a0a0f, text: #e2e8f0, accent: #10b981). Include tables, key metrics, and professional formatting. The report should look like a premium financial advisory document.`,
+                content: `${AI_COMPLIANCE_FLOOR}\n\nYou are a financial report generator for Russell Capital Systems. Label every projected figure hypothetical and end the report with: AI-generated education, not tax, legal or investment advice. Generate a professional HTML report with inline CSS styling. Use dark theme (bg: #0a0a0f, text: #e2e8f0, accent: #10b981). Include tables, key metrics, and professional formatting. The report should look like a premium financial advisory document.`,
               },
               {
                 role: "user",
@@ -9863,7 +9867,7 @@ Generate the full HTML report with professional styling. Include a cover page, t
         const response = await invokeLLM({
           messages: [
             ...(await hiveGroundingMessages(ctx)),
-            { role: "system", content: "You are an elite financial strategist for Russell Capital Systems. Analyze the client profile and explain why the recommended Tax-Free Wealth Combos are ideal. Be specific about dollar amounts, tax implications, and timeline. Use markdown. Keep it under 500 words." },
+            { role: "system", content: `${CLIENT_FACING_PREAMBLE}\n\nYou explain strategy combinations for Russell Capital Systems. As a hypothetical based on the client's facts, explain how each recommended combo works, why it may fit this profile, its costs and risks, the order in which the pieces could be modeled, and what a licensed professional must confirm before anyone acts. Do not call any combo ideal, best or tax-free without the condition that makes it so. Name IUL as permanent life insurance and annuities as annuity contracts. Use dollar figures only when they come from the inputs, labelled hypothetical. End with: "AI-generated education, not tax, legal or investment advice." Use markdown. Keep it under 500 words.` },
             { role: "user", content: `Client: ${input.profession}, Age ${input.age}, ${input.state}, NW $${input.netWorth.toLocaleString()}, Income $${input.annualIncome.toLocaleString()}. Goals: ${input.goals.join(", ")}. Top Combos: ${input.topComboNames.map((n, i) => `${i+1}. ${n}`).join("; ")}. Explain why these combos match this client and recommend execution order.` }
           ],
         });

@@ -6,7 +6,7 @@
  * Thinks like a senior annuity advisor. Takes an existing contract and scores
  * it 0-100 on whether the client should replace it — factoring in surrender
  * economics, bonus uplift, income improvement, carrier strength, and
- * state-specific guaranty headroom.
+ * timing. (The state guaranty headroom factor was removed: G.S. 58-62-86.)
  *
  * The score is NOT a simple comparison. It models the *breakeven timeline* —
  * how many months until the new contract's benefits overcome the cost of
@@ -420,40 +420,11 @@ function scoreCarrierStrength(contract: ExistingContract, bestCandidate: Annuity
   };
 }
 
-function scoreStateGuarantyHeadroom(contract: ExistingContract, stateCode: StateCode): ReplacementFactor {
-  const guaranty = getStateGuaranty(stateCode);
-  const annuityLimit = guaranty.annuityLimit;
-  const headroom = annuityLimit - contract.accountValue;
-  const utilizationPct = (contract.accountValue / annuityLimit) * 100;
-
-  if (utilizationPct > 90) {
-    return {
-      name: "State Guaranty Headroom",
-      points: 10,
-      maxPoints: 10,
-      explanation: `Account value ($${contract.accountValue.toLocaleString()}) uses ${utilizationPct.toFixed(0)}% of ${stateCode}'s $${annuityLimit.toLocaleString()} guaranty limit. Consider splitting across carriers for full protection.`,
-      direction: "replace",
-    };
-  }
-
-  if (utilizationPct > 70) {
-    return {
-      name: "State Guaranty Headroom",
-      points: 5,
-      maxPoints: 10,
-      explanation: `Account uses ${utilizationPct.toFixed(0)}% of state guaranty ($${headroom.toLocaleString()} headroom). Approaching limit — monitor as value grows.`,
-      direction: "neutral",
-    };
-  }
-
-  return {
-    name: "State Guaranty Headroom",
-    points: 0,
-    maxPoints: 10,
-    explanation: `Well within ${stateCode} guaranty limit ($${headroom.toLocaleString()} headroom). No concern.`,
-    direction: "neutral",
-  };
-}
+// scoreStateGuarantyHeadroom was removed 23 Sep 2026. It scored up to 10 points toward REPLACING a
+// contract when the account value neared the state guaranty association limit. N.C. Gen. Stat.
+// § 58-62-86 bars using the association in the sale or solicitation of an annuity, and a replacement
+// score is exactly that. Diversification across insurers, if wanted, should rest on financial-strength
+// ratings (see scoreCarrierStrength), never on the association.
 
 function scoreTimingAndAge(contract: ExistingContract): ReplacementFactor {
   const yearsToIncome = Math.max(0, 65 - contract.clientAge);
@@ -726,7 +697,7 @@ function calculateSolarPathway(
   const annualImprovement = monthlyIncomeImprovement * 12;
   const yearsToBreakeven = annualImprovement > 0 ? Math.ceil(conversionTaxCost / annualImprovement) : 99;
 
-  const summary = `Solar Strategy transforms $${netAfterPenalties.toLocaleString()} of taxable proceeds into $${totalEnhancedPremium.toLocaleString()} of enhanced tax-free principal — a ${Math.round(((totalEnhancedPremium / netAfterPenalties) - 1) * 100)}% total uplift. Solar bonus adds $${solarBonusAmount.toLocaleString()} (${(solarGrowthPct * 100).toFixed(0)}%), then the annuity bonus adds another $${annuityBonusAmount.toLocaleString()} (${(annuityBonusPct * 100).toFixed(0)}%). Result: $${monthlyTaxFreeIncome.toLocaleString()}/mo tax-free guaranteed income for life vs $${currentAfterTaxMonthly.toLocaleString()}/mo after-tax currently.`;
+  const summary = `Solar Strategy transforms $${netAfterPenalties.toLocaleString()} of taxable proceeds into $${totalEnhancedPremium.toLocaleString()} of enhanced Roth principal — a ${Math.round(((totalEnhancedPremium / netAfterPenalties) - 1) * 100)}% total uplift. Solar bonus adds $${solarBonusAmount.toLocaleString()} (${(solarGrowthPct * 100).toFixed(0)}%), then the annuity bonus adds another $${annuityBonusAmount.toLocaleString()} (${(annuityBonusPct * 100).toFixed(0)}%). Result (hypothetical): $${monthlyTaxFreeIncome.toLocaleString()}/mo of contractual lifetime income paid as qualified Roth distributions (subject to the insurer's claims-paying ability) vs $${currentAfterTaxMonthly.toLocaleString()}/mo after tax currently.`;
 
   const comparisonLabel = `$${currentAfterTaxMonthly.toLocaleString()}/mo taxable → $${monthlyTaxFreeIncome.toLocaleString()}/mo tax-free`;
 
@@ -830,22 +801,21 @@ export function scoreReplacementOpportunity(
     scoreBonusOpportunity(contract, bestCandidate),
     scoreIncomeImprovement(contract, bestCandidate),
     scoreCarrierStrength(contract, bestCandidate),
-    scoreStateGuarantyHeadroom(contract, stateCode),
     scoreTimingAndAge(contract),
   ];
 
-  // Solar factor (7th factor — only scores if eligible)
+  // Solar factor (6th factor — only scores if eligible)
   const solarFactor = scoreSolarStrategy(contract, solarPathway);
 
-  // All 7 factors
+  // All 6 factors
   const factors: ReplacementFactor[] = [...baseFactors, solarFactor];
 
-  // Calculate base score (traditional 6-factor, without solar)
+  // Calculate base score (traditional 5-factor, without solar)
   const baseTotalPoints = baseFactors.reduce((sum, f) => sum + f.points, 0);
   const baseMaxPossible = baseFactors.reduce((sum, f) => sum + f.maxPoints, 0);
   const rawScore = Math.max(0, Math.min(100, Math.round(((baseTotalPoints + 20) / (baseMaxPossible + 20)) * 100)));
 
-  // Calculate solar-enhanced score (all 7 factors)
+  // Calculate solar-enhanced score (all 6 factors)
   const solarTotalPoints = factors.reduce((sum, f) => sum + f.points, 0);
   const solarMaxPossible = factors.reduce((sum, f) => sum + f.maxPoints, 0);
   const solarEnhancedScore = Math.max(0, Math.min(100, Math.round(((solarTotalPoints + 20) / (solarMaxPossible + 20)) * 100)));

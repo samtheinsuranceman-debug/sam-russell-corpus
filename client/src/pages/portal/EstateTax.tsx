@@ -53,6 +53,7 @@ import { ExecutiveSummary, GoalsAccelerator, RecommendationSummary, DoNothingBas
 import { formatTaxCurrency } from "@shared/taxBracketEngine";
 import { RelatedCalculators } from "@/components/RelatedCalculators";
 import { ComplianceFooter } from "@/components/ComplianceFooter";
+import { TAX_RULES_2026 } from "@shared/taxRules";
 
 const fmt = (n: number) => `$${Math.round(n).toLocaleString()}`;
 const fmtShort = (n: number) => {
@@ -143,7 +144,7 @@ export default function EstateTax() {
   const [iulDeathBenefit, setIulDeathBenefit] = useState(3000000);
   const [useILIT, setUseILIT] = useState(true);
 
-  const [annualGiftsPerRecipient, setAnnualGiftsPerRecipient] = useState(18000);
+  const [annualGiftsPerRecipient, setAnnualGiftsPerRecipient] = useState(TAX_RULES_2026.annualGiftExclusion);
   const [numberOfRecipients, setNumberOfRecipients] = useState(4);
   const [yearsOfGifting, setYearsOfGifting] = useState(10);
   const [lifetimeGiftsUsed, setLifetimeGiftsUsed] = useState(0);
@@ -839,7 +840,7 @@ export default function EstateTax() {
                   <Gift className="h-5 w-5 text-pink-400" /> Gifting Strategy
                 </CardTitle>
                 <CardDescription>
-                  Annual exclusion gifts reduce your taxable estate without using lifetime exemption ($18,000 per recipient in 2024)
+                  Annual exclusion gifts reduce your taxable estate without using lifetime exemption ({`$${TAX_RULES_2026.annualGiftExclusion.toLocaleString()} per recipient in ${TAX_RULES_2026.taxYear}`})
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -847,7 +848,7 @@ export default function EstateTax() {
                   <div className="rounded-xl border border-slate-700/60 bg-slate-800/40 p-4">
                     <Label className="text-sm font-medium text-slate-200">Annual Gift per Recipient</Label>
                     <NumberInput value={annualGiftsPerRecipient} onChange={setAnnualGiftsPerRecipient} className="bg-slate-900/60 border-slate-600/50 text-white h-10 mt-2" min={0} step={1000} />
-                    <p className="text-[11px] text-slate-500 mt-1.5">2024 exclusion: $18,000</p>
+                    <p className="text-[11px] text-slate-500 mt-1.5">{TAX_RULES_2026.taxYear} exclusion: {`$${TAX_RULES_2026.annualGiftExclusion.toLocaleString()}`} (Rev. Proc. 2025-32)</p>
                   </div>
                   <div className="rounded-xl border border-slate-700/60 bg-slate-800/40 p-4">
                     <Label className="text-sm font-medium text-slate-200">Number of Recipients</Label>

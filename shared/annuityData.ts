@@ -275,8 +275,9 @@ const INCOME_PRODUCTS: AnnuityProduct[] = [
 /*
  * 25 products with varied state availability so that different states
  * see genuinely different top-10 lists when filtered.
- * Rank field is the *national* baseline; getTopProductsForState applies
- * state-specific adjustments (see STATE_GROWTH_RANK_BOOSTS below).
+ * Rank field is the site's own illustrative order (not an independent
+ * rating, not a recommendation); getTopProductsForState applies no per-state
+ * adjustments. Rates are from the Feb 2026 source above and change monthly.
  */
 const GROWTH_PRODUCTS: AnnuityProduct[] = [
   {
@@ -482,185 +483,16 @@ const GROWTH_PRODUCTS: AnnuityProduct[] = [
   },
 ];
 
-/**
- * State-specific ranking adjustments for growth products.
- * Positive numbers = boost (lower rank number = higher position).
- * Products not listed keep their national baseline rank.
- * This creates genuinely different top-10 lists per state based on:
- * - Carrier regional strength & licensing
- * - State regulatory preferences
- * - Historical sales volume in that state
- * - Guaranty association tier compatibility
+/*
+ * STATE_GROWTH_RANK_BOOSTS was removed 23 Sep 2026. It held hand-typed rank
+ * offsets per state ("historical sales volume", "guaranty association tier
+ * compatibility") with no data behind them, so the per-state "top 10" was
+ * fabricated (NAIC Model 570 §5.W(1), §5.R; G.S. 58-62-86). Every state now
+ * sees the same order: the site's own illustrative order in the rank field,
+ * filtered only by real state availability (excludedStates, NY versions).
  */
-const STATE_GROWTH_RANK_BOOSTS: Partial<Record<StateCode, Record<string, number>>> = {
-  // Florida — retiree-heavy, prefers high participation + bonus products
-  FL: { "athene-pe-plus15": -3, "fg-power-accumulator": -1, "protective-indexed-choice": -8, "global-atlantic-forethought": -7 },
-  // Texas — large market, diverse preferences, bonus products popular
-  TX: { "north-american-charter-plus": -5, "transamerica-growth-choice": -9, "midland-livewell-growth": -4, "sammons-accumulation-fia": -12 },
-  // California — strict regulation, prefers high-rated carriers
-  CA: { "allianz-222": -3, "pacific-life-pacific-index": -8, "mass-mutual-stable-voyage": -12, "new-york-life-secure-growth": -11 },
-  // New York — strictest regulation, limited product availability
-  NY: { "athene-agility10-ny": -20, "mass-mutual-stable-voyage": -15, "new-york-life-secure-growth": -14, "allianz-222": -2 },
-  // Ohio — Great American home state, midwest preferences
-  OH: { "gaig-indexmark-7": -15, "great-american-legend7": -8, "nationwide-peak10-growth": -3, "lincoln-optiblend-10": -5 },
-  // Pennsylvania — conservative, prefers A+ carriers
-  PA: { "lincoln-optiblend-10": -7, "nationwide-peak10-growth": -2, "mass-mutual-stable-voyage": -10, "new-york-life-secure-growth": -9 },
-  // Illinois — large market, Jackson National strong
-  IL: { "jackson-market-link-pro": -7, "nationwide-peak10-growth": -2, "midland-livewell-growth": -3, "allianz-222": -1 },
-  // Arizona — retiree destination, bonus products popular
-  AZ: { "athene-pe-plus15": -2, "fg-power-accumulator": -1, "protective-indexed-choice": -7, "north-american-charter-plus": -4 },
-  // Georgia — southeast hub, Protective Life home state
-  GA: { "protective-indexed-choice": -12, "global-atlantic-forethought": -6, "corebridge-polaris-platinum": -5, "transamerica-growth-choice": -8 },
-  // North Carolina — financial hub, diverse preferences
-  NC: { "protective-indexed-choice": -8, "lincoln-optiblend-10": -4, "corebridge-polaris-platinum": -3, "nationwide-peak10-growth": -1 },
-  // Virginia — DC metro influence, conservative preferences
-  VA: { "mass-mutual-stable-voyage": -10, "new-york-life-secure-growth": -9, "lincoln-optiblend-10": -5, "nationwide-peak10-growth": -2 },
-  // Washington — Symetra home state, strict regulation
-  WA: { "symetra-accumulator-elite": -14, "pacific-life-pacific-index": -6, "mass-mutual-stable-voyage": -8, "new-york-life-secure-growth": -7 },
-  // Oregon — Pacific NW, Symetra strong
-  OR: { "symetra-accumulator-elite": -12, "pacific-life-pacific-index": -5, "allianz-222": -1, "mass-mutual-stable-voyage": -6 },
-  // Colorado — western state, growth-oriented
-  CO: { "pacific-life-pacific-index": -5, "fg-power-accumulator": -1, "jackson-market-link-pro": -3, "allianz-222": -1 },
-  // Michigan — midwest, auto industry wealth
-  MI: { "jackson-market-link-pro": -8, "nationwide-peak10-growth": -2, "lincoln-optiblend-10": -3, "midland-livewell-growth": -2 },
-  // New Jersey — strict regulation, high net worth
-  NJ: { "mass-mutual-stable-voyage": -12, "new-york-life-secure-growth": -10, "allianz-222": -2, "lincoln-optiblend-10": -4 },
-  // Connecticut — premium guaranty state, conservative
-  CT: { "mass-mutual-stable-voyage": -15, "new-york-life-secure-growth": -13, "allianz-222": -3, "lincoln-optiblend-10": -5 },
-  // Massachusetts — strict regulation, MassMutual home state
-  MA: { "mass-mutual-stable-voyage": -18, "new-york-life-secure-growth": -12, "allianz-222": -2, "lincoln-optiblend-10": -4 },
-  // Iowa — insurance capital, North American/Sammons home
-  IA: { "north-american-charter-plus": -8, "sammons-accumulation-fia": -14, "midland-livewell-growth": -5, "fg-power-accumulator": -1 },
-  // Minnesota — Allianz strong, conservative preferences
-  MN: { "allianz-222": -3, "mass-mutual-stable-voyage": -8, "midland-livewell-growth": -3, "nationwide-peak10-growth": -1 },
-  // Wisconsin — midwest, conservative
-  WI: { "nationwide-peak10-growth": -3, "midland-livewell-growth": -4, "allianz-222": -2, "mass-mutual-stable-voyage": -6 },
-  // Indiana — midwest, Nationwide strong
-  IN: { "nationwide-peak10-growth": -4, "midland-livewell-growth": -3, "lincoln-optiblend-10": -3, "gaig-indexmark-7": -5 },
-  // Tennessee — southeast, growth-oriented
-  TN: { "protective-indexed-choice": -8, "global-atlantic-forethought": -5, "transamerica-growth-choice": -6, "north-american-charter-plus": -3 },
-  // South Carolina — retiree destination
-  SC: { "protective-indexed-choice": -9, "athene-pe-plus15": -2, "global-atlantic-forethought": -4, "fg-power-accumulator": -1 },
-  // Nevada — no state income tax, growth-focused
-  NV: { "fg-power-accumulator": -1, "athene-pe-plus15": -2, "pacific-life-pacific-index": -4, "jackson-market-link-pro": -3 },
-  // Alabama — southeast, conservative
-  AL: { "protective-indexed-choice": -12, "global-atlantic-forethought": -5, "midland-livewell-growth": -2, "north-american-charter-plus": -3 },
-  // Missouri — midwest hub
-  MO: { "north-american-charter-plus": -4, "sammons-accumulation-fia": -8, "nationwide-peak10-growth": -2, "midland-livewell-growth": -3 },
-  // Maryland — DC metro, high net worth
-  MD: { "mass-mutual-stable-voyage": -8, "new-york-life-secure-growth": -7, "lincoln-optiblend-10": -4, "corebridge-polaris-platinum": -3 },
-  // Kentucky — southeast/midwest border
-  KY: { "nationwide-peak10-growth": -3, "gaig-indexmark-7": -6, "protective-indexed-choice": -5, "midland-livewell-growth": -2 },
-  // Louisiana — southeast, bonus products popular
-  LA: { "athene-pe-plus15": -2, "global-atlantic-forethought": -5, "protective-indexed-choice": -6, "transamerica-growth-choice": -4 },
-  // Oklahoma — heartland, Sammons strong
-  OK: { "sammons-accumulation-fia": -12, "north-american-charter-plus": -5, "midland-livewell-growth": -3, "transamerica-growth-choice": -4 },
-  // Kansas — heartland
-  KS: { "sammons-accumulation-fia": -10, "north-american-charter-plus": -4, "midland-livewell-growth": -3, "security-benefit-strategic": -4 },
-  // Nebraska — midwest, Sammons territory
-  NE: { "sammons-accumulation-fia": -13, "midland-livewell-growth": -5, "north-american-charter-plus": -4, "nationwide-peak10-growth": -2 },
-  // Arkansas — southeast
-  AR: { "protective-indexed-choice": -7, "global-atlantic-forethought": -4, "north-american-charter-plus": -3, "transamerica-growth-choice": -5 },
-  // Mississippi — southeast
-  MS: { "protective-indexed-choice": -10, "global-atlantic-forethought": -5, "transamerica-growth-choice": -6, "midland-livewell-growth": -2 },
-  // Idaho — Pacific NW
-  ID: { "symetra-accumulator-elite": -10, "pacific-life-pacific-index": -4, "fg-power-accumulator": -1, "allianz-222": -1 },
-  // Utah — western, growth-oriented
-  UT: { "pacific-life-pacific-index": -5, "fg-power-accumulator": -1, "jackson-market-link-pro": -3, "allianz-222": -1 },
-  // New Mexico — southwest
-  NM: { "pacific-life-pacific-index": -4, "protective-indexed-choice": -5, "north-american-charter-plus": -3, "fg-power-accumulator": -1 },
-  // Hawaii — limited carrier availability
-  HI: { "pacific-life-pacific-index": -8, "mass-mutual-stable-voyage": -10, "new-york-life-secure-growth": -9, "allianz-222": -2 },
-  // Alaska — limited carrier availability
-  AK: { "mass-mutual-stable-voyage": -12, "new-york-life-secure-growth": -10, "allianz-222": -2, "nationwide-peak10-growth": -1 },
-  // Montana — rural, limited availability
-  MT: { "mass-mutual-stable-voyage": -10, "new-york-life-secure-growth": -8, "allianz-222": -2, "nationwide-peak10-growth": -1 },
-  // Wyoming — rural, limited availability
-  WY: { "mass-mutual-stable-voyage": -10, "new-york-life-secure-growth": -8, "allianz-222": -2, "security-benefit-strategic": -3 },
-  // North Dakota — rural, Sammons territory
-  ND: { "sammons-accumulation-fia": -10, "midland-livewell-growth": -5, "mass-mutual-stable-voyage": -6, "nationwide-peak10-growth": -2 },
-  // South Dakota — no state income tax, growth-focused
-  SD: { "sammons-accumulation-fia": -10, "midland-livewell-growth": -5, "fg-power-accumulator": -1, "security-benefit-strategic": -3 },
-  // West Virginia — Appalachian, conservative
-  WV: { "nationwide-peak10-growth": -4, "gaig-indexmark-7": -6, "protective-indexed-choice": -5, "lincoln-optiblend-10": -3 },
-  // Delaware — small state, financial hub
-  DE: { "lincoln-optiblend-10": -6, "mass-mutual-stable-voyage": -8, "new-york-life-secure-growth": -7, "corebridge-polaris-platinum": -3 },
-  // Rhode Island — New England, conservative
-  RI: { "mass-mutual-stable-voyage": -12, "new-york-life-secure-growth": -10, "allianz-222": -2, "lincoln-optiblend-10": -4 },
-  // New Hampshire — New England
-  NH: { "mass-mutual-stable-voyage": -10, "new-york-life-secure-growth": -8, "allianz-222": -2, "lincoln-optiblend-10": -3 },
-  // Vermont — New England, strict regulation
-  VT: { "mass-mutual-stable-voyage": -14, "new-york-life-secure-growth": -12, "allianz-222": -3, "lincoln-optiblend-10": -4 },
-  // Maine — New England
-  ME: { "mass-mutual-stable-voyage": -12, "new-york-life-secure-growth": -10, "allianz-222": -2, "lincoln-optiblend-10": -3 },
-  // DC — federal employees, conservative
-  DC: { "mass-mutual-stable-voyage": -12, "new-york-life-secure-growth": -10, "lincoln-optiblend-10": -5, "corebridge-polaris-platinum": -3 },
-};
 
-/* ─── STATE-SPECIFIC MYGA RANKING BOOSTS ─── */
-/**
- * Negative values = boost (move up in ranking), positive = penalize (move down).
- * States with strong insurance regulation prefer A-rated carriers; Sun Belt states
- * may see higher-rate B++ carriers rank higher due to broader availability.
- */
-const STATE_MYGA_RANK_BOOSTS: Partial<Record<StateCode, Record<string, number>>> = {
-  // Sun Belt / Southeast — high-rate carriers available, boost them
-  FL: { "american-equity-myga": -8, "aspida-myga": -7, "global-atlantic-myga": -5, "midland-myga": -4 },
-  TX: { "midland-myga": -10, "north-american-myga": -8, "american-equity-myga": -6, "athene-myga": -5 },
-  GA: { "american-equity-myga": -7, "aspida-myga": -6, "fg-myga": -5, "global-atlantic-myga": -4 },
-  SC: { "atlantic-coast-myga": -6, "american-equity-myga": -5, "aspida-myga": -4 },
-  NC: { "american-equity-myga": -6, "global-atlantic-myga": -5, "midland-myga": -4 },
-  AL: { "american-equity-myga": -7, "heartland-national-myga": -3, "nassau-life-myga": -2 },
-  TN: { "american-equity-myga": -6, "midland-myga": -5, "aspida-myga": -4 },
-  LA: { "american-equity-myga": -7, "midland-myga": -5, "fg-myga": -3 },
-  MS: { "american-equity-myga": -7, "heartland-national-myga": -3 },
-  AR: { "american-equity-myga": -6, "midland-myga": -4 },
-  // Midwest — Sammons/Midland strong, balanced mix
-  IA: { "midland-myga": -10, "north-american-myga": -8, "american-equity-myga": -6, "nationwide-myga": -3 },
-  OH: { "nationwide-myga": -8, "midland-myga": -6, "american-equity-myga": -5, "lincoln-myga": -3 },
-  IN: { "midland-myga": -7, "american-equity-myga": -6, "jackson-myga": -4, "nationwide-myga": -3 },
-  IL: { "midland-myga": -6, "american-equity-myga": -5, "jackson-myga": -4, "nationwide-myga": -3 },
-  MI: { "jackson-myga": -8, "midland-myga": -5, "american-equity-myga": -4, "nationwide-myga": -3 },
-  MN: { "midland-myga": -7, "north-american-myga": -5, "american-equity-myga": -4 },
-  WI: { "midland-myga": -6, "american-equity-myga": -5, "nationwide-myga": -3 },
-  MO: { "midland-myga": -7, "american-equity-myga": -5, "north-american-myga": -4 },
-  NE: { "midland-myga": -8, "north-american-myga": -6, "american-equity-myga": -4 },
-  KS: { "midland-myga": -7, "north-american-myga": -5, "american-equity-myga": -4 },
-  ND: { "midland-myga": -6, "north-american-myga": -5 },
-  SD: { "midland-myga": -6, "north-american-myga": -5 },
-  // Northeast — prefer A-rated safety carriers
-  PA: { "massmutual-myga": -10, "guardian-myga": -8, "athene-myga": -6, "lincoln-myga": -4, "protective-myga": -3 },
-  NJ: { "massmutual-myga": -9, "guardian-myga": -7, "athene-myga": -5, "pacific-life-myga": -3 },
-  CT: { "massmutual-myga": -10, "guardian-myga": -8, "athene-myga": -6, "nationwide-myga": -4 },
-  MA: { "massmutual-myga": -10, "guardian-myga": -8, "pacific-life-myga": -5, "athene-myga": -4 },
-  NH: { "massmutual-myga": -8, "guardian-myga": -6, "athene-myga": -4 },
-  VT: { "massmutual-myga": -8, "guardian-myga": -6, "athene-myga": -4 },
-  ME: { "massmutual-myga": -8, "guardian-myga": -6, "athene-myga": -4 },
-  RI: { "massmutual-myga": -8, "guardian-myga": -6, "athene-myga": -4 },
-  DE: { "massmutual-myga": -7, "guardian-myga": -5, "athene-myga": -4, "lincoln-myga": -3 },
-  MD: { "massmutual-myga": -7, "guardian-myga": -5, "athene-myga": -4, "corebridge-myga": -3 },
-  VA: { "massmutual-myga": -6, "guardian-myga": -5, "athene-myga": -4, "lincoln-myga": -3 },
-  // West Coast — strict regulation, A-rated preferred
-  CA: { "massmutual-myga": -10, "guardian-myga": -8, "pacific-life-myga": -7, "athene-myga": -5, "nationwide-myga": -4 },
-  WA: { "massmutual-myga": -10, "guardian-myga": -8, "pacific-life-myga": -7, "athene-myga": -5 },
-  OR: { "massmutual-myga": -9, "guardian-myga": -7, "pacific-life-myga": -6, "athene-myga": -4 },
-  // Mountain West
-  CO: { "midland-myga": -6, "athene-myga": -5, "american-equity-myga": -4, "nationwide-myga": -3 },
-  AZ: { "midland-myga": -5, "american-equity-myga": -6, "athene-myga": -4, "aspida-myga": -3 },
-  NV: { "midland-myga": -5, "american-equity-myga": -6, "athene-myga": -4 },
-  UT: { "midland-myga": -6, "north-american-myga": -5, "athene-myga": -4 },
-  NM: { "midland-myga": -5, "american-equity-myga": -4, "athene-myga": -3 },
-  ID: { "midland-myga": -5, "north-american-myga": -4, "athene-myga": -3 },
-  MT: { "midland-myga": -5, "north-american-myga": -4 },
-  WY: { "midland-myga": -5, "north-american-myga": -4 },
-  // Other
-  HI: { "pacific-life-myga": -8, "massmutual-myga": -6, "athene-myga": -4 },
-  AK: { "pacific-life-myga": -6, "massmutual-myga": -5, "athene-myga": -4 },
-  OK: { "midland-myga": -6, "american-equity-myga": -5, "north-american-myga": -4 },
-  KY: { "midland-myga": -5, "american-equity-myga": -4, "nationwide-myga": -3 },
-  WV: { "midland-myga": -5, "nationwide-myga": -4, "athene-myga": -3 },
-  DC: { "massmutual-myga": -8, "guardian-myga": -6, "athene-myga": -5, "corebridge-myga": -3 },
-};
+/* STATE_MYGA_RANK_BOOSTS removed 23 Sep 2026 for the same reason as the growth boosts above. */
 
 /* ─── TOP MYGA PRODUCTS ─── */
 const MYGA_PRODUCTS: AnnuityProduct[] = [
@@ -928,18 +760,10 @@ export function getTopProductsForState(
       return !p.excludedStates.includes(stateCode);
     });
 
-  // Step 2: Apply state-specific ranking adjustments for growth and myga products
-  const boosts = category === "growth"
-    ? (STATE_GROWTH_RANK_BOOSTS[stateCode] || {})
-    : category === "myga"
-      ? (STATE_MYGA_RANK_BOOSTS[stateCode] || {})
-      : {};
-
+  // Step 2: order by the file's own illustrative order. There are no per-state
+  // adjustments: the old hand-typed "rank boosts" had no data behind them.
   const products = filtered
-    .map(p => {
-      const boost = boosts[p.id] || 0;
-      return { ...p, rank: p.rank + boost };
-    })
+    .map(p => ({ ...p }))
     .sort((a, b) => a.rank - b.rank)
     .slice(0, limit)
     // Re-number ranks 1..N for clean display

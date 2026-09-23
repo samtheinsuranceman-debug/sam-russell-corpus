@@ -56,7 +56,7 @@ const STRATEGIES: StrategyDef[] = [
   {
     id: "miga", name: "MYGA → O&G Waterfall", shortName: "MYGA",
     icon: Flame, color: "text-amber-400", bgColor: "bg-amber-500/10", borderColor: "border-amber-500/30",
-    description: "MYGA at 6.25% → Borrow 70% at 7% → Invest in O&G at 15% for 10-12 years → 90% Year 1 tax deduction → Tax savings pay principal-only on bank LOC",
+    description: "Hypothetical: MYGA at an assumed 6.25% (guaranteed only for its term) → borrow 70% at 7% → oil & gas program at an assumed 15% (a security with risk of loss) for 10-12 years → Year 1 deduction if you qualify → tax savings pay principal on the bank LOC",
     ircCodes: ["§263(c)", "§613", "§469(c)(3)"],
     category: "Tax Elimination",
   },
@@ -890,7 +890,7 @@ export default function ClientPortfolioDashboard() {
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-6 gap-3">
                   {[
-                    { step: "1", title: "Fund MYGA", desc: `${fmt$(mygaPremium)} at 6.25% guaranteed`, color: "bg-amber-500/20 border-amber-500/40", icon: "💰" },
+                    { step: "1", title: "Fund MYGA", desc: `${fmt$(mygaPremium)} at an assumed 6.25% (a MYGA guarantees its rate only for its term)`, color: "bg-amber-500/20 border-amber-500/40", icon: "💰" },
                     { step: "2", title: "Borrow 70%", desc: `${fmt$(mygaPremium * 0.7)} bank LOC at 7%`, color: "bg-blue-500/20 border-blue-500/40", icon: "🏦" },
                     { step: "3", title: "Invest in O&G", desc: `${fmt$(mygaPremium * 0.7)} → 15% returns/yr`, color: "bg-orange-500/20 border-orange-500/40", icon: "🛢️" },
                     { step: "4", title: "90% Tax Deduction", desc: `${fmt$(mygaPremium * 0.7 * 0.9)} deduction Year 1`, color: "bg-green-500/20 border-green-500/40", icon: "📋" },
@@ -930,7 +930,7 @@ export default function ClientPortfolioDashboard() {
                 <CardContent className="p-3">
                   <div className="text-[10px] text-amber-400 font-semibold">MYGA VALUE (Yr {projectionYears})</div>
                   <div className="text-xl font-black text-white">{summary ? fmt$(summary.migaFinalMYGA) : "—"}</div>
-                  <div className="text-[10px] text-gray-400">6.25% guaranteed compounding</div>
+                  <div className="text-[10px] text-gray-400">Assumed 6.25% MYGA rate (hypothetical; guaranteed only for the contract term)</div>
                 </CardContent>
               </Card>
               <Card className="border-green-500/20 bg-green-500/5">
@@ -994,7 +994,7 @@ export default function ClientPortfolioDashboard() {
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm flex items-center gap-2">
                   <Scale className="w-4 h-4 text-amber-400" />
-                  MYGA Growth (6.25%) vs Bank Loan Balance — Collateral Always Wins
+                  MYGA Growth at the Assumed 6.25% Rate vs Bank Loan Balance (Hypothetical)
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -1013,7 +1013,7 @@ export default function ClientPortfolioDashboard() {
                   </AreaChart>
                 </ResponsiveContainer>
                 <div className="mt-3 p-2 bg-amber-500/10 rounded-lg border border-amber-500/20">
-                  <p className="text-xs text-amber-300"><strong>Key Insight:</strong> The MYGA (your collateral) compounds at 6.25% guaranteed while the bank loan balance shrinks from tax savings paying principal. The gap between these two lines is your <strong>net equity gain</strong> — it only grows wider over time.</p>
+                  <p className="text-xs text-amber-300"><strong>Key Insight:</strong> Hypothetically, the MYGA (your collateral) compounds at the assumed 6.25% rate for its term (renewal rates are not guaranteed; guarantees are subject to the insurer's claims-paying ability) while the bank loan balance shrinks from tax savings paying principal. The gap between these two lines is your modeled <strong>net equity gain</strong>; it narrows if rates, tax savings or the oil and gas program fall short.</p>
                 </div>
               </CardContent>
             </Card>

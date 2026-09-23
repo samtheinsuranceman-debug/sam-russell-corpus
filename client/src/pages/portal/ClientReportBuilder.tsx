@@ -33,7 +33,8 @@ export default function ClientReportBuilder() {
   const [advisorName, setAdvisorName] = useState("Sam Russell");
   const [companyName, setCompanyName] = useState("Russell Capital Solutions");
   const [selectedEngines, setSelectedEngines] = useState<ReportEngine[]>([]);
-  const [includeDisclaimer, setIncludeDisclaimer] = useState(true);
+  // Reports always carry the disclaimer (copy-compliance review S-a).
+  const includeDisclaimer = true;
   const [includeBranding, setIncludeBranding] = useState(true);
   const [report, setReport] = useState<any>(null);
   const [activeView, setActiveView] = useState<"setup" | "preview">("setup");
@@ -177,8 +178,9 @@ export default function ClientReportBuilder() {
                 </div>
                 <div className="flex items-center gap-6 pt-6">
                   <div className="flex items-center gap-2">
-                    <Checkbox id="disclaimer" checked={includeDisclaimer} onCheckedChange={(v) => setIncludeDisclaimer(!!v)} />
-                    <Label htmlFor="disclaimer" className="text-sm">Include Disclaimer</Label>
+                    {/* Disclaimers are always included in a generated report. */}
+                    <Checkbox id="disclaimer" checked disabled />
+                    <Label htmlFor="disclaimer" className="text-sm">Disclaimer (always included)</Label>
                   </div>
                   <div className="flex items-center gap-2">
                     <Checkbox id="branding" checked={includeBranding} onCheckedChange={(v) => setIncludeBranding(!!v)} />

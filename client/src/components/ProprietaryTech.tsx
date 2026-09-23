@@ -6,8 +6,8 @@
 //
 // STATUS: 57 claims documented, each with a drafted application. NONE IS
 // FILED. Do not write a status string here — import statusBadge() and
-// statusSentence() from shared/patentStatus, which return the words "patent
-// pending" only once a real USPTO number exists, which is not today.
+// statusSentence() from shared/patentStatus, which switch to the filing
+// wording only once a real USPTO application number exists, which is not today.
 // ============================================================
 import {
   Layers, Dna, Waves, Boxes, Repeat2, Home, Landmark, ShieldCheck, Radar, Dice5, History, Brain, Award, Network,

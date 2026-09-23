@@ -86,7 +86,7 @@ const HIDDEN_PAGES = [
   {
     category: "Annuity Data",
     pages: [
-      { path: "/portal/annuity-memory", label: "Annuity Memory — 50-State Database", icon: Database, description: "Complete 50-state annuity data store with guaranty limits, product rankings, and availability", views: 3500, status: "Active", lastAccessed: "2026-04-12", size: "15.8MB" },
+      { path: "/portal/annuity-memory", label: "Annuity Memory — 50-State Database", icon: Database, description: "Complete 50-state annuity data store: statutory reference data, the site's illustrative product order, and availability (advisor reference only)", views: 3500, status: "Active", lastAccessed: "2026-04-12", size: "15.8MB" },
     ],
   },
   {
@@ -1032,7 +1032,7 @@ function UnlockedContent() {
         </h4>
         <p className="text-sm text-[#c8d8ec] leading-relaxed max-w-4xl relative z-10">
           These tools and calculators were the original systems used on the Russell Capital platform prior to the 2026 compliance update.
-          They have been replaced with NAIC AG 49-A/B compliant versions that use proper "would have been" language, mandatory disclaimers, and educational framing.
+          They have been replaced with versions that use "would have been" language for past index history, assumed crediting rates the visitor sets, mandatory disclaimers, and educational framing.
           The new compliant versions are accessible from the main sidebar navigation. These legacy versions are maintained strictly for historical reference, 
           audit purposes, and internal analysis.
         </p>

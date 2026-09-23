@@ -203,7 +203,7 @@ export default function PresentationBuilder() {
   ]);
   const [activeSlideIndex, setActiveSlideIndex] = useState(0);
   const [previewMode, setPreviewMode] = useState(false);
-  const [includeDisclaimer, setIncludeDisclaimer] = useState(true);
+  // The NAIC disclaimer is always part of a client presentation (copy-compliance review S-a).
   const [includeAppendix, setIncludeAppendix] = useState(false);
   const [theme, setTheme] = useState("light");
   const [font, setFont] = useState("inter");
@@ -413,7 +413,7 @@ export default function PresentationBuilder() {
           "Phase 1: Complete fact-finder and risk assessment",
           "Phase 2: Initiate Roth conversion strategy",
           "Phase 3: Establish IUL policy with optimal carrier",
-          "Phase 4: Set up MYGA ladder for guaranteed returns",
+          "Phase 4: Set up a MYGA ladder (contractual fixed rates for each term, subject to the insurer's claims-paying ability)",
           "Ongoing: Quarterly reviews and rebalancing",
         ],
         notes: "",
@@ -935,8 +935,8 @@ export default function PresentationBuilder() {
                 
                 <div className="pt-4 border-t space-y-3">
                   <div className="flex items-center justify-between">
-                    <Label htmlFor="include-disclaimer" className="text-sm font-medium cursor-pointer">Include NAIC Disclaimer</Label>
-                    <Switch id="include-disclaimer" checked={includeDisclaimer} onCheckedChange={setIncludeDisclaimer} />
+                    <Label htmlFor="include-disclaimer" className="text-sm font-medium">NAIC Disclaimer</Label>
+                    <span id="include-disclaimer" className="text-xs text-emerald-400">Always included</span>
                   </div>
                   <div className="flex items-center justify-between">
                     <Label htmlFor="include-appendix" className="text-sm font-medium cursor-pointer">Include Appendix</Label>
@@ -1331,7 +1331,7 @@ export default function PresentationBuilder() {
           </div>
         </div>
 
-        {includeDisclaimer && <NAICDisclaimer />}
+        <NAICDisclaimer />
         <PageInsights pageId="presentation-builder" />
       </div>
     </AppShell>

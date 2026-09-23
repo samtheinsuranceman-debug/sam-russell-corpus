@@ -4,6 +4,7 @@ import React, { useState, useMemo } from 'react';
 import { Users, DollarSign, TrendingUp, Shield, CheckCircle2, AlertTriangle, Calendar, Target, Percent, ArrowRight, Heart, Lock } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend, BarChart, Bar, ComposedChart, Line } from 'recharts';
 import { PageInsights } from "@/components/PageInsights";
+import { TAX_RULES_2026 } from "@shared/taxRules";
 
 export default function SLATDeepDive() {
   const [showDetails, setShowDetails] = useState(false);
@@ -92,11 +93,11 @@ export default function SLATDeepDive() {
           Gift Tax: Annual Exclusion vs Lifetime Exemption
         </h2>
         <p className="mt-4 text-gray-200">
-          When funding a SLAT, you can use the annual gift tax exclusion ($18,000 per recipient in 2024) or the lifetime exemption. The annual exclusion applies to gifts without strings attached, while the lifetime exemption covers larger transfers but reduces your available estate tax exemption.
+          When funding a SLAT, you can use the annual gift tax exclusion ({`$${TAX_RULES_2026.annualGiftExclusion.toLocaleString()} per recipient in ${TAX_RULES_2026.taxYear}; Source: IRS Rev. Proc. 2025-32`}) or the lifetime exemption. The annual exclusion applies to gifts without strings attached, while the lifetime exemption covers larger transfers but reduces your available estate tax exemption.
         </p>
         <ul className="mt-4 list-disc pl-6 text-[#94a3b8]">
           <li>Annual Exclusion: Ideal for smaller gifts; no tax return required if under the limit.</li>
-          <li>Lifetime Exemption: Use for SLAT funding over $18,000; triggers gift tax reporting under IRC 2511.</li>
+          <li>Lifetime Exemption: Use for SLAT funding over {`$${TAX_RULES_2026.annualGiftExclusion.toLocaleString()}`} per recipient; triggers gift tax reporting under IRC 2511.</li>
           <li>Comparison: Annual gifts preserve your lifetime exemption, but may not suffice for substantial estate planning.</li>
         </ul>
         <div className="mt-4 p-4 bg-[#0d1526] rounded-lg">

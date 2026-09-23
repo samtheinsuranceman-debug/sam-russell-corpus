@@ -107,7 +107,7 @@ const LAB_TOOLS: { path: string; label: string }[] = [
   { path: "/portal/retirement-advantage", label: "Retirement Advantage" },
   { path: "/portal/income-gap", label: "Retirement Gap" },
   { path: "/portal/retirement-projection", label: "Retirement Income Proj" },
-  { path: "/portal/revenue-guarantee", label: "Revenue Guarantee" },
+  { path: "/portal/revenue-guarantee", label: "Revenue Case" },
   { path: "/portal/risk-tolerance", label: "Risk Tolerance" },
   { path: "/portal/russell-number", label: "Russell Number" },
   { path: "/portal/secret-secrets", label: "Secret Secrets" },

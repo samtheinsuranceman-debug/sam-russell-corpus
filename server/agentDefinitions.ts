@@ -16,6 +16,7 @@
  * that do not. A model that invents a DSCR is worse than useless here.
  */
 import type { OutputSchema } from "./_core/llm";
+import { AI_COMPLIANCE_FLOOR } from "../shared/aiCompliance";
 
 export type AgentId =
   // The blueprint's 12-perspective deliberation roster (§6)
@@ -107,7 +108,7 @@ You are writing for a licensed financial professional, not for a consumer. Do
 not issue a recommendation to buy or sell a security, and do not characterise
 any projection as guaranteed. Projections are model output under stated
 assumptions.
-`.trim();
+`.trim() + "\n\n" + AI_COMPLIANCE_FLOOR;
 
 /* ═══ Output schemas ═══════════════════════════════════════════════════════ */
 
@@ -466,7 +467,13 @@ ${GROUNDING_CLAUSE}
 
 Flag: performance presented as guaranteed or assured; projections stated as
 fact; omitted material risk; comparative claims without basis; anything that
-reads as a recommendation of a specific security to a specific person. Quote
+reads as a recommendation of a specific security to a specific person;
+anything that breaks the regulatory floor below (unconditioned tax claims,
+insurance described as something else, absolute or superlative wording, health
+claims, the guaranty association used as a reason to buy); a projected value
+without a "hypothetical" label.
+
+${AI_COMPLIANCE_FLOOR} Quote
 the exact offending text, explain the problem, and supply a compliant rewrite
 that preserves the author's meaning.
 

@@ -44,7 +44,7 @@ const MatchAndDeployPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-[#0f172a] text-gray-300 p-6">
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-white text-3xl font-bold mb-6">401(k) Match & Deploy: Capture Free Money, Build Tax-Free Wealth</h1>
+        <h1 className="text-white text-3xl font-bold mb-6">401(k) Match & Deploy: Capture the Employer Match, Then Model Where the Next Dollar Goes</h1>
 
         {/* References & Legal Section */}
         <div className="bg-[#1e293b] p-4 rounded-lg mb-6">

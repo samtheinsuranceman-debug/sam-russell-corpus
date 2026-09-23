@@ -420,7 +420,7 @@ export const TAB_SUMMARIES: TabSummary[] = [
     hiddenAdvantages: [
       "Creates urgency — shows the cost of waiting",
       "Uses 'truth numbers' from actual history, not hypotheticals",
-      "Compliant with AG49 because it shows historical, not projected, performance",
+      "Shows historical index crediting as a labelled back-test beside the carrier illustration, which AG 49-A governs",
     ],
     alternativeUses: [
       "Seminar presentation tool — show audience what they missed",
@@ -836,7 +836,7 @@ export const TAB_SUMMARIES: TabSummary[] = [
     icon: "Lock",
     useCase: "The flagship MYGA waterfall strategy — models a 20-year cascading deployment of capital through multiple MYGA contracts with O&G income, tax savings reinvestment, and depreciation benefits.",
     utility: "Shows clients how to create a guaranteed income waterfall using MYGAs while simultaneously benefiting from O&G tax deductions and reinvesting tax savings.",
-    uniqueProblem: "Clients want guaranteed returns but also want tax benefits and growth. The waterfall strategy delivers all three by cascading MYGA maturities with O&G income and tax savings reinvestment.",
+    uniqueProblem: "Clients want contractual fixed rates but also want tax benefits and growth. The waterfall strategy delivers all three by cascading MYGA maturities with O&G income and tax savings reinvestment.",
     resultConsistency: "High — MYGA rates are guaranteed. O&G income projections are estimates. Tax savings calculations are based on current tax law.",
     hiddenAdvantages: [
       "Tax savings reinvestment (shown in green) compounds the strategy's total return",
@@ -925,7 +925,7 @@ export const TAB_SUMMARIES: TabSummary[] = [
     ],
     alternativeUses: [
       "IRA rollover analysis — show growth potential in an annuity vs. staying invested",
-      "Safe money allocation — portion of portfolio in guaranteed growth",
+      "Fixed-rate allocation — portion of portfolio at a contractual rate for the MYGA term",
       "Pre-retirement accumulation strategy",
     ],
     realLifeAccuracy: "High for guaranteed values. Index-linked growth is estimated.",

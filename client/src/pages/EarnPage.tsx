@@ -4,7 +4,7 @@ import { Link } from 'wouter';
 const EarnPage: React.FC = () => {
   const subPages = [
     { path: '/portal/rewards', title: 'Rewards Vault', description: 'Access rewards, badges, and incentives for your achievements.', icon: '🏅' },
-    { path: '/portal/revenue-guarantee', title: 'Revenue Guarantee', description: 'AI-driven strategies to secure and grow your recurring revenue.', icon: '💎' },
+    { path: '/portal/revenue-guarantee', title: 'Revenue Case', description: 'AI-driven strategies to secure and grow your recurring revenue.', icon: '💎' },
     { path: '/portal/pet', title: 'Pet Companion', description: 'Your AI practice companion that grows as your business grows.', icon: '🐾' },
   ];
 

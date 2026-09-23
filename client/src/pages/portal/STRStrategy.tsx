@@ -405,7 +405,7 @@ export default function STRStrategy() {
                 <h1 className="text-lg font-bold bg-gradient-to-r from-orange-400 via-amber-400 to-yellow-400 bg-clip-text text-transparent">
                   SHORT-TERM RENTAL TAX STRATEGY
                 </h1>
-                <span className="text-[10px] bg-orange-500/20 text-orange-300 px-2 py-0.5 rounded-full font-bold">ZERO TAX ENGINE</span>
+                <span className="text-[10px] bg-orange-500/20 text-orange-300 px-2 py-0.5 rounded-full font-bold">TAX-OFFSET ENGINE (HYPOTHETICAL)</span>
               </div>
               <p className="text-[10px] text-gray-500">Cost Segregation + Bonus Depreciation + STR Loophole = $0 Federal Tax on $500K+ Income</p>
             </div>
