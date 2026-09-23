@@ -10,6 +10,8 @@
  *   Level 5 = 100 questions (full deep-dive)
  */
 
+import { federalBrackets } from "@shared/taxBracketEngine";
+
 export interface OnboardingQuestion {
   id: number;
   text: string;
@@ -20,6 +22,17 @@ export interface OnboardingQuestion {
   placeholder?: string;
   helperText?: string;
 }
+
+/**
+ * Federal bracket choices (single-filer taxable income), built from the
+ * current-year table in shared/taxRules.ts so the labels follow the rules.
+ */
+const SINGLE_BRACKET_OPTIONS: { label: string; value: string }[] = federalBrackets("single").map((b) => {
+  const pct = Math.round(b.rate * 100);
+  const from = b.min === 0 ? "$0" : `$${(b.min + 1).toLocaleString("en-US")}`;
+  const range = b.max === Infinity ? `${from}+` : `${from}-$${b.max.toLocaleString("en-US")}`;
+  return { label: `${pct}% (${range})`, value: String(pct) };
+});
 
 export interface OnboardingCategory {
   key: string;
@@ -130,7 +143,7 @@ export const ONBOARDING_QUESTIONS: OnboardingQuestion[] = [
   // TAX SITUATION — 10 questions
   // ═══════════════════════════════════════════════════════════════
   { id: 61, category: "tax", priority: 1, type: "select", text: "What is your federal tax filing status?", options: [{ label: "Single", value: "single" }, { label: "Married Filing Jointly", value: "mfj" }, { label: "Married Filing Separately", value: "mfs" }, { label: "Head of Household", value: "hoh" }, { label: "Qualifying Widow(er)", value: "qw" }] },
-  { id: 62, category: "tax", priority: 1, type: "select", text: "What is your approximate federal tax bracket?", options: [{ label: "10% ($0-$11,600)", value: "10" }, { label: "12% ($11,601-$47,150)", value: "12" }, { label: "22% ($47,151-$100,525)", value: "22" }, { label: "24% ($100,526-$191,950)", value: "24" }, { label: "32% ($191,951-$243,725)", value: "32" }, { label: "35% ($243,726-$609,350)", value: "35" }, { label: "37% ($609,351+)", value: "37" }, { label: "Not sure", value: "unsure" }] },
+  { id: 62, category: "tax", priority: 1, type: "select", text: "What is your approximate federal tax bracket?", options: [...SINGLE_BRACKET_OPTIONS, { label: "Not sure", value: "unsure" }] },
   { id: 63, category: "tax", priority: 2, type: "number", text: "What was your total federal tax liability last year?", placeholder: "$0" },
   { id: 64, category: "tax", priority: 2, type: "select", text: "Do you itemize deductions or take the standard deduction?", options: [{ label: "Standard deduction", value: "standard" }, { label: "Itemize deductions", value: "itemize" }, { label: "Not sure", value: "unsure" }] },
   { id: 65, category: "tax", priority: 3, type: "number", text: "What is your state income tax rate?", placeholder: "0%", helperText: "Enter 0 if your state has no income tax" },

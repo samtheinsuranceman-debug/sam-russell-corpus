@@ -23,7 +23,7 @@ import { useClientData, FactFinderBadge } from "@/contexts/ClientDataContext";
 import { PlatformEnhancements } from "@/components/PlatformEnhancements";
 import { ExecutiveSummary, GoalsAccelerator, RecommendationSummary, DoNothingBaseline, TaxBracketPanel } from "@/components/ConsumerOutcomeBlocks";
 import { IRMAA_2026, PART_B_STANDARD_MONTHLY_2026, irmaaTierIndex, type IrmaaFiling } from "@shared/irmaa";
-import { formatTaxCurrency } from "@shared/taxBracketEngine";
+import { formatTaxCurrency, federalBrackets } from "@shared/taxBracketEngine";
 import { RelatedCalculators } from "@/components/RelatedCalculators";
 import { ComplianceFooter } from "@/components/ComplianceFooter";
 
@@ -160,10 +160,10 @@ export default function TaxWaterfall() {
       }
       const baseIncome = result.taxableIncome - (income.iraDistributions || 0);
       const totalWithRmd = baseIncome + rmd;
-      const brackets = filingStatus === "married"
-        ? [22000, 89450, 190750, 364200, 462500, 693750]
-        : [11000, 44725, 95375, 182100, 231250, 578125];
-      const rates = [0.10, 0.12, 0.22, 0.24, 0.32, 0.35, 0.37];
+      // Current-year thresholds and rates from shared/taxRules.ts (via the bracket engine).
+      const table = federalBrackets(filingStatus === "married" ? "joint" : filingStatus);
+      const brackets = table.slice(0, -1).map((b) => b.max);
+      const rates = table.map((b) => b.rate);
       let bracket = "10%";
       for (let i = 0; i < brackets.length; i++) {
         if (totalWithRmd > brackets[i]) bracket = `${(rates[i + 1] * 100).toFixed(0)}%`;
