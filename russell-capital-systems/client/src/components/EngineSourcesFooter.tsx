@@ -46,7 +46,7 @@ export default function EngineSourcesFooter({ path }: { path: string }) {
 
   if (!plan) return null;
   const names = plan.engines.map(e => e.replace(/^shared\//, "").replace(/\.ts$/, ""));
-  const caption = names.length ? `engine ${names.join(", ")}` : "page sources";
+  const caption = names.length ? `${names.length > 1 ? "engines" : "engine"} ${names.join(", ")}` : "page sources";
 
   return (
     <section

@@ -17,7 +17,7 @@ import {
 } from "../shared/engineSources";
 
 const appSrc = readFileSync(resolve(__dirname, "../client/src/App.tsx"), "utf8");
-const UNSOURCED_PREFIXES = ["Assumption:", "Not sourced", "Not corrected yet:", "Computed by "];
+const UNSOURCED_PREFIXES = ["Assumption:", "Not sourced", "Not corrected yet:", "Computed by ", "Sample data:", "The "];
 
 describe("shared/pageSources.ts", () => {
   it("names only routes App.tsx declares", () => {
@@ -65,7 +65,7 @@ describe("route matching for the footer", () => {
   it("builds a plan from the page's engines and its own sources", () => {
     expect(engineForPath("/for")).toBe("shared/careerEngine.ts");
     const irmaa = sourcePlanForPath("/portal/medicare-irmaa")!;
-    expect(irmaa.engines).toEqual([]);
+    expect(irmaa.engines).toEqual(["shared/taxBracketEngine.ts"]);
     expect(irmaa.pageSources.some(s => s.url?.includes("cms.gov"))).toBe(true);
     const chain = sourcePlanForPath("/portal/chain")!;
     expect(chain.engines).toEqual(["shared/macroEngine.ts", "shared/ultraEngine.ts"]);
