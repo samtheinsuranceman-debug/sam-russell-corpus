@@ -89,4 +89,4 @@ export * from "./scoring";
 export * from "./people";
 export * from "./household";
 
-export const MACRO_LAYER_VERSION = "2026.09.22d";
+export const MACRO_LAYER_VERSION = "2026.09.23a";

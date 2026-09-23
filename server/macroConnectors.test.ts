@@ -14,6 +14,7 @@ import {
   runAllConnectors,
   plausibleTic,
   CONNECTORS,
+  allowedHosts,
   type FetchLike,
 } from "./macroConnectors";
 import { buildMacroBrief, parseMacroLookup, stripMacroLookup, executeMacroLookup } from "./macroContext";
@@ -77,8 +78,8 @@ describe("parsers", () => {
   });
 
   it("RSS", () => {
-    const xml = `<rss><channel><item><title><![CDATA[China's foreign ministry warns on Taiwan arms sale]]></title><link>https://x/1</link><pubDate>Mon, 21 Sep 2026 08:00:00 GMT</pubDate></item><item><title>Weather</title><link>https://x/2</link></item></channel></rss>`;
-    const items = parseRss(xml, "cn-xinhua");
+    const xml = `<rss><channel><item><title><![CDATA[Treasury statement on Taiwan arms sale]]></title><link>https://x/1</link><pubDate>Mon, 21 Sep 2026 08:00:00 GMT</pubDate></item><item><title>Weather</title><link>https://x/2</link></item></channel></rss>`;
+    const items = parseRss(xml, "whitehouse-briefing");
     expect(items).toHaveLength(2);
     expect(items[0].title).toMatch(/Taiwan/);
   });
@@ -91,7 +92,6 @@ describe("runner", () => {
       if (url.includes("fredgraph")) return okText("observation_date,X\n2026-09-19,4.9\n");
       if (url.includes("imf.org")) return okText(JSON.stringify({ values: { GGXWDG_NGDP: { USA: { "2026": 125.8 } } } }));
       if (url.includes("worldbank")) return okText(JSON.stringify([{}, [{ countryiso3code: "USA", date: "2024", value: 120 }]]));
-      if (url.includes("news.cn")) return okText("<rss><channel><item><title>Treasury talk</title></item></channel></rss>");
       return { ok: false, status: 404, text: async () => "" };
     };
     const r = await runAllConnectors({ fetchImpl, env: {} as NodeJS.ProcessEnv, today: "2026-09-22" });
@@ -101,7 +101,11 @@ describe("runner", () => {
     expect(r.results.find(x => x.sourceId === "eia-api")!.ok).toBe(false); // no key
     expect(r.okCount).toBeGreaterThanOrEqual(3);
     expect(r.observations.some(o => o.indicatorId === "ust10y")).toBe(true);
-    expect(r.observations.find(o => o.indicatorId === "cn-state-media-threat")!.value).toBe(1);
+  });
+
+  it("reads no Chinese government, Party, state-media or .cn/.hk host", () => {
+    for (const h of allowedHosts()) expect(h, h).not.toMatch(/\.(?:cn|hk|mo)$|news\.cn|xinhua/i);
+    for (const c of CONNECTORS) expect(SOURCE_BY_ID.get(c.sourceId)!.jurisdiction, c.sourceId).not.toMatch(/^(?:CN|HK)$/);
   });
 
   it("every connector names a registered source", () => {
