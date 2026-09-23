@@ -26,7 +26,17 @@ import {
 import {
   runPolicyLoanMechanics,
   yearsToCrossover,
+  compareLoanTypes,
+  modellableCarriers,
+  CARRIER_LOAN_PROFILES,
+  LOAN_DISCLOSURE,
+  NATIONWIDE_DECLARED,
+  NATIONWIDE_PARTICIPATING,
+  SECURIAN_FIXED,
+  SECURIAN_INDEXED,
+  SECURIAN_VARIABLE,
   type LoanType,
+  type LoanTerms,
 } from "@shared/policyLoanMechanics";
 import { applicablePercentage, VERIFIED_AGAINST_PRIMARY_TEXT, CORRIDOR_AUTHORITY } from "@shared/irc7702";
 import { UNPRICED_PARAMETERS, rankedFor } from "@shared/unpricedParameters";
@@ -185,6 +195,7 @@ export const policyLabRouter = router({
         isMec: z.boolean().default(false),
         ordinaryIncomeRatePct: z.number().min(0).max(50).default(37),
         chargedInAdvance: z.boolean().default(false),
+        indexedLoanAccountRatePct: z.number().min(0).max(12).default(0),
       })
     )
     .query(({ input }) => {
@@ -215,15 +226,38 @@ export const policyLabRouter = router({
             type,
             chargedRatePct: input.chargedRatePct,
             collateralCreditRatePct: input.collateralCreditRatePct,
+            indexedLoanAccountRatePct: input.indexedLoanAccountRatePct,
             inArrears: !input.chargedInAdvance,
           },
-          tax
+          tax,
+          { issueAge: input.attainedAge }
         );
+
+      // The carrier presets run beside the hand-set rates, so the page can put
+      // "what you typed" next to "what the illustration actually says" rather
+      // than making the reader trust a default.
+      const carrierRun = (terms: LoanTerms, guaranteed = false) =>
+        runPolicyLoanMechanics(states, terms, tax, { guaranteed, issueAge: input.attainedAge });
 
       return {
         wash: run("wash"),
         fixed: run("fixed"),
+        indexedAccount: run("indexed_account"),
         participating: run("participating"),
+        carriers: {
+          nationwideDeclared: carrierRun(NATIONWIDE_DECLARED),
+          nationwideParticipating: carrierRun(NATIONWIDE_PARTICIPATING),
+          nationwideParticipatingGuaranteed: carrierRun(NATIONWIDE_PARTICIPATING, true),
+          securianFixed: carrierRun(SECURIAN_FIXED),
+          securianIndexed: carrierRun(SECURIAN_INDEXED),
+          securianVariable: carrierRun(SECURIAN_VARIABLE),
+        },
+        comparison: compareLoanTypes(states, [NATIONWIDE_DECLARED, NATIONWIDE_PARTICIPATING], tax, {
+          issueAge: input.attainedAge,
+        }),
+        profiles: CARRIER_LOAN_PROFILES,
+        modellable: modellableCarriers().map((c) => c.carrier),
+        disclosure: LOAN_DISCLOSURE,
         crossoverYears: yearsToCrossover(
           input.annualDraw,
           input.startingCashValue,

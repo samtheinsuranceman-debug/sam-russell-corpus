@@ -232,11 +232,11 @@ export const MEMORY_GROUPS: readonly MemoryGroup[] = [
   {
     id: "insurance-mechanics",
     name: "Policy mechanics and carriers",
-    modules: ["shared/policyLoanMechanics.ts", "shared/policyMechanics.ts", "shared/irc7702.ts", "shared/ag49Validator.ts", "shared/mutualIulCarriers.ts", "shared/iulCarriers.ts", "shared/carrierRatings.ts", "shared/wholeLifeBanking.ts"],
+    modules: ["shared/policyLoanMechanics.ts", "shared/policyMechanics.ts", "shared/irc7702.ts", "shared/ag49Validator.ts", "shared/mutualIulCarriers.ts", "shared/iulCarriers.ts", "shared/carrierRatings.ts", "shared/wholeLifeBanking.ts", "shared/earlyCashValue.ts", "shared/lookbackIntegrity.ts"],
     knows:
-      "Loan mechanics including direct versus non-direct recognition, section 7702 and MEC limits, AG49 illustration constraints, and the mutual-only carrier registry with sourced ownership.",
+      "Loan mechanics for four loan types — wash, declared/fixed, indexed loan account, and participating — with the charged and credited rates transcribed from Nationwide, Securian, Pacific Life and Lafayette illustrations, each carrying its source document and date. Also section 7702 and MEC limits, AG49 illustration constraints, the overloan lapse protection gate, the mutual-only carrier registry with sourced ownership, and which published look-back figures an index actually lived through rather than was backtested to.",
     brief:
-      "Illustrations obey AG49. Mutual and mutual-holding carriers only for indexed life. Always raise MEC status before discussing policy loans.",
+      "Illustrations obey AG49. Mutual and mutual-holding carriers only for indexed life. Always raise MEC status before discussing policy loans. An indexed LOAN ACCOUNT loan is not a participating loan — the money still leaves the policy's own strategies. Never quote a look-back figure without saying whether the index lived it or was backtested to it. The Surrender Value Enhancement Rider does nothing for a loan plan: loans are tested against the unadjusted surrender charge schedule.",
     wired: true,
     priority: 1,
   },
