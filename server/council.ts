@@ -619,18 +619,28 @@ export type CouncilRunLog = {
 
 /**
  * Keyed, so a short or templated question cannot be recovered by hashing a
- * dictionary. The key is COUNCIL_LOG_SECRET, else JWT_SECRET; with neither, a
- * per-process key (hashes then stop matching across restarts, which is the
- * safe way to fail).
+ * dictionary.
+ *
+ * NEVER key these with JWT_SECRET itself. Session cookies are HS256 JWTs, and
+ * an HS256 signature is exactly HMAC-SHA256(JWT_SECRET, "header.payload"):
+ * a log hash keyed with the raw secret would sign any JWT a caller typed in as
+ * a question, i.e. mint an owner session (review finding R-B3). So every log
+ * key is derived for one purpose — HMAC(base, "rcs:council:<purpose>:v1") —
+ * from COUNCIL_HASH_SECRET (preferred), else COUNCIL_LOG_SECRET, else
+ * JWT_SECRET, else a per-process random key (hashes then stop matching across
+ * restarts, which is the safe way to fail). The message is also prefixed, so
+ * it can never be a bare JWT signing input.
  */
 let processKey: Buffer | null = null;
-function logKey(): string | Buffer {
-  const k = process.env.COUNCIL_LOG_SECRET?.trim() || process.env.JWT_SECRET?.trim();
-  if (k) return k;
-  processKey ??= randomBytes(32);
-  return processKey;
+export const QUESTION_HASH_CONTEXT = "rcs:council:question-hash:v1";
+export const VERDICT_DIGEST_CONTEXT = "rcs:council:verdict-digest:v1";
+function derivedLogKey(context: string): Buffer {
+  const base =
+    process.env.COUNCIL_HASH_SECRET?.trim() || process.env.COUNCIL_LOG_SECRET?.trim() || process.env.JWT_SECRET?.trim() || (processKey ??= randomBytes(32));
+  return createHmac("sha256", base).update(context).digest();
 }
-export const hashQuestion = (q: string): string => createHmac("sha256", logKey()).update(q.trim()).digest("hex");
+export const hashQuestion = (q: string): string =>
+  createHmac("sha256", derivedLogKey(QUESTION_HASH_CONTEXT)).update(`council-question\n${q.trim()}`).digest("hex");
 
 /**
  * B1: the judge's strings restate the household's facts, so they never enter
@@ -648,7 +658,7 @@ export function judgeLogSummary(v: JudgeVerdict, extra: { labels: string[]; judg
       unsupported: v.blind_spots.filter(b => b.startsWith("UNSUPPORTED:")).length,
     },
     confidence: v.confidence,
-    digest: createHmac("sha256", logKey()).update(JSON.stringify(v)).digest("hex"),
+    digest: createHmac("sha256", derivedLogKey(VERDICT_DIGEST_CONTEXT)).update(`council-verdict\n${JSON.stringify(v)}`).digest("hex"),
     labels: extra.labels,
     judgeInPanel: extra.judgeInPanel,
   };
@@ -759,9 +769,15 @@ const startOfUtcDay = (now: Date) => new Date(Date.UTC(now.getUTCFullYear(), now
  * concurrent requests cannot all slip under the cap. With `workspaceId`, only
  * that workspace's runs.
  */
-export async function councilRunsToday(now: Date = new Date(), workspaceId?: number | null): Promise<number> {
+export async function councilRunsToday(now: Date = new Date(), workspaceId?: number | null, upTo?: CouncilSlot): Promise<number> {
   const since = startOfUtcDay(now);
-  const pending = workspaceId === undefined ? reservations.total : reservations.byWorkspace.get(workspaceId ?? -1) ?? 0;
+  // Snapshot the pending slots BEFORE the count query starts. A slot is released
+  // only after its row is written, so every run is in this snapshot or already
+  // in the table the query reads — never neither (a run in both is counted
+  // twice, which errs toward refusing). Earlier-numbered slots were all taken
+  // before ours, so they are in the snapshot too.
+  const pending = pendingSlotsBefore(upTo, workspaceId);
+  const pendingNow = () => pending;
   const d = await db();
   if (d) {
     try {
@@ -775,7 +791,7 @@ export async function councilRunsToday(now: Date = new Date(), workspaceId?: num
             workspaceId === undefined || workspaceId === null ? undefined : eq(councilRuns.workspaceId, workspaceId),
           ),
         );
-      return Number(rows[0]?.n ?? 0) + pending;
+      return Number(rows[0]?.n ?? 0) + pendingNow();
     } catch (e) {
       console.warn("[council] audit count failed, using buffer:", String(e).slice(0, 120));
     }
@@ -786,26 +802,42 @@ export async function councilRunsToday(now: Date = new Date(), workspaceId?: num
         (r.outcome === "council" || r.outcome === "degraded") &&
         new Date(r.createdAt) >= since &&
         (workspaceId === undefined || workspaceId === null || r.workspaceId === workspaceId),
-    ).length + pending
+    ).length + pendingNow()
   );
 }
 
-/** Slots admitted by the cost guard in this process and not yet written to the log. */
-const reservations = { total: 0, byWorkspace: new Map<number, number>() };
-function reserve(workspaceId: number | null): () => void {
-  reservations.total += 1;
-  if (workspaceId !== null) reservations.byWorkspace.set(workspaceId, (reservations.byWorkspace.get(workspaceId) ?? 0) + 1);
-  let released = false;
-  return () => {
-    if (released) return;
-    released = true;
-    reservations.total -= 1;
-    if (workspaceId !== null) {
-      const n = (reservations.byWorkspace.get(workspaceId) ?? 1) - 1;
-      if (n > 0) reservations.byWorkspace.set(workspaceId, n);
-      else reservations.byWorkspace.delete(workspaceId);
-    }
-  };
+/**
+ * The cap race. A request takes a numbered slot SYNCHRONOUSLY — before any
+ * await — and then counts logged runs plus the pending slots numbered at or
+ * before its own, admitting itself only if that total is within the cap. So
+ * however the awaits interleave, the first N requests in arrival order are
+ * admitted and the rest refused; no two can both see "N-1".
+ *
+ * Per process: the slots live in this Node process. With several instances
+ * behind a balancer each holds its own slots, and the cap is only as exact as
+ * the logged rows between them (a burst across instances can overshoot by up
+ * to one run per instance). The service runs as one instance today.
+ */
+export type CouncilSlot = { readonly seq: number; readonly workspaceId: number | null };
+const pendingSlots = new Set<CouncilSlot>();
+let slotSeq = 0;
+
+export function reserveCouncilSlot(workspaceId: number | null): CouncilSlot {
+  const slot = { seq: ++slotSeq, workspaceId };
+  pendingSlots.add(slot);
+  return slot;
+}
+export function releaseCouncilSlot(slot: CouncilSlot): void {
+  pendingSlots.delete(slot);
+}
+function pendingSlotsBefore(upTo: CouncilSlot | undefined, workspaceId: number | null | undefined): number {
+  let n = 0;
+  for (const s of Array.from(pendingSlots)) {
+    if (upTo && s.seq > upTo.seq) continue;
+    if (workspaceId !== undefined && workspaceId !== null && s.workspaceId !== workspaceId) continue;
+    n += 1;
+  }
+  return n;
 }
 
 // ─── The run ─────────────────────────────────────────────────────────────────
@@ -944,11 +976,20 @@ export async function runCouncil(input: CouncilInput): Promise<CouncilResult> {
     return result({ ...empty, outcome: "single", finalText, decision, totalTokens: tokens, refusal: null }, log.id);
   }
 
-  // Cost guard — daily runs (global, then per household workspace), then the per-run token estimate.
-  if (limits.maxRunsPerDay <= 0 || (await councilRunsToday()) >= limits.maxRunsPerDay) {
+  // Cost guard. The slot is taken synchronously, before any await, and the
+  // counts below include it (hence ">" rather than ">=").
+  const slot = reserveCouncilSlot(base.workspaceId);
+  try {
+    return await admitted(slot);
+  } finally {
+    releaseCouncilSlot(slot);
+  }
+
+  async function admitted(slot: CouncilSlot): Promise<CouncilResult> {
+  if (limits.maxRunsPerDay <= 0 || (await councilRunsToday(new Date(), undefined, slot)) > limits.maxRunsPerDay) {
     return refuse(decision, COUNCIL_DAILY_CAP_MESSAGE(limits.maxRunsPerDay));
   }
-  if (base.workspaceId !== null && (await councilRunsToday(new Date(), base.workspaceId)) >= limits.maxRunsPerWorkspacePerDay) {
+  if (base.workspaceId !== null && (await councilRunsToday(new Date(), base.workspaceId, slot)) > limits.maxRunsPerWorkspacePerDay) {
     return refuse(decision, COUNCIL_WORKSPACE_CAP_MESSAGE(limits.maxRunsPerWorkspacePerDay));
   }
 
@@ -969,13 +1010,8 @@ export async function runCouncil(input: CouncilInput): Promise<CouncilResult> {
   const estimate = (input.facts ? 1_000 : 0) + seats.length * (promptEstimate + limits.panelistMaxTokens) + 2 * judgeCallEstimate;
   if (estimate > limits.maxTokensPerRun) return refuse(decision, COUNCIL_TOKEN_CAP_MESSAGE(estimate, limits.maxTokensPerRun));
 
-  // Admitted: hold a slot until the run is logged, so concurrent runs count.
-  const release = reserve(base.workspaceId);
-  try {
-    return await convene();
-  } finally {
-    release();
-  }
+  // Admitted: the slot is held (by the caller's finally) until the run is logged.
+  return convene();
 
   async function convene(): Promise<CouncilResult> {
 
@@ -1050,6 +1086,7 @@ export async function runCouncil(input: CouncilInput): Promise<CouncilResult> {
     outcome: "council", finalText, decision, panel, judge: judgeRun.verdict, judgeProviderId: judgeRun.providerId ?? null,
     judgeModel: judgeRun.model ?? null, judgeRepaired: judgeRun.repaired, judgeError: null, facts, factsError, totalTokens, refusal: null,
   }, log.id);
+  }
   }
 }
 
