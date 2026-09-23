@@ -240,8 +240,8 @@ export class OpenRouterBus {
         headers: {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${this.getApiKey()}`,
-          "HTTP-Referer": "https://drbuddy.xyz",
-          "X-Title": "Russell Labs Agentic Stack",
+          "HTTP-Referer": "https://russellcapitalsystems.com",
+          "X-Title": "Russell Capital Solutions",
         },
         body: JSON.stringify(body),
         signal: controller.signal,
