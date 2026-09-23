@@ -30,6 +30,8 @@ export type TaxRuleSet = {
     simple: number;
   };
   estateBasicExclusion: number;
+  /** Annual gift tax exclusion per donee (IRC §2503(b), indexed). */
+  annualGiftExclusion: number;
   salt: {
     cap: number;
     phaseDownStartMagi: number;
@@ -41,6 +43,30 @@ export type TaxRuleSet = {
   };
   amt: { exemption: Record<"single" | "joint", number>; phaseOutStart: Record<"single" | "joint", number> } | null;
   niit: { rate: number; threshold: Record<FilingKey, number> };
+  /**
+   * Social Security figures for the year (SSA COLA fact sheet / OACT contribution and benefit base).
+   * Added because the FICA step in advancedAnalytics carried a hard-coded 2024 wage base two years on.
+   * Fields the source did not publish for the year are null, per this file's rule.
+   */
+  socialSecurity: {
+    /** OASDI contribution and benefit base ("taxable maximum"). */
+    wageBase: number;
+    /** Employee OASDI rate (statutory 6.2%) and HI rate (1.45%); additional Medicare 0.9% above the threshold. */
+    oasdiRate: number;
+    hiRate: number;
+    additionalMedicareRate: number;
+    additionalMedicareThreshold: Record<FilingKey, number>;
+    /** Cost-of-living adjustment applied to benefits payable in January of the tax year (decimal). */
+    cola: number;
+    /** Earnings needed for one quarter of coverage. */
+    quarterOfCoverage: number | null;
+    /** Retirement earnings test: under FRA all year / the year FRA is reached (annual). */
+    earningsTestUnderFra: number;
+    earningsTestFraYear: number;
+    /** Maximum monthly benefit for a worker retiring at full retirement age. */
+    maxBenefitAtFraMonthly: number | null;
+    source: string;
+  };
 };
 
 const SEVEN = (t: number[]): Bracket[] => [
@@ -66,9 +92,21 @@ export const TAX_RULES_2025: TaxRuleSet = {
   additionalStandardDeduction: { singleOrHoh: 2_000, marriedPerSpouse: 1_600 },
   retirement: { deferral401k: 23_500, catchUp50: 7_500, catchUp60to63: 11_250, ira: 7_000, iraCatchUp: 1_000, simple: 16_500 },
   estateBasicExclusion: 13_990_000,
+  annualGiftExclusion: 19_000, // Rev. Proc. 2024-40 §3.43
   salt: { cap: 40_000, phaseDownStartMagi: 500_000, phaseDownRate: 0.30, floor: 10_000, separateCap: 20_000, separatePhaseDownStartMagi: 250_000, separateFloor: 5_000 },
   amt: null,
   niit: NIIT,
+  socialSecurity: {
+    wageBase: 176_100,
+    oasdiRate: 0.062, hiRate: 0.0145, additionalMedicareRate: 0.009,
+    additionalMedicareThreshold: { single: 200_000, hoh: 200_000, joint: 250_000, separate: 125_000 },
+    cola: 0.025,
+    quarterOfCoverage: 1_810,
+    earningsTestUnderFra: 23_400,
+    earningsTestFraYear: 62_160,
+    maxBenefitAtFraMonthly: 4_018,
+    source: "SSA 2025 COLA fact sheet (ssa.gov/news/press/factsheets/colafacts2025.pdf, Oct 2024); additional Medicare thresholds IRC §3101(b)(2)",
+  },
 };
 
 export const TAX_RULES_2026: TaxRuleSet = {
@@ -86,9 +124,21 @@ export const TAX_RULES_2026: TaxRuleSet = {
   additionalStandardDeduction: { singleOrHoh: 2_050, marriedPerSpouse: 1_650 },
   retirement: { deferral401k: 24_500, catchUp50: 8_000, catchUp60to63: 11_250, ira: 7_500, iraCatchUp: 1_100, simple: 17_000 },
   estateBasicExclusion: 15_000_000,
+  annualGiftExclusion: 19_000, // Rev. Proc. 2025-32 (unchanged from 2025)
   salt: { cap: 40_400, phaseDownStartMagi: 505_000, phaseDownRate: 0.30, floor: 10_000, separateCap: 20_200, separatePhaseDownStartMagi: 252_500, separateFloor: 5_000 },
   amt: { exemption: { single: 90_100, joint: 140_200 }, phaseOutStart: { single: 500_000, joint: 1_000_000 } },
   niit: NIIT,
+  socialSecurity: {
+    wageBase: 184_500,
+    oasdiRate: 0.062, hiRate: 0.0145, additionalMedicareRate: 0.009,
+    additionalMedicareThreshold: { single: 200_000, hoh: 200_000, joint: 250_000, separate: 125_000 },
+    cola: 0.028,
+    quarterOfCoverage: 1_890,
+    earningsTestUnderFra: 24_480,
+    earningsTestFraYear: 65_160,
+    maxBenefitAtFraMonthly: 4_152,
+    source: "SSA 2026 COLA fact sheet (ssa.gov/news/en/cola/factsheets/2026.html, Oct 2025; fetched 22 Sep 2026); SSA OACT contribution and benefit base (ssa.gov/oact/cola/cbb.html); additional Medicare thresholds IRC §3101(b)(2)",
+  },
 };
 
 export const TAX_RULE_VERSIONS: TaxRuleSet[] = [TAX_RULES_2025, TAX_RULES_2026];

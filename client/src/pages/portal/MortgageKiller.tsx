@@ -46,6 +46,8 @@ import { GuidedWizard, GuidedModeToggle, type WizardStep } from "@/components/Gu
 import { ReportGenerator, type ReportSection } from "@/components/ReportGenerator";
 import { ExportToSlides } from "@/components/ExportToSlides";
 import { DataFeedInline } from "@/components/DataFeedBadge";
+import ForecastPanel from "@/components/ForecastPanel";
+import { HOME_APPRECIATION_RATE } from "@shared/mortgageKiller";
 import { trpc as trpcClient } from "@/lib/trpc";
 import { ExecutiveSummary, GoalsAccelerator, RecommendationSummary, DoNothingBaseline, TaxBracketPanel } from "@/components/ConsumerOutcomeBlocks";
 import { formatTaxCurrency } from "@shared/taxBracketEngine";
@@ -1764,6 +1766,17 @@ export default function MortgageKiller() {
                     </div>
                   </CardContent>
                 </Card>
+
+                {/* Forecast overlay (off by default): the housing engine's current forecast applied to this
+                    projection's home value over 20 / 30 / 40 years. When the ZIP-history toggle is on the page's
+                    own appreciation path is already a forecast, so the flat-rate preservation is skipped. */}
+                <ForecastPanel
+                  domain="housing"
+                  engine="mortgageKiller"
+                  title="Apply the current housing forecast to the home value"
+                  base={result.cascadingProjection.map((r: any) => ({ year: r.year, value: r.homeValue }))}
+                  baseRate={evidence.useZipAppreciation ? undefined : HOME_APPRECIATION_RATE}
+                />
 
                 {/* Net Worth Growth Graph */}
                 <Card>
