@@ -1,0 +1,143 @@
+/**
+ * Engine sources — where each engine's numbers come from, in one shape.
+ *
+ * WHY THIS EXISTS. Engines across `shared/` already name their sources, but
+ * each in its own way: `LONGEVITY_SOURCES` is a list of {label, url, asOf},
+ * `SOURCES` in careerEngine is a record of them, `POWER_HISTORY_SOURCES` is
+ * plain strings, the macro layer has {id, name, entity, url}. A page could
+ * only print a source list if its author knew the engine's shape, which is
+ * why 100 of 120 engine-importing pages print none.
+ *
+ * This module gives the app shell one door: `engineForPath(route)` names the
+ * engine behind a catalogue page, `loadEngineSources(engine)` returns its
+ * sources as `SourceRef[]`, lazily, so no engine is bundled into the shell.
+ * An engine with no registered loader returns `null`, and the footer says so
+ * in plain words rather than hiding it — the provenance census counts those,
+ * and the list is meant to shrink to nothing.
+ *
+ * Adding an engine: export a `*_SOURCE` or `*_SOURCES` constant from it and
+ * add one loader line below. The census test checks the loader resolves.
+ */
+import { CALCULATORS } from "./calculatorCatalog";
+
+export type SourceRef = {
+  label: string;
+  url?: string;
+  /** When the figure was read or which edition it is. */
+  asOf?: string;
+  note?: string;
+};
+
+type Loader = () => Promise<unknown>;
+
+/**
+ * One loader per engine that exports its sources. The value is whatever the
+ * engine exports; `normalizeSources` turns it into `SourceRef[]`.
+ */
+export const ENGINE_SOURCE_LOADERS: Record<string, Loader> = {
+  "shared/careerEngine.ts": () => import("./careerEngine").then(m => m.SOURCES),
+  "shared/creditCardSourcing.ts": () => import("./creditCardSourcing").then(m => m.CARD_SOURCES),
+  "shared/incomeForLife.ts": () => import("./incomeForLife").then(m => m.INCOME_SOURCES),
+  "shared/indexCreditingData.ts": () => import("./indexCreditingData").then(m => m.INDEX_RETURN_SOURCES),
+  "shared/inheritanceEngine.ts": () => import("./inheritanceEngine").then(m => m.INHERITANCE_SOURCES),
+  "shared/iulLinks.ts": () => import("./iulLinks").then(m => m.IUL_LINK_SOURCES),
+  "shared/longevityEngine.ts": () => import("./longevityEngine").then(m => m.LONGEVITY_SOURCES),
+  "shared/ltcEngine.ts": () => import("./ltcEngine").then(m => m.LTC_SOURCES),
+  "shared/macroEngine.ts": () => import("./macroEngine").then(m => m.MACRO_SOURCES),
+  "shared/powerHistory.ts": () => import("./powerHistory").then(m => m.POWER_HISTORY_SOURCES),
+  "shared/qbiDeduction.ts": () => import("./qbiDeduction").then(m => m.QBI_SOURCE),
+  "shared/rentalEnterprise.ts": () => import("./rentalEnterprise").then(m => m.PARTICIPATION_SOURCES),
+  "shared/retirementLimits.ts": () => import("./retirementLimits").then(m => m.LIMITS_SOURCE),
+  "shared/strEngine.ts": () => import("./strEngine").then(m => m.STR_INPUT_SOURCES),
+  "shared/strSources.ts": () => import("./strSources").then(m => m.STR_SOURCES),
+  "shared/taxHistory.ts": () => import("./taxHistory").then(m => m.TAX_HISTORY_SOURCES),
+  "shared/zipEngine.ts": () => import("./zipEngine").then(m => m.ZIP_SOURCES),
+  "shared/macro/index.ts": () => import("./macro/sources").then(m => m.CORE_SOURCES),
+  "shared/macro/sources.ts": () => import("./macro/sources").then(m => m.CORE_SOURCES),
+};
+
+/** The engines whose sources the shell can show. Exported for the census. */
+export const ENGINES_WITH_SOURCE_LOADERS: readonly string[] = Object.keys(ENGINE_SOURCE_LOADERS).sort();
+
+/** The engine behind a route, from the catalogue. Query strings and trailing slashes are ignored. */
+export function engineForPath(path: string): string | null {
+  const clean = path.split("?")[0]!.replace(/\/+$/, "") || "/";
+  const entry = CALCULATORS.find(c => c.path === clean);
+  return entry?.engine ?? null;
+}
+
+/** The catalogue entry behind a route, when there is one. */
+export function catalogueEntryForPath(path: string) {
+  const clean = path.split("?")[0]!.replace(/\/+$/, "") || "/";
+  return CALCULATORS.find(c => c.path === clean) ?? null;
+}
+
+function isRef(v: unknown): v is { label?: unknown; name?: unknown; url?: unknown; asOf?: unknown; note?: unknown; entity?: unknown; verifiedOn?: unknown } {
+  return typeof v === "object" && v !== null && ("label" in v || "name" in v || "url" in v);
+}
+
+/**
+ * Turn whatever an engine exports into a flat list of `SourceRef`.
+ *
+ * Accepts a string, a {label|name, url?, asOf?, note?, entity?} object, an
+ * array of either, or a record whose values are either (nested one level).
+ * Unknown shapes contribute nothing, never a throw: the footer must render
+ * on every page.
+ */
+export function normalizeSources(value: unknown, depth = 0): SourceRef[] {
+  if (value == null || depth > 2) return [];
+  if (typeof value === "string") return value.trim() ? [{ label: value.trim() }] : [];
+  if (Array.isArray(value)) return value.flatMap(v => normalizeSources(v, depth + 1));
+  if (isRef(value)) {
+    let label = typeof value.label === "string" ? value.label : typeof value.name === "string" ? value.name : "";
+    if (!label) {
+      // A descriptor with a url and no label (QBI_SOURCE: thresholds, statute, url):
+      // the other string fields are the citation.
+      const rest = value as Record<string, unknown>;
+      label = Object.entries(rest)
+        .filter(([k, v]) => k !== "url" && (typeof v === "string" || typeof v === "number") && String(v).trim())
+        .map(([k, v]) => `${k}: ${v}`)
+        .join("; ");
+    }
+    if (!label) return [];
+    const entity = typeof value.entity === "string" ? ` (${value.entity})` : "";
+    const ref: SourceRef = { label: `${label}${entity}` };
+    if (typeof value.url === "string" && value.url) ref.url = value.url;
+    if (typeof value.asOf === "string" && value.asOf) ref.asOf = value.asOf;
+    else if (typeof value.verifiedOn === "string" && value.verifiedOn) ref.asOf = `verified ${value.verifiedOn}`;
+    if (typeof value.note === "string" && value.note) ref.note = value.note;
+    return [ref];
+  }
+  if (typeof value === "object") {
+    // A record of sources, or an object like INDEX_RETURN_SOURCES {basis, verifiedOn, perIndex}.
+    const obj = value as Record<string, unknown>;
+    const out: SourceRef[] = [];
+    const scalarBits: string[] = [];
+    for (const [k, v] of Object.entries(obj)) {
+      if (typeof v === "string") scalarBits.push(`${k}: ${v}`);
+      else if (typeof v === "number") scalarBits.push(`${k}: ${v}`);
+      else out.push(...normalizeSources(v, depth + 1));
+    }
+    if (out.length === 0 && scalarBits.length) out.push({ label: scalarBits.join("; ") });
+    return out;
+  }
+  return [];
+}
+
+/** Load and normalise an engine's sources; `null` when no loader is registered. */
+export async function loadEngineSources(engine: string): Promise<SourceRef[] | null> {
+  const loader = ENGINE_SOURCE_LOADERS[engine];
+  if (!loader) return null;
+  try {
+    return normalizeSources(await loader());
+  } catch {
+    return [];
+  }
+}
+
+/** De-duplicate by label, keeping the first url/asOf seen. */
+export function uniqueSources(refs: readonly SourceRef[]): SourceRef[] {
+  const seen = new Map<string, SourceRef>();
+  for (const r of refs) if (!seen.has(r.label)) seen.set(r.label, r);
+  return Array.from(seen.values());
+}

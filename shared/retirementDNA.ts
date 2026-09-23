@@ -457,6 +457,13 @@ function generateActionItems(drivers: DriverScore[], inputs: EcologicalInputs): 
   return items.sort((a, b) => a.priority - b.priority);
 }
 
+/** Deterministic stand-in for a cohort count until a real peer dataset exists (provenance census D47). */
+export function placeholderCohortSize(key: string): number {
+  let h = 2166136261;
+  for (let i = 0; i < key.length; i++) { h ^= key.charCodeAt(i); h = Math.imul(h, 16777619) >>> 0; }
+  return 200 + (h % 501);
+}
+
 function generatePeerComparison(drivers: DriverScore[], inputs: EcologicalInputs): PeerComparison {
   // Determine cohort
   const ageRange =
@@ -477,7 +484,12 @@ function generatePeerComparison(drivers: DriverScore[], inputs: EcologicalInputs
 
   return {
     cohortLabel: `Ages ${ageRange}, ${assetRange} assets`,
-    cohortSize: Math.round(Math.random() * 500 + 200), // placeholder
+    // A placeholder cohort size, but a deterministic one: the same cohort
+    // always reports the same count, so a client reloading the page does not
+    // watch the number change. Derived from the label, in the 200–700 range
+    // the original placeholder used. Not a measured figure; labelled as such
+    // where it is shown.
+    cohortSize: placeholderCohortSize(`${ageRange}|${assetRange}`),
     percentileRank,
     aboveAverageDrivers: drivers.filter((d) => d.percentile >= 70).map((d) => d.id),
     belowAverageDrivers: drivers.filter((d) => d.percentile <= 30).map((d) => d.id),
