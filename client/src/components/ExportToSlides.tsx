@@ -103,7 +103,8 @@ export function ExportToSlides({
   const [advisorNotes, setAdvisorNotes] = useState(defaultNotes || "");
   const [slideCount, setSlideCount] = useState(6);
   const [audience, setAudience] = useState<"client" | "advisor" | "team">("client");
-  const [includeDisclaimer, setIncludeDisclaimer] = useState(true);
+  // Client decks always carry the disclaimer slide; there is no switch to drop it (copy-compliance review S-a).
+  const includeDisclaimer = true;
   const [themeId, setThemeId] = useState(DEFAULT_THEME_ID);
 
   const pptxMut = trpc.ai.generatePptx.useMutation({
@@ -277,8 +278,7 @@ export function ExportToSlides({
               </div>
               <div className="flex items-end">
                 <div className="flex items-center gap-2">
-                  <Switch checked={includeDisclaimer} onCheckedChange={setIncludeDisclaimer} />
-                  <Label className="text-xs text-zinc-300">Disclaimer</Label>
+                  <Label className="text-xs text-zinc-300">Disclaimer slide: always included</Label>
                 </div>
               </div>
             </div>

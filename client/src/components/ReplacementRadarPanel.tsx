@@ -427,7 +427,7 @@ export function ReplacementRadarPanel() {
                     { label: "Solar ITC Bonus", value: `+${fmtPct(result.solarPathway.solarGrowthPct)}`, sub: fmt(result.solarPathway.solarBonusAmount), highlight: true },
                     { label: "Post-Solar Principal", value: fmt(result.solarPathway.principalAfterSolar), sub: "Enhanced base" },
                     { label: "Annuity Bonus", value: `+${fmtPct(result.solarPathway.annuityBonusPct)}`, sub: fmt(result.solarPathway.annuityBonusAmount) },
-                    { label: "Tax-Free Income", value: `${fmt(result.solarPathway.monthlyTaxFreeIncome)}/mo`, sub: "Guaranteed for life", highlight: true },
+                    { label: "Lifetime Income (Roth-Held)", value: `${fmt(result.solarPathway.monthlyTaxFreeIncome)}/mo`, sub: "Contract terms; claims-paying ability", highlight: true },
                   ].map((step, i) => (
                     <div key={i} className={`p-3 rounded-lg text-center ${step.highlight ? "bg-amber-500/10 border border-amber-500/20" : "bg-white/5"}`}>
                       <p className="text-[10px] text-muted-foreground uppercase tracking-wider">{step.label}</p>
@@ -442,15 +442,15 @@ export function ReplacementRadarPanel() {
                   <p className="text-xs font-medium text-muted-foreground mb-3 uppercase tracking-wider">Income Comparison</p>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="text-center p-3 rounded-lg bg-red-500/10 border border-red-500/20">
-                      <p className="text-xs text-red-400 font-medium">Current — Taxable & Unreliable</p>
+                      <p className="text-xs text-red-400 font-medium">Current contract</p>
                       <p className="text-2xl font-bold text-red-400 mt-1">{fmt(result.solarPathway.currentMonthlyTaxableIncome)}/mo</p>
-                      <p className="text-[10px] text-muted-foreground mt-1">Subject to future tax rate changes</p>
+                      <p className="text-[10px] text-muted-foreground mt-1">Taxable as ordinary income when paid; subject to future tax rates</p>
                     </div>
                     <div className="text-center p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
-                      <p className="text-xs text-emerald-400 font-medium">Solar Strategy — Tax-Free & Guaranteed</p>
+                      <p className="text-xs text-emerald-400 font-medium">Hypothetical Solar Strategy</p>
                       <p className="text-2xl font-bold text-emerald-400 mt-1">{fmt(result.solarPathway.monthlyTaxFreeIncome)}/mo</p>
                       <p className="text-[10px] text-muted-foreground mt-1">
-                        +{fmtPct(result.solarPathway.pctIncomeImprovement)} more income, tax-free for life
+                        +{fmtPct(result.solarPathway.pctIncomeImprovement)} more income in this hypothetical; free of income tax only as qualified Roth distributions, and subject to the insurer's claims-paying ability
                       </p>
                     </div>
                   </div>

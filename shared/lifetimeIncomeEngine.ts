@@ -330,7 +330,7 @@ export function calculateLifetimeIncome(input: LifetimeIncomeInput): LifetimeInc
       lifetimeAdvantage: Math.round(lifetimeAdvantage),
       effectiveIncomeBoost: Math.round(effectiveIncomeBoost * 10) / 10,
       yearsToBreakeven,
-      budgetCertainty: "With tax-free income, your budget is 100% predictable. No future tax rate changes, no IRMAA surcharges, no state tax surprises. You know exactly what hits your bank account every month for life.",
+      budgetCertainty: "Qualified Roth distributions are not affected by future income tax rates, IRMAA or state income tax, so the amount the contract pays is the amount you keep. The payments are subject to the issuing insurer's claims-paying ability, and the numbers here are hypothetical.",
     },
     accumulationTimeline,
     incomePhaseTimeline,

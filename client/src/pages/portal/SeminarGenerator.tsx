@@ -210,7 +210,8 @@ export default function SeminarGenerator() {
   const [selectedTemplateId, setSelectedTemplateId] = useState("retirement-tax");
   const [advisorName, setAdvisorName] = useState("Russell Capital Systems™");
   const [customTitle, setCustomTitle] = useState("");
-  const [includeDisclaimer, setIncludeDisclaimer] = useState(true);
+  // Client materials always carry the NAIC disclaimer (copy-compliance review S-a).
+  const includeDisclaimer = true;
   const [showSpeakerNotes, setShowSpeakerNotes] = useState(true);
   const [activeSlide, setActiveSlide] = useState(0);
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
@@ -593,14 +594,10 @@ export default function SeminarGenerator() {
                     <h3 className="text-sm font-medium text-white mb-3">Compliance & Display</h3>
                     <div className="flex items-center justify-between">
                       <div>
-                        <Label className="text-[#c8d8ec] block mb-1">Include NAIC Disclaimer</Label>
-                        <span className="text-xs text-[#7a95b8]">Required for compliance in most states</span>
+                        <Label className="text-[#c8d8ec] block mb-1">NAIC Disclaimer</Label>
+                        <span className="text-xs text-[#7a95b8]">Always included in client materials</span>
                       </div>
-                      <Switch
-                        checked={includeDisclaimer}
-                        onCheckedChange={setIncludeDisclaimer}
-                        className="data-[state=checked]:bg-[#22c55e]"
-                      />
+                      <span className="text-xs text-[#22c55e]">Always included</span>
                     </div>
 
                     <div className="flex items-center justify-between">

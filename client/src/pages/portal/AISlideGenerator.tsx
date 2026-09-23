@@ -72,7 +72,8 @@ export default function AISlideGenerator() {
   const [activeSlideIndex, setActiveSlideIndex] = useState<number>(0);
   const [previewMode, setPreviewMode] = useState(false);
   const [fullscreenPreview, setFullscreenPreview] = useState(false);
-  const [includeDisclaimer, setIncludeDisclaimer] = useState(true);
+  // Client decks always carry the disclaimer slide; there is no switch to drop it (copy-compliance review S-a).
+  const includeDisclaimer = true;
   const [themeId, setThemeId] = useState(DEFAULT_THEME_ID);
   const [showSpeakerNotes, setShowSpeakerNotes] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -592,14 +593,14 @@ li::before{content:'▸';position:absolute;left:0;color:#22c55e;font-weight:700}
 
                 <div className="flex gap-6 pt-2 border-t border-[#12233e]">
                   <div className="flex items-center gap-2">
-                    <input 
-                      type="checkbox" 
+                    <input
+                      type="checkbox"
                       id="includeDisclaimer"
-                      checked={includeDisclaimer} 
-                      onChange={(e) => setIncludeDisclaimer(e.target.checked)}
+                      checked
+                      disabled
                       className="rounded border-[#12233e] bg-[#0d1a2e] text-[#22c55e] focus:ring-[#22c55e]"
                     />
-                    <label htmlFor="includeDisclaimer" className="text-sm text-[#c8d8ec]">Include Disclaimer</label>
+                    <label htmlFor="includeDisclaimer" className="text-sm text-[#c8d8ec]">Disclaimer (always included)</label>
                   </div>
                   <div className="flex items-center gap-2">
                     <input 

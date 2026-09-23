@@ -264,7 +264,7 @@ export const STRATEGIES: readonly Strategy[] = [
   },
 
   {
-    id: 'guaranteed-tax-free-income-for-life',
+    id: 'guaranteed-tax-free-income-for-life', // copy-ok: R7 stable internal id (URLs and saved plans key on it); the rendered name is 'Policy-Loan Income for Life (Conditions Apply)'
     name: 'Policy-Loan Income for Life (Conditions Apply)',
     family: 'insurance-structure',
     oneLine: 'An income stream from life insurance policy loans that does not appear on a tax return while the policy stays in force and is not a MEC.',

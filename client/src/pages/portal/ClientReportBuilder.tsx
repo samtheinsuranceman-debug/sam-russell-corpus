@@ -33,7 +33,8 @@ export default function ClientReportBuilder() {
   const [advisorName, setAdvisorName] = useState("Sam Russell");
   const [companyName, setCompanyName] = useState("Russell Capital Solutions");
   const [selectedEngines, setSelectedEngines] = useState<ReportEngine[]>([]);
-  const [includeDisclaimer, setIncludeDisclaimer] = useState(true);
+  // Reports always carry the disclaimer (copy-compliance review S-a).
+  const includeDisclaimer = true;
   const [includeBranding, setIncludeBranding] = useState(true);
   const [report, setReport] = useState<any>(null);
   const [activeView, setActiveView] = useState<"setup" | "preview">("setup");

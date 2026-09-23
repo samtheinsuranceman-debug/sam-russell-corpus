@@ -6,7 +6,7 @@
  * Thinks like a senior annuity advisor. Takes an existing contract and scores
  * it 0-100 on whether the client should replace it — factoring in surrender
  * economics, bonus uplift, income improvement, carrier strength, and
- * state-specific guaranty headroom.
+ * timing. (The state guaranty headroom factor was removed: G.S. 58-62-86.)
  *
  * The score is NOT a simple comparison. It models the *breakeven timeline* —
  * how many months until the new contract's benefits overcome the cost of
@@ -697,7 +697,7 @@ function calculateSolarPathway(
   const annualImprovement = monthlyIncomeImprovement * 12;
   const yearsToBreakeven = annualImprovement > 0 ? Math.ceil(conversionTaxCost / annualImprovement) : 99;
 
-  const summary = `Solar Strategy transforms $${netAfterPenalties.toLocaleString()} of taxable proceeds into $${totalEnhancedPremium.toLocaleString()} of enhanced tax-free principal — a ${Math.round(((totalEnhancedPremium / netAfterPenalties) - 1) * 100)}% total uplift. Solar bonus adds $${solarBonusAmount.toLocaleString()} (${(solarGrowthPct * 100).toFixed(0)}%), then the annuity bonus adds another $${annuityBonusAmount.toLocaleString()} (${(annuityBonusPct * 100).toFixed(0)}%). Result: $${monthlyTaxFreeIncome.toLocaleString()}/mo tax-free guaranteed income for life vs $${currentAfterTaxMonthly.toLocaleString()}/mo after-tax currently.`;
+  const summary = `Solar Strategy transforms $${netAfterPenalties.toLocaleString()} of taxable proceeds into $${totalEnhancedPremium.toLocaleString()} of enhanced Roth principal — a ${Math.round(((totalEnhancedPremium / netAfterPenalties) - 1) * 100)}% total uplift. Solar bonus adds $${solarBonusAmount.toLocaleString()} (${(solarGrowthPct * 100).toFixed(0)}%), then the annuity bonus adds another $${annuityBonusAmount.toLocaleString()} (${(annuityBonusPct * 100).toFixed(0)}%). Result (hypothetical): $${monthlyTaxFreeIncome.toLocaleString()}/mo of contractual lifetime income paid as qualified Roth distributions (subject to the insurer's claims-paying ability) vs $${currentAfterTaxMonthly.toLocaleString()}/mo after tax currently.`;
 
   const comparisonLabel = `$${currentAfterTaxMonthly.toLocaleString()}/mo taxable → $${monthlyTaxFreeIncome.toLocaleString()}/mo tax-free`;
 
@@ -804,18 +804,18 @@ export function scoreReplacementOpportunity(
     scoreTimingAndAge(contract),
   ];
 
-  // Solar factor (7th factor — only scores if eligible)
+  // Solar factor (6th factor — only scores if eligible)
   const solarFactor = scoreSolarStrategy(contract, solarPathway);
 
-  // All 7 factors
+  // All 6 factors
   const factors: ReplacementFactor[] = [...baseFactors, solarFactor];
 
-  // Calculate base score (traditional 6-factor, without solar)
+  // Calculate base score (traditional 5-factor, without solar)
   const baseTotalPoints = baseFactors.reduce((sum, f) => sum + f.points, 0);
   const baseMaxPossible = baseFactors.reduce((sum, f) => sum + f.maxPoints, 0);
   const rawScore = Math.max(0, Math.min(100, Math.round(((baseTotalPoints + 20) / (baseMaxPossible + 20)) * 100)));
 
-  // Calculate solar-enhanced score (all 7 factors)
+  // Calculate solar-enhanced score (all 6 factors)
   const solarTotalPoints = factors.reduce((sum, f) => sum + f.points, 0);
   const solarMaxPossible = factors.reduce((sum, f) => sum + f.maxPoints, 0);
   const solarEnhancedScore = Math.max(0, Math.min(100, Math.round(((solarTotalPoints + 20) / (solarMaxPossible + 20)) * 100)));

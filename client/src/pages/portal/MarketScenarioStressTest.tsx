@@ -143,7 +143,6 @@ export default function MarketScenarioStressTest() {
   const [stressLevel, setStressLevel] = useState(50);
   const [portfolioMultiplier, setPortfolioMultiplier] = useState(1);
   const [showMitigation, setShowMitigation] = useState(true);
-  const [showDisclaimer, setShowDisclaimer] = useState(true);
   const [animateCharts, setAnimateCharts] = useState(true);
   const [selectedAssetClass, setSelectedAssetClass] = useState<string | null>(null);
   const [hoveredDataPoint, setHoveredDataPoint] = useState<any>(null);

@@ -528,7 +528,7 @@ export default function LifetimeGuaranteedIncome() {
                       </div>
                       <div className="flex items-center gap-2 text-emerald-400 text-sm">
                         <CheckCircle2 className="w-4 h-4" />
-                        <span>100% predictable — no tax rate surprises</span>
+                        <span>Qualified Roth distributions are not affected by future income tax rates</span>
                       </div>
                       <div className="flex items-center gap-2 text-emerald-400 text-sm">
                         <CheckCircle2 className="w-4 h-4" />
@@ -669,7 +669,7 @@ export default function LifetimeGuaranteedIncome() {
                     <span className="flex items-center gap-2">
                       <Lock className="w-4 h-4 text-red-400" />
                       <span className="font-medium text-red-400">Traditional (Taxable)</span>
-                      <Badge variant="outline" className="border-red-500/50 text-red-400 text-xs">UNRELIABLE</Badge>
+                      <Badge variant="outline" className="border-red-500/50 text-red-400 text-xs">TAXED WHEN PAID</Badge>
                     </span>
                     <span className="font-bold text-red-300">{fmt(result.taxableScenario.afterTaxIncome)}/yr after tax</span>
                   </div>
@@ -880,9 +880,8 @@ export default function LifetimeGuaranteedIncome() {
                       </div>
                     </div>
                     <p className="mt-3">
-                      With <strong>$35+ trillion in national debt</strong> and growing, many experts predict tax rates will need to increase 
-                      significantly. Your "guaranteed" income becomes <strong className="text-red-400">unreliable</strong> when you cannot predict 
-                      how much the government will take.
+                      Income from a traditional (pre-tax) annuity is taxed when paid, so its after-tax value
+                      <strong className="text-red-400"> depends on future tax rates</strong>, which nobody can predict.
                     </p>
                   </div>
                 </div>
@@ -976,7 +975,7 @@ export default function LifetimeGuaranteedIncome() {
                     {result && (
                       <p className="mt-3 text-center">
                         That is <strong className="text-amber-400 text-lg">{fmtPct(result.comparison.effectiveIncomeBoost)} more</strong> effective 
-                        income every single year, guaranteed for life.
+                        income each year in this hypothetical, based on your facts (income subject to the insurer's claims-paying ability).
                       </p>
                     )}
                   </div>

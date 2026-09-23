@@ -560,7 +560,7 @@ function MYGAvsSP500Section({ premium, mygaRate }: { premium: number; mygaRate: 
                   { factor: "Inflation Protection", myga: "Limited — fixed rate may trail inflation", sp500: "Historically outpaces inflation", winner: "sp500" },
                   { factor: "Estate Transfer", myga: "Bypasses probate (named beneficiary)", sp500: "Step-up in basis at death", winner: "tie" },
                   { factor: "Emotional Stress", myga: "Zero — rate is guaranteed", sp500: "High — requires discipline in crashes", winner: "myga" },
-                  { factor: "Income Predictability", myga: "100% predictable", sp500: "Variable — depends on market", winner: "myga" },
+                  { factor: "Income Predictability", myga: "Fixed rate for the term (claims-paying ability)", sp500: "Variable — depends on market", winner: "myga" },
                   { factor: "Upside Potential", myga: "Capped at guaranteed rate", sp500: "Unlimited — 29%+ in strong years", winner: "sp500" },
                 ].map((row, i) => (
                   <tr key={i} className="border-b hover:bg-muted/50">

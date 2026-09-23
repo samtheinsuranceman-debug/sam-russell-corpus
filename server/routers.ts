@@ -1255,6 +1255,7 @@ All content must be branded as Russell Capital Systems™.`;
         speakerNotes: z.string(),
         layout: z.string(),
       })),
+      /** Accepted for older clients and ignored: the disclaimer slide is always added. */
       includeDisclaimer: z.boolean().default(true),
     })).mutation(async ({ ctx, input }) => {
       const PptxGenJS = (await import("pptxgenjs")).default;
@@ -1348,12 +1349,12 @@ All content must be branded as Russell Capital Systems™.`;
         }
       }
 
-      // Disclaimer slide
-      if (input.includeDisclaimer) {
+      // Disclaimer slide: always added. A client deck may not drop it (copy-compliance review S-a).
+      {
         const ds = pptx.addSlide({ masterName: "RC_MASTER" });
         ds.addText("Disclaimer", { x: 0.8, y: 1.0, w: 8.4, h: 0.6, fontSize: 22, bold: true, color: BRAND.gold, fontFace: titleFont });
         ds.addText(
-          "This presentation is for educational and informational purposes only. It does not constitute financial, tax, or legal advice. Past performance does not guarantee future results. Consult with a qualified financial professional before making any investment decisions.",
+          "This presentation is for educational and informational purposes only. Every figure is hypothetical and based on the facts provided; it is not a guarantee and does not constitute financial, tax, or legal advice. Life insurance and annuities are issued by insurance companies, and guarantees are subject to the claims-paying ability of the issuing insurer. Past performance does not guarantee future results. Consult with a qualified professional before acting.",
           { x: 0.8, y: 1.8, w: 8.4, h: 2.0, fontSize: 11, color: BRAND.lightGray, fontFace: bodyFont, lineSpacingMultiple: 1.6 }
         );
         ds.addText("Russell Capital Systems™ — Turn Capital Into Income™", { x: 0.8, y: 4.0, w: 8.4, h: 0.4, fontSize: 12, color: BRAND.emerald, fontFace: bodyFont, align: "center" });

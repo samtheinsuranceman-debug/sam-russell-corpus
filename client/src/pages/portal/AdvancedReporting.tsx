@@ -84,7 +84,8 @@ export default function AdvancedReporting() {
   const [reportFormat, setReportFormat] = useState("pdf");
   const [includeCover, setIncludeCover] = useState(true);
   const [includeTOC, setIncludeTOC] = useState(true);
-  const [includeDisclaimers, setIncludeDisclaimers] = useState(true);
+  // Reports always carry the disclaimers (copy-compliance review S-a).
+  const includeDisclaimers = true;
   const [watermark, setWatermark] = useState("Draft");
   const [pageSize, setPageSize] = useState("letter");
   const [orientation, setOrientation] = useState("portrait");
