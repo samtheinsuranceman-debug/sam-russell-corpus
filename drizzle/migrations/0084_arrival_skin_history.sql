@@ -1,4 +1,4 @@
--- 0083_arrival_skin_history: per-user return-skin history for the arrival field (additive).
+-- 0084_arrival_skin_history: per-user return-skin history for the arrival field (additive).
 -- One row per user; `recent` is a JSON array of skin ids, most recent last.
 CREATE TABLE `arrival_skin_history` (
   `id` int AUTO_INCREMENT NOT NULL,

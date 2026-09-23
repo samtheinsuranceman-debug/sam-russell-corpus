@@ -51,9 +51,9 @@ describe("arrival.begin", () => {
   });
 });
 
-describe("migration 0083", () => {
+describe("migration 0084", () => {
   it("is additive: one CREATE TABLE, no ALTER or DROP", () => {
-    const sql = readFileSync(new URL("../drizzle/migrations/0083_arrival_skin_history.sql", import.meta.url), "utf8");
+    const sql = readFileSync(new URL("../drizzle/migrations/0084_arrival_skin_history.sql", import.meta.url), "utf8");
     expect(sql).toMatch(/CREATE TABLE `arrival_skin_history`/);
     expect(sql).not.toMatch(/\b(ALTER|DROP|TRUNCATE|DELETE)\b/i);
     expect(sql).toMatch(/UNIQUE\(`userId`\)/);
