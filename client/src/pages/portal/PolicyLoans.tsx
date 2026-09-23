@@ -37,7 +37,7 @@ import { PlatformEnhancements } from "@/components/PlatformEnhancements";
 import { ExportToSlides } from "@/components/ExportToSlides";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { ExecutiveSummary, GoalsAccelerator, RecommendationSummary, DoNothingBaseline, TaxBracketPanel } from "@/components/ConsumerOutcomeBlocks";
-import { formatTaxCurrency } from "@shared/taxBracketEngine";
+import { formatTaxCurrency, federalBrackets, FEDERAL_TAX_YEAR } from "@shared/taxBracketEngine";
 import { RelatedCalculators } from "@/components/RelatedCalculators";
 import { ComplianceFooter } from "@/components/ComplianceFooter";
 
@@ -921,7 +921,7 @@ export default function PolicyLoans() {
 
           <Card>
             <CardHeader>
-              <CardTitle>Tax Bracket Reference</CardTitle>
+              <CardTitle>Tax Bracket Reference ({FEDERAL_TAX_YEAR})</CardTitle>
             </CardHeader>
             <CardContent>
               <table className="w-full text-sm">
@@ -933,9 +933,12 @@ export default function PolicyLoans() {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr><td className="py-2">10%</td><td className="py-2">$0 to $11,000</td><td className="py-2">$0 to $22,000</td></tr>
-                  <tr><td className="py-2">12%</td><td className="py-2">$11,001 to $44,725</td><td className="py-2">$22,001 to $89,450</td></tr>
-                  <tr><td className="py-2">22%</td><td className="py-2">$44,726 to $95,375</td><td className="py-2">$89,451 to $190,750</td></tr>
+                  {/* First three current-year brackets, from shared/taxRules.ts via the bracket engine. */}
+                  {federalBrackets("single").slice(0, 3).map((b, i) => {
+                    const j = federalBrackets("joint")[i]!;
+                    const range = (r: { min: number; max: number }) => `$${(r.min === 0 ? 0 : r.min + 1).toLocaleString()} to $${r.max.toLocaleString()}`;
+                    return <tr key={b.rate}><td className="py-2">{Math.round(b.rate * 100)}%</td><td className="py-2">{range(b)}</td><td className="py-2">{range(j)}</td></tr>;
+                  })}
                 </tbody>
               </table>
             </CardContent>

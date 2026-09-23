@@ -45,30 +45,13 @@ import {
   Tooltip, ResponsiveContainer, Legend, ComposedChart, Line,
 } from "recharts";
 import { ExecutiveSummary, GoalsAccelerator, RecommendationSummary, DoNothingBaseline, TaxBracketPanel } from "@/components/ConsumerOutcomeBlocks";
-import { formatTaxCurrency } from "@shared/taxBracketEngine";
+import { formatTaxCurrency, federalBrackets } from "@shared/taxBracketEngine";
 import { RelatedCalculators } from "@/components/RelatedCalculators";
 import { ComplianceFooter } from "@/components/ComplianceFooter";
 
-/* ─── TAX BRACKET DATA (2026 Federal) ─── */
-const FEDERAL_BRACKETS_SINGLE = [
-  { min: 0, max: 11600, rate: 0.10 },
-  { min: 11600, max: 47150, rate: 0.12 },
-  { min: 47150, max: 100525, rate: 0.22 },
-  { min: 100525, max: 191950, rate: 0.24 },
-  { min: 191950, max: 243725, rate: 0.32 },
-  { min: 243725, max: 609350, rate: 0.35 },
-  { min: 609350, max: Infinity, rate: 0.37 },
-];
-
-const FEDERAL_BRACKETS_MARRIED = [
-  { min: 0, max: 23200, rate: 0.10 },
-  { min: 23200, max: 94300, rate: 0.12 },
-  { min: 94300, max: 201050, rate: 0.22 },
-  { min: 201050, max: 383900, rate: 0.24 },
-  { min: 383900, max: 487450, rate: 0.32 },
-  { min: 487450, max: 731200, rate: 0.35 },
-  { min: 731200, max: Infinity, rate: 0.37 },
-];
+/* ─── TAX BRACKET DATA (current-year federal, from shared/taxRules.ts) ─── */
+const FEDERAL_BRACKETS_SINGLE = federalBrackets("single");
+const FEDERAL_BRACKETS_MARRIED = federalBrackets("joint");
 
 function calcFederalTax(taxableIncome: number, brackets = FEDERAL_BRACKETS_SINGLE): number {
   let tax = 0;
