@@ -174,6 +174,52 @@ export function runMonteCarlo(config: MonteCarloConfig): MonteCarloResult {
 }
 
 // ── Preset configurations ────────────────────────────────────────────────────
+//
+// Where each preset number comes from. Three are read from a named table; the
+// rest are the firm's own choices and are declared as such below, not dressed
+// up as history.
+
+/** S&P 500 return and volatility, real estate return: Damodaran's annual table. */
+const DAMODARAN_HISTORICAL_RETURNS_SOURCE = {
+  label:
+    "Aswath Damodaran, NYU Stern, 'Historical Returns on Stocks, Bonds and Bills: 1928-2025' (histretSP). " +
+    "Computed by the firm from the page's annual rows, 1928-2025: S&P 500 including dividends, geometric average 10.02%, " +
+    "arithmetic average 11.86%, standard deviation 19.40%; Real Estate column (home prices), geometric average 4.20%",
+  url: "https://pages.stern.nyu.edu/~adamodar/New_Home_Page/datafile/histretSP.html",
+  asOf: "page updated January 5, 2026; read 2026-09-23",
+  note:
+    "sp500.expectedReturn 0.10 matches the 10.02% geometric average. sp500.volatility 0.16 is below the 19.40% standard deviation " +
+    "in the same table, so the preset understates the spread of S&P 500 outcomes. realEstate.expectedReturn 0.04 is close to the 4.20% geometric average.",
+};
+
+/** Long-run consumer price inflation for retirementWithdrawal.inflationRate. */
+const CPI_INFLATION_SOURCE = {
+  label:
+    "Federal Reserve Bank of Minneapolis, 'Consumer Price Index, 1913-' (BLS CPI-U annual averages): 17.7 in 1926 to 321.9 in 2025, " +
+    "a compound rate of 2.97% a year, which the 3% preset rounds",
+  url: "https://www.minneapolisfed.org/about-us/monetary-policy/inflation-calculator/consumer-price-index-1913-",
+  asOf: "read 2026-09-23",
+};
+
+/** The live monthly series behind the same index. */
+const FRED_CPI_SOURCE = {
+  label: "U.S. Bureau of Labor Statistics, Consumer Price Index for All Urban Consumers (CPIAUCSL), via FRED, Federal Reserve Bank of St. Louis",
+  url: "https://fred.stlouisfed.org/series/CPIAUCSL",
+  asOf: "read 2026-09-23",
+};
+
+/** The presets nobody publishes: each one is the firm's choice, said in words. */
+const MONTE_CARLO_ASSUMPTIONS = [
+  { label: "Assumption: IUL crediting floor = 0% (floorReturn 0), chosen by the firm because a 0% floor is the common contractual floor on indexed accounts; the client's own contract governs; no external source" },
+  { label: "Assumption: IUL caps = 8% (iulConservative) and 12% (iulModerate), chosen by the firm to bracket a low and a high current cap; the carrier's illustration governs; no external source" },
+  { label: "Assumption: IUL expected return = 6.5% and 7.5% with volatility 12% and 14%, chosen by the firm as pre-cap parameters that produce plausible capped outcomes; no external source" },
+  { label: "Assumption: annual charges = 1% for IUL and real estate, 0.5% for balanced and retirement, 0.8% for aggressive growth, 0.1% for an S&P 500 index fund, 0% for a MYGA, chosen by the firm as round illustrative costs; no external source" },
+  { label: "Assumption: MYGA = 5.5% with 0.5% volatility, chosen by the firm as a representative multi-year guaranteed rate; the quoted contract rate governs; no external source" },
+  { label: "Assumption: real estate volatility = 8%, chosen by the firm because a house price index understates the spread of a single property; no external source" },
+  { label: "Assumption: balanced 60/40 = 7% return and 10% volatility, chosen by the firm as a round long-run figure between the stock and bond rows of the Damodaran table; no external source" },
+  { label: "Assumption: aggressive growth = 12% return and 22% volatility, chosen by the firm to sit above the S&P 500 row on both return and risk; no external source" },
+  { label: "Assumption: retirement withdrawal = 6% return and 10% volatility, chosen by the firm as a conservative drawdown-phase portfolio; no external source" },
+] as const;
 
 export const MONTE_CARLO_PRESETS = {
   /** Conservative IUL with 0% floor, 8% cap */
@@ -246,3 +292,13 @@ export function compareScenarios(
     result: runMonteCarlo(s.config),
   }));
 }
+
+// ── Sources ──────────────────────────────────────────────────────────────────
+
+/** Every source and declared assumption behind the presets, for the shell's source footer. */
+export const MONTE_CARLO_SOURCES: readonly { label: string; url?: string; asOf?: string; note?: string }[] = [
+  DAMODARAN_HISTORICAL_RETURNS_SOURCE,
+  CPI_INFLATION_SOURCE,
+  FRED_CPI_SOURCE,
+  ...MONTE_CARLO_ASSUMPTIONS,
+];
