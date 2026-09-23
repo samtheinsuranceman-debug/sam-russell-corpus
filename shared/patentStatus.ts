@@ -63,6 +63,18 @@ export interface PatentApplication {
   readonly kind: 'provisional' | 'nonprovisional';
   /** Patent number, once granted. */
   readonly patentNumber?: string;
+  /**
+   * The homepage technology this application covers, exactly as its manifesto
+   * ref ("01" … "23"). A technology may say "patent pending" only when an
+   * application names it here; one filing never marks the others.
+   */
+  readonly claimRef?: string;
+  /**
+   * 'pending' while alive. A provisional that is not converted within 12
+   * months lapses (35 U.S.C. § 119(e)); mark it 'expired' or 'abandoned' and
+   * it stops counting.
+   */
+  readonly status?: 'pending' | 'abandoned' | 'expired' | 'granted';
 }
 
 /**
@@ -87,8 +99,21 @@ export const APPLICATIONS: readonly PatentApplication[] = [];
  * surfaces say "Proprietary method"; the day it holds a number they say
  * "Patent pending (Application No. …)".
  */
-export const FILED_APPLICATION_NUMBERS: readonly string[] = APPLICATIONS.map((a) => a.applicationNumber).filter(
-  (n) => n.trim().length > 0,
+/** An application still alive: has a number, not abandoned/expired, and a provisional under 12 months old. */
+export function isActiveApplication(a: PatentApplication, today: Date = new Date()): boolean {
+  if (!a.applicationNumber.trim()) return false;
+  if (a.status === 'abandoned' || a.status === 'expired') return false;
+  if (a.kind === 'provisional' && !a.patentNumber) {
+    const filed = new Date(a.filedOn);
+    const lapse = new Date(filed);
+    lapse.setFullYear(lapse.getFullYear() + 1);
+    if (!(today < lapse)) return false;
+  }
+  return true;
+}
+
+export const FILED_APPLICATION_NUMBERS: readonly string[] = APPLICATIONS.filter((a) => isActiveApplication(a)).map(
+  (a) => a.applicationNumber,
 );
 
 /**
@@ -126,10 +151,17 @@ export function mayClaimPatentPending(): boolean {
  * with its number, so it can be checked.
  */
 export function techStatusLabel(ref?: string): string {
-  if (!mayClaimPatentPending()) return 'Proprietary method';
-  const app = ref ? APPLICATIONS.find((a) => a.ref === ref || a.ref.endsWith(ref)) : undefined;
-  const number = app?.applicationNumber ?? FILED_APPLICATION_NUMBERS[0];
-  return `Patent pending (Application No. ${number})`;
+  return techStatusLabelFor(ref, APPLICATIONS);
+}
+
+/** Pure form of techStatusLabel, for tests: the label a technology gets from a given set of applications. */
+export function techStatusLabelFor(ref: string | undefined, apps: readonly PatentApplication[], today: Date = new Date()): string {
+  // Only an application that names THIS technology, exactly, may mark it. No fallback to another
+  // filing: the day one provisional is filed, the other technologies still read "Proprietary method".
+  const app = ref ? apps.find((a) => a.claimRef === ref && isActiveApplication(a, today)) : undefined;
+  if (!app) return 'Proprietary method';
+  if (app.patentNumber) return `Patented (U.S. Patent No. ${app.patentNumber})`;
+  return `Patent pending (Application No. ${app.applicationNumber})`;
 }
 
 /** May a surface say a patent has been granted? */
@@ -163,7 +195,10 @@ export function statusSentence(): string {
  */
 export function statusBadge(): string {
   if (mayClaimGranted()) return 'Patented';
-  if (mayClaimPatentPending()) return `Patent Pending (Application No. ${FILED_APPLICATION_NUMBERS[0]})`;
+  if (mayClaimPatentPending()) {
+    const n = FILED_APPLICATION_NUMBERS.length;
+    return `${n} application${n === 1 ? '' : 's'} pending (No. ${FILED_APPLICATION_NUMBERS.join(', ')}); the other claims are not filed`;
+  }
   return 'Claims drafted — not filed';
 }
 

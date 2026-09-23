@@ -67,7 +67,7 @@ export function GuaranteedMinimumFootnote({
               </p>
             )}
             <p className="text-amber-200/60 text-xs italic">
-              This illustration complies with NAIC Actuarial Guideline 49-A/B. Consult your carrier's
+              This is a hypothetical model, not a policy illustration. Consult your carrier's
               formal illustration for guaranteed and non-guaranteed ledger values side by side.
             </p>
           </div>

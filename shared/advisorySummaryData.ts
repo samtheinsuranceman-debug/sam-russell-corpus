@@ -420,7 +420,7 @@ export const TAB_SUMMARIES: TabSummary[] = [
     hiddenAdvantages: [
       "Creates urgency — shows the cost of waiting",
       "Uses 'truth numbers' from actual history, not hypotheticals",
-      "Compliant with AG49 because it shows historical, not projected, performance",
+      "Shows historical index crediting as a labelled back-test beside the carrier illustration, which AG 49-A governs",
     ],
     alternativeUses: [
       "Seminar presentation tool — show audience what they missed",

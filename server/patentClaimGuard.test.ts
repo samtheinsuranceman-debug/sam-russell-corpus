@@ -26,6 +26,7 @@ import {
   FILED_APPLICATION_NUMBERS,
   mayClaimPatentPending,
   techStatusLabel,
+  techStatusLabelFor,
   patentClaimHits,
 } from '../shared/patentStatus';
 
@@ -113,5 +114,17 @@ describe('no surface claims a filing that does not exist', () => {
     // The single switch: FILED_APPLICATION_NUMBERS, derived from APPLICATIONS in patentStatus.ts.
     expect(FILED_APPLICATION_NUMBERS).toEqual([]);
     expect(techStatusLabel('01')).toBe('Proprietary method');
+  });
+
+  it('marks only the technology an application names, and stops when a provisional lapses', () => {
+    const prov = { ref: 'PAT-005', title: 't', applicationNumber: '63/000,001', filedOn: '2026-10-01', kind: 'provisional' as const, claimRef: '05' };
+    const during = new Date('2027-03-01');
+    expect(techStatusLabelFor('05', [prov], during)).toBe('Patent pending (Application No. 63/000,001)');
+    // One filing never marks the others (35 U.S.C. § 292).
+    expect(techStatusLabelFor('01', [prov], during)).toBe('Proprietary method');
+    expect(techStatusLabelFor('105', [prov], during)).toBe('Proprietary method');
+    // Unconverted provisional after 12 months: no longer pending.
+    expect(techStatusLabelFor('05', [prov], new Date('2027-10-02'))).toBe('Proprietary method');
+    expect(techStatusLabelFor('05', [{ ...prov, status: 'abandoned' as const }], during)).toBe('Proprietary method');
   });
 });

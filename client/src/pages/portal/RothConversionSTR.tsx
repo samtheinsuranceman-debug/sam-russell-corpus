@@ -1181,7 +1181,7 @@ export default function RothConversionSTR() {
               </div>
             </div>
             <div className="mt-3 p-3 rounded-lg bg-emerald-500/5 border border-emerald-500/15 text-xs text-[#7a95b8]">
-              <strong className="text-emerald-400">How to read:</strong> The green line shows the base case (the assumed 10% crediting rate, hypothetical). The purple bands show the probability distribution across 500 simulated paths using 19.4% annual volatility (historical S&P 500, 1928–2025). The IUL floor of 0% prevents negative returns. Wider bands = more uncertainty in later years.
+              <strong className="text-emerald-400">How to read:</strong> The green line shows the base case (the assumed 10% crediting rate, hypothetical). The purple bands show the probability distribution across 500 simulated paths using 19.4% annual volatility (historical S&P 500, 1928–2025). The IUL floor of 0% prevents negative index credits; policy charges still reduce the account value. Wider bands = more uncertainty in later years.
             </div>
           </div>
         )}

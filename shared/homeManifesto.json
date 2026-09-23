@@ -23,7 +23,7 @@
       "ref": "01",
       "name": "HELOC-to-IUL Arbitrage Optimization Engine",
       "lead": "Imagine you could borrow against your house at a low price, say three cents per dollar, and pay that money into a permanent life insurance policy, an indexed universal life (IUL) policy, whose account is credited at a rate you assume, say seven cents per dollar.",
-      "detail": "This invention models the best order to draw on a home equity line of credit, a HELOC, and fund the policy, where the contract credits interest on the full account value, including the part serving as collateral for a policy loan. Based on your facts, it shows a hypothetical date your mortgage could be paid off with policy loans, and the loans you could take later, cycle after cycle. Policy charges, loan interest and the HELOC rate all reduce the result, and the spread can turn negative. Loans from a policy that is not a modified endowment contract and stays in force are generally not taxable income; a lapse with a loan outstanding can create a large tax bill. All premiums paid and all interest credited, less policy charges, equal the account value."
+      "detail": "This invention models the best order to draw on a home equity line of credit, a HELOC, and fund the policy. With a participating (indexed) loan option, the loaned value may keep receiving index credits under the carrier's terms; with a standard loan it is credited at a declared rate. Based on your facts, it shows a hypothetical date your mortgage could be paid off with policy loans, and the loans you could take later, cycle after cycle. Policy charges, loan interest and the HELOC rate all reduce the result, and the spread can turn negative. Loans from a policy that is not a modified endowment contract and stays in force are generally not taxable income; a lapse with a loan outstanding can create a large tax bill. All premiums paid and all interest credited, less policy charges, equal the account value."
     },
     {
       "ref": "02",
@@ -51,7 +51,7 @@
     },
     {
       "ref": "06",
-      "name": "Tax-Free Retirement Income Waterfall Engine",
+      "name": "Retirement Income Tax Waterfall Engine",
       "lead": "When you retire, you have money in lots of different buckets: your Roth IRA, regular IRA, Social Security, a pension, rental income, life insurance, annuity income. The government taxes each bucket differently.",
       "detail": "This invention is like a master plumber who connects all your money buckets with pipes and valves, then models the order to turn each valve to lower the taxes you pay over your retirement, based on your facts. For some households the modeled savings run to hundreds of thousands of dollars or more; yours depend on your numbers and on tax law, which can change."
     },
@@ -75,7 +75,7 @@
     },
     {
       "ref": "10",
-      "name": "Time Machine Dual-Illustration Method",
+      "name": "Time Machine Dual-View Method",
       "lead": "Insurance companies illustrate future values under Actuarial Guideline 49-A, an NAIC rule the states apply. The Time Machine adds a second view: how the same crediting formula would have credited on real index history.",
       "detail": "You see what the policy's crediting formula would have credited if you had started ten, twenty, or thirty years ago, right beside the illustration the rules require. The required forward view and the historical back-test, side by side, so you can ask better questions. Past index performance is not indicative of future results, and a back-test applies today's caps to years when they did not exist."
     },
@@ -94,7 +94,7 @@
     {
       "ref": "13",
       "name": "Top Ten Ecological Drivers of Retirement Success and Risk-Failure Assessment Framework",
-      "lead": "Ten threats can derail a retirement, drawn from public data published by the Social Security Administration, the IRS and the Bureau of Labor Statistics, and many of them rarely come up in a typical planning meeting.",
+      "lead": "Ten threats can derail a retirement, and many of them rarely come up in a typical planning meeting.",
       "detail": "These threats have little to do with your average rate of return, or with how consistent it is. They can make an average rate of return far less useful than it looks. You deserve to know what they are. It is not only the average rate of return."
     },
     {

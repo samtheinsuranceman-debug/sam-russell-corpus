@@ -72,7 +72,7 @@ const COMPLIANCE_CATEGORIES = [
       { requirement: "Cap rates, participation rates, and floor explained", regulation: "AG 49-B" },
       { requirement: "Surrender charges and schedule disclosed", regulation: "State Insurance Code" },
       { requirement: "Cost of insurance charges explained", regulation: "NAIC Model #582" },
-      { requirement: "Illustration compliant with AG 49-B standards", regulation: "AG 49-B" },
+      { requirement: "Illustration compliant with AG 49-B standards", regulation: "AG 49-B" }, // copy-ok: R13 a checklist item for a carrier illustration, which AG 49-B does govern
     ],
   },
   {

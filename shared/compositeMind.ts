@@ -132,7 +132,7 @@ export const MINDS: readonly Mind[] = [
     reads: ["somatic-response", "responsibility", "temper-to-instruction", "affiliation"],
     owns: ["chunk-down", "embedded-command", "choice-of-agreements"],
     instruction:
-      "End on a motion, not a summary. One action, small enough to be done this week, with the thing they need in hand to do it. For a strong-willed reader, present it as the obvious next move and let them claim it rather than instructing them.",
+      "End on a motion, not a summary. One action, small enough to be done this week, with the thing they need in hand to do it. Offer one small next step and let them decide; never press.",
     standingQuestion: "What is the smallest real thing that could move before Friday?",
   },
   {

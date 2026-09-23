@@ -11,13 +11,17 @@
  *   - Corpus: client/src/**.{ts,tsx}, shared/**.{ts,json}, live/**.html, and the
  *     server files that hold prompts or visitor-facing copy (PROMPT_FILES).
  *     Tests are not read.
- *   - Lines carrying a `copy-ok:` pragma are dropped first. The pragma must say
- *     why (e.g. `// copy-ok: R4 claim recorded as needs-correction in the
- *     claims registry`). Every pragma is counted and listed in the output so a
- *     reviewer sees the exemption count grow.
- *   - Block and line comments are stripped, then the text is normalized:
- *     lower case, the separators · — – - | collapsed to spaces, whitespace
- *     collapsed. So "Never-Lose", "never lose" and "NEVER  LOSE" are one thing,
+ *   - Lines carrying a `copy-ok:` pragma are dropped first. The pragma must name
+ *     the rule and say why, in the form `copy-ok: R<n> <reason of 10+ chars>`
+ *     (e.g. `// copy-ok: R10 claim recorded verbatim as 'unconfirmed' in the
+ *     claims registry`). A malformed pragma fails the build, the count is
+ *     pinned in RATCHETS.pragmas, and every one is listed in the output.
+ *     The pragma is also the documented escape for an honest negation that a
+ *     phrase rule cannot tell from the claim ("IUL is not a Mega Roth").
+ *   - Block comments (only where a comment can start: line start or just after
+ *     `{`, so `accept="image/*"` is not read as one) and line comments are
+ *     stripped, then the text is normalized: lower case, the separators
+ *     · — – ‐ ‑ - | collapsed to spaces, whitespace collapsed. So "Never-Lose", "never lose" and "NEVER  LOSE" are one thing,
  *     and a claim split across JSX lines is still one sentence.
  *
  * Three kinds of rule:
@@ -65,6 +69,8 @@ const PROMPT_FILES = [
   "server/whispererReports.ts",
   "server/leadStrategy.ts",
 ];
+/** The built static homepage, served before the app boots (see livePageParity.test.ts). */
+const EXTRA_FILES = ["../docs/mirror/index.html"];
 /**
  * Exempt by path, with the reason. Nothing else is exempt by path; everything
  * else uses a line pragma so the exemption is visible where it applies.
@@ -86,18 +92,24 @@ function walk(dir: string, exts: string[], out: string[] = []): string[] {
   return out;
 }
 
-type Doc = { rel: string; raw: string; text: string; pragmas: number };
+type Doc = { rel: string; raw: string; text: string; pragmas: number; badPragmas: string[] };
 
-export function normalizeCopy(raw: string): { text: string; pragmas: number } {
+/** `copy-ok: R<n> <reason>`: the rule it relies on and a reason someone can check. */
+export const PRAGMA = /copy-ok: R\d+ \S.{9,}/;
+
+export function normalizeCopy(raw: string): { text: string; pragmas: number; badPragmas: string[] } {
   let pragmas = 0;
+  const badPragmas: string[] = [];
   const kept = raw.split("\n").filter((l) => {
     if (l.includes("copy-ok:")) {
       pragmas++;
+      if (!PRAGMA.test(l)) badPragmas.push(l.trim().slice(0, 120));
       return false;
     }
     return true;
   });
-  const noBlock = kept.join("\n").replace(/\/\*[\s\S]*?\*\//g, " ");
+  // A block comment can only start at a line start or right after "{" (JSX); "image/*" inside an attribute is not one.
+  const noBlock = kept.join("\n").replace(/(^[ \t]*|\{\s*)\/\*[\s\S]*?\*\//gm, "$1 ");
   const noLine = noBlock
     .split("\n")
     .filter((l) => !l.trim().startsWith("//"))
@@ -105,9 +117,9 @@ export function normalizeCopy(raw: string): { text: string; pragmas: number } {
   const text = noLine
     .toLowerCase()
     .replace(/[’‘]/g, "'")
-    .replace(/[·—–|\-]/g, " ")
+    .replace(/[·—–‐‑‒\u00ad|\-]/g, " ")
     .replace(/\s+/g, " ");
-  return { text, pragmas };
+  return { text, pragmas, badPragmas };
 }
 
 let cache: Doc[] | null = null;
@@ -116,9 +128,10 @@ function corpus(): Doc[] {
   const files: string[] = [];
   for (const [dir, exts] of ROOTS) files.push(...walk(join(APP, dir), exts));
   for (const f of PROMPT_FILES) files.push(join(APP, f));
+  for (const f of EXTRA_FILES) files.push(resolve(APP, f));
   cache = files
     .map((full) => {
-      const rel = full.slice(APP.length + 1);
+      const rel = full.startsWith(APP + "/") ? full.slice(APP.length + 1) : full.slice(resolve(APP, "..").length + 1);
       const raw = readFileSync(full, "utf8");
       return { rel, raw, ...normalizeCopy(raw) };
     })
@@ -132,23 +145,42 @@ function corpus(): Doc[] {
 const near = (a: string, b: string, n = 12) => new RegExp(`\\b(${a})\\b(\\s+\\S+){0,${n}}?\\s+\\b(${b})\\b|\\b(${b})\\b(\\s+\\S+){0,${n}}?\\s+\\b(${a})\\b`);
 const POLICY = "iul|annuity|annuities|policy|myga|fia|life insurance";
 
-type Rule = { id: string; why: string; rx: RegExp; only?: RegExp };
+type Rule = {
+  id: string;
+  why: string;
+  rx: RegExp;
+  only?: RegExp;
+  /** Files exempt from this one rule, each with the reason (the guard asserts the reason still holds where it can). */
+  skip?: Record<string, string>;
+  /** A match is allowed when this appears within 160 characters of it (a statement of the prohibition itself). */
+  allowIf?: RegExp;
+};
 
 /** Always fail. Patterns run against normalized text (lower case, separators → spaces). */
 export const BANNED: Rule[] = [
-  { id: "mega-roth", why: "R2/R3: a policy titled as an IRA (G.S. 58-63-15(1))", rx: /\bmega roth\b/ },
-  { id: "never-lose", why: "R10: the floor limits index credits, not charges", rx: /\bnever (lose|loses|lost) (money|principal|value|a dollar|your money)\b|\bnever loses value\b|\bcan(not|'t) lose (money|principal)\b/ },
+  { id: "mega-roth", why: "R2/R3: a policy titled as an IRA (G.S. 58-63-15(1))", rx: /\bmega ?roth\b/ },
+  { id: "never-lose", why: "R10: the floor limits index credits, not charges", rx: /\bnever (lose|loses|lost) (money|principal|value|a dollar|a dime|a penny|your money)\b|\bnever loses value\b|\bcan(not|'t) lose (money|principal)\b|\bcan never go down\b|\bwon't lose (money|a dime)\b/ },
   { id: "risk-free-product", why: "R10: no-risk language beside a policy", rx: near("risk free|zero risk|zero market risk|no market risk", POLICY) },
   { id: "no-risk-of-loss", why: "R10", rx: /\bno risk of loss\b/ },
-  { id: "guaranteed-growth", why: "R4: 'guaranteed' applied to growth or compounding", rx: /\bguaranteed (growth|compounding)\b/ },
+  { id: "guaranteed-growth", why: "R4: 'guaranteed' applied to growth or compounding", rx: /\bguaranteed (growth|compounding)\b|\b(compounds?|compounding|grows?|growing) at (an? )?\d+(\.\d+)?% guaranteed\b/ },
   { id: "zero-tax", why: "R7/R11: a tax result stated as a certainty", rx: /\bpay \$?0 in tax\b|\b0% roth conversion|\btax savings = |\b(99|ninety nine) percent of the time\b/ },
-  { id: "policy-never-dies", why: "R13: a policy matures at the insured's death", rx: /\bpolicy never (dies|lapses)\b|\bnever lapses at death\b|\bpolicy doesn't lapse at death\b|\bdoes not terminate at the insured's death\b/ },
+  { id: "policy-never-dies", why: "R13: a policy matures at the insured's death", rx: /\bpolicy never (dies|lapses)\b|\bnever lapses,? (even )?at death\b|\bpolicy doesn't lapse at death\b|\bdoes not terminate at the insured's death\b|\bpolicy lives forever\b/ },
   { id: "nicknames", why: "R2: product nicknames that hide what it is", rx: /\bmagic growing jar\b|\bspecialized liquidity tool\b|\bmulti guaranteed annuity\b/ },
   { id: "piggy-bank-policy", why: "R2", rx: near("piggy bank", POLICY) },
   { id: "promissory", why: "R11: projections are not promises", rx: /\brepeat forever\b|\bgrows exponentially for\b|\bgrowth goes exponential\b|\bcollateral always wins\b/ },
-  { id: "ag49-compliance-claim", why: "R13: these pages are not illustrations", rx: /\b(ag ?49( ?a)?( ?\/ ?b)?|actuarial guideline (49|xlix)( ?a)?)( ?[ab])? (compliant|complies|comply|compliance notice)\b|\bfederal rules? called ag/ },
+  { id: "ag49-compliance-claim", why: "R13: these pages are not illustrations", rx: /\b(ag ?49( ?a)?( ?\/ ?b)?|actuarial guideline (49|xlix)( ?a)?)( ?[ab])? (compliant|complies|comply|compliance notice)\b|\b(comply|complies|compliant|compliance) with (the )?(naic )?(ag ?49|actuarial guideline (49|xlix))|\bfederal rules? called ag/ },
   { id: "fabricated-score", why: "R27: a score nothing computes", rx: /\bpage insights score\b/ },
-  { id: "guaranty-association", why: "R19: G.S. 58-62-86 bars using the guaranty association in a sale", rx: /\bguaranty (association|associations|fund|funds|coverage)\b/, only: /^client\/src\/(pages|components)\// },
+  {
+    id: "guaranty-association",
+    why: "R19: G.S. 58-62-86 bars using the guaranty association in a sale",
+    rx: /\bguaranty (association|associations|fund|funds|coverage|limit|limits|headroom|protection|tier)\b/,
+    allowIf: /may not be used|58 62 86|bars using|barred by|reason to buy/,
+    skip: {
+      "shared/annuityData.ts": "statutory reference data; no page renders its split recommendation (asserted below)",
+      "client/src/pages/portal/AnnuityMemory.tsx": "advisor reference database; carries the § 58-62-86 notice on the page (asserted below)",
+      "client/src/pages/portal/AnnuityAccumulationDB.tsx": "password-gated advisor database; carries the § 58-62-86 notice on the page (asserted below)",
+    },
+  },
   { id: "grok-bans", why: "R24: owner's standing bans", rx: /\bthe best place\b|\bwe treat anxiety\b|\boxytocin\b|\bformulary\b|\bburnout rate\b|\bfinancial prescription\b|\bsee diagnosis\b|\bshape is the diagnosis\b/ },
   { id: "health-claims", why: "R24: no health claims for a financial product", rx: /\blive longer\b|\bcortisol\b|\bhealth strategy\b|\blower (rates of )?depression\b|\blower mortality risk\b/ },
   { id: "demo-mode-disclaimers", why: "disclosures must always render", rx: /\bhide disclaimers\b|\bshow disclaimers\b/ },
@@ -185,7 +217,8 @@ export function unqualifiedTaxFree(text: string): string[] {
     const tight = text.slice(Math.max(0, i - 60), i + 68);
     if (!ctx.test(wide)) continue;
     if (/\b(mec|modified endowment)/.test(wide) && /in force|lapse/.test(wide)) continue;
-    if (/roth|death benefit|101\(a\)|qualified|inheritance|529|hsa|1035/.test(tight)) continue;
+    // Bare "roth"/"qualified" let "IUL loans are tax-free, just like a Roth" through; require the real condition.
+    if (/\bqualified (roth )?(distributions?|withdrawals?)\b|\broth ira\b(?!.{0,40}\biul\b)|\broth: ["'`]|death benefit|101\(a\)|inheritance|529|\bhsa\b|1035/.test(tight)) continue;
     out.push(text.slice(Math.max(0, i - 80), i + 60));
   }
   return out;
@@ -196,12 +229,38 @@ export function unqualifiedTaxFree(text: string): string[] {
  * Only ever lower these numbers.
  */
 export const RATCHETS = {
-  unqualifiedTaxFree: 216,
+  unqualifiedTaxFree: 251,
   guaranteedReturns: 12,
   divorceProof: 14,
   infiniteBanking: 25,
   policyRoutesWithoutLine: 98,
+  /** "N% guaranteed": fine for a contractual minimum or term rate with its caveat; counted so it cannot spread. */
+  percentGuaranteed: 14,
+  /** copy-ok pragmas in the corpus. */
+  pragmas: 3,
+  /** Components that call an AI endpoint (P12-A ai_files.txt) and render no AiAnswerNote / "AI-generated" line. */
+  aiSurfacesWithoutNote: 33,
 };
+
+/** Components that call an AI endpoint, from P12-A's scan (p12/ai_files.txt). */
+const AI_SURFACES = [
+  "client/src/components/TapeRecorderAdvisor.tsx", "client/src/components/ExportToSlides.tsx", "client/src/components/ExportPdfButton.tsx",
+  "client/src/components/ReportGenerator.tsx", "client/src/components/AdvisorNudge.tsx", "client/src/components/VoiceAdvisor.tsx",
+  "client/src/components/AIChatBox.tsx", "client/src/pages/portal/CompetitiveAnalysis.tsx", "client/src/pages/portal/AiAssist.tsx",
+  "client/src/pages/portal/AISlideGenerator.tsx", "client/src/pages/portal/WarStoryGenerator.tsx", "client/src/pages/portal/ClientIntakeInterview.tsx",
+  "client/src/pages/portal/Knowledge.tsx", "client/src/pages/portal/MortgageKiller.tsx", "client/src/pages/portal/ClientDetail.tsx",
+  "client/src/pages/portal/IndexStrategyComparison.tsx", "client/src/pages/portal/ComplianceExport.tsx", "client/src/pages/portal/ExchangeChainOptimizer.tsx",
+  "client/src/pages/portal/Arena.tsx", "client/src/pages/portal/LiveCoPilot.tsx", "client/src/pages/portal/DocumentTemplates.tsx",
+  "client/src/pages/portal/ReferralTracker.tsx", "client/src/pages/portal/EngineChainingPipeline.tsx", "client/src/pages/portal/AvatarTwins.tsx",
+  "client/src/pages/portal/MeetingAgenda.tsx", "client/src/pages/portal/ThomasGoldman.tsx", "client/src/pages/portal/AdvisorChat.tsx",
+  "client/src/pages/portal/AiStrategyRecommender.tsx", "client/src/pages/portal/SamuelGoldman.tsx", "client/src/pages/portal/ClientReportBuilder.tsx",
+  "client/src/pages/portal/WillWriter.tsx", "client/src/pages/portal/CarrierQuotes.tsx", "client/src/pages/portal/Pipeline.tsx",
+  "client/src/pages/portal/AdvancedReporting.tsx", "client/src/pages/portal/MySlides.tsx", "client/src/pages/portal/IbbotsonCharts.tsx",
+  "client/src/pages/portal/RewardsVault.tsx", "client/src/pages/portal/BatchSlides.tsx", "client/src/pages/portal/MorningRitual.tsx",
+  "client/src/pages/portal/WithdrawalSequencing.tsx", "client/src/pages/portal/SeminarGenerator.tsx", "client/src/pages/portal/StrategyCompare.tsx",
+  "client/src/pages/portal/VideoProposalGenerator.tsx", "client/src/pages/portal/ComboRecommender.tsx", "client/src/pages/UltraCalculatorPage.tsx",
+  "client/src/components/HomeAIConcierge.tsx",
+];
 
 /* ─── Tests ──────────────────────────────────────────────────────────────── */
 
@@ -215,14 +274,35 @@ describe("copy compliance: banned phrases", () => {
     for (const d of corpus()) {
       for (const r of BANNED) {
         if (r.only && !r.only.test(d.rel)) continue;
-        const m = d.text.match(r.rx);
-        if (m) hits.push(`${d.rel} [${r.id}: ${r.why}] … ${m[0]}`);
+        if (r.skip?.[d.rel]) continue;
+        for (const m of d.text.matchAll(new RegExp(r.rx.source, "g"))) {
+          const i = m.index ?? 0;
+          if (r.allowIf && r.allowIf.test(d.text.slice(Math.max(0, i - 160), i + m[0].length + 160))) continue;
+          hits.push(`${d.rel} [${r.id}: ${r.why}] … ${m[0]}`);
+        }
       }
     }
     const pragmas = corpus().filter((d) => d.pragmas > 0).map((d) => `${d.rel} (${d.pragmas})`);
     // Visible in the test output: every file that relies on a copy-ok pragma.
     console.log(`[copyComplianceGuard] copy-ok pragmas: ${pragmas.length ? pragmas.join(", ") : "none"}`);
     expect(hits).toEqual([]);
+  });
+
+  it("every copy-ok pragma names its rule and gives a reason, and their number only falls", () => {
+    const bad = corpus().flatMap((d) => d.badPragmas.map((l) => `${d.rel}: ${l}`));
+    expect(bad).toEqual([]);
+    const total = corpus().reduce((n, d) => n + d.pragmas, 0);
+    expect(total).toBeLessThanOrEqual(RATCHETS.pragmas);
+  });
+
+  it("the per-rule exemptions still hold", () => {
+    // annuityData's split recommendation is rendered nowhere; the advisor databases carry the notice.
+    const offenders = walk(join(APP, "client/src"), [".ts", ".tsx"]).filter((f) => /splitRec\.(recommendation|splitCount)/.test(readFileSync(f, "utf8")));
+    expect(offenders).toEqual([]);
+    for (const f of ["client/src/pages/portal/AnnuityMemory.tsx", "client/src/pages/portal/AnnuityAccumulationDB.tsx"]) {
+      expect(read(f), f).toContain("58-62-86");
+    }
+    expect(read("shared/replacementScoring.ts")).not.toMatch(/function scoreStateGuarantyHeadroom/);
   });
 
   it("finds no patent-status claim while nothing is filed", () => {
@@ -255,6 +335,22 @@ describe("copy compliance: banned phrases", () => {
       "refund-promise": "we refund every penny. No questions asked",
       "divorce-proof-prompt": "hard to touch ('divorce-proof')",
     };
+    // Forms that slipped past the first version of this guard (C-B review S1).
+    const alsoPlanted: Record<string, string[]> = {
+      "ag49-compliance-claim": ["These illustrations comply with NAIC Actuarial Guideline 49-A and 49-B requirements."],
+      "never-lose": ["you will never lose a dime", "your account can never go down", "you won't lose money"],
+      "policy-never-dies": ["The policy lives forever", "It never lapses, even at death"],
+      "mega-roth": ["the MegaRoth"],
+      "guaranteed-growth": ["compounds at 6.25% guaranteed while the loan shrinks"],
+      "guaranty-association": ["to stay within North Carolina's $250,000 guaranty limit per carrier"],
+      "risk-free-product": ["this IUL is risk‑free"],
+    };
+    for (const [id, samples] of Object.entries(alsoPlanted)) {
+      const r = BANNED.find((x) => x.id === id)!;
+      for (const s of samples) expect(normalizeCopy(s).text, `${id}: ${s}`).toMatch(r.rx);
+    }
+    // The comment stripper does not swallow live markup after accept="image/*".
+    expect(normalizeCopy('<input accept="image/*" /> <p>never lose money</p> {/* c */}').text).toContain("never lose money");
     for (const r of BANNED) {
       const sample = planted[r.id];
       expect(sample, `no planted sample for ${r.id}`).toBeTruthy();
@@ -297,6 +393,15 @@ describe("copy compliance: the backlog only shrinks", () => {
   it("unqualified 'tax-free' near a policy", () => {
     const n = corpus().reduce((s, d) => s + unqualifiedTaxFree(d.text).length, 0);
     expect(n).toBeLessThanOrEqual(RATCHETS.unqualifiedTaxFree);
+  });
+
+  it("'N% guaranteed' outside a contractual minimum", () => {
+    expect(count(/\b\d+(\.\d+)?% guaranteed\b/g)).toBeLessThanOrEqual(RATCHETS.percentGuaranteed);
+  });
+
+  it("AI-calling components without the AI-generated note", () => {
+    const missing = AI_SURFACES.filter((f) => !/<AiAnswerNote|AI-generated/.test(read(f)));
+    expect(missing.length, missing.join(", ")).toBeLessThanOrEqual(RATCHETS.aiSurfacesWithoutNote);
   });
 
   it("'guaranteed returns', 'divorce-proof', 'infinite banking'", () => {
@@ -396,6 +501,9 @@ describe("copy compliance: disclosures cannot be switched off", () => {
     // Nowhere in the client may a component hide a disclosure behind the old flag.
     const offenders = walk(join(APP, "client/src"), [".ts", ".tsx"]).filter((f) => /if\s*\(\s*!\s*showDisclaimers\s*\)\s*return null/.test(readFileSync(f, "utf8")));
     expect(offenders).toEqual([]);
+    // Nor a page-level Hide/Show switch (MarketScenarioStressTest had one): no setter that toggles a disclaimer flag.
+    const toggles = walk(join(APP, "client/src"), [".ts", ".tsx"]).filter((f) => /set\w*Disclaimers?\s*\(\s*!/.test(readFileSync(f, "utf8")));
+    expect(toggles).toEqual([]);
   });
 
   it("the footer makes no blanket compliance claim", () => {

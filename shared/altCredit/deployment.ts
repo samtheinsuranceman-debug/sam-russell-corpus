@@ -663,7 +663,7 @@ export const DEPLOYMENT_STRATEGIES: readonly DeploymentStrategy[] = [
     collateral: "The policy itself, which has a surrender value well below the purchase price and is worth nothing at all if it lapses. This is a contingent contractual claim against a carrier, not collateral in the sense the rest of this page uses the word.",
     secondaryGuarantees: [
       "The carrier's obligation to pay the death benefit, which is why carrier claims-paying strength is a primary diligence item rather than a formality.",
-      "State guaranty association coverage for life insurance benefits, subject to per-life statutory caps well below most settlement face amounts.",
+      "State guaranty association coverage for life insurance benefits, subject to per-life statutory caps well below most settlement face amounts.", // copy-ok: R19 a risk disclosure to a life-settlement investor (coverage caps are low), not a reason to buy a policy
       "A premium escrow funded at closing, which is the only reliable protection against lapse.",
       "Portfolio diversification across many lives, which converts a single unpredictable event into a statistical distribution.",
     ],

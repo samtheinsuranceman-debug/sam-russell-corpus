@@ -1042,8 +1042,8 @@ export default function TimeMachineAG49() {
                 <Users className="w-5 h-5 text-emerald-500" /> Multigenerational Wealth Engine
               </CardTitle>
               <CardDescription>
-                An IUL policy is permanent life insurance: it ends when the insured dies and pays an income-tax-free
-                death benefit (IRC §101(a)). What can carry across generations is the money: a death benefit paid to
+                An IUL policy is permanent life insurance: it ends when the insured dies and pays a death benefit that is generally
+                income-tax-free (IRC §101(a)). What can carry across generations is the money: a death benefit paid to
                 a trust can fund new coverage on the next generation. Ownership can change while the insured lives,
                 but the insured cannot. Interest credits inside the policy are tax-deferred, not tax-free, and are
                 reduced by policy charges.

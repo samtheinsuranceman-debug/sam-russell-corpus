@@ -84,7 +84,7 @@ const CALCULATOR_MODULES: CalculatorModule[] = [
     id: "tax-waterfall",
     name: "Tax Waterfall Engine",
     tagline: "Visualize Every Dollar's Tax Journey",
-    description: "Physicians in the 37% bracket carry some of the heaviest tax loads of any profession. The cascading waterfall shows where each dollar goes — federal, state, FICA, NIIT, AMT — and models redirecting flows into tax-advantaged options, each with the conditions that make it so.",
+    description: "Physicians in the 37% bracket pay federal, state, FICA and NIIT on the same dollars. The cascading waterfall shows where each dollar goes — federal, state, FICA, NIIT, AMT — and models redirecting flows into tax-advantaged options, each with the conditions that make it so.",
     icon: BarChart3,
     color: "text-amber-400",
     bgColor: "bg-amber-500/10",

@@ -86,7 +86,7 @@ const HIDDEN_PAGES = [
   {
     category: "Annuity Data",
     pages: [
-      { path: "/portal/annuity-memory", label: "Annuity Memory — 50-State Database", icon: Database, description: "Complete 50-state annuity data store with guaranty limits, product rankings, and availability", views: 3500, status: "Active", lastAccessed: "2026-04-12", size: "15.8MB" },
+      { path: "/portal/annuity-memory", label: "Annuity Memory — 50-State Database", icon: Database, description: "Complete 50-state annuity data store: statutory reference data, the site's illustrative product order, and availability (advisor reference only)", views: 3500, status: "Active", lastAccessed: "2026-04-12", size: "15.8MB" },
     ],
   },
   {

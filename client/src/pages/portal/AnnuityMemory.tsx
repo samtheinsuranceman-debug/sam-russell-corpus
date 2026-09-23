@@ -310,7 +310,10 @@ export default function AnnuityMemory() {
               <div>
                 <h1 className="rc-page-title">Annuity Memory</h1>
                 <p className="rc-page-subtitle">
-                  Complete 50-state annuity data store — guaranty limits, product availability, and rankings
+                  Complete 50-state annuity data store — statutory reference data, product availability, and the site's illustrative order
+                </p>
+                <p className="mt-1 text-xs text-amber-300/80">
+                  Advisor reference only. The state guaranty association may not be used in the sale or solicitation of an annuity (N.C. Gen. Stat. § 58-62-86); never show these limits to a prospect as a reason to buy.
                 </p>
               </div>
             </div>
