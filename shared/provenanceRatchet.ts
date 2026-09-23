@@ -22,15 +22,10 @@
 export const ZERO_SOURCE_ENGINES: readonly string[] = [
   "shared/accessControl.ts",
   "shared/advisorModes.ts",
-  "shared/altCredit/simulator.ts",
-  "shared/carrierRatings.ts",
-  "shared/cryptoCycleEngine.ts",
   "shared/erosion.ts",
   "shared/firewall.ts",
   "shared/genomeStrategyFit.ts",
-  "shared/historicalShocks.ts",
   "shared/householdWealth.ts",
-  "shared/monteCarloEngine.ts",
   "shared/mortgageKiller.ts",
   "shared/mortgageLedger.ts",
   "shared/multiPropertyMyga.ts",
@@ -50,7 +45,6 @@ export const UNSEEDED_RANDOM_ENGINES: readonly string[] = [
 /** Catalogue engines with no loader in shared/engineSources.ts, so the shell cannot print their sources yet. */
 export const CATALOGUE_ENGINES_WITHOUT_SHELL_SOURCES: readonly string[] = [
   "server/outsideForces.ts",
-  "shared/altCredit/simulator.ts",
   "shared/balancedIndexedAccount.ts",
   "shared/clientFactFinder.ts",
   "shared/compositeMind.ts",
@@ -101,7 +95,6 @@ export const PAGES_PRINTING_NO_SOURCE: readonly string[] = [
   "client/src/pages/portal/AIPolicyReviewGap.tsx",
   "client/src/pages/portal/AdvisorIncomeCalculator.tsx",
   "client/src/pages/portal/AiStrategyRecommender.tsx",
-  "client/src/pages/portal/AltCreditHub.tsx",
   "client/src/pages/portal/AnnuityAccumulationDB.tsx",
   "client/src/pages/portal/AnnuityMemory.tsx",
   "client/src/pages/portal/AtheneGuaranteedIncome.tsx",
