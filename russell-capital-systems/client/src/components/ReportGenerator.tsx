@@ -90,7 +90,8 @@ export function ReportGenerator({
   const [open, setOpen] = useState(false);
   const [selectedTools, setSelectedTools] = useState<Set<string>>(new Set(["current"]));
   const [advisorNotes, setAdvisorNotes] = useState(defaultNotes || "");
-  const [includeDisclaimer, setIncludeDisclaimer] = useState(true);
+  // Reports always carry the compliance disclaimers (copy-compliance review S-a).
+  const includeDisclaimer = true;
   const [includeCharts, setIncludeCharts] = useState(true);
 
   const exportMut = trpc.strategyExport.generate.useMutation({

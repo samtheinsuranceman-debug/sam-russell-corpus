@@ -1370,7 +1370,7 @@ export default function MortgageKiller() {
                     <Slider
                       value={[strategyParams.assumedAnnuityRate * 100]}
                       onValueChange={([v]) => setStrategyParams((p) => ({ ...p, assumedAnnuityRate: v / 100 }))}
-                      min={0} max={8} step={0.05}
+                      min={0} max={12} step={0.05}
                     />
                     <p className="text-xs text-muted-foreground">Rate you assume for the 30-year annuity view. MYGAs guarantee a rate only for their term (typically 3–10 years); renewal rates are not guaranteed.</p>
                   </div>

@@ -115,6 +115,9 @@ export function normalizeCopy(raw: string): { text: string; pragmas: number; bad
     .filter((l) => !l.trim().startsWith("//"))
     .join("\n");
   const text = noLine
+    // Prettier breaks long JSX text with {" "} spacers; "never{" "}lose money" is one sentence.
+    .replace(/\{\s*(["'`])\s*\1\s*\}/g, " ")
+    .replace(/\{\s*(["'`]) \1\s*\}/g, " ")
     .toLowerCase()
     .replace(/[’‘]/g, "'")
     .replace(/[·—–‐‑‒\u00ad|\-]/g, " ")
@@ -159,12 +162,12 @@ type Rule = {
 /** Always fail. Patterns run against normalized text (lower case, separators → spaces). */
 export const BANNED: Rule[] = [
   { id: "mega-roth", why: "R2/R3: a policy titled as an IRA (G.S. 58-63-15(1))", rx: /\bmega ?roth\b/ },
-  { id: "never-lose", why: "R10: the floor limits index credits, not charges", rx: /\bnever (lose|loses|lost) (money|principal|value|a dollar|a dime|a penny|your money)\b|\bnever loses value\b|\bcan(not|'t) lose (money|principal)\b|\bcan never go down\b|\bwon't lose (money|a dime)\b/ },
+  { id: "never-lose", why: "R10: the floor limits index credits, not charges", rx: /\bnever lose (your |a |a single )?(\w+ )?(money|principal|dollar|dime|penny|value)\b|\bnever (lose|loses|lost) (money|principal|value|a dollar|a dime|a penny|your money)\b|\bnever loses value\b|\bcan(not|'t) lose (money|principal)\b|\bcan never go down\b|\bwon't lose (money|a dime)\b/ },
   { id: "risk-free-product", why: "R10: no-risk language beside a policy", rx: near("risk free|zero risk|zero market risk|no market risk", POLICY) },
   { id: "no-risk-of-loss", why: "R10", rx: /\bno risk of loss\b/ },
   { id: "guaranteed-growth", why: "R4: 'guaranteed' applied to growth or compounding", rx: /\bguaranteed (growth|compounding)\b|\b(compounds?|compounding|grows?|growing) at (an? )?\d+(\.\d+)?% guaranteed\b/ },
   { id: "zero-tax", why: "R7/R11: a tax result stated as a certainty", rx: /\bpay \$?0 in tax\b|\b0% roth conversion|\btax savings = |\b(99|ninety nine) percent of the time\b/ },
-  { id: "policy-never-dies", why: "R13: a policy matures at the insured's death", rx: /\bpolicy never (dies|lapses)\b|\bnever lapses,? (even )?at death\b|\bpolicy doesn't lapse at death\b|\bdoes not terminate at the insured's death\b|\bpolicy lives forever\b/ },
+  { id: "policy-never-dies", why: "R13: a policy matures at the insured's death", rx: /\bpolicy (will )?never (die|dies|lapse|lapses)\b|\bnever lapses,? (even )?at death\b|\bpolicy doesn't lapse at death\b|\bdoes not terminate at the insured's death\b|\bpolicy lives forever\b/ },
   { id: "nicknames", why: "R2: product nicknames that hide what it is", rx: /\bmagic growing jar\b|\bspecialized liquidity tool\b|\bmulti guaranteed annuity\b/ },
   { id: "piggy-bank-policy", why: "R2", rx: near("piggy bank", POLICY) },
   { id: "promissory", why: "R11: projections are not promises", rx: /\brepeat forever\b|\bgrows exponentially for\b|\bgrowth goes exponential\b|\bcollateral always wins\b/ },
@@ -174,7 +177,8 @@ export const BANNED: Rule[] = [
     id: "guaranty-association",
     why: "R19: G.S. 58-62-86 bars using the guaranty association in a sale",
     rx: /\bguaranty (association|associations|fund|funds|coverage|limit|limits|headroom|protection|tier)\b/,
-    allowIf: /may not be used|58 62 86|bars using|barred by|reason to buy/,
+    // Only the notice sentence itself (or the model rule 'as a reason to buy') excuses a mention; a bare citation does not.
+    allowIf: /may not be used in the sale or solicitation|used as a reason to buy|as a reason to buy anything/,
     skip: {
       "shared/annuityData.ts": "statutory reference data; no page renders its split recommendation (asserted below)",
       "client/src/pages/portal/AnnuityMemory.tsx": "advisor reference database; carries the § 58-62-86 notice on the page (asserted below)",
@@ -184,6 +188,7 @@ export const BANNED: Rule[] = [
   { id: "grok-bans", why: "R24: owner's standing bans", rx: /\bthe best place\b|\bwe treat anxiety\b|\boxytocin\b|\bformulary\b|\bburnout rate\b|\bfinancial prescription\b|\bsee diagnosis\b|\bshape is the diagnosis\b/ },
   { id: "health-claims", why: "R24: no health claims for a financial product", rx: /\blive longer\b|\bcortisol\b|\bhealth strategy\b|\blower (rates of )?depression\b|\blower mortality risk\b/ },
   { id: "demo-mode-disclaimers", why: "disclosures must always render", rx: /\bhide disclaimers\b|\bshow disclaimers\b/ },
+  { id: "guaranteed-tax-free-sales", why: "R4/R7: unqualified guarantee plus tax claim in a sales comparison", rx: /\btax free (&|and) guaranteed\b|\bguaranteed (&|and) tax free\b|\bguaranteed tax free\b|\b100% (certainty|confidence|predictable)\b|\btaxable (&|and) (unreliable|unpredictable)\b/ },
   { id: "refund-promise", why: "contradicts the non-refundable terms on /pricing", rx: /\brefund every penny\b|\bmoney back guarantee\b|\bwe guarantee them\b/ },
   { id: "divorce-proof-prompt", why: "R11: an absolute handed to the model", rx: /\bdivorce proof\b/, only: /^server\// },
 ];
@@ -235,9 +240,10 @@ export const RATCHETS = {
   infiniteBanking: 25,
   policyRoutesWithoutLine: 98,
   /** "N% guaranteed": fine for a contractual minimum or term rate with its caveat; counted so it cannot spread. */
-  percentGuaranteed: 14,
+  /** Both orders ("N% guaranteed", "guaranteed N%"); the remainder are contractual minimums/maximums in carrier data and questionnaire choices. */
+  percentGuaranteed: 16,
   /** copy-ok pragmas in the corpus. */
-  pragmas: 3,
+  pragmas: 4,
   /** Components that call an AI endpoint (P12-A ai_files.txt) and render no AiAnswerNote / "AI-generated" line. */
   aiSurfacesWithoutNote: 33,
 };
@@ -260,6 +266,18 @@ const AI_SURFACES = [
   "client/src/pages/portal/WithdrawalSequencing.tsx", "client/src/pages/portal/SeminarGenerator.tsx", "client/src/pages/portal/StrategyCompare.tsx",
   "client/src/pages/portal/VideoProposalGenerator.tsx", "client/src/pages/portal/ComboRecommender.tsx", "client/src/pages/UltraCalculatorPage.tsx",
   "client/src/components/HomeAIConcierge.tsx",
+];
+
+/**
+ * A user-facing switch that can drop a disclosure: a negating setter (`setX(!x)`, `setX(prev => !prev)`),
+ * a setter wired straight to a checkbox/switch, or a disclosure rendered behind a flag.
+ * Dialog open/close setters (onOpenChange) and acknowledgement buttons (setX(false)) are not toggles.
+ */
+export const DISCLAIMER_TOGGLE: RegExp[] = [
+  /set\w*Disclaimers?\s*\(\s*(!|\(?\s*\w+\s*\)?\s*=>\s*!)/,
+  /(onCheckedChange|onChange|onToggle)=\{\s*set\w*Disclaimers?\s*\}/,
+  /(onCheckedChange|onChange)=\{\s*\(?\s*\w*\s*\)?\s*=>\s*set\w*Disclaimers?\s*\(/,
+  /\{\s*\w+\s*&&\s*\(?\s*<(NAICDisclaimer|ComplianceFooter|PolicyDisclosureLine|AiAnswerNote)\b/,
 ];
 
 /* ─── Tests ──────────────────────────────────────────────────────────────── */
@@ -334,20 +352,33 @@ describe("copy compliance: banned phrases", () => {
       "demo-mode-disclaimers": "Switch to Demo Mode (hide disclaimers)",
       "refund-promise": "we refund every penny. No questions asked",
       "divorce-proof-prompt": "hard to touch ('divorce-proof')",
+      "guaranteed-tax-free-sales": "With $4,000/month guaranteed tax-free, here is exactly what you can plan for with 100% confidence",
     };
     // Forms that slipped past the first version of this guard (C-B review S1).
     const alsoPlanted: Record<string, string[]> = {
       "ag49-compliance-claim": ["These illustrations comply with NAIC Actuarial Guideline 49-A and 49-B requirements."],
-      "never-lose": ["you will never lose a dime", "your account can never go down", "you won't lose money"],
-      "policy-never-dies": ["The policy lives forever", "It never lapses, even at death"],
+      "never-lose": ["you will never lose a dime", "your account can never go down", "you won't lose money", "you'll never{\" \"}lose money", "never lose your principal", "never lose a single dollar"],
+      "policy-never-dies": ["The policy lives forever", "It never lapses, even at death", "your policy will never die"],
+      "guaranteed-tax-free-sales": ["With $4,000/month guaranteed tax-free, plan with 100% confidence", "Current — Taxable & Unreliable", "Solar Strategy — Tax-Free & Guaranteed"],
       "mega-roth": ["the MegaRoth"],
       "guaranteed-growth": ["compounds at 6.25% guaranteed while the loan shrinks"],
-      "guaranty-association": ["to stay within North Carolina's $250,000 guaranty limit per carrier"],
+      "guaranty-association": ["to stay within North Carolina's $250,000 guaranty limit per carrier", "Your state guaranty association protects you (§ 58-62-86)"],
       "risk-free-product": ["this IUL is risk‑free"],
     };
     for (const [id, samples] of Object.entries(alsoPlanted)) {
       const r = BANNED.find((x) => x.id === id)!;
       for (const s of samples) expect(normalizeCopy(s).text, `${id}: ${s}`).toMatch(r.rx);
+    }
+    // allowIf excuses only the notice sentence, not a bare citation.
+    const ga = BANNED.find((x) => x.id === "guaranty-association")!;
+    expect(ga.allowIf!.test(normalizeCopy("Your state guaranty association protects you (§ 58-62-86)").text)).toBe(false);
+    expect(ga.allowIf!.test(normalizeCopy("The state guaranty association may not be used in the sale or solicitation of an annuity").text)).toBe(true);
+    // The toggle detector catches every shape the reviewer found, and not dialogs or acknowledgements.
+    for (const bad of ["setShowDisclaimer(!showDisclaimer)", "setShowDisclaimer(prev => !prev)", "onCheckedChange={setIncludeDisclaimer}", "onChange={(e) => setIncludeDisclaimer(e.target.checked)}", "{showDisclaimer && <NAICDisclaimer />}"]) {
+      expect(DISCLAIMER_TOGGLE.some((rx) => rx.test(bad)), bad).toBe(true);
+    }
+    for (const ok of ["onOpenChange={setShowDisclaimer}", "setShowDisclaimer(false)", "<NAICDisclaimer />"]) {
+      expect(DISCLAIMER_TOGGLE.some((rx) => rx.test(ok)), ok).toBe(false);
     }
     // The comment stripper does not swallow live markup after accept="image/*".
     expect(normalizeCopy('<input accept="image/*" /> <p>never lose money</p> {/* c */}').text).toContain("never lose money");
@@ -396,7 +427,7 @@ describe("copy compliance: the backlog only shrinks", () => {
   });
 
   it("'N% guaranteed' outside a contractual minimum", () => {
-    expect(count(/\b\d+(\.\d+)?% guaranteed\b/g)).toBeLessThanOrEqual(RATCHETS.percentGuaranteed);
+    expect(count(/\b\d+(\.\d+)?% guaranteed\b|\bguaranteed \d+(\.\d+)?%/g)).toBeLessThanOrEqual(RATCHETS.percentGuaranteed);
   });
 
   it("AI-calling components without the AI-generated note", () => {
@@ -502,7 +533,7 @@ describe("copy compliance: disclosures cannot be switched off", () => {
     const offenders = walk(join(APP, "client/src"), [".ts", ".tsx"]).filter((f) => /if\s*\(\s*!\s*showDisclaimers\s*\)\s*return null/.test(readFileSync(f, "utf8")));
     expect(offenders).toEqual([]);
     // Nor a page-level Hide/Show switch (MarketScenarioStressTest had one): no setter that toggles a disclaimer flag.
-    const toggles = walk(join(APP, "client/src"), [".ts", ".tsx"]).filter((f) => /set\w*Disclaimers?\s*\(\s*!/.test(readFileSync(f, "utf8")));
+    const toggles = walk(join(APP, "client/src"), [".ts", ".tsx"]).filter((f) => DISCLAIMER_TOGGLE.some((rx) => rx.test(readFileSync(f, "utf8"))));
     expect(toggles).toEqual([]);
   });
 

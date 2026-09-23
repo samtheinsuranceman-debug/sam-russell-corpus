@@ -574,7 +574,7 @@ export default function ExistingAnnuities() {
                 <CardHeader className="pb-2">
                   <CardTitle className="text-base text-red-400 flex items-center gap-2">
                     <XCircle className="w-5 h-5" />
-                    Current: Taxable & Unreliable
+                    Current Contract (Taxable Income)
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
@@ -597,8 +597,8 @@ export default function ExistingAnnuities() {
                   <div className="bg-red-500/10 rounded p-3 mt-2">
                     <p className="text-xs text-red-300">
                       <AlertTriangle className="w-3 h-3 inline mr-1" />
-                      Tax rates can change at any time. Your actual take-home is unpredictable 
-                      and could decrease by 20-45% depending on future legislation.
+                      Income from a traditional (pre-tax) annuity is taxed as ordinary income when paid,
+                      so after-tax income changes if tax rates change.
                     </p>
                   </div>
                 </CardContent>
@@ -608,17 +608,17 @@ export default function ExistingAnnuities() {
                 <CardHeader className="pb-2">
                   <CardTitle className="text-base text-emerald-400 flex items-center gap-2">
                     <CheckCircle2 className="w-5 h-5" />
-                    Recommended: Tax-Free & Guaranteed
+                    Hypothetical: Roth-Held Lifetime Income
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Tax-Free Annual Income</span>
+                    <span className="text-muted-foreground">Annual Income (qualified Roth distributions)</span>
                     <span>{fmt(result.newIncome.annualTaxFreeIncome)}</span>
                   </div>
                   <div className="flex justify-between text-sm text-emerald-400">
-                    <span>Tax Burden</span>
-                    <span>$0 — Forever</span>
+                    <span>Income Tax on Qualified Distributions</span>
+                    <span>$0 (conversion tax paid up front)</span>
                   </div>
                   <div className="border-t border-emerald-500/30 pt-2 flex justify-between font-semibold">
                     <span>Take-Home Annual</span>
@@ -631,8 +631,9 @@ export default function ExistingAnnuities() {
                   <div className="bg-emerald-500/10 rounded p-3 mt-2">
                     <p className="text-xs text-emerald-300">
                       <Shield className="w-3 h-3 inline mr-1" />
-                      100% predictable. No matter what Congress does to tax rates, 
-                      your income stays exactly the same — guaranteed for life.
+                      Hypothetical, based on your facts. Lifetime income is set by the contract, subject to the
+                      issuing insurer's claims-paying ability; it is free of income tax only as qualified Roth
+                      distributions (age 59½ and the five-year rule met), and the conversion itself is taxable.
                     </p>
                   </div>
                 </CardContent>
@@ -810,9 +811,9 @@ export default function ExistingAnnuities() {
             {/* Income Header */}
             <Card className="bg-gradient-to-r from-emerald-500/10 to-blue-500/10 border-emerald-500/30">
               <CardContent className="p-6 text-center">
-                <p className="text-sm text-muted-foreground mb-1">Your Guaranteed Tax-Free Monthly Income</p>
+                <p className="text-sm text-muted-foreground mb-1">Your Hypothetical Monthly Lifetime Income (Roth-Held)</p>
                 <p className="text-4xl font-bold text-emerald-400">{fmt(result.lifestyleBudget.monthlyTaxFreeIncome)}</p>
-                <p className="text-xs text-muted-foreground mt-1">Every month, guaranteed for life, with 100% certainty</p>
+                <p className="text-xs text-muted-foreground mt-1">Paid for life under the contract, subject to the issuing insurer's claims-paying ability</p>
               </CardContent>
             </Card>
 
@@ -873,10 +874,10 @@ export default function ExistingAnnuities() {
               <CardHeader className="pb-3">
                 <CardTitle className="text-lg flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-emerald-400" />
-                  What Your Guaranteed Income Covers
+                  What Your Lifetime Income Could Cover (Hypothetical)
                 </CardTitle>
                 <p className="text-xs text-muted-foreground">
-                  With {fmt(result.lifestyleBudget.monthlyTaxFreeIncome)}/month guaranteed tax-free, here is exactly what you can plan for with 100% confidence:
+                  With {fmt(result.lifestyleBudget.monthlyTaxFreeIncome)}/month of contractual lifetime income, subject to the issuing insurer's claims-paying ability (free of income tax only as qualified Roth distributions), here is what that amount would cover:
                 </p>
               </CardHeader>
               <CardContent>
@@ -1106,14 +1107,14 @@ export default function ExistingAnnuities() {
                 <h3 className="text-lg font-semibold text-amber-400 mb-4 text-center">Your Personal Transformation</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="p-5 rounded-lg bg-red-500/5 border border-red-500/20 text-center">
-                    <p className="text-xs text-muted-foreground mb-1">Current: Taxable & Unpredictable</p>
+                    <p className="text-xs text-muted-foreground mb-1">Current contract (after tax)</p>
                     <p className="text-3xl font-bold text-red-400">{fmt(result.currentSituation.afterTaxMonthlyIncome)}/mo</p>
-                    <p className="text-xs text-red-300 mt-1">Subject to 20-45% tax fluctuations</p>
+                    <p className="text-xs text-red-300 mt-1">Taxed as ordinary income when paid</p>
                   </div>
                   <div className="p-5 rounded-lg bg-emerald-500/5 border border-emerald-500/20 text-center">
-                    <p className="text-xs text-muted-foreground mb-1">Recommended: Tax-Free & Guaranteed</p>
+                    <p className="text-xs text-muted-foreground mb-1">Hypothetical: Roth-held lifetime income</p>
                     <p className="text-3xl font-bold text-emerald-400">{fmt(result.newIncome.monthlyTaxFreeIncome)}/mo</p>
-                    <p className="text-xs text-emerald-300 mt-1">100% predictable, forever</p>
+                    <p className="text-xs text-emerald-300 mt-1">Contractual; claims-paying ability; qualified Roth distributions</p>
                   </div>
                 </div>
                 <div className="text-center mt-4">

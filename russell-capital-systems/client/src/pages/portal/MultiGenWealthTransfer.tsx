@@ -281,7 +281,6 @@ export default function MultiGenWealthTransfer() {
   const [isSimulating, setIsSimulating] = useState(false);
   const [simulationProgress, setSimulationProgress] = useState(0);
   const [activeScenarioId, setActiveScenarioId] = useState<string>("");
-  const [showDisclaimer, setShowDisclaimer] = useState(true);
   const [chartType, setChartType] = useState<'area' | 'line' | 'composed'>('area');
   const [includeInsurance, setIncludeInsurance] = useState(true);
   const [includeRealEstate, setIncludeRealEstate] = useState(true);
@@ -1143,7 +1142,7 @@ export default function MultiGenWealthTransfer() {
                         The primary causes are a breakdown in family communication, lack of financial education for heirs, and absence of a shared family mission.
                         A comprehensive wealth transfer plan addresses all three pillars: financial optimization, family governance, and philanthropic purpose.
                       </p>
-                      {showDisclaimer && <NAICDisclaimer />}
+                      <NAICDisclaimer />
                     </div>
                   </div>
                 )}
