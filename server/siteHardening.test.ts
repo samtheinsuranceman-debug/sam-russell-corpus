@@ -61,6 +61,8 @@ describe("cache policy, robots and sitemap", () => {
     expect(cacheControlFor("/assets/chunks/x-ABC123.js")).toContain("immutable");
     expect(cacheControlFor("/rcs-neon-a.webp")).toContain("max-age=86400");
     expect(cacheControlFor("/assets/app.js")).toContain("must-revalidate");
+    expect(cacheControlFor("/assets/app-7QX3KD2M.js")).toContain("immutable");
+    expect(cacheControlFor("/assets/app-0A1B2C3D.css")).toContain("immutable");
     expect(cacheControlFor("/pricing")).toBe("no-cache");
   });
   it("keeps robots out of the portal and points at the sitemap", () => {
@@ -88,6 +90,12 @@ describe("route knowledge", () => {
     expect(isKnownRoute("/portal/tax-combos/42/extra", routes)).toBe(false);
     expect(isKnownRoute("/nope", routes)).toBe(false);
     expect(isKnownRoute("/nope", [])).toBe(true);
+  });
+  it("the /404 page itself answers 404, not a soft 200", () => {
+    const withNotFound = compileRoutes(["/", "/404"]);
+    expect(isKnownRoute("/404", withNotFound)).toBe(false);
+    expect(isKnownRoute("/404/", withNotFound)).toBe(false);
+    expect(isKnownRoute("/404?x=1", [])).toBe(false);
   });
   it("every catalogue path is declared in App.tsx", () => {
     const app = readFileSync(resolve("client/src/App.tsx"), "utf8");

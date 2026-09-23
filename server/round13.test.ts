@@ -161,7 +161,8 @@ describe("clientPortal.revokeLink", () => {
 
 describe("clientPortal.view", () => {
   it("rejects invalid token", async () => {
-    await expect(anonCaller.clientPortal.view({ token: "invalid-token-xyz" })).rejects.toThrow("Invalid or expired portal link");
+    // With a database: "Invalid or expired". Without one (this suite): 503, so an outage never looks like a revoked link.
+    await expect(anonCaller.clientPortal.view({ token: "invalid-token-xyz" })).rejects.toThrow(/Invalid or expired portal link|cannot be opened right now/);
   });
 
   it("is a public procedure (no auth required)", async () => {
@@ -169,7 +170,7 @@ describe("clientPortal.view", () => {
     try {
       await anonCaller.clientPortal.view({ token: "some-nonexistent-token" });
     } catch (e: any) {
-      expect(e.code).toBe("NOT_FOUND");
+      expect(["NOT_FOUND", "SERVICE_UNAVAILABLE"]).toContain(e.code); // 503 when no database is attached
     }
   });
 });
