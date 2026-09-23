@@ -37,6 +37,7 @@ import { FactFinderBadge } from "@/contexts/ClientDataContext";
 import { CastBadge, useRoom } from "@/components/rooms/RoomTheme";
 import { EngineWhyFooter, QuestionWhy } from "@/components/rooms/Reveal";
 import { RoomVideoTile } from "@/components/rooms/RoomVideoTile";
+import PredictiveFooter from "@/components/PredictiveFooter";
 
 /* ═══════════════════════════════════════════════════════════════════
    COLOR-CODED NAVIGATION — Intuitive categories with visual coding
@@ -1672,6 +1673,8 @@ export function AppShell({ children, title: _title, subtitle: _subtitle }: { chi
           {/* Go-deeper buttons: the less-essential pages of this subject, data-driven */}
           <DeeperButtons />
           {children}
+          {/* The predictive engine on every predictive calculator: forecast, scenarios, confidence horizon, citations. Off until opened. */}
+          <PredictiveFooter path={location} />
           {/* Every engine carries the reveal footer: the same idea, not a new one */}
           {room.theme === "theme9" && <EngineWhyFooter />}
         </main>

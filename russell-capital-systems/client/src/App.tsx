@@ -22,6 +22,7 @@ import { AchievementUnlockOverlay } from "./components/AchievementUnlockOverlay"
 import { PetEvolutionOverlay } from "./components/PetEvolutionOverlay";
 import VoiceAdvisor from "./components/VoiceAdvisor";
 import { SiteMapProvider } from "./contexts/SiteMapContext";
+import { PredictiveProvider } from "./contexts/PredictiveContext";
 import SiteMapOverlay from "./components/SiteMapOverlay";
 import AdvisorNudge from "./components/AdvisorNudge";
 const SiteMapPage = lazy(() => import("./pages/portal/SiteMapPage"));
@@ -1047,11 +1048,14 @@ function App() {
             <RoomSync />
             <WebVitalsReporter />
             <SiteMapProvider>
-              <Router />
-              {/* The login site map: every page, clickable, visited pages glow green; closes only from its X */}
-              <SiteMapOverlay />
-              {/* Samuel Goldman speaks after the second page open */}
-              <AdvisorNudge />
+              {/* One macro scenario state for every calculator; the app shell's predictive footer shows it */}
+              <PredictiveProvider>
+                <Router />
+                {/* The login site map: every page, clickable, visited pages glow green; closes only from its X */}
+                <SiteMapOverlay />
+                {/* Samuel Goldman speaks after the second page open */}
+                <AdvisorNudge />
+              </PredictiveProvider>
             </SiteMapProvider>
             {/* The every-page AI voice advisor — speak on any page, the AI
                 answers in context of that page and the saved profile. */}
