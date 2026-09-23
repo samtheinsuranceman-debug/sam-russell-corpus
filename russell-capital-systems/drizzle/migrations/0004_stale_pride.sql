@@ -1,0 +1,1 @@
+-- already applied: 0004_stale_pride
