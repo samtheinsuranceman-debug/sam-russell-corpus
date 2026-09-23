@@ -149,6 +149,45 @@ export const TAX_RULES_2026: TaxRuleSet = {
 
 export const TAX_RULE_VERSIONS: TaxRuleSet[] = [TAX_RULES_2025, TAX_RULES_2026];
 
+/**
+ * Roth IRA contribution phase-out, tax year 2026: the modified-AGI range over which
+ * the Roth contribution limit falls to zero (IRC §408A(c)(3), indexed).
+ * Source: IRS Notice 2025-67 (2026 retirement plan limits), and the IRS release
+ * "401(k) limit increases to $24,500 for 2026, IRA limit increases to $7,500"
+ * (irs.gov/newsroom/401k-limit-increases-to-24500-for-2026-ira-limit-increases-to-7500):
+ * single and head of household $153,000–$168,000; married filing jointly $242,000–$252,000.
+ * Married filing separately (lived with spouse) stays $0–$10,000 (statutory, not indexed).
+ * Checked 2026-09-23.
+ */
+export const ROTH_IRA_PHASE_OUT_2026: Record<FilingKey, { start: number; end: number }> = {
+  single: { start: 153_000, end: 168_000 },
+  hoh: { start: 153_000, end: 168_000 },
+  joint: { start: 242_000, end: 252_000 },
+  separate: { start: 0, end: 10_000 },
+};
+
+/**
+ * Long-term capital gains / qualified dividend breakpoints, tax year 2026 (IRC §1(h), indexed).
+ * `zeroUpTo`: taxable income up to which the 0% rate applies; `fifteenUpTo`: taxable income up to
+ * which the 15% rate applies; 20% above that.
+ * Source: Rev. Proc. 2025-32 §4.03 ("Maximum Capital Gains Rate"),
+ * https://www.irs.gov/pub/irs-drop/rp-25-32.pdf — single $49,450 / $545,500; joint $98,900 / $613,700;
+ * head of household $66,200 / $579,600; married filing separately $49,450 / $306,850 (one-half of the
+ * joint 15% ceiling). Single and joint verified 2026-09-23 against published summaries of the revenue procedure.
+ */
+export const LTCG_THRESHOLDS_2026: Record<FilingKey, { zeroUpTo: number; fifteenUpTo: number }> = {
+  single: { zeroUpTo: 49_450, fifteenUpTo: 545_500 },
+  joint: { zeroUpTo: 98_900, fifteenUpTo: 613_700 },
+  hoh: { zeroUpTo: 66_200, fifteenUpTo: 579_600 },
+  separate: { zeroUpTo: 49_450, fifteenUpTo: 306_850 },
+};
+
+/** The 2026 capital-gains rate bands as {limit, rate} rows for a filing status (taxable-income ceilings). */
+export function ltcgBrackets2026(filing: FilingKey): { limit: number; rate: number }[] {
+  const t = LTCG_THRESHOLDS_2026[filing];
+  return [{ limit: t.zeroUpTo, rate: 0 }, { limit: t.fifteenUpTo, rate: 0.15 }, { limit: Infinity, rate: 0.20 }];
+}
+
 export function rulesForYear(taxYear: number): TaxRuleSet {
   const exact = TAX_RULE_VERSIONS.find((r) => r.taxYear === taxYear);
   if (exact) return exact;

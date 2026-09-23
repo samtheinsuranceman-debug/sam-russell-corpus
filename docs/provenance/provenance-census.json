@@ -1,5 +1,5 @@
 {
-  "tree": "ce56fbd",
+  "tree": "c0b5128",
   "summary": {
     "engines": 98,
     "enginesFromCatalogue": 40,
@@ -11,7 +11,7 @@
       "enginesWithHardCodedYearsOlderThan2025": 50,
       "enginesWithUnseededRandomness": 0,
       "pagesImportingAnEngineWithNoProvenanceOnPage": 35,
-      "pagesImportingAnEngine": 130,
+      "pagesImportingAnEngine": 132,
       "enginesThatSimulate": 22,
       "enginesOnALiveFeed": 10,
       "enginesImportedByNoPageAndNoRouter": 8,
@@ -2505,7 +2505,7 @@
     {
       "engine": "shared/ibbotsonModel.ts",
       "exists": true,
-      "lines": 439,
+      "lines": 452,
       "cataloguePages": [],
       "memoryGroups": [
         "markets"
@@ -2525,12 +2525,15 @@
         "server/partnerApi.ts"
       ],
       "sources": [
-        "Based on Ibbotson SBBI historical data. Research-based estimates only — not guaranteed.",
-        "Projections are based on Roger Ibbotson's historical S&P 500 data (SBBI) and",
+        "Based on historical S&P 500 total returns (S&P Dow Jones Indices / Ibbotson SBBI). Research-based estimates only — not guaranteed.",
+        "Ibbotson SBBI large-company stocks for years before the S&P 500) and",
+        "Projections are based on historical S&P 500 total returns (S&P Dow Jones Indices;",
         "S&P Dow Jones Indices, S&P 500 total return (the index's publisher; before 1957 the S&P 90 Composite, as carried in Morningstar's Ibbotson SBBI yearbooks)",
         "Slickcharts, S&P 500 Total Returns by Year Since 1926 (year-by-year compilation of the same series): -8.42% (1929), -24.90% (1930), -43.34% (1931), 52.62% (1…",
         "export IBBOTSON_MODEL_SOURCES",
+        "https://pages.stern.nyu.edu/~adamodar/New_Home_Page/datafile/histretSP.html",
         "https://www.slickcharts.com/sp500/returns",
+        "https://www.spglobal.com/spdji/en/commentary/article/us-equities-market-attributes/",
         "https://www.spglobal.com/spdji/en/indices/equity/sp-500/"
       ],
       "sourceFields": [
@@ -5616,17 +5619,25 @@
     {
       "engine": "shared/taxRules.ts",
       "exists": true,
-      "lines": 302,
+      "lines": 341,
       "cataloguePages": [],
       "memoryGroups": [
         "tax-engines"
       ],
       "pages": [
+        "client/src/pages/portal/BeneficiaryOptimization.tsx",
+        "client/src/pages/portal/BusinessOwnerPlanning.tsx",
+        "client/src/pages/portal/DynastyTrustPlanner.tsx",
+        "client/src/pages/portal/EstateFlowChart.tsx",
+        "client/src/pages/portal/EstatePlanningSimulator.tsx",
         "client/src/pages/portal/IULvsRoth.tsx",
+        "client/src/pages/portal/MultiGenWealthTransfer.tsx",
+        "client/src/pages/portal/PredictiveAnalytics.tsx",
         "client/src/pages/portal/SalesStoryBuilder.tsx",
         "client/src/pages/portal/TaxBracketVisualizer.tsx",
         "client/src/pages/portal/TaxOpportunityDetector.tsx",
-        "client/src/pages/portal/TaxReturnUpload.tsx"
+        "client/src/pages/portal/TaxReturnUpload.tsx",
+        "client/src/pages/portal/TaxWaterfall.tsx"
       ],
       "serverImporters": [
         "server/advice.ts",
@@ -5642,7 +5653,8 @@
         "Rev. Proc. 2025-32 (brackets, standard deduction, AMT, estate); IRS Notice 2025-67 (retirement limits); OBBBA §70120 (SALT, indexed)",
         "SSA 2025 COLA fact sheet (ssa.gov/news/press/factsheets/colafacts2025.pdf, Oct 2024); additional Medicare thresholds IRC §3101(b)(2)",
         "SSA 2026 COLA fact sheet (ssa.gov/news/en/cola/factsheets/2026.html, Oct 2025; fetched 22 Sep 2026); SSA OACT contribution and benefit base (ssa.gov/oact/col…",
-        "https://www.irs.gov/newsroom/irs-releases-tax-inflation-adjustments-for-tax-year-2026-including-amendments-from-the-one-big-beautiful-bill"
+        "https://www.irs.gov/newsroom/irs-releases-tax-inflation-adjustments-for-tax-year-2026-including-amendments-from-the-one-big-beautiful-bill",
+        "https://www.irs.gov/pub/irs-drop/rp-25-32.pdf"
       ],
       "sourceFields": [
         "source"
@@ -5660,17 +5672,25 @@
       "liveFeed": [],
       "provenanceOnPage": true,
       "provenancePages": [
+        "client/src/pages/portal/BeneficiaryOptimization.tsx",
+        "client/src/pages/portal/BusinessOwnerPlanning.tsx",
+        "client/src/pages/portal/DynastyTrustPlanner.tsx",
+        "client/src/pages/portal/EstateFlowChart.tsx",
+        "client/src/pages/portal/EstatePlanningSimulator.tsx",
         "client/src/pages/portal/IULvsRoth.tsx",
+        "client/src/pages/portal/MultiGenWealthTransfer.tsx",
+        "client/src/pages/portal/PredictiveAnalytics.tsx",
         "client/src/pages/portal/SalesStoryBuilder.tsx",
         "client/src/pages/portal/TaxBracketVisualizer.tsx",
         "client/src/pages/portal/TaxOpportunityDetector.tsx",
-        "client/src/pages/portal/TaxReturnUpload.tsx"
+        "client/src/pages/portal/TaxReturnUpload.tsx",
+        "client/src/pages/portal/TaxWaterfall.tsx"
       ],
       "hardCodedYears": [
         2024,
         2025
       ],
-      "numericConstants": 155,
+      "numericConstants": 172,
       "shellSourced": false
     },
     {

@@ -1,4 +1,4 @@
-import { currentRules } from "./taxRules";
+import { currentRules, TAX_RULES_2026 } from "./taxRules";
 /**
  * SISTER INVENTION SI-014: Client Family Tree Financial Mapping
  * Patent Reference: Extends PAT-004 (Household Wealth Engine)
@@ -103,14 +103,16 @@ export function analyzeFamilyTree(members: FamilyMember[]): FamilyTreeResult {
         amount: giftAmount,
         taxCost: 0,
         netTransfer: giftAmount,
-        irsReference: "IRC §2503(b) — $18,000 annual exclusion per donee",
+        irsReference: `IRC §2503(b) — $${giftAmount.toLocaleString("en-US")} annual exclusion per donee (Rev. Proc. 2025-32 for 2026)`,
         efficiency: 100,
       });
     });
 
     // 529 superfunding to grandchildren
     grandchildren.forEach(gc => {
-      const amount529 = 90000; // 5-year superfunding
+      // 5-year superfunding: five times the annual exclusion (IRC §529(c)(2)(B)); 5 × $19,000 = $95,000 in 2026
+      // (Rev. Proc. 2025-32, shared/taxRules.ts). Was 90,000 (5 × the 2024 $18,000).
+      const amount529 = 5 * currentRules().annualGiftExclusion;
       transferPaths.push({
         from: parent.name,
         to: gc.name,
@@ -118,7 +120,7 @@ export function analyzeFamilyTree(members: FamilyMember[]): FamilyTreeResult {
         amount: amount529,
         taxCost: 0,
         netTransfer: amount529,
-        irsReference: "IRC §529 — 5-year gift tax averaging ($18K × 5)",
+        irsReference: `IRC §529 — 5-year gift tax averaging ($${(currentRules().annualGiftExclusion / 1000).toFixed(0)}K × 5)`,
         efficiency: 100,
       });
     });
@@ -140,7 +142,8 @@ export function analyzeFamilyTree(members: FamilyMember[]): FamilyTreeResult {
     // SLAT for spouse
     const spouse = members.find(m => m.id === parent.spouseId);
     if (spouse && parent.netWorth > 5000000) {
-      const slatAmount = Math.min(parent.netWorth * 0.3, 13610000);
+      // Capped at the 2026 basic exclusion, $15,000,000 (Rev. Proc. 2025-32; P.L. 119-21 §70106), shared/taxRules.ts. Was 13,610,000 (2024).
+      const slatAmount = Math.min(parent.netWorth * 0.3, TAX_RULES_2026.estateBasicExclusion);
       transferPaths.push({
         from: parent.name,
         to: `SLAT for ${spouse.name}`,
@@ -185,7 +188,9 @@ export function analyzeFamilyTree(members: FamilyMember[]): FamilyTreeResult {
   });
 
   // Estate tax exposure
-  const federalExemption = 13610000;
+  // Federal basic exclusion amount, 2026: $15,000,000 per person (Rev. Proc. 2025-32; IRC §2010(c)(3) as amended by
+  // P.L. 119-21 §70106), read from shared/taxRules.ts. Was 13,610,000, the 2024 figure (Rev. Proc. 2023-34).
+  const federalExemption = TAX_RULES_2026.estateBasicExclusion;
   const primaryNW = primaryMembers.reduce((s, m) => s + m.netWorth, 0);
   const taxableEstate = Math.max(0, primaryNW - federalExemption * primaryMembers.length);
   const estateTaxExposure = Math.round(taxableEstate * 0.40);
@@ -197,7 +202,7 @@ export function analyzeFamilyTree(members: FamilyMember[]): FamilyTreeResult {
     recommendations.push(`Estate tax exposure: $${estateTaxExposure.toLocaleString()} — implement ILIT and SLAT strategies immediately`);
   }
   if (children.length > 0 && !transferPaths.some(p => p.method.includes("Annual"))) {
-    recommendations.push("Start annual exclusion gifting program to children ($18K/child/year)");
+    recommendations.push(`Start annual exclusion gifting program to children ($${(currentRules().annualGiftExclusion / 1000).toFixed(0)}K/child/year)`);
   }
   if (grandchildren.length > 0) {
     recommendations.push("Consider 529 superfunding for grandchildren ($90K per grandchild, tax-free)");

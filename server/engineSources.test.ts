@@ -136,7 +136,10 @@ describe("routes mapped outside the catalogue", () => {
     expect(loaded.every(s => s !== null)).toBe(true);
     const sources = uniqueSources([...plan.pageSources, ...loaded.flatMap(s => s ?? [])]);
     expect(sources.some(s => s.label.startsWith("IRS, Rev. Proc. 2025-32"))).toBe(true);
-    expect(sources.some(s => s.url === "https://www.cms.gov/newsroom/fact-sheets/2025-medicare-parts-b-premiums-and-deductibles")).toBe(true);
+    // The page now carries the 2026 tables: IRMAA tiers from shared/irmaa.ts (SSA POMS HI 01101.031) and the
+    // 2026 Part D base premium from CMS. It pinned the 2025 CMS Part B fact sheet, which the page no longer uses.
+    expect(sources.some(s => s.url === "https://www.cms.gov/newsroom/fact-sheets/2026-medicare-part-d-bid-information-and-part-d-premium-stabilization-demonstration-parameters")).toBe(true);
+    expect(sources.some(s => s.url === "https://secure.ssa.gov/poms.nsf/lnx/0601101031")).toBe(true);
     expect(sourcePlanForPath("/portal/not-a-real-page")).toBeNull();
   });
 });

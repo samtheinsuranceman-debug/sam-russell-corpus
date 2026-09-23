@@ -5,6 +5,7 @@ import { useState, useMemo, useCallback, useEffect } from "react";
 import { trpc } from "@/lib/trpc";
 import { federalTaxOnTaxable, federalMarginalRateFor } from "@shared/taxBracketEngine";
 import { TAX_RULES_2026 } from "@shared/taxRules";
+import { uniformLifetimeDivisor, FIRST_RMD_DIVISOR_AT_73 } from "@shared/uniformLifetimeTable";
 import { IRMAA_2026 } from "@shared/irmaa";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { BarChart, LineChart, PieChart, AreaChart, RadarChart, ComposedChart, ResponsiveContainer, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Bar, Line, Pie, Cell, Area, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis } from "recharts";
@@ -57,14 +58,9 @@ const calculateCompoundInterest = (principal: number, rate: number, times: numbe
   return principal * Math.pow(1 + rate / times, times * years);
 };
 
-const calculateRMD = (age: number, balance: number) => {
-  const divisors: Record<number, number> = {
-    73: 26.5, 74: 25.5, 75: 24.6, 76: 23.7, 77: 22.9, 78: 22.0, 79: 21.1, 80: 20.2,
-    81: 19.4, 82: 18.5, 83: 17.7, 84: 16.8, 85: 16.0, 86: 15.2, 87: 14.4, 88: 13.7,
-    89: 12.9, 90: 12.2, 91: 11.5, 92: 10.8, 93: 10.1, 94: 9.5, 95: 8.9, 96: 8.4
-  };
-  return balance / (divisors[age] || 27.4);
-};
+// Uniform Lifetime Table, Treas. Reg. § 1.401(a)(9)-9(c) (shared/uniformLifetimeTable.ts). Replaces a local
+// copy that stopped at 96 and fell back to 27.4 (the age-72 divisor) for any age outside it.
+const calculateRMD = (age: number, balance: number) => balance / uniformLifetimeDivisor(age);
 
 const generateYearlyData = (startAge: number, endAge: number, initialBalance: number, growthRate: number) => {
   let currentBalance = initialBalance;
@@ -576,8 +572,10 @@ export default function SalesStoryBuilder() {
     const iulPremium = Math.round(annualIncome * 0.12);
     const iulCashValue20 = Math.round(iulPremium * 20 * 1.55);
     const taxFreeIncome = Math.round(iulCashValue20 * 0.065);
-    const rmdAt72 = Math.round(retirement401k * Math.pow(1.07, 72 - clientAge) / 27.4);
-    const rmdTax = Math.round(rmdAt72 * taxRate / 100);
+    // First RMD (age 73) = year-end balance at 72 ÷ the age-73 Uniform Lifetime divisor, 26.5
+    // (Treas. Reg. § 1.401(a)(9)-9(c); shared/uniformLifetimeTable.ts). Was ÷ 27.4, the age-72 divisor.
+    const firstRmdAt73 = Math.round(retirement401k * Math.pow(1.07, 72 - clientAge) / FIRST_RMD_DIVISOR_AT_73);
+    const rmdTax = Math.round(firstRmdAt73 * taxRate / 100);
     const estateExemption = TAX_RULES_2026.estateBasicExclusion; // shared/taxRules.ts
     const estateTax = Math.max(0, Math.round((estateValue * Math.pow(1.06, 85 - clientAge) - estateExemption) * 0.40));
 
@@ -654,7 +652,7 @@ export default function SalesStoryBuilder() {
               </div>
               <div className="p-6 rounded-xl bg-red-500/10 border border-red-500/20">
                 <div className="text-sm text-red-300 mb-1">Forced Annual RMD at 73</div>
-                <div className="text-3xl font-bold text-red-400">{fmt(rmdAt72)}</div>
+                <div className="text-3xl font-bold text-red-400">{fmt(firstRmdAt73)}</div>
                 <div className="text-sm text-red-300 mt-2">
                   Tax on RMD at {taxRate}%: <span className="font-bold">{fmt(rmdTax)}/year</span>
                 </div>
@@ -663,7 +661,7 @@ export default function SalesStoryBuilder() {
                 <div className="flex items-start gap-2">
                   <AlertTriangle className="h-5 w-5 text-amber-400 mt-0.5 shrink-0" />
                   <div className="text-sm text-amber-200">
-                    RMDs increase every year. By age 80, your forced distribution could exceed {fmt(Math.round(rmdAt72 * 1.5))}/year — 
+                    RMDs increase every year. By age 80, your forced distribution could exceed {fmt(Math.round(firstRmdAt73 * 1.5))}/year — 
                     potentially pushing you into the {Math.min(taxRate + 5, 37)}% bracket and triggering IRMAA Medicare surcharges.
                   </div>
                 </div>
@@ -897,12 +895,12 @@ export default function SalesStoryBuilder() {
           <div className="space-y-3">
             <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20">
               <div className="text-sm text-red-300">First Year RMD (Age 73)</div>
-              <div className="text-3xl font-bold text-red-400">{fmt(rmdAt72)}</div>
+              <div className="text-3xl font-bold text-red-400">{fmt(firstRmdAt73)}</div>
               <div className="text-sm text-red-300">Tax owed: {fmt(rmdTax)} at {taxRate}%</div>
             </div>
             <div className="p-3 rounded-lg bg-amber-500/10 border border-amber-500/20 text-sm">
               <AlertTriangle className="h-4 w-4 inline mr-1 text-amber-400" />
-              RMDs may also trigger: IRMAA Medicare surcharges ({fmt(Math.round(rmdAt72 > IRMAA_2026.married[0]!.maxMagi ? 5000 : 0))}/yr), Social Security taxation (up to 85%), and higher state taxes.
+              RMDs may also trigger: IRMAA Medicare surcharges ({fmt(Math.round(firstRmdAt73 > IRMAA_2026.married[0]!.maxMagi ? 5000 : 0))}/yr), Social Security taxation (up to 85%), and higher state taxes.
             </div>
           </div>
         )},

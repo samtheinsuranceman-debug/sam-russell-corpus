@@ -1,3 +1,4 @@
+import { TAX_RULES_2026 } from "./taxRules";
 /**
  * SISTER INVENTION SI-015: Multi-Generational Wealth Transfer Simulation
  * Patent Reference: Extends PAT-004 (Household Wealth Engine)
@@ -72,7 +73,11 @@ export function simulateGenerationalWealth(
   let totalTaxPaid = 0;
   let totalTaxSaved = 0;
 
-  const federalExemption = 13610000;
+  // Federal basic exclusion amount, 2026: $15,000,000 per person (Rev. Proc. 2025-32; IRC §2010(c)(3) as amended by
+  // P.L. 119-21 §70106), read from shared/taxRules.ts. Was 13,610,000, the 2024 figure (Rev. Proc. 2023-34).
+  const federalExemption = TAX_RULES_2026.estateBasicExclusion;
+  // Annual gift exclusion per donee, 2026: $19,000 (IRC §2503(b); Rev. Proc. 2025-32), shared/taxRules.ts. Was 18,000 (2024).
+  const annualExclusion = TAX_RULES_2026.annualGiftExclusion;
 
   for (let y = 1; y <= projectionYears; y++) {
     const yearTransfers: TransferEvent[] = [];
@@ -86,7 +91,7 @@ export function simulateGenerationalWealth(
       g1Wealth *= (1 + gen1.investmentReturn);
 
       // Annual gifting to Gen 2
-      const annualGift = 18000 * gen2.childrenCount;
+      const annualGift = annualExclusion * gen2.childrenCount;
       g1Wealth -= annualGift;
       g2Wealth += annualGift;
       totalTaxSaved += annualGift * 0.40;
@@ -139,7 +144,7 @@ export function simulateGenerationalWealth(
 
       // Annual gifting to Gen 3 (once Gen 3 is born)
       if (g3Age >= 0) {
-        const gift = 18000;
+        const gift = annualExclusion;
         g2Wealth -= gift;
         g3Wealth += gift;
       }
@@ -192,7 +197,7 @@ export function simulateGenerationalWealth(
 
   const strategies: string[] = [
     "Establish ILIT with IUL for tax-free death benefit transfer",
-    "Maximize annual exclusion gifts ($18K/person/year)",
+    `Maximize annual exclusion gifts ($${(TAX_RULES_2026.annualGiftExclusion / 1000).toFixed(0)}K/person/year in 2026, Rev. Proc. 2025-32)`,
     useDynastyTrust ? "Dynasty trust shields multi-generational growth from estate tax" : "Consider dynasty trust for additional tax protection",
     "Use GRAT for appreciated assets to freeze estate value",
     "529 superfunding for grandchildren's education ($90K per grandchild)",

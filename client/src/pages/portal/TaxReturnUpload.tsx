@@ -929,12 +929,20 @@ export default function TaxReturnUpload() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="tcja">Current (TCJA)</SelectItem>
-                      <SelectItem value="sunset">Post-2025 Sunset</SelectItem>
+                      <SelectItem value="tcja">Current law (P.L. 119-21)</SelectItem>
+                      {/* Was "Post-2025 Sunset". Current law has no sunset: P.L. 119-21 (One Big Beautiful Bill Act,
+                          4 Jul 2025) §70101 made the TCJA rates and brackets permanent (IRC §1(j)). This option is a
+                          what-if only, not a scheduled change. */}
+                      <SelectItem value="hypothetical_higher_rates">Hypothetical: what if Congress raises rates</SelectItem>
                       <SelectItem value="proposed">Proposed Changes</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
+                {taxRegime === "hypothetical_higher_rates" && (
+                  <p className="text-xs text-amber-400">
+                    Hypothetical only. Current law (P.L. 119-21) made today's rates permanent; there is no scheduled sunset. This models a future act of Congress that has not happened.
+                  </p>
+                )}
               </div>
 
               <Button 
