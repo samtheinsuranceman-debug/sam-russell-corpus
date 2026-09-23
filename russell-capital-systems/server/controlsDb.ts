@@ -233,10 +233,13 @@ export async function insertProvenance(row: Omit<typeof documentProvenance.$infe
 
 const provenanceRow = (r: DocumentProvenanceRow): DocumentProvenanceRow => ({ ...r, metadata: jsonColumn<unknown>(r.metadata, null), consistency: jsonColumn<unknown>(r.consistency, null) });
 
-export async function provenanceForDocument(documentId: number): Promise<DocumentProvenanceRow | null> {
+/** The latest provenance for a document, only when it belongs to this client in this workspace. */
+export async function provenanceForDocument(documentId: number, clientId: number, workspaceId: number): Promise<DocumentProvenanceRow | null> {
   const db = await getDb();
   if (!db) return null;
-  const [r] = await db.select().from(documentProvenance).where(eq(documentProvenance.documentId, documentId)).orderBy(desc(documentProvenance.id)).limit(1);
+  const [r] = await db.select().from(documentProvenance)
+    .where(and(eq(documentProvenance.documentId, documentId), eq(documentProvenance.clientId, clientId), eq(documentProvenance.workspaceId, workspaceId)))
+    .orderBy(desc(documentProvenance.id)).limit(1);
   return r ? provenanceRow(r) : null;
 }
 
