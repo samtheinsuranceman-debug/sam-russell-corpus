@@ -1283,7 +1283,7 @@ export default function IbbotsonCharts() {
                       <div className="absolute right-0 top-0 w-24 h-24 bg-[#22c55e]/10 rounded-full blur-2xl transform translate-x-1/2 -translate-y-1/2"></div>
                       <div className="text-xs text-[#7a95b8] mb-1 flex items-center gap-1.5"><Shield size={14} className="text-[#22c55e]"/> $100 → IUL ({cap}%/{floor}%)</div>
                       <div className="text-3xl font-bold text-[#22c55e] font-mono my-2">${stats.finalIUL.toLocaleString(undefined, {maximumFractionDigits: 0})}</div>
-                      <div className="text-[10px] text-[#7a95b8] bg-[#12233e]/50 inline-block px-2 py-1 rounded">Never lost a dollar in any down year</div>
+                      <div className="text-[10px] text-[#7a95b8] bg-[#12233e]/50 inline-block px-2 py-1 rounded">Hypothetical credit was 0% in negative index years, before policy charges</div>
                     </div>
                   </div>
                 </div>
@@ -1294,7 +1294,7 @@ export default function IbbotsonCharts() {
                 <div className="space-y-6">
                   <p className="text-xs text-[#7a95b8] max-w-3xl">
                     Decade-by-decade breakdown showing average S&P 500 returns vs. IUL credited returns with a {cap}% cap and {floor}% floor.
-                    Notice how the IUL average remains positive in every decade — even the 1930s (Great Depression) and 2000s (Dot-com bust & GFC).
+                    Applying today's cap/floor formula to historical index data (a back-cast; IUL did not exist before 1997) keeps the hypothetical credited average positive in every decade, before policy charges. Past index performance is not indicative of future results.
                   </p>
                   <DecadeSummary data={chartData} cap={cap} floor={floor} />
                   

@@ -11,6 +11,7 @@ import {
 } from "recharts";
 import strategiesData from "@/data/strategies.json";
 import combosData from "@/data/combos.json";
+import HypotheticalCaseBanner from "@/components/HypotheticalCaseBanner";
 
 const COLORS = ["#a855f7", "#3b82f6", "#22c55e", "#f59e0b", "#ef4444"];
 
@@ -148,6 +149,7 @@ export default function StrategyCompareTool() {
 
   return (
     <div className="space-y-8 max-w-7xl mx-auto">
+      <HypotheticalCaseBanner />
       {/* Header */}
       <div className="rounded-2xl border border-emerald-500/20 bg-gradient-to-br from-[#1a0d2e] via-[#0a1628] to-[#0d1a2e] p-6 md:p-8">
         <div className="flex items-center gap-3 mb-2">

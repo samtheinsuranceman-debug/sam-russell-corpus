@@ -43,6 +43,7 @@ import {
   ChevronUp,
   Plus,
 } from "lucide-react";
+import AiAnswerNote from "@/components/AiAnswerNote";
 
 const CHAPTER_TYPES = [
   { value: "introduction", label: "Introduction", icon: User, color: "bg-blue-500/10 text-blue-400", description: "Warm welcome, preview what's covered" },
@@ -415,6 +416,7 @@ function ScriptEditor({ proposalId, clients, onGenerate }: { proposalId: number;
                     ) : (
                       <>
                         <p className="text-sm whitespace-pre-wrap leading-relaxed">{chapter.script}</p>
+                        <AiAnswerNote />
                         <div className="flex gap-2">
                           <Button size="sm" variant="outline" className="gap-1" onClick={() => { setEditingChapterId(chapter.id); setEditScript(chapter.script); }}>
                             <Edit3 className="w-3 h-3" /> Edit Script

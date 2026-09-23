@@ -938,7 +938,7 @@ export default function IndexBacktester() {
                                     This strategy tracks the {opt.index} index. It provides a {opt.participation}% participation rate 
                                     {opt.cap ? ` up to a maximum cap of ${opt.cap}%` : ' with no cap on upside potential'}
                                     {opt.spread > 0 ? `, minus a ${opt.spread}% spread` : ''}.
-                                    The floor is strictly 0%, meaning you will never lose principal due to market downturns.
+                                    The floor is 0%, meaning a negative index year credits 0%; policy charges still reduce the account value.
                                   </p>
                                   {(() => {
                                     const stats = tenYearCreditingStats(opt.id);

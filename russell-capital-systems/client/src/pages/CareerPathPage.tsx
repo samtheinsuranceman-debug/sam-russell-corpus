@@ -98,12 +98,6 @@ const CareerPathPage: React.FC = () => {
           </Button>
         </div>
 
-        {/* Page Insights Badge */}
-        <div className="mt-6 text-center">
-          <div className="inline-block bg-[#1a202c] px-4 py-2 rounded-md text-sm">
-            Page Insights Score: <span className="text-[#22c55e]">88/100</span>
-          </div>
-        </div>
 
         {/* Regulatory Disclaimer */}
         <p className="mt-4 text-gray-500 text-sm text-center">

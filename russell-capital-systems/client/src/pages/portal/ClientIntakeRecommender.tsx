@@ -10,6 +10,7 @@ import {
 } from "recharts";
 import strategiesData from "@/data/strategies.json";
 import combosData from "@/data/combos.json";
+import HypotheticalCaseBanner from "@/components/HypotheticalCaseBanner";
 
 const COLORS = ["#22c55e", "#3b82f6", "#a855f7", "#f59e0b", "#ef4444", "#06b6d4", "#ec4899"];
 
@@ -284,6 +285,7 @@ export default function ClientIntakeRecommender() {
 
   return (
     <div className="space-y-8 max-w-5xl mx-auto">
+      <HypotheticalCaseBanner />
       {/* Header */}
       <div className="rounded-2xl border border-cyan-500/20 bg-gradient-to-br from-[#0d1a2e] via-[#0a1628] to-[#0d2e1a] p-6 md:p-8">
         <div className="flex items-center gap-3 mb-2">

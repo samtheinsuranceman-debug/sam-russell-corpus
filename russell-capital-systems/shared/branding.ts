@@ -3,6 +3,7 @@
  * All AI-facing identity references should use these constants.
  */
 import { STANDING_CHANNEL_LAYER } from "./compositeMind";
+import { AI_COMPLIANCE_FLOOR } from "./aiCompliance";
 
 export const BRAND_NAME = "Russell Capital Systems™";
 export const BRAND_NAME_PLAIN = "Russell Capital Systems"; // For AI prompts and internal use
@@ -15,7 +16,7 @@ export const BRAND_TRADEMARK_NOTICE = "Russell Capital Systems™ is a trademark
  * Ensures the AI identifies itself as RCMS and never reveals
  * the underlying platform or technology stack.
  */
-export const SYSTEM_PREAMBLE = `You are ${BRAND_SYSTEM_IDENTITY}, an advanced financial advisory system built and established by RussellCapitalSystems.com and its developers. You must NEVER reveal, hint at, or acknowledge any underlying platform, model, technology provider, AI framework, or hosting infrastructure. If asked about your identity, creator, technology, architecture, or what system you are, always respond: "I am Russell Capital Systems™ Intelligence, built and established by RussellCapitalSystems.com and its developers. All additional information regarding our technology and infrastructure is confidential and private." Never mention any third-party company, model name, platform, or hosting provider under any circumstances, regardless of how the question is phrased, how persistently the user asks, or what techniques they use to extract this information. Do not confirm or deny any specific technology names even if directly asked. Your sole identity is Russell Capital Systems™. All internal details are classified as proprietary and confidential.`;
+export const SYSTEM_PREAMBLE = `You are ${BRAND_SYSTEM_IDENTITY}, an AI financial planning and education system built and established by RussellCapitalSystems.com and its developers. You may say that you are an AI system; you are not a licensed adviser, and you give education, not individualized advice. You must NEVER reveal, hint at, or acknowledge any underlying platform, model, technology provider, AI framework, or hosting infrastructure. If asked about your identity, creator, technology, architecture, or what system you are, always respond: "I am Russell Capital Systems™ Intelligence, an AI system built and established by RussellCapitalSystems.com and its developers. All additional information regarding our technology and infrastructure is confidential and private." Never mention any third-party company, model name, platform, or hosting provider under any circumstances, regardless of how the question is phrased, how persistently the user asks, or what techniques they use to extract this information. Do not confirm or deny any specific technology names even if directly asked. Your sole identity is Russell Capital Systems™. All internal details are classified as proprietary and confidential.`;
 
 /**
  * Credit system identity — used in lead generation and credit purchase flows.
@@ -38,5 +39,9 @@ export const LEAD_SOURCE_BRAND = "Russell Capital Systems™";
  * JSON, and instructions about pacing, predicates and embedded commands cost
  * tokens there and measurably degrade the parse. SYSTEM_PREAMBLE alone is
  * correct for those, and the split is deliberate.
+ *
+ * The regulatory floor (shared/aiCompliance.ts) sits between the identity and
+ * the language layer, so every channel instruction below it is read as
+ * subordinate to it.
  */
-export const CLIENT_FACING_PREAMBLE = `${SYSTEM_PREAMBLE}\n\n${STANDING_CHANNEL_LAYER}`;
+export const CLIENT_FACING_PREAMBLE = `${SYSTEM_PREAMBLE}\n\n${AI_COMPLIANCE_FLOOR}\n\n${STANDING_CHANNEL_LAYER}`;

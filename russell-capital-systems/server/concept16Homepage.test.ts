@@ -76,7 +76,8 @@ describe("The homepage: clean pictures, one slogan, fifteen stacked claims, the 
       expect(sentences(claim.lead) + sentences(claim.detail), claim.name).toBeGreaterThanOrEqual(2);
       expect(claim.lead.length, claim.name).toBeLessThan(400);
     }
-    expect(manifesto.claims.map((c) => c.name)).toContain("Tax-Free Retirement Income Waterfall Engine");
+    // Renamed 23 Sep 2026: its buckets include IRAs and annuity income, so "Tax-Free" in the name overstated it (R7).
+    expect(manifesto.claims.map((c) => c.name)).toContain("Retirement Income Tax Waterfall Engine");
     expect(manifesto.claims.map((c) => c.name)).toContain("Mortgage Elimination Through Real Estate Recycling and IUL Arbitrage");
     expect(JSON.stringify(manifesto)).not.toMatch(/Russell Number/);
     expect(landing).toContain('id="claims"');

@@ -58,12 +58,6 @@ const RealEstatePage: React.FC = () => {
           </CardContent>
         </Card>
 
-        {/* Page Insights */}
-        <div className="mt-6 flex justify-end">
-          <div className="bg-[#22c55e]/20 text-[#22c55e] px-4 py-2 rounded-lg text-sm">
-            Page Insights Score: 90/100
-          </div>
-        </div>
 
         {/* Cross-Tool Integration */}
         <Card className="mt-6 bg-[#0a0f1a] border-gray-700">

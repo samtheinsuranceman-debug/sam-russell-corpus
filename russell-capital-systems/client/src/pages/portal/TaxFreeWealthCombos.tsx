@@ -2,6 +2,7 @@ import { useState, useMemo } from "react";
 import { Link } from "wouter";
 import { Search, Filter, TrendingUp, Users, DollarSign, Shield, ChevronRight, Sparkles } from "lucide-react";
 import combosData from "@/data/combos.json";
+import HypotheticalCaseBanner from "@/components/HypotheticalCaseBanner";
 
 const categories = ["All", "IUL", "Trusts", "Real Estate", "Roth", "Premium Financing", "Annuities", "Business", "Estate Planning", "Tax Deferral"];
 const netWorthRanges = ["All", "Under $5M", "$5M–$15M", "$15M–$35M", "$35M–$55M", "$55M+"];
@@ -51,6 +52,7 @@ export default function TaxFreeWealthCombos() {
 
   return (
     <div className="space-y-8">
+      <HypotheticalCaseBanner />
       {/* Header Card */}
       <div className="relative overflow-hidden rounded-2xl border border-emerald-500/20 bg-gradient-to-br from-[#0d1a0d] via-[#0a1628] to-[#0d1a0d] p-8">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-emerald-500/10 via-transparent to-transparent" />
@@ -130,7 +132,7 @@ export default function TaxFreeWealthCombos() {
               </div>
               <div className="flex items-center gap-2 mb-3">
                 <Users className="w-3.5 h-3.5 text-gray-500" />
-                <span className="text-xs text-gray-400">{combo.clientProfile.name} — {combo.clientProfile.profession}</span>
+                <span className="text-xs text-gray-400">Hypothetical: {combo.clientProfile.name} — {combo.clientProfile.profession}</span>
               </div>
               <div className="grid grid-cols-3 gap-2 mb-3">
                 <div className="text-center">

@@ -132,6 +132,9 @@ export default function MortgageKiller() {
     policyLoanDragRate: 0.05, // 5% loan rate
     interestReinvestRate: 0.07,
     interestReinvestYears: 20,
+    // Assumed annuity rate for compounding the saved interest (the visitor sets it). Default 6.25%: a real
+    // declared 5-year MYGA rate (shared/mortgageKiller.ts MGA_RATE_SOURCE). Not a 30-year guarantee.
+    assumedAnnuityRate: 0.0625,
     clientAge: 45,
   });
 
@@ -258,6 +261,7 @@ export default function MortgageKiller() {
       policyLoanDragRate: input.policyLoanDragRate ?? p.policyLoanDragRate,
       interestReinvestRate: input.interestReinvestRate ?? p.interestReinvestRate,
       interestReinvestYears: input.interestReinvestYears ?? p.interestReinvestYears,
+      assumedAnnuityRate: input.assumedAnnuityRate ?? p.assumedAnnuityRate,
       clientAge: input.clientAge ?? p.clientAge,
     }));
     toast.success(`Loaded "${scenario.name}"`);
@@ -392,7 +396,7 @@ export default function MortgageKiller() {
   const getReportBullets = useCallback((): string[] => {
     if (!result) return [];
     return [
-      `By redirecting ${fmtPct(strategyParams.incomeAllocationPct)} of annual income into an IUL policy, ${clientName} can eliminate their mortgage ${result.summary.yearsSaved}+ years early.`,
+      `In this hypothetical, based on the facts entered, redirecting ${fmtPct(strategyParams.incomeAllocationPct)} of annual income into an IUL life insurance policy models ${clientName}'s mortgage paid off ${result.summary.yearsSaved}+ years early. Policy charges, loan interest and the HELOC rate can change the result.`,
       `Total interest saved: ${fmt(result.summary.totalInterestSaved)} compared to the current 30-year plan.`,
       `The IUL policy builds ${fmt(result.summary.finalPolicyCashValue)} in tax-advantaged cash value while simultaneously paying down the mortgage.`,
       `Compounding the interest savings in a MYGA at ${fmtPct(strategyParams.interestReinvestRate)} for 20 years yields ${fmt(result.interestSavings.compoundedValue20yr)} in additional wealth.`,
@@ -1362,6 +1366,15 @@ export default function MortgageKiller() {
                     <p className="text-xs text-muted-foreground">Compound rate on saved interest (an assumption you set)</p>
                   </div>
                   <div className="space-y-3">
+                    <Label className="text-sm font-medium">Assumed Annuity Rate: {fmtPct(strategyParams.assumedAnnuityRate)}</Label>
+                    <Slider
+                      value={[strategyParams.assumedAnnuityRate * 100]}
+                      onValueChange={([v]) => setStrategyParams((p) => ({ ...p, assumedAnnuityRate: v / 100 }))}
+                      min={0} max={12} step={0.05}
+                    />
+                    <p className="text-xs text-muted-foreground">Rate you assume for the 30-year annuity view. MYGAs guarantee a rate only for their term (typically 3–10 years); renewal rates are not guaranteed.</p>
+                  </div>
+                  <div className="space-y-3">
                     <Label className="text-sm font-medium">Client Age: {strategyParams.clientAge}</Label>
                     <Slider
                       value={[strategyParams.clientAge]}
@@ -1916,7 +1929,7 @@ export default function MortgageKiller() {
                   </Card>
                   <Card className="bg-gradient-to-br from-blue-500 to-indigo-600 text-white">
                     <CardContent className="p-6 text-center">
-                      <p className="text-sm opacity-90">Compounded at 7% for 20 Years</p>
+                      <p className="text-sm opacity-90">Compounded at {fmtPct(strategyParams.interestReinvestRate)} for 20 Years (assumed rate you set)</p>
                       <p className="text-3xl font-bold mt-1">{fmt(result.interestSavings.compoundedValue20yr)}</p>
                     </CardContent>
                   </Card>
@@ -1931,9 +1944,9 @@ export default function MortgageKiller() {
 
                 <Card>
                   <CardHeader>
-                    <CardTitle>Interest Saved — Compounding at 7% Annually</CardTitle>
+                    <CardTitle>Interest Saved — Compounding at {fmtPct(strategyParams.interestReinvestRate)} a Year (Hypothetical)</CardTitle>
                     <CardDescription>
-                      Every dollar of interest you don't pay grows at 7% compound for 20 years
+                      Hypothetically, every dollar of interest you don't pay compounds at the {fmtPct(strategyParams.interestReinvestRate)} rate you assume for 20 years
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
@@ -2212,7 +2225,7 @@ export default function MortgageKiller() {
                     { key: "doNothing" as const, label: "Do Nothing", sub: "(Current)", icon: "🔴", desc: "Standard 30-yr amortization" },
                     { key: "recommended" as const, label: "After", sub: "Recommendation", icon: "🟢", desc: "Accelerated IUL & HELOC" },
                     { key: "interestSaved" as const, label: "Interest", sub: "Saved", icon: "💰", desc: "Year-by-year savings" },
-                    { key: "opportunityCost" as const, label: "Opportunity", sub: "Cost", icon: "📈", desc: "MGA 6.25% / 30 yrs" },
+                    { key: "opportunityCost" as const, label: "Opportunity", sub: "Cost", icon: "📈", desc: "Annuity at your assumed rate / 30 yrs" },
                   ].map((tab, idx) => (
                     <button
                       key={tab.key}
@@ -2455,8 +2468,8 @@ export default function MortgageKiller() {
                           You will pay {fmt(result.currentPlan.totalInterest)} in interest doing nothing.
                         </h3>
                         <p className="text-sm text-muted-foreground mb-4">
-                          That is {((result.currentPlan.totalInterest / (result.currentPlan.totalPayments - result.currentPlan.totalInterest)) * 100).toFixed(0)}% of your original loan amount — gone forever.
-                          Click below to see how the Mortgage Killer strategy changes everything.
+                          That is {((result.currentPlan.totalInterest / (result.currentPlan.totalPayments - result.currentPlan.totalInterest)) * 100).toFixed(0)}% of your original loan amount, paid as interest.
+                          Click below to see how the Mortgage Killer strategy could change that, hypothetically, based on your facts.
                         </p>
                         <Button onClick={() => setAmortSubTab("recommended")} className="bg-emerald-600 hover:bg-emerald-700">
                           View After Recommendation →
@@ -2910,7 +2923,7 @@ export default function MortgageKiller() {
 
                 {/* ════════════════════════════════════════════════════════════════
                     SECTION 4: TOTAL OPPORTUNITY COST ACCOMPLISHED
-                    Multi Guaranteed Annuity at 6.25% for 30 Years
+                    Annuity at the assumed rate the visitor sets, 30 years (hypothetical)
                     ════════════════════════════════════════════════════════════════ */}
                 {amortSubTab === "opportunityCost" && (
                   <div className="space-y-6">
@@ -2920,7 +2933,7 @@ export default function MortgageKiller() {
                           <TrendingUp className="h-6 w-6" /> Total Opportunity Cost Accomplished
                         </h2>
                         <p className="text-emerald-200 text-sm mt-1">
-                          Mortgage interest saved, invested in a Multi Guaranteed Annuity (MGA) at 6.25% compounding annually for 30 years
+                          Hypothetical: mortgage interest saved, placed in fixed annuities (MYGAs) at the {fmtPct(strategyParams.assumedAnnuityRate)} rate you assume, compounding annually for 30 years. A MYGA guarantees its rate only for its term (typically 3–10 years), subject to the insurer's claims-paying ability; renewals are not guaranteed.
                         </p>
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
                           <div className="bg-white/10 rounded-lg p-3">
@@ -2928,15 +2941,15 @@ export default function MortgageKiller() {
                             <p className="text-2xl font-bold text-amber-300">{fmt(result.interestSavings.totalInterestSaved)}</p>
                           </div>
                           <div className="bg-white/10 rounded-lg p-3">
-                            <p className="text-emerald-200 text-xs">MGA Rate</p>
-                            <p className="text-2xl font-bold text-green-300">6.25%</p>
+                            <p className="text-emerald-200 text-xs">Assumed Annuity Rate (you set)</p>
+                            <p className="text-2xl font-bold text-green-300">{fmtPct(strategyParams.assumedAnnuityRate)}</p>
                           </div>
                           <div className="bg-white/10 rounded-lg p-3">
                             <p className="text-emerald-200 text-xs">Compounding Period</p>
                             <p className="text-2xl font-bold text-blue-300">30 Years</p>
                           </div>
                           <div className="bg-white/10 rounded-lg p-3 border-2 border-emerald-400">
-                            <p className="text-emerald-200 text-xs">MGA Value at Year 30</p>
+                            <p className="text-emerald-200 text-xs">Annuity Value at Year 30 (hypothetical)</p>
                             <p className="text-2xl font-bold text-white">{fmt(result.interestSavings.mgaAnnuityValue30yr)}</p>
                           </div>
                         </div>
@@ -2950,7 +2963,7 @@ export default function MortgageKiller() {
                           <TrendingUp className="h-5 w-5 text-emerald-500" /> Total Opportunity Cost Accomplished
                         </CardTitle>
                         <CardDescription>
-                          Your mortgage interest savings growing at 6.25% annually in a Multi Guaranteed Annuity over 30 years
+                          Hypothetical: your mortgage interest savings growing at the {fmtPct(strategyParams.assumedAnnuityRate)} rate you assume, in fixed annuities, over 30 years
                         </CardDescription>
                       </CardHeader>
                       <CardContent>
@@ -2972,7 +2985,7 @@ export default function MortgageKiller() {
                             <Tooltip formatter={(v: number) => fmt(v)} />
                             <Legend />
                             <Area type="monotone" dataKey="cumulativeSaved" name="Cumulative Interest Saved" stroke="#f59e0b" fill="url(#savedGradient)" />
-                            <Area type="monotone" dataKey="mgaAnnuityValue" name="MGA Annuity Value (6.25%)" stroke="#10b981" fill="url(#mgaGradient)" strokeWidth={3} />
+                            <Area type="monotone" dataKey="mgaAnnuityValue" name={`Annuity Value (assumed ${fmtPct(strategyParams.assumedAnnuityRate)})`} stroke="#10b981" fill="url(#mgaGradient)" strokeWidth={3} />
                             <Line type="monotone" dataKey="interestSaved" name="Annual Interest Saved" stroke="#10b981" strokeWidth={1} dot={false} strokeDasharray="5 5" />
                           </ComposedChart>
                         </ResponsiveContainer>
@@ -2983,10 +2996,10 @@ export default function MortgageKiller() {
                     <Card>
                       <CardHeader>
                         <CardTitle className="flex items-center gap-2">
-                          <Calculator className="h-5 w-5 text-emerald-500" /> MGA Compounding Schedule — 30 Years at 6.25%
+                          <Calculator className="h-5 w-5 text-emerald-500" /> Annuity Compounding Schedule — 30 Years at {fmtPct(strategyParams.assumedAnnuityRate)} (assumed)
                         </CardTitle>
                         <CardDescription>
-                          Each year's interest savings deposited into the annuity, compounding at the guaranteed 6.25% rate
+                          Each year's interest savings deposited into the annuity, compounding at the rate you assume (hypothetical; not guaranteed beyond a MYGA's term)
                         </CardDescription>
                       </CardHeader>
                       <CardContent>
@@ -3060,20 +3073,20 @@ export default function MortgageKiller() {
                             <p className="text-[10px] text-muted-foreground mt-1">Raw savings from accelerated payoff</p>
                           </div>
                           <div className="p-4 rounded-xl bg-white dark:bg-slate-800 shadow-lg">
-                            <p className="text-xs text-muted-foreground mb-1">MGA Annuity (30yr @ 6.25%)</p>
+                            <p className="text-xs text-muted-foreground mb-1">Annuity (30yr @ {fmtPct(strategyParams.assumedAnnuityRate)} assumed)</p>
                             <p className="text-3xl font-bold text-emerald-600">{fmt(result.interestSavings.mgaAnnuityValue30yr)}</p>
-                            <p className="text-[10px] text-muted-foreground mt-1">Guaranteed compounding growth</p>
+                            <p className="text-[10px] text-muted-foreground mt-1">Hypothetical, at the rate you assume</p>
                           </div>
                           <div className="p-4 rounded-xl bg-white dark:bg-slate-800 shadow-lg border-2 border-emerald-400">
                             <p className="text-xs text-muted-foreground mb-1">Total Wealth Created</p>
                             <p className="text-3xl font-bold text-emerald-600">{fmt(result.summary.totalWealthCreated + result.interestSavings.mgaAnnuityValue30yr)}</p>
-                            <p className="text-[10px] text-muted-foreground mt-1">IUL + MGA + Interest Savings</p>
+                            <p className="text-[10px] text-muted-foreground mt-1">IUL + Annuity + Interest Savings (hypothetical)</p>
                           </div>
                         </div>
                         <p className="text-sm text-muted-foreground max-w-2xl mx-auto">
-                          By implementing the Mortgage Killer strategy, your client eliminates their mortgage {result.summary.yearsSaved}+ years early,
-                          saves {fmt(result.interestSavings.totalInterestSaved)} in interest, and when that savings compounds at 6.25% in a
-                          Multi Guaranteed Annuity for 30 years, it grows to {fmt(result.interestSavings.mgaAnnuityValue30yr)}.
+                          In this hypothetical, based on your facts, the Mortgage Killer strategy pays the mortgage off {result.summary.yearsSaved}+ years early,
+                          saves {fmt(result.interestSavings.totalInterestSaved)} in interest, and if that savings compounded at the {fmtPct(strategyParams.assumedAnnuityRate)} rate you assume in
+                          fixed annuities for 30 years, it would grow to {fmt(result.interestSavings.mgaAnnuityValue30yr)}.
                         </p>
                       </CardContent>
                     </Card>
@@ -3214,7 +3227,7 @@ export default function MortgageKiller() {
                         { step: 4, title: "Principal-Only Paydown", desc: `Apply policy loans directly to mortgage principal. After paydown, recalculate equity for next HELOC draw.`, color: "red" },
                         { step: 5, title: "Post-Premium Growth", desc: `After ${strategyParams.premiumYears} years: ${fmtPct(strategyParams.iulCreditRate)} crediting (assumed, non-guaranteed) minus ${fmtPct(strategyParams.policyLoanDragRate)} loan drag. Net growth funds continued paydowns.`, color: "cyan" },
                         { step: 6, title: "Mortgage Eliminated", desc: `Mortgage paid off ${result.summary.yearsSaved}+ years early. ${fmt(result.interestSavings.totalInterestSaved)} interest saved.`, color: "green" },
-                        { step: 7, title: "MGA Compounding", desc: `Interest saved grows at 6.25% in Multi Guaranteed Annuity → ${fmt(result.interestSavings.mgaAnnuityValue30yr)} over 30 years`, color: "purple" },
+                        { step: 7, title: "Annuity Compounding", desc: `Interest saved compounds at the ${fmtPct(strategyParams.assumedAnnuityRate)} rate you assume in fixed annuities → ${fmt(result.interestSavings.mgaAnnuityValue30yr)} over 30 years (hypothetical)`, color: "purple" },
                       ].map(({ step, title, desc, color }) => (
                         <div key={step} className={`p-4 rounded-lg border-2 border-${color}-200 bg-${color}-50/30`}>
                           <div className={`w-8 h-8 rounded-full bg-${color}-500 text-white flex items-center justify-center text-sm font-bold mb-2`}>

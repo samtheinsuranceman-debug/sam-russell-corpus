@@ -124,7 +124,6 @@ export default function MedicareIRMAA() {
   const [includePartD, setIncludePartD] = useState(true);
   const [enableAlerts, setEnableAlerts] = useState(true);
   const [reportFormat, setReportFormat] = useState("pdf");
-  const [showDisclaimer, setShowDisclaimer] = useState(true);
   const [themeMode, setThemeMode] = useState("dark");
   const [viewMode, setViewMode] = useState("standard");
   const [autoSave, setAutoSave] = useState(true);
@@ -1393,7 +1392,7 @@ export default function MedicareIRMAA() {
           </TabsContent>
         </Tabs>
 
-        {showDisclaimer && <NAICDisclaimer variant="compact" showsProjections />}
+        <NAICDisclaimer variant="compact" showsProjections />
         
         {/* Padding for lines */}
         <div className="hidden">

@@ -350,7 +350,7 @@ export const DATA_FLOW_LINKS: DataFlowLink[] = [
     from: "myga-waterfall",
     to: "retirement-income",
     label: "MYGA Income → Guaranteed Income",
-    description: "MYGA guaranteed returns provide a reliable income floor for retirement projections.",
+    description: "MYGA contractual fixed rates (for each guarantee term, subject to the insurer's claims-paying ability) feed the retirement income projection.",
     mapData: (src: MYGAWaterfallResult) => ({ mygaIncome: src.totalMygaValue * (src.mygaRate / 100), guaranteed: true }),
   },
   {

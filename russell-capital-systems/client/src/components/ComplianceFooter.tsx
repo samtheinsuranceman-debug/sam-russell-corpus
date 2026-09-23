@@ -1,17 +1,16 @@
 import { Shield, Scale, Building2, FileText, ExternalLink } from "lucide-react";
-import { useDisclaimer } from "@/contexts/DisclaimerContext";
 
 /**
  * ComplianceFooter — Universal compliance footer for ALL calculator/financial pages.
  * 
  * Combines:
- *   1. NAIC AG 49-A/B citations with source links
+ *   1. What AG 49-A/B governs (insurer illustrations) and what these pages are (hypothetical mechanics)
  *   2. Russell Holdings Management LLC ownership statement
  *   3. Context-specific disclaimers based on page content type
  *   4. SEC/FINRA non-securities clarification
  * 
  * Drop this at the bottom of every financial calculator page.
- * It respects the global disclaimer toggle from DisclaimerContext.
+ * It always renders: there is no user toggle that hides it.
  */
 
 interface ComplianceFooterProps {
@@ -40,13 +39,13 @@ const SECTIONS = {
   ownership: {
     icon: Building2,
     title: "Ownership & Operation",
-    text: "www.RussellCapitalSystems.com is owned and operated by Russell Holdings Management LLC. Russell Capital Systems™ is a registered trademark of Russell Holdings Management LLC. All content, tools, calculators, and financial illustrations provided on this platform are proprietary to Russell Holdings Management LLC.",
+    text: "www.RussellCapitalSystems.com is owned and operated by Russell Holdings Management LLC. Russell Capital Systems™ is a trademark of Russell Holdings Management LLC. All content, tools, calculators, and financial illustrations provided on this platform are proprietary to Russell Holdings Management LLC.",
   },
   naic: {
     icon: Scale,
-    title: "NAIC Regulatory Compliance",
-    text: "All indexed universal life (IUL) illustrations on this platform comply with the National Association of Insurance Commissioners (NAIC) Actuarial Guideline 49-A (adopted 2020) and Actuarial Guideline 49-B (adopted 2024). These guidelines establish maximum illustrated rates, benchmark index account requirements, and supplemental illustration standards for IUL products.",
-    source: "Source: NAIC Model Regulation Service, AG 49-A/B — www.naic.org",
+    title: "Not a Policy Illustration",
+    text: "The indexed universal life (IUL) figures on this page are hypothetical mechanics, based on your facts and an assumed crediting rate you set. They are not policy illustrations. Only the issuing insurer's illustration shows policy values; those illustrations are governed by the NAIC's Actuarial Guideline 49-A (effective 2020) and 49-B (effective May 2023), as adopted by the states, which set maximum illustrated rates and benchmark index account requirements.",
+    source: "Source: NAIC, Actuarial Guidelines XLIX-A and XLIX-B — www.naic.org",
   },
   nonSecurities: {
     icon: Shield,
@@ -92,8 +91,7 @@ export function ComplianceFooter({
   additionalText,
   className = "",
 }: ComplianceFooterProps) {
-  const { showDisclaimers } = useDisclaimer();
-  if (!showDisclaimers) return null;
+  // Always rendered. No user setting hides a disclosure (contexts/DisclaimerContext.tsx).
 
   // Always show: ownership, nonSecurities, projections
   // Conditionally show: naic (IUL), tax, annuity, estate, policyLoans
@@ -161,7 +159,7 @@ export function ComplianceFooter({
         </p>
         <div className="flex items-center gap-1 text-[9px] text-muted-foreground/30">
           <Shield className="w-2.5 h-2.5" />
-          <span>NAIC AG 49-A/B Compliant</span>
+          <span>Hypothetical. Not a guarantee. Not advice.</span>
         </div>
       </div>
     </footer>

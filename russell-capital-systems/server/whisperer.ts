@@ -20,6 +20,7 @@ import { createHmac, timingSafeEqual } from "crypto";
 import { z } from "zod";
 import { protectedProcedure, router } from "./_core/trpc";
 import { sdk } from "./_core/sdk";
+import { legacySessionKeyForVerifyOnly, purposeKey, type BaseEnv } from "./_core/purposeKeys";
 import { sendSms, smsMode, normalizePhone } from "./_core/sms";
 import { createClientNote, getClientById, getClientNotes, getClients, getOrCreateWorkspace, getWorkspaceByOwnerId, ensureMembership } from "./db";
 import {
@@ -128,8 +129,30 @@ async function maybeTextUrgent(sessionId: number, workspaceId: number, coaching:
 
 const cycleRunning = new Set<number>();
 
-export function reportLinkToken(reportId: number, exp: number): string {
-  return createHmac("sha256", process.env.JWT_SECRET ?? "whisperer").update(`${reportId}.${exp}`).digest("hex").slice(0, 32);
+// Keyed with a purpose key derived from JWT_SECRET, never JWT_SECRET itself
+// (session cookies are HMAC-SHA256 under JWT_SECRET; see _core/purposeKeys.ts).
+function reportLinkMac(key: string, reportId: number, exp: number): string {
+  return createHmac("sha256", key).update(`${reportId}.${exp}`).digest("hex").slice(0, 32);
+}
+
+export function reportLinkToken(reportId: number, exp: number, env: BaseEnv = process.env): string {
+  return reportLinkMac(purposeKey("whisperer-report-link", env), reportId, exp);
+}
+
+function sameToken(expected: string, token: string): boolean {
+  const a = Buffer.from(expected);
+  const b = Buffer.from(token);
+  return a.length === b.length && timingSafeEqual(a, b);
+}
+
+/** Checks a texted report link. Expiry is the caller's job. */
+export function verifyReportLinkToken(reportId: number, exp: number, token: string, env: BaseEnv = process.env): boolean {
+  if (sameToken(reportLinkToken(reportId, exp, env), token)) return true;
+  // Links texted before key separation were keyed with JWT_SECRET directly.
+  // They expire 14 days after issue, so accept them for verification only.
+  // TODO(2026-10-08): drop the legacy key; every pre-separation link has expired by then.
+  const legacy = legacySessionKeyForVerifyOnly(env);
+  return legacy !== null && sameToken(reportLinkMac(legacy, reportId, exp), token);
 }
 
 function reportUrl(reportId: number): string {
@@ -285,9 +308,7 @@ export function registerWhispererRoutes(app: Express): void {
     const t = String(req.query.t ?? "");
     let workspaceId: number | null = null;
     if (exp && t && exp > Date.now()) {
-      const a = Buffer.from(reportLinkToken(id, exp));
-      const b = Buffer.from(t);
-      if (a.length === b.length && timingSafeEqual(a, b)) workspaceId = -1; // signed link: any workspace
+      if (verifyReportLinkToken(id, exp, t)) workspaceId = -1; // signed link: any workspace
     }
     if (workspaceId === null) {
       try {

@@ -43,6 +43,7 @@ import {
   Pie,
   ComposedChart,
 } from "recharts";
+import { TAX_RULES_2026 } from "@shared/taxRules";
 
 // ─── STATE ANNUITY PROTECTION MAP ───────────────────────────────────
 // States where fixed annuities held in trust are protected from divorce proceedings
@@ -1075,7 +1076,7 @@ export default function DivorceCalculator() {
                 { code: "IRC §72", title: "Annuities; Certain Proceeds", desc: "Governs the taxation of annuity contracts. Fixed annuities in irrevocable trusts grow tax-deferred. When held in a protected state, they're beyond the reach of divorce proceedings.", bg: "rgba(59,130,246,0.05)", border: "rgba(59,130,246,0.2)", badge: "rgba(59,130,246,0.2)", text: "#3b82f6" },
                 { code: "IRC §101(a)", title: "Death Benefits Exclusion", desc: "Life insurance death benefits paid to beneficiaries are generally income tax-free. Combined with ILIT ownership (§2042), this creates a completely tax-free wealth transfer to children.", bg: "rgba(59,130,246,0.05)", border: "rgba(59,130,246,0.2)", badge: "rgba(59,130,246,0.2)", text: "#3b82f6" },
                 { code: "IRC §677", title: "Grantor Trust Income", desc: "Income of a trust is taxable to the grantor if it may be used to pay premiums on the grantor's life insurance. Crummey powers in ILITs navigate this by making beneficiaries the technical premium payers.", bg: "rgba(52,211,153,0.05)", border: "rgba(52,211,153,0.2)", badge: "rgba(52,211,153,0.2)", text: "#10b981" },
-                { code: "IRC §2503(b)", title: "Annual Gift Tax Exclusion", desc: "Allows annual gifts up to $18,000 per beneficiary ($36,000 for married couples) without gift tax. ILIT premium payments use Crummey notices to qualify for this exclusion.", bg: "rgba(52,211,153,0.05)", border: "rgba(52,211,153,0.2)", badge: "rgba(52,211,153,0.2)", text: "#10b981" },
+                { code: "IRC §2503(b)", title: "Annual Gift Tax Exclusion", desc: `Allows annual gifts up to $${TAX_RULES_2026.annualGiftExclusion.toLocaleString()} per beneficiary ($${(TAX_RULES_2026.annualGiftExclusion * 2).toLocaleString()} for married couples) in ${TAX_RULES_2026.taxYear} without gift tax (Rev. Proc. 2025-32). ILIT premium payments use Crummey notices to qualify for this exclusion.`, bg: "rgba(52,211,153,0.05)", border: "rgba(52,211,153,0.2)", badge: "rgba(52,211,153,0.2)", text: "#10b981" },
                 { code: "IRC §2611", title: "Generation-Skipping Transfer", desc: "Defines generation-skipping transfers. Dynasty trusts holding IUL policies can pass wealth across multiple generations, compounding the divorce protection for children and grandchildren.", bg: "rgba(6,182,212,0.05)", border: "rgba(6,182,212,0.2)", badge: "rgba(6,182,212,0.2)", text: "#06b6d4" },
               ].map((item, i) => (
                 <div key={i} className="p-4 rounded-lg" style={{ backgroundColor: item.bg, border: `1px solid ${item.border}` }}>

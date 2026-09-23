@@ -90,7 +90,8 @@ export function ReportGenerator({
   const [open, setOpen] = useState(false);
   const [selectedTools, setSelectedTools] = useState<Set<string>>(new Set(["current"]));
   const [advisorNotes, setAdvisorNotes] = useState(defaultNotes || "");
-  const [includeDisclaimer, setIncludeDisclaimer] = useState(true);
+  // Reports always carry the compliance disclaimers (copy-compliance review S-a).
+  const includeDisclaimer = true;
   const [includeCharts, setIncludeCharts] = useState(true);
 
   const exportMut = trpc.strategyExport.generate.useMutation({
@@ -255,13 +256,10 @@ export function ReportGenerator({
             </h4>
             <div className="space-y-2">
               <div className="flex items-center gap-2">
-                <Checkbox
-                  id="include-disclaimer"
-                  checked={includeDisclaimer}
-                  onCheckedChange={(checked) => setIncludeDisclaimer(!!checked)}
-                />
+                {/* Disclosures are always included in a generated report; there is no switch to drop them. */}
+                <Checkbox id="include-disclaimer" checked disabled />
                 <Label htmlFor="include-disclaimer" className="text-sm text-zinc-300">
-                  Include compliance disclaimers
+                  Compliance disclaimers (always included)
                 </Label>
               </div>
               <div className="flex items-center gap-2">

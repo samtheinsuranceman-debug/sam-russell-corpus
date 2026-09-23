@@ -61,13 +61,13 @@ export function computeLeadAnalysis(ff: LeadFactFinder): LeadAnalysis {
 
   return {
     teaser: {
-      headline: "Accelerated mortgage payoff + low tax liability + Roth conversion + oil & gas drilling + trust-owned Index Universal Life — combined to help make your money divorce-proof.",
+      headline: "Accelerated mortgage payoff + lower tax liability + Roth conversion + oil & gas drilling + a trust-owned indexed universal life insurance policy — combined to help protect your money in divorce, depending on your state's law.",
       pillars: [
         "Accelerated mortgage payoff",
         "Lower tax liability",
         "Roth-conversion sequencing",
         "Oil & gas drilling deduction",
-        "Trust-owned Index Universal Life",
+        "Trust-owned indexed universal life insurance",
       ],
       note: "General concepts and sequence only — the specific numbers, timing, and structure are worked out with a licensed advisor in your evaluation.",
     },
