@@ -183,7 +183,7 @@ async function loadCredentials(): Promise<CachedCredential[]> {
 const CONVENTIONAL_ENV_NAMES: Record<string, string[]> = {
   anthropic: ["ANTHROPIC_API_KEY"],
   openai: ["OPENAI_API_KEY"],
-  google: ["GOOGLE_API_KEY", "GEMINI_API_KEY"],
+  google: ["GOOGLE_API_KEY", "GEMINI_API_KEY", "GOOGLE_AI_API_KEY"],
   xai: ["XAI_API_KEY"],
   perplexity: ["PERPLEXITY_API_KEY"],
   openrouter: ["OPENROUTER_API_KEY"],
