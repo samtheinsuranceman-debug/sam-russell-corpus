@@ -233,3 +233,308 @@ describe('what is a carrier quote and what is mechanics', () => {
     expect(r.notes.join(' ')).toMatch(/contractually guaranteed/);
   });
 });
+
+// ============================================================
+// Merged in from the retired policyLoanTypes.ts: the carrier rates read off
+// the illustrations, the fourth loan type, the guaranteed column and the
+// overloan gate. Each test pins one way the merged engine could mislead.
+// ============================================================
+
+import {
+  NATIONWIDE_DECLARED, NATIONWIDE_PARTICIPATING,
+  SECURIAN_FIXED, SECURIAN_FIXED_LATE, SECURIAN_INDEXED, SECURIAN_VARIABLE,
+  CARRIER_LOAN_PROFILES, modellableCarriers, compareLoanTypes,
+  chargedRateAt, collateralStaysIndexed, overloanEligibleYear, LOAN_DISCLOSURE,
+} from '../shared/policyLoanMechanics';
+
+/** A policy that grows steadily, so the loan overlay is the only variable. */
+function steadyStates(years: number, creditedPct: number, draw: number, startValue = 900_000): PolicyYearState[] {
+  return Array.from({ length: years }, (_, i) => {
+    const value = startValue * Math.pow(1 + creditedPct / 100, i + 1);
+    return {
+      policyYear: i + 1,
+      attainedAge: 45 + i + 1,
+      accountValue: value,
+      surrenderValue: value,
+      creditedRatePct: creditedPct,
+      loanTaken: i + 1 >= 2 ? draw : 0,
+    };
+  });
+}
+
+const MERGED_TAX = {
+  cumulativePremiumsPaid: 750_000,
+  isMec: false,
+  ownerAgeAtStart: 45,
+  ordinaryIncomeRatePct: 37,
+};
+
+describe('the charged rate is a schedule, not a number', () => {
+  it('steps Nationwide down from 3.90% to 3.00% at year 11', () => {
+    // A single flat rate is wrong in one half of any projection long enough to
+    // matter. This is the reason LoanTerms takes a function.
+    expect(chargedRateAt(NATIONWIDE_DECLARED, 1)).toBe(3.90);
+    expect(chargedRateAt(NATIONWIDE_DECLARED, 10)).toBe(3.90);
+    expect(chargedRateAt(NATIONWIDE_DECLARED, 11)).toBe(3.00);
+    expect(chargedRateAt(NATIONWIDE_DECLARED, 30)).toBe(3.00);
+  });
+
+  it('still accepts a plain number, so existing callers keep working', () => {
+    expect(chargedRateAt(NATIONWIDE_PARTICIPATING, 1)).toBe(5.00);
+    expect(chargedRateAt(NATIONWIDE_PARTICIPATING, 25)).toBe(5.00);
+  });
+
+  it('carries the stepped rate onto each row, not just into the total', () => {
+    const r = runPolicyLoanMechanics(steadyStates(15, 6, 60_000), NATIONWIDE_DECLARED, MERGED_TAX);
+    expect(r.years[4].chargedRatePct).toBe(3.90);    // year 5
+    expect(r.years[12].chargedRatePct).toBe(3.00);   // year 13
+  });
+});
+
+describe('four loan types, and only one leaves the money in the index', () => {
+  it('says so for each type, with the indexed loan account on the FALSE side', () => {
+    // The distinction the merge exists to protect: Securian's indexed loan
+    // still moves the money, it just moves it somewhere that tracks an index.
+    expect(collateralStaysIndexed('participating')).toBe(true);
+    expect(collateralStaysIndexed('indexed_account')).toBe(false);
+    expect(collateralStaysIndexed('fixed')).toBe(false);
+    expect(collateralStaysIndexed('wash')).toBe(false);
+  });
+
+  it('warns on the page when an indexed loan account is being run', () => {
+    const r = runPolicyLoanMechanics(steadyStates(20, 6, 60_000), SECURIAN_INDEXED, MERGED_TAX);
+    expect(r.notes.join(' ')).toContain('not a participating loan');
+  });
+
+  it('credits a participating loan the policy rate and an indexed loan its own', () => {
+    const states = steadyStates(20, 9, 60_000);
+    const part = runPolicyLoanMechanics(states, SECURIAN_VARIABLE, MERGED_TAX);
+    const idx = runPolicyLoanMechanics(states, { ...SECURIAN_INDEXED, indexedLoanAccountRatePct: 2 }, MERGED_TAX);
+    expect(part.years[5].collateralCreditRatePct).toBe(9);   // the policy's rate
+    expect(idx.years[5].collateralCreditRatePct).toBe(2);    // the loan account's
+  });
+
+  it('does not silently fall back to the policy rate when the account rate is absent', () => {
+    // Absent must not mean "same as the policy", which would turn this type
+    // into a participating loan on the page.
+    const r = runPolicyLoanMechanics(steadyStates(10, 9, 60_000), SECURIAN_INDEXED, MERGED_TAX);
+    expect(r.years[3].collateralCreditRatePct).toBe(0);
+    expect(r.years[3].collateralCreditRatePct).not.toBe(9);
+  });
+});
+
+describe('the spread, year by year', () => {
+  it('pays +4.00 on a 9% year under a participating loan charged 5%', () => {
+    const r = runPolicyLoanMechanics(steadyStates(20, 9, 60_000), NATIONWIDE_PARTICIPATING, MERGED_TAX);
+    expect(r.years[5].netSpreadPct).toBe(4.00);
+  });
+
+  it('costs the full charged rate in a 0% year — the floor protects the account, not the loan', () => {
+    const r = runPolicyLoanMechanics(steadyStates(20, 0, 60_000), NATIONWIDE_PARTICIPATING, MERGED_TAX);
+    expect(r.years[5].netSpreadPct).toBe(-5.00);
+    expect(r.years[5].collateralCreditedNothing).toBe(true);
+  });
+
+  it('is bounded on the declared loan: -0.90 early, 0.00 from year 11', () => {
+    const r = runPolicyLoanMechanics(steadyStates(20, 9, 60_000), NATIONWIDE_DECLARED, MERGED_TAX);
+    expect(r.years[4].netSpreadPct).toBe(-0.90);
+    expect(r.years[12].netSpreadPct).toBe(0);
+  });
+
+  it('makes Securian fixed a TRUE wash from year 11, and -1.00 before it', () => {
+    const states = steadyStates(20, 9, 60_000);
+    const early = runPolicyLoanMechanics(states, SECURIAN_FIXED, MERGED_TAX);
+    const late = runPolicyLoanMechanics(states, SECURIAN_FIXED_LATE, MERGED_TAX);
+    expect(early.years[4].netSpreadPct).toBe(-1.00);
+    expect(late.years[4].netSpreadPct).toBe(0);
+  });
+});
+
+describe('the guaranteed column is the contract, not a forecast', () => {
+  const states = steadyStates(20, 9, 60_000);
+
+  it('charges 8% and credits the 0% floor on Nationwide participating', () => {
+    const r = runPolicyLoanMechanics(states, NATIONWIDE_PARTICIPATING, MERGED_TAX, { guaranteed: true });
+    expect(r.years[0].chargedRatePct).toBe(8.00);
+    expect(r.years[0].collateralCreditRatePct).toBe(0);
+    expect(r.years[0].netSpreadPct).toBe(-8.00);
+  });
+
+  it('is never cheaper than the current column', () => {
+    const cur = runPolicyLoanMechanics(states, NATIONWIDE_PARTICIPATING, MERGED_TAX);
+    const gtd = runPolicyLoanMechanics(states, NATIONWIDE_PARTICIPATING, MERGED_TAX, { guaranteed: true });
+    expect(gtd.summary.totalNetCost).toBeGreaterThan(cur.summary.totalNetCost);
+  });
+
+  it('labels itself so a page cannot print it as a projection', () => {
+    const r = runPolicyLoanMechanics(states, NATIONWIDE_PARTICIPATING, MERGED_TAX, { guaranteed: true });
+    expect(r.provenance.guaranteedColumn).toBe(true);
+    expect(r.notes.join(' ')).toContain('not a forecast');
+  });
+});
+
+describe('the overloan gate is age 65 AND year 15, both', () => {
+  it('waits for age 65 when the insured is young at issue', () => {
+    expect(overloanEligibleYear(45, 40)).toBe(21);   // 45 + 21 - 1 = 65
+  });
+
+  it('waits for year 15 when the insured is already old enough', () => {
+    expect(overloanEligibleYear(70, 40)).toBe(15);
+  });
+
+  it('returns null inside a horizon that reaches neither condition', () => {
+    expect(overloanEligibleYear(40, 10)).toBeNull();
+  });
+
+  it('is absent rather than "never" when no issue age was supplied', () => {
+    const r = runPolicyLoanMechanics(steadyStates(30, 9, 60_000), NATIONWIDE_PARTICIPATING, MERGED_TAX);
+    expect(r.overloanEligibleYear).toBeNull();
+  });
+
+  it('reports the year and the unsettled tax treatment when it is supplied', () => {
+    const r = runPolicyLoanMechanics(steadyStates(30, 9, 60_000), NATIONWIDE_PARTICIPATING, MERGED_TAX, { issueAge: 45 });
+    expect(r.overloanEligibleYear).toBe(21);
+    expect(r.notes.join(' ')).toContain('neither the IRS nor the courts have ruled');
+  });
+
+  it('says the backstop is missing when the lapse lands before it', () => {
+    // A flat run with a loan running: it lapses long before year 21.
+    const flat = steadyStates(30, 0, 200_000, 900_000);
+    const r = runPolicyLoanMechanics(flat, NATIONWIDE_PARTICIPATING, MERGED_TAX, { issueAge: 45 });
+    expect(r.summary.lapseYear).not.toBeNull();
+    expect(r.summary.lapseYear!).toBeLessThan(21);
+    expect(r.notes.join(' ')).toContain('does not exist yet');
+  });
+});
+
+describe('every rate carries where it came from', () => {
+  it('names a source document and a date on each preset', () => {
+    for (const t of [NATIONWIDE_DECLARED, NATIONWIDE_PARTICIPATING, SECURIAN_FIXED, SECURIAN_INDEXED, SECURIAN_VARIABLE]) {
+      expect(t.source!.length).toBeGreaterThan(40);
+      expect(t.asOf).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+      expect(t.label!.length).toBeGreaterThan(3);
+    }
+  });
+
+  it('echoes that source onto the result, so a page never prints a bare figure', () => {
+    const r = runPolicyLoanMechanics(steadyStates(20, 9, 60_000), NATIONWIDE_PARTICIPATING, MERGED_TAX);
+    expect(r.provenance.source).toContain('Nationwide');
+    expect(r.provenance.asOf).toBe('2026-03-19');
+    expect(r.provenance.label).toBe('Alternative Policy Loan');
+  });
+
+  it('describes a stepped rate as a schedule in the carrier-quote list', () => {
+    const r = runPolicyLoanMechanics(steadyStates(20, 9, 60_000), NATIONWIDE_DECLARED, MERGED_TAX);
+    expect(r.carrierQuoted.join(' ')).toContain('a schedule');
+  });
+
+  it('flags the indexed loan account rate as a separate quote', () => {
+    const r = runPolicyLoanMechanics(steadyStates(20, 9, 60_000), SECURIAN_INDEXED, MERGED_TAX);
+    expect(r.carrierQuoted.join(' ')).toContain("that account's performance, not the policy's");
+  });
+});
+
+describe('comparing types over one sequence', () => {
+  const states = steadyStates(25, 9, 60_000);
+  const c = compareLoanTypes(states, [NATIONWIDE_DECLARED, NATIONWIDE_PARTICIPATING], MERGED_TAX);
+
+  it('runs every set of terms over the same policy', () => {
+    expect(c.runs).toHaveLength(2);
+    expect(c.runs.every((r) => r.result.years.length === 25)).toBe(true);
+  });
+
+  it('names the cheapest by the carrier\'s own label, not by type', () => {
+    expect([c.cheapest, c.costliest]).toContain('Alternative Policy Loan');
+    expect([c.cheapest, c.costliest]).toContain('Declared Rate Loan');
+  });
+
+  it('refuses to present the winner as a conclusion', () => {
+    expect(c.verdict).toContain('worse sequence');
+    expect(c.verdict).toContain('guaranteed column');
+  });
+
+  it('says the comparison is stable when no participating loan is in it', () => {
+    const stable = compareLoanTypes(states, [NATIONWIDE_DECLARED, SECURIAN_FIXED], MERGED_TAX);
+    expect(stable.verdict).toContain('stable across sequences');
+  });
+});
+
+describe('the carrier registry — four carriers, four machines', () => {
+  it('holds all four with a source, a date and notes each', () => {
+    expect(CARRIER_LOAN_PROFILES).toHaveLength(4);
+    for (const c of CARRIER_LOAN_PROFILES) {
+      expect(c.source.length).toBeGreaterThan(20);
+      expect(c.asOf).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+      expect(c.notes.length).toBeGreaterThan(0);
+    }
+  });
+
+  it('models only the carriers whose participating terms are documented', () => {
+    expect(modellableCarriers().map((c) => c.carrier).sort())
+      .toEqual(['Nationwide', 'Securian / Minnesota Life']);
+  });
+
+  it('marks Pacific Life\'s rates absent rather than inventing them', () => {
+    const pl = CARRIER_LOAN_PROFILES.find((c) => c.carrier === 'Pacific Life')!;
+    expect(pl.participatingCharged).toBeNull();
+    expect(pl.notes.join(' ')).toContain('Policy Distributions 0');
+  });
+
+  it('records that the whole life product has no participating loan at all', () => {
+    const ll = CARRIER_LOAN_PROFILES.find((c) => c.kind === 'whole_life')!;
+    expect(ll.participatingCharged).toBeNull();
+    expect(ll.notes.join(' ')).toContain('arbitrage does not exist on this product');
+    expect(ll.declaredCredited).toContain('not credited to the cash value');
+  });
+
+  it('records the 12-month lockout as triggered by the FIXED loan', () => {
+    // Backwards from what anyone expects: taking the safe loan locks you out
+    // of the other two for a year. A real sequencing trap.
+    const sec = CARRIER_LOAN_PROFILES.find((c) => c.carrier.startsWith('Securian'))!;
+    expect(sec.notes.join(' ')).toContain('12-MONTH LOCKOUT');
+    expect(sec.notes.join(' ')).toContain('triggered by the FIXED loan');
+    expect(sec.notes.join(' ')).toContain('there is no 2% floor');
+  });
+
+  it('keeps the collateral in place only on the VARIABLE loan', () => {
+    const sec = CARRIER_LOAN_PROFILES.find((c) => c.carrier.startsWith('Securian'))!;
+    expect(sec.participatingCredited).toContain('REMAINS in your current fixed or indexed accounts');
+    expect(sec.notes.join(' ')).toContain('still moves, just into a different bucket');
+  });
+});
+
+describe('the disclosure a page renders verbatim', () => {
+  it('states that no rate is fixed for the life of the policy', () => {
+    expect(LOAN_DISCLOSURE).toContain('is fixed for the life of the policy');
+  });
+
+  it('names every carrier whose rates it quotes', () => {
+    expect(LOAN_DISCLOSURE).toContain('Nationwide');
+    expect(LOAN_DISCLOSURE).toContain('Securian');
+  });
+});
+
+describe('carrier sources carry no client identity', () => {
+  it('names the carrier, product, form and date, never a client or a case number', async () => {
+    const mod = await import('../shared/policyLoanMechanics');
+    const text = JSON.stringify([mod.CARRIER_LOAN_PROFILES, mod.POLICY_LOAN_SOURCES]);
+    expect(text).not.toMatch(/Case ID \d|case \d{6,}|\bfor [A-Z]\. [A-Z][a-z]+/);
+  });
+
+  it('no shared or server file carries a case number read off a client illustration', async () => {
+    const { readdirSync, readFileSync, statSync } = await import('node:fs');
+    const { join, resolve } = await import('node:path');
+    const root = resolve(__dirname, '..');
+    const hits: string[] = [];
+    const walk = (d: string) => {
+      for (const e of readdirSync(d)) {
+        const p = join(d, e);
+        if (statSync(p).isDirectory()) walk(p);
+        else if (/\.ts$/.test(e) && !/\.test\.ts$/.test(e) && readFileSync(p, 'utf8').match(/Case ID \d{5,}|29335303/)) hits.push(p.slice(root.length + 1));
+      }
+    };
+    walk(join(root, 'shared'));
+    walk(join(root, 'server'));
+    expect(hits).toEqual([]);
+  });
+});

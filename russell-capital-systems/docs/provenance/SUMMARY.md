@@ -1,18 +1,18 @@
-# Provenance census — summary (tree `41bcc8b`)
+# Provenance census — summary (tree `d360a2f`)
 
 Every count below is computed from the tree; none is typed. `server/provenanceCensus.test.ts` fails the build if any list grows.
 
 | Count | Value |
 |---|---|
-| Engines censused | 95 (36 via catalogue bindings, 87 via memory-bank modules, union) |
+| Engines censused | 97 (37 via catalogue bindings, 89 via memory-bank modules, union) |
 | **Engines with zero sources** | **0** (of which 0 carry 20+ typed-in numeric literals) |
 | **Catalogue engines whose sources the shell cannot print yet** | **1** |
 | **Engines with unseeded randomness** | **1** |
-| **Pages that import an engine and print no source** | **83** of 120 |
-| Engines with hard-coded years older than 2025 | 47 |
+| **Pages that import an engine and print no source** | **82** of 120 |
+| Engines with hard-coded years older than 2025 | 50 |
 | Engines that simulate | 21 |
 | Engines on a live feed seam | 9 |
-| Engines imported by no page and no router | 8 |
+| Engines imported by no page and no router | 10 |
 
 ## Engines with zero sources
 
@@ -85,7 +85,6 @@ Every count below is computed from the tree; none is typed. `server/provenanceCe
 - `client/src/pages/portal/MultiGenWealthTransfer.tsx`
 - `client/src/pages/portal/MultiScenarioPlayZone.tsx`
 - `client/src/pages/portal/PatentShowcase.tsx`
-- `client/src/pages/portal/PolicyLoans.tsx`
 - `client/src/pages/portal/PolicyReview.tsx`
 - `client/src/pages/portal/PortfolioDriftMonitor.tsx`
 - `client/src/pages/portal/PredictiveAnalytics.tsx`
@@ -125,6 +124,7 @@ Every count below is computed from the tree; none is typed. `server/provenanceCe
 - `shared/carrierRatings.ts (2020, 2021, 2022)`
 - `shared/creditingWindows.ts (2000, 2007, 2020)`
 - `shared/cryptoCycleEngine.ts (2011, 2012, 2013, 2015, 2016, 2017, 2018, 2020, 2021, 2022, 2024)`
+- `shared/earlyCashValue.ts (2020)`
 - `shared/erosion.ts (2015)`
 - `shared/estateTaxEngine.ts (2024)`
 - `shared/forgiveness.ts (2007, 2009, 2010, 2011, 2012, 2014, 2015, 2018, 2020, 2021, 2022, 2023, 2024)`
@@ -139,6 +139,7 @@ Every count below is computed from the tree; none is typed. `server/provenanceCe
 - `shared/lifetimeIncomeEngine.ts (2019, 2024)`
 - `shared/liquidityRoutes.ts (2004, 2006, 2008, 2020)`
 - `shared/longevityEngine.ts (2012, 2020, 2021, 2023)`
+- `shared/lookbackIntegrity.ts (2006, 2020, 2022)`
 - `shared/ltcEngine.ts (2022)`
 - `shared/macroEngine.ts (2010, 2019, 2020, 2021, 2022, 2023)`
 - `shared/mortgageKiller.ts (2020)`
@@ -146,6 +147,7 @@ Every count below is computed from the tree; none is typed. `server/provenanceCe
 - `shared/mutualIulCarriers.ts (2023)`
 - `shared/nlpBrain.ts (2008)`
 - `shared/patentCatalog.ts (2008, 2020, 2022)`
+- `shared/policyLoanMechanics.ts (2022)`
 - `shared/powerHistory.ts (2000, 2001, 2003, 2005, 2007, 2008, 2009, 2011, 2013, 2015, 2016, 2017, 2019, 2020, 2021, 2023, 2024)`
 - `shared/premiumFinancing.ts (2020)`
 - `shared/provenance.ts (2019, 2020)`

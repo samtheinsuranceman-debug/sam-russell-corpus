@@ -1,20 +1,20 @@
 {
-  "tree": "41bcc8b",
+  "tree": "d360a2f",
   "summary": {
-    "engines": 95,
-    "enginesFromCatalogue": 36,
-    "enginesFromMemoryBank": 87,
+    "engines": 97,
+    "enginesFromCatalogue": 37,
+    "enginesFromMemoryBank": 89,
     "enginesMissingOnDisk": [],
     "counts": {
       "enginesWithZeroSources": 0,
       "numericEnginesWithZeroSources": 0,
-      "enginesWithHardCodedYearsOlderThan2025": 47,
+      "enginesWithHardCodedYearsOlderThan2025": 50,
       "enginesWithUnseededRandomness": 1,
-      "pagesImportingAnEngineWithNoProvenanceOnPage": 83,
+      "pagesImportingAnEngineWithNoProvenanceOnPage": 82,
       "pagesImportingAnEngine": 120,
       "enginesThatSimulate": 21,
       "enginesOnALiveFeed": 9,
-      "enginesImportedByNoPageAndNoRouter": 8,
+      "enginesImportedByNoPageAndNoRouter": 10,
       "enginesWithoutShellSources": 1
     },
     "lists": {
@@ -32,6 +32,7 @@
         "shared/carrierRatings.ts (2020, 2021, 2022)",
         "shared/creditingWindows.ts (2000, 2007, 2020)",
         "shared/cryptoCycleEngine.ts (2011, 2012, 2013, 2015, 2016, 2017, 2018, 2020, 2021, 2022, 2024)",
+        "shared/earlyCashValue.ts (2020)",
         "shared/erosion.ts (2015)",
         "shared/estateTaxEngine.ts (2024)",
         "shared/forgiveness.ts (2007, 2009, 2010, 2011, 2012, 2014, 2015, 2018, 2020, 2021, 2022, 2023, 2024)",
@@ -46,6 +47,7 @@
         "shared/lifetimeIncomeEngine.ts (2019, 2024)",
         "shared/liquidityRoutes.ts (2004, 2006, 2008, 2020)",
         "shared/longevityEngine.ts (2012, 2020, 2021, 2023)",
+        "shared/lookbackIntegrity.ts (2006, 2020, 2022)",
         "shared/ltcEngine.ts (2022)",
         "shared/macroEngine.ts (2010, 2019, 2020, 2021, 2022, 2023)",
         "shared/mortgageKiller.ts (2020)",
@@ -53,6 +55,7 @@
         "shared/mutualIulCarriers.ts (2023)",
         "shared/nlpBrain.ts (2008)",
         "shared/patentCatalog.ts (2008, 2020, 2022)",
+        "shared/policyLoanMechanics.ts (2022)",
         "shared/powerHistory.ts (2000, 2001, 2003, 2005, 2007, 2008, 2009, 2011, 2013, 2015, 2016, 2017, 2019, 2020, 2021, 2023, 2024)",
         "shared/premiumFinancing.ts (2020)",
         "shared/provenance.ts (2019, 2020)",
@@ -130,7 +133,6 @@
         "client/src/pages/portal/MultiGenWealthTransfer.tsx",
         "client/src/pages/portal/MultiScenarioPlayZone.tsx",
         "client/src/pages/portal/PatentShowcase.tsx",
-        "client/src/pages/portal/PolicyLoans.tsx",
         "client/src/pages/portal/PolicyReview.tsx",
         "client/src/pages/portal/PortfolioDriftMonitor.tsx",
         "client/src/pages/portal/PredictiveAnalytics.tsx",
@@ -160,8 +162,10 @@
       "enginesImportedByNoPageAndNoRouter": [
         "server/outsideForces.ts",
         "shared/ag49Validator.ts",
+        "shared/earlyCashValue.ts",
         "shared/historicalShocks.ts",
         "shared/livingRiskProfile.ts",
+        "shared/lookbackIntegrity.ts",
         "shared/nlpBrain.ts",
         "shared/regulatorySandbox.ts",
         "shared/retirementDNA.ts",
@@ -1091,7 +1095,7 @@
     {
       "engine": "shared/calculatorCatalog.ts",
       "exists": true,
-      "lines": 496,
+      "lines": 497,
       "cataloguePages": [],
       "memoryGroups": [
         "instruments"
@@ -1814,6 +1818,44 @@
       "shellSourced": false
     },
     {
+      "engine": "shared/earlyCashValue.ts",
+      "exists": true,
+      "lines": 240,
+      "cataloguePages": [],
+      "memoryGroups": [
+        "insurance-mechanics"
+      ],
+      "pages": [],
+      "serverImporters": [],
+      "sources": [
+        "Nationwide Indexed UL Accumulator II 2020 illustration, Form ICC18-NWLA-538, prepared 29 Jan 2026, Table of Surrender Charges",
+        "Nationwide Indexed UL Accumulator II 2020 illustration, Form ICC18-NWLA-538, prepared 29 Jan 2026, Table of Surrender Charges, Adjusted column — Surrender Va…",
+        "Surrender charge figures are transcribed from a Nationwide Indexed UL Accumulator II 2020 illustration"
+      ],
+      "sourceFields": [
+        "source",
+        "asOf"
+      ],
+      "sourceExports": [],
+      "lookback": [],
+      "simulation": {
+        "seeded": null,
+        "unseededRandom": false,
+        "runs": [],
+        "seeds": [],
+        "bootstrapBlock": null,
+        "markers": []
+      },
+      "liveFeed": [],
+      "provenanceOnPage": false,
+      "provenancePages": [],
+      "hardCodedYears": [
+        2020
+      ],
+      "numericConstants": 23,
+      "shellSourced": false
+    },
+    {
       "engine": "shared/erosion.ts",
       "exists": true,
       "lines": 358,
@@ -2488,6 +2530,7 @@
         "client/src/components/IbbotsonCredibilityOverlay.tsx",
         "client/src/pages/portal/IULHistoricalPerformance.tsx",
         "client/src/pages/portal/MortgageKiller.tsx",
+        "client/src/pages/portal/PolicyLoans.tsx",
         "client/src/pages/portal/PremiumFinancing.tsx"
       ],
       "hardCodedYears": [
@@ -3182,6 +3225,46 @@
       ],
       "numericConstants": 147,
       "shellSourced": true
+    },
+    {
+      "engine": "shared/lookbackIntegrity.ts",
+      "exists": true,
+      "lines": 220,
+      "cataloguePages": [],
+      "memoryGroups": [
+        "insurance-mechanics"
+      ],
+      "pages": [],
+      "serverImporters": [],
+      "sources": [
+        "Figures are Nationwide's own published look-backs from the Accumulator II 2020 rate guide",
+        "Nationwide's best 20-year allocation",
+        "Nationwide's strongest allocation"
+      ],
+      "sourceFields": [],
+      "sourceExports": [],
+      "lookback": [
+        "2006–2025"
+      ],
+      "simulation": {
+        "seeded": null,
+        "unseededRandom": false,
+        "runs": [],
+        "seeds": [],
+        "bootstrapBlock": null,
+        "markers": []
+      },
+      "liveFeed": [],
+      "provenanceOnPage": false,
+      "provenancePages": [],
+      "hardCodedYears": [
+        2006,
+        2020,
+        2022,
+        2025
+      ],
+      "numericConstants": 6,
+      "shellSourced": false
     },
     {
       "engine": "shared/ltcEngine.ts",
@@ -4141,8 +4224,10 @@
     {
       "engine": "shared/policyLoanMechanics.ts",
       "exists": true,
-      "lines": 406,
-      "cataloguePages": [],
+      "lines": 855,
+      "cataloguePages": [
+        "/portal/policy-loans"
+      ],
       "memoryGroups": [
         "insurance-mechanics"
       ],
@@ -4151,10 +4236,38 @@
         "server/policyLabRouter.ts"
       ],
       "sources": [
-        "Held to death, none of this happens: the death benefit repays the loan and the remainder passes income-tax-free under IRC 101(a). The lapse consequence is th…"
+        "'Nationwide reserves the right to designate which indexed interest strategies are available for new alternative loans in the future.'",
+        "'The Alternate Interest Rate applies only to eligible accounts ... Pacific Life Insurance Company may change the eligible accounts at any time.'",
+        "Held to death, none of this happens: the death benefit repays the loan and the remainder passes income-tax-free under IRC 101(a). The lapse consequence is th…",
+        "Indexed: the loan amount is transferred into a separate INDEXED LOAN ACCOUNT and credited at that account's performance. Charged 4.75% constant. This is not …",
+        "Nationwide",
+        "Nationwide Alternative (participating): charged 5.00% current, 8.00% guaranteed maximum, set quarterly by the carrier in advance,",
+        "Nationwide Declared Rate: charged 3.90% years 1-10 / 3.00% years 11+, credited 3.00% (guaranteed 3.90% charged / 1.00% credited).",
+        "Nationwide Indexed UL Accumulator III illustration, Form ICC25-NWLA-692, prepared 19 Mar 2026",
+        "Nationwide Indexed UL Accumulator III illustration, Form ICC25-NWLA-692, prepared 19 Mar 2026 — 'Alternative Policy Loans ... the money borrowed remains allo…",
+        "Nationwide Indexed UL Accumulator III illustration, Form ICC25-NWLA-692, prepared 19 Mar 2026 — 'Any Policy Loan will be charged interest at the following ra…",
+        "Overloan Lapse Protection Rider II gate: age 65 AND 15th anniversary AND a trigger point by attained age. Neither the IRS nor the courts have ruled on its tr…",
+        "Pacific Life",
+        "RATES NOT IN THE DOCUMENT. This illustration runs 'Policy Distributions 0' — no loans are illustrated — so no loan rate table is populated. The same gap appe…",
+        "Securian / Minnesota Life",
+        "Securian / Minnesota Life Balanced Growth Accumulator III illustration, Case ID 29335303 — fixed loan charged 4.00% constant, credited 3.00% years 1-10 and 4…",
+        "Securian / Minnesota Life Balanced Growth Accumulator III illustration, Case ID 29335303, for M. Corrales age 65 Preferred Non-Tobacco",
+        "Securian: fixed 4.00% charged against 3.00% then 4.00% credited; indexed 4.75% into a separate loan account; variable capped 1.5% above the fixed account rate.",
+        "Variable interest rate loan: varies with the Moody's Corporate Bond Yield Average, capped at 1.5% above the current fixed account crediting rate",
+        "Variable: the loan amount REMAINS in your current fixed or indexed accounts. This is the true participating loan here. Charged rate floats with Moody's, capp…",
+        "export POLICY_LOAN_SOURCES",
+        "s Corporate Bond Yield Average, capped at 1.5% above the current fixed account crediting rate. The 4.75% here is a placeholder at the indexed-loan rate: conf…",
+        "s own illustration states that neither the IRS nor the courts have ruled on the treatment, and that the indebtedness could be asserted to be a taxable distri…",
+        "s rate would quietly turn Securian"
       ],
-      "sourceFields": [],
-      "sourceExports": [],
+      "sourceFields": [
+        "source",
+        "asOf",
+        "*_SOURCE"
+      ],
+      "sourceExports": [
+        "POLICY_LOAN_SOURCES"
+      ],
       "lookback": [
         "1996–2025"
       ],
@@ -4170,10 +4283,11 @@
       "provenanceOnPage": false,
       "provenancePages": [],
       "hardCodedYears": [
+        2022,
         2025
       ],
-      "numericConstants": 2,
-      "shellSourced": false
+      "numericConstants": 76,
+      "shellSourced": true
     },
     {
       "engine": "shared/policyMechanics.ts",
@@ -5273,6 +5387,7 @@
         "client/src/pages/portal/LifetimeGuaranteedIncome.tsx",
         "client/src/pages/portal/MYGAFixedRate.tsx",
         "client/src/pages/portal/MortgageKiller.tsx",
+        "client/src/pages/portal/PolicyLoans.tsx",
         "client/src/pages/portal/PremiumFinancing.tsx",
         "client/src/pages/portal/RetirementIncomeProjection.tsx",
         "client/src/pages/portal/RothConversionSTR.tsx",
