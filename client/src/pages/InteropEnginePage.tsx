@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React from 'react';
 import { Link } from 'wouter';
+import { CALCULATOR_COUNT, categoryCounts, type CalculatorCategory } from '@shared/calculatorCatalog';
 
 interface CalculatorNode {
   id: string;
@@ -11,30 +12,25 @@ interface CalculatorNode {
   connections: string[];
 }
 
-const CALCULATOR_CATEGORIES = [
-  { name: 'Retirement & Income', color: '#22c55e', icon: '💰', count: 7 },
-  { name: 'Tax & Estate', color: '#3b82f6', icon: '📊', count: 6 },
-  { name: 'IUL & Insurance', color: '#a855f7', icon: '🛡️', count: 14 },
-  { name: 'Real Estate', color: '#f59e0b', icon: '🏠', count: 5 },
-  { name: 'Life Events', color: '#ef4444', icon: '🎯', count: 8 },
-  { name: 'Wealth Building', color: '#06b6d4', icon: '📈', count: 8 },
-  { name: 'Advanced Strategies', color: '#ec4899', icon: '🧠', count: 13 },
-  { name: 'Lifestyle & Protection', color: '#84cc16', icon: '🏥', count: 12 },
-];
+// Real figures only: the counts come from the calculator catalogue the router is tested against.
+const CATEGORY_STYLE: Record<CalculatorCategory, { color: string; icon: string }> = {
+  "retirement-income": { color: '#22c55e', icon: '💰' },
+  tax: { color: '#3b82f6', icon: '📊' },
+  insurance: { color: '#a855f7', icon: '🛡️' },
+  "real-estate": { color: '#f59e0b', icon: '🏠' },
+  "estate-legacy": { color: '#14b8a6', icon: '📜' },
+  business: { color: '#eab308', icon: '🏢' },
+  "life-events": { color: '#ef4444', icon: '🎯' },
+  markets: { color: '#06b6d4', icon: '📈' },
+  diagnostics: { color: '#ec4899', icon: '🧠' },
+  practice: { color: '#84cc16', icon: '🧰' },
+};
+
+const CALCULATOR_CATEGORIES = categoryCounts()
+  .filter((c) => c.count > 0)
+  .map((c) => ({ name: c.label, count: c.count, ...CATEGORY_STYLE[c.category] }));
 
 const InteropEnginePage: React.FC = () => {
-  const [activeFlows, setActiveFlows] = useState(0);
-  const [totalSyncs, setTotalSyncs] = useState(0);
-
-  useEffect(() => {
-    // Simulate live data flow counter
-    const interval = setInterval(() => {
-      setActiveFlows(prev => Math.min(prev + Math.floor(Math.random() * 3), 248));
-      setTotalSyncs(prev => prev + Math.floor(Math.random() * 5));
-    }, 2000);
-    return () => clearInterval(interval);
-  }, []);
-
   return (
     <div className="min-h-screen bg-[#0a0f1a] text-white p-8 font-sans">
       <div className="max-w-7xl mx-auto">
@@ -49,29 +45,24 @@ const InteropEnginePage: React.FC = () => {
 
         <p className="mb-8 text-lg text-gray-300 max-w-3xl">
           The Interop Engine is the neural network of Russell Capital Systems. It enables real-time 
-          bidirectional data propagation across 248+ interconnected financial calculators, ensuring 
+          bidirectional data propagation across {CALCULATOR_COUNT} catalogued financial calculators, ensuring 
           that a single variable change cascades intelligently through every relevant model.
         </p>
 
-        {/* Live Stats Dashboard */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        {/* Catalogue figures — counted from the calculator catalogue, not simulated */}
+        <div className="grid grid-cols-2 gap-4 mb-8">
           <div className="bg-[#1a1f2a] border border-[#22c55e]/30 rounded-xl p-4 text-center">
-            <p className="text-3xl font-bold text-[#22c55e]">248+</p>
-            <p className="text-gray-400 text-sm">Connected Calculators</p>
+            <p className="text-3xl font-bold text-[#22c55e]">{CALCULATOR_COUNT}</p>
+            <p className="text-gray-400 text-sm">Calculators in the catalogue</p>
           </div>
           <div className="bg-[#1a1f2a] border border-[#22c55e]/30 rounded-xl p-4 text-center">
-            <p className="text-3xl font-bold text-[#22c55e]">{activeFlows}</p>
-            <p className="text-gray-400 text-sm">Active Data Flows</p>
-          </div>
-          <div className="bg-[#1a1f2a] border border-[#22c55e]/30 rounded-xl p-4 text-center">
-            <p className="text-3xl font-bold text-[#22c55e]">{totalSyncs.toLocaleString()}</p>
-            <p className="text-gray-400 text-sm">Total Syncs Today</p>
-          </div>
-          <div className="bg-[#1a1f2a] border border-[#22c55e]/30 rounded-xl p-4 text-center">
-            <p className="text-3xl font-bold text-[#22c55e]">100%</p>
-            <p className="text-gray-400 text-sm">Engine Health</p>
+            <p className="text-3xl font-bold text-[#22c55e]">{CALCULATOR_CATEGORIES.length}</p>
+            <p className="text-gray-400 text-sm">Categories</p>
           </div>
         </div>
+        <p className="mb-8 text-xs text-gray-500">
+          Live data-flow and sync counts are not shown: they are not yet measured. They will appear here once the engine records them.
+        </p>
 
         {/* Network Visualization Placeholder */}
         <div className="bg-[#1a1f2a] border border-[#22c55e]/20 rounded-xl p-6 mb-8">
@@ -82,22 +73,22 @@ const InteropEnginePage: React.FC = () => {
               {CALCULATOR_CATEGORIES.map((cat, i) => (
                 <g key={cat.name}>
                   <circle
-                    cx={200 + (i % 4) * 200}
-                    cy={100 + Math.floor(i / 4) * 200}
+                    cx={110 + (i % 5) * 170}
+                    cy={100 + Math.floor(i / 5) * 200}
                     r={30 + cat.count}
                     fill={cat.color}
                     opacity={0.3}
                     className="animate-pulse"
                   />
                   <circle
-                    cx={200 + (i % 4) * 200}
-                    cy={100 + Math.floor(i / 4) * 200}
+                    cx={110 + (i % 5) * 170}
+                    cy={100 + Math.floor(i / 5) * 200}
                     r={15}
                     fill={cat.color}
                   />
                   <text
-                    x={200 + (i % 4) * 200}
-                    y={100 + Math.floor(i / 4) * 200 + 50}
+                    x={110 + (i % 5) * 170}
+                    y={100 + Math.floor(i / 5) * 200 + 50}
                     fill="white"
                     textAnchor="middle"
                     fontSize="11"
@@ -105,8 +96,8 @@ const InteropEnginePage: React.FC = () => {
                     {cat.name}
                   </text>
                   <text
-                    x={200 + (i % 4) * 200}
-                    y={100 + Math.floor(i / 4) * 200 + 5}
+                    x={110 + (i % 5) * 170}
+                    y={100 + Math.floor(i / 5) * 200 + 5}
                     fill="white"
                     textAnchor="middle"
                     fontSize="14"
@@ -179,7 +170,7 @@ const InteropEnginePage: React.FC = () => {
             <h2 className="text-2xl font-bold text-emerald-400">AI Strategy Engine — Interop Intelligence</h2>
           </div>
           <p className="text-gray-300 mb-4">
-            The AI Brain sits at the center of the Interop Engine, orchestrating data flows between all 248+ calculators.
+            The AI Brain sits at the center of the Interop Engine, orchestrating data flows between all {CALCULATOR_COUNT} catalogued calculators.
             When a variable changes in any calculator, the AI Strategy Engine determines which downstream models are affected,
             prioritizes the cascade order, and generates real-time impact reports for the advisor.
           </p>

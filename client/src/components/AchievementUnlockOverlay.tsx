@@ -106,10 +106,10 @@ export function AchievementUnlockOverlay() {
             key={i}
             className={`absolute w-2 h-2 rounded-full ${style.text} opacity-80`}
             style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animation: `float-particle ${2 + Math.random() * 3}s ease-in-out infinite`,
-              animationDelay: `${Math.random() * 2}s`,
+              left: `${Math.random() * 100}%`, // decorative
+              top: `${Math.random() * 100}%`, // decorative
+              animation: `float-particle ${2 + Math.random() * 3}s ease-in-out infinite`, // decorative
+              animationDelay: `${Math.random() * 2}s`, // decorative
               backgroundColor: "currentColor",
             }}
           />

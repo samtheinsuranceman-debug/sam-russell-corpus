@@ -89,22 +89,6 @@ const CHART_COLORS = [
   "#ec4899", "#14b8a6", "#f97316", "#06b6d4", "#84cc16"
 ];
 
-const generateMockData = (count: number) => {
-  return Array.from({ length: count }).map((_, i) => ({
-    id: `mock-${i}-${Math.random().toString(36).substr(2, 9)}`,
-    clientName: `Client ${i + 1}`,
-    age: 30 + Math.floor(Math.random() * 40),
-    premium: 10000 + Math.floor(Math.random() * 90000),
-    years: 5 + Math.floor(Math.random() * 25),
-    status: Math.random() > 0.8 ? (Math.random() > 0.5 ? "error" : "done") : "pending" as any,
-    productType: ["IUL", "VUL", "Term", "Whole Life", "Annuity"][Math.floor(Math.random() * 5)],
-    riskTolerance: ["Low", "Medium", "High"][Math.floor(Math.random() * 3)],
-    targetReturn: 4 + Math.floor(Math.random() * 8),
-    notes: `Notes for client ${i + 1}`,
-    selected: false
-  }));
-};
-
 export default function BatchIllustration() {
   const { user } = useAuth();
   
@@ -117,14 +101,9 @@ export default function BatchIllustration() {
   const { data: complianceData } = trpc.complianceTracking.getStatus.useQuery(undefined, { enabled: !!user });
   const { data: notificationsData } = trpc.activity.list.useQuery(undefined, { enabled: !!user });
 
-  const [rows, setRows] = useState<BatchRow[]>([
-    { id: "1", clientName: "John Smith", age: 45, premium: 50000, years: 5, status: "pending", productType: "IUL", riskTolerance: "Medium", targetReturn: 6, notes: "Needs review", selected: false },
-    { id: "2", clientName: "Jane Doe", age: 52, premium: 75000, years: 7, status: "pending", productType: "VUL", riskTolerance: "High", targetReturn: 8, notes: "", selected: false },
-    { id: "3", clientName: "Robert Johnson", age: 38, premium: 25000, years: 10, status: "pending", productType: "Term", riskTolerance: "Low", targetReturn: 4, notes: "Urgent", selected: false },
-    { id: "4", clientName: "Emily Davis", age: 60, premium: 100000, years: 5, status: "done", productType: "Annuity", riskTolerance: "Low", targetReturn: 5, notes: "Completed yesterday", selected: false },
-    { id: "5", clientName: "Michael Wilson", age: 41, premium: 35000, years: 15, status: "error", productType: "Whole Life", riskTolerance: "Medium", targetReturn: 5.5, notes: "Missing signature", selected: false },
-    ...generateMockData(15)
-  ]);
+  // The worksheet starts empty: rows are what the advisor enters. No client names,
+  // premiums or statuses are pre-filled, because none of them would be real.
+  const [rows, setRows] = useState<BatchRow[]>([]);
   
   const [processing, setProcessing] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -178,7 +157,7 @@ export default function BatchIllustration() {
 
   const addRow = () => {
     setRows(r => [{ 
-      id: Math.random().toString(36).substring(7),
+      id: crypto.randomUUID(),
       clientName: newRowData.clientName || "New Client", 
       age: newRowData.age || 45, 
       premium: newRowData.premium || 50000, 
@@ -202,7 +181,7 @@ export default function BatchIllustration() {
   const duplicateRow = (id: string) => {
     const rowToDuplicate = rows.find((r) => r.id === id);
     if (rowToDuplicate) {
-      setRows(r => [{ ...rowToDuplicate, id: Math.random().toString(36).substring(7), clientName: `${rowToDuplicate.clientName} (Copy)` }, ...r]);
+      setRows(r => [{ ...rowToDuplicate, id: crypto.randomUUID(), clientName: `${rowToDuplicate.clientName} (Copy)` }, ...r]);
       toast.success("Row duplicated");
     }
   };
@@ -233,24 +212,11 @@ export default function BatchIllustration() {
     setBulkAction("");
   };
 
+  // The batch runner is not connected to the illustration engine yet. It used to flip each
+  // row to "done" or "error" at random, which reported illustrations that were never run.
+  // Until it is wired to the gated generator (shared/iulIllustrationGate.ts) it says so.
   const runBatch = async () => {
-    setProcessing(true);
-    toast.loading("Processing illustrations...");
-    
-    const pendingRows = rows.filter((r) => r.status === "pending");
-    
-    for (let i = 0; i < rows.length; i++) {
-      if (rows[i].status !== "pending") continue;
-      
-      await new Promise(r => setTimeout(r, 300 / simulationSpeed[0]));
-      
-      const isError = Math.random() > 0.9;
-      setRows(r => r.map((row, idx) => idx === i ? { ...row, status: isError ? "error" : "done" } : row));
-    }
-    
-    setProcessing(false);
-    toast.dismiss();
-    toast.success(`Batch processing completed`);
+    toast.info("Batch runs are not connected to the illustration engine yet. No illustrations were generated.");
   };
 
   const exportData = async () => {
@@ -398,7 +364,6 @@ export default function BatchIllustration() {
         pending: Math.max(0, currentPending - i * (stats.total / 10)),
         completed: Math.min(stats.total, currentDone + i * (stats.done / 10)),
         errors: Math.min(stats.total, currentError + i * (stats.error / 10)),
-        efficiency: 50 + Math.random() * 40 + i * 2
       });
     }
     return data;
@@ -453,6 +418,11 @@ export default function BatchIllustration() {
     <AppShell>
       <div className="space-y-6 pb-20 p-2 md:p-6 bg-[#030712] min-h-screen text-slate-200">
         
+        <div className="rounded-xl border border-amber-500/40 bg-amber-500/10 p-4 text-sm text-amber-200">
+          <strong>Coming soon.</strong> The batch runner is not yet connected to the illustration engine. Rows you add
+          here are a worksheet only: no illustration is produced, and statuses change only when you set them.
+        </div>
+
         {/* Top Header Navigation */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 rc-page-header bg-[#060d19] p-4 rounded-xl border border-[#12233e] shadow-lg">
           <div className="flex items-center gap-4">
@@ -465,9 +435,7 @@ export default function BatchIllustration() {
                 <Badge className="bg-blue-500/20 text-blue-400 border-blue-500/30">v2.4</Badge>
               </h1>
               <p className="text-[#7a95b8] text-sm mt-1 flex items-center gap-2">
-                <Clock className="w-3 h-3" /> Last run: {new Date().toLocaleTimeString()}
-                <span className="text-[#12233e]">|</span>
-                <Users className="w-3 h-3" /> {stats.total} Active Clients
+                <Users className="w-3 h-3" /> {stats.total} rows in this worksheet
               </p>
             </div>
           </div>

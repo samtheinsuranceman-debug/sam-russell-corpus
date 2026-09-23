@@ -97,10 +97,10 @@ export function PetEvolutionOverlay() {
             key={i}
             className="absolute w-1 h-1 bg-amber-400 rounded-full"
             style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animation: `sparkle-float ${1.5 + Math.random() * 3}s ease-in-out infinite`,
-              animationDelay: `${Math.random() * 2}s`,
+              left: `${Math.random() * 100}%`, // decorative
+              top: `${Math.random() * 100}%`, // decorative
+              animation: `sparkle-float ${1.5 + Math.random() * 3}s ease-in-out infinite`, // decorative
+              animationDelay: `${Math.random() * 2}s`, // decorative
             }}
           />
         ))}
