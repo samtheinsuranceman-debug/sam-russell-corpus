@@ -106,6 +106,22 @@ export const CREDIT_LINE_RULES = {
   policyLoadOnPremium: { value: 0.06, verified: false, source: "Premium load assumption consistent with shared/householdWealth.ts (6%).", asOf: "2026-09" } as Sourced<number>,
 } as const;
 
+/**
+ * The engine's sources in the shell's shape (shared/engineSources.ts): every
+ * rule in CREDIT_LINE_RULES with its own source, as-of date and verified flag,
+ * then the issuer table's single provenance line. Derived from the tables
+ * above, never retyped, so a changed rule changes the footer with it.
+ */
+export const CREDIT_LINE_SEQUENCING_SOURCES: readonly { label: string; asOf: string; note: string }[] = [
+  ...Object.entries(CREDIT_LINE_RULES)
+    .filter(([k]) => k !== "rulesVersion")
+    .map(([k, v]) => {
+      const s = v as Sourced<unknown>;
+      return { label: `${k}: ${s.source}`, asOf: s.asOf, note: s.verified ? "Verified against the publisher." : "Unverified: an assumption or community report." };
+    }),
+  { label: `Issuer approval policies (${ISSUER_RULES.map(r => r.name).join(", ")}): ${COMMUNITY}`, asOf: "2026-09", note: "Unverified: community-reported, not published by the issuers." },
+];
+
 // ─────────────────────────────────────────────────────────────────────
 // INPUT / OUTPUT
 // ─────────────────────────────────────────────────────────────────────

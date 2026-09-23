@@ -451,6 +451,8 @@ const NAV_SECTIONS: NavSection[] = [
           { path: "/portal/policy-cost-lab", label: "Policy Cost Lab", icon: Wallet, color: "cyan" },
           { path: "/portal/ai-policy-review", label: "Policy Gap Analysis", icon: Search, color: "emerald" },
           { path: "/portal/policy-loans", label: "Policy Loans", icon: Wallet, color: "cyan" },
+          { path: "/portal/early-cash-value", label: "Early Cash Value", icon: Scale, color: "cyan" },
+          { path: "/portal/credit-line-sequencing", label: "Credit-Line Sequencing", icon: CircleDollarSign, color: "gold" },
           { path: "/portal/policy-review", label: "Policy Review", icon: ChevronRight, color: "amber" },
           { path: "/portal/policy-review-checklist", label: "Policy Review Checklist", icon: ChevronRight, color: "amber" },
           { path: "/portal/premium-financing", label: "Premium Financing", icon: DollarSign, color: "cyan" },
