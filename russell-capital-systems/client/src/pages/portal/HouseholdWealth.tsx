@@ -743,7 +743,7 @@ export default function HouseholdWealth() {
                     <TrendingUp className="h-5 w-5 text-emerald-500" />
                     Family Policy Accumulation — {simulationYears}-Year Projection
                   </CardTitle>
-                  <CardDescription>Account values for all family members' IUL policies growing at 7.5% (NAIC AG 49 max illustrated rate) with 5% loan drag (+0.5% positive arbitrage). Per AG 49, the maximum hypothetical illustrated rate is 7.5% — even though 30-year historical averages exceed this number.</CardDescription>
+                  <CardDescription>Account values for all family members' IUL policies growing at an assumed 7.5% crediting rate with 5% loan drag (+0.5% positive arbitrage).</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <ResponsiveContainer width="100%" height={400}>

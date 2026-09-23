@@ -38,7 +38,7 @@ export interface PolicyLoanInput {
   currentCashValue: number;
   currentAge: number;
   retirementAge: number;
-  illustratedRate: number; // e.g. 0.075 (AG 49 max: 7.5%)
+  illustratedRate: number; // assumed crediting rate, e.g. 0.075
   loanRate: number; // e.g. 0.05 (5% loan rate, +0.5% positive arbitrage)
   loanType: 'fixed' | 'variable' | 'wash';
   annualIncomeNeeded: number;

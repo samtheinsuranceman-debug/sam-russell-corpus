@@ -107,7 +107,7 @@ const BATTLE_CARDS = [
   },
   {
     objection: "The stock market returns more than IUL",
-    response: "The S&P 500 averages 10% but with 30-40% drawdowns. IUL illustrates up to 7.5% per NAIC AG 49 (non-guaranteed) with ZERO downside — even though 30-year historical averages are more than twice this number. Over 30 years, the sequence-of-returns risk in the market can devastate retirement income. IUL's floor protection means your retirement income is predictable and guaranteed.",
+    response: "The S&P 500 averages 10% but with 30-40% drawdowns. An IUL credits the index gain up to its cap with a 0% floor (non-guaranteed; each carrier's illustrated maximum is set under NAIC AG 49-A). Over 30 years, the sequence-of-returns risk in the market can devastate retirement income. IUL's floor protection means your retirement income is predictable and guaranteed.",
     killer: "Show them the 2000-2010 'Lost Decade' — the S&P returned 0% while IUL averaged 6-8% (illustrated, non-guaranteed).",
     icon: TrendingUp, color: "text-amber-400",
   },
@@ -612,7 +612,7 @@ export default function CompetitiveAnalysis() {
                   <div><Label>Annual Contribution</Label><NumberInput value={annualContribution} onChange={(v) => setAnnualContribution(v)} className="mt-1" min={1000} step={5000} /></div>
                   <div><Label>Years</Label><NumberInput value={years} onChange={(v) => setYears(v)} className="mt-1" min={10} max={50} /></div>
                   <div><Label>Tax Bracket</Label><NumberInput value={taxBracket} onChange={(v) => setTaxBracket(v)} className="mt-1" min={0.10} max={0.37} step={0.01} /></div>
-                  <div><Label>IUL Rate (AG 49 Max: 7.5%)</Label><NumberInput value={iulRate} onChange={(v) => setIulRate(v)} className="mt-1" min={0.01} max={0.075} step={0.005} /></div>
+                  <div><Label>Assumed crediting rate</Label><NumberInput value={iulRate} onChange={(v) => setIulRate(v)} className="mt-1" min={0.01} max={0.12} step={0.005} /></div>
                   <div><Label>Market Rate</Label><NumberInput value={marketRate} onChange={(v) => setMarketRate(v)} className="mt-1" min={0.01} max={0.20} step={0.01} /></div>
                 </div>
                 <Button onClick={runCompare} className="mt-4 bg-emerald-600 hover:bg-emerald-700" disabled={compareMut.isPending}>

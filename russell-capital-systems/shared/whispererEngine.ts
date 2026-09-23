@@ -407,7 +407,7 @@ export const OBJECTION_LIBRARY: ObjectionTemplate[] = [
     boost: (_c, d, p) => ({ score: (d === "analytical" ? 0.15 : 0) + (p === "presentation" ? 0.1 : 0), why: [] }),
     handle: "Do not defend insurance. Agree that as an investment it loses to an index fund, then reposition it: it is the tax-free income layer and the protection wrapper, bought with money the mortgage cycle freed.",
     talkTrack: () => `You are right: as an investment against an index fund, it loses. That is not the job. The job is tax-free income in the years your other accounts are taxed hardest, and a wrapper a creditor cannot reach. Let me show you the year-by-year with and without it.`,
-    strategies: ["IUL vs Roth comparison", "Time Machine policy design (AG-49 compliant)", "Trust-owned IUL for protection", "IUL historical index performance"],
+    strategies: ["IUL vs Roth comparison", "Time Machine policy design", "Trust-owned IUL for protection", "IUL historical index performance"],
     calculators: [{ label: "IUL vs Roth", path: "/portal/iul-vs-roth" }, { label: "IUL Historical Performance", path: "/portal/iul-historical" }, { label: "Time Machine Calculator", path: "/portal/time-machine-calculator" }],
   },
   {

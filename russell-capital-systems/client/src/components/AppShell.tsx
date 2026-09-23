@@ -39,6 +39,7 @@ import { EngineWhyFooter, QuestionWhy } from "@/components/rooms/Reveal";
 import { RoomVideoTile } from "@/components/rooms/RoomVideoTile";
 import PredictiveFooter from "@/components/PredictiveFooter";
 import EngineSourcesFooter from "@/components/EngineSourcesFooter";
+import PolicyDisclosureLine from "@/components/PolicyDisclosureLine";
 
 /* ═══════════════════════════════════════════════════════════════════
    COLOR-CODED NAVIGATION — Intuitive categories with visual coding
@@ -1673,6 +1674,8 @@ export function AppShell({ children, title: _title, subtitle: _subtitle }: { chi
           )}
           {/* Go-deeper buttons: the less-essential pages of this subject, data-driven */}
           <DeeperButtons />
+          {/* One line naming the product on every engine that runs on a policy (shared/policyDisclosure.ts). */}
+          <PolicyDisclosureLine path={location} />
           {children}
           {/* The predictive engine on every predictive calculator: forecast, scenarios, confidence horizon, citations. Off until opened. */}
           <PredictiveFooter path={location} />

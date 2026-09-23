@@ -434,7 +434,7 @@ export const DATA_FLOW_LINKS: DataFlowLink[] = [
     from: "time-machine",
     to: "iul-projection",
     label: "AG49 Returns → IUL Projection",
-    description: "Time Machine AG49-compliant returns feed into IUL projection modeling.",
+    description: "Time Machine returns feed into IUL projection modeling.",
     mapData: (src: TimeMachineResult) => ({ avgReturn: src.ag49CompliantReturn, cashValue: src.cashValueYear20 }),
   },
   {
