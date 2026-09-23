@@ -246,12 +246,10 @@ describe("Provider catalog", () => {
       // connectable and silently fail at call time.
       const hasHttpsDefault = p.baseUrl.startsWith("https://");
       const needsOverride = p.baseUrl === "" || p.baseUrl.startsWith("http://");
-      if (p.id !== "forge") {
-        expect(hasHttpsDefault || needsOverride, `${p.id} base URL`).toBe(true);
-        if (needsOverride) {
-          expect(p.caution, `${p.id} has no https default, so it must tell the operator to set a Base URL override`)
-            .toMatch(/base url|override|your own/i);
-        }
+      expect(hasHttpsDefault || needsOverride, `${p.id} base URL`).toBe(true);
+      if (needsOverride) {
+        expect(p.caution, `${p.id} has no https default, so it must tell the operator to set a Base URL override`)
+          .toMatch(/base url|override|your own/i);
       }
     }
   });

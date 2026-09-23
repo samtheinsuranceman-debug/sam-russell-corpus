@@ -4,18 +4,18 @@ import { ArrowLeft, ArrowRight, ShieldCheck } from "lucide-react";
 const routeCopy: Record<string, { label: string; title: string; body: string }> = {
   "/register": {
     label: "Account access",
-    title: "Registration is managed securely",
-    body: "Russell Capital Systems now provisions access through the managed identity service. Continue to sign in; approved accounts and roles are resolved server-side.",
+    title: "Access is by invitation",
+    body: "Russell Capital Systems does not take open registrations. Invited visitors sign in with their email and the entrance passcode they were given; approved accounts and roles are resolved server-side.",
   },
   "/forgot-password": {
     label: "Account recovery",
     title: "Password recovery has moved",
-    body: "Local portal passwords have been retired. Continue to the secure identity service to recover or access your authorized account.",
+    body: "Visitor passwords are not stored. Invited visitors use the entrance passcode; if you have lost it, ask the firm for it again.",
   },
   "/reset-password": {
     label: "Account recovery",
     title: "Password reset links are retired",
-    body: "The portal no longer stores or resets local passwords. Continue through secure sign in for identity-managed recovery.",
+    body: "The portal does not store or reset visitor passwords. Continue to sign in with the entrance passcode the firm gave you.",
   },
   "/trial": {
     label: "Portal access",

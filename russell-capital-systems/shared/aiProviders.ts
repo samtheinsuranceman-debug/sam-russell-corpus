@@ -894,27 +894,10 @@ export const PROVIDERS: ProviderDefinition[] = [
     caution: "Set the Base URL override to https://<your-workspace>/serving-endpoints before this brain can be called.",
     requiresBaseUrl: true,
   },
-
-  // ─── Internal: the gateway the platform shipped with ────────────────────
-  {
-    id: "forge",
-    name: "Built-in Gateway",
-    country: "Managed",
-    wireFormat: "openai-compatible",
-    baseUrl: "",
-    chatPath: "/v1/chat/completions",
-    defaultModel: "gemini-2.5-flash",
-    suggestedModels: ["gemini-2.5-flash"],
-    keyPattern: /.+/,
-    keyHint: "Configured by the hosting environment",
-    consoleUrl: "",
-    role: "The gateway the platform shipped with. Kept as a last-resort fallback so the advisor still answers if every other provider is down.",
-    caution: "Routes to a fast, non-flagship model with a minimal reasoning budget. Adequate as a fallback; not what should be answering a strategy question.",
-  },
 ];
 
-/** The fifty-five brains the owner can wire — everything except the internal gateway. */
-export const BRAIN_PROVIDERS: ProviderDefinition[] = PROVIDERS.filter(p => p.id !== "forge");
+/** The brains the owner can wire. There is no internal gateway entry. */
+export const BRAIN_PROVIDERS: ProviderDefinition[] = PROVIDERS;
 
 /**
  * ─── OWNER'S STANDING RULE: NO CHINA-LINKED AI ──────────────────────────────

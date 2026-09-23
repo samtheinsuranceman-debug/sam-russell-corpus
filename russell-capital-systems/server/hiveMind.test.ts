@@ -12,10 +12,10 @@ type Reply = Awaited<ReturnType<Complete>>;
 
 /**
  * A stand-in for brainComplete: answers by the preferred provider when it is
- * in `live`, otherwise by the first live one (that is what the real chain does),
- * or by the gateway ("forge") when nothing is live. Records every call.
+ * in `live`, otherwise by the first live one (that is what the real chain does).
+ * With nothing live it throws, as the real chain does. Records every call.
  */
-function fakeBrain(live: Record<string, string>, opts: { reconcile?: string; gateway?: string } = {}) {
+function fakeBrain(live: Record<string, string>, opts: { reconcile?: string } = {}) {
   const calls: Array<{ preferProvider?: string; user: string; system: string }> = [];
   const complete: Complete = async (params) => {
     const system = params.messages.find(m => m.role === "system")?.content ?? "";
@@ -25,7 +25,6 @@ function fakeBrain(live: Record<string, string>, opts: { reconcile?: string; gat
     const ids = Object.keys(live);
     const pick = params.preferProvider && live[params.preferProvider] !== undefined ? params.preferProvider : ids[0];
     if (pick) return { text: live[pick], providerId: pick, model: `${pick}-model`, attempted: [] } as Reply;
-    if (opts.gateway) return { text: opts.gateway, providerId: "forge", model: "gateway", attempted: [] } as Reply;
     throw new Error("no provider available");
   };
   return { complete, calls };
@@ -102,13 +101,7 @@ describe("hive mind", () => {
     expect(a.text).toBe("same brain");
   });
 
-  it("says so when only the gateway answered, and when nothing answered", async () => {
-    const gateway = fakeBrain({}, { gateway: "gateway said hi" });
-    const a = await askHive(USER, { question: "anything" }, { ...quiet, complete: gateway.complete, members: members([]) });
-    expect(a.text).toBe("gateway said hi");
-    expect(a.fallback).toBe(true);
-    expect(a.answeredBy).toEqual([{ providerId: "forge", model: "gateway", role: "primary" }]);
-
+  it("says so when nothing answered (there is no hosted gateway to fall back on)", async () => {
     const dark = fakeBrain({});
     const none = await askHive(USER, { question: "anything" }, { ...quiet, complete: dark.complete, members: members([]) });
     expect(none.fallback).toBe(true);

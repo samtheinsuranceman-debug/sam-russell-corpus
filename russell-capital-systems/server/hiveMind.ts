@@ -4,8 +4,8 @@
 // One AI address (board decision D24, 22 Sep 2026): every model call in this
 // file goes through `brainComplete()` from the Brain Hub registry. The hive
 // owns no provider transport of its own; a test reads this file and fails if
-// one appears. The chain — vault keys, then Railway environment keys, then the
-// built-in gateway — is the Brain Hub's, so the hive and the advisor page
+// one appears. The chain — vault keys, then Railway environment keys — is the
+// Brain Hub's, so the hive and the advisor page
 // answer through the same brains with the same fallback rule and the same
 // `answeredBy`.
 //
@@ -31,9 +31,6 @@ import { legacyActivityEvents, recentHiveEvents, recordHiveEvent } from "./hiveM
 import { registeredModules } from "@shared/aiMemoryBank";
 import { brainComplete, environmentCredentials, liveProviderIds } from "./providerRegistry";
 import { loadEnabledServers } from "./mcpRegistry";
-
-/** The gateway id brainComplete reports when no configured brain answered. */
-const GATEWAY_PROVIDER_ID = "forge";
 
 /** Every provider whose key resolves right now, tagged by where the key lives. */
 export async function hiveMembers(): Promise<HiveRoster["members"]> {
@@ -145,7 +142,7 @@ export async function askHive(userId: number, input: HiveAskInput, deps: HiveDep
   await d.record(userId, { kind: "question", routePath: input.routePath, payload: { question: question.slice(0, 500), domain, depth: input.depth ?? "direct" } });
 
   // Fan-out: prefer the first n live members, one brainComplete call each.
-  // With no live member the chain itself decides (it ends at the gateway).
+  // With no live member the chain itself decides (and throws when it is empty).
   const { n, reconcile } = fanOutFor(input.depth);
   const members = await d.members().catch(() => [] as HiveRoster["members"]);
   const preferred: (string | undefined)[] = members.slice(0, Math.max(1, n)).map(m => m.providerId);
@@ -176,12 +173,11 @@ export async function askHive(userId: number, input: HiveAskInput, deps: HiveDep
   let fallback = false;
 
   if (unique.length === 0) {
-    text = `${ADVISOR_NAME} has no member able to answer right now: no brain in the chain responded and the gateway did not respond. The question was recorded.`;
+    text = `${ADVISOR_NAME} has no member able to answer right now: no brain in the chain responded. The question was recorded.`;
     fallback = true;
   } else if (unique.length === 1 || !reconcile) {
     text = unique[0].text;
     unique.forEach((dr, i) => answeredBy.push({ providerId: dr.providerId, model: dr.model, role: i === 0 ? "primary" : "second" }));
-    fallback = unique[0].providerId === GATEWAY_PROVIDER_ID;
   } else {
     unique.forEach((dr, i) => answeredBy.push({ providerId: dr.providerId, model: dr.model, role: i === 0 ? "primary" : "second" }));
     const reconcileUser = [
@@ -197,7 +193,6 @@ export async function askHive(userId: number, input: HiveAskInput, deps: HiveDep
       if (rec.text.trim()) {
         text = rec.text.trim();
         answeredBy.push({ providerId: rec.providerId, model: rec.model, role: "reconciler" });
-        fallback = rec.providerId === GATEWAY_PROVIDER_ID;
       } else {
         text = unique[0].text;
       }
