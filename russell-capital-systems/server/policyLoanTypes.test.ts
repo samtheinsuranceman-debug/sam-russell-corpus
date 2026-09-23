@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import {
   DECLARED_RATE, PARTICIPATING, compareLoanTypes, overloanEligibleYear, runLoan,
-  termsFor, LOAN_DISCLOSURE, type LoanRunInput,
+  termsFor, LOAN_DISCLOSURE, CARRIER_LOAN_PROFILES, modellableCarriers, type LoanRunInput,
 } from "../shared/policyLoanTypes";
 
 /** A good run: capped at 12, floored at 0, one flat year in the middle. */
@@ -153,5 +153,43 @@ describe("honesty of the summary", () => {
   it("maps loan types to terms without a default that hides a mistake", () => {
     expect(termsFor("declared").type).toBe("declared");
     expect(termsFor("participating").type).toBe("participating");
+  });
+});
+
+describe("the carrier registry — three carriers, three machines", () => {
+  it("holds all three with a source and an as-of date each", () => {
+    expect(CARRIER_LOAN_PROFILES).toHaveLength(3);
+    for (const c of CARRIER_LOAN_PROFILES) {
+      expect(c.source.length).toBeGreaterThan(20);
+      expect(c.asOf).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+      expect(c.notes.length).toBeGreaterThan(0);
+    }
+  });
+
+  it("models only the carrier whose participating terms are actually documented", () => {
+    // Pacific Life's illustration runs zero distributions, so its loan rate
+    // table is empty. Lafayette is whole life and has no participating loan.
+    // One carrier is modellable and the registry says so rather than guessing.
+    const m = modellableCarriers();
+    expect(m).toHaveLength(1);
+    expect(m[0].carrier).toBe("Nationwide");
+  });
+
+  it("marks Pacific Life's rates absent rather than inventing them", () => {
+    const pl = CARRIER_LOAN_PROFILES.find((c) => c.carrier === "Pacific Life")!;
+    expect(pl.participatingCharged).toBeNull();
+    expect(pl.notes.join(" ")).toContain("Policy Distributions 0");
+  });
+
+  it("records that the whole life product has no participating loan at all", () => {
+    const ll = CARRIER_LOAN_PROFILES.find((c) => c.kind === "whole_life")!;
+    expect(ll.participatingCharged).toBeNull();
+    expect(ll.notes.join(" ")).toContain("arbitrage does not exist on this product");
+    expect(ll.declaredCredited).toContain("not credited to the cash value");
+  });
+
+  it("flags both IUL carriers as able to change which accounts qualify", () => {
+    const iuls = CARRIER_LOAN_PROFILES.filter((c) => c.kind === "iul");
+    expect(iuls.every((c) => c.carrierMayChangeEligibleAccounts)).toBe(true);
   });
 });

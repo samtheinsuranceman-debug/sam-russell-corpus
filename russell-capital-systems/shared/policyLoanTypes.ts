@@ -336,3 +336,93 @@ export const LOAN_DISCLOSURE =
   "Declared Rate: charged 3.90% years 1-10 / 3.00% years 11+, credited 3.00% (guaranteed 3.90% charged / 1.00% credited). " +
   "Alternative (participating): charged 5.00% current, 8.00% guaranteed maximum, set quarterly by Nationwide in advance, " +
   "with the borrowed amount remaining allocated to the index strategies. Neither rate is fixed for the life of the policy.";
+
+// ============================================================
+// CARRIER REGISTRY — three carriers, three different machines.
+//
+// Transcribed 23 September 2026 from illustrations supplied by the operator.
+// Where a figure is not in the document it is `null` and says so. Nothing here
+// is filled in from memory or from a competitor's terms.
+// ============================================================
+
+export interface CarrierLoanProfile {
+  carrier: string;
+  product: string;
+  kind: "iul" | "whole_life";
+  /** The conservative loan: what it charges and what it credits back. */
+  declaredCharged: string;
+  declaredCredited: string;
+  /** The participating loan, where the collateral keeps index exposure. */
+  participatingCharged: string | null;
+  participatingCredited: string | null;
+  /** True when the carrier can move the goalposts on which accounts qualify. */
+  carrierMayChangeEligibleAccounts: boolean;
+  notes: readonly string[];
+  source: string;
+  asOf: string;
+}
+
+export const CARRIER_LOAN_PROFILES: readonly CarrierLoanProfile[] = [
+  {
+    carrier: "Nationwide",
+    product: "Indexed UL Accumulator III",
+    kind: "iul",
+    declaredCharged: "3.90% years 1–10, 3.00% years 11+ (current); 3.90% guaranteed",
+    declaredCredited: "3.00% current; 1.00% guaranteed",
+    participatingCharged: "5.00% current; 8.00% guaranteed maximum; set quarterly, declared in advance",
+    participatingCredited: "the index strategy's own credit — 0% floor",
+    carrierMayChangeEligibleAccounts: true,
+    notes: [
+      "'Alternative Policy Loans — the money borrowed remains allocated to the selected interest crediting strategies and continues to receive the interest credited to those strategies.'",
+      "'Nationwide reserves the right to designate which indexed interest strategies are available for new alternative loans in the future.'",
+      "'Alternative Loans are more volatile than Declared Rate Loans because the interest charged and credited both can vary more.'",
+      "Overloan Lapse Protection Rider II gate: age 65 AND 15th anniversary AND a trigger point by attained age. Neither the IRS nor the courts have ruled on its treatment.",
+    ],
+    source: "Nationwide Indexed UL Accumulator III illustration, Form ICC25-NWLA-692, prepared 19 Mar 2026",
+    asOf: "2026-03-19",
+  },
+  {
+    carrier: "Pacific Life",
+    product: "Pacific Horizon ECV IUL (GPT)",
+    kind: "iul",
+    declaredCharged: null as unknown as string,
+    declaredCredited: null as unknown as string,
+    participatingCharged: null,
+    participatingCredited: null,
+    carrierMayChangeEligibleAccounts: true,
+    notes: [
+      "RATES NOT IN THE DOCUMENT. This illustration runs 'Policy Distributions 0' — no loans are illustrated — so no loan rate table is populated. The same gap appeared on the Securian BGA III run for this client.",
+      "Loan types exist and are configurable: 'Switch Loan Debt from Standard to Alternate' and back, both set to No here.",
+      "'All policy charges, Standard Policy Loans and Withdrawals will be deducted from the Fixed Account. If the Fixed Account is depleted, any remaining deductions are taken proportionate to each Segment Value across all segments in the Indexed Accounts.' — a standard loan pulls money OUT of the index.",
+      "'The Alternate Interest Rate applies only to eligible accounts ... Pacific Life Insurance Company may change the eligible accounts at any time.'",
+      "Illustrated interest rate 4.50% years 1–52; guaranteed 1.00%.",
+      "Carries SVER coverage and a year-8 conversion rider at no cost, surrender charges waived, no evidence of insurability.",
+    ],
+    source: "Pacific Horizon ECV IUL illustration, Form Series ICC21 P21IUL, run 16 Sep 2026 for M. Corrales",
+    asOf: "2026-09-16",
+  },
+  {
+    carrier: "Lafayette Life",
+    product: "Patriot 2022 Level Premium Whole Life",
+    kind: "whole_life",
+    declaredCharged: "adjustable, changed year to year by the carrier; minimum 0.00%, maximum 8.00%",
+    declaredCredited: "none — 'Interest that you pay to us is not credited to the cash value of the policy and it does not increase the cash value of the policy.'",
+    participatingCharged: null,
+    participatingCredited: null,
+    carrierMayChangeEligibleAccounts: false,
+    notes: [
+      "Whole life, not IUL. There is no index, no cap and no floor — growth comes from guaranteed cash value plus a dividend that is NOT guaranteed.",
+      "No participating-loan mechanism. The IUL arbitrage does not exist on this product.",
+      "'Any interest that is not paid at the end of a policy year is added to the loan balance, which will also be charged interest.'",
+      "'A policy dividend, if any, may not be sufficient to pay loan interest.'",
+      "Illustrated at 100% of the current dividend scale — the top of the range, and the scale can fall.",
+    ],
+    source: "Lafayette Life Patriot 2022 illustration, Policy Form LL-01 2104 CA",
+    asOf: "2026-09-23",
+  },
+];
+
+/** Carriers whose participating-loan terms are documented well enough to model. */
+export function modellableCarriers(): CarrierLoanProfile[] {
+  return CARRIER_LOAN_PROFILES.filter((c) => c.participatingCharged !== null);
+}
