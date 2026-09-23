@@ -73,6 +73,10 @@ import { formatTaxCurrency } from "@shared/taxBracketEngine";
 import { RelatedCalculators } from "@/components/RelatedCalculators";
 import { ComplianceFooter } from "@/components/ComplianceFooter";
 
+// S&P 500 total return with dividends, percent: Aswath Damodaran, NYU Stern, "Historical Returns on
+// Stocks, Bonds and Bills" (histretSP), https://pages.stern.nyu.edu/~adamodar/New_Home_Page/datafile/histretSP.html
+// (checked 23 Sep 2026 against 2008 −36.55, 2022 −18.04, 2023 26.06, 2024 24.88). This series is Damodaran's,
+// not Ibbotson SBBI's; the page previously named SBBI as its source.
 const SP500_RETURNS: Record<number, number> = {
   1929: -8.30, 1930: -25.12, 1931: -43.84, 1932: -8.64, 1933: 49.98,
   1934: -1.19, 1935: 46.74, 1936: 31.94, 1937: -35.34, 1938: 29.28,
@@ -93,7 +97,9 @@ const SP500_RETURNS: Record<number, number> = {
   2009: 25.94, 2010: 14.82, 2011: 2.10, 2012: 15.89, 2013: 32.15,
   2014: 13.52, 2015: 1.38, 2016: 11.77, 2017: 21.61, 2018: -4.23,
   2019: 31.21, 2020: 18.02, 2021: 28.47, 2022: -18.04, 2023: 26.06,
-  2024: 24.88, 2025: 17.78,
+  // 2025: 17.72% (price +16.39%, dividend yield 1.34%) — Damodaran, "Data Update 2 for 2026",
+  // https://pages.stern.nyu.edu/~adamodar/pdfiles/blog/DataUpdate2for2026.pdf (read 23 Sep 2026). Was 17.78.
+  2024: 24.88, 2025: 17.72,
 };
 
 const YEARS = Object.keys(SP500_RETURNS).map(Number).sort((a, b) => a - b);
@@ -1536,9 +1542,9 @@ export default function IbbotsonCharts() {
               <Info size={16} className="text-[#7a95b8] mt-0.5 shrink-0" />
               <div className="text-[10px] text-[#7a95b8] leading-relaxed space-y-3">
                 <p>
-                  <span className="text-white font-semibold">Data Sources:</span> S&P 500 total return data (including dividends) sourced from
-                  the Ibbotson SBBI (Stocks, Bonds, Bills, and Inflation) dataset, originally compiled by Roger G. Ibbotson and Rex A. Sinquefield,
-                  and maintained by Morningstar/CRSP. Additional data from NYU Stern School of Business (Aswath Damodaran).
+                  <span className="text-white font-semibold">Data Sources:</span> S&P 500 total return data (including dividends) from
+                  Aswath Damodaran's "Historical Returns on Stocks, Bonds and Bills" (NYU Stern, histretSP), 1929–2025. The page
+                  keeps the Ibbotson name for the method — Ibbotson and Sinquefield's historical-returns framework — not for the data.
                 </p>
                 <p>
                   <span className="text-white font-semibold">Important Disclosure:</span> This page is for educational and illustrative purposes only.

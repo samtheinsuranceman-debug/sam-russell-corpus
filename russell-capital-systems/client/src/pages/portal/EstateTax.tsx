@@ -193,7 +193,8 @@ export default function EstateTax() {
     if (!result) return [];
     return [
       { label: "Current Law", tax: result.sunsetAnalysis.currentTax, exemption: result.sunsetAnalysis.currentExemption },
-      { label: "After 2026 Sunset", tax: result.sunsetAnalysis.sunsetTax, exemption: result.sunsetAnalysis.sunsetExemption },
+      // The engine's "sunset" figures are 2026 current law since P.L. 119-21 cancelled the sunset (see shared/estateTaxEngine.ts).
+      { label: "2026 (P.L. 119-21)", tax: result.sunsetAnalysis.sunsetTax, exemption: result.sunsetAnalysis.sunsetExemption },
     ];
   }, [result]);
 
@@ -248,7 +249,7 @@ export default function EstateTax() {
             Estate Tax Impact Calculator
           </h1>
           <p className="text-muted-foreground mt-1">
-            Comprehensive federal estate tax analysis with ILIT planning, gifting strategies, and 2026 sunset projections
+            Comprehensive federal estate tax analysis with ILIT planning, gifting strategies, and projections under current law (P.L. 119-21)
           </p>
         </div>
 
@@ -291,7 +292,7 @@ export default function EstateTax() {
             <SelectContent>
               <SelectItem value="2024">2024</SelectItem>
               <SelectItem value="2025">2025</SelectItem>
-              <SelectItem value="2026">2026 (Sunset)</SelectItem>
+              <SelectItem value="2026">2026</SelectItem>
               <SelectItem value="2027">2027</SelectItem>
             </SelectContent>
           </Select>
@@ -311,7 +312,7 @@ export default function EstateTax() {
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
             <StatCard label="Gross Estate" value={fmtShort(result.grossEstate)} color="#3b82f6" icon={Building} />
             <StatCard label="Deductions" value={fmtShort(result.totalDeductions)} color="#f59e0b" icon={Scale} />
-            <StatCard label="Exemption" value={fmtShort(result.exemption)} color="#22c55e" icon={Shield} subtitle={year >= 2026 ? "Post-sunset" : "Current law"} />
+            <StatCard label="Exemption" value={fmtShort(result.exemption)} color="#22c55e" icon={Shield} subtitle="Current law" />
             <StatCard label="Taxable Estate" value={fmtShort(result.taxableEstate)} color="#f97316" icon={Calculator} />
             <StatCard label="Estate Tax" value={fmt(result.federalEstateTax)} color="#ef4444" icon={AlertTriangle} subtitle={`Effective: ${pct(result.effectiveRate)}`} />
             <StatCard label="Net to Heirs" value={fmtShort(result.netToHeirs)} color="#a855f7" icon={Users} />
@@ -337,7 +338,7 @@ export default function EstateTax() {
               <Gift className="h-3.5 w-3.5 mr-1.5 hidden sm:inline" />Gifting
             </TabsTrigger>
             <TabsTrigger value="sunset" className="text-xs sm:text-sm px-3 py-2 flex-none whitespace-nowrap rounded-lg font-semibold data-[state=active]:bg-red-600 data-[state=active]:text-white data-[state=active]:shadow-md data-[state=inactive]:text-slate-200 data-[state=inactive]:hover:bg-slate-700/60 transition-all">
-              <AlertTriangle className="h-3.5 w-3.5 mr-1.5 hidden sm:inline" />2026 Sunset
+              <AlertTriangle className="h-3.5 w-3.5 mr-1.5 hidden sm:inline" />2026 Law
             </TabsTrigger>
             <TabsTrigger value="projections" className="text-xs sm:text-sm px-3 py-2 flex-none whitespace-nowrap rounded-lg font-semibold data-[state=active]:bg-cyan-600 data-[state=active]:text-white data-[state=active]:shadow-md data-[state=inactive]:text-slate-200 data-[state=inactive]:hover:bg-slate-700/60 transition-all">
               <TrendingUp className="h-3.5 w-3.5 mr-1.5 hidden sm:inline" />Wealth Growth
@@ -473,7 +474,7 @@ export default function EstateTax() {
                 <Card className="bg-slate-800/50 border-slate-700/50">
                   <CardHeader>
                     <CardTitle className="text-lg text-slate-100">10-Year Estate Tax Projection</CardTitle>
-                    <CardDescription>Assuming 3% annual estate growth — note the 2026 sunset cliff</CardDescription>
+                    <CardDescription>Assuming 3% annual estate growth — exemption per current law (P.L. 119-21: $15M in 2026, no sunset)</CardDescription>
                   </CardHeader>
                   <CardContent>
                     <ResponsiveContainer width="100%" height={300}>
@@ -942,7 +943,7 @@ export default function EstateTax() {
             )}
           </TabsContent>
 
-          {/* ═══════════ 2026 SUNSET TAB ═══════════ */}
+          {/* ═══════════ 2026 LAW TAB (was "2026 Sunset") ═══════════ */}
           <TabsContent value="sunset" className="space-y-6 mt-4">
             <Card className="border-red-500/30 bg-red-500/5">
               <CardContent className="pt-5 pb-4">
@@ -951,10 +952,11 @@ export default function EstateTax() {
                     <AlertTriangle className="w-8 h-8 text-red-400" />
                   </div>
                   <div>
-                    <p className="text-lg font-bold text-red-400">2026 Estate Tax Sunset Warning</p>
+                    {/* P.L. 119-21 § 70106 amending IRC § 2010(c)(3), https://www.congress.gov/119/plaws/publ21/PLAW-119publ21.pdf; Rev. Proc. 2025-32, https://www.irs.gov/pub/irs-drop/rp-25-32.pdf (read 23 Sep 2026). Was a "2026 Estate Tax Sunset Warning" ($13.61M reverting to ~$7M). */}
+                    <p className="text-lg font-bold text-red-400">No 2026 Sunset Under Current Law</p>
                     <p className="text-sm text-slate-300 mt-1">
-                      The Tax Cuts and Jobs Act (TCJA) doubled the estate tax exemption to $13.61M per person.
-                      Unless Congress acts, this provision sunsets on January 1, 2026, reverting the exemption to approximately $7M (adjusted for inflation).
+                      The TCJA's scheduled 2026 sunset did not happen. The One Big Beautiful Bill Act (P.L. 119-21, July 2025) set the
+                      exemption at $15M per person for 2026, indexed for inflation, with no expiry. A lower exemption would take a new act of Congress — treat it as a "what if" scenario, not a deadline.
                     </p>
                   </div>
                 </div>
@@ -967,7 +969,7 @@ export default function EstateTax() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <Card className="bg-slate-800/50 border-emerald-500/30">
                     <CardHeader>
-                      <CardTitle className="text-lg text-emerald-400">Current Law (2024-2025)</CardTitle>
+                      <CardTitle className="text-lg text-emerald-400">This Year</CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-3">
                       <div className="flex justify-between"><span className="text-sm text-slate-400">Exemption</span><span className="text-sm font-bold text-emerald-400">{fmt(result.sunsetAnalysis.currentExemption)}</span></div>
@@ -977,7 +979,7 @@ export default function EstateTax() {
                   </Card>
                   <Card className="bg-slate-800/50 border-red-500/30">
                     <CardHeader>
-                      <CardTitle className="text-lg text-red-400">After 2026 Sunset</CardTitle>
+                      <CardTitle className="text-lg text-red-400">2026 Under P.L. 119-21</CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-3">
                       <div className="flex justify-between"><span className="text-sm text-slate-400">Exemption</span><span className="text-sm font-bold text-red-400">{fmt(result.sunsetAnalysis.sunsetExemption)}</span></div>
@@ -991,7 +993,7 @@ export default function EstateTax() {
                 <Card className="bg-slate-800/50 border-slate-700/50">
                   <CardHeader>
                     <CardTitle className="text-lg text-slate-100">Tax Impact Comparison</CardTitle>
-                    <CardDescription>How the 2026 sunset affects your estate tax liability</CardDescription>
+                    <CardDescription>This year versus 2026 under current law</CardDescription>
                   </CardHeader>
                   <CardContent>
                     <ResponsiveContainer width="100%" height={300}>
@@ -1016,9 +1018,9 @@ export default function EstateTax() {
                   <Card className="border-red-500/30 bg-red-500/5">
                     <CardContent className="pt-5 text-center">
                       <p className="text-3xl font-bold text-red-400">{fmt(result.sunsetAnalysis.additionalExposure)}</p>
-                      <p className="text-sm text-slate-400 mt-1">Additional estate tax exposure after 2026 sunset</p>
+                      <p className="text-sm text-slate-400 mt-1">Additional estate tax exposure in 2026 versus this year</p>
                       <p className="text-xs text-slate-500 mt-2">
-                        Act now: use gifting, ILIT strategies, and Roth conversions to reduce exposure before the sunset takes effect.
+                        Gifting, ILIT strategies, and Roth conversions can reduce this exposure.
                       </p>
                     </CardContent>
                   </Card>
@@ -1027,14 +1029,15 @@ export default function EstateTax() {
                 {/* Action items */}
                 <Card className="bg-slate-800/50 border-slate-700/50">
                   <CardHeader>
-                    <CardTitle className="text-lg text-slate-100">Pre-Sunset Action Plan</CardTitle>
+                    <CardTitle className="text-lg text-slate-100">Exemption Action Plan</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {[
-                        { title: "Maximize Annual Gifts", desc: "Gift $18,000 per recipient per year to reduce estate size without using lifetime exemption.", icon: Gift, color: "#ec4899" },
-                        { title: "Establish an ILIT", desc: "Move life insurance out of your estate before the exemption drops. This is especially critical for large policies.", icon: Shield, color: "#10b981" },
-                        { title: "Use Lifetime Exemption", desc: "Consider making large gifts now while the $13.61M exemption is available. The IRS has confirmed gifts made under current law won't be clawed back.", icon: DollarSign, color: "#22c55e" },
+                        // Annual exclusion $19,000 and exemption $15M for 2026 — P.L. 119-21 § 70106 amending IRC § 2010(c)(3), https://www.congress.gov/119/plaws/publ21/PLAW-119publ21.pdf; Rev. Proc. 2025-32, https://www.irs.gov/pub/irs-drop/rp-25-32.pdf (read 23 Sep 2026). Were $18,000 (2024) and $13.61M (2024).
+                        { title: "Maximize Annual Gifts", desc: "Gift $19,000 per recipient per year (2026, Rev. Proc. 2025-32) to reduce estate size without using lifetime exemption.", icon: Gift, color: "#ec4899" },
+                        { title: "Establish an ILIT", desc: "Move life insurance out of your estate so the death benefit is not counted against the exemption. This is especially important for large policies.", icon: Shield, color: "#10b981" },
+                        { title: "Use Lifetime Exemption", desc: "Large lifetime gifts use the $15M exemption (2026). If a future Congress lowers it, gifts already made are not clawed back (Treas. Reg. § 20.2010-1(c)).", icon: DollarSign, color: "#22c55e" },
                         { title: "Roth Conversions", desc: "Convert traditional IRA to Roth to reduce estate size (pay tax now at known rates) and provide tax-free inheritance.", icon: TrendingUp, color: "#3b82f6" },
                       ].map((item, i) => (
                         <div key={i} className="p-4 rounded-xl border border-slate-700/40 bg-slate-900/40 flex items-start gap-3">

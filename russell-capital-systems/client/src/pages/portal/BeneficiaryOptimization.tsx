@@ -35,6 +35,10 @@ import { useClientData } from "@/contexts/ClientDataContext";
 import { formatTaxCurrency } from "@shared/taxBracketEngine";
 import { RelatedCalculators } from "@/components/RelatedCalculators";
 import { ComplianceFooter } from "@/components/ComplianceFooter";
+import { rulesForYear } from "@shared/taxRules";
+// Federal estate/GST exemption: $15,000,000 per person in 2026, indexed, no sunset — P.L. 119-21 § 70106 amending IRC § 2010(c)(3), https://www.congress.gov/119/plaws/publ21/PLAW-119publ21.pdf; Rev. Proc. 2025-32, https://www.irs.gov/pub/irs-drop/rp-25-32.pdf (read 23 Sep 2026).
+// Replaces the 2024 figure, $13,610,000.
+const ESTATE_EXCLUSION_2026 = rulesForYear(2026).estateBasicExclusion;
 
 const fmt = (n: number) => `$${Math.round(n).toLocaleString()}`;
 const fmtPct = (n: number) => `${(n * 100).toFixed(1)}%`;
@@ -133,7 +137,7 @@ function generateAccounts(client: any): BeneficiaryAccount[] {
       lastReviewed: "2023-11-15",
       issues: !spouse ? ["Estate as beneficiary subjects proceeds to estate tax", "Proceeds will go through probate"] : ["Consider ILIT ownership to remove from taxable estate"],
       status: !spouse ? "critical" : "needs_review",
-      recommendation: !spouse ? "Designate individual beneficiaries immediately. Consider an Irrevocable Life Insurance Trust (ILIT) to remove proceeds from taxable estate." : "If estate exceeds federal exemption ($13.61M in 2024), strongly consider transferring ownership to an ILIT. This removes the death benefit from the taxable estate.",
+      recommendation: !spouse ? "Designate individual beneficiaries immediately. Consider an Irrevocable Life Insurance Trust (ILIT) to remove proceeds from taxable estate." : "If estate exceeds federal exemption ($15M per person in 2026, P.L. 119-21), strongly consider transferring ownership to an ILIT. This removes the death benefit from the taxable estate.",
       taxImplication: "Income tax free, potentially subject to estate tax",
       probateRisk: !spouse ? "High" : "Low",
       liquidityScore: 10
@@ -265,7 +269,7 @@ export default function BeneficiaryOptimization() {
         year: `Year ${year}`,
         value: Math.round(currentTotal),
         taxableValue: Math.round(currentTotal * (1 - (taxRateAssumed / 100))),
-        estateTaxImpact: includeEstateTax && currentTotal > 13610000 ? Math.round((currentTotal - 13610000) * 0.4) : 0
+        estateTaxImpact: includeEstateTax && currentTotal > ESTATE_EXCLUSION_2026 ? Math.round((currentTotal - ESTATE_EXCLUSION_2026) * 0.4) : 0
       });
       currentTotal *= rate;
     }
@@ -1169,7 +1173,7 @@ export default function BeneficiaryOptimization() {
                         
                         <div className="flex items-center space-x-2 pt-4 border-t border-[#1e293b]">
                           <Switch id="estate-tax" checked={includeEstateTax} onCheckedChange={setIncludeEstateTax} />
-                          <Label htmlFor="estate-tax" className="text-white">Calculate Estate Tax (Exemption $13.61M)</Label>
+                          <Label htmlFor="estate-tax" className="text-white">Calculate Estate Tax (Exemption $15M, 2026)</Label>
                         </div>
                       </div>
                       

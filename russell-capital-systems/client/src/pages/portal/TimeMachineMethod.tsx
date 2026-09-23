@@ -271,7 +271,7 @@ IMPORTANT LIMITATIONS:
 • All projections are hypothetical and for educational comparison only
 • Consult a licensed insurance professional for actual policy illustrations
 
-The "Your Plan" illustration uses a flat assumed crediting rate compliant with AG 49 guidelines. The "Time Machine" illustration applies actual index crediting rates that would have been credited based on the selected index strategy's parameters (cap, floor, participation, spread) applied to historical market data. Neither illustration guarantees future performance.`;
+The "Your Plan" column uses a flat assumed crediting rate you set; it is a mechanic, not an AG 49-A illustration. The "Time Machine" illustration applies actual index crediting rates that would have been credited based on the selected index strategy's parameters (cap, floor, participation, spread) applied to historical market data. Neither illustration guarantees future performance.`;
 
 function InfoPill({ text, variant }: { text: string; variant: "yourPlan" | "timeMachine" }) {
   const c = COLORS[variant];
@@ -544,11 +544,11 @@ export default function TimeMachineMethod() {
             <CardHeader>
               <CardTitle className="text-lg flex items-center gap-2">
                 <div className="w-3 h-3 rounded-full" style={{ backgroundColor: COLORS.yourPlan.primary }} />
-                <span className={COLORS.yourPlan.text}>Your Plan</span> — AG 49 Illustrated Rate
+                <span className={COLORS.yourPlan.text}>Your Plan</span> — Assumed Crediting Rate
               </CardTitle>
               <CardDescription>
-                The standard flat crediting rate used for the compliant illustration.
-                This is what a carrier would show you on a standard illustration.
+                The flat crediting rate you assume. This is a mechanic, not an illustration — a carrier's
+                illustration uses the maximum illustrated rate its own AG 49-A calculation produces.
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -563,8 +563,16 @@ export default function TimeMachineMethod() {
                     </SelectContent>
                   </Select>
                 </div>
+                {/* NAIC Actuarial Guideline XLIX-A (AG 49-A, 2020; AG 49-B, 2023), https://content.naic.org/sites/default/files/committees-pending-action-actuarial-guideline-xlix-a-230224.pdf (read 23 Sep 2026). AG 49-A/49-B set no fixed percentage cap. The Benchmark Index Account's
+                    maximum illustrated rate is the lesser of the mean of its 25-year geometric-average credited
+                    rates over the look-back and 145% of the insurer's net investment earnings rate; other index
+                    accounts may not illustrate above it. Was: "AG 49-B limits illustrated rates to the lesser of
+                    6.5% or the Benchmark Index Account rate". */}
                 <p className="text-sm text-muted-foreground">
-                  AG 49-B limits illustrated rates to the lesser of 6.5% or the Benchmark Index Account rate.
+                  AG 49-A and 49-B set no fixed percentage cap. Each carrier computes its own maximum by formula:
+                  the Benchmark Index Account is limited to the average of its 25-year look-back credited rates
+                  (and to 145% of the insurer's net investment earnings rate), and no other index account may
+                  illustrate higher. The rate here is an assumption you set.
                 </p>
               </div>
             </CardContent>
@@ -1021,7 +1029,7 @@ export default function TimeMachineMethod() {
               <div className="flex items-center gap-6 p-3 rounded-lg bg-muted/20 border border-border/50">
                 <div className="flex items-center gap-2">
                   <div className="w-4 h-2 rounded" style={{ backgroundColor: COLORS.yourPlan.primary }} />
-                  <span className="text-xs" style={{ color: COLORS.yourPlan.primary }}>Your Plan — Standard AG 49 flat rate illustration</span>
+                  <span className="text-xs" style={{ color: COLORS.yourPlan.primary }}>Your Plan — flat assumed crediting rate</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-4 h-2 rounded" style={{ backgroundColor: COLORS.timeMachine.primary }} />

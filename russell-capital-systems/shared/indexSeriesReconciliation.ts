@@ -10,8 +10,10 @@
 //     the cap) and replaced when the previous series failed all three. See
 //     `sp500SeriesAudit.ts`, which runs those checks on every test pass.
 //
-//   `ibbotsonModel.SP500_ANNUAL_RETURNS` — sourced "NYU Stern / Damodaran,
-//     Ibbotson SBBI", which is a TOTAL return series: price appreciation plus
+//   `ibbotsonModel.SP500_ANNUAL_RETURNS` — once labelled "NYU Stern / Damodaran,
+//     Ibbotson SBBI"; checked 23 Sep 2026, its figures are S&P Dow Jones
+//     Indices' published total returns (SBBI for pre-1957 years), not
+//     Damodaran's. Either way it is a TOTAL return series: price appreciation plus
 //     reinvested dividends. It has never been audited, it imports nothing, and
 //     it is the series actually driving crediting math on the Mortgage Killer,
 //     IUL vs Roth, Tax-Advantaged Growth, Real Estate Mogul, the crediting
