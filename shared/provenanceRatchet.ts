@@ -20,6 +20,7 @@
 
 /** Engines that carry typed-in numeric literals and name no institution, URL, dated source or exported source constant. */
 export const ZERO_SOURCE_ENGINES: readonly string[] = [
+
 ];
 
 /** Engines with Math.random() in a value path. chainEngine uses it for step ids only (cosmetic, D47). */
@@ -27,7 +28,7 @@ export const UNSEEDED_RANDOM_ENGINES: readonly string[] = [
   "shared/chainEngine.ts",
 ];
 
-/** Catalogue engines with no loader in shared/engineSources.ts, so the shell cannot print their sources yet. */
+/** Catalogue engines with no loader in shared/engineSources.ts, so the shell cannot print their sources yet. outsideForces is server code the shell cannot import. */
 export const CATALOGUE_ENGINES_WITHOUT_SHELL_SOURCES: readonly string[] = [
   "server/outsideForces.ts",
 ];
