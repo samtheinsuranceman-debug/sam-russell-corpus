@@ -108,8 +108,9 @@ const PROVIDERS: Provider[] = [
     call: (k, s, u) => openAiCompatible("https://openrouter.ai/api/v1", "anthropic/claude-sonnet-4.5", k, s, u) },
   { id: "mistral", label: "Mistral", envKey: "MISTRAL_API_KEY",
     call: (k, s, u) => openAiCompatible("https://api.mistral.ai/v1", "mistral-large-latest", k, s, u) },
+  // Groq retired llama-3.3-70b-versatile; gpt-oss-120b (OpenAI open weights) is on the current key's model list.
   { id: "groq", label: "Groq", envKey: "GROQ_API_KEY",
-    call: (k, s, u) => openAiCompatible("https://api.groq.com/openai/v1", "llama-3.3-70b-versatile", k, s, u) },
+    call: (k, s, u) => openAiCompatible("https://api.groq.com/openai/v1", "openai/gpt-oss-120b", k, s, u) },
   // Cohere's OpenAI-compatible endpoint (Command A).
   { id: "cohere", label: "Cohere", envKey: "COHERE_API_KEY",
     call: (k, s, u) => openAiCompatible("https://api.cohere.ai/compatibility/v1", "command-a-03-2025", k, s, u) },
