@@ -22,9 +22,9 @@ import { stepPolicyYear, ILLUSTRATIVE_COI_TABLE, ILLUSTRATIVE_SOURCE } from "@sh
 // that nobody can check. Real terms arrive through carrier_overrides — see
 // docs/carriers/INTAKE.md for what a strategy has to carry before it goes in.
 const CARRIERS = [
-  { id: "mutual-a", name: "Mutual Company A", color: GENOME.accent, loadFee: 0.06,  capRate: 0.11,  floorRate: 0.0,    assumedCredit: 0.06 },
-  { id: "mutual-b", name: "Mutual Company B", color: GENOME.cyan,   loadFee: 0.055, capRate: 0.105, floorRate: 0.0,    assumedCredit: 0.06 },
-  { id: "mutual-c", name: "Mutual Company C", color: "#f5b14c",     loadFee: 0.05,  capRate: 0.10,  floorRate: 0.0075, assumedCredit: 0.06 },
+  { id: "design-1", name: "Illustrative design 1", color: GENOME.accent, loadFee: 0.06,  capRate: 0.11,  floorRate: 0.0,    assumedCredit: 0.06 },
+  { id: "design-2", name: "Illustrative design 2", color: GENOME.cyan,   loadFee: 0.055, capRate: 0.105, floorRate: 0.0,    assumedCredit: 0.06 },
+  { id: "design-3", name: "Illustrative design 3", color: "#f5b14c",     loadFee: 0.05,  capRate: 0.10,  floorRate: 0.0075, assumedCredit: 0.06 },
 ];
 
 // The charge sequence is not this page's to invent. It runs through

@@ -12,7 +12,7 @@
  *
  * ## Carriers are de-identified
  *
- * Mutual Company A, B and C. The terms below are real and sourced; the names
+ * Mutual Company N, B and C. The terms below are real and sourced; the names
  * are not attached because an unsourced figure under a real company's name is
  * a factual claim nobody can check, and because the illustrations these came
  * from are client documents.
@@ -21,7 +21,7 @@
  *
  * **1. The surrender charge is not a percentage of account value.**
  *
- * On Mutual Company A it is a fixed dollar amount per $1,000 of specified
+ * On Mutual Company N it is a fixed dollar amount per $1,000 of specified
  * amount — $37.68 flat for policy years 1-3, then declining in equal steps to
  * zero at year 11. Read as a percentage of account value the same schedule
  * runs 38.97%, 19.40%, 13.64%, 9.08% ... 0.85%, which is a completely
@@ -35,8 +35,8 @@
  *
  * **2. Where the interest lands differs by carrier.**
  *
- * Mutual Company A credits interest to the accumulated value, and the
- * surrender value is that figure less the surrender charge. Mutual Company B
+ * Mutual Company N credits interest to the accumulated value, and the
+ * surrender value is that figure less the surrender charge. Mutual Company S
  * credits to the cash value. The distinction matters because it decides what
  * the surrender charge is subtracted from and what the next year's interest
  * compounds on. `creditingTarget` records it per carrier.
@@ -72,7 +72,7 @@ export interface CostSummaryYear {
 }
 
 export interface CostBaseline {
-  readonly carrierId: 'mutual-a' | 'mutual-b' | 'mutual-c';
+  readonly carrierId: 'mutual-n' | 'mutual-s' | 'mutual-pc';
   readonly carrierLabel: string;
   readonly product: string;
   readonly source: string;
@@ -100,7 +100,7 @@ export interface CostBaseline {
   readonly coiPerThousandByAge: readonly { readonly age: number; readonly perThousand: number }[];
   /**
    * A credit the carrier adds back as a percentage of cash value from a given
-   * year (Mutual Company B's "bonus interest credit"). Absent where the
+   * year (Mutual Company S's "bonus interest credit"). Absent where the
    * product has none.
    */
   readonly bonusInterestPctOfCashValue?: number;
@@ -119,7 +119,7 @@ export interface CostBaseline {
 }
 
 /**
- * Mutual Company A — read off an Annual Cost Summary, every figure.
+ * Mutual Company N — read off an Annual Cost Summary, every figure.
  *
  * Case: female, issue age 63, preferred non-tobacco, specified amount
  * $4,755,883, total outlay $2,100,000 over five years, death benefit Option 2
@@ -130,9 +130,9 @@ export interface CostBaseline {
  * derived as the printed COI charge divided by the net amount at risk (death
  * benefit less account value, both printed on the same row).
  */
-export const MUTUAL_A_BASELINE: CostBaseline = {
-  carrierId: 'mutual-a',
-  carrierLabel: 'Mutual Company A',
+export const MUTUAL_N_BASELINE: CostBaseline = {
+  carrierId: 'mutual-n',
+  carrierLabel: 'Mutual Company N',
   product: 'Indexed UL Accumulator III',
   source: 'Annual Cost Summary, illustration prepared 4/9/2026, software 4.89.0.7',
   // The surrender value column equals the accumulated value less the surrender
@@ -189,7 +189,7 @@ export const MUTUAL_A_BASELINE: CostBaseline = {
 };
 
 /**
- * Mutual Company B — read off its illustration's Charges Report, every figure.
+ * Mutual Company S — read off its illustration's Charges Report, every figure.
  *
  * B calls its cost summary "Your policy's current charges summary" (the
  * Charges Report). Not every B illustration carries it; this one does, and
@@ -222,9 +222,9 @@ export const MUTUAL_A_BASELINE: CostBaseline = {
  * percent in each of its five years, so the figures below are the product's,
  * not one case's arithmetic.
  */
-export const MUTUAL_B_BASELINE: CostBaseline = {
-  carrierId: 'mutual-b',
-  carrierLabel: 'Mutual Company B',
+export const MUTUAL_S_BASELINE: CostBaseline = {
+  carrierId: 'mutual-s',
+  carrierLabel: 'Mutual Company S',
   product: 'Balanced Growth Accumulator III Indexed Universal Life',
   source: 'Charges Report ("Your policy\'s current charges summary"), illustration run 4/8/2026',
   creditingTarget: 'cash-value',
@@ -259,7 +259,7 @@ export const MUTUAL_B_BASELINE: CostBaseline = {
   surrenderPerThousandByYear: [51.49, 49.75, 48.01, 46.28, 44.56, 42.84, 41.14, 37.35, 18.67, 0],
 
   // Printed cost of insurance divided by (death benefit - year-end cash
-  // value), the same basis as Mutual Company A. Ages 64-73 rise as a mortality
+  // value), the same basis as Mutual Company N. Ages 64-73 rise as a mortality
   // curve must. From year 11 the carrier's rate steps down (the same dollars
   // on a smaller amount at risk), and from year 15 the amount at risk is small
   // enough that the year-end basis swings the implied rate: see the caveats.
@@ -296,19 +296,19 @@ export const MUTUAL_B_BASELINE: CostBaseline = {
 };
 
 /** Every carrier whose charge structure was read off its own cost summary. */
-export const COMPLETE_BASELINES: readonly CostBaseline[] = [MUTUAL_A_BASELINE, MUTUAL_B_BASELINE];
+export const COMPLETE_BASELINES: readonly CostBaseline[] = [MUTUAL_N_BASELINE, MUTUAL_S_BASELINE];
 
 /**
- * Mutual Company C has no cost summary yet.
+ * Mutual Company PC has no cost summary yet.
  *
  * B's brochure once stood here with a complete taxonomy and no rates; its
- * Charges Report closed it (MUTUAL_B_BASELINE). C's structure is not held at
+ * Charges Report closed it (MUTUAL_S_BASELINE). PC's structure is not held at
  * all: one illustration carrying its charges summary resolves it the same way.
  */
 export const PENDING_BASELINES = [
   {
-    carrierId: 'mutual-c' as const,
-    carrierLabel: 'Mutual Company C',
+    carrierId: 'mutual-pc' as const,
+    carrierLabel: 'Mutual Company PC',
     creditingTarget: null as CreditingTarget | null,
     creditingTargetSource: 'not established',
     chargeNamesKnown: [] as string[],
@@ -408,7 +408,7 @@ export function impliedSurrenderPerThousand(
 }
 
 /**
- * Mutual Company A's multi-index blend, from the illustration's own note.
+ * Mutual Company N's multi-index blend, from the illustration's own note.
  *
  * "50% of best performing index, 30% of the next best, and 20% of the third
  * best performing index are used. In the event that only two of the indexes
