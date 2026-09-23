@@ -50,7 +50,7 @@ function imageInventory(dir: string): Array<{ file: string; bytes: number; forma
     for (const e of entries) {
       const p = path.join(d, e.name);
       const r = `${rel}/${e.name}`;
-      if (e.isDirectory()) { if (!/node_modules|__manus__/.test(e.name)) walk(p, r); continue; }
+      if (e.isDirectory()) { if (!/node_modules/.test(e.name)) walk(p, r); continue; }
       const m = /\.(webp|avif|png|jpe?g|gif|svg)$/i.exec(e.name);
       if (m) out.push({ file: r, bytes: fs.statSync(p).size, format: m[1]!.toLowerCase() });
     }
