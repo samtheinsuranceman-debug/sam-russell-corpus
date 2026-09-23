@@ -142,6 +142,8 @@ export function securityHeaders(facts: RequestFacts, env: Env = process.env): Re
 /** Hashed bundles live forever; images a day; the entry files and HTML always revalidate. */
 export function cacheControlFor(p: string): string {
   if (/^\/assets\/(chunks|media)\//.test(p)) return "public, max-age=31536000, immutable";
+  // The entry script and stylesheet carry a content hash (scripts/build.mjs): app-XXXXXXXX.js / .css.
+  if (/^\/assets\/app-[A-Z0-9]{8}\.(js|css)$/.test(p)) return "public, max-age=31536000, immutable";
   if (/\.(webp|avif|png|jpe?g|gif|svg|ico|woff2?|ttf|mp3|mp4)$/i.test(p)) return "public, max-age=86400, stale-while-revalidate=604800";
   if (/^\/assets\//.test(p)) return "public, max-age=0, must-revalidate";
   if (p === "/sitemap.xml" || p === "/robots.txt") return "public, max-age=3600";
@@ -169,9 +171,13 @@ export function compileRoutes(patterns: string[]): RegExp[] {
   return patterns.map((p) => new RegExp("^" + p.replace(/[.+^${}()|[\]\\]/g, "\\$&").replace(/\*/g, ".*").replace(/:[A-Za-z0-9_]+\??/g, "[^/]+") + "/?$"));
 }
 
+/** The not-found page's own route. It renders the 404 page, so it must answer HTTP 404 too (not a soft 404). */
+export const NOT_FOUND_PATH = "/404";
+
 export function isKnownRoute(p: string, routes: RegExp[]): boolean {
-  if (!routes.length) return true; // no manifest: never claim a page is missing
   const clean = p.split(/[?#]/)[0] || "/";
+  if (clean.replace(/\/+$/, "") === NOT_FOUND_PATH) return false;
+  if (!routes.length) return true; // no manifest: never claim a page is missing
   return routes.some((r) => r.test(clean));
 }
 

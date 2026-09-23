@@ -43,7 +43,7 @@ export default function NotFound() {
           </Button>
           <Button
             onClick={() => setLocation("/portal")}
-            className="bg-emerald-600 hover:bg-emerald-500 text-white px-6"
+            className="bg-emerald-700 hover:bg-emerald-800 text-white px-6"
           >
             <Home className="w-4 h-4 mr-2" />
             Go to Dashboard

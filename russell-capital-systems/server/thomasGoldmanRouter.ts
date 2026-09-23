@@ -208,6 +208,25 @@ export const thomasGoldmanRouter = router({
         }
       }
 
+      // ── The Wealth Genome map, this household's only ────────────────────
+      // Tendencies and money bands; the raw answers were destroyed at close.
+      let genomeContext = "";
+      try {
+        const { genomeStore } = await import("./genomeIntakeDb");
+        const { readMap } = await import("./genomeIntake");
+        const { genomeLinesForAdvisor } = await import("@shared/genomeIntake");
+        const mine = await readMap(genomeStore(), ctx.user, ctx.user.id);
+        if (mine) {
+          genomeContext = [
+            "\n--- WEALTH GENOME MAP (tendencies, not a diagnosis; the raw answers were destroyed) ---",
+            ...genomeLinesForAdvisor(mine.map),
+            "Context only: it helps you understand how they decide. Do not base any product or strategy recommendation on it. Never call it a diagnosis, never name a condition, never quote it back as their words.",
+          ].join("\n");
+        }
+      } catch {
+        // No database or no map: the advisor simply does not know the genome yet.
+      }
+
       // ── Model disclosure, so he can answer "what are you?" truthfully ───
       const live = MODEL_REGISTRY.filter(m => {
         const v = process.env[m.envVar];
@@ -257,6 +276,7 @@ export const thomasGoldmanRouter = router({
           ? `\n--- WORKING MEMORY (earlier in this conversation) ---\n${summary}\n--- END WORKING MEMORY ---\nTreat everything above as things the client already told you. Do not ask them again.`
           : "",
         clientContext,
+        genomeContext,
         visitContext,
       ]
         .filter(Boolean)

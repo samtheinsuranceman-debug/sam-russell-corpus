@@ -1,4 +1,5 @@
 import { ArrowLeft } from "lucide-react";
+import { PUBLIC_HOME_FALLBACK, useHomepageOpen } from "@/hooks/useHomepageOpen";
 import { Link } from "wouter";
 import PageBackdrop from "@/components/PageBackdrop";
 
@@ -11,12 +12,14 @@ const PHOTOS = {
 } as const;
 
 function LegalShell({ title, photo, position, children }: { title: string; photo: keyof typeof PHOTOS; position?: string; children: React.ReactNode }) {
+  // While the homepage is gated, "/" bounces a signed-out visitor to /login.
+  const homeOpen = useHomepageOpen();
   return (
     <div className="relative min-h-screen bg-[#060f20] text-[#c8d8ec]">
       <PageBackdrop {...PHOTOS[photo]} fade="#060f20" position={position} />
       <div className="container relative z-10 max-w-3xl py-12">
-        <Link href="/" className="inline-flex items-center gap-2 text-sm text-[#7a95b8] hover:text-white mb-8 transition-colors">
-          <ArrowLeft size={14} /> Back to Home
+        <Link href={homeOpen ? "/" : PUBLIC_HOME_FALLBACK.href} className="inline-flex items-center gap-2 text-sm text-[#7a95b8] hover:text-white mb-8 transition-colors">
+          <ArrowLeft size={14} /> {homeOpen ? "Back to Home" : PUBLIC_HOME_FALLBACK.label}
         </Link>
         <h1 className="text-3xl font-extrabold text-white mb-8" style={{ fontFamily: "DM Sans, sans-serif" }}>{title}</h1>
         <div className="prose prose-invert max-w-none text-[#c8d8ec] space-y-6 text-sm leading-relaxed">
@@ -41,7 +44,7 @@ export function Privacy() {
       <h2 className="text-white font-bold text-lg">Financial Data</h2>
       <p>Client financial data entered into the platform is used solely to generate planning scenarios. We do not share individual client data with third parties without explicit consent.</p>
       <h2 className="text-white font-bold text-lg">Contact</h2>
-      <p>For privacy inquiries, contact us at <a href="mailto:privacy@russellcapitalsystems.com" className="text-[#22c55e]">privacy@russellcapitalsystems.com</a>.</p>
+      <p>For privacy inquiries, contact us at <a href="mailto:privacy@russellcapitalsystems.com" className="text-[#22c55e] underline underline-offset-2">privacy@russellcapitalsystems.com</a>.</p>
     </LegalShell>
   );
 }
@@ -60,7 +63,7 @@ export function Terms() {
       <h2 className="text-white font-bold text-lg">Intellectual Property</h2>
       <p>All platform software, proprietary models, and financial engines are the intellectual property of Russell Holdings Management LLC, doing business as Russell Capital Systems™. You may not reverse-engineer, copy, or redistribute any platform components.</p>
       <h2 className="text-white font-bold text-lg">Contact</h2>
-      <p>For legal inquiries, contact us at <a href="mailto:legal@russellcapitalsystems.com" className="text-[#22c55e]">legal@russellcapitalsystems.com</a>.</p>
+      <p>For legal inquiries, contact us at <a href="mailto:legal@russellcapitalsystems.com" className="text-[#22c55e] underline underline-offset-2">legal@russellcapitalsystems.com</a>.</p>
     </LegalShell>
   );
 }
@@ -76,7 +79,7 @@ export function Support() {
       <h2 className="text-white font-bold text-lg">Team Management</h2>
       <p>Invite team members from the Team settings page. Roles include Admin, Advisor, Analyst, and Viewer. Invitations expire after 7 days.</p>
       <h2 className="text-white font-bold text-lg">Contact Support</h2>
-      <p>Email: <a href="mailto:support@russellcapitalsystems.com" className="text-[#22c55e]">support@russellcapitalsystems.com</a></p>
+      <p>Email: <a href="mailto:support@russellcapitalsystems.com" className="text-[#22c55e] underline underline-offset-2">support@russellcapitalsystems.com</a></p>
       <p>Response time: within 1 business day for Growth plans, same-day for Professional and Enterprise.</p>
     </LegalShell>
   );
