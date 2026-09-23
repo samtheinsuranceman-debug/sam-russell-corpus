@@ -22,6 +22,7 @@ import { AchievementUnlockOverlay } from "./components/AchievementUnlockOverlay"
 import { PetEvolutionOverlay } from "./components/PetEvolutionOverlay";
 import VoiceAdvisor from "./components/VoiceAdvisor";
 import { SiteMapProvider } from "./contexts/SiteMapContext";
+import { ArrivalSoundProvider } from "./contexts/ArrivalSoundContext";
 import { PredictiveProvider } from "./contexts/PredictiveContext";
 import SiteMapOverlay from "./components/SiteMapOverlay";
 import AdvisorNudge from "./components/AdvisorNudge";
@@ -1056,7 +1057,10 @@ function App() {
             <SiteMapProvider>
               {/* One macro scenario state for every calculator; the app shell's predictive footer shows it */}
               <PredictiveProvider>
-                <Router />
+                {/* Arrival sound: idle until a household chooses "Enter with sound" on the arrival field (flag default off) */}
+                <ArrivalSoundProvider>
+                  <Router />
+                </ArrivalSoundProvider>
                 {/* The login site map: every page, clickable, visited pages glow green; closes only from its X */}
                 <SiteMapOverlay />
                 {/* Samuel Goldman speaks after the second page open */}
